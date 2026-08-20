@@ -17,6 +17,8 @@ const displayStack = `Impact, 'Helvetica Neue', sans-serif`;
  * update both when adding or removing fonts.
  */
 export const HOMEPAGE_FONTS: HomepageFontDefinition[] = [
+    // La police de DEHORS. Bunny Fonts la sert sous `archivo`.
+    {value: 'Archivo', label: 'Archivo', category: 'sans', bunnyFamily: 'archivo', weights: '400,500,600,700,800', stack: sansStack},
     {value: 'Outfit', label: 'Outfit', category: 'sans', bunnyFamily: 'outfit', weights: '400,500,600,700,800', stack: sansStack},
     {value: 'Inter', label: 'Inter', category: 'sans', bunnyFamily: 'inter', weights: '400,500,600,700,800', stack: sansStack},
     {value: 'Roboto', label: 'Roboto', category: 'sans', bunnyFamily: 'roboto', weights: '400,500,700', stack: sansStack},

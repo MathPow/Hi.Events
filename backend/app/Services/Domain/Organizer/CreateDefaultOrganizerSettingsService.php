@@ -24,8 +24,10 @@ class CreateDefaultOrganizerSettingsService
             'organizer_id' => $organizer->getId(),
             'homepage_visibility' => OrganizerHomepageVisibility::PUBLIC->name,
 
-            // Use the "Modern" theme as default
-            'homepage_theme_settings' => $defaultTheme->getThemeData(),
+            // Le format lu par le front, pas l'ancien à six couleurs: sinon
+            // la nouvelle organisation naît avec des réglages que la page
+            // publique ne sait pas lire, et retombe sur le thème d'usine.
+            'homepage_theme_settings' => $defaultTheme->getHomepageThemeSettings(),
 
             // Platform fee pass-through default from config
             'default_pass_platform_fee_to_buyer' => config('app.saas_default_pass_platform_fee_to_buyer', false),

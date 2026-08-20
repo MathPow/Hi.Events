@@ -67,7 +67,7 @@ return [
     /**
      * Default color theme for organizer homepages
      */
-    'organizer_homepage_default_theme' => ColorTheme::MIDNIGHT,
+    'organizer_homepage_default_theme' => ColorTheme::DEHORS,
 
     /**
      * Path to default event category cover images

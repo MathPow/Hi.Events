@@ -4,6 +4,12 @@ namespace HiEvents\DomainObjects\Enums;
 
 enum ColorTheme: string
 {
+    /**
+     * Thème maison DEHORS. Sert de défaut à toute nouvelle organisation
+     * (cf. config/app.php), qui reste libre de le remplacer depuis le
+     * concepteur de page d'accueil — c'est tout l'intérêt d'un défaut.
+     */
+    case DEHORS = 'Dehors';
     case CLASSIC = 'Classic';
     case ELEGANT = 'Elegant';
     case MODERN = 'Modern';
@@ -19,6 +25,24 @@ enum ColorTheme: string
     public function getThemeData(): array
     {
         return match ($this) {
+            self::DEHORS => [
+                'name' => self::DEHORS->value,
+                'homepage_background_color' => '#f9f3e1',
+                'homepage_content_background_color' => '#fdfaf0bf',
+                /*
+                 * #ae5626 et non l'orange de marque #ef854a. L'accent sert ICI
+                 * de couleur de TEXTE autant que d'aplat (cf. le bandeau de
+                 * consentement, qui l'emploie en `color:` comme en
+                 * `background:`), et #ef854a ne donne que 3,1:1 sur le beige —
+                 * sous le 4,5:1 du WCAG AA. C'est la règle que la charte DEHORS
+                 * pose déjà noir sur blanc: l'orange foncé pour les fonds,
+                 * l'orange texte dès que ce sont des lettres.
+                 */
+                'homepage_primary_color' => '#ae5626',
+                'homepage_primary_text_color' => '#241c15',
+                'homepage_secondary_color' => '#2a805a',
+                'homepage_secondary_text_color' => '#fdfaf0',
+            ],
             self::MIDNIGHT => [
                 'name' => self::MIDNIGHT->value,
                 'homepage_background_color' => '#737373ff',
@@ -119,6 +143,48 @@ enum ColorTheme: string
                 'homepage_secondary_text_color' => '#ffffff',
             ],
         };
+    }
+
+    /**
+     * Le format que le front lit VRAIMENT (`HomepageThemeSettings`):
+     * accent + fond + clair/sombre. `getThemeData()` rend encore l'ancien
+     * format à six couleurs, qu'une migration d'upstream convertit une fois
+     * pour toutes — mais rien ne convertit les organisations créées APRÈS.
+     * On dérive donc ici, avec la même règle de luminance que cette migration.
+     */
+    public function getHomepageThemeSettings(): array
+    {
+        $data = $this->getThemeData();
+
+        return [
+            'accent' => $data['homepage_primary_color'],
+            'background' => $data['homepage_background_color'],
+            'mode' => self::detectMode($data['homepage_background_color']),
+            'background_type' => 'COLOR',
+            'font_family' => $this === self::DEHORS ? 'Archivo' : 'Outfit',
+        ];
+    }
+
+    /** Fond clair ou sombre, par la luminance WCAG. */
+    private static function detectMode(string $backgroundColor): string
+    {
+        $hex = ltrim($backgroundColor, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        } elseif (strlen($hex) === 8) {
+            $hex = substr($hex, 0, 6);
+        }
+
+        if (strlen($hex) !== 6) {
+            return 'light';
+        }
+
+        $luminance = 0.2126 * hexdec(substr($hex, 0, 2))
+            + 0.7152 * hexdec(substr($hex, 2, 2))
+            + 0.0722 * hexdec(substr($hex, 4, 2));
+
+        return $luminance > 128 ? 'light' : 'dark';
     }
 
     public static function getAllThemes(): array

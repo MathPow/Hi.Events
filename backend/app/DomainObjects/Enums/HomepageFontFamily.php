@@ -10,6 +10,7 @@ enum HomepageFontFamily: string
 {
     use BaseEnum;
 
+    case Archivo = 'Archivo';
     case Outfit = 'Outfit';
     case Inter = 'Inter';
     case Roboto = 'Roboto';
