@@ -65,7 +65,25 @@ export const PoweredByFooter = (
             >
                 Hi.Events
             </a>{" "}
-            🚀
+            🚀{" "}
+            {/*
+              * Mention DEHORS ajoutee a cote de l'attribution, jamais a sa place.
+              * La clause 7(b) de l'AGPL autorise a REFORMULER le "Powered by"
+              * ("Powered by [Your Company] based on Hi.Events"), a la condition
+              * que le lien continue de pointer vers https://hi.events. Le lien
+              * ci-dessus n'est donc pas touche: on ajoute un second lien, on ne
+              * detourne pas le premier. Le retirer demanderait une licence
+              * commerciale (https://hi.events/licensing).
+              */}
+            {t`and`}{" "}
+            <a
+                href="https://dehorsqc.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                title={"DEHORS - le plein air, pour vrai accessible"}
+            >
+                DehorsQC
+            </a>
         </>
     );
 
