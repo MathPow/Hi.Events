@@ -84,6 +84,9 @@ use HiEvents\Http\Actions\Messages\GetMessageRecipientsAction;
 use HiEvents\Http\Actions\Messages\GetMessagesAction;
 use HiEvents\Http\Actions\Messages\SendMessageAction;
 use HiEvents\Http\Actions\Orders\CancelOrderAction;
+use HiEvents\Http\Actions\ApiTokens\CreateApiTokenAction;
+use HiEvents\Http\Actions\ApiTokens\DeleteApiTokenAction;
+use HiEvents\Http\Actions\ApiTokens\GetApiTokensAction;
 use HiEvents\Http\Actions\Orders\DownloadDonationReceiptAction;
 use HiEvents\Http\Actions\Orders\DownloadOrderInvoiceAction;
 use HiEvents\Http\Actions\Orders\EditOrderAction;
@@ -250,6 +253,12 @@ $router->middleware(['auth:api'])->group(
         $router->post('/auth/refresh', RefreshTokenAction::class);
 
         // Users
+        // Jetons d'application: permettent a une app tierce d'appeler cette meme
+        // API sans stocker le mot de passe du compte. Cf. ExchangeApiTokenForJwt.
+        $router->get('/api-tokens', GetApiTokensAction::class);
+        $router->post('/api-tokens', CreateApiTokenAction::class);
+        $router->delete('/api-tokens/{token_id}', DeleteApiTokenAction::class);
+
         $router->get('/users/me', GetMeAction::class);
         $router->put('/users/me', UpdateMeAction::class);
         $router->post('/users', CreateUserAction::class);

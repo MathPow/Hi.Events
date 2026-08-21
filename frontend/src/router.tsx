@@ -253,6 +253,13 @@ export const router: RouteObject[] = [
                         }
                     },
                     {
+                        path: "api-tokens",
+                        async lazy() {
+                            const ApiTokens = await import("./components/routes/account/ManageAccount/sections/ApiTokens");
+                            return { Component: ApiTokens.default };
+                        }
+                    },
+                    {
                         path: "users",
                         async lazy() {
                             const Users = await import("./components/routes/account/ManageAccount/sections/Users");

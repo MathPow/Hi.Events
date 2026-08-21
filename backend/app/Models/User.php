@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Lab404\Impersonate\Models\Impersonate;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use RuntimeException;
@@ -30,6 +31,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 {
     use SoftDeletes;
     use Notifiable;
+    use HasApiTokens;
     use Authenticatable;
     use Authorizable;
     use CanResetPassword;

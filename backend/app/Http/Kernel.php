@@ -8,6 +8,7 @@ use HiEvents\Http\Middleware\HandleDeprecatedTimezones;
 use HiEvents\Http\Middleware\LogImpersonationMiddleware;
 use HiEvents\Http\Middleware\PreventRequestsDuringMaintenance;
 use HiEvents\Http\Middleware\RedirectIfAuthenticated;
+use HiEvents\Http\Middleware\ExchangeApiTokenForJwt;
 use HiEvents\Http\Middleware\SetAccountContext;
 use HiEvents\Http\Middleware\SetUserLocaleMiddleware;
 use HiEvents\Http\Middleware\TrimStrings;
@@ -70,6 +71,9 @@ class Kernel extends HttpKernel
         'api' => [
             ThrottleRequests::class . ':api',
             SubstituteBindings::class,
+            // AVANT SetAccountContext: celui-ci lit Auth::payload(), donc le
+            // jeton doit deja avoir ete echange contre un JWT a ce stade.
+            ExchangeApiTokenForJwt::class,
             SetAccountContext::class,
             SetUserLocaleMiddleware::class,
             LogImpersonationMiddleware::class,
