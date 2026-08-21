@@ -4,7 +4,7 @@ import { IconBrandStripe } from '@tabler/icons-react';
 import { t } from '@lingui/macro';
 import { useCreateOrGetStripeConnectDetails } from '../../../queries/useCreateOrGetStripeConnectDetails';
 import { useGetAccount } from '../../../queries/useGetAccount';
-import { showSuccess } from '../../../utilites/notifications';
+import { showError, showSuccess } from '../../../utilites/notifications';
 import { isHiEvents } from '../../../utilites/helpers';
 
 interface StripeConnectButtonProps {
@@ -60,6 +60,17 @@ export const StripeConnectButton: React.FC<StripeConnectButtonProps> = ({
             window.location.href = String(stripeDetails.connect_url);
         }
     }, [fetchStripeDetails, stripeDetailsQuery.isLoading, stripeDetails]);
+
+    // Sans ca, un 500 cote Stripe (Connect pas active sur le compte, cle live
+    // invalide...) laisse le bouton muet: on clique, rien ne bouge, aucune piste.
+    useEffect(() => {
+        if (!fetchStripeDetails || !stripeDetailsQuery.isError) {
+            return;
+        }
+        setFetchStripeDetails(false);
+        const data = stripeDetailsQuery.error?.response?.data as { message?: string } | undefined;
+        showError(data?.message ?? t`Unable to reach Stripe. Please try again.`);
+    }, [fetchStripeDetails, stripeDetailsQuery.isError, stripeDetailsQuery.error]);
 
     const handleClick = () => {
         if (!stripeDetails) {
