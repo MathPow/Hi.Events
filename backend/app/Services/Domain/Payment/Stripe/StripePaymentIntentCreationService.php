@@ -84,7 +84,12 @@ class StripePaymentIntentCreationService
                     'enabled' => true,
                 ],
                 ...($paymentIntentDTO->description ? ['description' => $paymentIntentDTO->description] : []),
-                ...($applicationFee && !$bypassApplicationFees ? ['application_fee_amount' => $applicationFee->grossApplicationFee->toMinorUnit()] : []),
+                // Une commission plateforme n'a de sens QUE sur une charge portee par
+                // un compte connecte. Sur le compte de la plateforme, l'encaissement est
+                // deja integralement le sien, et Stripe rejette la requete.
+                ...($applicationFee && !$bypassApplicationFees && $paymentIntentDTO->stripeAccountId !== null
+                    ? ['application_fee_amount' => $applicationFee->grossApplicationFee->toMinorUnit()]
+                    : []),
             ], $this->getStripeAccountData($paymentIntentDTO));
 
             $this->logger->debug('Stripe payment intent created', [
@@ -127,16 +132,20 @@ class StripePaymentIntentCreationService
             return [];
         }
 
+        // Organisation sans compte Stripe Connect: on encaisse sur le compte de la
+        // PLATEFORME plutot que de refuser la vente. Sans ce repli, tout billet
+        // payant d'un organisateur pas encore branche echoue au checkout, et le
+        // client ne voit qu'une erreur de paiement generique.
+        //
+        // Contrepartie assumee: l'argent atterrit dans le solde de la plateforme,
+        // c'est donc a elle de reverser l'organisateur a la main.
         if ($paymentIntentDTO->stripeAccountId === null) {
-            $this->logger->error(
-                'Stripe Connect account not found for the event organizer, payment intent creation failed.
-                You will need to connect your Stripe account to receive payments.',
+            $this->logger->info(
+                'No Stripe Connect account for the event organizer, charging the platform account instead.',
                 ['paymentIntentDTO' => $paymentIntentDTO->toArray(['account'])]
             );
 
-            throw new CreatePaymentIntentFailedException(
-                __('Stripe Connect account not found for the event organizer')
-            );
+            return [];
         }
 
         return [
