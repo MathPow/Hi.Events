@@ -45,6 +45,12 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\TrustHosts::class,
         TrustProxies::class,
         HandleCors::class,
+        // Pile GLOBALE et non groupe 'api', volontairement: Laravel trie les
+        // middlewares de route par $middlewarePriority, ce qui remonte
+        // Authenticate AVANT tout middleware maison. L'echange arriverait donc
+        // apres le rejet en 401. La pile globale, elle, n'est pas triee.
+        // Sans jeton de la forme « <id>|<secret> », ce middleware ne fait rien.
+        ExchangeApiTokenForJwt::class,
         PreventRequestsDuringMaintenance::class,
         ValidatePostSize::class,
         TrimStrings::class,
@@ -71,9 +77,6 @@ class Kernel extends HttpKernel
         'api' => [
             ThrottleRequests::class . ':api',
             SubstituteBindings::class,
-            // AVANT SetAccountContext: celui-ci lit Auth::payload(), donc le
-            // jeton doit deja avoir ete echange contre un JWT a ce stade.
-            ExchangeApiTokenForJwt::class,
             SetAccountContext::class,
             SetUserLocaleMiddleware::class,
             LogImpersonationMiddleware::class,
