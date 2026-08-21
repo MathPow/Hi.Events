@@ -8,10 +8,80 @@ use HiEvents\DomainObjects\Enums\ProductPriceType;
 use HiEvents\DomainObjects\Enums\ProductType;
 use HiEvents\Http\Request\BaseRequest;
 use HiEvents\Validators\Rules\RulesHelper;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class UpsertProductRequest extends BaseRequest
 {
+    /**
+     * Le type DONATION et la part charity_amount annoncent un don au sens
+     * fiscal. Tant que l'organisateur n'a pas de numero d'enregistrement, aucun
+     * recu ne peut etre emis: on refuse cote serveur, pas seulement dans l'UI,
+     * ou un simple appel API contournerait le garde-fou.
+     *
+     * Un produit DEJA en DONATION reste modifiable: bloquer sa sauvegarde
+     * rendrait inaccessible un produit cree avant que le reglage ne soit vide.
+     */
+    public function after(): array
+    {
+        return [
+            function ($validator) {
+                $wantsDonationType = $this->input('type') === ProductPriceType::DONATION->name;
+                $wantsCharitySplit = (float)$this->input('charity_amount', 0) > 0;
+
+                if (!$wantsDonationType && !$wantsCharitySplit) {
+                    return;
+                }
+
+                if ($this->organizerIsRegisteredCharity()) {
+                    return;
+                }
+
+                if ($wantsCharitySplit) {
+                    $validator->errors()->add(
+                        'charity_amount',
+                        __('Add your charity registration number in the organizer settings before splitting a price into a donation.')
+                    );
+                }
+
+                if ($wantsDonationType && !$this->productIsAlreadyDonation()) {
+                    $validator->errors()->add(
+                        'type',
+                        __('Add your charity registration number in the organizer settings before creating a donation product.')
+                    );
+                }
+            },
+        ];
+    }
+
+    private function organizerIsRegisteredCharity(): bool
+    {
+        $organizerId = DB::table('events')
+            ->where('id', $this->route('event_id'))
+            ->value('organizer_id');
+
+        if ($organizerId === null) {
+            return false;
+        }
+
+        return trim((string)DB::table('organizer_settings')
+            ->where('organizer_id', $organizerId)
+            ->value('charity_registration_number')) !== '';
+    }
+
+    private function productIsAlreadyDonation(): bool
+    {
+        $productId = $this->route('ticket_id');
+
+        if ($productId === null) {
+            return false;
+        }
+
+        return DB::table('products')
+                ->where('id', $productId)
+                ->value('type') === ProductPriceType::DONATION->name;
+    }
+
     public function rules(): array
     {
         return [

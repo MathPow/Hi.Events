@@ -189,6 +189,23 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
     const isCharityEnabled = !!organizerSettings?.charity_registration_number;
     const showCharitySplit = isCharityEnabled && !isFreeProduct && !isDonationProduct
         && form.values.type !== ProductPriceType.Tiered;
+
+    // Le type DONATION annonce un don au sens fiscal. Tant que l'organisme n'est
+    // pas configure (numero d'enregistrement absent), aucun recu ne peut etre
+    // emis: on ferme l'option plutot que de laisser croire au contraire.
+    // Un produit DEJA en DONATION reste modifiable, sinon on echouerait a
+    // rouvrir un produit cree avant que le reglage ne soit vide.
+    const isDonationLocked = !isCharityEnabled && product?.type !== ProductPriceType.Donation;
+
+    const priceTypeOptions: ItemProps[] = productPriceOptions.map((option) => (
+        option.value === ProductPriceType.Donation && isDonationLocked
+            ? {
+                ...option,
+                disabled: true,
+                description: t`Requires a charity registration number in Settings, Tax receipts.`,
+            }
+            : option
+    ));
     const {data: taxesAndFees} = useGetTaxesAndFees();
 
     const handleTaxOrFeeCreated = (taxOrFee: TaxAndFee) => {
@@ -258,7 +275,7 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
                 required
                 form={form}
                 name={'type'}
-                optionList={productPriceOptions}
+                optionList={priceTypeOptions}
             />
 
             {form.errors.type && (
