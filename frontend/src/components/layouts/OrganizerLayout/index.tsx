@@ -14,6 +14,7 @@ import {
     IconSettings,
     IconShare,
     IconUsersGroup,
+    IconShield,
     IconWebhook
 } from "@tabler/icons-react";
 import { t } from "@lingui/macro";
@@ -41,6 +42,7 @@ import { confirmationDialog } from "../../../utilites/confirmationDialog.tsx";
 import { showError, showSuccess } from "../../../utilites/notifications.tsx";
 import { useResendEmailConfirmation } from "../../../mutations/useResendEmailConfirmation.ts";
 import { useGetMe } from "../../../queries/useGetMe.ts";
+import { useIsCurrentUserSuperAdmin } from "../../../hooks/useIsCurrentUserAdmin.ts";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -61,6 +63,7 @@ const OrganizerLayout = () => {
     const resendEmailConfirmationMutation = useResendEmailConfirmation();
     const [emailConfirmationResent, setEmailConfirmationResent] = useState(false);
     const { data: me } = useGetMe();
+    const isSuperAdmin = useIsCurrentUserSuperAdmin();
     const isUserEmailVerfied = me?.is_email_verified;
     const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -92,6 +95,17 @@ const OrganizerLayout = () => {
 
         { label: t`Integrations` },
         { link: 'webhooks', label: t`Webhooks`, icon: IconWebhook },
+
+        // Le tableau de bord admin n'existait que dans le menu de l'avatar, en
+        // haut a droite: introuvable quand on cherche dans la barre laterale.
+        // Les entetes de section s'affichent AVANT le filtre showWhen, d'ou le
+        // spread conditionnel plutot qu'un showWhen sur chaque ligne.
+        ...(isSuperAdmin
+            ? [
+                { label: t`Platform` },
+                { link: '/admin', label: t`Admin Dashboard`, icon: IconShield },
+            ]
+            : []),
     ];
 
     const handleEmailConfirmationResend = () => {
