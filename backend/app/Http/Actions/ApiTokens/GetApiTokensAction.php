@@ -6,6 +6,7 @@ use HiEvents\DomainObjects\Enums\Role;
 use HiEvents\Http\Actions\BaseAction;
 use HiEvents\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 
 class GetApiTokensAction extends BaseAction
@@ -15,7 +16,7 @@ class GetApiTokensAction extends BaseAction
         $this->minimumAllowedRole(Role::ADMIN);
 
         $tokens = DB::table('personal_access_tokens')
-            ->where('tokenable_type', User::class)
+            ->where('tokenable_type', $this->userMorphAlias())
             ->whereJsonContains('abilities', 'account:' . User::getCurrentAccountId())
             ->orderBy('id', 'desc')
             ->get();
@@ -31,5 +32,16 @@ class GetApiTokensAction extends BaseAction
                 'created_at' => $token->created_at,
             ])->values(),
         ]);
+    }
+
+    /**
+     * tokenable_type stocke l'ALIAS de la morph map, pas le nom de classe du
+     * modele. Comparer a User::class ne remonterait jamais rien.
+     */
+    private function userMorphAlias(): string
+    {
+        $alias = array_search(User::class, Relation::morphMap(), true);
+
+        return $alias === false ? User::class : (string)$alias;
     }
 }
