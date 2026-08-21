@@ -98,6 +98,11 @@ class PartialUpdateOrganizerSettingsHandler
 
             'tracking_pixels' => $dto->getProvided('trackingPixels', $organizerSettings->getTrackingPixels()),
             'tracking_consent_acknowledged' => $dto->getProvided('trackingConsentAcknowledged', $organizerSettings->getTrackingConsentAcknowledged()),
+            'charity_registration_number' => $dto->getProvided('charityRegistrationNumber', $organizerSettings->getCharityRegistrationNumber()),
+            'charity_legal_name' => $dto->getProvided('charityLegalName', $organizerSettings->getCharityLegalName()),
+            'charity_address' => $dto->getProvided('charityAddress', $organizerSettings->getCharityAddress()),
+            'charity_signatory_name' => $dto->getProvided('charitySignatoryName', $organizerSettings->getCharitySignatoryName()),
+            'charity_receipt_prefix' => $dto->getProvided('charityReceiptPrefix', $organizerSettings->getCharityReceiptPrefix()),
         ], [
             'organizer_id' => $dto->organizerId,
             'id' => $organizerSettings->getId(),

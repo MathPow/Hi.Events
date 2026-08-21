@@ -31,6 +31,11 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     final public const DEFAULT_ALLOW_ATTENDEE_SELF_EDIT = 'default_allow_attendee_self_edit';
     final public const TRACKING_PIXELS = 'tracking_pixels';
     final public const TRACKING_CONSENT_ACKNOWLEDGED = 'tracking_consent_acknowledged';
+    final public const CHARITY_REGISTRATION_NUMBER = 'charity_registration_number';
+    final public const CHARITY_LEGAL_NAME = 'charity_legal_name';
+    final public const CHARITY_ADDRESS = 'charity_address';
+    final public const CHARITY_SIGNATORY_NAME = 'charity_signatory_name';
+    final public const CHARITY_RECEIPT_PREFIX = 'charity_receipt_prefix';
 
     protected int $id;
     protected int $organizer_id;
@@ -53,6 +58,11 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     protected bool $default_allow_attendee_self_edit = true;
     protected array|string|null $tracking_pixels = null;
     protected bool $tracking_consent_acknowledged = false;
+    protected ?string $charity_registration_number = null;
+    protected ?string $charity_legal_name = null;
+    protected ?string $charity_address = null;
+    protected ?string $charity_signatory_name = null;
+    protected ?string $charity_receipt_prefix = null;
 
     public function toArray(): array
     {
@@ -78,6 +88,11 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
                     'default_allow_attendee_self_edit' => $this->default_allow_attendee_self_edit ?? null,
                     'tracking_pixels' => $this->tracking_pixels ?? null,
                     'tracking_consent_acknowledged' => $this->tracking_consent_acknowledged ?? null,
+                    'charity_registration_number' => $this->charity_registration_number ?? null,
+                    'charity_legal_name' => $this->charity_legal_name ?? null,
+                    'charity_address' => $this->charity_address ?? null,
+                    'charity_signatory_name' => $this->charity_signatory_name ?? null,
+                    'charity_receipt_prefix' => $this->charity_receipt_prefix ?? null,
                 ];
     }
 
@@ -311,5 +326,60 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     public function getTrackingConsentAcknowledged(): bool
     {
         return $this->tracking_consent_acknowledged;
+    }
+
+    public function setCharityRegistrationNumber(?string $charity_registration_number): self
+    {
+        $this->charity_registration_number = $charity_registration_number;
+        return $this;
+    }
+
+    public function getCharityRegistrationNumber(): ?string
+    {
+        return $this->charity_registration_number;
+    }
+
+    public function setCharityLegalName(?string $charity_legal_name): self
+    {
+        $this->charity_legal_name = $charity_legal_name;
+        return $this;
+    }
+
+    public function getCharityLegalName(): ?string
+    {
+        return $this->charity_legal_name;
+    }
+
+    public function setCharityAddress(?string $charity_address): self
+    {
+        $this->charity_address = $charity_address;
+        return $this;
+    }
+
+    public function getCharityAddress(): ?string
+    {
+        return $this->charity_address;
+    }
+
+    public function setCharitySignatoryName(?string $charity_signatory_name): self
+    {
+        $this->charity_signatory_name = $charity_signatory_name;
+        return $this;
+    }
+
+    public function getCharitySignatoryName(): ?string
+    {
+        return $this->charity_signatory_name;
+    }
+
+    public function setCharityReceiptPrefix(?string $charity_receipt_prefix): self
+    {
+        $this->charity_receipt_prefix = $charity_receipt_prefix;
+        return $this;
+    }
+
+    public function getCharityReceiptPrefix(): ?string
+    {
+        return $this->charity_receipt_prefix;
     }
 }

@@ -126,6 +126,7 @@ class EditProductHandler
                 'is_highlighted' => $productsData->is_highlighted ?? false,
                 'highlight_message' => $productsData->highlight_message,
                 'waitlist_enabled' => $productsData->waitlist_enabled,
+                'charity_amount' => $productsData->charity_amount,
             ],
             where: $where
         );

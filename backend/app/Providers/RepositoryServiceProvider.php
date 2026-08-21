@@ -22,6 +22,7 @@ use HiEvents\Repository\Eloquent\EventRepository;
 use HiEvents\Repository\Eloquent\EventSettingsRepository;
 use HiEvents\Repository\Eloquent\EventStatisticRepository;
 use HiEvents\Repository\Eloquent\ImageRepository;
+use HiEvents\Repository\Eloquent\DonationReceiptRepository;
 use HiEvents\Repository\Eloquent\InvoiceRepository;
 use HiEvents\Repository\Eloquent\MessageRepository;
 use HiEvents\Repository\Eloquent\OrderApplicationFeeRepository;
@@ -69,6 +70,7 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
+use HiEvents\Repository\Interfaces\DonationReceiptRepositoryInterface;
 use HiEvents\Repository\Interfaces\InvoiceRepositoryInterface;
 use HiEvents\Repository\Interfaces\MessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderApplicationFeeRepositoryInterface;
@@ -135,6 +137,7 @@ class RepositoryServiceProvider extends ServiceProvider
         CheckInListRepositoryInterface::class => CheckInListRepository::class,
         AttendeeCheckInRepositoryInterface::class => AttendeeCheckInRepository::class,
         ProductCategoryRepositoryInterface::class => ProductCategoryRepository::class,
+        DonationReceiptRepositoryInterface::class => DonationReceiptRepository::class,
         InvoiceRepositoryInterface::class => InvoiceRepository::class,
         OrderRefundRepositoryInterface::class => OrderRefundRepository::class,
         WebhookRepositoryInterface::class => WebhookRepository::class,

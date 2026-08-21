@@ -64,6 +64,7 @@ class ProductResource extends JsonResource
             'is_highlighted' => $this->getIsHighlighted(),
             'highlight_message' => $this->getHighlightMessage(),
             'waitlist_enabled' => $this->getWaitlistEnabled(),
+            'charity_amount' => $this->getCharityAmount(),
         ];
     }
 }

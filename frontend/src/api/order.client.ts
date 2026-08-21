@@ -107,6 +107,14 @@ export const orderClient = {
         return new Blob([response.data]);
     },
 
+    downloadDonationReceipt: async (eventId: IdParam, orderId: IdParam): Promise<Blob> => {
+        const response = await api.get(`events/${eventId}/orders/${orderId}/donation-receipt`, {
+            responseType: 'blob',
+        });
+
+        return new Blob([response.data]);
+    },
+
     editOrder: async (eventId: IdParam, orderId: IdParam, payload: EditOrderPayload) => {
         const response = await api.put<GenericDataResponse<Order>>(`events/${eventId}/orders/${orderId}`, payload);
         return response.data;
@@ -170,6 +178,14 @@ export const orderClientPublic = {
 
     downloadInvoice: async (eventId: IdParam, orderShortId: IdParam): Promise<Blob> => {
         const response = await publicApi.get(`events/${eventId}/order/${orderShortId}/invoice`, {
+            responseType: 'blob',
+        });
+
+        return new Blob([response.data]);
+    },
+
+    downloadDonationReceipt: async (eventId: IdParam, orderShortId: IdParam): Promise<Blob> => {
+        const response = await publicApi.get(`events/${eventId}/order/${orderShortId}/donation-receipt`, {
             responseType: 'blob',
         });
 

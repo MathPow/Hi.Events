@@ -128,6 +128,14 @@ class PartialUpdateOrganizerSettingsRequest extends BaseRequest
             'tracking_pixels.*.pixel_id' => ['required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9\-_]+$/'],
             'tracking_pixels.*.enabled' => ['required', 'boolean'],
             'tracking_consent_acknowledged' => ['sometimes', 'nullable', 'boolean'],
+
+            // Organisme de bienfaisance emetteur des recus officiels.
+            // charity_registration_number vide = aucun recu emis.
+            'charity_registration_number' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'charity_legal_name' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'charity_address' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'charity_signatory_name' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'charity_receipt_prefix' => ['sometimes', 'nullable', 'string', 'max:20'],
         ];
     }
 }

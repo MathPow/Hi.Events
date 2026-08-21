@@ -44,6 +44,9 @@ class UpsertProductRequest extends BaseRequest
             'is_highlighted' => 'boolean',
             'highlight_message' => 'string|nullable|max:255',
             'waitlist_enabled' => 'boolean|nullable',
+            // Part du prix qui constitue un don, par unite. Bornee au prix
+            // lui-meme: au-dela, le recu depasserait la somme reellement recue.
+            'charity_amount' => ['nullable', ...RulesHelper::MONEY, 'lte:prices.0.price'],
         ];
     }
 
@@ -55,6 +58,7 @@ class UpsertProductRequest extends BaseRequest
             'prices.*.sale_end_date.date' => __('The sale end date must be a valid date.'),
             'prices.*.sale_start_date.after' => __('The sale start date must be after the product sale start date.'),
             'product_category_id.required' => __('You must select a product category.'),
+            'charity_amount.lte' => __('The donation portion cannot exceed the ticket price.'),
         ];
     }
 }

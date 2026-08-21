@@ -2,6 +2,8 @@
 
 namespace HiEvents\Resources\Order;
 
+use HiEvents\Resources\DonationReceipt\DonationReceiptResource;
+
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\Resources\Attendee\AttendeeResource;
 use HiEvents\Resources\BaseResource;
@@ -58,6 +60,10 @@ class OrderResource extends BaseResource
             'latest_invoice' => $this->when(
                 !is_null($this->getLatestInvoice()),
                 fn() => (new InvoiceResource($this->getLatestInvoice()))->toArray($request),
+            ),
+            'donation_receipt' => $this->when(
+                !is_null($this->getLatestDonationReceipt()),
+                fn() => (new DonationReceiptResource($this->getLatestDonationReceipt()))->toArray($request),
             ),
         ];
     }

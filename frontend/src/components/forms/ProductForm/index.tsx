@@ -37,6 +37,7 @@ import {NavLink, useParams} from "react-router";
 import {useEffect} from "react";
 import {CustomSelect, ItemProps} from "../../common/CustomSelect";
 import {formatCurrency, getCurrencySymbol} from "../../../utilites/currency.ts";
+import {useGetOrganizerSettings} from "../../../queries/useGetOrganizerSettings.ts";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {useGetTaxesAndFees} from "../../../queries/useGetTaxesAndFees.ts";
 import {Card} from "../../common/Card";
@@ -44,6 +45,7 @@ import classes from './ProductForm.module.scss';
 import {Fieldset} from "../../common/Fieldset";
 import {Editor} from "../../common/Editor";
 import {InputGroup} from "../../common/InputGroup";
+import {CharitySplitInput} from "./CharitySplitInput";
 import {showError} from "../../../utilites/notifications.tsx";
 import classNames from "classnames";
 import {InputLabelWithHelp} from "../../common/InputLabelWithHelp";
@@ -181,6 +183,12 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
     const isFreeProduct = form.values.type === 'FREE';
     const isDonationProduct = form.values.type === 'DONATION';
     const {data: event} = useGetEvent(eventId);
+    const {data: organizerSettings} = useGetOrganizerSettings(event?.organizer_id);
+    // Le volet don n'apparait que si l'organisme est enregistre: sans numero
+    // d'enregistrement, aucun recu ne sera emis, le champ n'aurait aucun effet.
+    const isCharityEnabled = !!organizerSettings?.charity_registration_number;
+    const showCharitySplit = isCharityEnabled && !isFreeProduct && !isDonationProduct
+        && form.values.type !== ProductPriceType.Tiered;
     const {data: taxesAndFees} = useGetTaxesAndFees();
 
     const handleTaxOrFeeCreated = (taxOrFee: TaxAndFee) => {
@@ -337,6 +345,10 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
                                  />}
                     />
                 </InputGroup>
+            )}
+
+            {showCharitySplit && (
+                <CharitySplitInput form={form} currency={event?.currency}/>
             )}
 
             {form.values.type === ProductPriceType.Tiered && (

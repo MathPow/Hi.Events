@@ -1,6 +1,6 @@
 import {t} from "@lingui/macro";
 import {Anchor, Button, Group, Menu, Popover, Text, Tooltip} from '@mantine/core';
-import {Event, IdParam, Invoice, MessageType, Order} from "../../../types.ts";
+import {DonationReceipt, Event, IdParam, Invoice, MessageType, Order} from "../../../types.ts";
 import {
     IconAlertCircle,
     IconBasketCog,
@@ -110,6 +110,29 @@ export const OrdersTable = ({orders, event}: OrdersTableProps) => {
         );
     };
 
+    const handleDonationReceiptDownload = async (receipt: DonationReceipt) => {
+        await withLoadingNotification(
+            async () => {
+                const blob = await orderClient.downloadDonationReceipt(event.id, receipt.order_id);
+                downloadBinary(blob, 'recu-' + receipt.receipt_number + '.pdf');
+            },
+            {
+                loading: {
+                    title: t`Downloading receipt`,
+                    message: t`Please wait while we prepare the tax receipt...`
+                },
+                success: {
+                    title: t`Success`,
+                    message: t`Tax receipt downloaded successfully`
+                },
+                error: {
+                    title: t`Error`,
+                    message: t`Failed to download the tax receipt. Please try again.`
+                }
+            }
+        );
+    };
+
     const handleCopyEmail = (email: string) => {
         clipboard.copy(email);
         showSuccess(t`Email address copied to clipboard`);
@@ -163,6 +186,11 @@ export const OrdersTable = ({orders, event}: OrdersTableProps) => {
                         {order.latest_invoice && (
                             <Menu.Item onClick={() => handleInvoiceDownload(order.latest_invoice as Invoice)}
                                        leftSection={<IconReceipt2 size={14}/>}>{t`Download invoice`}</Menu.Item>
+                        )}
+
+                        {order.donation_receipt && (
+                            <Menu.Item onClick={() => handleDonationReceiptDownload(order.donation_receipt as DonationReceipt)}
+                                       leftSection={<IconReceipt2 size={14}/>}>{t`Download tax receipt`}</Menu.Item>
                         )}
 
                         {order.status === 'AWAITING_OFFLINE_PAYMENT' && (

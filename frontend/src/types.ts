@@ -442,6 +442,11 @@ export interface OrganizerSettings {
     allow_search_engine_indexing?: boolean;
     tracking_pixels?: TrackingPixelConfig[];
     tracking_consent_acknowledged?: boolean;
+    charity_registration_number?: string | null;
+    charity_legal_name?: string | null;
+    charity_address?: string | null;
+    charity_signatory_name?: string | null;
+    charity_receipt_prefix?: string | null;
 }
 
 export interface TrackingPixelConfig {
@@ -559,6 +564,8 @@ export interface Product {
     is_highlighted?: boolean;
     highlight_message?: string;
     waitlist_enabled?: boolean | null;
+    /** Part du prix qui constitue un don, par unite. Alimente le recu officiel. */
+    charity_amount?: number | null;
     has_waiting_entries?: boolean;
     waitlist_entry_count?: number;
 }
@@ -665,7 +672,21 @@ export interface Order {
     question_answers?: QuestionAnswer[];
     event?: Event;
     latest_invoice?: Invoice;
+    donation_receipt?: DonationReceipt;
     session_identifier?: string;
+}
+
+export interface DonationReceipt {
+    id: IdParam;
+    order_id: IdParam;
+    receipt_number: string;
+    issue_date: string;
+    donation_date: string;
+    total_received: number;
+    advantage_amount: number;
+    eligible_amount: number;
+    currency: string;
+    status: 'ISSUED' | 'REPLACED';
 }
 
 export interface Invoice {

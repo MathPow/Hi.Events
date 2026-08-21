@@ -2,6 +2,8 @@
 
 namespace HiEvents\DomainObjects;
 
+use HiEvents\DomainObjects\Status\DonationReceiptStatus;
+
 use Exception;
 use HiEvents\DataTransferObjects\AddressDTO;
 use HiEvents\DomainObjects\Enums\PaymentProviders;
@@ -31,6 +33,8 @@ class OrderDomainObject extends Generated\OrderDomainObjectAbstract implements I
     public ?Collection $questionAndAnswerViews = null;
 
     public ?Collection $invoices = null;
+
+    public ?Collection $donationReceipts = null;
 
     public ?EventDomainObject $event = null;
 
@@ -268,6 +272,29 @@ class OrderDomainObject extends Generated\OrderDomainObjectAbstract implements I
     public function getInvoices(): ?Collection
     {
         return $this->invoices;
+    }
+
+    public function setDonationReceipts(?Collection $donationReceipts): OrderDomainObject
+    {
+        $this->donationReceipts = $donationReceipts;
+        return $this;
+    }
+
+    public function getDonationReceipts(): ?Collection
+    {
+        return $this->donationReceipts;
+    }
+
+    /**
+     * Seuls les recus ISSUED comptent: un recu remplace reste en base mais n'a
+     * plus de valeur, le presenter au telechargement serait une erreur.
+     */
+    public function getLatestDonationReceipt(): ?DonationReceiptDomainObject
+    {
+        return $this->getDonationReceipts()
+            ?->filter(fn(DonationReceiptDomainObject $receipt) => $receipt->getStatus() === DonationReceiptStatus::ISSUED->name)
+            ->sortByDesc(fn(DonationReceiptDomainObject $receipt) => $receipt->getId())
+            ->first();
     }
 
     public function setSessionIdentifier(?string $sessionIdentifier): OrderDomainObject

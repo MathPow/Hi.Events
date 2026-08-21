@@ -31,6 +31,11 @@ class OrganizerSettingsResource extends BaseResource
             'location_details' => $this->getLocationDetails(),
             'tracking_pixels' => $this->getTrackingPixels(),
             'tracking_consent_acknowledged' => $this->getTrackingConsentAcknowledged(),
+            'charity_registration_number' => $this->getCharityRegistrationNumber(),
+            'charity_legal_name' => $this->getCharityLegalName(),
+            'charity_address' => $this->getCharityAddress(),
+            'charity_signatory_name' => $this->getCharitySignatoryName(),
+            'charity_receipt_prefix' => $this->getCharityReceiptPrefix(),
         ];
     }
 }

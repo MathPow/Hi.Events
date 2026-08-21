@@ -19,6 +19,17 @@ class OrganizerSettingsPublicResource extends OrganizerSettingsResource
             $data['homepage_password'],
         );
 
+        // Reglages internes de l'organisme emetteur: ils n'ont aucun usage sur la
+        // page publique, et le nom du signataire est une donnee personnelle.
+        // Cette resource etend la privee, donc sans ce unset ils fuiteraient.
+        unset(
+            $data['charity_registration_number'],
+            $data['charity_legal_name'],
+            $data['charity_address'],
+            $data['charity_signatory_name'],
+            $data['charity_receipt_prefix'],
+        );
+
         if (config('app.saas_mode_enabled') && !empty($data['tracking_pixels'])) {
             $data['tracking_pixels'] = array_values(array_filter(
                 $data['tracking_pixels'],
