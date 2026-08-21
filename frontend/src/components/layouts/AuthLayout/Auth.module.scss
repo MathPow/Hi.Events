@@ -51,6 +51,22 @@
 }
 
 .logo {
+  /*
+    Cale a gauche, sur la MEME gouttiere que le formulaire (.wrapper, 480px).
+    On ne touche pas au `align-items: center` du conteneur: le basculer
+    decalerait aussi la carte de connexion. En donnant au logo la largeur du
+    formulaire et un `justify-content: flex-start`, son bord gauche tombe pile
+    sur celui de la carte.
+  */
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  justify-content: flex-start;
+
+  @include mixins.respond-below(sm) {
+    max-width: 100%;
+  }
+
   margin-bottom: 1.5rem;
 
   @include mixins.respond-below(md) {
