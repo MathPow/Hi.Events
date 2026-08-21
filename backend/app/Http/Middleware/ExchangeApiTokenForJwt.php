@@ -74,7 +74,11 @@ class ExchangeApiTokenForJwt
             'is_api_token' => true,
         ])->fromUser($user);
 
+        // Les deux sont necessaires. Reecrire l'en-tete ne suffit pas: le parser
+        // de jwt-auth memorise le jeton lu au premier acces et ne relit pas
+        // l'en-tete ensuite. setToken() l'impose au garde directement.
         $request->headers->set('Authorization', 'Bearer ' . $jwt);
+        auth('api')->setToken($jwt);
         $request->attributes->set('is_api_token_request', true);
 
         // Ecriture directe: passer par le modele declencherait les timestamps et
