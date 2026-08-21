@@ -11,8 +11,14 @@ return [
     'frontend_url' => env('APP_FRONTEND_URL', 'http://localhost'),
     'api_url' => env('APP_URL', 'https://localhost:8443'),
     'cnd_url' => env('APP_CDN_URL', '/storage'),
-    'default_timezone' => 'America/Vancouver',
-    'default_currency_code' => 'USD',
+    /*
+     * Defauts DEHORS: tout ce qui se cree sans devise ni fuseau explicite nait
+     * en dollars canadiens, heure de l'Est. Upstream posait 'America/Vancouver'
+     * et 'USD' en dur — un compte neuf serait donc parti en devise americaine.
+     * Passes par env() au passage: changer d'avis ne demandera plus un rebuild.
+     */
+    'default_timezone' => env('APP_DEFAULT_TIMEZONE', 'America/Toronto'),
+    'default_currency_code' => env('APP_DEFAULT_CURRENCY_CODE', 'CAD'),
     'saas_mode_enabled' => env('APP_SAAS_MODE_ENABLED', false),
     'saas_stripe_application_fee_percent' => env('APP_SAAS_STRIPE_APPLICATION_FEE_PERCENT', 1.5),
     'saas_stripe_application_fee_fixed' => env('APP_SAAS_STRIPE_APPLICATION_FEE_FIXED', 0),
