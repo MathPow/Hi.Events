@@ -184,6 +184,14 @@ export const orderClientPublic = {
         return new Blob([response.data]);
     },
 
+    setPlatformContribution: async (eventId: IdParam, orderShortId: IdParam, amount: number) => {
+        const response = await publicApi.patch<GenericDataResponse<Order>>(
+            `events/${eventId}/order/${orderShortId}/platform-contribution`,
+            {platform_contribution: amount},
+        );
+        return response.data;
+    },
+
     downloadDonationReceipt: async (eventId: IdParam, orderShortId: IdParam): Promise<Blob> => {
         const response = await publicApi.get(`events/${eventId}/order/${orderShortId}/donation-receipt`, {
             responseType: 'blob',

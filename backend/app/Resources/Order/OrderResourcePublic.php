@@ -23,6 +23,7 @@ class OrderResourcePublic extends BaseResource
             'total_before_additions' => $this->getTotalBeforeAdditions(),
             'total_tax' => $this->getTotalTax(),
             'total_gross' => $this->getTotalGross(),
+            'platform_contribution' => $this->getPlatformContribution(),
             'total_fee' => $this->getTotalFee(),
             'status' => $this->getStatus(),
             'refund_status' => $this->getRefundStatus(),

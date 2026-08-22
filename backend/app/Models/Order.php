@@ -59,6 +59,7 @@ class Order extends BaseModel
     protected function getCastMap(): array
     {
         return [
+            'platform_contribution' => 'float',
             'total_before_additions' => 'float',
             'total_tax' => 'float',
             'total_gross' => 'float',

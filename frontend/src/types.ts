@@ -23,7 +23,10 @@ export type ConfigKeys =
     | 'VITE_I_HAVE_PURCHASED_A_LICENCE'
     | 'VITE_DEFAULT_IMAGE_URL'
     | 'VITE_COOKIE_CONSENT_ENABLED'
-    | 'VITE_COOKIE_CONSENT_TEXT';
+    | 'VITE_COOKIE_CONSENT_TEXT'
+    | 'VITE_PLATFORM_SUPPORT_ENABLED'
+    | 'VITE_PLATFORM_SUPPORT_LABEL'
+    | 'VITE_PLATFORM_SUPPORT_DESCRIPTION';
 
 export enum StripePlatform {
     Canada = 'ca',
@@ -673,6 +676,7 @@ export interface Order {
     event?: Event;
     latest_invoice?: Invoice;
     donation_receipt?: DonationReceipt;
+    platform_contribution?: number;
     session_identifier?: string;
 }
 

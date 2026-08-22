@@ -18,6 +18,7 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     final public const TOTAL_BEFORE_ADDITIONS = 'total_before_additions';
     final public const TOTAL_REFUNDED = 'total_refunded';
     final public const TOTAL_GROSS = 'total_gross';
+    final public const PLATFORM_CONTRIBUTION = 'platform_contribution';
     final public const CURRENCY = 'currency';
     final public const FIRST_NAME = 'first_name';
     final public const LAST_NAME = 'last_name';
@@ -53,6 +54,7 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     protected float $total_before_additions = 0.0;
     protected float $total_refunded = 0.0;
     protected float $total_gross = 0.0;
+    protected float $platform_contribution = 0.0;
     protected string $currency;
     protected ?string $first_name = null;
     protected ?string $last_name = null;
@@ -91,6 +93,7 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
                     'total_before_additions' => $this->total_before_additions ?? null,
                     'total_refunded' => $this->total_refunded ?? null,
                     'total_gross' => $this->total_gross ?? null,
+                    'platform_contribution' => $this->platform_contribution ?? null,
                     'currency' => $this->currency ?? null,
                     'first_name' => $this->first_name ?? null,
                     'last_name' => $this->last_name ?? null,
@@ -492,5 +495,16 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     public function getOptedIntoMarketingAt(): ?string
     {
         return $this->opted_into_marketing_at;
+    }
+
+    public function setPlatformContribution(float $platform_contribution): self
+    {
+        $this->platform_contribution = $platform_contribution;
+        return $this;
+    }
+
+    public function getPlatformContribution(): float
+    {
+        return $this->platform_contribution;
     }
 }

@@ -23,6 +23,7 @@ class OrderResource extends BaseResource
             'short_id' => $this->getShortId(),
             'total_before_additions' => $this->getTotalBeforeAdditions(),
             'total_gross' => $this->getTotalGross(),
+            'platform_contribution' => $this->getPlatformContribution(),
             'total_tax' => $this->getTotalTax(),
             'total_fee' => $this->getTotalFee(),
             'total_refunded' => $this->getTotalRefunded(),

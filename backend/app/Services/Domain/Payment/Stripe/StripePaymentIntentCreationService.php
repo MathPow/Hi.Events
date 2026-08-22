@@ -4,6 +4,7 @@ namespace HiEvents\Services\Domain\Payment\Stripe;
 
 use HiEvents\DomainObjects\StripeCustomerDomainObject;
 use HiEvents\Exceptions\Stripe\CreatePaymentIntentFailedException;
+use HiEvents\Values\MoneyValue;
 use HiEvents\Repository\Interfaces\StripeCustomerRepositoryInterface;
 use HiEvents\Services\Domain\Order\DTO\ApplicationFeeValuesDTO;
 use HiEvents\Services\Domain\Order\OrderApplicationFeeCalculationService;
@@ -87,9 +88,7 @@ class StripePaymentIntentCreationService
                 // Une commission plateforme n'a de sens QUE sur une charge portee par
                 // un compte connecte. Sur le compte de la plateforme, l'encaissement est
                 // deja integralement le sien, et Stripe rejette la requete.
-                ...($applicationFee && !$bypassApplicationFees && $paymentIntentDTO->stripeAccountId !== null
-                    ? ['application_fee_amount' => $applicationFee->grossApplicationFee->toMinorUnit()]
-                    : []),
+                ...($this->applicationFeeAmount($paymentIntentDTO, $applicationFee, $bypassApplicationFees)),
             ], $this->getStripeAccountData($paymentIntentDTO));
 
             $this->logger->debug('Stripe payment intent created', [
@@ -236,5 +235,40 @@ class StripePaymentIntentCreationService
         }
 
         return $metaData;
+    }
+
+    /**
+     * Commission plateforme + contribution volontaire de l'acheteur.
+     *
+     * La contribution s'ajoute a la commission parce que, sur une charge directe
+     * portee par le compte connecte de l'organisateur, application_fee_amount est
+     * le seul canal qui ramene de l'argent a la plateforme.
+     *
+     * Sans compte connecte, la charge est deja sur le compte de la plateforme:
+     * l'argent y est, et Stripe refuse application_fee_amount dans ce cas.
+     */
+    private function applicationFeeAmount(
+        CreatePaymentIntentRequestDTO $paymentIntentDTO,
+        ?ApplicationFeeValuesDTO      $applicationFee,
+        bool                          $bypassApplicationFees
+    ): array
+    {
+        if ($paymentIntentDTO->stripeAccountId === null) {
+            return [];
+        }
+
+        $feeMinorUnit = ($applicationFee && !$bypassApplicationFees)
+            ? $applicationFee->grossApplicationFee->toMinorUnit()
+            : 0;
+
+        $contribution = $paymentIntentDTO->order->getPlatformContribution();
+
+        $contributionMinorUnit = $contribution > 0
+            ? MoneyValue::fromFloat($contribution, $paymentIntentDTO->currencyCode)->toMinorUnit()
+            : 0;
+
+        $total = $feeMinorUnit + $contributionMinorUnit;
+
+        return $total > 0 ? ['application_fee_amount' => $total] : [];
     }
 }

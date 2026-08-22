@@ -82,6 +82,11 @@ class OrderManagementService
             $totalGross += $item->getTotalGross();
         }
 
+        // La contribution n'est pas une ligne de commande: sans cette reinjection,
+        // le moindre recalcul (ajout d'un participant, traitement d'une liste
+        // d'attente) la ferait disparaitre du total facture.
+        $totalGross += $order->getPlatformContribution();
+
         $rollup = $this->taxAndFeeOrderRollupService->rollup($orderItems);
 
         $this->orderRepository->updateFromArray($order->getId(), [

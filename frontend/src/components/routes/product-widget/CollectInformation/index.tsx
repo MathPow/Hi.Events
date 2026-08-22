@@ -27,6 +27,7 @@ import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
 import {getConfig} from "../../../../utilites/config.ts";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
+import {PlatformSupportInput, platformSupportEnabled} from "../../../common/PlatformSupportInput";
 import {eventCheckoutPath, eventHomepagePath} from "../../../../utilites/urlHelper.ts";
 import {showInfo} from "../../../../utilites/notifications.tsx";
 import countries from "../../../../../data/countries.json";
@@ -213,6 +214,11 @@ export const CollectInformation = () => {
         }
     }, [form.values.order.first_name, form.values.order.last_name, form.values.order.email]);
 
+    // Doit etre applique AVANT finaliseOrder: le PaymentIntent est cree a l'etape
+    // suivante et n'est jamais recree ensuite, donc une contribution ajoutee plus
+    // tard ne serait pas debitee.
+    const [platformContribution, setPlatformContribution] = useState<number>(0);
+
     const mutation = useMutation({
         mutationFn: (orderData: FinaliseOrderPayload) => orderClientPublic.finaliseOrder(Number(eventId), String(orderShortId), orderData),
 
@@ -294,7 +300,19 @@ export const CollectInformation = () => {
         return formOrderQuestions;
     }
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = async (values: any) => {
+        if (platformSupportEnabled() && platformContribution > 0) {
+            try {
+                await orderClientPublic.setPlatformContribution(Number(eventId), String(orderShortId), platformContribution);
+            } catch {
+                // Une contribution facultative ne doit pas bloquer un achat: on
+                // poursuit sans elle plutot que de renvoyer l'acheteur a un echec.
+                notifications.show({
+                    message: t`Your contribution could not be applied, continuing without it.`,
+                });
+            }
+        }
+
         mutation.mutate(values);
     };
 
@@ -732,6 +750,13 @@ export const CollectInformation = () => {
                         <div dangerouslySetInnerHTML={{__html: event?.settings?.pre_checkout_message}}/>
                     </Card>
                 )}
+
+                <PlatformSupportInput
+                    value={platformContribution}
+                    onChange={setPlatformContribution}
+                    currency={event?.currency}
+                    disabled={mutation.isPending}
+                />
 
                 <div className={classes.checkoutActions}>
                     <Button
