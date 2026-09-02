@@ -1,6 +1,7 @@
 import {useLocation, useNavigate} from "react-router";
 import {ActionIcon, Anchor} from '@mantine/core';
 import {EventCard} from './EventCard';
+import {AccentBlobs} from '../../common/AccentBlobs';
 import classes from './OrganizerHomepage.module.scss';
 import React, {useEffect, useState} from 'react';
 import {Event, GenericPaginatedResponse, Organizer} from "../../../types.ts";
@@ -155,6 +156,7 @@ export const OrganizerHomepage = ({
                         '--overlay-color': themeSettings.background
                     } as React.CSSProperties : undefined}
                 />
+                <AccentBlobs accentColor={themeSettings.accent} mode={themeSettings.mode}/>
 
                 <div className={classes.container}>
                     <div className={classes.wrapper}>

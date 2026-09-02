@@ -1,0 +1,80 @@
+.blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  // Un radial-gradient est deja diffus: pas besoin de `filter: blur()`, qui
+  // coute cher a repeindre sur mobile pour un rendu equivalent.
+  background: radial-gradient(circle at center, var(--blob-accent) 0%, transparent 70%);
+  opacity: 0.1;
+  will-change: transform;
+}
+
+.blobs[data-mode="dark"] .blob {
+  opacity: 0.16;
+}
+
+.blobA {
+  width: 70vmax;
+  height: 70vmax;
+  top: -22vmax;
+  left: -16vmax;
+  animation: driftA 34s ease-in-out infinite alternate;
+}
+
+.blobB {
+  width: 55vmax;
+  height: 55vmax;
+  bottom: -18vmax;
+  right: -12vmax;
+  animation: driftB 43s ease-in-out infinite alternate;
+}
+
+.blobC {
+  width: 45vmax;
+  height: 45vmax;
+  top: 38%;
+  right: 18%;
+  animation: driftC 28s ease-in-out infinite alternate;
+}
+
+// Des durees premieres entre elles: les trois taches ne se resynchronisent
+// jamais, le mouvement ne laisse pas deviner de boucle.
+@keyframes driftA {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(22vmax, 14vmax, 0) scale(1.25);
+  }
+}
+
+@keyframes driftB {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+  to {
+    transform: translate3d(-20vmax, -12vmax, 0) scale(0.86);
+  }
+}
+
+@keyframes driftC {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.96);
+  }
+  to {
+    transform: translate3d(-18vmax, 17vmax, 0) scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none;
+  }
+}

@@ -3,6 +3,7 @@ import SelectProducts from "../../routes/product-widget/SelectProducts";
 import "../../../styles/widget/default.scss";
 import React, {useEffect, useRef, useState} from "react";
 import {EventDocumentHead} from "../../common/EventDocumentHead";
+import {AccentBlobs} from "../../common/AccentBlobs";
 import {eventCoverImage, eventHomepageUrl, imageUrl, organizerHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {Event, OrganizerStatus} from "../../../types.ts";
 import {EventNotAvailable} from "./EventNotAvailable";
@@ -228,6 +229,7 @@ const EventHomepage = ({...loaderData}: EventHomepageProps) => {
                         '--overlay-color': themeSettings.background
                     } as React.CSSProperties : undefined}
                 />
+                <AccentBlobs accentColor={themeSettings.accent} mode={themeSettings.mode}/>
 
                 <div className={classes.container}>
                     <div className={classes.wrapper}>
