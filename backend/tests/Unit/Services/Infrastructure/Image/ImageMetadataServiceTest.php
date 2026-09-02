@@ -54,6 +54,26 @@ class ImageMetadataServiceTest extends TestCase
         unlink($testImagePath);
     }
 
+    public function testExtractMetadataOfAnAnimatedGifDescribesItsFirstFrame(): void
+    {
+        if (!extension_loaded('imagick')) {
+            $this->markTestSkipped('This test requires Imagick to be installed');
+        }
+
+        $testImagePath = $this->createAnimatedGif();
+        $uploadedFile = new UploadedFile($testImagePath, 'test.gif', 'image/gif', null, true);
+
+        $result = $this->service->extractMetadata($uploadedFile);
+
+        $this->assertNotNull($result);
+        $this->assertEquals(120, $result->width);
+        $this->assertEquals(80, $result->height);
+        $this->assertEquals('#ff5500', strtolower($result->avg_colour));
+        $this->assertStringStartsWith('data:image/webp;base64,', $result->lqip_base64);
+
+        unlink($testImagePath);
+    }
+
     public function testExtractMetadataLogsWarningOnFailure(): void
     {
         if (!extension_loaded('imagick')) {
@@ -82,6 +102,25 @@ class ImageMetadataServiceTest extends TestCase
 
         $tempPath = sys_get_temp_dir() . '/test_image_' . uniqid() . '.png';
         $imagick->writeImage($tempPath);
+        $imagick->destroy();
+
+        return $tempPath;
+    }
+
+    private function createAnimatedGif(): string
+    {
+        $imagick = new \Imagick();
+
+        foreach (['#ff5500', '#0055ff', '#00ff55'] as $colour) {
+            $frame = new \Imagick();
+            $frame->newImage(120, 80, $colour);
+            $frame->setImageFormat('gif');
+            $frame->setImageDelay(10);
+            $imagick->addImage($frame);
+        }
+
+        $tempPath = sys_get_temp_dir() . '/test_animated_' . uniqid() . '.gif';
+        $imagick->writeImages($tempPath, true);
         $imagick->destroy();
 
         return $tempPath;

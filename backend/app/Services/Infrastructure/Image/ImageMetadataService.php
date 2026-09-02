@@ -24,7 +24,11 @@ class ImageMetadataService
         }
 
         try {
-            $imagick = new Imagick($image->getRealPath());
+            $imagick = new Imagick();
+            // `[0]` ne decode que la premiere frame. Les metadonnees ne
+            // regardent qu'elle, et decoder un GIF anime en entier coute des
+            // secondes sur l'upload (150 frames en 1600x1200: 4s contre 0.02s).
+            $imagick->readImage($image->getRealPath() . '[0]');
 
             $width = $imagick->getImageWidth();
             $height = $imagick->getImageHeight();

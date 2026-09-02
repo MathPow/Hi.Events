@@ -22,7 +22,7 @@ class CreateImageRequest extends FormRequest
                 'image',
                 'max:8192', //8mb
                 'dimensions:min_width=' . $minWidth . ',min_height=' . $minHeight . ',max_width=4000,max_height=4000',
-                'mimes:jpeg,png,jpg,webp',
+                'mimes:jpeg,png,jpg,webp,gif',
             ],
             'image_type' => [
                 Rule::in(ImageType::valuesArray()),
