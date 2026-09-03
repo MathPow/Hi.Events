@@ -52,6 +52,11 @@ class Account extends BaseModel
         return $this->hasOne(AccountVatSetting::class);
     }
 
+    public function account_square_credential(): HasOne
+    {
+        return $this->hasOne(AccountSquareCredential::class);
+    }
+
     public function messagingTier(): BelongsTo
     {
         return $this->belongsTo(AccountMessagingTier::class, 'account_messaging_tier_id');

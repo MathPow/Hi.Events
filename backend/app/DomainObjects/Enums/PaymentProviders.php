@@ -7,5 +7,6 @@ enum PaymentProviders: string
     use BaseEnum;
 
     case STRIPE = 'STRIPE';
+    case SQUARE = 'SQUARE';
     case OFFLINE = 'OFFLINE';
 }

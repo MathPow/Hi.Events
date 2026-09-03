@@ -15,6 +15,8 @@ class AccountDomainObject extends Generated\AccountDomainObjectAbstract
 
     private ?AccountVatSettingDomainObject $accountVatSetting = null;
 
+    private ?AccountSquareCredentialDomainObject $squareCredential = null;
+
     private ?AccountMessagingTierDomainObject $messagingTier = null;
 
     public function getApplicationFee(): AccountApplicationFeeDTO
@@ -51,6 +53,26 @@ class AccountDomainObject extends Generated\AccountDomainObjectAbstract
     public function getAccountVatSetting(): ?AccountVatSettingDomainObject
     {
         return $this->accountVatSetting;
+    }
+
+    public function getAccountSquareCredential(): ?AccountSquareCredentialDomainObject
+    {
+        return $this->squareCredential;
+    }
+
+    public function setAccountSquareCredential(?AccountSquareCredentialDomainObject $squareCredential): void
+    {
+        $this->squareCredential = $squareCredential;
+    }
+
+    /**
+     * Square est utilisable seulement si le marchand a termine l'autorisation
+     * OAuth ET choisi un point de vente: sans location_id, l'API Payments
+     * refuse toute transaction.
+     */
+    public function isSquareSetupComplete(): bool
+    {
+        return $this->squareCredential?->isSetupComplete() === true;
     }
 
     public function setAccountVatSetting(AccountVatSettingDomainObject $accountVatSetting): void

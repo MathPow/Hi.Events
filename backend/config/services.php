@@ -31,6 +31,25 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'square' => [
+        // Identifiants de l'application Square (Developer Dashboard > Credentials).
+        // L'application est celle de la PLATEFORME: chaque organisateur y branche
+        // ensuite son propre compte marchand via OAuth.
+        'application_id' => env('SQUARE_APPLICATION_ID'),
+        'application_secret' => env('SQUARE_APPLICATION_SECRET'),
+        'webhook_signature_key' => env('SQUARE_WEBHOOK_SIGNATURE_KEY'),
+        // 'sandbox' ou 'production'. Determine l'URL de l'API ET celle du SDK
+        // Web Payments servi au navigateur.
+        'environment' => env('SQUARE_ENVIRONMENT', 'production'),
+        // Version d'API epinglee: Square fait evoluer ses reponses et une version
+        // flottante casserait le parsing sans previsibilite.
+        'api_version' => env('SQUARE_API_VERSION', '2025-01-23'),
+        // Repli mono-compte (installation open source sans OAuth): jeton d'acces
+        // et point de vente d'un seul marchand.
+        'access_token' => env('SQUARE_ACCESS_TOKEN'),
+        'location_id' => env('SQUARE_LOCATION_ID'),
+    ],
+
     'stripe' => [
         'secret_key' => env('STRIPE_SECRET_KEY'),
         'public_key' => env('STRIPE_PUBLIC_KEY'),
