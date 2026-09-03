@@ -18,6 +18,7 @@ import {isHiEvents} from "../../../../../../utilites/helpers.ts";
 import {VatSettings} from './VatSettings';
 import {VatSettingsModal} from './VatSettings/VatSettingsModal.tsx';
 import {VatNotice, getVatInfo} from './VatNotice';
+import {SquareSettings} from './SquareSettings';
 import {useGetAccountVatSetting} from '../../../../../../queries/useGetAccountVatSetting.ts';
 import {trackEvent, AnalyticsEvents} from "../../../../../../utilites/analytics.ts";
 
@@ -841,6 +842,9 @@ const PaymentSettings = () => {
                                     }
                                 />
                             )}
+                        </Grid.Col>
+                        <Grid.Col span={{base: 12}}>
+                            <SquareSettings accountId={accountQuery.data.id}/>
                         </Grid.Col>
                         {isHiEvents() && (
                             <Grid.Col span={{base: 12}}>

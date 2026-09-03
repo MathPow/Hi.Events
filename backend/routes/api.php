@@ -2,6 +2,11 @@
 
 use HiEvents\Http\Actions\Accounts\CreateAccountAction;
 use HiEvents\Http\Actions\Accounts\GetAccountAction;
+use HiEvents\Http\Actions\Accounts\Square\CompleteSquareAuthorizationAction;
+use HiEvents\Http\Actions\Accounts\Square\CreateSquareAuthorizationUrlAction;
+use HiEvents\Http\Actions\Accounts\Square\DisconnectSquareAction;
+use HiEvents\Http\Actions\Accounts\Square\GetSquareConnectionAction;
+use HiEvents\Http\Actions\Accounts\Square\UpdateSquareLocationAction;
 use HiEvents\Http\Actions\Accounts\Stripe\CreateStripeConnectAccountAction;
 use HiEvents\Http\Actions\Accounts\Stripe\GetStripeConnectAccountsAction;
 use HiEvents\Http\Actions\Accounts\UpdateAccountAction;
@@ -289,6 +294,13 @@ $router->middleware(['auth:api'])->group(
         $router->put('/accounts/{account_id?}', UpdateAccountAction::class);
         $router->get('/accounts/{account_id}/stripe/connect_accounts', GetStripeConnectAccountsAction::class);
         $router->post('/accounts/{account_id}/stripe/connect', CreateStripeConnectAccountAction::class);
+
+        // Square: autorisation OAuth du compte marchand, puis choix du point de vente
+        $router->get('/accounts/{account_id}/square', GetSquareConnectionAction::class);
+        $router->post('/accounts/{account_id}/square/authorize', CreateSquareAuthorizationUrlAction::class);
+        $router->post('/accounts/{account_id}/square/connect', CompleteSquareAuthorizationAction::class);
+        $router->put('/accounts/{account_id}/square/location', UpdateSquareLocationAction::class);
+        $router->delete('/accounts/{account_id}/square', DisconnectSquareAction::class);
 
         // VAT Settings
         $router->get('/accounts/{account_id}/vat-settings', GetAccountVatSettingAction::class);
