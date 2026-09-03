@@ -12,12 +12,12 @@
   // Un radial-gradient est deja diffus: pas besoin de `filter: blur()`, qui
   // coute cher a repeindre sur mobile pour un rendu equivalent.
   background: radial-gradient(circle at center, var(--blob-accent) 0%, transparent 70%);
-  opacity: 0.1;
+  opacity: 0.3;
   will-change: transform;
 }
 
 .blobs[data-mode="dark"] .blob {
-  opacity: 0.16;
+  opacity: 0.38;
 }
 
 .blobA {
@@ -25,7 +25,7 @@
   height: 70vmax;
   top: -22vmax;
   left: -16vmax;
-  animation: driftA 34s ease-in-out infinite alternate;
+  animation: driftA 16s ease-in-out infinite alternate;
 }
 
 .blobB {
@@ -33,7 +33,7 @@
   height: 55vmax;
   bottom: -18vmax;
   right: -12vmax;
-  animation: driftB 43s ease-in-out infinite alternate;
+  animation: driftB 21s ease-in-out infinite alternate;
 }
 
 .blobC {
@@ -41,7 +41,7 @@
   height: 45vmax;
   top: 38%;
   right: 18%;
-  animation: driftC 28s ease-in-out infinite alternate;
+  animation: driftC 13s ease-in-out infinite alternate;
 }
 
 // Des durees premieres entre elles: les trois taches ne se resynchronisent
