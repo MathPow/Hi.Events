@@ -6,6 +6,7 @@ namespace HiEvents\Providers;
 
 use HiEvents\Repository\Eloquent\AccountAttributionRepository;
 use HiEvents\Repository\Eloquent\AccountConfigurationRepository;
+use HiEvents\Repository\Eloquent\AccountRegistrationInviteRepository;
 use HiEvents\Repository\Eloquent\AccountMessagingTierRepository;
 use HiEvents\Repository\Eloquent\AccountRepository;
 use HiEvents\Repository\Eloquent\AccountStripePlatformRepository;
@@ -54,6 +55,7 @@ use HiEvents\Repository\Eloquent\WebhookLogRepository;
 use HiEvents\Repository\Eloquent\WebhookRepository;
 use HiEvents\Repository\Interfaces\AccountAttributionRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountConfigurationRepositoryInterface;
+use HiEvents\Repository\Interfaces\AccountRegistrationInviteRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountMessagingTierRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountStripePlatformRepositoryInterface;
@@ -147,6 +149,7 @@ class RepositoryServiceProvider extends ServiceProvider
         OrderPaymentPlatformFeeRepositoryInterface::class => OrderPaymentPlatformFeeRepository::class,
         StripePayoutsRepositoryInterface::class => StripePayoutsRepository::class,
         AccountConfigurationRepositoryInterface::class => AccountConfigurationRepository::class,
+        AccountRegistrationInviteRepositoryInterface::class => AccountRegistrationInviteRepository::class,
         QuestionAndAnswerViewRepositoryInterface::class => QuestionAndAnswerViewRepository::class,
         OutgoingMessageRepositoryInterface::class => OutgoingMessageRepository::class,
         OrganizerSettingsRepositoryInterface::class => OrganizerSettingsRepository::class,

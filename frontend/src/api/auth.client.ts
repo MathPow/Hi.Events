@@ -8,6 +8,11 @@ import {
 } from "../types.ts";
 import {api} from './client.ts';
 
+export interface RegistrationInviteDetails {
+    email: string | null;
+    expires_at: string | null;
+}
+
 export const authClient = {
     refreshAccessTokenFn: async () => {
         const response = await api.get<LoginResponse>('auth/refresh');
@@ -31,6 +36,13 @@ export const authClient = {
 
     forgotPassword: async (email: { email: string }) => {
         const response = await api.post('auth/forgot-password', email);
+        return response.data;
+    },
+
+    getRegistrationInvite: async (token: string) => {
+        const response = await api.get<GenericDataResponse<RegistrationInviteDetails>>(
+            `auth/registration-invite/${token}`
+        );
         return response.data;
     },
 

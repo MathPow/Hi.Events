@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace HiEvents\Services\Application\Handlers\Account;
 
 use HiEvents\DomainObjects\AccountDomainObject;
+use HiEvents\DomainObjects\AccountRegistrationInviteDomainObject;
 use HiEvents\DomainObjects\Enums\Role;
 use HiEvents\DomainObjects\Status\UserStatus;
 use HiEvents\DomainObjects\UserDomainObject;
 use HiEvents\Exceptions\EmailAlreadyExists;
+use HiEvents\Exceptions\InvalidRegistrationInviteException;
 use HiEvents\Helper\IdHelper;
 use HiEvents\Repository\Interfaces\AccountAttributionRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountConfigurationRepositoryInterface;
@@ -18,6 +20,7 @@ use HiEvents\Repository\Interfaces\UserRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Account\DTO\CreateAccountDTO;
 use HiEvents\Services\Application\Handlers\Account\Exceptions\AccountConfigurationDoesNotExist;
 use HiEvents\Services\Application\Handlers\Account\Exceptions\AccountRegistrationDisabledException;
+use HiEvents\Services\Domain\Account\AccountRegistrationInviteService;
 use HiEvents\Services\Domain\Account\AccountUserAssociationService;
 use HiEvents\Services\Domain\User\EmailConfirmationService;
 use Illuminate\Config\Repository;
@@ -40,6 +43,7 @@ class CreateAccountHandler
         private readonly AccountUserRepositoryInterface          $accountUserRepository,
         private readonly AccountConfigurationRepositoryInterface $accountConfigurationRepository,
         private readonly AccountAttributionRepositoryInterface   $accountAttributionRepository,
+        private readonly AccountRegistrationInviteService        $registrationInviteService,
         private readonly LoggerInterface                         $logger,
     )
     {
@@ -50,14 +54,16 @@ class CreateAccountHandler
      */
     public function handle(CreateAccountDTO $accountData): AccountDomainObject
     {
-        if ($this->config->get('app.disable_registration')) {
+        $registrationInvite = $this->resolveRegistrationInvite($accountData);
+
+        if ($registrationInvite === null && $this->config->get('app.disable_registration')) {
             throw new AccountRegistrationDisabledException();
         }
 
         $isSaasMode = $this->config->get('app.saas_mode_enabled');
         $passwordHash = $this->hashManager->make($accountData->password);;
 
-        return $this->databaseManager->transaction(function () use ($isSaasMode, $passwordHash, $accountData) {
+        return $this->databaseManager->transaction(function () use ($registrationInvite, $isSaasMode, $passwordHash, $accountData) {
             $account = $this->accountRepository->create([
                 'timezone' => $this->getTimezone($accountData),
                 'currency_code' => $this->getCurrencyCode($accountData),
@@ -105,10 +111,36 @@ class CreateAccountHandler
                 ]);
             }
 
+            if ($registrationInvite !== null) {
+                $this->registrationInviteService->consume($registrationInvite, $account->getId());
+            }
+
             $this->emailConfirmationService->sendConfirmation($user, $account->getId());
 
             return $account;
         });
+    }
+
+    /**
+     * Une invitation valide ouvre l'inscription meme quand elle est fermee au
+     * public. Elle n'est consommee qu'une fois le compte cree, dans la meme
+     * transaction: un echec en aval rend le lien a son proprietaire.
+     *
+     * @throws InvalidRegistrationInviteException
+     */
+    private function resolveRegistrationInvite(CreateAccountDTO $accountData): ?AccountRegistrationInviteDomainObject
+    {
+        $token = trim((string)$accountData->registration_token);
+
+        if ($token === '') {
+            return null;
+        }
+
+        $invite = $this->registrationInviteService->findUsableByToken($token);
+
+        $this->registrationInviteService->assertUsableForEmail($invite, $accountData->email);
+
+        return $invite;
     }
 
     private function getTimezone(CreateAccountDTO $accountData): ?string

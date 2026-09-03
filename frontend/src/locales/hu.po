@@ -805,6 +805,10 @@ msgstr "Válasz sikeresen frissítve."
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "A terméktulajdonosoktól érkező bármilyen kérdés erre az e-mail címre kerül elküldésre. Ez lesz az „válasz” cím is az eseményről küldött összes e-mailhez."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "Bárki, akinek megvan a link"
+
 #: src/components/common/WidgetEditor/index.tsx:216
 msgid "Appearance"
 msgstr "Megjelenés"
@@ -2171,6 +2175,10 @@ msgstr "Link másolása"
 msgid "Copy my details to:"
 msgstr "Adataim másolása:"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "Másold ki most ezt a linket. Nem tároljuk, és nem jeleníthető meg újra."
+
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
 msgstr "Másolja ezt a linket a megosztáshoz bárhol"
@@ -2312,6 +2320,12 @@ msgstr "Kedvezmények, hozzáférési kódok rejtett jegyekhez és különleges 
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:257
 msgid "Create Event"
 msgstr "Esemény létrehozása"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "Meghívó létrehozása"
 
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
@@ -2891,6 +2905,10 @@ msgstr "pl. Fontos frissítés a jegyeiről"
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "pl. Alap, Prémium, Vállalati"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "Minden link egyetlen fiókot hoz létre, utána megszűnik működni — akkor is, ha a nyilvános regisztráció zárva van. A link csak egyszer, a létrehozáskor jelenik meg."
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3591,6 +3609,10 @@ msgstr "Lejárt"
 msgid "Expires"
 msgstr "Lejár"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "Lejár ennyi nap után"
+
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
 msgstr "Lejárati dátum"
@@ -3790,6 +3812,10 @@ msgstr "A feladat újrapróbálása sikertelen"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "A feladatok újrapróbálása sikertelen"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "A meghívó visszavonása nem sikerült"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4610,13 +4636,29 @@ msgstr "Érvénytelen Liquid szintaxis. Kérjük, javítsa ki és próbálja új
 msgid "Invalid VAT number format"
 msgstr "Érvénytelen ÁFA szám formátum"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "Meghívó linkje"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "Meghívó újraküldve!"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "Meghívó visszavonva"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "Meghívó visszavonva!"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "A meghívó nem érhető el"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "Meghívók"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4853,6 +4895,10 @@ msgstr "Utoljára használva"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:191
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Hagyja üresen az alapértelmezett „Számla” szó használatához"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Hagyd üresen, ha a link soha ne járjon le."
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -5426,6 +5472,10 @@ msgstr "Nincsenek elérhető szűrők"
 msgid "No impact on your current or past transactions"
 msgstr "Nincs hatása a jelenlegi vagy múltbeli tranzakciókra"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "Még nincs meghívó"
+
 #: src/components/common/OrdersTable/index.tsx:306
 msgid "No invoice"
 msgstr "Nincs számla"
@@ -5628,6 +5678,10 @@ msgstr "Nincs bejelentkezve"
 msgid "Not Eligible"
 msgstr "Nem jogosult"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "Megjegyzés"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5773,6 +5827,10 @@ msgstr "Online esemény"
 msgid "Online Event Details"
 msgstr "Online esemény részletei"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "Ezt a linket csak {0} használhatja."
+
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:73
 msgid "Only account administrators can delete or archive events. Contact your account admin for assistance."
 msgstr "Csak a fiókadminisztrátorok törölhetnek vagy archiválhatnak eseményeket. Segítségért forduljon a fiókadminisztrátorhoz."
@@ -5823,6 +5881,14 @@ msgstr "Opcionális előtag a számlaszámokhoz (pl. INV-)"
 #: src/components/routes/event/TicketDesigner/index.tsx:165
 msgid "Optional text for disclaimers, contact info, or thank you notes (single line only)"
 msgstr "Opcionális szöveg jogi nyilatkozatokhoz, kapcsolattartási információkhoz vagy köszönetnyilvánításhoz (csak egy sor)"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "Nem kötelező. Csak te látod, hogy később felismerd a meghívót."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "Nem kötelező. Ha megadod, csak ez a cím használhatja a linket."
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6978,6 +7044,10 @@ msgstr "Hely újbóli felajánlása"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "Készen áll a frissítésre? Ez csak néhány percet vesz igénybe."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "Használatra kész"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "Valós idejű elemzések"
@@ -7106,6 +7176,10 @@ msgstr "Regionális beállítások"
 #: src/components/routes/auth/Register/index.tsx:137
 msgid "Register"
 msgstr "Regisztráció"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "Regisztrációs meghívók"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7290,6 +7364,14 @@ msgstr "Meghívó visszavonása"
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "Ajánlat visszavonása"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "Visszavonod ezt a meghívót? A link azonnal használhatatlanná válik."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "Visszavonva"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -8729,6 +8811,14 @@ msgstr "Ez az esemény még nem került közzétételre."
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Ez az információ megjelenik a fizetési oldalon, a megrendelés összefoglaló oldalán és a megrendelés visszaigazoló e-mailben."
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "Ez a meghívó ehhez a címhez van kötve."
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "Ez a meghívó link már nem érvényes. Kérj újat."
+
 #: src/components/forms/ProductForm/index.tsx:147
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "Ez egy általános termék, mint egy póló vagy egy bögre. Nem kerül jegy kiállításra."
@@ -9422,6 +9512,11 @@ msgstr "Rendelési adatok használata minden résztvevőhöz. A résztvevők nev
 msgid "Use the buyer's details for all attendees"
 msgstr "Vásárló adatainak használata minden résztvevőhöz"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "Felhasználva"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Határok, kiemelések és QR kód stílusához használva"
@@ -10055,6 +10150,10 @@ msgstr "Mely jegyeket kell ehhez a bejelentkezési listához társítani?"
 #: src/components/modals/CreateEventModal/index.tsx:154
 msgid "Who is organizing this event?"
 msgstr "Ki szervezi ezt az eseményt?"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "Kinek szól?"
 
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"

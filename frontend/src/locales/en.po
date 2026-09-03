@@ -805,6 +805,10 @@ msgstr "Answer updated successfully."
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "Anyone with the link"
+
 #: src/components/common/WidgetEditor/index.tsx:216
 msgid "Appearance"
 msgstr "Appearance"
@@ -2171,6 +2175,10 @@ msgstr "Copy Link"
 msgid "Copy my details to:"
 msgstr "Copy my details to:"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "Copy this link now. It is not stored and cannot be shown again."
+
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
 msgstr "Copy this link to share it anywhere"
@@ -2312,6 +2320,12 @@ msgstr "Create discounts, access codes for hidden tickets, and special offers."
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:257
 msgid "Create Event"
 msgstr "Create Event"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "Create invitation"
 
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
@@ -2891,6 +2905,10 @@ msgstr "e.g., Important update about your tickets"
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "e.g., Standard, Premium, Enterprise"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3591,6 +3609,10 @@ msgstr "Expired"
 msgid "Expires"
 msgstr "Expires"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "Expires after (days)"
+
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
 msgstr "Expiry Date"
@@ -3790,6 +3812,10 @@ msgstr "Failed to retry job"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "Failed to retry jobs"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "Failed to revoke the invitation"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4610,13 +4636,29 @@ msgstr "Invalid Liquid syntax. Please correct it and try again."
 msgid "Invalid VAT number format"
 msgstr "Invalid VAT number format"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "Invitation link"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "Invitation resent!"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "Invitation revoked"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "Invitation revoked!"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "Invitation unavailable"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "Invitations"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4853,6 +4895,10 @@ msgstr "Last Used"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:191
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Leave blank to use the default word \"Invoice\""
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Leave empty for a link that never expires."
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -5426,6 +5472,10 @@ msgstr "No filters available"
 msgid "No impact on your current or past transactions"
 msgstr "No impact on your current or past transactions"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "No invitations yet"
+
 #: src/components/common/OrdersTable/index.tsx:306
 msgid "No invoice"
 msgstr "No invoice"
@@ -5628,6 +5678,10 @@ msgstr "Not Checked In"
 msgid "Not Eligible"
 msgstr "Not Eligible"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "Note"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5773,6 +5827,10 @@ msgstr "Online Event"
 msgid "Online Event Details"
 msgstr "Online Event Details"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "Only {0} can use this link."
+
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:73
 msgid "Only account administrators can delete or archive events. Contact your account admin for assistance."
 msgstr "Only account administrators can delete or archive events. Contact your account admin for assistance."
@@ -5823,6 +5881,14 @@ msgstr "Optional prefix for invoice numbers (e.g., INV-)"
 #: src/components/routes/event/TicketDesigner/index.tsx:165
 msgid "Optional text for disclaimers, contact info, or thank you notes (single line only)"
 msgstr "Optional text for disclaimers, contact info, or thank you notes (single line only)"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "Optional. Only visible to you, to recognise the invitation later."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "Optional. When set, only this address can use the link."
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6978,6 +7044,10 @@ msgstr "Re-offer Spot"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "Ready to upgrade? This takes only a few minutes."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "Ready to use"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "Real-Time Analytics"
@@ -7106,6 +7176,10 @@ msgstr "Regional Settings"
 #: src/components/routes/auth/Register/index.tsx:137
 msgid "Register"
 msgstr "Register"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "Registration Invitations"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7290,6 +7364,14 @@ msgstr "Revoke invitation"
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "Revoke Offer"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "Revoke this invitation? The link will stop working immediately."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "Revoked"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -8729,6 +8811,14 @@ msgstr "This event is not published yet"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "This information will be shown on the payment page, order summary page, and order confirmation email."
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "This invitation is tied to this address."
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "This invitation link is no longer valid. Ask for a new one."
+
 #: src/components/forms/ProductForm/index.tsx:147
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "This is a general product, like a t-shirt or a mug. No ticket will be issued"
@@ -9422,6 +9512,11 @@ msgstr "Use order details for all attendees. Attendee names and emails will matc
 msgid "Use the buyer's details for all attendees"
 msgstr "Use the buyer's details for all attendees"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "Used"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Used for borders, highlights, and QR code styling"
@@ -10055,6 +10150,10 @@ msgstr "Which tickets should be associated with this check-in list?"
 #: src/components/modals/CreateEventModal/index.tsx:154
 msgid "Who is organizing this event?"
 msgstr "Who is organizing this event?"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "Who is this for?"
 
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"

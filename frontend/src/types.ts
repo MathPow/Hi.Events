@@ -47,6 +47,7 @@ export interface AcceptInvitationRequest {
 
 export interface RegisterAccountRequest extends AcceptInvitationRequest {
     locale: SupportedLocales;
+    registration_token?: string | null;
     utm_source?: string | null;
     utm_medium?: string | null;
     utm_campaign?: string | null;

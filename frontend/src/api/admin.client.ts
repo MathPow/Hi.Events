@@ -44,6 +44,33 @@ export interface AdminAccount {
     };
 }
 
+export type RegistrationInviteStatus = 'PENDING' | 'USED' | 'EXPIRED' | 'REVOKED';
+
+export interface RegistrationInvite {
+    id: number;
+    email: string | null;
+    label: string | null;
+    expires_at: string | null;
+    used_at: string | null;
+    revoked_at: string | null;
+    used_by_account_id: number | null;
+    created_at: string;
+    status: RegistrationInviteStatus;
+}
+
+/**
+ * Le lien complet n'est renvoye qu'a la creation: seul son hash est conserve.
+ */
+export interface CreatedRegistrationInvite extends RegistrationInvite {
+    registration_url: string;
+}
+
+export interface CreateRegistrationInviteData {
+    email?: string | null;
+    label?: string | null;
+    expires_in_days?: number | null;
+}
+
 export interface AccountConfiguration {
     id: number;
     name: string;
@@ -458,6 +485,26 @@ export const adminClient = {
             `admin/accounts/${accountId}/configuration`,
             data
         );
+        return response.data;
+    },
+
+    getRegistrationInvites: async () => {
+        const response = await api.get<GenericDataResponse<RegistrationInvite[]>>(
+            'admin/registration-invites'
+        );
+        return response.data;
+    },
+
+    createRegistrationInvite: async (data: CreateRegistrationInviteData) => {
+        const response = await api.post<GenericDataResponse<CreatedRegistrationInvite>>(
+            'admin/registration-invites',
+            data
+        );
+        return response.data;
+    },
+
+    revokeRegistrationInvite: async (inviteId: IdParam) => {
+        const response = await api.delete(`admin/registration-invites/${inviteId}`);
         return response.data;
     },
 

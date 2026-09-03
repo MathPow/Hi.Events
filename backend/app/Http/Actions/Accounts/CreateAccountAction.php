@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HiEvents\Http\Actions\Accounts;
 
 use HiEvents\Exceptions\EmailAlreadyExists;
+use HiEvents\Exceptions\InvalidRegistrationInviteException;
 use HiEvents\Exceptions\UnauthorizedException;
 use HiEvents\Http\Actions\Auth\BaseAuthAction;
 use HiEvents\Http\Request\Account\CreateAccountRequest;
@@ -50,6 +51,7 @@ class CreateAccountAction extends BaseAuthAction
                     ? $request->validated('locale')
                     : $this->localeService->getLocaleOrDefault($request->getPreferredLanguage()),
                 'invite_token' => $request->validated('invite_token'),
+                'registration_token' => $request->validated('registration_token') ?: null,
                 'marketing_opt_in' => (bool) $request->validated('marketing_opt_in'),
                 'utm_source' => $request->validated('utm_source'),
                 'utm_medium' => $request->validated('utm_medium'),
@@ -75,6 +77,10 @@ class CreateAccountAction extends BaseAuthAction
                 message: __('Account registration is disabled'),
                 statusCode: ResponseCodes::HTTP_FORBIDDEN,
             );
+        } catch (InvalidRegistrationInviteException $e) {
+            throw ValidationException::withMessages([
+                'registration_token' => $e->getMessage(),
+            ]);
         } catch (AccountConfigurationDoesNotExist $e) {
             return $this->errorResponse(
                 message: $e->getMessage(),

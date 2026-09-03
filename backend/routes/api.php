@@ -24,6 +24,7 @@ use HiEvents\Http\Actions\Attendees\PartialEditAttendeeAction;
 use HiEvents\Http\Actions\Attendees\ResendAttendeeTicketAction;
 use HiEvents\Http\Actions\Auth\AcceptInvitationAction;
 use HiEvents\Http\Actions\Auth\ForgotPasswordAction;
+use HiEvents\Http\Actions\Auth\GetRegistrationInviteAction;
 use HiEvents\Http\Actions\Auth\GetUserInvitationAction;
 use HiEvents\Http\Actions\Auth\LoginAction;
 use HiEvents\Http\Actions\Auth\LogoutAction;
@@ -204,6 +205,9 @@ use HiEvents\Http\Actions\Admin\Attribution\GetUtmAttributionStatsAction;
 use HiEvents\Http\Actions\Admin\GetSystemInfoAction;
 use HiEvents\Http\Actions\Admin\Stats\GetAdminDashboardDataAction;
 use HiEvents\Http\Actions\Admin\Stats\GetAdminStatsAction;
+use HiEvents\Http\Actions\Admin\RegistrationInvites\CreateRegistrationInviteAction;
+use HiEvents\Http\Actions\Admin\RegistrationInvites\GetAllRegistrationInvitesAction;
+use HiEvents\Http\Actions\Admin\RegistrationInvites\RevokeRegistrationInviteAction;
 use HiEvents\Http\Actions\Admin\Users\GetAllUsersAction;
 use HiEvents\Http\Actions\Admin\Users\StartImpersonationAction;
 use HiEvents\Http\Actions\Admin\Users\StopImpersonationAction;
@@ -237,6 +241,10 @@ $router->prefix('/auth')->group(
         // Invitations
         $router->get('/invitation/{invite_token}', GetUserInvitationAction::class)->name('auth.invitation');
         $router->post('/invitation/{invite_token}', AcceptInvitationAction::class)->name('auth.accept-invitation');
+
+        // Invitations a creer un compte, quand l'inscription publique est fermee
+        $router->get('/registration-invite/{registration_token}', GetRegistrationInviteAction::class)
+            ->name('auth.registration-invite');
 
         // Reset Passwords
         $router->get('/reset-password/{reset_token}', ValidateResetPasswordTokenAction::class)->name('auth.validate-reset-password-token');
@@ -474,6 +482,9 @@ $router->prefix('/admin')->middleware(['auth:api'])->group(
         $router->put('/configurations/{configuration_id}', UpdateConfigurationAction::class);
         $router->delete('/configurations/{configuration_id}', DeleteConfigurationAction::class);
         $router->get('/users', GetAllUsersAction::class);
+        $router->get('/registration-invites', GetAllRegistrationInvitesAction::class);
+        $router->post('/registration-invites', CreateRegistrationInviteAction::class);
+        $router->delete('/registration-invites/{invite_id}', RevokeRegistrationInviteAction::class);
         $router->get('/events', GetAllAdminEventsAction::class);
         $router->get('/events/upcoming', GetUpcomingEventsAction::class);
         $router->get('/orders', GetAllOrdersAction::class);
