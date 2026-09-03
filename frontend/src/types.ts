@@ -756,6 +756,9 @@ export interface CheckInList {
     short_id: string;
     name: string;
     description?: string | null;
+    pin?: string | null;
+    requires_pin?: boolean;
+    allow_door_sales?: boolean;
     expires_at?: string;  // ISO 8601 string
     activates_at?: string;  // ISO 8601 string
     total_attendees: number;
@@ -771,10 +774,34 @@ export interface CheckInList {
 }
 
 export type CheckInListRequest =
-    Omit<CheckInList, 'event_id' | 'short_id' | 'id' | 'products' | 'total_attendees' | 'checked_in_attendees' | 'is_expired' | 'is_active'>
+    Omit<CheckInList, 'event_id' | 'short_id' | 'id' | 'products' | 'total_attendees' | 'checked_in_attendees' | 'is_expired' | 'is_active' | 'requires_pin'>
     & {
     product_ids: IdParam[];
 };
+
+export interface DoorSaleProductPrice {
+    id: number;
+    label: string | null;
+    price: number;
+    quantity_remaining: number | null;
+    is_available: boolean;
+}
+
+export interface DoorSaleProduct {
+    id: number;
+    title: string;
+    prices: DoorSaleProductPrice[];
+}
+
+export interface DoorSaleRequest {
+    product_id: IdParam;
+    product_price_id?: IdParam;
+    quantity: number;
+    first_name: string;
+    last_name?: string;
+    email?: string;
+    check_in_immediately: boolean;
+}
 
 export interface QuestionRequestData {
     title: string;

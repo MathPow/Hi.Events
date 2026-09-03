@@ -24,6 +24,8 @@ export const CreateCheckInListModal = ({onClose}: GenericModalProps) => {
             description: '',
             expires_at: '',
             activates_at: '',
+            pin: '',
+            allow_door_sales: false,
             product_ids: [],
         }
     });

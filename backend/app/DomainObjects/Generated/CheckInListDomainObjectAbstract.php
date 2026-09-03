@@ -20,6 +20,8 @@ abstract class CheckInListDomainObjectAbstract extends \HiEvents\DomainObjects\A
     final public const DELETED_AT = 'deleted_at';
     final public const CREATED_AT = 'created_at';
     final public const UPDATED_AT = 'updated_at';
+    final public const PIN = 'pin';
+    final public const ALLOW_DOOR_SALES = 'allow_door_sales';
 
     protected int $id;
     protected int $event_id;
@@ -31,6 +33,8 @@ abstract class CheckInListDomainObjectAbstract extends \HiEvents\DomainObjects\A
     protected ?string $deleted_at = null;
     protected ?string $created_at = null;
     protected ?string $updated_at = null;
+    protected ?string $pin = null;
+    protected bool $allow_door_sales = false;
 
     public function toArray(): array
     {
@@ -45,6 +49,8 @@ abstract class CheckInListDomainObjectAbstract extends \HiEvents\DomainObjects\A
                     'deleted_at' => $this->deleted_at ?? null,
                     'created_at' => $this->created_at ?? null,
                     'updated_at' => $this->updated_at ?? null,
+                    'pin' => $this->pin ?? null,
+                    'allow_door_sales' => $this->allow_door_sales ?? null,
                 ];
     }
 
@@ -156,5 +162,27 @@ abstract class CheckInListDomainObjectAbstract extends \HiEvents\DomainObjects\A
     public function getUpdatedAt(): ?string
     {
         return $this->updated_at;
+    }
+
+    public function setPin(?string $pin): self
+    {
+        $this->pin = $pin;
+        return $this;
+    }
+
+    public function getPin(): ?string
+    {
+        return $this->pin;
+    }
+
+    public function setAllowDoorSales(bool $allow_door_sales): self
+    {
+        $this->allow_door_sales = $allow_door_sales;
+        return $this;
+    }
+
+    public function getAllowDoorSales(): bool
+    {
+        return $this->allow_door_sales;
     }
 }

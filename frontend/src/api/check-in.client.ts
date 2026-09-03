@@ -2,12 +2,15 @@ import {publicApi} from "./public-client";
 import {
     Attendee,
     CheckInList,
+    DoorSaleProduct,
+    DoorSaleRequest,
     GenericDataResponse,
     GenericPaginatedResponse,
     IdParam, PublicCheckIn,
     QueryFilters,
 } from "../types";
 import {queryParamsHelper} from "../utilites/queryParamsHelper";
+import {checkInPinHeaders} from "../utilites/checkInPin";
 
 export const publicCheckInClient = {
     getCheckInList: async (checkInListShortId: IdParam) => {
@@ -15,26 +18,54 @@ export const publicCheckInClient = {
         return response.data;
     },
     getCheckInListAttendees: async (checkInListShortId: IdParam, pagination: QueryFilters) => {
-        const response = await publicApi.get<GenericPaginatedResponse<Attendee>>(`/check-in-lists/${checkInListShortId}/attendees` + queryParamsHelper.buildQueryString(pagination));
+        const response = await publicApi.get<GenericPaginatedResponse<Attendee>>(
+            `/check-in-lists/${checkInListShortId}/attendees` + queryParamsHelper.buildQueryString(pagination),
+            {headers: checkInPinHeaders(checkInListShortId)},
+        );
         return response.data;
     },
     getCheckInListAttendee: async (checkInListShortId: IdParam, attendeePublicId: IdParam) => {
-        const response = await publicApi.get<GenericDataResponse<Attendee>>(`/check-in-lists/${checkInListShortId}/attendees/${attendeePublicId}`);
+        const response = await publicApi.get<GenericDataResponse<Attendee>>(
+            `/check-in-lists/${checkInListShortId}/attendees/${attendeePublicId}`,
+            {headers: checkInPinHeaders(checkInListShortId)},
+        );
         return response.data;
     },
     createCheckIn: async (checkInListShortId: IdParam, attendeePublicId: IdParam, action: 'check-in' | 'check-in-and-mark-order-as-paid') => {
-        const response = await publicApi.post<GenericDataResponse<PublicCheckIn[]>>(`/check-in-lists/${checkInListShortId}/check-ins`, {
-            "attendees": [
-                {
-                    "public_id": attendeePublicId,
-                    "action": action
-                }
-            ]
-        });
+        const response = await publicApi.post<GenericDataResponse<PublicCheckIn[]>>(
+            `/check-in-lists/${checkInListShortId}/check-ins`,
+            {
+                "attendees": [
+                    {
+                        "public_id": attendeePublicId,
+                        "action": action
+                    }
+                ]
+            },
+            {headers: checkInPinHeaders(checkInListShortId)},
+        );
         return response.data;
     },
     deleteCheckIn: async (checkInListShortId: IdParam, checkInShortId: IdParam) => {
-        const response = await publicApi.delete<GenericDataResponse<PublicCheckIn>>(`/check-in-lists/${checkInListShortId}/check-ins/${checkInShortId}`);
+        const response = await publicApi.delete<GenericDataResponse<PublicCheckIn>>(
+            `/check-in-lists/${checkInListShortId}/check-ins/${checkInShortId}`,
+            {headers: checkInPinHeaders(checkInListShortId)},
+        );
+        return response.data;
+    },
+    getDoorSaleProducts: async (checkInListShortId: IdParam) => {
+        const response = await publicApi.get<GenericDataResponse<DoorSaleProduct[]>>(
+            `/check-in-lists/${checkInListShortId}/door-sale-products`,
+            {headers: checkInPinHeaders(checkInListShortId)},
+        );
+        return response.data;
+    },
+    createDoorSale: async (checkInListShortId: IdParam, doorSale: DoorSaleRequest) => {
+        const response = await publicApi.post<GenericDataResponse<Attendee[]>>(
+            `/check-in-lists/${checkInListShortId}/door-sales`,
+            doorSale,
+            {headers: checkInPinHeaders(checkInListShortId)},
+        );
         return response.data;
     },
 };

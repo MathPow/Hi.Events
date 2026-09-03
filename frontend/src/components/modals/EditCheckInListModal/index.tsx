@@ -34,6 +34,8 @@ export const EditCheckInListModal = ({
             expires_at: '',
             activates_at: '',
             description: '',
+            pin: '',
+            allow_door_sales: false,
             product_ids: [],
         }
     });
@@ -60,6 +62,8 @@ export const EditCheckInListModal = ({
                 description: checkInList.description,
                 expires_at: utcToTz(checkInList.expires_at, event.timezone),
                 activates_at: utcToTz(checkInList.activates_at, event.timezone),
+                pin: checkInList.pin ?? '',
+                allow_door_sales: checkInList.allow_door_sales ?? false,
                 product_ids: checkInList.products?.map(product => String(product.id)),
             });
         }

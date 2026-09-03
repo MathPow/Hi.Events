@@ -15,6 +15,8 @@ class UpsertCheckInListRequest extends BaseRequest
             'expires_at' => ['nullable', 'date'],
             'activates_at' => ['nullable', 'date'],
             'product_ids' => ['required', 'array', 'min:1'],
+            'pin' => ['nullable', 'string', 'min:4', 'max:12', 'regex:/^[0-9]+$/'],
+            'allow_door_sales' => ['boolean'],
         ];
     }
 
@@ -33,6 +35,8 @@ class UpsertCheckInListRequest extends BaseRequest
     {
         return [
             'product_ids.required' => __('Please select at least one product.'),
+            'pin.regex' => __('The PIN must contain digits only.'),
+            'pin.min' => __('The PIN must be at least 4 digits.'),
             'expires_at.after' => __('The expiration date must be after the activation date.'),
             'activates_at.before' => __('The activation date must be before the expiration date.'),
         ];

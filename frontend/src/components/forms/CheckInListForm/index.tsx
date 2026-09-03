@@ -1,4 +1,4 @@
-import {Alert, Textarea, TextInput} from "@mantine/core";
+import {Alert, Switch, Textarea, TextInput} from "@mantine/core";
 import {t} from "@lingui/macro";
 import {UseFormReturnType} from "@mantine/form";
 import {CheckInListRequest, ProductCategory, ProductType} from "../../../types.ts";
@@ -69,6 +69,23 @@ export const CheckInListForm = ({form, productCategories}: CheckInListFormProps)
                     description={t`When check-in closes`}
                 />
             </InputGroup>
+
+            <TextInput
+                {...form.getInputProps('pin')}
+                mt={20}
+                inputMode="numeric"
+                maxLength={12}
+                label={t`Check-in PIN`}
+                placeholder={t`e.g. 4821`}
+                description={t`Digits only, 4 to 12. Anyone with the check-in link can see your attendee list and undo check-ins, so give this code to your staff and leave it set.`}
+            />
+
+            <Switch
+                {...form.getInputProps('allow_door_sales', {type: 'checkbox'})}
+                mt={20}
+                label={t`Allow selling tickets at the door`}
+                description={t`Check-in staff can sell any remaining tickets from this list. Take the payment on your own card terminal or in cash — the ticket is issued and checked in on the spot.`}
+            />
         </>
     );
 }

@@ -40,6 +40,8 @@ use HiEvents\Http\Actions\CheckInLists\DeleteCheckInListAction;
 use HiEvents\Http\Actions\CheckInLists\GetCheckInListAction;
 use HiEvents\Http\Actions\CheckInLists\GetCheckInListsAction;
 use HiEvents\Http\Actions\CheckInLists\Public\CreateAttendeeCheckInPublicAction;
+use HiEvents\Http\Actions\CheckInLists\Public\CreateDoorSalePublicAction;
+use HiEvents\Http\Actions\CheckInLists\Public\GetDoorSaleProductsPublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\DeleteAttendeeCheckInPublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\GetCheckInListAttendeePublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\GetCheckInListAttendeesPublicAction;
@@ -550,11 +552,22 @@ $router->prefix('/public')->group(
         $router->post('/webhooks/stripe', StripeIncomingWebhookAction::class);
 
         // Check-In
-        $router->get('/check-in-lists/{check_in_list_short_id}', GetCheckInListPublicAction::class);
-        $router->get('/check-in-lists/{check_in_list_short_id}/attendees', GetCheckInListAttendeesPublicAction::class);
-        $router->get('/check-in-lists/{check_in_list_short_id}/attendees/{attendee_public_id}', GetCheckInListAttendeePublicAction::class);
-        $router->post('/check-in-lists/{check_in_list_short_id}/check-ins', CreateAttendeeCheckInPublicAction::class);
-        $router->delete('/check-in-lists/{check_in_list_short_id}/check-ins/{check_in_short_id}', DeleteAttendeeCheckInPublicAction::class);
+        // Only the list metadata is readable without the door code, so the scanner app can name the
+        // list it is asking a PIN for. Everything that exposes attendees or mutates check-ins is
+        // behind 'check-in.pin', and all of it is rate limited.
+        $router->get('/check-in-lists/{check_in_list_short_id}', GetCheckInListPublicAction::class)
+            ->middleware('throttle:check-in');
+
+        $router->middleware(['throttle:check-in', 'check-in.pin'])->group(function (Router $router): void {
+            $router->get('/check-in-lists/{check_in_list_short_id}/attendees', GetCheckInListAttendeesPublicAction::class);
+            $router->get('/check-in-lists/{check_in_list_short_id}/attendees/{attendee_public_id}', GetCheckInListAttendeePublicAction::class);
+            $router->post('/check-in-lists/{check_in_list_short_id}/check-ins', CreateAttendeeCheckInPublicAction::class);
+            $router->delete('/check-in-lists/{check_in_list_short_id}/check-ins/{check_in_short_id}', DeleteAttendeeCheckInPublicAction::class);
+
+            // Selling at the door. Off unless the organiser enabled it on the list.
+            $router->get('/check-in-lists/{check_in_list_short_id}/door-sale-products', GetDoorSaleProductsPublicAction::class);
+            $router->post('/check-in-lists/{check_in_list_short_id}/door-sales', CreateDoorSalePublicAction::class);
+        });
 
         // Color themes
         $router->get('/color-themes', GetColorThemesAction::class);

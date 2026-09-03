@@ -21,6 +21,7 @@ use HiEvents\Services\Domain\CheckInList\DTO\CheckInResultDTO;
 use HiEvents\Services\Domain\CheckInList\DTO\CreateAttendeeCheckInsResponseDTO;
 use HiEvents\Services\Domain\Order\MarkOrderAsPaidService;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Collection;
 use Throwable;
 
@@ -194,18 +195,41 @@ class CreateAttendeeCheckInService
             return new CheckInResultDTO(error: $error);
         }
 
-        return $this->db->transaction(function () use ($attendee, $checkInList, $checkInAction, $checkInUserIpAddress) {
-            $checkIn = $this->createCheckIn($attendee, $checkInList, $checkInUserIpAddress);
+        try {
+            return $this->db->transaction(function () use ($attendee, $checkInList, $checkInAction, $checkInUserIpAddress) {
+                $checkIn = $this->createCheckIn($attendee, $checkInList, $checkInUserIpAddress);
 
-            if ($checkInAction->value === AttendeeCheckInActionType::CHECK_IN_AND_MARK_ORDER_AS_PAID->value) {
-                $this->markOrderAsPaidService->markOrderAsPaid(
-                    orderId: $attendee->getOrderId(),
-                    eventId: $attendee->getEventId(),
-                );
-            }
+                if ($checkInAction->value === AttendeeCheckInActionType::CHECK_IN_AND_MARK_ORDER_AS_PAID->value) {
+                    $this->markOrderAsPaidService->markOrderAsPaid(
+                        orderId: $attendee->getOrderId(),
+                        eventId: $attendee->getEventId(),
+                    );
+                }
 
-            return new CheckInResultDTO(checkIn: $checkIn);
-        });
+                return new CheckInResultDTO(checkIn: $checkIn);
+            });
+        } catch (UniqueConstraintViolationException) {
+            // A concurrent scan of the same ticket got there first. The unique index on
+            // (attendee_id, check_in_list_id) is what actually guarantees a ticket is only ever
+            // checked in once - the read above is just an optimisation to give a nicer error.
+            return new CheckInResultDTO(
+                checkIn: $this->findExistingCheckIn($attendee, $checkInList),
+                error: __('Attendee :attendee_name is already checked in', [
+                    'attendee_name' => $attendee->getFullName(),
+                ])
+            );
+        }
+    }
+
+    private function findExistingCheckIn(
+        AttendeeDomainObject    $attendee,
+        CheckInListDomainObject $checkInList
+    ): ?AttendeeCheckInDomainObject
+    {
+        return $this->attendeeCheckInRepository->findFirstWhere([
+            AttendeeCheckInDomainObjectAbstract::ATTENDEE_ID => $attendee->getId(),
+            AttendeeCheckInDomainObjectAbstract::CHECK_IN_LIST_ID => $checkInList->getId(),
+        ]);
     }
 
     private function getExistingCheckIn(Collection $existingCheckIns, AttendeeDomainObject $attendee): ?object

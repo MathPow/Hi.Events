@@ -9,7 +9,7 @@ import {AxiosError} from "axios";
 import classes from "./CheckIn.module.scss";
 import {ActionIcon, Modal} from "@mantine/core";
 import {SearchBar} from "../../common/SearchBar";
-import {IconInfoCircle, IconQrcode, IconVolume, IconVolumeOff} from "@tabler/icons-react";
+import {IconInfoCircle, IconQrcode, IconShoppingCart, IconVolume, IconVolumeOff} from "@tabler/icons-react";
 import {QRScannerComponent} from "../../common/AttendeeCheckInTable/QrScanner.tsx";
 import {useGetCheckInListAttendees} from "../../../queries/useGetCheckInListAttendeesPublic.ts";
 import {useCreateCheckInPublic} from "../../../mutations/useCreateCheckInPublic.ts";
@@ -25,6 +25,9 @@ import {CheckInOptionsModal} from "../../common/CheckIn/CheckInOptionsModal";
 import {ScannerSelectionModal} from "../../common/CheckIn/ScannerSelectionModal";
 import {CheckInInfoModal} from "../../common/CheckIn/CheckInInfoModal";
 import {HidScannerStatus} from "../../common/CheckIn/HidScannerStatus";
+import {PinPromptModal} from "../../common/CheckIn/PinPromptModal";
+import {DoorSaleModal} from "../../common/CheckIn/DoorSaleModal";
+import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/checkInPin.ts";
 import {Button} from "@mantine/core";
 
 const CheckIn = () => {
@@ -54,6 +57,10 @@ const CheckIn = () => {
         return storedIsSoundOn === null ? true : JSON.parse(storedIsSoundOn);
     });
     const [selectedAttendee, setSelectedAttendee] = useState<Attendee | null>(null);
+    const [pinPromptOpen, setPinPromptOpen] = useState(false);
+    const [pinFailed, setPinFailed] = useState(false);
+    const [hasPin, setHasPin] = useState(() => Boolean(getCheckInPin(checkInListShortId)));
+    const [doorSaleOpen, doorSaleHandlers] = useDisclosure(false);
     const [checkInModalOpen, checkInModalHandlers] = useDisclosure(false);
     const [infoModalOpen, infoModalHandlers] = useDisclosure(false, {
             onOpen: () => {
@@ -72,10 +79,12 @@ const CheckIn = () => {
         },
     };
 
+    const isUnlocked = !checkInList?.requires_pin || hasPin;
+
     const attendeesQuery = useGetCheckInListAttendees(
         checkInListShortId,
         queryFilters,
-        checkInList?.is_active && !checkInList?.is_expired,
+        checkInList?.is_active && !checkInList?.is_expired && isUnlocked,
     );
     const attendees = attendeesQuery?.data?.data;
     const checkInMutation = useCreateCheckInPublic(queryFilters);
@@ -83,6 +92,22 @@ const CheckIn = () => {
     const areOfflinePaymentsEnabled = eventSettings?.payment_providers?.includes('OFFLINE');
     const allowOrdersAwaitingOfflinePaymentToCheckIn = areOfflinePaymentsEnabled
         && eventSettings?.allow_orders_awaiting_offline_payment_to_check_in;
+
+    useEffect(() => {
+        if (checkInList?.requires_pin && !hasPin) {
+            setPinPromptOpen(true);
+        }
+    }, [checkInList?.requires_pin, hasPin]);
+
+    // A stored PIN can go stale when the organizer changes it, so a refusal sends us back to the prompt.
+    useEffect(() => {
+        if ((attendeesQuery.error as AxiosError)?.response?.status === 401) {
+            clearCheckInPin(checkInListShortId);
+            setHasPin(false);
+            setPinFailed(true);
+            setPinPromptOpen(true);
+        }
+    }, [attendeesQuery.error, checkInListShortId]);
 
     // Save sound preference to localStorage
     useEffect(() => {
@@ -455,6 +480,12 @@ const CheckIn = () => {
                                     onClick={() => setScannerSelectionOpen(true)}>
                             <IconQrcode size={32}/>
                         </ActionIcon>
+                        {checkInList?.allow_door_sales && (
+                            <ActionIcon aria-label={t`Sell a ticket`} variant={'light'} size={'xl'}
+                                        onClick={() => doorSaleHandlers.open()}>
+                                <IconShoppingCart size={28}/>
+                            </ActionIcon>
+                        )}
                     </div>
                 </div>
             </div>
@@ -516,6 +547,25 @@ const CheckIn = () => {
                 isOpen={infoModalOpen}
                 checkInList={checkInList}
                 onClose={infoModalHandlers.close}
+            />
+            {checkInList?.allow_door_sales && (
+                <DoorSaleModal
+                    isOpen={doorSaleOpen}
+                    checkInListShortId={checkInListShortId as string}
+                    currency={event?.currency as string}
+                    onClose={doorSaleHandlers.close}
+                />
+            )}
+            <PinPromptModal
+                isOpen={pinPromptOpen}
+                checkInListName={checkInList?.name}
+                hasFailed={pinFailed}
+                onSubmit={(pin) => {
+                    setCheckInPin(checkInListShortId, pin);
+                    setHasPin(true);
+                    setPinFailed(false);
+                    setPinPromptOpen(false);
+                }}
             />
             {/* Audio elements for HID scanner sounds */}
             <audio ref={scanSuccessAudioRef} src="/sounds/scan-success.wav"/>

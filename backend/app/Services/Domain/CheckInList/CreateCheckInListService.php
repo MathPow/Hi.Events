@@ -44,6 +44,8 @@ class CreateCheckInListService
                 CheckInListDomainObjectAbstract::ACTIVATES_AT => $checkInList->getActivatesAt()
                     ? DateHelper::convertToUTC($checkInList->getActivatesAt(), $event->getTimezone())
                     : null,
+                CheckInListDomainObjectAbstract::PIN => $checkInList->getPin(),
+                CheckInListDomainObjectAbstract::ALLOW_DOOR_SALES => $checkInList->getAllowDoorSales(),
                 CheckInListDomainObjectAbstract::SHORT_ID => IdHelper::shortId(IdHelper::CHECK_IN_LIST_PREFIX),
             ]);
 

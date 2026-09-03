@@ -33,6 +33,8 @@ class UpdateCheckInListAction extends BaseAction
                     productIds: $request->validated('product_ids'),
                     expiresAt: $request->validated('expires_at'),
                     activatesAt: $request->validated('activates_at'),
+                    pin: $request->validated('pin'),
+                    allowDoorSales: $request->boolean('allow_door_sales'),
                     id: $checkInListId,
                 )
             );

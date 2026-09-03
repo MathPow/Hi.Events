@@ -37,6 +37,13 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perHour(20)->by($request->route('order_short_id') ?? $request->ip());
         });
 
+        // The check-in endpoints are unauthenticated, so cap how fast anyone holding (or guessing)
+        // a check-in link can hammer them. A busy door scans a few times a second at most.
+        RateLimiter::for('check-in', function (Request $request) {
+            return Limit::perMinute(120)
+                ->by($request->route('check_in_list_short_id') . '|' . $request->ip());
+        });
+
         $this->routes(function () {
             Route::middleware('api')
                 ->group(base_path('routes/api.php'));

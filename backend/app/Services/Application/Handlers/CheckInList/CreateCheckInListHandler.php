@@ -25,7 +25,9 @@ class CreateCheckInListHandler
             ->setDescription($listData->description)
             ->setEventId($listData->eventId)
             ->setExpiresAt($listData->expiresAt)
-            ->setActivatesAt($listData->activatesAt);
+            ->setActivatesAt($listData->activatesAt)
+            ->setPin($listData->pin)
+            ->setAllowDoorSales($listData->allowDoorSales);
 
         return $this->createCheckInListService->createCheckInList(
             checkInList: $checkInList,
