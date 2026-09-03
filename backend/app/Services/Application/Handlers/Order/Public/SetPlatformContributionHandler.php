@@ -37,6 +37,13 @@ class SetPlatformContributionHandler
             throw new ResourceConflictException(__('This order can no longer be modified.'));
         }
 
+        // Une commande gratuite n'a pas de paiement a porter la contribution: la
+        // gonfler ici la rendrait payable alors que le parcours l'a deja routee
+        // vers la confirmation, et elle serait completee sans etre encaissee.
+        if (!$order->isPaymentRequired()) {
+            throw new ResourceConflictException(__('A contribution cannot be added to a free order.'));
+        }
+
         $this->orderRepository->updateFromArray($order->getId(), [
             'platform_contribution' => Currency::round(max(0, $contribution)),
         ]);

@@ -219,6 +219,10 @@ export const CollectInformation = () => {
     // tard ne serait pas debitee.
     const [platformContribution, setPlatformContribution] = useState<number>(platformSupportDefaultAmount);
 
+    // Une commande gratuite ne cree pas de PaymentIntent: il n'y a rien a quoi
+    // rattacher la contribution, donc on ne la demande pas.
+    const canContribute = order?.is_payment_required === true;
+
     const mutation = useMutation({
         mutationFn: (orderData: FinaliseOrderPayload) => orderClientPublic.finaliseOrder(Number(eventId), String(orderShortId), orderData),
 
@@ -301,7 +305,7 @@ export const CollectInformation = () => {
     }
 
     const handleSubmit = async (values: any) => {
-        if (platformSupportEnabled() && platformContribution > 0) {
+        if (canContribute && platformSupportEnabled() && platformContribution > 0) {
             try {
                 await orderClientPublic.setPlatformContribution(Number(eventId), String(orderShortId), platformContribution);
             } catch {
@@ -749,12 +753,14 @@ export const CollectInformation = () => {
                     </Card>
                 )}
 
-                <PlatformSupportInput
-                    value={platformContribution}
-                    onChange={setPlatformContribution}
-                    currency={event?.currency}
-                    disabled={mutation.isPending}
-                />
+                {canContribute && (
+                    <PlatformSupportInput
+                        value={platformContribution}
+                        onChange={setPlatformContribution}
+                        currency={event?.currency}
+                        disabled={mutation.isPending}
+                    />
+                )}
 
                 <div className={classes.checkoutActions}>
                     <Button

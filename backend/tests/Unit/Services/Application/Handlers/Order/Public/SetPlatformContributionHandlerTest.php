@@ -99,11 +99,29 @@ class SetPlatformContributionHandlerTest extends TestCase
         $this->handler->handle(1, 'abc123', -20.00);
     }
 
-    private function makeOrder(OrderStatus $status): OrderDomainObject
+    /**
+     * L'endpoint est public: sans ce garde, n'importe qui pourrait rendre payante
+     * une commande gratuite, qui serait ensuite completee sans encaissement.
+     */
+    public function testThrowsWhenTheOrderIsFree(): void
+    {
+        $this->orderRepository
+            ->shouldReceive('findFirstWhere')
+            ->andReturn($this->makeOrder(OrderStatus::RESERVED, isPaymentRequired: false));
+
+        $this->orderRepository->shouldNotReceive('updateFromArray');
+
+        $this->expectException(ResourceConflictException::class);
+
+        $this->handler->handle(1, 'abc123', 5.00);
+    }
+
+    private function makeOrder(OrderStatus $status, bool $isPaymentRequired = true): OrderDomainObject
     {
         $order = m::mock(OrderDomainObject::class);
         $order->shouldReceive('getId')->andReturn(10);
         $order->shouldReceive('getStatus')->andReturn($status->name);
+        $order->shouldReceive('isPaymentRequired')->andReturn($isPaymentRequired);
         $order->shouldReceive('getOrderItems')->andReturn(new Collection());
 
         return $order;
