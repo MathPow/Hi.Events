@@ -13,6 +13,7 @@ use HiEvents\Mail\Attendee\AttendeeTicketMail;
 use HiEvents\Mail\Order\OrderSummary;
 use HiEvents\Services\Domain\Email\DTO\RenderedEmailTemplateDTO;
 use HiEvents\Services\Domain\Order\OfflinePaymentInstructionsRenderService;
+use Illuminate\Support\Collection;
 
 class MailBuilderService
 {
@@ -23,12 +24,16 @@ class MailBuilderService
     ) {
     }
 
+    /**
+     * @param Collection<int, AttendeeDomainObject>|null $additionalAttendees
+     */
     public function buildAttendeeTicketMail(
         AttendeeDomainObject $attendee,
         OrderDomainObject $order,
         EventDomainObject $event,
         EventSettingDomainObject $eventSettings,
-        OrganizerDomainObject $organizer
+        OrganizerDomainObject $organizer,
+        ?Collection $additionalAttendees = null
     ): AttendeeTicketMail {
         $renderedTemplate = $this->renderAttendeeTicketTemplate(
             $attendee,
@@ -45,6 +50,7 @@ class MailBuilderService
             eventSettings: $eventSettings,
             organizer: $organizer,
             renderedTemplate: $renderedTemplate,
+            additionalAttendees: $additionalAttendees,
         );
     }
 

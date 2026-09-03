@@ -84,23 +84,25 @@ class SendOrderDetailsService
             ->send($mail);
     }
 
+    /**
+     * Several attendees commonly share one email address - either the event collects details per
+     * order, or the buyer simply puts their own address on every ticket. Send one email per address
+     * carrying every ticket that belongs to it, rather than dropping all but the first.
+     */
     private function sendAttendeeTicketEmails(OrderDomainObject $order, EventDomainObject $event): void
     {
-        $sentEmails = [];
-        foreach ($order->getAttendees() as $attendee) {
-            if (in_array($attendee->getEmail(), $sentEmails, true)) {
-                continue;
-            }
+        $attendeesByEmail = collect($order->getAttendees())
+            ->groupBy(fn(AttendeeDomainObject $attendee) => strtolower(trim($attendee->getEmail())));
 
+        foreach ($attendeesByEmail as $attendees) {
             $this->sendAttendeeTicketService->send(
                 order: $order,
-                attendee: $attendee,
+                attendee: $attendees->first(),
                 event: $event,
                 eventSettings: $event->getEventSettings(),
                 organizer: $event->getOrganizer(),
+                additionalAttendees: $attendees->skip(1)->values(),
             );
-
-            $sentEmails[] = $attendee->getEmail();
         }
     }
 
