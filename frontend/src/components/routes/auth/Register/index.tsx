@@ -1,4 +1,4 @@
-import {Button, Checkbox, PasswordInput, SimpleGrid, TextInput} from "@mantine/core";
+import {Alert, Button, Checkbox, LoadingOverlay, PasswordInput, SimpleGrid, TextInput} from "@mantine/core";
 import {hasLength, isEmail, matchesField, useForm} from "@mantine/form";
 import {RegisterAccountRequest} from "../../../../types.ts";
 import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorResponseHandler.tsx";
@@ -11,10 +11,19 @@ import {useEffect} from "react";
 import {getUserCurrency} from "../../../../utilites/currency.ts";
 import {getConfig} from "../../../../utilites/config.ts";
 import {captureUtmData, getStoredUtmData, clearStoredUtmData} from "../../../../utilites/utm.ts";
+import {useGetRegistrationInvite} from "../../../../queries/useGetRegistrationInvite.ts";
+import {IconAlertCircle} from "@tabler/icons-react";
 
 export const Register = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Quand l'inscription publique est fermee, seule une invitation ouvre le
+    // formulaire. On la valide avant d'afficher quoi que ce soit, pour ne pas
+    // faire remplir un formulaire qui sera refuse.
+    const registrationToken = new URLSearchParams(location.search).get('registration_token');
+    const inviteQuery = useGetRegistrationInvite(registrationToken);
+    const invitedEmail = inviteQuery.data?.data?.email ?? null;
 
     const form = useForm({
         validateInputOnBlur: true,
@@ -29,6 +38,7 @@ export const Register = () => {
                 : 'UTC',
             locale: getClientLocale(),
             invite_token: '',
+            registration_token: registrationToken ?? '',
             currency_code: getUserCurrency(),
             marketing_opt_in: false,
         },
@@ -57,6 +67,12 @@ export const Register = () => {
     }
 
     useEffect(() => {
+        if (invitedEmail) {
+            form.setFieldValue('email', invitedEmail);
+        }
+    }, [invitedEmail]);
+
+    useEffect(() => {
         captureUtmData();
 
         const searchParams = new URLSearchParams(location.search);
@@ -66,6 +82,26 @@ export const Register = () => {
             form.setFieldValue('invite_token', token);
         }
     }, [location.search]);
+
+    if (registrationToken && inviteQuery.isLoading) {
+        return <LoadingOverlay visible/>;
+    }
+
+    if (registrationToken && inviteQuery.isError) {
+        return (
+            <>
+                <header className={classes.header}>
+                    <h2>{t`Invitation unavailable`}</h2>
+                </header>
+                <div className={classes.registerCard}>
+                    <Alert icon={<IconAlertCircle size={16}/>} color="red">
+                        {(inviteQuery.error as any)?.response?.data?.message
+                            || t`This invitation link is no longer valid. Ask for a new one.`}
+                    </Alert>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -103,6 +139,8 @@ export const Register = () => {
                         {...form.getInputProps('email')}
                         label={t`Email`}
                         placeholder={'your@email.com'}
+                        description={invitedEmail ? t`This invitation is tied to this address.` : undefined}
+                        readOnly={!!invitedEmail}
                         required
                     />
 

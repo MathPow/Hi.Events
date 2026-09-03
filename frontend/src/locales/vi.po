@@ -596,7 +596,7 @@ msgid "Admin Access Required"
 msgstr "Yêu cầu quyền truy cập quản trị viên"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:27
+#: src/components/layouts/Admin/index.tsx:28
 #: src/components/layouts/OrganizerLayout/index.tsx:106
 #: src/components/routes/admin/Dashboard/index.tsx:70
 msgid "Admin Dashboard"
@@ -741,7 +741,7 @@ msgstr "Gần xong rồi! Hoàn thành kết nối tài khoản Stripe để b�
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Sắp xong rồi! Chúng tôi đang chờ thanh toán của bạn được xử lý. Quá trình này chỉ mất vài giây."
 
-#: src/components/routes/auth/Register/index.tsx:75
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Đã có tài khoản? <0>{0}</0>"
 
@@ -819,6 +819,10 @@ msgstr "Câu trả lời đã được cập nhật thành công."
 #: src/components/routes/event/Settings/Sections/EmailSettings/GeneralEmailSettings.tsx:62
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "Mọi thắc mắc từ chủ sở hữu sản phẩm sẽ được gửi đến địa chỉ email này. Địa chỉ này cũng sẽ được sử dụng làm địa chỉ \"trả lời\" cho tất cả email gửi từ sự kiện này."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "Bất kỳ ai có liên kết"
 
 #: src/components/routes/account/ManageAccount/index.tsx:38
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:55
@@ -1386,7 +1390,7 @@ msgstr "Bằng việc thêm pixel theo dõi, bạn thừa nhận rằng bạn v�
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Bằng cách tiếp tục, bạn đồng ý với <0>Điều khoản dịch vụ của {0}</0>"
 
-#: src/components/routes/auth/Register/index.tsx:141
+#: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Bằng cách đăng ký, bạn đồng ý với các <0>Điều khoản dịch vụ của chúng tôi</0> và <1>Chính sách bảo mật</1>."
 
@@ -1428,6 +1432,7 @@ msgstr "Chiến dịch"
 #: src/components/common/QuestionAndAnswerList/index.tsx:149
 #: src/components/common/WaitlistTable/index.tsx:111
 #: src/components/common/WaitlistTable/index.tsx:132
+#: src/components/routes/admin/RegistrationInvites/index.tsx:241
 #: src/components/routes/event/messages.tsx:80
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:62
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:68
@@ -1942,7 +1947,7 @@ msgstr "Tên cấu hình hiển thị với người dùng cuối. Phí cố đ�
 msgid "Configuration updated successfully"
 msgstr "Cấu hình đã được cập nhật thành công"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "Cấu hình"
@@ -1988,12 +1993,12 @@ msgid "Confirm New Password"
 msgstr "Xác nhận mật khẩu mới"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:119
+#: src/components/routes/auth/Register/index.tsx:157
 msgid "Confirm password"
 msgstr "Xác nhận mật khẩu"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:118
+#: src/components/routes/auth/Register/index.tsx:156
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Xác nhận mật khẩu"
@@ -2203,6 +2208,7 @@ msgid "Copy Email"
 msgstr "Sao chép Email"
 
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:67
+#: src/components/routes/admin/RegistrationInvites/index.tsx:277
 msgid "Copy link"
 msgstr "Sao chép liên kết"
 
@@ -2214,6 +2220,10 @@ msgstr "Sao chép Link"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:531
 msgid "Copy my details to:"
 msgstr "Sao chép thông tin của tôi cho:"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "Hãy sao chép liên kết ngay. Liên kết không được lưu và sẽ không hiển thị lại."
 
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
@@ -2369,6 +2379,12 @@ msgstr "Tạo giảm giá, mã truy cập cho vé ẩn và ưu đãi đặc bi�
 msgid "Create Event"
 msgstr "Tạo sự kiện"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "Tạo lời mời"
+
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
 msgstr "Tạo mới"
@@ -2447,6 +2463,7 @@ msgstr "Tạo sự kiện của riêng bạn"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:169
 #: src/components/routes/admin/Messages/index.tsx:309
+#: src/components/routes/admin/RegistrationInvites/index.tsx:126
 msgid "Created"
 msgstr "Đã tạo"
 
@@ -2843,6 +2860,7 @@ msgstr "Số tiền quyên góp"
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:72
 #: src/components/modals/CreateWebhookModal/index.tsx:72
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:123
+#: src/components/routes/admin/RegistrationInvites/index.tsx:293
 msgid "Done"
 msgstr "Xong"
 
@@ -2950,6 +2968,10 @@ msgstr "ví dụ: Cập nhật quan trọng về vé của bạn"
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "ví dụ: Tiêu chuẩn, Cao cấp, Doanh nghiệp"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "Mỗi liên kết chỉ tạo được một tài khoản rồi ngừng hoạt động, kể cả khi đăng ký công khai đang đóng. Liên kết chỉ hiển thị một lần, lúc tạo."
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3121,7 +3143,7 @@ msgstr "Đủ điều kiện nhận biên nhận thuế chính thức."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:104
+#: src/components/routes/auth/Register/index.tsx:140
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -3141,6 +3163,7 @@ msgstr "Email & Mẫu"
 #: src/components/modals/CreateAttendeeModal/index.tsx:143
 #: src/components/modals/ManageAttendeeModal/index.tsx:114
 #: src/components/modals/ManageOrderModal/index.tsx:157
+#: src/components/routes/admin/RegistrationInvites/index.tsx:221
 msgid "Email address"
 msgstr "Địa chỉ email"
 
@@ -3553,7 +3576,7 @@ msgid "Event Updated"
 msgstr "Sự kiện đã cập nhật"
 
 #: src/components/common/AdminAccountsTable/index.tsx:82
-#: src/components/layouts/Admin/index.tsx:16
+#: src/components/layouts/Admin/index.tsx:17
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
@@ -3594,13 +3617,19 @@ msgid "Expiration date"
 msgstr "Ngày hết hạn"
 
 #: src/components/common/WaitlistTable/index.tsx:28
+#: src/components/routes/admin/RegistrationInvites/index.tsx:49
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:74
 msgid "Expired"
 msgstr "Đã hết hạn"
 
 #: src/components/common/PromoCodeTable/index.tsx:73
+#: src/components/routes/admin/RegistrationInvites/index.tsx:130
 msgid "Expires"
 msgstr "Hết hạn"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "Hết hạn sau (ngày)"
 
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
@@ -3661,7 +3690,7 @@ msgstr "Thất bại"
 msgid "Failed At"
 msgstr "Thất bại lúc"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "Công việc thất bại"
@@ -3805,6 +3834,10 @@ msgstr "Không thể thử lại công việc"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "Không thể thử lại các công việc"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "Không thể thu hồi lời mời"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4009,7 +4042,7 @@ msgstr "Tên"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:90
+#: src/components/routes/auth/Register/index.tsx:126
 #: src/components/routes/product-widget/CollectInformation/index.tsx:474
 #: src/components/routes/product-widget/CollectInformation/index.tsx:690
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4156,7 +4189,7 @@ msgstr "Chỉ đường"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Nhận thanh toán ngay lập tức qua Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:73
+#: src/components/routes/auth/Register/index.tsx:109
 msgid "Get started"
 msgstr "Bắt đầu"
 
@@ -4624,13 +4657,29 @@ msgstr "Cú pháp Liquid không hợp lệ. Vui lòng sửa và thử lại."
 msgid "Invalid VAT number format"
 msgstr "Định dạng số VAT không hợp lệ"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "Liên kết lời mời"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "Lời mời đã được gửi lại!"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "Đã thu hồi lời mời"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "Lời mời bị thu hồi!"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "Lời mời không khả dụng"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "Lời mời"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4730,7 +4779,7 @@ msgid "Job queued for retry"
 msgstr "Công việc đã được xếp hàng để thử lại"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:91
+#: src/components/routes/auth/Register/index.tsx:127
 msgid "John"
 msgstr "John"
 
@@ -4839,7 +4888,7 @@ msgstr "Họ"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:96
+#: src/components/routes/auth/Register/index.tsx:132
 #: src/components/routes/product-widget/CollectInformation/index.tsx:481
 #: src/components/routes/product-widget/CollectInformation/index.tsx:482
 #: src/components/routes/product-widget/CollectInformation/index.tsx:697
@@ -4876,6 +4925,10 @@ msgstr "Được sử dụng lần cuối"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:201
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Để trống để sử dụng từ mặc định \"Hóa đơn\""
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Để trống nếu muốn liên kết không bao giờ hết hạn."
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -4959,7 +5012,7 @@ msgid "Location"
 msgstr "Vị trí"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:78
+#: src/components/routes/auth/Register/index.tsx:114
 msgid "Log in"
 msgstr "Đăng nhập"
 
@@ -5167,7 +5220,7 @@ msgstr "Tin nhắn đã được lên lịch"
 msgid "Message Sent"
 msgstr "Tin nhắn được gửi"
 
-#: src/components/layouts/Admin/index.tsx:18
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5312,6 +5365,7 @@ msgstr "Doanh thu ròng"
 #: src/components/common/WebhookTable/index.tsx:266
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:114
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:101
+#: src/components/routes/admin/RegistrationInvites/index.tsx:134
 msgid "Never"
 msgstr "Không bao giờ"
 
@@ -5449,6 +5503,10 @@ msgstr "Không có bộ lọc có sẵn"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:86
 msgid "No impact on your current or past transactions"
 msgstr "Không ảnh hưởng đến giao dịch hiện tại hoặc quá khứ của bạn"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "Chưa có lời mời nào"
 
 #: src/components/common/OrdersTable/index.tsx:334
 msgid "No invoice"
@@ -5656,6 +5714,10 @@ msgstr "Chưa Đăng Ký"
 msgid "Not Eligible"
 msgstr "Không Đủ Điều Kiện"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "Ghi chú"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5794,6 +5856,10 @@ msgstr "Sự kiện trực tuyến"
 msgid "Online Event Details"
 msgstr "Chi tiết sự kiện trực tuyến"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "Chỉ {0} có thể dùng liên kết này."
+
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:68
 msgid "Only a registered charity may issue official receipts. Leave the registration number empty and no receipt will ever be issued. You remain responsible for the accuracy of every receipt, including the valuation of any advantage received by the donor."
 msgstr "Chỉ tổ chức từ thiện đã đăng ký mới được cấp biên nhận chính thức. Để trống số đăng ký thì sẽ không bao giờ có biên nhận nào được cấp. Bạn vẫn chịu trách nhiệm về tính chính xác của mọi biên nhận, bao gồm việc định giá mọi lợi ích mà người quyên góp nhận được."
@@ -5856,6 +5922,14 @@ msgstr "Không bắt buộc. Giúp trang trải chi phí duy trì dịch vụ b�
 #: src/components/common/CheckIn/DoorSaleModal.tsx:169
 msgid "Optional. If given, the ticket and its QR code are emailed to the buyer."
 msgstr "Không bắt buộc. Nếu có, vé và mã QR sẽ được gửi qua email cho người mua."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "Không bắt buộc. Chỉ bạn thấy, để nhận ra lời mời sau này."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "Không bắt buộc. Nếu điền, chỉ địa chỉ này dùng được liên kết."
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6019,7 +6093,7 @@ msgstr "Đơn hàng đã được cập nhật thành công"
 msgid "Order was cancelled"
 msgstr "Đơn hàng đã bị hủy"
 
-#: src/components/layouts/Admin/index.tsx:17
+#: src/components/layouts/Admin/index.tsx:18
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
@@ -6220,7 +6294,7 @@ msgstr "Chuyển cho người mua"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:112
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Mật khẩu"
@@ -6229,7 +6303,7 @@ msgstr "Mật khẩu"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "Mật khẩu phải tối thiểu 8 ký tự"
 
-#: src/components/routes/auth/Register/index.tsx:36
+#: src/components/routes/auth/Register/index.tsx:46
 msgid "Password must be at least 8 characters"
 msgstr "Mật khẩu phải có ít nhất 8 ký tự"
 
@@ -6238,7 +6312,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Đặt lại mật khẩu thành công. Vui lòng sử dụng mật khẩu mới để đăng nhập."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:37
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Passwords are not the same"
 msgstr "Mật khẩu không giống nhau"
 
@@ -6497,7 +6571,7 @@ msgid "Please check your email and password and try again"
 msgstr "Vui lòng kiểm tra email và mật khẩu của bạn và thử lại"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:38
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Please check your email is valid"
 msgstr "Vui lòng kiểm tra email của bạn là hợp lệ"
 
@@ -6940,6 +7014,10 @@ msgstr "Cung cấp lại suất"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "Sẵn sàng nâng cấp? Điều này chỉ mất vài phút."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "Sẵn sàng dùng"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "Phân tích thời gian thực"
@@ -6949,7 +7027,7 @@ msgid "Receipt number prefix"
 msgstr "Tiền tố số biên nhận"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:171
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Nhận cập nhật sản phẩm từ {0}."
@@ -7069,9 +7147,13 @@ msgstr "Hoàn tiền"
 msgid "Regional Settings"
 msgstr "Cài đặt khu vực"
 
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Register"
 msgstr "Đăng ký"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "Lời mời đăng ký"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7262,12 +7344,21 @@ msgid "Revoke {0}? Any application using it will stop working immediately."
 msgstr "Thu hồi {0}? Mọi ứng dụng đang dùng nó sẽ ngừng hoạt động ngay lập tức."
 
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:130
+#: src/components/routes/admin/RegistrationInvites/index.tsx:151
 msgid "Revoke invitation"
 msgstr "Thu hồi lời mời"
 
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "Thu hồi ưu đãi"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "Thu hồi lời mời này? Liên kết sẽ ngừng hoạt động ngay lập tức."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "Đã thu hồi"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -7941,7 +8032,7 @@ msgid "Slovak"
 msgstr "Tiếng Slovak"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:97
+#: src/components/routes/auth/Register/index.tsx:133
 msgid "Smith"
 msgstr "Smith"
 
@@ -8719,6 +8810,14 @@ msgstr "Sự kiện này chưa được xuất bản"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Thông tin này sẽ được hiển thị trên trang thanh toán, trang tóm tắt đơn hàng và email xác nhận đơn hàng."
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "Lời mời này gắn với địa chỉ email này."
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "Liên kết lời mời này không còn hiệu lực. Hãy yêu cầu liên kết mới."
+
 #: src/components/forms/ProductForm/index.tsx:149
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "Đây là một sản phẩm chung, như áo phông hoặc cốc. Không có vé nào được phát hành"
@@ -9404,6 +9503,11 @@ msgstr "Sử dụng thông tin đơn hàng cho tất cả người tham dự. T�
 msgid "Use the buyer's details for all attendees"
 msgstr "Sử dụng thông tin người mua cho tất cả người tham dự"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "Đã dùng"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Được sử dụng cho viền, vùng tô sáng và kiểu mã QR"
@@ -9439,7 +9543,7 @@ msgstr "Người dùng có thể thay đổi email của họ trong <0>Cài đ�
 msgid "UTC"
 msgstr "UTC"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 msgid "UTM Analytics"
 msgstr "Phân tích UTM"
 
@@ -10038,6 +10142,10 @@ msgstr "Những vé nào nên được liên kết với danh sách người tha
 msgid "Who is organizing this event?"
 msgstr "Ai đang tổ chức sự kiện này?"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "Dành cho ai?"
+
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"
 msgstr "Ai nên được hỏi câu hỏi này?"
@@ -10071,7 +10179,7 @@ msgstr "Làm việc"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Working..."
 msgstr "Làm việc ..."
 
@@ -10384,7 +10492,7 @@ msgid "Your organizer address"
 msgstr "Địa chỉ nhà tổ chức của bạn"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:113
+#: src/components/routes/auth/Register/index.tsx:151
 msgid "Your password"
 msgstr "Mật khẩu của bạn"
 

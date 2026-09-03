@@ -173,6 +173,13 @@ export const router: RouteObject[] = [
                 }
             },
             {
+                path: "registration-invites",
+                async lazy() {
+                    const RegistrationInvites = await import("./components/routes/admin/RegistrationInvites");
+                    return { Component: RegistrationInvites.default };
+                }
+            },
+            {
                 path: "events",
                 async lazy() {
                     const Events = await import("./components/routes/admin/Events");

@@ -596,7 +596,7 @@ msgid "Admin Access Required"
 msgstr "Vyžaduje sa prístup správcu"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:27
+#: src/components/layouts/Admin/index.tsx:28
 #: src/components/layouts/OrganizerLayout/index.tsx:106
 #: src/components/routes/admin/Dashboard/index.tsx:70
 msgid "Admin Dashboard"
@@ -741,7 +741,7 @@ msgstr "Takmer hotovo! Dokončite prepojenie Stripe účtu a začnite prijímať
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Takmer hotovo! Čakáme na spracovanie vašej platby. Malo by to trvať len niekoľko sekúnd."
 
-#: src/components/routes/auth/Register/index.tsx:75
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Už máte účet? <0>{0}</0>"
 
@@ -819,6 +819,10 @@ msgstr "Odpoveď bola úspešne aktualizovaná."
 #: src/components/routes/event/Settings/Sections/EmailSettings/GeneralEmailSettings.tsx:62
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "Všetky otázky od držiteľov produktov budú odoslané na túto e-mailovú adresu. Táto adresa bude tiež použitá ako adresa \"reply-to\" pre všetky e-maily odoslané z tejto udalosti"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "Ktokoľvek s odkazom"
 
 #: src/components/routes/account/ManageAccount/index.tsx:38
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:55
@@ -1386,7 +1390,7 @@ msgstr "Pridaním sledovacích pixelov potvrdzujete, že vy a táto platforma st
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Pokračovaním súhlasíte s <0>Podmienkami služby {0}</0>"
 
-#: src/components/routes/auth/Register/index.tsx:141
+#: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Registráciou súhlasíte s našimi <0>Podmienkami služby</0> a <1>Zásadami ochrany osobných údajov</1>."
 
@@ -1428,6 +1432,7 @@ msgstr "Kampaň"
 #: src/components/common/QuestionAndAnswerList/index.tsx:149
 #: src/components/common/WaitlistTable/index.tsx:111
 #: src/components/common/WaitlistTable/index.tsx:132
+#: src/components/routes/admin/RegistrationInvites/index.tsx:241
 #: src/components/routes/event/messages.tsx:80
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:62
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:68
@@ -1942,7 +1947,7 @@ msgstr "Názvy konfigurácií sú viditeľné pre koncových používateľov. Pe
 msgid "Configuration updated successfully"
 msgstr "Konfigurácia bola úspešne aktualizovaná"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "Konfigurácie"
@@ -1988,12 +1993,12 @@ msgid "Confirm New Password"
 msgstr "Potvrdiť nové heslo"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:119
+#: src/components/routes/auth/Register/index.tsx:157
 msgid "Confirm password"
 msgstr "Potvrdiť heslo"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:118
+#: src/components/routes/auth/Register/index.tsx:156
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Potvrdiť heslo"
@@ -2203,6 +2208,7 @@ msgid "Copy Email"
 msgstr "Kopírovať e-mail"
 
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:67
+#: src/components/routes/admin/RegistrationInvites/index.tsx:277
 msgid "Copy link"
 msgstr "Kopírovať odkaz"
 
@@ -2214,6 +2220,10 @@ msgstr "Kopírovať odkaz"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:531
 msgid "Copy my details to:"
 msgstr "Kopírovať moje údaje do:"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "Skopírujte tento odkaz teraz. Neukladá sa a nedá sa znova zobraziť."
 
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
@@ -2369,6 +2379,12 @@ msgstr "Vytvorte zľavy, prístupové kódy pre skryté lístky a špeciálne po
 msgid "Create Event"
 msgstr "Vytvoriť udalosť"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "Vytvoriť pozvánku"
+
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
 msgstr "Vytvoriť nové"
@@ -2447,6 +2463,7 @@ msgstr "Vytvorte vlastnú udalosť"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:169
 #: src/components/routes/admin/Messages/index.tsx:309
+#: src/components/routes/admin/RegistrationInvites/index.tsx:126
 msgid "Created"
 msgstr "Vytvorené"
 
@@ -2843,6 +2860,7 @@ msgstr "Suma daru"
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:72
 #: src/components/modals/CreateWebhookModal/index.tsx:72
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:123
+#: src/components/routes/admin/RegistrationInvites/index.tsx:293
 msgid "Done"
 msgstr "Hotovo"
 
@@ -2950,6 +2968,10 @@ msgstr "napr. Dôležitá aktualizácia o vašich lístkoch"
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "napr. Štandard, Prémiový, Enterprise"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "Každý odkaz vytvorí jeden účet a potom prestane fungovať, aj keď je verejná registrácia zatvorená. Odkaz sa zobrazí len raz, pri vytvorení."
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3121,7 +3143,7 @@ msgstr "Oprávňuje na oficiálne daňové potvrdenie."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:104
+#: src/components/routes/auth/Register/index.tsx:140
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -3141,6 +3163,7 @@ msgstr "E-mail a šablóny"
 #: src/components/modals/CreateAttendeeModal/index.tsx:143
 #: src/components/modals/ManageAttendeeModal/index.tsx:114
 #: src/components/modals/ManageOrderModal/index.tsx:157
+#: src/components/routes/admin/RegistrationInvites/index.tsx:221
 msgid "Email address"
 msgstr "E-mailová adresa"
 
@@ -3553,7 +3576,7 @@ msgid "Event Updated"
 msgstr "Udalosť aktualizovaná"
 
 #: src/components/common/AdminAccountsTable/index.tsx:82
-#: src/components/layouts/Admin/index.tsx:16
+#: src/components/layouts/Admin/index.tsx:17
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
@@ -3594,13 +3617,19 @@ msgid "Expiration date"
 msgstr "Dátum vypršania"
 
 #: src/components/common/WaitlistTable/index.tsx:28
+#: src/components/routes/admin/RegistrationInvites/index.tsx:49
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:74
 msgid "Expired"
 msgstr "Vypršané"
 
 #: src/components/common/PromoCodeTable/index.tsx:73
+#: src/components/routes/admin/RegistrationInvites/index.tsx:130
 msgid "Expires"
 msgstr "Vyprší"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "Vyprší po (dňoch)"
 
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
@@ -3661,7 +3690,7 @@ msgstr "Neúspešné"
 msgid "Failed At"
 msgstr "Zlyhalo o"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "Neúspešné úlohy"
@@ -3805,6 +3834,10 @@ msgstr "Nepodarilo sa zopakovať úlohu"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "Nepodarilo sa zopakovať úlohy"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "Pozvánku sa nepodarilo zrušiť"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4009,7 +4042,7 @@ msgstr "Meno"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:90
+#: src/components/routes/auth/Register/index.tsx:126
 #: src/components/routes/product-widget/CollectInformation/index.tsx:474
 #: src/components/routes/product-widget/CollectInformation/index.tsx:690
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4156,7 +4189,7 @@ msgstr "Získať trasu"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Dostávajte platby okamžite cez Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:73
+#: src/components/routes/auth/Register/index.tsx:109
 msgid "Get started"
 msgstr "Začať"
 
@@ -4624,13 +4657,29 @@ msgstr "Neplatná Liquid syntax. Opravte ju a skúste znovu."
 msgid "Invalid VAT number format"
 msgstr "Neplatný formát čísla DPH"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "Odkaz na pozvánku"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "Pozvánka znovu odoslaná!"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "Pozvánka zrušená"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "Pozvánka odvolaná!"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "Pozvánka nie je dostupná"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "Pozvánky"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4730,7 +4779,7 @@ msgid "Job queued for retry"
 msgstr "Úloha zaradená do frontu na opakovanie"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:91
+#: src/components/routes/auth/Register/index.tsx:127
 msgid "John"
 msgstr "Ján"
 
@@ -4839,7 +4888,7 @@ msgstr "Priezvisko"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:96
+#: src/components/routes/auth/Register/index.tsx:132
 #: src/components/routes/product-widget/CollectInformation/index.tsx:481
 #: src/components/routes/product-widget/CollectInformation/index.tsx:482
 #: src/components/routes/product-widget/CollectInformation/index.tsx:697
@@ -4876,6 +4925,10 @@ msgstr "Naposledy použité"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:201
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Nechajte prázdne pre použitie predvoleného slova \"Faktúra\""
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Nechajte prázdne pre odkaz bez expirácie."
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -4959,7 +5012,7 @@ msgid "Location"
 msgstr "Miesto"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:78
+#: src/components/routes/auth/Register/index.tsx:114
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
@@ -5167,7 +5220,7 @@ msgstr "Správa naplánovaná"
 msgid "Message Sent"
 msgstr "Správa odoslaná"
 
-#: src/components/layouts/Admin/index.tsx:18
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5312,6 +5365,7 @@ msgstr "Čistý príjem"
 #: src/components/common/WebhookTable/index.tsx:266
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:114
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:101
+#: src/components/routes/admin/RegistrationInvites/index.tsx:134
 msgid "Never"
 msgstr "Nikdy"
 
@@ -5449,6 +5503,10 @@ msgstr "Žiadne dostupné filtre"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:86
 msgid "No impact on your current or past transactions"
 msgstr "Žiadny vplyv na vaše súčasné alebo minulé transakcie"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "Zatiaľ žiadne pozvánky"
 
 #: src/components/common/OrdersTable/index.tsx:334
 msgid "No invoice"
@@ -5656,6 +5714,10 @@ msgstr "Neodbavený"
 msgid "Not Eligible"
 msgstr "Neoprávnený"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "Poznámka"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5794,6 +5856,10 @@ msgstr "Online udalosť"
 msgid "Online Event Details"
 msgstr "Podrobnosti online udalosti"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "Tento odkaz môže použiť len {0}."
+
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:68
 msgid "Only a registered charity may issue official receipts. Leave the registration number empty and no receipt will ever be issued. You remain responsible for the accuracy of every receipt, including the valuation of any advantage received by the donor."
 msgstr "Oficiálne potvrdenia môže vystavovať iba registrovaná charitatívna organizácia. Ak necháte registračné číslo prázdne, nikdy sa nevystaví žiadne potvrdenie. Naďalej zodpovedáte za správnosť každého potvrdenia vrátane ocenenia akejkoľvek výhody, ktorú darca získal."
@@ -5856,6 +5922,14 @@ msgstr "Nepovinné. Pomáha pokryť náklady na prevádzku tejto predajne vstupe
 #: src/components/common/CheckIn/DoorSaleModal.tsx:169
 msgid "Optional. If given, the ticket and its QR code are emailed to the buyer."
 msgstr "Voliteľné. Ak ho zadáte, lístok a jeho QR kód sa kupujúcemu pošlú e-mailom."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "Voliteľné. Vidíte to len vy, aby ste pozvánku neskôr spoznali."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "Voliteľné. Ak je vyplnené, odkaz môže použiť len táto adresa."
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6019,7 +6093,7 @@ msgstr "Objednávka bola úspešne aktualizovaná"
 msgid "Order was cancelled"
 msgstr "Objednávka bola zrušená"
 
-#: src/components/layouts/Admin/index.tsx:17
+#: src/components/layouts/Admin/index.tsx:18
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
@@ -6220,7 +6294,7 @@ msgstr "Preniesť na kupujúceho"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:112
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Heslo"
@@ -6229,7 +6303,7 @@ msgstr "Heslo"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "Heslo musí mať minimálne 8 znakov"
 
-#: src/components/routes/auth/Register/index.tsx:36
+#: src/components/routes/auth/Register/index.tsx:46
 msgid "Password must be at least 8 characters"
 msgstr "Heslo musí mať aspoň 8 znakov"
 
@@ -6238,7 +6312,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Heslo bolo úspešne obnovené. Prihláste sa novým heslom."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:37
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Passwords are not the same"
 msgstr "Heslá sa nezhodujú"
 
@@ -6497,7 +6571,7 @@ msgid "Please check your email and password and try again"
 msgstr "Skontrolujte e-mail a heslo a skúste znovu"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:38
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Please check your email is valid"
 msgstr "Skontrolujte, či je váš e-mail platný"
 
@@ -6940,6 +7014,10 @@ msgstr "Znovu ponúknuť miesto"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "Pripravení na upgrade? Trvá to len niekoľko minút."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "Pripravená na použitie"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "Analytika v reálnom čase"
@@ -6949,7 +7027,7 @@ msgid "Receipt number prefix"
 msgstr "Predpona čísla potvrdenia"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:171
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Dostávajte aktualizácie produktov od {0}."
@@ -7069,9 +7147,13 @@ msgstr "Vrátenia"
 msgid "Regional Settings"
 msgstr "Regionálne nastavenia"
 
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Register"
 msgstr "Registrovať"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "Registračné pozvánky"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7262,12 +7344,21 @@ msgid "Revoke {0}? Any application using it will stop working immediately."
 msgstr "Zrušiť {0}? Každá aplikácia, ktorá ho používa, okamžite prestane fungovať."
 
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:130
+#: src/components/routes/admin/RegistrationInvites/index.tsx:151
 msgid "Revoke invitation"
 msgstr "Odvolať pozvánku"
 
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "Odvolať ponuku"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "Zrušiť túto pozvánku? Odkaz okamžite prestane fungovať."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "Zrušená"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -7941,7 +8032,7 @@ msgid "Slovak"
 msgstr "Slovenčina"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:97
+#: src/components/routes/auth/Register/index.tsx:133
 msgid "Smith"
 msgstr "Kováč"
 
@@ -8719,6 +8810,14 @@ msgstr "Táto udalosť ešte nie je zverejnená"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Tieto informácie sa zobrazia na platobnej stránke, stránke súhrnu objednávky a v potvrdzovacom e-maile objednávky."
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "Táto pozvánka je viazaná na túto adresu."
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "Tento odkaz na pozvánku už nie je platný. Vyžiadajte si nový."
+
 #: src/components/forms/ProductForm/index.tsx:149
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "Toto je všeobecný produkt, ako tričko alebo hrnček. Nebude vydaný žiadny lístok"
@@ -9404,6 +9503,11 @@ msgstr "Použiť údaje objednávky pre všetkých účastníkov. Mená a e-mail
 msgid "Use the buyer's details for all attendees"
 msgstr "Použiť údaje kupujúceho pre všetkých účastníkov"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "Použitá"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Používa sa pre okraje, zvýraznenia a štýlovanie QR kódu"
@@ -9439,7 +9543,7 @@ msgstr "Používatelia môžu zmeniť e-mail v <0>Nastaveniach profilu</0>"
 msgid "UTC"
 msgstr "UTC"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 msgid "UTM Analytics"
 msgstr "UTM analytika"
 
@@ -10038,6 +10142,10 @@ msgstr "Ktoré lístky majú byť spojené s týmto zoznamom odbavení?"
 msgid "Who is organizing this event?"
 msgstr "Kto organizuje túto udalosť?"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "Pre koho to je?"
+
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"
 msgstr "Komu má byť táto otázka položená?"
@@ -10071,7 +10179,7 @@ msgstr "Pracuje"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Working..."
 msgstr "Pracuje..."
 
@@ -10384,7 +10492,7 @@ msgid "Your organizer address"
 msgstr "Adresa vášho organizátora"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:113
+#: src/components/routes/auth/Register/index.tsx:151
 msgid "Your password"
 msgstr "Vaše heslo"
 

@@ -596,7 +596,7 @@ msgid "Admin Access Required"
 msgstr "需要管理員存取權限"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:27
+#: src/components/layouts/Admin/index.tsx:28
 #: src/components/layouts/OrganizerLayout/index.tsx:106
 #: src/components/routes/admin/Dashboard/index.tsx:70
 msgid "Admin Dashboard"
@@ -741,7 +741,7 @@ msgstr "快完成了！完成連接您的 Stripe 帳戶以開始接受付款。"
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "快完成了！我們正在等待您的付款處理。這只需要幾秒鐘。"
 
-#: src/components/routes/auth/Register/index.tsx:75
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Already have an account? <0>{0}</0>"
 msgstr "已有帳戶？<0>{0}</0>"
 
@@ -819,6 +819,10 @@ msgstr "答案更新成功。"
 #: src/components/routes/event/Settings/Sections/EmailSettings/GeneralEmailSettings.tsx:62
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "產品持有者的任何查詢都將發送到此電子郵件地址。此地址還將用作從此活動發送的所有電子郵件的“回覆至”地址"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "任何取得連結的人"
 
 #: src/components/routes/account/ManageAccount/index.tsx:38
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:55
@@ -1386,7 +1390,7 @@ msgstr "通過添加追蹤像素，您確認您和本平台是所收集數據的
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "繼續即表示您同意 <0>{0} 服務條款</0>"
 
-#: src/components/routes/auth/Register/index.tsx:141
+#: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "註冊即表示您同意我們的<0>服務條款</0>和<1>隱私政策</1>。"
 
@@ -1428,6 +1432,7 @@ msgstr "活動"
 #: src/components/common/QuestionAndAnswerList/index.tsx:149
 #: src/components/common/WaitlistTable/index.tsx:111
 #: src/components/common/WaitlistTable/index.tsx:132
+#: src/components/routes/admin/RegistrationInvites/index.tsx:241
 #: src/components/routes/event/messages.tsx:80
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:62
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:68
@@ -1942,7 +1947,7 @@ msgstr "配置名稱對最終用戶可見。固定費用將按當前匯率轉換
 msgid "Configuration updated successfully"
 msgstr "配置更新成功"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "配置"
@@ -1988,12 +1993,12 @@ msgid "Confirm New Password"
 msgstr "確認新密碼"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:119
+#: src/components/routes/auth/Register/index.tsx:157
 msgid "Confirm password"
 msgstr "確認密碼"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:118
+#: src/components/routes/auth/Register/index.tsx:156
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "確認密碼"
@@ -2203,6 +2208,7 @@ msgid "Copy Email"
 msgstr "複製郵箱"
 
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:67
+#: src/components/routes/admin/RegistrationInvites/index.tsx:277
 msgid "Copy link"
 msgstr "複製連結"
 
@@ -2214,6 +2220,10 @@ msgstr "複製鏈接"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:531
 msgid "Copy my details to:"
 msgstr "複製我的資料到："
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "請立即複製此連結。系統不會儲存，亦無法再次顯示。"
 
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
@@ -2369,6 +2379,12 @@ msgstr "建立折扣、隱藏門票的存取碼和特別優惠。"
 msgid "Create Event"
 msgstr "創建活動"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "建立邀請"
+
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
 msgstr "創建新的"
@@ -2447,6 +2463,7 @@ msgstr "建立您自己的活動"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:169
 #: src/components/routes/admin/Messages/index.tsx:309
+#: src/components/routes/admin/RegistrationInvites/index.tsx:126
 msgid "Created"
 msgstr "已建立"
 
@@ -2843,6 +2860,7 @@ msgstr "捐款金額"
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:72
 #: src/components/modals/CreateWebhookModal/index.tsx:72
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:123
+#: src/components/routes/admin/RegistrationInvites/index.tsx:293
 msgid "Done"
 msgstr "完成"
 
@@ -2950,6 +2968,10 @@ msgstr "例如：關於您門票的重要更新"
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "例如：標準版、進階版、企業版"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "每條連結只能建立一個帳戶，之後即失效，即使公開註冊已關閉亦然。連結只會在建立時顯示一次。"
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3121,7 +3143,7 @@ msgstr "符合開立正式稅務收據的條件。"
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:104
+#: src/components/routes/auth/Register/index.tsx:140
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -3141,6 +3163,7 @@ msgstr "電子郵件和模板"
 #: src/components/modals/CreateAttendeeModal/index.tsx:143
 #: src/components/modals/ManageAttendeeModal/index.tsx:114
 #: src/components/modals/ManageOrderModal/index.tsx:157
+#: src/components/routes/admin/RegistrationInvites/index.tsx:221
 msgid "Email address"
 msgstr "電子郵件地址"
 
@@ -3553,7 +3576,7 @@ msgid "Event Updated"
 msgstr "活動已更新"
 
 #: src/components/common/AdminAccountsTable/index.tsx:82
-#: src/components/layouts/Admin/index.tsx:16
+#: src/components/layouts/Admin/index.tsx:17
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
@@ -3594,13 +3617,19 @@ msgid "Expiration date"
 msgstr "過期日期"
 
 #: src/components/common/WaitlistTable/index.tsx:28
+#: src/components/routes/admin/RegistrationInvites/index.tsx:49
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:74
 msgid "Expired"
 msgstr "已過期"
 
 #: src/components/common/PromoCodeTable/index.tsx:73
+#: src/components/routes/admin/RegistrationInvites/index.tsx:130
 msgid "Expires"
 msgstr "到期"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "有效期（日）"
 
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
@@ -3661,7 +3690,7 @@ msgstr "失敗"
 msgid "Failed At"
 msgstr "失敗時間"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "失敗任務"
@@ -3805,6 +3834,10 @@ msgstr "重試任務失敗"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "重試任務失敗"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "撤銷邀請失敗"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4009,7 +4042,7 @@ msgstr "姓名"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:90
+#: src/components/routes/auth/Register/index.tsx:126
 #: src/components/routes/product-widget/CollectInformation/index.tsx:474
 #: src/components/routes/product-widget/CollectInformation/index.tsx:690
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4156,7 +4189,7 @@ msgstr "取得路線"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "透過 Stripe Connect 立即獲得付款"
 
-#: src/components/routes/auth/Register/index.tsx:73
+#: src/components/routes/auth/Register/index.tsx:109
 msgid "Get started"
 msgstr "開始使用"
 
@@ -4624,13 +4657,29 @@ msgstr "無效的Liquid語法。請更正後再試。"
 msgid "Invalid VAT number format"
 msgstr "無效的增值稅號碼格式"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "邀請連結"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "再次發出邀請！"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "邀請已撤銷"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "撤銷邀請！"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "邀請無法使用"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "邀請"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4730,7 +4779,7 @@ msgid "Job queued for retry"
 msgstr "任務已排隊等待重試"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:91
+#: src/components/routes/auth/Register/index.tsx:127
 msgid "John"
 msgstr "約翰"
 
@@ -4839,7 +4888,7 @@ msgstr "姓氏"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:96
+#: src/components/routes/auth/Register/index.tsx:132
 #: src/components/routes/product-widget/CollectInformation/index.tsx:481
 #: src/components/routes/product-widget/CollectInformation/index.tsx:482
 #: src/components/routes/product-widget/CollectInformation/index.tsx:697
@@ -4876,6 +4925,10 @@ msgstr "最近一次使用"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:201
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "留空以使用默認詞“發票”"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "留空表示連結永不過期。"
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -4959,7 +5012,7 @@ msgid "Location"
 msgstr "地點"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:78
+#: src/components/routes/auth/Register/index.tsx:114
 msgid "Log in"
 msgstr "登錄"
 
@@ -5167,7 +5220,7 @@ msgstr "訊息已排程"
 msgid "Message Sent"
 msgstr "發送的信息"
 
-#: src/components/layouts/Admin/index.tsx:18
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5312,6 +5365,7 @@ msgstr "淨收入"
 #: src/components/common/WebhookTable/index.tsx:266
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:114
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:101
+#: src/components/routes/admin/RegistrationInvites/index.tsx:134
 msgid "Never"
 msgstr "從不"
 
@@ -5449,6 +5503,10 @@ msgstr "沒有可用篩選器"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:86
 msgid "No impact on your current or past transactions"
 msgstr "不影響您當前或過去的交易"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "暫無邀請"
 
 #: src/components/common/OrdersTable/index.tsx:334
 msgid "No invoice"
@@ -5656,6 +5714,10 @@ msgstr "未簽到"
 msgid "Not Eligible"
 msgstr "不符合條件"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "備註"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5794,6 +5856,10 @@ msgstr "線上活動"
 msgid "Online Event Details"
 msgstr "在線活動詳情"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "只有 {0} 可以使用此連結。"
+
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:68
 msgid "Only a registered charity may issue official receipts. Leave the registration number empty and no receipt will ever be issued. You remain responsible for the accuracy of every receipt, including the valuation of any advantage received by the donor."
 msgstr "只有已註冊的慈善機構才可開立正式收據。若註冊號碼留空，將永遠不會開立任何收據。你仍須對每張收據的準確性負責，包括對捐款人所獲任何利益的估值。"
@@ -5856,6 +5922,14 @@ msgstr "可選。有助分擔本票務服務的託管費用。"
 #: src/components/common/CheckIn/DoorSaleModal.tsx:169
 msgid "Optional. If given, the ticket and its QR code are emailed to the buyer."
 msgstr "選填。如果填寫，門票及其二維碼會透過電郵傳送給購買者。"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "選填。只有你能看到，方便日後辨識此邀請。"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "選填。填寫後，只有該地址可以使用此連結。"
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6019,7 +6093,7 @@ msgstr "訂單更新成功"
 msgid "Order was cancelled"
 msgstr "訂單已被取消"
 
-#: src/components/layouts/Admin/index.tsx:17
+#: src/components/layouts/Admin/index.tsx:18
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
@@ -6220,7 +6294,7 @@ msgstr "轉嫁給買家"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:112
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "密碼"
@@ -6229,7 +6303,7 @@ msgstr "密碼"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "密碼必須至少包含 8 個字符"
 
-#: src/components/routes/auth/Register/index.tsx:36
+#: src/components/routes/auth/Register/index.tsx:46
 msgid "Password must be at least 8 characters"
 msgstr "密碼必須至少包含 8 個字符"
 
@@ -6238,7 +6312,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "密碼重置成功。請使用新密碼登錄。"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:37
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Passwords are not the same"
 msgstr "密碼不一樣"
 
@@ -6497,7 +6571,7 @@ msgid "Please check your email and password and try again"
 msgstr "請檢查您的電子郵件和密碼並重試"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:38
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Please check your email is valid"
 msgstr "請檢查您的電子郵件是否有效"
 
@@ -6940,6 +7014,10 @@ msgstr "重新提供名額"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "準備升級？這只需要幾分鐘。"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "可以使用"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "即時分析"
@@ -6949,7 +7027,7 @@ msgid "Receipt number prefix"
 msgstr "收據編號前綴"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:171
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "接收 {0} 的產品更新。"
@@ -7069,9 +7147,13 @@ msgstr "退款"
 msgid "Regional Settings"
 msgstr "地區設定"
 
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Register"
 msgstr "註冊"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "註冊邀請"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7262,12 +7344,21 @@ msgid "Revoke {0}? Any application using it will stop working immediately."
 msgstr "撤銷 {0}？任何使用它的應用程式將立即停止運作。"
 
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:130
+#: src/components/routes/admin/RegistrationInvites/index.tsx:151
 msgid "Revoke invitation"
 msgstr "撤銷邀請"
 
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "撤銷報價"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "撤銷此邀請？連結將立即失效。"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "已撤銷"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -7941,7 +8032,7 @@ msgid "Slovak"
 msgstr "斯洛伐克語"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:97
+#: src/components/routes/auth/Register/index.tsx:133
 msgid "Smith"
 msgstr "史密斯"
 
@@ -8719,6 +8810,14 @@ msgstr "呢個活動未發佈"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "這些信息將顯示在支付頁面、訂單摘要頁面和訂單確認電子郵件中。"
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "此邀請已綁定此電郵地址。"
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "此邀請連結已失效。請索取新的連結。"
+
 #: src/components/forms/ProductForm/index.tsx:149
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "這是一種常規產品，例如T恤或杯子。不發行門票"
@@ -9404,6 +9503,11 @@ msgstr "為所有參加者使用訂單詳情。參加者姓名和電郵將與買
 msgid "Use the buyer's details for all attendees"
 msgstr "為所有參與者使用購買者的資料"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "已使用"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "用於邊框、高亮和二維碼樣式"
@@ -9439,7 +9543,7 @@ msgstr "用户可在 <0>\"配置文件設置\"</0> 中更改自己的電子郵�
 msgid "UTC"
 msgstr "世界協調時"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 msgid "UTM Analytics"
 msgstr "UTM 分析"
 
@@ -10038,6 +10142,10 @@ msgstr "哪些票應與此簽到列表關聯？"
 msgid "Who is organizing this event?"
 msgstr "這項活動由誰組織？"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "這是給誰的？"
+
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"
 msgstr "這個問題應該問誰？"
@@ -10071,7 +10179,7 @@ msgstr "工作"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Working..."
 msgstr "工作..."
 
@@ -10384,7 +10492,7 @@ msgid "Your organizer address"
 msgstr "您主辦單位的地址"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:113
+#: src/components/routes/auth/Register/index.tsx:151
 msgid "Your password"
 msgstr "您的密碼"
 

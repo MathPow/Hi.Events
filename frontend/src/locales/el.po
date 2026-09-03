@@ -596,7 +596,7 @@ msgid "Admin Access Required"
 msgstr "Απαιτείται Πρόσβαση Διαχειριστή"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:27
+#: src/components/layouts/Admin/index.tsx:28
 #: src/components/layouts/OrganizerLayout/index.tsx:106
 #: src/components/routes/admin/Dashboard/index.tsx:70
 msgid "Admin Dashboard"
@@ -741,7 +741,7 @@ msgstr "Σχεδόν έτοιμο! Ολοκληρώστε τη σύνδεση τ
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Σχεδόν έτοιμο! Αναμένουμε την επεξεργασία της πληρωμής σας. Αυτό θα διαρκέσει μόνο λίγα δευτερόλεπτα."
 
-#: src/components/routes/auth/Register/index.tsx:75
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Έχετε ήδη λογαριασμό; <0>{0}</0>"
 
@@ -819,6 +819,10 @@ msgstr "Η απάντηση ενημερώθηκε επιτυχώς."
 #: src/components/routes/event/Settings/Sections/EmailSettings/GeneralEmailSettings.tsx:62
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "Τυχόν ερωτήματα από κατόχους προϊόντων θα αποστέλλονται σε αυτή τη διεύθυνση. Θα χρησιμοποιηθεί επίσης ως διεύθυνση \"απάντηση προς\" για όλα τα email αυτής της εκδήλωσης"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "Οποιοσδήποτε έχει τον σύνδεσμο"
 
 #: src/components/routes/account/ManageAccount/index.tsx:38
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:55
@@ -1386,7 +1390,7 @@ msgstr "Με την προσθήκη pixels παρακολούθησης, ανα
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Συνεχίζοντας, αποδέχεστε τους <0>Όρους Χρήσης {0}</0>"
 
-#: src/components/routes/auth/Register/index.tsx:141
+#: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Με την εγγραφή σας συμφωνείτε με τους <0>Όρους Χρήσης</0> και την <1>Πολιτική Απορρήτου</1>."
 
@@ -1428,6 +1432,7 @@ msgstr "Καμπάνια"
 #: src/components/common/QuestionAndAnswerList/index.tsx:149
 #: src/components/common/WaitlistTable/index.tsx:111
 #: src/components/common/WaitlistTable/index.tsx:132
+#: src/components/routes/admin/RegistrationInvites/index.tsx:241
 #: src/components/routes/event/messages.tsx:80
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:62
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:68
@@ -1942,7 +1947,7 @@ msgstr "Τα ονόματα ρυθμίσεων είναι ορατά στους 
 msgid "Configuration updated successfully"
 msgstr "Η ρύθμιση ενημερώθηκε επιτυχώς"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "Ρυθμίσεις"
@@ -1988,12 +1993,12 @@ msgid "Confirm New Password"
 msgstr "Επιβεβαίωση Νέου Κωδικού"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:119
+#: src/components/routes/auth/Register/index.tsx:157
 msgid "Confirm password"
 msgstr "Επιβεβαίωση κωδικού"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:118
+#: src/components/routes/auth/Register/index.tsx:156
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Επιβεβαίωση Κωδικού"
@@ -2203,6 +2208,7 @@ msgid "Copy Email"
 msgstr "Αντιγραφή Email"
 
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:67
+#: src/components/routes/admin/RegistrationInvites/index.tsx:277
 msgid "Copy link"
 msgstr "Αντιγραφή συνδέσμου"
 
@@ -2214,6 +2220,10 @@ msgstr "Αντιγραφή Συνδέσμου"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:531
 msgid "Copy my details to:"
 msgstr "Αντιγραφή στοιχείων μου σε:"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "Αντιγράψτε τον σύνδεσμο τώρα. Δεν αποθηκεύεται και δεν μπορεί να εμφανιστεί ξανά."
 
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
@@ -2369,6 +2379,12 @@ msgstr "Δημιουργία εκπτώσεων, κωδικών πρόσβαση
 msgid "Create Event"
 msgstr "Δημιουργία Εκδήλωσης"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "Δημιουργία πρόσκλησης"
+
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
 msgstr "Δημιουργία νέου"
@@ -2447,6 +2463,7 @@ msgstr "Δημιουργήστε τη δική σας εκδήλωση"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:169
 #: src/components/routes/admin/Messages/index.tsx:309
+#: src/components/routes/admin/RegistrationInvites/index.tsx:126
 msgid "Created"
 msgstr "Δημιουργήθηκε"
 
@@ -2843,6 +2860,7 @@ msgstr "Ποσό δωρεάς"
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:72
 #: src/components/modals/CreateWebhookModal/index.tsx:72
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:123
+#: src/components/routes/admin/RegistrationInvites/index.tsx:293
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
@@ -2950,6 +2968,10 @@ msgstr "π.χ., Σημαντική ενημέρωση για τα εισιτήρ
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "π.χ., Βασικό, Premium, Enterprise"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "Κάθε σύνδεσμος δημιουργεί έναν μόνο λογαριασμό και μετά παύει να λειτουργεί, ακόμα και όταν η δημόσια εγγραφή είναι κλειστή. Ο σύνδεσμος εμφανίζεται μόνο μία φορά, κατά τη δημιουργία."
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3121,7 +3143,7 @@ msgstr "Δικαιούται επίσημη φορολογική απόδειξ�
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:104
+#: src/components/routes/auth/Register/index.tsx:140
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -3141,6 +3163,7 @@ msgstr "Email & Πρότυπα"
 #: src/components/modals/CreateAttendeeModal/index.tsx:143
 #: src/components/modals/ManageAttendeeModal/index.tsx:114
 #: src/components/modals/ManageOrderModal/index.tsx:157
+#: src/components/routes/admin/RegistrationInvites/index.tsx:221
 msgid "Email address"
 msgstr "Διεύθυνση email"
 
@@ -3553,7 +3576,7 @@ msgid "Event Updated"
 msgstr "Εκδήλωση Ενημερώθηκε"
 
 #: src/components/common/AdminAccountsTable/index.tsx:82
-#: src/components/layouts/Admin/index.tsx:16
+#: src/components/layouts/Admin/index.tsx:17
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
@@ -3594,13 +3617,19 @@ msgid "Expiration date"
 msgstr "Ημερομηνία λήξης"
 
 #: src/components/common/WaitlistTable/index.tsx:28
+#: src/components/routes/admin/RegistrationInvites/index.tsx:49
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:74
 msgid "Expired"
 msgstr "Ληγμένο"
 
 #: src/components/common/PromoCodeTable/index.tsx:73
+#: src/components/routes/admin/RegistrationInvites/index.tsx:130
 msgid "Expires"
 msgstr "Λήγει"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "Λήγει μετά από (ημέρες)"
 
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
@@ -3661,7 +3690,7 @@ msgstr "Απέτυχε"
 msgid "Failed At"
 msgstr "Απέτυχε στο"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "Αποτυχημένες Εργασίες"
@@ -3805,6 +3834,10 @@ msgstr "Αποτυχία επανάληψης εργασίας"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "Αποτυχία επανάληψης εργασιών"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "Η ανάκληση της πρόσκλησης απέτυχε"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4009,7 +4042,7 @@ msgstr "Όνομα"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:90
+#: src/components/routes/auth/Register/index.tsx:126
 #: src/components/routes/product-widget/CollectInformation/index.tsx:474
 #: src/components/routes/product-widget/CollectInformation/index.tsx:690
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4156,7 +4189,7 @@ msgstr "Οδηγίες"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Λάβετε πληρωμή αμέσως μέσω Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:73
+#: src/components/routes/auth/Register/index.tsx:109
 msgid "Get started"
 msgstr "Ξεκινήστε"
 
@@ -4624,13 +4657,29 @@ msgstr "Μη έγκυρη σύνταξη Liquid. Παρακαλώ διορθώσ
 msgid "Invalid VAT number format"
 msgstr "Μη έγκυρη μορφή αριθμού ΦΠΑ"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "Σύνδεσμος πρόσκλησης"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "Η πρόσκληση εστάλη ξανά!"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "Η πρόσκληση ανακλήθηκε"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "Η πρόσκληση ανακλήθηκε!"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "Η πρόσκληση δεν είναι διαθέσιμη"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "Προσκλήσεις"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4730,7 +4779,7 @@ msgid "Job queued for retry"
 msgstr "Η εργασία τέθηκε σε ουρά για επανάληψη"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:91
+#: src/components/routes/auth/Register/index.tsx:127
 msgid "John"
 msgstr "Γιώργης"
 
@@ -4839,7 +4888,7 @@ msgstr "Επώνυμο"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:96
+#: src/components/routes/auth/Register/index.tsx:132
 #: src/components/routes/product-widget/CollectInformation/index.tsx:481
 #: src/components/routes/product-widget/CollectInformation/index.tsx:482
 #: src/components/routes/product-widget/CollectInformation/index.tsx:697
@@ -4876,6 +4925,10 @@ msgstr "Τελευταία Χρήση"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:201
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Αφήστε κενό για χρήση της προεπιλεγμένης λέξης \"Τιμολόγιο\""
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Αφήστε το κενό για σύνδεσμο χωρίς λήξη."
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -4959,7 +5012,7 @@ msgid "Location"
 msgstr "Τοποθεσία"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:78
+#: src/components/routes/auth/Register/index.tsx:114
 msgid "Log in"
 msgstr "Σύνδεση"
 
@@ -5167,7 +5220,7 @@ msgstr "Μήνυμα Προγραμματίστηκε"
 msgid "Message Sent"
 msgstr "Μήνυμα Εστάλη"
 
-#: src/components/layouts/Admin/index.tsx:18
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5312,6 +5365,7 @@ msgstr "Καθαρά Έσοδα"
 #: src/components/common/WebhookTable/index.tsx:266
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:114
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:101
+#: src/components/routes/admin/RegistrationInvites/index.tsx:134
 msgid "Never"
 msgstr "Ποτέ"
 
@@ -5449,6 +5503,10 @@ msgstr "Δεν υπάρχουν διαθέσιμα φίλτρα"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:86
 msgid "No impact on your current or past transactions"
 msgstr "Χωρίς επίπτωση στις τρέχουσες ή παρελθοντικές συναλλαγές σας"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "Δεν υπάρχουν προσκλήσεις"
 
 #: src/components/common/OrdersTable/index.tsx:334
 msgid "No invoice"
@@ -5656,6 +5714,10 @@ msgstr "Δεν Εισήλθε"
 msgid "Not Eligible"
 msgstr "Μη Επιλέξιμο"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "Σημείωση"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5794,6 +5856,10 @@ msgstr "Διαδικτυακή Εκδήλωση"
 msgid "Online Event Details"
 msgstr "Λεπτομέρειες Διαδικτυακής Εκδήλωσης"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "Μόνο ο/η {0} μπορεί να χρησιμοποιήσει αυτόν τον σύνδεσμο."
+
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:68
 msgid "Only a registered charity may issue official receipts. Leave the registration number empty and no receipt will ever be issued. You remain responsible for the accuracy of every receipt, including the valuation of any advantage received by the donor."
 msgstr "Μόνο ένας εγγεγραμμένος φιλανθρωπικός οργανισμός μπορεί να εκδίδει επίσημες αποδείξεις. Αφήστε τον αριθμό μητρώου κενό και δεν θα εκδοθεί ποτέ καμία απόδειξη. Παραμένετε υπεύθυνοι για την ακρίβεια κάθε απόδειξης, συμπεριλαμβανομένης της αποτίμησης κάθε οφέλους που έλαβε ο δωρητής."
@@ -5856,6 +5922,14 @@ msgstr "Προαιρετικό. Βοηθά στην κάλυψη του κόστ
 #: src/components/common/CheckIn/DoorSaleModal.tsx:169
 msgid "Optional. If given, the ticket and its QR code are emailed to the buyer."
 msgstr "Προαιρετικό. Αν δοθεί, το εισιτήριο και ο κωδικός QR στέλνονται με email στον αγοραστή."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "Προαιρετικό. Ορατό μόνο σε εσάς, για να αναγνωρίσετε αργότερα την πρόσκληση."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "Προαιρετικό. Αν οριστεί, μόνο αυτή η διεύθυνση μπορεί να χρησιμοποιήσει τον σύνδεσμο."
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6019,7 +6093,7 @@ msgstr "Η παραγγελία ενημερώθηκε επιτυχώς"
 msgid "Order was cancelled"
 msgstr "Η παραγγελία ακυρώθηκε"
 
-#: src/components/layouts/Admin/index.tsx:17
+#: src/components/layouts/Admin/index.tsx:18
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
@@ -6220,7 +6294,7 @@ msgstr "Μεταβίβαση στον Αγοραστή"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:112
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Κωδικός"
@@ -6229,7 +6303,7 @@ msgstr "Κωδικός"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες"
 
-#: src/components/routes/auth/Register/index.tsx:36
+#: src/components/routes/auth/Register/index.tsx:46
 msgid "Password must be at least 8 characters"
 msgstr "Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες"
 
@@ -6238,7 +6312,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Ο κωδικός επαναφέρθηκε επιτυχώς. Παρακαλώ συνδεθείτε με τον νέο σας κωδικό."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:37
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Passwords are not the same"
 msgstr "Οι κωδικοί δεν ταιριάζουν"
 
@@ -6497,7 +6571,7 @@ msgid "Please check your email and password and try again"
 msgstr "Παρακαλώ ελέγξτε το email και τον κωδικό σας και δοκιμάστε ξανά"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:38
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Please check your email is valid"
 msgstr "Παρακαλώ ελέγξτε ότι το email είναι έγκυρο"
 
@@ -6940,6 +7014,10 @@ msgstr "Νέα Προσφορά Θέσης"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "Έτοιμοι για αναβάθμιση; Διαρκεί μόνο λίγα λεπτά."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "Έτοιμη για χρήση"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "Αναλυτικά σε Πραγματικό Χρόνο"
@@ -6949,7 +7027,7 @@ msgid "Receipt number prefix"
 msgstr "Πρόθεμα αριθμού απόδειξης"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:171
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Λήψη ενημερώσεων προϊόντων από {0}."
@@ -7069,9 +7147,13 @@ msgstr "Επιστροφές"
 msgid "Regional Settings"
 msgstr "Περιφερειακές Ρυθμίσεις"
 
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Register"
 msgstr "Εγγραφή"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "Προσκλήσεις εγγραφής"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7262,12 +7344,21 @@ msgid "Revoke {0}? Any application using it will stop working immediately."
 msgstr "Ανάκληση {0}; Κάθε εφαρμογή που το χρησιμοποιεί θα σταματήσει αμέσως να λειτουργεί."
 
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:130
+#: src/components/routes/admin/RegistrationInvites/index.tsx:151
 msgid "Revoke invitation"
 msgstr "Ανάκληση πρόσκλησης"
 
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "Ανάκληση Προσφοράς"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "Ανάκληση αυτής της πρόσκλησης; Ο σύνδεσμος θα πάψει αμέσως να λειτουργεί."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "Ανακλήθηκε"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -7941,7 +8032,7 @@ msgid "Slovak"
 msgstr "Σλοβακικά"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:97
+#: src/components/routes/auth/Register/index.tsx:133
 msgid "Smith"
 msgstr "Παπαδόπουλος"
 
@@ -8719,6 +8810,14 @@ msgstr "Αυτή η εκδήλωση δεν έχει δημοσιευτεί ακ
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Αυτές οι πληροφορίες θα εμφανίζονται στη σελίδα πληρωμής, στη σύνοψη παραγγελίας και στο email επιβεβαίωσης."
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "Αυτή η πρόσκληση συνδέεται με αυτή τη διεύθυνση."
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "Αυτός ο σύνδεσμος πρόσκλησης δεν είναι πλέον έγκυρος. Ζητήστε νέον."
+
 #: src/components/forms/ProductForm/index.tsx:149
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "Πρόκειται για γενικό προϊόν, όπως μπλούζα ή κούπα. Δεν θα εκδοθεί εισιτήριο"
@@ -9404,6 +9503,11 @@ msgstr "Χρήση στοιχείων παραγγελίας για όλους �
 msgid "Use the buyer's details for all attendees"
 msgstr "Χρήση στοιχείων αγοραστή για όλους τους συμμετέχοντες"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "Χρησιμοποιήθηκε"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Χρησιμοποιείται για περιγράμματα, ανάδειξη και στυλιζάρισμα QR code"
@@ -9439,7 +9543,7 @@ msgstr "Οι χρήστες μπορούν να αλλάξουν email στις 
 msgid "UTC"
 msgstr "UTC"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 msgid "UTM Analytics"
 msgstr "Αναλυτικά UTM"
 
@@ -10038,6 +10142,10 @@ msgstr "Ποια εισιτήρια πρέπει να σχετίζονται μ�
 msgid "Who is organizing this event?"
 msgstr "Ποιος διοργανώνει αυτή την εκδήλωση;"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "Για ποιον είναι;"
+
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"
 msgstr "Σε ποιον πρέπει να τεθεί αυτή η ερώτηση;"
@@ -10071,7 +10179,7 @@ msgstr "Εργασία"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Working..."
 msgstr "Επεξεργασία..."
 
@@ -10384,7 +10492,7 @@ msgid "Your organizer address"
 msgstr "Η διεύθυνση του διοργανωτή σας"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:113
+#: src/components/routes/auth/Register/index.tsx:151
 msgid "Your password"
 msgstr "Ο κωδικός σας"
 

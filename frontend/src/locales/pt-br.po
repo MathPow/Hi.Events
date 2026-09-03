@@ -596,7 +596,7 @@ msgid "Admin Access Required"
 msgstr "Acesso de administrador necessário"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:27
+#: src/components/layouts/Admin/index.tsx:28
 #: src/components/layouts/OrganizerLayout/index.tsx:106
 #: src/components/routes/admin/Dashboard/index.tsx:70
 msgid "Admin Dashboard"
@@ -741,7 +741,7 @@ msgstr "Quase lá! Termine de conectar sua conta Stripe para começar a aceitar 
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Quase lá! Estamos apenas aguardando o processamento do seu pagamento. Isso deve levar apenas alguns segundos."
 
-#: src/components/routes/auth/Register/index.tsx:75
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Já tem uma conta? <0>{0}</0>"
 
@@ -819,6 +819,10 @@ msgstr "Resposta atualizada com sucesso."
 #: src/components/routes/event/Settings/Sections/EmailSettings/GeneralEmailSettings.tsx:62
 msgid "Any queries from product holders will be sent to this email address. This will also be used as the \"reply-to\" address for all emails sent from this event"
 msgstr "Quaisquer perguntas dos portadores de produtos serão enviadas para este endereço de e-mail. Este também será usado como o endereço de \"responder para\" em todos os e-mails enviados deste evento"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:113
+msgid "Anyone with the link"
+msgstr "Qualquer pessoa com o link"
 
 #: src/components/routes/account/ManageAccount/index.tsx:38
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:55
@@ -1386,7 +1390,7 @@ msgstr "Ao adicionar pixels de rastreamento, você reconhece que você e esta pl
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Ao continuar, você concorda com os <0>Termos de Serviço de {0}</0>"
 
-#: src/components/routes/auth/Register/index.tsx:141
+#: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Ao se registrar, você concorda com nossos <0>Termos de Serviço</0> e <1>Política de Privacidade</1>."
 
@@ -1428,6 +1432,7 @@ msgstr "Campanha"
 #: src/components/common/QuestionAndAnswerList/index.tsx:149
 #: src/components/common/WaitlistTable/index.tsx:111
 #: src/components/common/WaitlistTable/index.tsx:132
+#: src/components/routes/admin/RegistrationInvites/index.tsx:241
 #: src/components/routes/event/messages.tsx:80
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:62
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:68
@@ -1942,7 +1947,7 @@ msgstr "Os nomes de configuração são visíveis para os usuários finais. As t
 msgid "Configuration updated successfully"
 msgstr "Configuração atualizada com sucesso"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "Configurações"
@@ -1988,12 +1993,12 @@ msgid "Confirm New Password"
 msgstr "Confirmar nova senha"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:119
+#: src/components/routes/auth/Register/index.tsx:157
 msgid "Confirm password"
 msgstr "Confirmar senha"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:118
+#: src/components/routes/auth/Register/index.tsx:156
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Confirmar senha"
@@ -2203,6 +2208,7 @@ msgid "Copy Email"
 msgstr "Copiar Email"
 
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:67
+#: src/components/routes/admin/RegistrationInvites/index.tsx:277
 msgid "Copy link"
 msgstr "Copiar link"
 
@@ -2214,6 +2220,10 @@ msgstr "Copiar link"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:531
 msgid "Copy my details to:"
 msgstr "Copiar meus dados para:"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:263
+msgid "Copy this link now. It is not stored and cannot be shown again."
+msgstr "Copie este link agora. Ele não é armazenado e não poderá ser exibido novamente."
 
 #: src/components/modals/ShareModal/index.tsx:264
 msgid "Copy this link to share it anywhere"
@@ -2369,6 +2379,12 @@ msgstr "Crie descontos, códigos de acesso para ingressos ocultos e ofertas espe
 msgid "Create Event"
 msgstr "Criar evento"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:98
+#: src/components/routes/admin/RegistrationInvites/index.tsx:216
+#: src/components/routes/admin/RegistrationInvites/index.tsx:244
+msgid "Create invitation"
+msgstr "Criar convite"
+
 #: src/components/routes/events/Dashboard/index.tsx:172
 msgid "Create new"
 msgstr "Criar novo"
@@ -2447,6 +2463,7 @@ msgstr "Crie seu próprio evento"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:169
 #: src/components/routes/admin/Messages/index.tsx:309
+#: src/components/routes/admin/RegistrationInvites/index.tsx:126
 msgid "Created"
 msgstr "Criado"
 
@@ -2843,6 +2860,7 @@ msgstr "Valor da doação"
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:72
 #: src/components/modals/CreateWebhookModal/index.tsx:72
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:123
+#: src/components/routes/admin/RegistrationInvites/index.tsx:293
 msgid "Done"
 msgstr "Concluído"
 
@@ -2950,6 +2968,10 @@ msgstr "ex: Atualização importante sobre seus ingressos"
 #: src/components/routes/admin/Configurations/index.tsx:221
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "ex: Padrão, Premium, Enterprise"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:103
+msgid "Each link creates one account and then stops working, even while public registration is closed. The link is only shown once, when you create it."
+msgstr "Cada link cria uma única conta e depois para de funcionar, mesmo com o cadastro público fechado. O link só é exibido uma vez, ao criá-lo."
 
 #: src/components/modals/OfferWaitlistModal/index.tsx:129
 msgid "Each person will receive an email with a reserved spot to complete their purchase."
@@ -3121,7 +3143,7 @@ msgstr "Dá direito a um recibo fiscal oficial."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:104
+#: src/components/routes/auth/Register/index.tsx:140
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -3141,6 +3163,7 @@ msgstr "E-mail e Modelos"
 #: src/components/modals/CreateAttendeeModal/index.tsx:143
 #: src/components/modals/ManageAttendeeModal/index.tsx:114
 #: src/components/modals/ManageOrderModal/index.tsx:157
+#: src/components/routes/admin/RegistrationInvites/index.tsx:221
 msgid "Email address"
 msgstr "Endereço de e-mail"
 
@@ -3553,7 +3576,7 @@ msgid "Event Updated"
 msgstr "Evento atualizado"
 
 #: src/components/common/AdminAccountsTable/index.tsx:82
-#: src/components/layouts/Admin/index.tsx:16
+#: src/components/layouts/Admin/index.tsx:17
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
@@ -3594,13 +3617,19 @@ msgid "Expiration date"
 msgstr "Data de Expiração"
 
 #: src/components/common/WaitlistTable/index.tsx:28
+#: src/components/routes/admin/RegistrationInvites/index.tsx:49
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:74
 msgid "Expired"
 msgstr "Expirado"
 
 #: src/components/common/PromoCodeTable/index.tsx:73
+#: src/components/routes/admin/RegistrationInvites/index.tsx:130
 msgid "Expires"
 msgstr "Expirações"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:233
+msgid "Expires after (days)"
+msgstr "Expira após (dias)"
 
 #: src/components/forms/PromoCodeForm/index.tsx:109
 msgid "Expiry Date"
@@ -3661,7 +3690,7 @@ msgstr "Falhou"
 msgid "Failed At"
 msgstr "Falhou em"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "Trabalhos com falha"
@@ -3805,6 +3834,10 @@ msgstr "Falha ao tentar novamente o trabalho"
 #: src/components/routes/admin/FailedJobs/index.tsx:79
 msgid "Failed to retry jobs"
 msgstr "Falha ao tentar novamente os trabalhos"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:72
+msgid "Failed to revoke the invitation"
+msgstr "Não foi possível revogar o convite"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:148
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:151
@@ -4009,7 +4042,7 @@ msgstr "Primeiro nome"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:90
+#: src/components/routes/auth/Register/index.tsx:126
 #: src/components/routes/product-widget/CollectInformation/index.tsx:474
 #: src/components/routes/product-widget/CollectInformation/index.tsx:690
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4156,7 +4189,7 @@ msgstr "Como chegar"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Receba pagamentos imediatamente via Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:73
+#: src/components/routes/auth/Register/index.tsx:109
 msgid "Get started"
 msgstr "Começar"
 
@@ -4624,13 +4657,29 @@ msgstr "Sintaxe Liquid inválida. Por favor, corrija e tente novamente."
 msgid "Invalid VAT number format"
 msgstr "Formato de número de IVA inválido"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:260
+msgid "Invitation link"
+msgstr "Link do convite"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:39
 msgid "Invitation resent!"
 msgstr "Convite reenviado!"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:71
+msgid "Invitation revoked"
+msgstr "Convite revogado"
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:53
 msgid "Invitation revoked!"
 msgstr "Convite revogado!"
+
+#: src/components/routes/auth/Register/index.tsx:94
+msgid "Invitation unavailable"
+msgstr "Convite indisponível"
+
+#: src/components/layouts/Admin/index.tsx:16
+msgid "Invitations"
+msgstr "Convites"
 
 #: src/components/modals/InviteUserModal/index.tsx:54
 msgid "Invite a team member"
@@ -4730,7 +4779,7 @@ msgid "Job queued for retry"
 msgstr "Trabalho na fila para nova tentativa"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:91
+#: src/components/routes/auth/Register/index.tsx:127
 msgid "John"
 msgstr "João"
 
@@ -4839,7 +4888,7 @@ msgstr "Sobrenome"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:96
+#: src/components/routes/auth/Register/index.tsx:132
 #: src/components/routes/product-widget/CollectInformation/index.tsx:481
 #: src/components/routes/product-widget/CollectInformation/index.tsx:482
 #: src/components/routes/product-widget/CollectInformation/index.tsx:697
@@ -4876,6 +4925,10 @@ msgstr "Última vez usado"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:201
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Deixe em branco para usar a palavra padrão \"Fatura\""
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Deixe em branco para um link que nunca expira."
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:141
 msgid "Legal business name for VAT purposes"
@@ -4959,7 +5012,7 @@ msgid "Location"
 msgstr "Localização"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:78
+#: src/components/routes/auth/Register/index.tsx:114
 msgid "Log in"
 msgstr "Fazer login"
 
@@ -5167,7 +5220,7 @@ msgstr "Mensagem agendada"
 msgid "Message Sent"
 msgstr "Mensagem enviada"
 
-#: src/components/layouts/Admin/index.tsx:18
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5312,6 +5365,7 @@ msgstr "Receita Líquida"
 #: src/components/common/WebhookTable/index.tsx:266
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:114
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:101
+#: src/components/routes/admin/RegistrationInvites/index.tsx:134
 msgid "Never"
 msgstr "Nunca"
 
@@ -5449,6 +5503,10 @@ msgstr "Nenhum filtro disponível"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:86
 msgid "No impact on your current or past transactions"
 msgstr "Sem impacto nas suas transações atuais ou passadas"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:161
+msgid "No invitations yet"
+msgstr "Nenhum convite ainda"
 
 #: src/components/common/OrdersTable/index.tsx:334
 msgid "No invoice"
@@ -5656,6 +5714,10 @@ msgstr "Não Registrado"
 msgid "Not Eligible"
 msgstr "Não Elegível"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:227
+msgid "Note"
+msgstr "Observação"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:130
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
@@ -5794,6 +5856,10 @@ msgstr "Evento online"
 msgid "Online Event Details"
 msgstr "Detalhes do evento on-line"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:288
+msgid "Only {0} can use this link."
+msgstr "Apenas {0} pode usar este link."
+
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:68
 msgid "Only a registered charity may issue official receipts. Leave the registration number empty and no receipt will ever be issued. You remain responsible for the accuracy of every receipt, including the valuation of any advantage received by the donor."
 msgstr "Apenas uma entidade beneficente registrada pode emitir recibos oficiais. Deixe o número de registro vazio e nenhum recibo será emitido. Você continua responsável pela exatidão de cada recibo, incluindo a avaliação de qualquer vantagem recebida pelo doador."
@@ -5856,6 +5922,14 @@ msgstr "Opcional. Ajuda a cobrir os custos de hospedagem desta bilheteria."
 #: src/components/common/CheckIn/DoorSaleModal.tsx:169
 msgid "Optional. If given, the ticket and its QR code are emailed to the buyer."
 msgstr "Opcional. Se informado, o bilhete e seu código QR são enviados por e-mail ao comprador."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:229
+msgid "Optional. Only visible to you, to recognise the invitation later."
+msgstr "Opcional. Visível apenas para você, para reconhecer o convite depois."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:223
+msgid "Optional. When set, only this address can use the link."
+msgstr "Opcional. Se preenchido, apenas este endereço pode usar o link."
 
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
@@ -6019,7 +6093,7 @@ msgstr "Pedido atualizado com sucesso"
 msgid "Order was cancelled"
 msgstr "O pedido foi cancelado"
 
-#: src/components/layouts/Admin/index.tsx:17
+#: src/components/layouts/Admin/index.tsx:18
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
@@ -6220,7 +6294,7 @@ msgstr "Passar para o comprador"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:112
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Senha"
@@ -6229,7 +6303,7 @@ msgstr "Senha"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "A senha deve ter um mínimo de 8 caracteres"
 
-#: src/components/routes/auth/Register/index.tsx:36
+#: src/components/routes/auth/Register/index.tsx:46
 msgid "Password must be at least 8 characters"
 msgstr "A senha deve ter pelo menos 8 caracteres"
 
@@ -6238,7 +6312,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Redefinição de senha bem-sucedida. Faça login com sua nova senha."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:37
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Passwords are not the same"
 msgstr "As senhas não são as mesmas"
 
@@ -6497,7 +6571,7 @@ msgid "Please check your email and password and try again"
 msgstr "Verifique seu e-mail e senha e tente novamente"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:38
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Please check your email is valid"
 msgstr "Verifique se seu e-mail é válido"
 
@@ -6940,6 +7014,10 @@ msgstr "Reoferecer vaga"
 msgid "Ready to upgrade? This takes only a few minutes."
 msgstr "Pronto para atualizar? Isso leva apenas alguns minutos."
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:53
+msgid "Ready to use"
+msgstr "Pronto para uso"
+
 #: src/components/layouts/AuthLayout/index.tsx:41
 msgid "Real-Time Analytics"
 msgstr "Análises em Tempo Real"
@@ -6949,7 +7027,7 @@ msgid "Receipt number prefix"
 msgstr "Prefixo do número do recibo"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:171
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Receber atualizações de produtos do {0}."
@@ -7069,9 +7147,13 @@ msgstr "Reembolsos"
 msgid "Regional Settings"
 msgstr "Configurações regionais"
 
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Register"
 msgstr "Registro"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:93
+msgid "Registration Invitations"
+msgstr "Convites de cadastro"
 
 #: src/components/common/QuestionsTable/index.tsx:412
 #: src/components/layouts/Event/index.tsx:107
@@ -7262,12 +7344,21 @@ msgid "Revoke {0}? Any application using it will stop working immediately."
 msgstr "Revogar {0}? Qualquer aplicativo que o utilize para de funcionar imediatamente."
 
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:130
+#: src/components/routes/admin/RegistrationInvites/index.tsx:151
 msgid "Revoke invitation"
 msgstr "Revogar convite"
 
 #: src/components/common/WaitlistTable/index.tsx:78
 msgid "Revoke Offer"
 msgstr "Revogar oferta"
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:66
+msgid "Revoke this invitation? The link will stop working immediately."
+msgstr "Revogar este convite? O link para de funcionar imediatamente."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:51
+msgid "Revoked"
+msgstr "Revogado"
 
 #: src/components/modals/EditUserModal/index.tsx:93
 #: src/components/modals/InviteUserModal/index.tsx:64
@@ -7941,7 +8032,7 @@ msgid "Slovak"
 msgstr "Eslovaco"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:97
+#: src/components/routes/auth/Register/index.tsx:133
 msgid "Smith"
 msgstr "Smith"
 
@@ -8719,6 +8810,14 @@ msgstr "Este evento ainda não foi publicado"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Essas informações serão exibidas na página de pagamento, no resumo do pedido e no e-mail de confirmação do pedido."
 
+#: src/components/routes/auth/Register/index.tsx:142
+msgid "This invitation is tied to this address."
+msgstr "Este convite está vinculado a este endereço."
+
+#: src/components/routes/auth/Register/index.tsx:99
+msgid "This invitation link is no longer valid. Ask for a new one."
+msgstr "Este link de convite não é mais válido. Peça um novo."
+
 #: src/components/forms/ProductForm/index.tsx:149
 msgid "This is a general product, like a t-shirt or a mug. No ticket will be issued"
 msgstr "Este é um produto geral, como uma camiseta ou uma caneca. Nenhum ingresso será emitido"
@@ -9404,6 +9503,11 @@ msgstr "Usar detalhes do pedido para todos os participantes. Os nomes e e-mails 
 msgid "Use the buyer's details for all attendees"
 msgstr "Usar os dados do comprador para todos os participantes"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:47
+#: src/components/routes/admin/RegistrationInvites/index.tsx:139
+msgid "Used"
+msgstr "Usado"
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Usado para bordas, destaques e estilo do código QR"
@@ -9439,7 +9543,7 @@ msgstr "Os usuários podem alterar seu e-mail em <0>Configurações de perfil</0
 msgid "UTC"
 msgstr "UTC"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 msgid "UTM Analytics"
 msgstr "Análise UTM"
 
@@ -10038,6 +10142,10 @@ msgstr "Quais ingressos devem ser associados a esta lista de registro?"
 msgid "Who is organizing this event?"
 msgstr "Quem está organizando esse evento?"
 
+#: src/components/routes/admin/RegistrationInvites/index.tsx:228
+msgid "Who is this for?"
+msgstr "Para quem é?"
+
 #: src/components/forms/QuestionForm/index.tsx:151
 msgid "Who should be asked this question?"
 msgstr "A quem deve ser feita essa pergunta?"
@@ -10071,7 +10179,7 @@ msgstr "Trabalho"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:137
+#: src/components/routes/auth/Register/index.tsx:175
 msgid "Working..."
 msgstr "Trabalhando..."
 
@@ -10384,7 +10492,7 @@ msgid "Your organizer address"
 msgstr "Endereço do seu organizador"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:113
+#: src/components/routes/auth/Register/index.tsx:151
 msgid "Your password"
 msgstr "Sua senha"
 
