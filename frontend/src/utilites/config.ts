@@ -27,6 +27,7 @@ export const clientBuildEnv: { [K in ConfigKeys]: string } = {
     'VITE_PLATFORM_SUPPORT_ENABLED': import.meta.env.VITE_PLATFORM_SUPPORT_ENABLED,
     'VITE_PLATFORM_SUPPORT_LABEL': import.meta.env.VITE_PLATFORM_SUPPORT_LABEL,
     'VITE_PLATFORM_SUPPORT_DESCRIPTION': import.meta.env.VITE_PLATFORM_SUPPORT_DESCRIPTION,
+    'VITE_PLATFORM_SUPPORT_DEFAULT': import.meta.env.VITE_PLATFORM_SUPPORT_DEFAULT,
 }
 
 export const getConfig = (key: ConfigKeys, fallback?: string): string | undefined => {

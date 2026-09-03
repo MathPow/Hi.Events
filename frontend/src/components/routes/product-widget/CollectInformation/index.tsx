@@ -27,9 +27,9 @@ import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
 import {getConfig} from "../../../../utilites/config.ts";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
-import {PlatformSupportInput, platformSupportEnabled} from "../../../common/PlatformSupportInput";
+import {PlatformSupportInput, platformSupportDefaultAmount, platformSupportEnabled} from "../../../common/PlatformSupportInput";
 import {eventCheckoutPath, eventHomepagePath} from "../../../../utilites/urlHelper.ts";
-import {showInfo} from "../../../../utilites/notifications.tsx";
+import {showError, showInfo} from "../../../../utilites/notifications.tsx";
 import countries from "../../../../../data/countries.json";
 import classes from "./CollectInformation.module.scss";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
@@ -217,7 +217,7 @@ export const CollectInformation = () => {
     // Doit etre applique AVANT finaliseOrder: le PaymentIntent est cree a l'etape
     // suivante et n'est jamais recree ensuite, donc une contribution ajoutee plus
     // tard ne serait pas debitee.
-    const [platformContribution, setPlatformContribution] = useState<number>(0);
+    const [platformContribution, setPlatformContribution] = useState<number>(platformSupportDefaultAmount);
 
     const mutation = useMutation({
         mutationFn: (orderData: FinaliseOrderPayload) => orderClientPublic.finaliseOrder(Number(eventId), String(orderShortId), orderData),
@@ -307,9 +307,7 @@ export const CollectInformation = () => {
             } catch {
                 // Une contribution facultative ne doit pas bloquer un achat: on
                 // poursuit sans elle plutot que de renvoyer l'acheteur a un echec.
-                notifications.show({
-                    message: t`Your contribution could not be applied, continuing without it.`,
-                });
+                showError(t`Your contribution could not be applied, continuing without it.`);
             }
         }
 

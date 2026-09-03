@@ -22,6 +22,22 @@ interface PlatformSupportInputProps {
 export const platformSupportEnabled = (): boolean =>
     getConfig('VITE_PLATFORM_SUPPORT_ENABLED') === 'true';
 
+export const PLATFORM_SUPPORT_MAX = 1000;
+
+/**
+ * Montant propose d'entree de jeu, dans l'unite majeure de la devise. L'acheteur
+ * reste libre de le baisser, jusqu'a zero.
+ */
+export const platformSupportDefaultAmount = (): number => {
+    const configured = Number(getConfig('VITE_PLATFORM_SUPPORT_DEFAULT'));
+
+    if (!Number.isFinite(configured) || configured <= 0) {
+        return 0;
+    }
+
+    return Math.min(configured, PLATFORM_SUPPORT_MAX);
+};
+
 export const PlatformSupportInput = ({value, onChange, currency, disabled}: PlatformSupportInputProps) => {
     if (!platformSupportEnabled()) {
         return null;
@@ -38,11 +54,11 @@ export const PlatformSupportInput = ({value, onChange, currency, disabled}: Plat
                 decimalScale={2}
                 fixedDecimalScale
                 min={0}
-                max={1000}
+                max={PLATFORM_SUPPORT_MAX}
                 disabled={disabled}
                 leftSection={currency ? getCurrencySymbol(currency) : <IconHeartHandshake size={18}/>}
-                // Defaut a 0, jamais vide: un champ vide se lit comme une valeur
-                // a saisir, alors que la contribution est facultative.
+                // Jamais vide: un champ vide se lit comme une valeur a saisir,
+                // alors que la contribution est facultative.
                 value={value}
                 onChange={(next) => onChange(Number(next) || 0)}
                 label={label}
