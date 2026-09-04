@@ -48,6 +48,10 @@ return [
         // et point de vente d'un seul marchand.
         'access_token' => env('SQUARE_ACCESS_TOKEN'),
         'location_id' => env('SQUARE_LOCATION_ID'),
+        // Meme logique que du cote Stripe: la plateforme absorbe la part
+        // variable des frais que la contribution volontaire ajoute, pour qu'elle
+        // ne coute rien a l'organisateur.
+        'processing_fee_percentage' => env('SQUARE_PROCESSING_FEE_PERCENTAGE', 2.9),
     ],
 
     'stripe' => [

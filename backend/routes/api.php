@@ -104,6 +104,8 @@ use HiEvents\Http\Actions\Orders\GetOrdersAction;
 use HiEvents\Http\Actions\Orders\MarkOrderAsPaidAction;
 use HiEvents\Http\Actions\Orders\MessageOrderAction;
 use HiEvents\Http\Actions\Orders\Payment\RefundOrderAction;
+use HiEvents\Http\Actions\Orders\Payment\Square\CreateSquarePaymentActionPublic;
+use HiEvents\Http\Actions\Orders\Payment\Square\GetSquareCheckoutConfigActionPublic;
 use HiEvents\Http\Actions\Orders\Payment\Stripe\CreatePaymentIntentActionPublic;
 use HiEvents\Http\Actions\Orders\Payment\Stripe\GetPaymentIntentActionPublic;
 use HiEvents\Http\Actions\Orders\Public\AbandonOrderActionPublic;
@@ -576,6 +578,11 @@ $router->prefix('/public')->group(
         // Stripe payment gateway
         $router->post('/events/{event_id}/order/{order_short_id}/stripe/payment_intent', CreatePaymentIntentActionPublic::class);
         $router->get('/events/{event_id}/order/{order_short_id}/stripe/payment_intent', GetPaymentIntentActionPublic::class);
+
+        // Square: pas de PaymentIntent, le paiement est cree et capture en un
+        // seul appel avec le jeton de carte produit par le navigateur
+        $router->get('/events/{event_id}/square/checkout-config', GetSquareCheckoutConfigActionPublic::class);
+        $router->post('/events/{event_id}/order/{order_short_id}/square/payment', CreateSquarePaymentActionPublic::class);
 
         // Questions
         $router->get('/events/{event_id}/questions', GetQuestionsPublicAction::class);
