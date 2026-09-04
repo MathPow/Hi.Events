@@ -36,6 +36,12 @@ return [
         'public_key' => env('STRIPE_PUBLIC_KEY'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
 
+        // Part variable des frais Stripe, en pourcentage. Sert a facturer a la
+        // plateforme le cout de traitement de la contribution volontaire, pour
+        // que celle-ci ne coute rien a l'organisateur. La part fixe (0,30 $) est
+        // due de toute facon, contribution ou pas: elle reste a l'organisateur.
+        'processing_fee_percentage' => env('STRIPE_PROCESSING_FEE_PERCENTAGE', 2.9),
+
         // Canadian platform (Optional)
         'ca_secret_key' => env('STRIPE_CA_SECRET_KEY', env('STRIPE_SECRET_KEY')),
         'ca_public_key' => env('STRIPE_CA_PUBLIC_KEY', env('STRIPE_PUBLIC_KEY')),

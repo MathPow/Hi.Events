@@ -59,14 +59,49 @@ class StripePaymentIntentCreationServiceTest extends TestCase
     {
         $this->givenSaasMode();
         $this->givenApplicationFee(5.00);
+        $this->givenProcessingFeePercentage();
 
         $this->createPaymentIntent(
             contribution: 2.00,
             stripeAccountId: 'acct_123',
         );
 
-        self::assertSame(700, $this->capturedCall['params']['application_fee_amount']);
+        // 500 de commission + 200 de contribution moins les 2,9% que Stripe
+        // prend sur cette contribution, a la charge de la plateforme.
+        self::assertSame(694, $this->capturedCall['params']['application_fee_amount']);
         self::assertSame(['stripe_account' => 'acct_123'], $this->capturedCall['opts']);
+    }
+
+    /**
+     * La contribution n'appartient pas a l'organisateur: elle ne doit pas lui
+     * couter les frais de traitement que sa presence ajoute a la transaction.
+     */
+    public function testThePlatformAbsorbsTheProcessingCostOfTheContribution(): void
+    {
+        $this->givenSaasMode();
+        $this->givenApplicationFee(0.0);
+        $this->givenProcessingFeePercentage();
+
+        $this->createPaymentIntent(
+            contribution: 1.00,
+            stripeAccountId: 'acct_123',
+        );
+
+        self::assertSame(97, $this->capturedCall['params']['application_fee_amount']);
+    }
+
+    public function testTheFullContributionIsTakenWhenNoProcessingRateIsConfigured(): void
+    {
+        $this->givenSaasMode();
+        $this->givenApplicationFee(0.0);
+        $this->givenProcessingFeePercentage(0.0);
+
+        $this->createPaymentIntent(
+            contribution: 1.00,
+            stripeAccountId: 'acct_123',
+        );
+
+        self::assertSame(100, $this->capturedCall['params']['application_fee_amount']);
     }
 
     public function testChargesTheContributionEvenWhenTheAccountBypassesApplicationFees(): void
@@ -77,13 +112,15 @@ class StripePaymentIntentCreationServiceTest extends TestCase
         $configuration = new AccountConfigurationDomainObject();
         $configuration->setBypassApplicationFees(true);
 
+        $this->givenProcessingFeePercentage();
+
         $this->createPaymentIntent(
             contribution: 2.00,
             stripeAccountId: 'acct_123',
             configuration: $configuration,
         );
 
-        self::assertSame(200, $this->capturedCall['params']['application_fee_amount']);
+        self::assertSame(194, $this->capturedCall['params']['application_fee_amount']);
     }
 
     public function testChargesOnlyTheApplicationFeeWhenNothingIsContributed(): void
@@ -121,6 +158,7 @@ class StripePaymentIntentCreationServiceTest extends TestCase
     {
         $this->givenSaasMode();
         $this->givenApplicationFee(5.00);
+        $this->givenProcessingFeePercentage();
 
         $this->createPaymentIntent(
             contribution: 2.00,
@@ -134,6 +172,14 @@ class StripePaymentIntentCreationServiceTest extends TestCase
     private function givenSaasMode(bool $enabled = true): void
     {
         $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn($enabled);
+    }
+
+    private function givenProcessingFeePercentage(float $percentage = 2.9): void
+    {
+        $this->config
+            ->shouldReceive('get')
+            ->with('services.stripe.processing_fee_percentage', 0)
+            ->andReturn($percentage);
     }
 
     private function givenApplicationFee(float $gross): void
