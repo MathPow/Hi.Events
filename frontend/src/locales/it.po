@@ -555,7 +555,7 @@ msgstr "Informazioni Aggiuntive"
 
 #: src/components/common/OrderDetails/index.tsx:96
 #: src/components/forms/QuestionForm/index.tsx:130
-#: src/components/routes/organizer/Settings/index.tsx:43
+#: src/components/routes/organizer/Settings/index.tsx:44
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:67
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:91
 msgid "Address"
@@ -1306,7 +1306,7 @@ msgstr "Colore di sfondo"
 msgid "Background Type"
 msgstr "Tipo di Sfondo"
 
-#: src/components/routes/organizer/Settings/index.tsx:31
+#: src/components/routes/organizer/Settings/index.tsx:32
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:63
 msgid "Basic Information"
 msgstr "Informazioni di base"
@@ -2045,6 +2045,7 @@ msgstr "Connetti elaborazione pagamenti"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:195
 #: src/components/layouts/OrganizerLayout/index.tsx:203
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
 msgid "Connect Stripe"
 msgstr "Connect Stripe"
 
@@ -2095,6 +2096,10 @@ msgstr "Connetti il tuo account Stripe per iniziare ad accettare pagamenti."
 #: src/components/routes/event/GettingStarted/index.tsx:155
 msgid "Connect your Stripe account to start receiving payments."
 msgstr "Connetti il tuo account Stripe per iniziare a ricevere pagamenti."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:85
+msgid "Connected"
+msgstr "Collegato"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:393
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:630
@@ -2262,6 +2267,14 @@ msgstr "Impossibile creare il token. Riprova."
 msgid "Could not disconnect the Square account."
 msgstr "Impossibile disconnettere l'account Square."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:71
+msgid "Could not disconnect the Stripe account."
+msgstr "Impossibile disconnettere l'account Stripe."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:124
+msgid "Could not read the Stripe status for this organizer."
+msgstr "Impossibile leggere lo stato Stripe di questo organizzatore."
+
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:42
 msgid "Could not revoke the token. Please try again."
 msgstr "Impossibile revocare il token. Riprova."
@@ -2273,6 +2286,10 @@ msgstr "Impossibile salvare la sede Square."
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:73
 msgid "Could not start the Square authorization."
 msgstr "Impossibile avviare l'autorizzazione Square."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:59
+msgid "Could not start the Stripe setup. Please try again."
+msgstr "Impossibile avviare la configurazione Stripe. Riprova."
 
 #: src/components/common/CheckoutQuestion/index.tsx:174
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:152
@@ -2659,7 +2676,7 @@ msgstr "Zona pericolosa"
 #: src/components/common/AttendeeTable/index.tsx:367
 #: src/components/common/DangerZone/index.tsx:30
 #: src/components/routes/event/Settings/index.tsx:88
-#: src/components/routes/organizer/Settings/index.tsx:85
+#: src/components/routes/organizer/Settings/index.tsx:92
 msgid "Danger Zone"
 msgstr "Zona pericolosa"
 
@@ -2831,6 +2848,14 @@ msgstr "Disconnetti Square"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:79
 msgid "Disconnect Square? Events using it will stop accepting card payments."
 msgstr "Disconnettere Square? Gli eventi che lo usano smetteranno di accettare pagamenti con carta."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
+msgid "Disconnect Stripe"
+msgstr "Disconnetti Stripe"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:65
+msgid "Disconnect this Stripe account? New sales will be paid to the platform account instead."
+msgstr "Disconnettere questo account Stripe? Le nuove vendite saranno accreditate all'account della piattaforma."
 
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:71
 msgid "Discord"
@@ -3257,7 +3282,7 @@ msgid "Email Preview"
 msgstr "Anteprima Email"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:336
-#: src/components/routes/organizer/Settings/index.tsx:73
+#: src/components/routes/organizer/Settings/index.tsx:80
 msgid "Email Templates"
 msgstr "Modelli Email"
 
@@ -3504,7 +3529,7 @@ msgid "Event date display"
 msgstr "Visualizzazione della data dell'evento"
 
 #: src/components/routes/account/ManageAccount/sections/EventDefaultsSettings/index.tsx:5
-#: src/components/routes/organizer/Settings/index.tsx:37
+#: src/components/routes/organizer/Settings/index.tsx:38
 #: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:73
 msgid "Event Defaults"
 msgstr "Impostazioni Predefinite Evento"
@@ -4034,6 +4059,10 @@ msgstr "Filtri ({activeFilterCount})"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:215
 msgid "Finish Setup"
 msgstr "Completa configurazione"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
+msgid "Finish Stripe setup"
+msgstr "Completa la configurazione Stripe"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:426
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:673
@@ -5681,6 +5710,10 @@ msgstr "Nessun Risultato di Ricerca"
 msgid "No search results."
 msgstr "Nessun risultato di ricerca."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:108
+msgid "No Stripe account is connected. Sales are paid to the platform account until one is."
+msgstr "Nessun account Stripe collegato. Le vendite vengono accreditate all'account della piattaforma finché non ce n'è uno."
+
 #: src/components/common/TaxAndFeeList/index.tsx:105
 msgid "No Taxes or Fees have been added."
 msgstr "Nessuna Tassa o Commissione è stata aggiunta."
@@ -6219,7 +6252,7 @@ msgstr "Organizzatore non trovato"
 msgid "Organizer restored successfully"
 msgstr "Organizzatore ripristinato con successo"
 
-#: src/components/routes/organizer/Settings/index.tsx:138
+#: src/components/routes/organizer/Settings/index.tsx:145
 msgid "Organizer Settings"
 msgstr "Impostazioni organizzatore"
 
@@ -6475,6 +6508,11 @@ msgstr "Pagamento riuscito!"
 msgid "Payment Terms"
 msgstr "Termini di Pagamento"
 
+#: src/components/routes/organizer/Settings/index.tsx:50
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:78
+msgid "Payments"
+msgstr "Pagamenti"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:160
 msgid "Payments are recorded against this Square location."
 msgstr "I pagamenti vengono registrati su questa sede Square."
@@ -6586,7 +6624,7 @@ msgstr "Commissione piattaforma di {0} detratta dal tuo pagamento"
 #: src/components/routes/event/Settings/index.tsx:98
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:46
 #: src/components/routes/organizer/Reports/index.tsx:41
-#: src/components/routes/organizer/Settings/index.tsx:95
+#: src/components/routes/organizer/Settings/index.tsx:102
 #: src/components/routes/organizer/Settings/Sections/PlatformFeesSettings/index.tsx:42
 msgid "Platform Fees"
 msgstr "Commissioni piattaforma"
@@ -7903,7 +7941,7 @@ msgid "Sent to each attendee with their ticket details"
 msgstr "Inviato a ogni partecipante con i dettagli del biglietto"
 
 #: src/components/routes/event/Settings/index.tsx:58
-#: src/components/routes/organizer/Settings/index.tsx:67
+#: src/components/routes/organizer/Settings/index.tsx:74
 msgid "SEO"
 msgstr "SEO"
 
@@ -8097,7 +8135,7 @@ msgstr "Per distinguerli in seguito, ad esempio sito dehorsqc.com"
 msgid "Social"
 msgstr "Sociale"
 
-#: src/components/routes/organizer/Settings/index.tsx:61
+#: src/components/routes/organizer/Settings/index.tsx:68
 msgid "Social Links"
 msgstr "Link social"
 
@@ -8272,6 +8310,10 @@ msgstr "Interrompi Impersonificazione"
 msgid "Stripe"
 msgstr "Stripe"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:70
+msgid "Stripe account disconnected"
+msgstr "Account Stripe disconnesso"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:163
 msgid "Stripe Connect"
 msgstr "Stripe Connect"
@@ -8295,6 +8337,10 @@ msgstr "I pagamenti Stripe non sono abilitati per questo evento."
 #: src/components/common/StripeConnectButton/index.tsx:80
 msgid "Stripe setup is already complete."
 msgstr "La configurazione di Stripe è già completa."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:107
+msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
+msgstr "La configurazione Stripe non è terminata. Fino ad allora le vendite vanno all'account della piattaforma."
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
 #: src/components/modals/SendMessageModal/index.tsx:347
@@ -8569,7 +8615,7 @@ msgstr "Tassa o Commissione eliminata con successo"
 msgid "Tax receipt downloaded successfully"
 msgstr "Ricevuta fiscale scaricata"
 
-#: src/components/routes/organizer/Settings/index.tsx:49
+#: src/components/routes/organizer/Settings/index.tsx:56
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:63
 msgid "Tax receipts"
 msgstr "Ricevute fiscali"
@@ -8964,6 +9010,10 @@ msgstr "Questo ordine è stato abbandonato. Puoi avviarne uno nuovo in qualsiasi
 msgid "This order was cancelled. You can start a new order anytime."
 msgstr "Questo ordine è stato annullato. Puoi iniziare un nuovo ordine in qualsiasi momento."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:56
+msgid "This organizer is already connected to Stripe."
+msgstr "Questo organizzatore è già collegato a Stripe."
+
 #: src/components/common/StatusToggle/index.tsx:83
 msgid "This organizer profile is not published yet"
 msgstr "Questo profilo organizzatore non è ancora pubblicato"
@@ -9093,6 +9143,10 @@ msgstr "Prezzo del biglietto"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:501
 msgid "Ticket resent successfully"
 msgstr "Biglietto reinviato con successo"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:89
+msgid "Ticket sales for this organizer are paid directly into this Stripe account."
+msgstr "Le vendite di biglietti di questo organizzatore vengono accreditate direttamente su questo account Stripe."
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:93
 msgid "Ticket sold"
@@ -9305,7 +9359,7 @@ msgstr "Traccia la crescita e le prestazioni dell'account per fonte di attribuzi
 msgid "Track sales, revenue, and attendance with detailed reports"
 msgstr "Tieni traccia delle vendite, dei ricavi e delle presenze con report dettagliati"
 
-#: src/components/routes/organizer/Settings/index.tsx:79
+#: src/components/routes/organizer/Settings/index.tsx:86
 #: src/components/routes/organizer/Settings/Sections/TrackingPixelSettings/index.tsx:171
 msgid "Tracking & Analytics"
 msgstr "Monitoraggio & Analytics"
@@ -10202,6 +10256,10 @@ msgstr "Quando abilitato, non verranno addebitate commissioni di applicazione su
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Quando i pagamenti offline sono abilitati, gli utenti potranno completare i loro ordini e ricevere i loro biglietti. I loro biglietti indicheranno chiaramente che l'ordine non è pagato, e lo strumento di check-in avviserà il personale di check-in se un ordine richiede il pagamento."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
+msgid "Where the money from this organizer's ticket sales is paid."
+msgstr "Dove finiscono i soldi delle vendite di biglietti di questo organizzatore."
 
 #: src/components/forms/CheckInListForm/index.tsx:42
 msgid "Which tickets should be associated with this check-in list?"

@@ -555,7 +555,7 @@ msgstr "Ek Bilgiler"
 
 #: src/components/common/OrderDetails/index.tsx:96
 #: src/components/forms/QuestionForm/index.tsx:130
-#: src/components/routes/organizer/Settings/index.tsx:43
+#: src/components/routes/organizer/Settings/index.tsx:44
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:67
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:91
 msgid "Address"
@@ -1306,7 +1306,7 @@ msgstr "Arkaplan Rengi"
 msgid "Background Type"
 msgstr "Arkaplan Türü"
 
-#: src/components/routes/organizer/Settings/index.tsx:31
+#: src/components/routes/organizer/Settings/index.tsx:32
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:63
 msgid "Basic Information"
 msgstr "Temel Bilgiler"
@@ -2045,6 +2045,7 @@ msgstr "Ödeme işlemeyi bağla"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:195
 #: src/components/layouts/OrganizerLayout/index.tsx:203
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
 msgid "Connect Stripe"
 msgstr "Stripe'ı Bağla"
 
@@ -2095,6 +2096,10 @@ msgstr "Ödeme almaya başlamak için Stripe hesabınızı bağlayın."
 #: src/components/routes/event/GettingStarted/index.tsx:155
 msgid "Connect your Stripe account to start receiving payments."
 msgstr "Ödeme almaya başlamak için Stripe hesabınızı bağlayın."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:85
+msgid "Connected"
+msgstr "Bağlandı"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:393
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:630
@@ -2262,6 +2267,14 @@ msgstr "Belirteç oluşturulamadı. Lütfen tekrar deneyin."
 msgid "Could not disconnect the Square account."
 msgstr "Square hesabının bağlantısı kesilemedi."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:71
+msgid "Could not disconnect the Stripe account."
+msgstr "Stripe hesabının bağlantısı kesilemedi."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:124
+msgid "Could not read the Stripe status for this organizer."
+msgstr "Bu organizatörün Stripe durumu okunamadı."
+
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:42
 msgid "Could not revoke the token. Please try again."
 msgstr "Belirteç iptal edilemedi. Lütfen tekrar deneyin."
@@ -2273,6 +2286,10 @@ msgstr "Square konumu kaydedilemedi."
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:73
 msgid "Could not start the Square authorization."
 msgstr "Square yetkilendirmesi başlatılamadı."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:59
+msgid "Could not start the Stripe setup. Please try again."
+msgstr "Stripe kurulumu başlatılamadı. Lütfen tekrar deneyin."
 
 #: src/components/common/CheckoutQuestion/index.tsx:174
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:152
@@ -2659,7 +2676,7 @@ msgstr "Tehlike bölgesi"
 #: src/components/common/AttendeeTable/index.tsx:367
 #: src/components/common/DangerZone/index.tsx:30
 #: src/components/routes/event/Settings/index.tsx:88
-#: src/components/routes/organizer/Settings/index.tsx:85
+#: src/components/routes/organizer/Settings/index.tsx:92
 msgid "Danger Zone"
 msgstr "Tehlike Bölgesi"
 
@@ -2831,6 +2848,14 @@ msgstr "Square bağlantısını kes"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:79
 msgid "Disconnect Square? Events using it will stop accepting card payments."
 msgstr "Square bağlantısı kesilsin mi? Onu kullanan etkinlikler kartlı ödeme almayı bırakır."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
+msgid "Disconnect Stripe"
+msgstr "Stripe bağlantısını kes"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:65
+msgid "Disconnect this Stripe account? New sales will be paid to the platform account instead."
+msgstr "Bu Stripe hesabının bağlantısı kesilsin mi? Yeni satışlar platform hesabına ödenir."
 
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:71
 msgid "Discord"
@@ -3257,7 +3282,7 @@ msgid "Email Preview"
 msgstr "E-posta Önizlemesi"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:336
-#: src/components/routes/organizer/Settings/index.tsx:73
+#: src/components/routes/organizer/Settings/index.tsx:80
 msgid "Email Templates"
 msgstr "E-posta Şablonları"
 
@@ -3504,7 +3529,7 @@ msgid "Event date display"
 msgstr "Etkinlik tarihi gösterimi"
 
 #: src/components/routes/account/ManageAccount/sections/EventDefaultsSettings/index.tsx:5
-#: src/components/routes/organizer/Settings/index.tsx:37
+#: src/components/routes/organizer/Settings/index.tsx:38
 #: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:73
 msgid "Event Defaults"
 msgstr "Etkinlik Varsayılanları"
@@ -4034,6 +4059,10 @@ msgstr "Filtreler ({activeFilterCount})"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:215
 msgid "Finish Setup"
 msgstr "Kurulumu Tamamla"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
+msgid "Finish Stripe setup"
+msgstr "Stripe kurulumunu tamamla"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:426
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:673
@@ -5681,6 +5710,10 @@ msgstr "Arama Sonucu Yok"
 msgid "No search results."
 msgstr "Arama sonucu yok."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:108
+msgid "No Stripe account is connected. Sales are paid to the platform account until one is."
+msgstr "Bağlı bir Stripe hesabı yok. Bağlanana kadar satışlar platform hesabına ödenir."
+
 #: src/components/common/TaxAndFeeList/index.tsx:105
 msgid "No Taxes or Fees have been added."
 msgstr "Hiçbir Vergi veya Ücret eklenmemiş."
@@ -6219,7 +6252,7 @@ msgstr "Organizatör Bulunamadı"
 msgid "Organizer restored successfully"
 msgstr "Organizatör başarıyla geri yüklendi"
 
-#: src/components/routes/organizer/Settings/index.tsx:138
+#: src/components/routes/organizer/Settings/index.tsx:145
 msgid "Organizer Settings"
 msgstr "Organizatör Ayarları"
 
@@ -6475,6 +6508,11 @@ msgstr "Ödeme başarılı!"
 msgid "Payment Terms"
 msgstr "Ödeme Koşulları"
 
+#: src/components/routes/organizer/Settings/index.tsx:50
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:78
+msgid "Payments"
+msgstr "Ödemeler"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:160
 msgid "Payments are recorded against this Square location."
 msgstr "Ödemeler bu Square konumuna kaydedilir."
@@ -6586,7 +6624,7 @@ msgstr "Ödemenizden {0} platform ücreti düşülür"
 #: src/components/routes/event/Settings/index.tsx:98
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:46
 #: src/components/routes/organizer/Reports/index.tsx:41
-#: src/components/routes/organizer/Settings/index.tsx:95
+#: src/components/routes/organizer/Settings/index.tsx:102
 #: src/components/routes/organizer/Settings/Sections/PlatformFeesSettings/index.tsx:42
 msgid "Platform Fees"
 msgstr "Platform Ücretleri"
@@ -7903,7 +7941,7 @@ msgid "Sent to each attendee with their ticket details"
 msgstr "Her katılımcıya bilet detaylarıyla birlikte gönderilir"
 
 #: src/components/routes/event/Settings/index.tsx:58
-#: src/components/routes/organizer/Settings/index.tsx:67
+#: src/components/routes/organizer/Settings/index.tsx:74
 msgid "SEO"
 msgstr "SEO"
 
@@ -8097,7 +8135,7 @@ msgstr "Sonradan ayırt edebilmek için, örneğin dehorsqc.com sitesi"
 msgid "Social"
 msgstr "Sosyal"
 
-#: src/components/routes/organizer/Settings/index.tsx:61
+#: src/components/routes/organizer/Settings/index.tsx:68
 msgid "Social Links"
 msgstr "Sosyal Bağlantılar"
 
@@ -8272,6 +8310,10 @@ msgstr "Taklidi Durdur"
 msgid "Stripe"
 msgstr "Stripe"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:70
+msgid "Stripe account disconnected"
+msgstr "Stripe hesabının bağlantısı kesildi"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:163
 msgid "Stripe Connect"
 msgstr "Stripe Connect"
@@ -8295,6 +8337,10 @@ msgstr "Bu etkinlik için Stripe ödemeleri etkinleştirilmemiş."
 #: src/components/common/StripeConnectButton/index.tsx:80
 msgid "Stripe setup is already complete."
 msgstr "Stripe kurulumu zaten tamamlandı."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:107
+msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
+msgstr "Stripe kurulumu henüz bitmedi. O zamana kadar satışlar platform hesabına ödenir."
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
 #: src/components/modals/SendMessageModal/index.tsx:347
@@ -8569,7 +8615,7 @@ msgstr "Vergi veya Ücret başarıyla silindi"
 msgid "Tax receipt downloaded successfully"
 msgstr "Vergi makbuzu indirildi"
 
-#: src/components/routes/organizer/Settings/index.tsx:49
+#: src/components/routes/organizer/Settings/index.tsx:56
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:63
 msgid "Tax receipts"
 msgstr "Vergi makbuzları"
@@ -8964,6 +9010,10 @@ msgstr "Bu sipariş terk edildi. İstediğiniz zaman yeni bir sipariş başlatab
 msgid "This order was cancelled. You can start a new order anytime."
 msgstr "Bu sipariş iptal edildi. İstediğiniz zaman yeni bir sipariş başlatabilirsiniz."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:56
+msgid "This organizer is already connected to Stripe."
+msgstr "Bu organizatör zaten Stripe'a bağlı."
+
 #: src/components/common/StatusToggle/index.tsx:83
 msgid "This organizer profile is not published yet"
 msgstr "Bu organizatör profili henüz yayınlanmadı"
@@ -9093,6 +9143,10 @@ msgstr "Bilet fiyatı"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:501
 msgid "Ticket resent successfully"
 msgstr "Bilet başarıyla yeniden gönderildi"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:89
+msgid "Ticket sales for this organizer are paid directly into this Stripe account."
+msgstr "Bu organizatörün bilet satışları doğrudan bu Stripe hesabına ödenir."
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:93
 msgid "Ticket sold"
@@ -9305,7 +9359,7 @@ msgstr "Atıf kaynağına göre hesap büyümesini ve performansını takip edin
 msgid "Track sales, revenue, and attendance with detailed reports"
 msgstr "Detaylı raporlarla satışları, gelirleri ve katılımı takip edin"
 
-#: src/components/routes/organizer/Settings/index.tsx:79
+#: src/components/routes/organizer/Settings/index.tsx:86
 #: src/components/routes/organizer/Settings/Sections/TrackingPixelSettings/index.tsx:171
 msgid "Tracking & Analytics"
 msgstr "İzleme ve Analitik"
@@ -10202,6 +10256,10 @@ msgstr "Etkinleştirildiğinde, Stripe Connect işlemlerinde uygulama ücreti al
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Çevrimdışı ödemeler etkinleştirildiğinde, kullanıcılar siparişlerini tamamlayabilir ve biletlerini alabilir. Biletleri siparişin ödenmediğini açıkça belirtecek ve check-in aracı, bir sipariş ödeme gerektiriyorsa check-in personelini bilgilendirecek."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
+msgid "Where the money from this organizer's ticket sales is paid."
+msgstr "Bu organizatörün bilet satış gelirinin nereye gittiği."
 
 #: src/components/forms/CheckInListForm/index.tsx:42
 msgid "Which tickets should be associated with this check-in list?"

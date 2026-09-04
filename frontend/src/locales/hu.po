@@ -555,7 +555,7 @@ msgstr "További információk"
 
 #: src/components/common/OrderDetails/index.tsx:96
 #: src/components/forms/QuestionForm/index.tsx:130
-#: src/components/routes/organizer/Settings/index.tsx:43
+#: src/components/routes/organizer/Settings/index.tsx:44
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:67
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:91
 msgid "Address"
@@ -1306,7 +1306,7 @@ msgstr "Háttérszín"
 msgid "Background Type"
 msgstr "Háttér típusa"
 
-#: src/components/routes/organizer/Settings/index.tsx:31
+#: src/components/routes/organizer/Settings/index.tsx:32
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:63
 msgid "Basic Information"
 msgstr "Alapvető információk"
@@ -2045,6 +2045,7 @@ msgstr "Fizetésfeldolgozás csatlakoztatása"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:195
 #: src/components/layouts/OrganizerLayout/index.tsx:203
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
 msgid "Connect Stripe"
 msgstr "Stripe csatlakoztatása"
 
@@ -2095,6 +2096,10 @@ msgstr "Kapcsolja össze a Stripe fiókját a fizetések fogadásának megkezdé
 #: src/components/routes/event/GettingStarted/index.tsx:155
 msgid "Connect your Stripe account to start receiving payments."
 msgstr "Csatlakoztassa Stripe fiókját, hogy elkezdhesse a fizetések fogadását."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:85
+msgid "Connected"
+msgstr "Csatlakoztatva"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:393
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:630
@@ -2262,6 +2267,14 @@ msgstr "A token létrehozása nem sikerült. Próbáld újra."
 msgid "Could not disconnect the Square account."
 msgstr "A Square-fiókot nem sikerült leválasztani."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:71
+msgid "Could not disconnect the Stripe account."
+msgstr "A Stripe-fiókot nem sikerült leválasztani."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:124
+msgid "Could not read the Stripe status for this organizer."
+msgstr "Nem sikerült beolvasni a szervező Stripe-állapotát."
+
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:42
 msgid "Could not revoke the token. Please try again."
 msgstr "A token visszavonása nem sikerült. Próbáld újra."
@@ -2273,6 +2286,10 @@ msgstr "A Square-helyszínt nem sikerült menteni."
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:73
 msgid "Could not start the Square authorization."
 msgstr "A Square-engedélyezést nem sikerült elindítani."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:59
+msgid "Could not start the Stripe setup. Please try again."
+msgstr "A Stripe-beállítást nem sikerült elindítani. Próbáld újra."
 
 #: src/components/common/CheckoutQuestion/index.tsx:174
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:152
@@ -2659,7 +2676,7 @@ msgstr "Veszélyzóna"
 #: src/components/common/AttendeeTable/index.tsx:367
 #: src/components/common/DangerZone/index.tsx:30
 #: src/components/routes/event/Settings/index.tsx:88
-#: src/components/routes/organizer/Settings/index.tsx:85
+#: src/components/routes/organizer/Settings/index.tsx:92
 msgid "Danger Zone"
 msgstr "Veszélyzóna"
 
@@ -2831,6 +2848,14 @@ msgstr "Square leválasztása"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:79
 msgid "Disconnect Square? Events using it will stop accepting card payments."
 msgstr "Leválasztod a Square-t? Az azt használó események többé nem fogadnak kártyás fizetést."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
+msgid "Disconnect Stripe"
+msgstr "Stripe leválasztása"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:65
+msgid "Disconnect this Stripe account? New sales will be paid to the platform account instead."
+msgstr "Leválasztod ezt a Stripe-fiókot? Az új eladások a platform fiókjára érkeznek."
 
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:71
 msgid "Discord"
@@ -3257,7 +3282,7 @@ msgid "Email Preview"
 msgstr "E-mail előnézet"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:336
-#: src/components/routes/organizer/Settings/index.tsx:73
+#: src/components/routes/organizer/Settings/index.tsx:80
 msgid "Email Templates"
 msgstr "E-mail sablonok"
 
@@ -3504,7 +3529,7 @@ msgid "Event date display"
 msgstr "Esemény dátumának megjelenítése"
 
 #: src/components/routes/account/ManageAccount/sections/EventDefaultsSettings/index.tsx:5
-#: src/components/routes/organizer/Settings/index.tsx:37
+#: src/components/routes/organizer/Settings/index.tsx:38
 #: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:73
 msgid "Event Defaults"
 msgstr "Esemény alapértelmezett beállításai"
@@ -4034,6 +4059,10 @@ msgstr "Szűrők ({activeFilterCount})"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:215
 msgid "Finish Setup"
 msgstr "Beállítás befejezése"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
+msgid "Finish Stripe setup"
+msgstr "Stripe-beállítás befejezése"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:426
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:673
@@ -5681,6 +5710,10 @@ msgstr "Nincs találat"
 msgid "No search results."
 msgstr "Nincs találat."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:108
+msgid "No Stripe account is connected. Sales are paid to the platform account until one is."
+msgstr "Nincs csatlakoztatott Stripe-fiók. Addig az eladások a platform fiókjára érkeznek."
+
 #: src/components/common/TaxAndFeeList/index.tsx:105
 msgid "No Taxes or Fees have been added."
 msgstr "Nem adtak hozzá adókat vagy díjakat."
@@ -6219,7 +6252,7 @@ msgstr "Szervező nem található"
 msgid "Organizer restored successfully"
 msgstr "A szervező sikeresen visszaállítva"
 
-#: src/components/routes/organizer/Settings/index.tsx:138
+#: src/components/routes/organizer/Settings/index.tsx:145
 msgid "Organizer Settings"
 msgstr "Szervezői beállítások"
 
@@ -6475,6 +6508,11 @@ msgstr "Fizetés sikeres!"
 msgid "Payment Terms"
 msgstr "Fizetési feltételek"
 
+#: src/components/routes/organizer/Settings/index.tsx:50
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:78
+msgid "Payments"
+msgstr "Fizetések"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:160
 msgid "Payments are recorded against this Square location."
 msgstr "A fizetéseket ehhez a Square-helyszínhez könyveljük."
@@ -6586,7 +6624,7 @@ msgstr "{0} platformdíj levonva a kifizetésből"
 #: src/components/routes/event/Settings/index.tsx:98
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:46
 #: src/components/routes/organizer/Reports/index.tsx:41
-#: src/components/routes/organizer/Settings/index.tsx:95
+#: src/components/routes/organizer/Settings/index.tsx:102
 #: src/components/routes/organizer/Settings/Sections/PlatformFeesSettings/index.tsx:42
 msgid "Platform Fees"
 msgstr "Platform díjak"
@@ -7903,7 +7941,7 @@ msgid "Sent to each attendee with their ticket details"
 msgstr "Elküldve minden résztvevőnek a jegy részleteivel"
 
 #: src/components/routes/event/Settings/index.tsx:58
-#: src/components/routes/organizer/Settings/index.tsx:67
+#: src/components/routes/organizer/Settings/index.tsx:74
 msgid "SEO"
 msgstr "Keresőoptimalizálás"
 
@@ -8097,7 +8135,7 @@ msgstr "Hogy később meg tudd különböztetni őket, például dehorsqc.com we
 msgid "Social"
 msgstr "Közösségi"
 
-#: src/components/routes/organizer/Settings/index.tsx:61
+#: src/components/routes/organizer/Settings/index.tsx:68
 msgid "Social Links"
 msgstr "Közösségi linkek"
 
@@ -8272,6 +8310,10 @@ msgstr "Megszemélyesítés leállítása"
 msgid "Stripe"
 msgstr "Stripe"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:70
+msgid "Stripe account disconnected"
+msgstr "Stripe-fiók leválasztva"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:163
 msgid "Stripe Connect"
 msgstr "Stripe Connect"
@@ -8295,6 +8337,10 @@ msgstr "A Stripe fizetések nincsenek engedélyezve ehhez az eseményhez."
 #: src/components/common/StripeConnectButton/index.tsx:80
 msgid "Stripe setup is already complete."
 msgstr "A Stripe beállítás már kész."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:107
+msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
+msgstr "A Stripe-beállítás még nincs kész. Addig az eladások a platform fiókjára érkeznek."
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
 #: src/components/modals/SendMessageModal/index.tsx:347
@@ -8569,7 +8615,7 @@ msgstr "Adó vagy díj sikeresen törölve"
 msgid "Tax receipt downloaded successfully"
 msgstr "Adóigazolás letöltve"
 
-#: src/components/routes/organizer/Settings/index.tsx:49
+#: src/components/routes/organizer/Settings/index.tsx:56
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:63
 msgid "Tax receipts"
 msgstr "Adóigazolások"
@@ -8964,6 +9010,10 @@ msgstr "Ez a rendelés elhagyásra került. Bármikor kezdhet új rendelést."
 msgid "This order was cancelled. You can start a new order anytime."
 msgstr "Ez a rendelés törölve lett. Bármikor kezdhet új rendelést."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:56
+msgid "This organizer is already connected to Stripe."
+msgstr "Ez a szervező már csatlakozik a Stripe-hoz."
+
 #: src/components/common/StatusToggle/index.tsx:83
 msgid "This organizer profile is not published yet"
 msgstr "Ez a szervezői profil még nem került közzétételre."
@@ -9093,6 +9143,10 @@ msgstr "Jegyár"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:501
 msgid "Ticket resent successfully"
 msgstr "Jegy sikeresen újraküldve"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:89
+msgid "Ticket sales for this organizer are paid directly into this Stripe account."
+msgstr "Ennek a szervezőnek a jegyeladásai közvetlenül erre a Stripe-fiókra érkeznek."
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:93
 msgid "Ticket sold"
@@ -9305,7 +9359,7 @@ msgstr "Kövesse nyomon a fióknövekedést és teljesítményt hozzárendelési
 msgid "Track sales, revenue, and attendance with detailed reports"
 msgstr "Értékesítések, bevételek és látogatottság nyomon követése részletes jelentésekkel"
 
-#: src/components/routes/organizer/Settings/index.tsx:79
+#: src/components/routes/organizer/Settings/index.tsx:86
 #: src/components/routes/organizer/Settings/Sections/TrackingPixelSettings/index.tsx:171
 msgid "Tracking & Analytics"
 msgstr "Követés és elemzés"
@@ -10202,6 +10256,10 @@ msgstr "Ha engedélyezve van, a Stripe Connect tranzakciókra nem számítanak f
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Ha az offline fizetések engedélyezve vannak, a felhasználók befejezhetik megrendeléseiket és megkaphatják jegyeiket. Jegyükön egyértelműen fel lesz tüntetve, hogy a megrendelés nincs kifizetve, és a bejelentkezési eszköz értesíti a bejelentkezési személyzetet, ha egy megrendelés fizetést igényel."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
+msgid "Where the money from this organizer's ticket sales is paid."
+msgstr "Hová kerül a szervező jegyeladásaiból származó pénz."
 
 #: src/components/forms/CheckInListForm/index.tsx:42
 msgid "Which tickets should be associated with this check-in list?"

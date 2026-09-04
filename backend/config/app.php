@@ -54,6 +54,8 @@ return [
         'confirm_email_change' => '/manage/profile/confirm-email-change/%s',
         'accept_invitation' => '/auth/accept-invitation/%s',
         'stripe_connect_return_url' => '/account/payment',
+        'organizer_stripe_return_url' => '/manage/organizer/%d/settings?stripe_return=1',
+        'organizer_stripe_refresh_url' => '/manage/organizer/%d/settings?stripe_refresh=1',
         'stripe_connect_refresh_url' => '/account/payment',
         'event_homepage' => '/event/%d/%s',
         'attendee_product' => '/product/%d/%s',

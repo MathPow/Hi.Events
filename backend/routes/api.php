@@ -122,6 +122,9 @@ use HiEvents\Http\Actions\SelfService\ResendAttendeeTicketPublicAction;
 use HiEvents\Http\Actions\SelfService\ResendOrderConfirmationPublicAction;
 use HiEvents\Http\Actions\Organizers\EditOrganizerAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizerAction;
+use HiEvents\Http\Actions\Organizers\Stripe\ConnectOrganizerStripeAction;
+use HiEvents\Http\Actions\Organizers\Stripe\DisconnectOrganizerStripeAction;
+use HiEvents\Http\Actions\Organizers\Stripe\GetOrganizerStripeConnectionAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizerEventsAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizersAction;
 use HiEvents\Http\Actions\Organizers\GetPublicOrganizerAction;
@@ -316,6 +319,12 @@ $router->middleware(['auth:api'])->group(
         $router->get('/organizers', GetOrganizersAction::class);
         $router->get('/organizers/{organizer_id}', GetOrganizerAction::class);
         $router->get('/organizers/{organizer_id}/events', GetOrganizerEventsAction::class);
+
+        // Stripe propre a l'organisateur: il encaisse chez lui, le compte de la
+        // billetterie ne servant que de repli
+        $router->get('/organizers/{organizer_id}/stripe', GetOrganizerStripeConnectionAction::class);
+        $router->post('/organizers/{organizer_id}/stripe/connect', ConnectOrganizerStripeAction::class);
+        $router->delete('/organizers/{organizer_id}/stripe', DisconnectOrganizerStripeAction::class);
         $router->get('/organizers/{organizer_id}/stats', GetOrganizerStatsAction::class);
         $router->get('/organizers/{organizer_id}/orders', GetOrganizerOrdersAction::class);
         $router->get('/organizers/{organizer_id}/settings', GetOrganizerSettingsAction::class);

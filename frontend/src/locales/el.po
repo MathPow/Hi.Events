@@ -555,7 +555,7 @@ msgstr "Πρόσθετες Πληροφορίες"
 
 #: src/components/common/OrderDetails/index.tsx:96
 #: src/components/forms/QuestionForm/index.tsx:130
-#: src/components/routes/organizer/Settings/index.tsx:43
+#: src/components/routes/organizer/Settings/index.tsx:44
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:67
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:91
 msgid "Address"
@@ -1306,7 +1306,7 @@ msgstr "Χρώμα Φόντου"
 msgid "Background Type"
 msgstr "Τύπος Φόντου"
 
-#: src/components/routes/organizer/Settings/index.tsx:31
+#: src/components/routes/organizer/Settings/index.tsx:32
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:63
 msgid "Basic Information"
 msgstr "Βασικές Πληροφορίες"
@@ -2045,6 +2045,7 @@ msgstr "Σύνδεση επεξεργασίας πληρωμών"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:195
 #: src/components/layouts/OrganizerLayout/index.tsx:203
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
 msgid "Connect Stripe"
 msgstr "Σύνδεση Stripe"
 
@@ -2095,6 +2096,10 @@ msgstr "Συνδέστε τον λογαριασμό Stripe για να ξεκι
 #: src/components/routes/event/GettingStarted/index.tsx:155
 msgid "Connect your Stripe account to start receiving payments."
 msgstr "Συνδέστε τον λογαριασμό Stripe για να ξεκινήσετε να λαμβάνετε πληρωμές."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:85
+msgid "Connected"
+msgstr "Συνδεδεμένο"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:393
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:630
@@ -2262,6 +2267,14 @@ msgstr "Δεν ήταν δυνατή η δημιουργία του διακρι
 msgid "Could not disconnect the Square account."
 msgstr "Δεν ήταν δυνατή η αποσύνδεση του λογαριασμού Square."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:71
+msgid "Could not disconnect the Stripe account."
+msgstr "Δεν ήταν δυνατή η αποσύνδεση του λογαριασμού Stripe."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:124
+msgid "Could not read the Stripe status for this organizer."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της κατάστασης Stripe αυτού του διοργανωτή."
+
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:42
 msgid "Could not revoke the token. Please try again."
 msgstr "Δεν ήταν δυνατή η ανάκληση του διακριτικού. Δοκιμάστε ξανά."
@@ -2273,6 +2286,10 @@ msgstr "Δεν ήταν δυνατή η αποθήκευση του καταστ
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:73
 msgid "Could not start the Square authorization."
 msgstr "Δεν ήταν δυνατή η έναρξη της εξουσιοδότησης Square."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:59
+msgid "Could not start the Stripe setup. Please try again."
+msgstr "Δεν ήταν δυνατή η έναρξη της ρύθμισης Stripe. Δοκιμάστε ξανά."
 
 #: src/components/common/CheckoutQuestion/index.tsx:174
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:152
@@ -2659,7 +2676,7 @@ msgstr "Επικίνδυνη ζώνη"
 #: src/components/common/AttendeeTable/index.tsx:367
 #: src/components/common/DangerZone/index.tsx:30
 #: src/components/routes/event/Settings/index.tsx:88
-#: src/components/routes/organizer/Settings/index.tsx:85
+#: src/components/routes/organizer/Settings/index.tsx:92
 msgid "Danger Zone"
 msgstr "Επικίνδυνη Ζώνη"
 
@@ -2831,6 +2848,14 @@ msgstr "Αποσύνδεση Square"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:79
 msgid "Disconnect Square? Events using it will stop accepting card payments."
 msgstr "Αποσύνδεση Square; Οι εκδηλώσεις που το χρησιμοποιούν θα σταματήσουν να δέχονται πληρωμές με κάρτα."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
+msgid "Disconnect Stripe"
+msgstr "Αποσύνδεση Stripe"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:65
+msgid "Disconnect this Stripe account? New sales will be paid to the platform account instead."
+msgstr "Αποσύνδεση αυτού του λογαριασμού Stripe; Οι νέες πωλήσεις θα πληρώνονται στον λογαριασμό της πλατφόρμας."
 
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:71
 msgid "Discord"
@@ -3257,7 +3282,7 @@ msgid "Email Preview"
 msgstr "Προεπισκόπηση Email"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:336
-#: src/components/routes/organizer/Settings/index.tsx:73
+#: src/components/routes/organizer/Settings/index.tsx:80
 msgid "Email Templates"
 msgstr "Πρότυπα Email"
 
@@ -3504,7 +3529,7 @@ msgid "Event date display"
 msgstr "Εμφάνιση ημερομηνίας εκδήλωσης"
 
 #: src/components/routes/account/ManageAccount/sections/EventDefaultsSettings/index.tsx:5
-#: src/components/routes/organizer/Settings/index.tsx:37
+#: src/components/routes/organizer/Settings/index.tsx:38
 #: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:73
 msgid "Event Defaults"
 msgstr "Προεπιλογές Εκδήλωσης"
@@ -4034,6 +4059,10 @@ msgstr "Φίλτρα ({activeFilterCount})"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:215
 msgid "Finish Setup"
 msgstr "Ολοκλήρωση Ρύθμισης"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
+msgid "Finish Stripe setup"
+msgstr "Ολοκλήρωση ρύθμισης Stripe"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:426
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:673
@@ -5681,6 +5710,10 @@ msgstr "Δεν βρέθηκαν Αποτελέσματα Αναζήτησης"
 msgid "No search results."
 msgstr "Δεν βρέθηκαν αποτελέσματα αναζήτησης."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:108
+msgid "No Stripe account is connected. Sales are paid to the platform account until one is."
+msgstr "Δεν έχει συνδεθεί λογαριασμός Stripe. Ως τότε οι πωλήσεις πληρώνονται στον λογαριασμό της πλατφόρμας."
+
 #: src/components/common/TaxAndFeeList/index.tsx:105
 msgid "No Taxes or Fees have been added."
 msgstr "Δεν έχουν προστεθεί Φόροι ή Τέλη."
@@ -6219,7 +6252,7 @@ msgstr "Διοργανωτής Δεν Βρέθηκε"
 msgid "Organizer restored successfully"
 msgstr "Ο διοργανωτής αποκαταστάθηκε επιτυχώς"
 
-#: src/components/routes/organizer/Settings/index.tsx:138
+#: src/components/routes/organizer/Settings/index.tsx:145
 msgid "Organizer Settings"
 msgstr "Ρυθμίσεις Διοργανωτή"
 
@@ -6475,6 +6508,11 @@ msgstr "Η πληρωμή επιτεύχθηκε!"
 msgid "Payment Terms"
 msgstr "Όροι Πληρωμής"
 
+#: src/components/routes/organizer/Settings/index.tsx:50
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:78
+msgid "Payments"
+msgstr "Πληρωμές"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:160
 msgid "Payments are recorded against this Square location."
 msgstr "Οι πληρωμές καταγράφονται σε αυτό το κατάστημα Square."
@@ -6586,7 +6624,7 @@ msgstr "Τέλος πλατφόρμας {0} αφαιρείται από την �
 #: src/components/routes/event/Settings/index.tsx:98
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:46
 #: src/components/routes/organizer/Reports/index.tsx:41
-#: src/components/routes/organizer/Settings/index.tsx:95
+#: src/components/routes/organizer/Settings/index.tsx:102
 #: src/components/routes/organizer/Settings/Sections/PlatformFeesSettings/index.tsx:42
 msgid "Platform Fees"
 msgstr "Τέλη Πλατφόρμας"
@@ -7903,7 +7941,7 @@ msgid "Sent to each attendee with their ticket details"
 msgstr "Αποστέλλεται σε κάθε συμμετέχοντα με τα στοιχεία εισιτηρίου"
 
 #: src/components/routes/event/Settings/index.tsx:58
-#: src/components/routes/organizer/Settings/index.tsx:67
+#: src/components/routes/organizer/Settings/index.tsx:74
 msgid "SEO"
 msgstr "SEO"
 
@@ -8097,7 +8135,7 @@ msgstr "Για να τα ξεχωρίζετε αργότερα, για παρά�
 msgid "Social"
 msgstr "Κοινωνικά"
 
-#: src/components/routes/organizer/Settings/index.tsx:61
+#: src/components/routes/organizer/Settings/index.tsx:68
 msgid "Social Links"
 msgstr "Κοινωνικοί Σύνδεσμοι"
 
@@ -8272,6 +8310,10 @@ msgstr "Διακοπή Υποκατάστασης"
 msgid "Stripe"
 msgstr "Stripe"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:70
+msgid "Stripe account disconnected"
+msgstr "Ο λογαριασμός Stripe αποσυνδέθηκε"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:163
 msgid "Stripe Connect"
 msgstr "Stripe Connect"
@@ -8295,6 +8337,10 @@ msgstr "Οι πληρωμές Stripe δεν είναι ενεργοποιημέ�
 #: src/components/common/StripeConnectButton/index.tsx:80
 msgid "Stripe setup is already complete."
 msgstr "Η ρύθμιση Stripe έχει ήδη ολοκληρωθεί."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:107
+msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
+msgstr "Η ρύθμιση Stripe δεν έχει ολοκληρωθεί. Ως τότε οι πωλήσεις πληρώνονται στον λογαριασμό της πλατφόρμας."
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
 #: src/components/modals/SendMessageModal/index.tsx:347
@@ -8569,7 +8615,7 @@ msgstr "Ο φόρος ή τέλος διαγράφηκε επιτυχώς"
 msgid "Tax receipt downloaded successfully"
 msgstr "Η φορολογική απόδειξη λήφθηκε"
 
-#: src/components/routes/organizer/Settings/index.tsx:49
+#: src/components/routes/organizer/Settings/index.tsx:56
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:63
 msgid "Tax receipts"
 msgstr "Φορολογικές αποδείξεις"
@@ -8964,6 +9010,10 @@ msgstr "Αυτή η παραγγελία εγκαταλείφθηκε. Μπορ�
 msgid "This order was cancelled. You can start a new order anytime."
 msgstr "Αυτή η παραγγελία ακυρώθηκε. Μπορείτε να ξεκινήσετε νέα παραγγελία ανά πάσα στιγμή."
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:56
+msgid "This organizer is already connected to Stripe."
+msgstr "Αυτός ο διοργανωτής είναι ήδη συνδεδεμένος με το Stripe."
+
 #: src/components/common/StatusToggle/index.tsx:83
 msgid "This organizer profile is not published yet"
 msgstr "Αυτό το προφίλ διοργανωτή δεν έχει δημοσιευτεί ακόμα"
@@ -9093,6 +9143,10 @@ msgstr "Τιμή εισιτηρίου"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:501
 msgid "Ticket resent successfully"
 msgstr "Το εισιτήριο εστάλη ξανά επιτυχώς"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:89
+msgid "Ticket sales for this organizer are paid directly into this Stripe account."
+msgstr "Οι πωλήσεις εισιτηρίων αυτού του διοργανωτή πληρώνονται απευθείας σε αυτόν τον λογαριασμό Stripe."
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:93
 msgid "Ticket sold"
@@ -9305,7 +9359,7 @@ msgstr "Παρακολούθηση ανάπτυξης λογαριασμού κ�
 msgid "Track sales, revenue, and attendance with detailed reports"
 msgstr "Παρακολούθηση πωλήσεων, εσόδων και παρουσίας με αναλυτικές αναφορές"
 
-#: src/components/routes/organizer/Settings/index.tsx:79
+#: src/components/routes/organizer/Settings/index.tsx:86
 #: src/components/routes/organizer/Settings/Sections/TrackingPixelSettings/index.tsx:171
 msgid "Tracking & Analytics"
 msgstr "Παρακολούθηση & Αναλυτικά"
@@ -10202,6 +10256,10 @@ msgstr "Όταν είναι ενεργό, δεν θα χρεώνονται χρ�
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Όταν οι πληρωμές εκτός σύνδεσης είναι ενεργές, οι χρήστες μπορούν να ολοκληρώσουν παραγγελίες και να λάβουν εισιτήρια με ένδειξη μη πληρωμένης παραγγελίας."
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
+msgid "Where the money from this organizer's ticket sales is paid."
+msgstr "Πού πηγαίνουν τα χρήματα από τις πωλήσεις εισιτηρίων αυτού του διοργανωτή."
 
 #: src/components/forms/CheckInListForm/index.tsx:42
 msgid "Which tickets should be associated with this check-in list?"

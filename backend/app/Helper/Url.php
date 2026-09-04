@@ -17,6 +17,8 @@ class Url
     public const ORGANIZER_ORDER_SUMMARY = 'app.frontend_urls.organizer_order_summary';
     public const TICKET_LOOKUP = 'app.frontend_urls.ticket_lookup';
     public const REGISTRATION_INVITE = 'app.frontend_urls.registration_invite';
+    public const ORGANIZER_STRIPE_RETURN = 'app.frontend_urls.organizer_stripe_return_url';
+    public const ORGANIZER_STRIPE_REFRESH = 'app.frontend_urls.organizer_stripe_refresh_url';
 
     public static function getFrontEndUrlFromConfig(string $key, array $queryParams = []): string
     {

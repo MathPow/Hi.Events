@@ -555,7 +555,7 @@ msgstr "附加信息"
 
 #: src/components/common/OrderDetails/index.tsx:96
 #: src/components/forms/QuestionForm/index.tsx:130
-#: src/components/routes/organizer/Settings/index.tsx:43
+#: src/components/routes/organizer/Settings/index.tsx:44
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:67
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:91
 msgid "Address"
@@ -1306,7 +1306,7 @@ msgstr "背景顏色"
 msgid "Background Type"
 msgstr "背景類型"
 
-#: src/components/routes/organizer/Settings/index.tsx:31
+#: src/components/routes/organizer/Settings/index.tsx:32
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:63
 msgid "Basic Information"
 msgstr "基本資料"
@@ -2045,6 +2045,7 @@ msgstr "連接支付處理"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:195
 #: src/components/layouts/OrganizerLayout/index.tsx:203
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
 msgid "Connect Stripe"
 msgstr "連接條紋"
 
@@ -2095,6 +2096,10 @@ msgstr "連接您的 Stripe 帳戶以開始接受付款。"
 #: src/components/routes/event/GettingStarted/index.tsx:155
 msgid "Connect your Stripe account to start receiving payments."
 msgstr "連接 Stripe 賬户，開始接收付款。"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:85
+msgid "Connected"
+msgstr "已連接"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:393
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:630
@@ -2262,6 +2267,14 @@ msgstr "無法建立權杖。請重試。"
 msgid "Could not disconnect the Square account."
 msgstr "無法中斷 Square 帳戶連接。"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:71
+msgid "Could not disconnect the Stripe account."
+msgstr "無法中斷 Stripe 帳戶連接。"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:124
+msgid "Could not read the Stripe status for this organizer."
+msgstr "無法讀取此主辦方的 Stripe 狀態。"
+
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:42
 msgid "Could not revoke the token. Please try again."
 msgstr "無法撤銷權杖。請重試。"
@@ -2273,6 +2286,10 @@ msgstr "無法儲存 Square 營業地點。"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:73
 msgid "Could not start the Square authorization."
 msgstr "無法啟動 Square 授權。"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:59
+msgid "Could not start the Stripe setup. Please try again."
+msgstr "無法開始 Stripe 設定，請再試一次。"
 
 #: src/components/common/CheckoutQuestion/index.tsx:174
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:152
@@ -2659,7 +2676,7 @@ msgstr "危險區"
 #: src/components/common/AttendeeTable/index.tsx:367
 #: src/components/common/DangerZone/index.tsx:30
 #: src/components/routes/event/Settings/index.tsx:88
-#: src/components/routes/organizer/Settings/index.tsx:85
+#: src/components/routes/organizer/Settings/index.tsx:92
 msgid "Danger Zone"
 msgstr "危險區"
 
@@ -2831,6 +2848,14 @@ msgstr "中斷 Square 連接"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:79
 msgid "Disconnect Square? Events using it will stop accepting card payments."
 msgstr "中斷 Square 連接？使用它的活動將無法再接受信用卡付款。"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
+msgid "Disconnect Stripe"
+msgstr "中斷 Stripe 連接"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:65
+msgid "Disconnect this Stripe account? New sales will be paid to the platform account instead."
+msgstr "中斷此 Stripe 帳戶連接？新的銷售款項將轉入平台帳戶。"
 
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:71
 msgid "Discord"
@@ -3257,7 +3282,7 @@ msgid "Email Preview"
 msgstr "郵件預覽"
 
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:336
-#: src/components/routes/organizer/Settings/index.tsx:73
+#: src/components/routes/organizer/Settings/index.tsx:80
 msgid "Email Templates"
 msgstr "郵件範本"
 
@@ -3504,7 +3529,7 @@ msgid "Event date display"
 msgstr "活動日期顯示"
 
 #: src/components/routes/account/ManageAccount/sections/EventDefaultsSettings/index.tsx:5
-#: src/components/routes/organizer/Settings/index.tsx:37
+#: src/components/routes/organizer/Settings/index.tsx:38
 #: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:73
 msgid "Event Defaults"
 msgstr "事件默認值"
@@ -4034,6 +4059,10 @@ msgstr "篩選器 ({activeFilterCount})"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:215
 msgid "Finish Setup"
 msgstr "完成設置"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
+msgid "Finish Stripe setup"
+msgstr "完成 Stripe 設定"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:426
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:673
@@ -5681,6 +5710,10 @@ msgstr "沒有搜索結果"
 msgid "No search results."
 msgstr "沒有搜索結果。"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:108
+msgid "No Stripe account is connected. Sales are paid to the platform account until one is."
+msgstr "尚未連接 Stripe 帳戶。在連接之前，銷售款項會轉入平台帳戶。"
+
 #: src/components/common/TaxAndFeeList/index.tsx:105
 msgid "No Taxes or Fees have been added."
 msgstr "未加收任何税費。"
@@ -6219,7 +6252,7 @@ msgstr "找不到主辦單位"
 msgid "Organizer restored successfully"
 msgstr "主辦方已成功還原"
 
-#: src/components/routes/organizer/Settings/index.tsx:138
+#: src/components/routes/organizer/Settings/index.tsx:145
 msgid "Organizer Settings"
 msgstr "主辦單位設定"
 
@@ -6475,6 +6508,11 @@ msgstr "付款成功！"
 msgid "Payment Terms"
 msgstr "付款條款"
 
+#: src/components/routes/organizer/Settings/index.tsx:50
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:78
+msgid "Payments"
+msgstr "收款"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/SquareSettings/index.tsx:160
 msgid "Payments are recorded against this Square location."
 msgstr "付款會記錄在此 Square 營業地點。"
@@ -6586,7 +6624,7 @@ msgstr "從您的付款中扣除 {0} 的平台費用"
 #: src/components/routes/event/Settings/index.tsx:98
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:46
 #: src/components/routes/organizer/Reports/index.tsx:41
-#: src/components/routes/organizer/Settings/index.tsx:95
+#: src/components/routes/organizer/Settings/index.tsx:102
 #: src/components/routes/organizer/Settings/Sections/PlatformFeesSettings/index.tsx:42
 msgid "Platform Fees"
 msgstr "平台費用"
@@ -7903,7 +7941,7 @@ msgid "Sent to each attendee with their ticket details"
 msgstr "發送給每位參會者及其門票詳情"
 
 #: src/components/routes/event/Settings/index.tsx:58
-#: src/components/routes/organizer/Settings/index.tsx:67
+#: src/components/routes/organizer/Settings/index.tsx:74
 msgid "SEO"
 msgstr "SEO"
 
@@ -8097,7 +8135,7 @@ msgstr "方便日後區分，例如 dehorsqc.com 網站"
 msgid "Social"
 msgstr "社交"
 
-#: src/components/routes/organizer/Settings/index.tsx:61
+#: src/components/routes/organizer/Settings/index.tsx:68
 msgid "Social Links"
 msgstr "社交連結"
 
@@ -8272,6 +8310,10 @@ msgstr "停止模擬"
 msgid "Stripe"
 msgstr "Stripe"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:70
+msgid "Stripe account disconnected"
+msgstr "已中斷 Stripe 帳戶連接"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:163
 msgid "Stripe Connect"
 msgstr "Stripe Connect"
@@ -8295,6 +8337,10 @@ msgstr "此活動未啟用 Stripe 支付。"
 #: src/components/common/StripeConnectButton/index.tsx:80
 msgid "Stripe setup is already complete."
 msgstr "Stripe設置已完成。"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:107
+msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
+msgstr "Stripe 設定尚未完成。在完成之前，銷售款項會轉入平台帳戶。"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
 #: src/components/modals/SendMessageModal/index.tsx:347
@@ -8569,7 +8615,7 @@ msgstr "成功刪除税費"
 msgid "Tax receipt downloaded successfully"
 msgstr "稅務收據已下載"
 
-#: src/components/routes/organizer/Settings/index.tsx:49
+#: src/components/routes/organizer/Settings/index.tsx:56
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:63
 msgid "Tax receipts"
 msgstr "稅務收據"
@@ -8964,6 +9010,10 @@ msgstr "此訂單已被放棄。您可以隨時開始新的訂單。"
 msgid "This order was cancelled. You can start a new order anytime."
 msgstr "此訂單已被取消。您可以隨時開始新訂單。"
 
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:56
+msgid "This organizer is already connected to Stripe."
+msgstr "此主辦方已連接 Stripe。"
+
 #: src/components/common/StatusToggle/index.tsx:83
 msgid "This organizer profile is not published yet"
 msgstr "呢個主辦方資料未發佈"
@@ -9093,6 +9143,10 @@ msgstr "票價"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:501
 msgid "Ticket resent successfully"
 msgstr "門票重新發送成功"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:89
+msgid "Ticket sales for this organizer are paid directly into this Stripe account."
+msgstr "此主辦方的門票銷售款項會直接存入此 Stripe 帳戶。"
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:93
 msgid "Ticket sold"
@@ -9305,7 +9359,7 @@ msgstr "按歸因來源追蹤帳戶增長和表現"
 msgid "Track sales, revenue, and attendance with detailed reports"
 msgstr "透過詳細報告追蹤銷售、收入和參加人數"
 
-#: src/components/routes/organizer/Settings/index.tsx:79
+#: src/components/routes/organizer/Settings/index.tsx:86
 #: src/components/routes/organizer/Settings/Sections/TrackingPixelSettings/index.tsx:171
 msgid "Tracking & Analytics"
 msgstr "追蹤與分析"
@@ -10202,6 +10256,10 @@ msgstr "啟用後，Stripe Connect交易將不收取應用費用。用於不支�
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "啟用線下支付後，用户可以完成訂單並收到門票。他們的門票將清楚地顯示訂單未支付，簽到工具會通知簽到工作人員訂單是否需要支付。"
+
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
+msgid "Where the money from this organizer's ticket sales is paid."
+msgstr "此主辦方門票銷售款項的去向。"
 
 #: src/components/forms/CheckInListForm/index.tsx:42
 msgid "Which tickets should be associated with this check-in list?"

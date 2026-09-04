@@ -22,6 +22,7 @@ use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\StripePaymentsRepositoryInterface;
 use HiEvents\Services\Domain\Payment\Stripe\DTOs\CreatePaymentIntentRequestDTO;
+use HiEvents\Services\Domain\Payment\Stripe\StripePayeeResolutionService;
 use HiEvents\Services\Domain\Payment\Stripe\DTOs\CreatePaymentIntentResponseDTO;
 use HiEvents\Services\Domain\Payment\Stripe\StripePaymentIntentCreationService;
 use HiEvents\Services\Infrastructure\Session\CheckoutSessionManagementService;
@@ -42,6 +43,7 @@ readonly class CreatePaymentIntentHandler
         private AccountRepositoryInterface         $accountRepository,
         private StripeClientFactory                $stripeClientFactory,
         private StripeConfigurationService         $stripeConfigurationService,
+        private StripePayeeResolutionService       $payeeResolutionService,
     )
     {
     }
@@ -85,10 +87,17 @@ readonly class CreatePaymentIntentHandler
             ))
             ->findByEventId($order->getEventId());
 
-        $stripePlatform = $account->getActiveStripePlatform()
+        // L'organisateur qui a branche son propre Stripe encaisse chez lui; sinon
+        // c'est le compte de la billetterie, pour ne pas perdre la vente.
+        $payee = $this->payeeResolutionService->resolveForOrganizer(
+            organizerId: $order->getEvent()?->getOrganizerId(),
+            account: $account,
+        );
+
+        $stripePlatform = $payee->platform
             ?? $this->stripeConfigurationService->getPrimaryPlatform();
 
-        $stripeAccountId = $account->getActiveStripeAccountId();
+        $stripeAccountId = $payee->stripeAccountId;
 
         // If no platform is configured, we can still process payments with regular Stripe keys
         if (!$stripePlatform) {

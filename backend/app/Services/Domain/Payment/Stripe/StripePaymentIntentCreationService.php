@@ -267,8 +267,35 @@ class StripePaymentIntentCreationService
             ? MoneyValue::fromFloat($contribution, $paymentIntentDTO->currencyCode)->toMinorUnit()
             : 0;
 
-        $total = $feeMinorUnit + $contributionMinorUnit;
+        $total = $feeMinorUnit + $this->contributionNetOfProcessing($contributionMinorUnit);
 
         return $total > 0 ? ['application_fee_amount' => $total] : [];
+    }
+
+    /**
+     * La contribution n'est pas l'argent de l'organisateur, elle ne doit donc
+     * rien lui couter. Sur une charge directe, Stripe preleve ses frais sur le
+     * compte connecte pour la totalite du montant: la plateforme rend la part
+     * variable qui porte sur la contribution, et l'organisateur touche
+     * exactement ce qu'il aurait touche sans elle.
+     *
+     * La part fixe (0,30 $) n'entre pas dans le calcul: elle est due une fois
+     * par transaction, contribution ou pas.
+     */
+    private function contributionNetOfProcessing(int $contributionMinorUnit): int
+    {
+        if ($contributionMinorUnit <= 0) {
+            return 0;
+        }
+
+        $percentage = (float)$this->config->get('services.stripe.processing_fee_percentage', 0);
+
+        if ($percentage <= 0) {
+            return $contributionMinorUnit;
+        }
+
+        $processingCost = (int)round($contributionMinorUnit * $percentage / 100);
+
+        return max(0, $contributionMinorUnit - $processingCost);
     }
 }
