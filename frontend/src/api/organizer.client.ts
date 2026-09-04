@@ -13,7 +13,34 @@ import {
 import {queryParamsHelper} from "../utilites/queryParamsHelper.ts";
 import {publicApi} from "./public-client.ts";
 
+export interface OrganizerStripeConnection {
+    stripe_account_id: string | null;
+    is_connected: boolean;
+    is_setup_complete: boolean;
+    connect_url: string | null;
+}
+
+
 export const organizerClient = {
+    getStripeConnection: async (organizerId: IdParam, refresh: boolean = false) => {
+        const response = await api.get<GenericDataResponse<OrganizerStripeConnection>>(
+            `organizers/${organizerId}/stripe${refresh ? '?refresh=1' : ''}`
+        );
+        return response.data;
+    },
+
+    connectStripe: async (organizerId: IdParam) => {
+        const response = await api.post<GenericDataResponse<OrganizerStripeConnection>>(
+            `organizers/${organizerId}/stripe/connect`
+        );
+        return response.data;
+    },
+
+    disconnectStripe: async (organizerId: IdParam) => {
+        const response = await api.delete(`organizers/${organizerId}/stripe`);
+        return response.data;
+    },
+
     create: async (organizer: Partial<Organizer>) => {
         const response = await api.post<GenericDataResponse<Organizer>>('organizers', organizer);
         return response.data;
