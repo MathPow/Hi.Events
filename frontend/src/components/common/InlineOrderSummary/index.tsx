@@ -1,6 +1,6 @@
 import {useState} from "react";
-import {Collapse, Popover} from "@mantine/core";
-import {IconCalendarEvent, IconChevronDown, IconInfoCircle, IconShieldCheck, IconTag} from "@tabler/icons-react";
+import {Button, Collapse, Popover, TextInput} from "@mantine/core";
+import {IconCalendarEvent, IconChevronDown, IconInfoCircle, IconShieldCheck, IconTag, IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import classNames from "classnames";
 import {Event, Order} from "../../../types.ts";
@@ -13,6 +13,8 @@ interface InlineOrderSummaryProps {
     order: Order;
     defaultExpanded?: boolean;
     showBuyerProtection?: boolean;
+    onPromoCodeChange?: (promoCode: string | null) => void;
+    isPromoCodePending?: boolean;
 }
 
 export const InlineOrderSummary = ({
@@ -20,8 +22,11 @@ export const InlineOrderSummary = ({
     order,
     defaultExpanded = true,
     showBuyerProtection = true,
+    onPromoCodeChange,
+    isPromoCodePending = false,
 }: InlineOrderSummaryProps) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
+    const [promoCodeInput, setPromoCodeInput] = useState('');
 
     const totalAmount = order.total_refunded
         ? order.total_gross - order.total_refunded
@@ -40,6 +45,18 @@ export const InlineOrderSummary = ({
         }
         return sum;
     }, 0) || 0;
+
+    // La saisie est reservee aux etapes ou la commande peut encore etre recalculee:
+    // ailleurs, appliquer un code echouerait cote serveur apres coup.
+    const isPromoCodeEditable = typeof onPromoCodeChange === 'function';
+
+    const handleApplyPromoCode = () => {
+        const trimmedPromoCode = promoCodeInput.trim();
+
+        if (trimmedPromoCode !== '') {
+            onPromoCodeChange?.(trimmedPromoCode);
+        }
+    };
 
     return (
         <div className={classes.inlineOrderSummary}>
@@ -113,15 +130,67 @@ export const InlineOrderSummary = ({
                         ))}
                     </div>
 
-                    {order.promo_code && totalDiscount > 0 && (
+                    {order.promo_code && (
                         <div className={classes.promoCode}>
                             <div className={classes.promoCodeLeft}>
                                 <IconTag size={16}/>
                                 <span>{order.promo_code}</span>
                             </div>
-                            <span className={classes.promoCodeDiscount}>
-                                -{formatCurrency(totalDiscount, order.currency)}
-                            </span>
+                            <div className={classes.promoCodeRight}>
+                                {totalDiscount > 0 && (
+                                    <span className={classes.promoCodeDiscount}>
+                                        -{formatCurrency(totalDiscount, order.currency)}
+                                    </span>
+                                )}
+                                {isPromoCodeEditable && (
+                                    <button
+                                        type="button"
+                                        className={classes.promoCodeRemove}
+                                        disabled={isPromoCodePending}
+                                        onClick={() => {
+                                            setPromoCodeInput('');
+                                            onPromoCodeChange?.(null);
+                                        }}
+                                        aria-label={t`Remove promo code`}
+                                        title={t`Remove promo code`}
+                                    >
+                                        <IconX size={14}/>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {isPromoCodeEditable && !order.promo_code && (
+                        <div className={classes.promoCodeForm}>
+                            <label className={classes.promoCodeFormLabel} htmlFor="inline-summary-promo-code">
+                                <IconTag size={16}/>
+                                {t`Have a promo code?`}
+                            </label>
+                            <div className={classes.promoCodeFormRow}>
+                                <TextInput
+                                    id="inline-summary-promo-code"
+                                    className={classes.promoCodeFormInput}
+                                    placeholder={t`Enter your code`}
+                                    value={promoCodeInput}
+                                    disabled={isPromoCodePending}
+                                    onChange={(event) => setPromoCodeInput(event.currentTarget.value)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') {
+                                            event.preventDefault();
+                                            handleApplyPromoCode();
+                                        }
+                                    }}
+                                />
+                                <Button
+                                    variant="outline"
+                                    disabled={isPromoCodePending || promoCodeInput.trim() === ''}
+                                    loading={isPromoCodePending}
+                                    onClick={handleApplyPromoCode}
+                                >
+                                    {t`Apply`}
+                                </Button>
+                            </div>
                         </div>
                     )}
 

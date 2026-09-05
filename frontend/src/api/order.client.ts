@@ -200,6 +200,14 @@ export const orderClientPublic = {
         return new Blob([response.data]);
     },
 
+    applyPromoCode: async (eventId: IdParam, orderShortId: IdParam, promoCode: string | null) => {
+        const response = await publicApi.post<GenericDataResponse<Order>>(
+            `events/${eventId}/order/${orderShortId}/promo-code`,
+            {promo_code: promoCode},
+        );
+        return response.data;
+    },
+
     abandonOrder: async (eventId: IdParam, orderShortId: IdParam) => {
         const response = await publicApi.post<GenericDataResponse<Order>>(`events/${eventId}/order/${orderShortId}/abandon`);
         return response.data;

@@ -1,7 +1,6 @@
 import {t, Trans} from "@lingui/macro";
 import {
     ActionIcon,
-    Anchor,
     Button,
     Collapse,
     Group,
@@ -21,7 +20,7 @@ import {
     ProductPriceQuantityFormValue
 } from "../../../../api/order.client.ts";
 import {useForm} from "@mantine/form";
-import {range, useInputState, useResizeObserver} from "@mantine/hooks";
+import {range, useResizeObserver} from "@mantine/hooks";
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {showError, showInfo, showSuccess} from "../../../../utilites/notifications.tsx";
 import {addQueryStringToUrl, isObjectEmpty, removeQueryStringFromUrl} from "../../../../utilites/helpers.ts";
@@ -33,7 +32,7 @@ import {PoweredByFooter} from "../../../common/PoweredByFooter";
 import {Event, Product} from "../../../../types.ts";
 import {eventsClientPublic} from "../../../../api/event.client.ts";
 import {promoCodeClientPublic} from "../../../../api/promo-code.client.ts";
-import {IconChevronRight, IconX} from "@tabler/icons-react"
+import {IconChevronRight, IconTag, IconX} from "@tabler/icons-react"
 import {getSessionIdentifier} from "../../../../utilites/sessionIdentifier.ts";
 import {Constants} from "../../../../constants.ts";
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
@@ -85,7 +84,6 @@ const SelectProducts = (props: SelectProductsProps) => {
     const navigate = useNavigate();
 
     const promoRef = useRef<HTMLInputElement>(null);
-    const [showPromoCodeInput, setShowPromoCodeInput] = useInputState<boolean>(false);
     const [event, setEvent] = useState(props.event);
     const [orderInProcessOverlayVisible, setOrderInProcessOverlayVisible] = useState(false);
     const [resizeRef, resizeObserverRect] = useResizeObserver();
@@ -213,7 +211,6 @@ const SelectProducts = (props: SelectProductsProps) => {
                 form.setFieldValue("promo_code", promoCode);
             } else {
                 form.setFieldValue("promo_code", null);
-                setShowPromoCodeInput(false)
                 removeQueryStringFromUrl('promo_code');
             }
         },
@@ -552,6 +549,53 @@ const SelectProducts = (props: SelectProductsProps) => {
                         })}
                     </div>
 
+                    <div className={'hi-promo-code-row'}>
+                        {form.values.promo_code ? (
+                            <div className={'hi-promo-code-applied'}>
+                                <span><b>{form.values.promo_code}</b> {t`applied`}</span>
+                                <ActionIcon
+                                    className={'hi-promo-code-applied-remove-icon-button'}
+                                    variant="transparent"
+                                    aria-label={t`remove`}
+                                    title={t`Remove`}
+                                    onClick={() => {
+                                        promoCodeEventRefetchMutation.mutate(null)
+                                    }}
+                                >
+                                    <IconX stroke={1.5} size={20}/>
+                                </ActionIcon>
+                            </div>
+                        ) : (
+                            <>
+                                <label className={'hi-promo-code-label'} htmlFor={'hi-promo-code-input'}>
+                                    <IconTag stroke={1.5} size={18}/>
+                                    {t`Have a promo code?`}
+                                </label>
+                                <Group className={'hi-promo-code-input-wrapper'} wrap={'nowrap'} gap={'20px'}>
+                                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                                    {/*@ts-ignore*/}
+                                    <TextInput id={'hi-promo-code-input'}
+                                               className={'hi-promo-code-input-field'}
+                                               classNames={{input: 'hi-promo-code-input'}}
+                                               placeholder={t`Enter your code`}
+                                               onKeyDown={(event) => {
+                                                   if (event.key === 'Enter') {
+                                                       event.preventDefault();
+                                                       handleApplyPromoCode();
+                                                   }
+                                               }} mb={0} ref={promoRef}/>
+                                    <Button type={'button'}
+                                            disabled={promoCodeEventRefetchMutation.isPending}
+                                            loading={promoCodeEventRefetchMutation.isPending}
+                                            className={'hi-apply-promo-code-button'} variant={'outline'}
+                                            onClick={handleApplyPromoCode}>
+                                        {t`Apply Promo Code`}
+                                    </Button>
+                                </Group>
+                            </>
+                        )}
+                    </div>
+
                     <div className={'hi-footer-row'}>
                         {event?.settings?.product_page_message && (
                             <div dangerouslySetInnerHTML={{
@@ -566,57 +610,6 @@ const SelectProducts = (props: SelectProductsProps) => {
                     </div>
                 </form>
             )}
-            <div className={'hi-promo-code-row'}>
-                {(!showPromoCodeInput && !form.values.promo_code) && (
-                    <Anchor className={'hi-have-a-promo-code-link'} underline={'always'}
-                            onClick={() => setShowPromoCodeInput(true)}>
-                        {t`Have a promo code?`}
-                    </Anchor>
-                )}
-                {form.values.promo_code && (
-                    <div className={'hi-promo-code-applied'}>
-                        <span><b>{form.values.promo_code}</b> {t`applied`}</span>
-                        <ActionIcon
-                            className={'hi-promo-code-applied-remove-icon-button'}
-                            variant="transparent"
-                            aria-label={t`remove`}
-                            title={t`Remove`}
-                            onClick={() => {
-                                promoCodeEventRefetchMutation.mutate(null)
-                            }}
-                        >
-                            <IconX stroke={1.5} size={20}/>
-                        </ActionIcon>
-                    </div>
-                )}
-
-                {(showPromoCodeInput && !form.values.promo_code) && (
-                    <Group className={'hi-promo-code-input-wrapper'} wrap={'nowrap'} gap={'20px'}>
-                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                        {/*@ts-ignore*/}
-                        <TextInput autoFocus classNames={{input: 'hi-promo-code-input'}} onKeyDown={(event) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                handleApplyPromoCode();
-                            }
-                        }} mb={0} ref={promoRef}/>
-                        <Button disabled={promoCodeEventRefetchMutation.isPending}
-                                className={'hi-apply-promo-code-button'} variant={'outline'}
-                                onClick={handleApplyPromoCode}>
-                            {t`Apply Promo Code`}
-                        </Button>
-                        <ActionIcon
-                            className={'hi-close-promo-code-input-button'}
-                            variant="transparent"
-                            aria-label={t`close`}
-                            title={t`Close`}
-                            onClick={() => setShowPromoCodeInput(false)}
-                        >
-                            <IconX stroke={1.5} size={20}/>
-                        </ActionIcon>
-                    </Group>
-                )}
-            </div>
 
             {
                 /**

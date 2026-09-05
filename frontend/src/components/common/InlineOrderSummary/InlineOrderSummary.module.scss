@@ -206,10 +206,70 @@
   color: var(--checkout-accent, #92400E);
 }
 
+.promoCodeRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .promoCodeDiscount {
   font-size: 14px;
   font-weight: 600;
   color: var(--checkout-accent, #059669);
+}
+
+.promoCodeRemove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--checkout-accent, #92400E);
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 1;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+}
+
+// Promo code entry
+.promoCodeForm {
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px dashed var(--checkout-border, #E5E7EB);
+  border-radius: 8px;
+  background: var(--checkout-background, #F9FAFB);
+}
+
+.promoCodeFormLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--checkout-text-primary, #111827);
+}
+
+.promoCodeFormRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.promoCodeFormInput {
+  flex: 1;
 }
 
 // Totals

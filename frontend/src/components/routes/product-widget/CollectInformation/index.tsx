@@ -29,12 +29,13 @@ import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
 import {PlatformSupportInput, platformSupportDefaultAmount, platformSupportEnabled} from "../../../common/PlatformSupportInput";
 import {eventCheckoutPath, eventHomepagePath} from "../../../../utilites/urlHelper.ts";
-import {showError, showInfo} from "../../../../utilites/notifications.tsx";
+import {showError, showInfo, showSuccess} from "../../../../utilites/notifications.tsx";
 import countries from "../../../../../data/countries.json";
 import classes from "./CollectInformation.module.scss";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
 import {useCheckoutPrefill, CheckoutPrefill} from "../../../../hooks/useCheckoutPrefill.ts";
+import {useApplyPromoCodeToOrder} from "../../../../mutations/useApplyPromoCodeToOrder.ts";
 
 const LoadingSkeleton = () =>
     (
@@ -250,6 +251,29 @@ export const CollectInformation = () => {
         }
     });
 
+    const promoCodeMutation = useApplyPromoCodeToOrder();
+
+    const handlePromoCodeChange = (promoCode: string | null) => {
+        promoCodeMutation.mutate({eventId, orderShortId, promoCode}, {
+            onSuccess: () => {
+                if (promoCode) {
+                    showSuccess(t`Promo code applied`);
+                } else {
+                    showInfo(t`Promo code removed`);
+                }
+            },
+            onError: (error: any) => {
+                const promoCodeError = error?.response?.data?.errors?.promo_code;
+
+                showError(
+                    (Array.isArray(promoCodeError) ? promoCodeError[0] : promoCodeError)
+                    ?? error?.response?.data?.message
+                    ?? t`That promo code is invalid`
+                );
+            },
+        });
+    };
+
     const createProductIdToQuestionMap = () => {
         const productIdToQuestionMap = new Map();
 
@@ -461,7 +485,13 @@ export const CollectInformation = () => {
                 )}
 
                 {(event && order) && (
-                    <InlineOrderSummary event={event} order={order} defaultExpanded={true}/>
+                    <InlineOrderSummary
+                        event={event}
+                        order={order}
+                        defaultExpanded={true}
+                        onPromoCodeChange={handlePromoCodeChange}
+                        isPromoCodePending={promoCodeMutation.isPending}
+                    />
                 )}
 
                 <h2 className={classes.sectionHeading}>
