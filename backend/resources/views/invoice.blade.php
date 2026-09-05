@@ -455,6 +455,13 @@
         </tr>
     @endif
 
+    @if($order->getPlatformContribution() > 0)
+        <tr class="subtotal">
+            <td>{{ __('Support the platform') }}</td>
+            <td>{{ Currency::format($order->getPlatformContribution(), $order->getCurrency()) }}</td>
+        </tr>
+    @endif
+
     <tr class="total-line">
         <td>{{ __('Total') }}</td>
         <td>{{ Currency::format($order->getTotalGross(), $order->getCurrency()) }}</td>
