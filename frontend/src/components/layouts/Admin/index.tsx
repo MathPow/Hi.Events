@@ -1,4 +1,4 @@
-import {IconUsers, IconUserPlus, IconBuildingBank, IconLayoutDashboard, IconCalendar, IconReceipt, IconSettings, IconChartBar, IconAlertTriangle, IconMail} from "@tabler/icons-react";
+import {IconUsers, IconUserPlus, IconBuildingBank, IconLayoutDashboard, IconCalendar, IconReceipt, IconSettings, IconChartBar, IconAlertTriangle, IconMail, IconCoins} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {NavItem, BreadcrumbItem} from "../AppLayout/types";
 import AppLayout from "../AppLayout";
@@ -16,6 +16,7 @@ const AdminLayout = () => {
         {link: 'registration-invites', label: t`Invitations`, icon: IconUserPlus},
         {link: 'events', label: t`Events`, icon: IconCalendar},
         {link: 'orders', label: t`Orders`, icon: IconReceipt},
+        {link: 'platform-revenue', label: t`Revenue`, icon: IconCoins},
         {link: 'messages', label: t`Messages`, icon: IconMail},
         {link: 'attribution', label: t`UTM Analytics`, icon: IconChartBar},
         {link: 'failed-jobs', label: t`Failed Jobs`, icon: IconAlertTriangle},

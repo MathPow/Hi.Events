@@ -20,6 +20,7 @@ import {useGetAdminStats} from "../../../../queries/useGetAdminStats";
 import {useGetUpcomingEvents} from "../../../../queries/useGetUpcomingEvents";
 import {useGetAdminDashboardData} from "../../../../queries/useGetAdminDashboardData";
 import {useGetPlatformRevenue} from "../../../../queries/useGetPlatformRevenue";
+import {Link} from "react-router";
 import {eventHomepageUrl} from "../../../../utilites/urlHelper";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -327,70 +328,11 @@ const AdminDashboard = () => {
                             </Group>
                         </Paper>
                     </SimpleGrid>
-
-                    {!isLoadingRevenue && (revenue?.by_currency?.length || revenue?.monthly?.length) ? (
-                        <SimpleGrid cols={{base: 1, md: 2}} spacing="md" mt="md">
-                            {revenue?.by_currency && revenue.by_currency.length > 0 && (
-                                <Paper shadow="sm" radius="md" withBorder>
-                                    <Table striped highlightOnHover>
-                                        <Table.Thead>
-                                            <Table.Tr>
-                                                <Table.Th>{t`Currency`}</Table.Th>
-                                                <Table.Th ta="right">{t`Contributions`}</Table.Th>
-                                                <Table.Th ta="right">{t`Commissions`}</Table.Th>
-                                                <Table.Th ta="right">{t`Total`}</Table.Th>
-                                            </Table.Tr>
-                                        </Table.Thead>
-                                        <Table.Tbody>
-                                            {revenue.by_currency.map((row) => (
-                                                <Table.Tr key={row.currency}>
-                                                    <Table.Td>
-                                                        <Badge variant="light">{row.currency}</Badge>
-                                                    </Table.Td>
-                                                    <Table.Td ta="right">
-                                                        {formatCurrency(row.contributions, row.currency)}
-                                                    </Table.Td>
-                                                    <Table.Td ta="right">
-                                                        {formatCurrency(row.commissions, row.currency)}
-                                                    </Table.Td>
-                                                    <Table.Td ta="right">
-                                                        <Text fw={600}>{formatCurrency(row.total, row.currency)}</Text>
-                                                    </Table.Td>
-                                                </Table.Tr>
-                                            ))}
-                                        </Table.Tbody>
-                                    </Table>
-                                </Paper>
-                            )}
-
-                            {revenue?.monthly && revenue.monthly.length > 0 && (
-                                <Paper shadow="sm" radius="md" withBorder>
-                                    <Table striped highlightOnHover>
-                                        <Table.Thead>
-                                            <Table.Tr>
-                                                <Table.Th>{t`Month`}</Table.Th>
-                                                <Table.Th ta="right">{t`Contributions`}</Table.Th>
-                                                <Table.Th ta="right">{t`Commissions`}</Table.Th>
-                                                <Table.Th ta="right">{t`Total`}</Table.Th>
-                                            </Table.Tr>
-                                        </Table.Thead>
-                                        <Table.Tbody>
-                                            {revenue.monthly.map((row) => (
-                                                <Table.Tr key={row.month}>
-                                                    <Table.Td>{dayjs(`${row.month}-01`).format('MMM YYYY')}</Table.Td>
-                                                    <Table.Td ta="right">{formatCurrency(row.contributions)}</Table.Td>
-                                                    <Table.Td ta="right">{formatCurrency(row.commissions)}</Table.Td>
-                                                    <Table.Td ta="right">
-                                                        <Text fw={600}>{formatCurrency(row.total)}</Text>
-                                                    </Table.Td>
-                                                </Table.Tr>
-                                            ))}
-                                        </Table.Tbody>
-                                    </Table>
-                                </Paper>
-                            )}
-                        </SimpleGrid>
-                    ) : null}
+                    <Text size="sm" mt="sm">
+                        <Anchor component={Link} to="/admin/platform-revenue">
+                            <Trans>See the full breakdown</Trans>
+                        </Anchor>
+                    </Text>
                 </div>
 
                 {/* Popular Events */}

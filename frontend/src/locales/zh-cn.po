@@ -64,8 +64,8 @@ msgstr "{0}可用"
 msgid "{0} created successfully"
 msgstr "成功创建 {0}"
 
-#: src/components/routes/admin/Dashboard/index.tsx:297
-#: src/components/routes/admin/Dashboard/index.tsx:321
+#: src/components/routes/admin/Dashboard/index.tsx:298
+#: src/components/routes/admin/Dashboard/index.tsx:322
 msgid "{0} in the last {revenueDays} days"
 msgstr "过去 {revenueDays} 天 {0}"
 
@@ -79,7 +79,8 @@ msgstr "剩余 {0}"
 msgid "{0} logo"
 msgstr "{0} 标志"
 
-#: src/components/routes/admin/Dashboard/index.tsx:274
+#: src/components/routes/admin/Dashboard/index.tsx:275
+#: src/components/routes/admin/PlatformRevenue/index.tsx:92
 msgid "{0} orders"
 msgstr "{0} 笔订单"
 
@@ -236,6 +237,18 @@ msgstr "示例街123号"
 msgid "20"
 msgstr "20"
 
+#: src/components/routes/admin/PlatformRevenue/index.tsx:62
+msgid "30 days"
+msgstr "30 天"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:61
+msgid "7 days"
+msgstr "7 天"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:63
+msgid "90 days"
+msgstr "90 天"
+
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:147
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:105
 msgid "94103"
@@ -369,8 +382,8 @@ msgstr "访问被拒绝"
 #: src/components/common/AdminOrdersTable/index.tsx:70
 #: src/components/routes/account/ManageAccount/index.tsx:24
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:53
-#: src/components/routes/admin/Dashboard/index.tsx:509
-#: src/components/routes/admin/Dashboard/index.tsx:556
+#: src/components/routes/admin/Dashboard/index.tsx:451
+#: src/components/routes/admin/Dashboard/index.tsx:498
 #: src/components/routes/admin/Messages/index.tsx:164
 #: src/components/routes/admin/Messages/index.tsx:281
 msgid "Account"
@@ -452,7 +465,7 @@ msgstr "激活日期"
 msgid "Active"
 msgstr "活跃"
 
-#: src/components/routes/admin/Dashboard/index.tsx:510
+#: src/components/routes/admin/Dashboard/index.tsx:452
 msgid "Active Events"
 msgstr "活跃活动"
 
@@ -605,9 +618,9 @@ msgid "Admin Access Required"
 msgstr "需要管理员访问权限"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:28
+#: src/components/layouts/Admin/index.tsx:29
 #: src/components/layouts/OrganizerLayout/index.tsx:106
-#: src/components/routes/admin/Dashboard/index.tsx:76
+#: src/components/routes/admin/Dashboard/index.tsx:77
 msgid "Admin Dashboard"
 msgstr "管理仪表板"
 
@@ -706,6 +719,10 @@ msgstr "所有产品"
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:64
 msgid "All Statuses"
 msgstr "所有状态"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:90
+msgid "All time: {0}"
+msgstr "累计：{0}"
 
 #: src/components/routes/events/Dashboard/index.tsx:73
 msgid "All Upcoming Events"
@@ -1400,6 +1417,14 @@ msgstr "通过添加跟踪像素，您确认您和本平台是所收集数据的
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "继续操作即表示您同意<0>{0}服务条款</0>"
 
+#: src/components/routes/admin/PlatformRevenue/index.tsx:105
+msgid "By currency (all time)"
+msgstr "按货币（累计）"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:157
+msgid "By month"
+msgstr "按月"
+
 #: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "注册即表示您同意我们的<0>服务条款</0>和<1>隐私政策</1>。"
@@ -1863,8 +1888,8 @@ msgstr "即将推出"
 msgid "Comma seperated keywords that describe the event. These will be used by search engines to help categorize and index the event"
 msgstr "以逗号分隔的描述活动的关键字。搜索引擎将使用这些关键字来帮助对活动进行分类和索引"
 
-#: src/components/routes/admin/Dashboard/index.tsx:340
-#: src/components/routes/admin/Dashboard/index.tsx:373
+#: src/components/routes/admin/PlatformRevenue/index.tsx:117
+#: src/components/routes/admin/PlatformRevenue/index.tsx:165
 msgid "Commissions"
 msgstr "佣金"
 
@@ -1957,7 +1982,7 @@ msgstr "配置名称对最终用户可见。固定费用将按当前汇率转换
 msgid "Configuration updated successfully"
 msgstr "配置更新成功"
 
-#: src/components/layouts/Admin/index.tsx:22
+#: src/components/layouts/Admin/index.tsx:23
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "配置"
@@ -2159,8 +2184,8 @@ msgstr "继续下一步"
 msgid "Continue to Payment"
 msgstr "继续付款"
 
-#: src/components/routes/admin/Dashboard/index.tsx:339
-#: src/components/routes/admin/Dashboard/index.tsx:372
+#: src/components/routes/admin/PlatformRevenue/index.tsx:115
+#: src/components/routes/admin/PlatformRevenue/index.tsx:164
 msgid "Contributions"
 msgstr "捐助"
 
@@ -2523,7 +2548,7 @@ msgstr "CTA标签是必需的"
 #: src/components/forms/OrganizerForm/index.tsx:50
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:73
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:149
-#: src/components/routes/admin/Dashboard/index.tsx:338
+#: src/components/routes/admin/PlatformRevenue/index.tsx:114
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:51
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:99
@@ -2726,7 +2751,8 @@ msgstr "将使用默认模板"
 msgid "Defaults to the year, e.g. 2026-1"
 msgstr "默认为年份，例如 2026-1"
 
-#: src/components/routes/admin/Dashboard/index.tsx:264
+#: src/components/routes/admin/Dashboard/index.tsx:265
+#: src/components/routes/admin/PlatformRevenue/index.tsx:27
 msgid "Dehors Contributions"
 msgstr "Dehors 捐助"
 
@@ -3184,7 +3210,7 @@ msgstr "符合开具正式税务收据的条件。"
 #: src/components/modals/InviteUserModal/index.tsx:61
 #: src/components/modals/JoinWaitlistModal/index.tsx:171
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:128
-#: src/components/routes/admin/Dashboard/index.tsx:557
+#: src/components/routes/admin/Dashboard/index.tsx:499
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
@@ -3474,8 +3500,8 @@ msgid "EUR"
 msgstr "欧元"
 
 #: src/components/common/AdminOrdersTable/index.tsx:72
-#: src/components/routes/admin/Dashboard/index.tsx:412
-#: src/components/routes/admin/Dashboard/index.tsx:461
+#: src/components/routes/admin/Dashboard/index.tsx:354
+#: src/components/routes/admin/Dashboard/index.tsx:403
 #: src/components/routes/admin/Messages/index.tsx:163
 #: src/components/routes/admin/Messages/index.tsx:277
 #: src/components/routes/event/EventDashboard/index.tsx:299
@@ -3630,7 +3656,7 @@ msgstr "活动已更新"
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
-#: src/components/routes/admin/Dashboard/index.tsx:559
+#: src/components/routes/admin/Dashboard/index.tsx:501
 #: src/components/routes/admin/Events/index.tsx:77
 #: src/components/routes/organizer/Events/index.tsx:43
 msgid "Events"
@@ -3641,7 +3667,7 @@ msgstr "活动"
 msgid "Events Performance"
 msgstr "活动表现"
 
-#: src/components/routes/admin/Dashboard/index.tsx:606
+#: src/components/routes/admin/Dashboard/index.tsx:548
 msgid "Events Starting in Next 24 Hours"
 msgstr "未来24小时内开始的活动"
 
@@ -3740,7 +3766,7 @@ msgstr "失败"
 msgid "Failed At"
 msgstr "失败时间"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "失败任务"
@@ -4300,7 +4326,7 @@ msgstr "总收入"
 msgid "Gross sales"
 msgstr "销售总额"
 
-#: src/components/routes/admin/Dashboard/index.tsx:415
+#: src/components/routes/admin/Dashboard/index.tsx:357
 #: src/components/routes/event/EventDashboard/index.tsx:370
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:119
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:30
@@ -4320,7 +4346,7 @@ msgstr "宾客"
 msgid "Have a promo code?"
 msgstr "有促销代码吗？"
 
-#: src/components/routes/admin/Dashboard/index.tsx:80
+#: src/components/routes/admin/Dashboard/index.tsx:81
 msgid "Hello {0}, manage your platform from here."
 msgstr "您好 {0}，从这里管理您的平台。"
 
@@ -4614,11 +4640,11 @@ msgstr "重要提示：更改您的电子邮件地址将更新访问此订单的
 msgid "Important: Stripe reconnection required"
 msgstr "重要：需要重新连接 Stripe"
 
-#: src/components/routes/admin/Dashboard/index.tsx:50
+#: src/components/routes/admin/Dashboard/index.tsx:51
 msgid "In {diffHours} hours"
 msgstr "{diffHours}小时后"
 
-#: src/components/routes/admin/Dashboard/index.tsx:48
+#: src/components/routes/admin/Dashboard/index.tsx:49
 msgid "In {diffMinutes} minutes"
 msgstr "{diffMinutes}分钟后"
 
@@ -4892,7 +4918,7 @@ msgstr "过去 12 个月"
 msgid "Last 14 days"
 msgstr "过去 14 天"
 
-#: src/components/routes/admin/Dashboard/index.tsx:165
+#: src/components/routes/admin/Dashboard/index.tsx:166
 msgid "Last 14 Days"
 msgstr "过去14天"
 
@@ -5028,7 +5054,7 @@ msgid "LIVE"
 msgstr "直播"
 
 #: src/components/routes/admin/Attribution/index.tsx:134
-#: src/components/routes/admin/Dashboard/index.tsx:128
+#: src/components/routes/admin/Dashboard/index.tsx:129
 msgid "Live Events"
 msgstr "直播活动"
 
@@ -5275,7 +5301,7 @@ msgstr "消息已定时"
 msgid "Message Sent"
 msgstr "发送的信息"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5318,7 +5344,7 @@ msgstr "移动优化"
 msgid "Mobile scanner with offline support and real-time tracking"
 msgstr "支持离线和实时跟踪的移动扫描仪"
 
-#: src/components/routes/admin/Dashboard/index.tsx:169
+#: src/components/routes/admin/Dashboard/index.tsx:170
 msgid "Monetary values are approximate totals across all currencies"
 msgstr "货币金额是所有货币的大致总和"
 
@@ -5326,12 +5352,12 @@ msgstr "货币金额是所有货币的大致总和"
 msgid "Monitor and manage failed background jobs"
 msgstr "监控和管理失败的后台任务"
 
-#: src/components/routes/admin/Dashboard/index.tsx:371
+#: src/components/routes/admin/PlatformRevenue/index.tsx:163
 #: src/components/routes/event/EventDashboard/index.tsx:283
 msgid "Month"
 msgstr "月"
 
-#: src/components/routes/admin/Dashboard/index.tsx:450
+#: src/components/routes/admin/Dashboard/index.tsx:392
 msgid "Most Viewed Events (Last 14 Days)"
 msgstr "最多浏览活动（过去14天）"
 
@@ -5430,7 +5456,7 @@ msgstr "从不"
 msgid "New Password"
 msgstr "新密码"
 
-#: src/components/routes/admin/Dashboard/index.tsx:231
+#: src/components/routes/admin/Dashboard/index.tsx:232
 msgid "New Signups"
 msgstr "新注册"
 
@@ -5536,7 +5562,7 @@ msgstr "没有可显示的已结束活动。"
 msgid "No events found"
 msgstr "未找到活动"
 
-#: src/components/routes/admin/Dashboard/index.tsx:645
+#: src/components/routes/admin/Dashboard/index.tsx:587
 msgid "No events starting in the next 24 hours"
 msgstr "未来24小时内没有开始的活动"
 
@@ -5601,7 +5627,7 @@ msgstr "无订单显示"
 msgid "No orders yet"
 msgstr "尚无订单"
 
-#: src/components/routes/admin/Dashboard/index.tsx:533
+#: src/components/routes/admin/Dashboard/index.tsx:475
 msgid "No organizer activity in the last 14 days"
 msgstr "过去14天没有组织者活动"
 
@@ -5626,7 +5652,7 @@ msgstr "当前没有可用的支付方式。请联系活动组织者以获取帮
 msgid "No Payment Required"
 msgstr "无需支付"
 
-#: src/components/routes/admin/Dashboard/index.tsx:438
+#: src/components/routes/admin/Dashboard/index.tsx:380
 msgid "No popular events in the last 14 days"
 msgstr "过去14天没有热门活动"
 
@@ -5666,7 +5692,7 @@ msgstr "此与会者未回答任何问题。"
 msgid "No questions have been asked for this order."
 msgstr "此订单尚未提出任何问题。"
 
-#: src/components/routes/admin/Dashboard/index.tsx:594
+#: src/components/routes/admin/Dashboard/index.tsx:536
 msgid "No recent account signups"
 msgstr "没有最近的账户注册"
 
@@ -5728,7 +5754,7 @@ msgstr "未找到用户"
 msgid "No VAT settings configured"
 msgstr "未配置增值税设置"
 
-#: src/components/routes/admin/Dashboard/index.tsx:485
+#: src/components/routes/admin/Dashboard/index.tsx:427
 msgid "No viewed events in the last 14 days"
 msgstr "过去14天没有浏览的活动"
 
@@ -5782,6 +5808,10 @@ msgstr "备注"
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
 msgstr "备注"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:147
+msgid "Nothing collected yet"
+msgstr "暂无收入"
 
 #: src/components/common/ReportTable/index.tsx:240
 msgid "Nothing to show yet"
@@ -6157,6 +6187,7 @@ msgstr "订单已被取消"
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
+#: src/components/routes/admin/PlatformRevenue/index.tsx:116
 #: src/components/routes/event/orders.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:103
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:60
@@ -6164,7 +6195,7 @@ msgstr "订单已被取消"
 msgid "Orders"
 msgstr "订单"
 
-#: src/components/routes/admin/Dashboard/index.tsx:195
+#: src/components/routes/admin/Dashboard/index.tsx:196
 msgid "Orders Completed"
 msgstr "已完成订单"
 
@@ -6172,7 +6203,7 @@ msgstr "已完成订单"
 msgid "Orders Exported"
 msgstr "订单已导出"
 
-#: src/components/routes/admin/Dashboard/index.tsx:213
+#: src/components/routes/admin/Dashboard/index.tsx:214
 msgid "Orders Total"
 msgstr "订单总额"
 
@@ -6203,9 +6234,9 @@ msgstr "组织名称"
 #: src/components/modals/EditUserModal/index.tsx:55
 #: src/components/modals/InviteUserModal/index.tsx:47
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:96
-#: src/components/routes/admin/Dashboard/index.tsx:413
-#: src/components/routes/admin/Dashboard/index.tsx:462
-#: src/components/routes/admin/Dashboard/index.tsx:508
+#: src/components/routes/admin/Dashboard/index.tsx:355
+#: src/components/routes/admin/Dashboard/index.tsx:404
+#: src/components/routes/admin/Dashboard/index.tsx:450
 #: src/components/routes/events/Dashboard/index.tsx:194
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:332
 msgid "Organizer"
@@ -6597,11 +6628,13 @@ msgstr "计划举办活动？"
 msgid "Platform"
 msgstr "平台"
 
-#: src/components/routes/admin/Dashboard/index.tsx:287
+#: src/components/routes/admin/Dashboard/index.tsx:288
+#: src/components/routes/admin/PlatformRevenue/index.tsx:34
 msgid "Platform Commissions"
 msgstr "平台佣金"
 
-#: src/components/routes/admin/Dashboard/index.tsx:251
+#: src/components/routes/admin/Dashboard/index.tsx:252
+#: src/components/routes/admin/PlatformRevenue/index.tsx:55
 msgid "Platform Earnings"
 msgstr "平台收入"
 
@@ -6627,7 +6660,7 @@ msgstr "平台费用"
 msgid "Platform Fees Report"
 msgstr "平台费用报告"
 
-#: src/components/routes/admin/Dashboard/index.tsx:177
+#: src/components/routes/admin/Dashboard/index.tsx:178
 msgid "Platform Revenue"
 msgstr "平台收入"
 
@@ -6752,7 +6785,7 @@ msgstr "请稍候，我们正在准备导出您的订单..."
 msgid "Polish"
 msgstr "波兰语"
 
-#: src/components/routes/admin/Dashboard/index.tsx:401
+#: src/components/routes/admin/Dashboard/index.tsx:343
 msgid "Popular Events (Last 14 Days)"
 msgstr "热门活动（过去14天）"
 
@@ -6927,8 +6960,8 @@ msgstr "产品"
 msgid "Products sold"
 msgstr "已售产品"
 
-#: src/components/routes/admin/Dashboard/index.tsx:414
-#: src/components/routes/admin/Dashboard/index.tsx:511
+#: src/components/routes/admin/Dashboard/index.tsx:356
+#: src/components/routes/admin/Dashboard/index.tsx:453
 #: src/components/routes/event/EventDashboard/index.tsx:332
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:125
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:68
@@ -7117,7 +7150,7 @@ msgstr "接收 {0} 的产品更新。"
 msgid "Recent"
 msgstr "最近"
 
-#: src/components/routes/admin/Dashboard/index.tsx:545
+#: src/components/routes/admin/Dashboard/index.tsx:487
 msgid "Recent Account Signups"
 msgstr "最近账户注册"
 
@@ -7411,6 +7444,7 @@ msgstr "返回活动页面"
 
 #: src/components/common/AffiliateTable/index.tsx:157
 #: src/components/common/EventCard/index.tsx:235
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/routes/admin/Attribution/index.tsx:137
 #: src/components/routes/event/EventDashboard/index.tsx:343
 msgid "Revenue"
@@ -7692,6 +7726,10 @@ msgstr "次要文字颜色"
 #: src/components/common/InlineOrderSummary/index.tsx:284
 msgid "Secure Checkout"
 msgstr "安全结账"
+
+#: src/components/routes/admin/Dashboard/index.tsx:333
+msgid "See the full breakdown"
+msgstr "查看完整明细"
 
 #: src/components/common/FilterModal/index.tsx:162
 #: src/components/common/FilterModal/index.tsx:181
@@ -8096,7 +8134,7 @@ msgstr "在顾客结账前向他们展示"
 msgid "Shows common address fields, including country"
 msgstr "显示常用地址字段，包括国家"
 
-#: src/components/routes/admin/Dashboard/index.tsx:558
+#: src/components/routes/admin/Dashboard/index.tsx:500
 msgid "Signed Up"
 msgstr "注册时间"
 
@@ -8266,7 +8304,7 @@ msgstr "统计数据基于账户创建日期"
 #: src/components/forms/WebhookForm/index.tsx:157
 #: src/components/modals/EditUserModal/index.tsx:103
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:157
-#: src/components/routes/admin/Dashboard/index.tsx:561
+#: src/components/routes/admin/Dashboard/index.tsx:503
 #: src/components/routes/admin/Messages/index.tsx:120
 #: src/components/routes/admin/Messages/index.tsx:167
 #: src/components/routes/admin/Messages/index.tsx:293
@@ -8284,7 +8322,7 @@ msgid "Stop Impersonating"
 msgstr "停止模拟"
 
 #: src/components/common/OrdersTable/index.tsx:412
-#: src/components/routes/admin/Dashboard/index.tsx:580
+#: src/components/routes/admin/Dashboard/index.tsx:522
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:86
 msgid "Stripe"
 msgstr "Stripe"
@@ -9174,7 +9212,7 @@ msgstr "无法从此签到列表出售门票。"
 msgid "Tickets for"
 msgstr "门票"
 
-#: src/components/routes/admin/Dashboard/index.tsx:146
+#: src/components/routes/admin/Dashboard/index.tsx:147
 msgid "Tickets Sold"
 msgstr "已售票数"
 
@@ -9253,19 +9291,19 @@ msgstr "令牌已撤销"
 msgid "Tools"
 msgstr "工具"
 
-#: src/components/routes/admin/Dashboard/index.tsx:497
+#: src/components/routes/admin/Dashboard/index.tsx:439
 msgid "Top Organizers (Last 14 Days)"
 msgstr "顶级组织者（过去14天）"
 
 #: src/components/common/AdminOrdersTable/index.tsx:81
 #: src/components/common/InlineOrderSummary/index.tsx:272
 #: src/components/common/OrderSummary/index.tsx:92
-#: src/components/routes/admin/Dashboard/index.tsx:341
-#: src/components/routes/admin/Dashboard/index.tsx:374
+#: src/components/routes/admin/PlatformRevenue/index.tsx:118
+#: src/components/routes/admin/PlatformRevenue/index.tsx:166
 msgid "Total"
 msgstr "总计"
 
-#: src/components/routes/admin/Dashboard/index.tsx:110
+#: src/components/routes/admin/Dashboard/index.tsx:111
 msgid "Total Accounts"
 msgstr "总账户数"
 
@@ -9277,7 +9315,8 @@ msgstr "总参与人数"
 msgid "Total Before Discounts"
 msgstr "折扣前总计"
 
-#: src/components/routes/admin/Dashboard/index.tsx:311
+#: src/components/routes/admin/Dashboard/index.tsx:312
+#: src/components/routes/admin/PlatformRevenue/index.tsx:41
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:49
 msgid "Total Collected"
 msgstr "总收款"
@@ -9326,11 +9365,11 @@ msgstr "退款总额"
 msgid "Total Tax"
 msgstr "总税额"
 
-#: src/components/routes/admin/Dashboard/index.tsx:92
+#: src/components/routes/admin/Dashboard/index.tsx:93
 msgid "Total Users"
 msgstr "总用户数"
 
-#: src/components/routes/admin/Dashboard/index.tsx:463
+#: src/components/routes/admin/Dashboard/index.tsx:405
 msgid "Total Views"
 msgstr "总浏览量"
 
@@ -9633,7 +9672,7 @@ msgstr "用户管理"
 #: src/components/routes/account/ManageAccount/index.tsx:32
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:166
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:316
-#: src/components/routes/admin/Dashboard/index.tsx:560
+#: src/components/routes/admin/Dashboard/index.tsx:502
 #: src/components/routes/admin/Users/index.tsx:57
 msgid "Users"
 msgstr "用户"
@@ -9649,7 +9688,7 @@ msgstr "用户可在 <0>\"配置文件设置\"</0> 中更改自己的电子邮�
 msgid "UTC"
 msgstr "世界协调时"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 msgid "UTM Analytics"
 msgstr "UTM 分析"
 
@@ -9769,7 +9808,7 @@ msgid "Verification code"
 msgstr "验证码"
 
 #: src/components/routes/admin/Attribution/index.tsx:136
-#: src/components/routes/admin/Dashboard/index.tsx:577
+#: src/components/routes/admin/Dashboard/index.tsx:519
 msgid "Verified"
 msgstr "已验证"
 
@@ -9816,7 +9855,7 @@ msgid "View Details"
 msgstr "查看详情"
 
 #: src/components/common/AdminEventsTable/index.tsx:157
-#: src/components/routes/admin/Dashboard/index.tsx:634
+#: src/components/routes/admin/Dashboard/index.tsx:576
 msgid "View Event"
 msgstr "查看活动"
 
@@ -10116,7 +10155,8 @@ msgstr "此代码适用于哪些产品？（默认适用于所有产品）"
 msgid "What products should this capacity apply to?"
 msgstr "此容量应适用于哪些产品？"
 
-#: src/components/routes/admin/Dashboard/index.tsx:255
+#: src/components/routes/admin/Dashboard/index.tsx:256
+#: src/components/routes/admin/PlatformRevenue/index.tsx:68
 msgid "What the platform actually collected: voluntary Dehors contributions and sales commissions. Approximate totals across all currencies."
 msgstr "平台实际收到的金额：Dehors 自愿捐助和销售佣金。所有货币的大致合计。"
 

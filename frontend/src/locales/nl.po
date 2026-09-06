@@ -65,8 +65,8 @@ msgstr "{0} beschikbaar"
 msgid "{0} created successfully"
 msgstr "{0} succesvol aangemaakt"
 
-#: src/components/routes/admin/Dashboard/index.tsx:297
-#: src/components/routes/admin/Dashboard/index.tsx:321
+#: src/components/routes/admin/Dashboard/index.tsx:298
+#: src/components/routes/admin/Dashboard/index.tsx:322
 msgid "{0} in the last {revenueDays} days"
 msgstr "{0} in de afgelopen {revenueDays} dagen"
 
@@ -80,7 +80,8 @@ msgstr "nog {0}"
 msgid "{0} logo"
 msgstr "{0} logo"
 
-#: src/components/routes/admin/Dashboard/index.tsx:274
+#: src/components/routes/admin/Dashboard/index.tsx:275
+#: src/components/routes/admin/PlatformRevenue/index.tsx:92
 msgid "{0} orders"
 msgstr "{0} bestellingen"
 
@@ -237,6 +238,18 @@ msgstr "Voorbeeldstraat 123"
 msgid "20"
 msgstr "20"
 
+#: src/components/routes/admin/PlatformRevenue/index.tsx:62
+msgid "30 days"
+msgstr "30 dagen"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:61
+msgid "7 days"
+msgstr "7 dagen"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:63
+msgid "90 days"
+msgstr "90 dagen"
+
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:147
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:105
 msgid "94103"
@@ -370,8 +383,8 @@ msgstr "Toegang geweigerd"
 #: src/components/common/AdminOrdersTable/index.tsx:70
 #: src/components/routes/account/ManageAccount/index.tsx:24
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:53
-#: src/components/routes/admin/Dashboard/index.tsx:509
-#: src/components/routes/admin/Dashboard/index.tsx:556
+#: src/components/routes/admin/Dashboard/index.tsx:451
+#: src/components/routes/admin/Dashboard/index.tsx:498
 #: src/components/routes/admin/Messages/index.tsx:164
 #: src/components/routes/admin/Messages/index.tsx:281
 msgid "Account"
@@ -453,7 +466,7 @@ msgstr "Activeringsdatum"
 msgid "Active"
 msgstr "Actief"
 
-#: src/components/routes/admin/Dashboard/index.tsx:510
+#: src/components/routes/admin/Dashboard/index.tsx:452
 msgid "Active Events"
 msgstr "Actieve evenementen"
 
@@ -606,9 +619,9 @@ msgid "Admin Access Required"
 msgstr "Beheerderstoegang vereist"
 
 #: src/components/common/GlobalMenu/index.tsx:61
-#: src/components/layouts/Admin/index.tsx:28
+#: src/components/layouts/Admin/index.tsx:29
 #: src/components/layouts/OrganizerLayout/index.tsx:106
-#: src/components/routes/admin/Dashboard/index.tsx:76
+#: src/components/routes/admin/Dashboard/index.tsx:77
 msgid "Admin Dashboard"
 msgstr "Beheerders Dashboard"
 
@@ -707,6 +720,10 @@ msgstr "Alle producten"
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:64
 msgid "All Statuses"
 msgstr "Alle statussen"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:90
+msgid "All time: {0}"
+msgstr "Sinds het begin: {0}"
 
 #: src/components/routes/events/Dashboard/index.tsx:73
 msgid "All Upcoming Events"
@@ -1401,6 +1418,14 @@ msgstr "Door trackingpixels toe te voegen, erkent u dat u en dit platform gezame
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Door verder te gaan, gaat u akkoord met de <0>{0} Servicevoorwaarden</0>"
 
+#: src/components/routes/admin/PlatformRevenue/index.tsx:105
+msgid "By currency (all time)"
+msgstr "Per valuta (sinds het begin)"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:157
+msgid "By month"
+msgstr "Per maand"
+
 #: src/components/routes/auth/Register/index.tsx:179
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Door je te registreren ga je akkoord met onze <0>Servicevoorwaarden</0> en <1>Privacybeleid</1>."
@@ -1864,8 +1889,8 @@ msgstr "Binnenkort beschikbaar"
 msgid "Comma seperated keywords that describe the event. These will be used by search engines to help categorize and index the event"
 msgstr "Door komma's gescheiden trefwoorden die het evenement beschrijven. Deze worden door zoekmachines gebruikt om het evenement te categoriseren en indexeren"
 
-#: src/components/routes/admin/Dashboard/index.tsx:340
-#: src/components/routes/admin/Dashboard/index.tsx:373
+#: src/components/routes/admin/PlatformRevenue/index.tsx:117
+#: src/components/routes/admin/PlatformRevenue/index.tsx:165
 msgid "Commissions"
 msgstr "Commissies"
 
@@ -1958,7 +1983,7 @@ msgstr "Configuratienamen zijn zichtbaar voor eindgebruikers. Vaste kosten worde
 msgid "Configuration updated successfully"
 msgstr "Configuratie succesvol bijgewerkt"
 
-#: src/components/layouts/Admin/index.tsx:22
+#: src/components/layouts/Admin/index.tsx:23
 #: src/components/routes/admin/Configurations/index.tsx:64
 msgid "Configurations"
 msgstr "Configuraties"
@@ -2160,8 +2185,8 @@ msgstr "Ga door naar de volgende stap"
 msgid "Continue to Payment"
 msgstr "Doorgaan naar betaling"
 
-#: src/components/routes/admin/Dashboard/index.tsx:339
-#: src/components/routes/admin/Dashboard/index.tsx:372
+#: src/components/routes/admin/PlatformRevenue/index.tsx:115
+#: src/components/routes/admin/PlatformRevenue/index.tsx:164
 msgid "Contributions"
 msgstr "Bijdragen"
 
@@ -2524,7 +2549,7 @@ msgstr "CTA label is verplicht"
 #: src/components/forms/OrganizerForm/index.tsx:50
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:73
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:149
-#: src/components/routes/admin/Dashboard/index.tsx:338
+#: src/components/routes/admin/PlatformRevenue/index.tsx:114
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:51
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:99
@@ -2727,7 +2752,8 @@ msgstr "Standaardsjabloon wordt gebruikt"
 msgid "Defaults to the year, e.g. 2026-1"
 msgstr "Standaard het jaar, bijvoorbeeld 2026-1"
 
-#: src/components/routes/admin/Dashboard/index.tsx:264
+#: src/components/routes/admin/Dashboard/index.tsx:265
+#: src/components/routes/admin/PlatformRevenue/index.tsx:27
 msgid "Dehors Contributions"
 msgstr "Dehors-bijdragen"
 
@@ -3185,7 +3211,7 @@ msgstr "Komt in aanmerking voor een officieel giftbewijs."
 #: src/components/modals/InviteUserModal/index.tsx:61
 #: src/components/modals/JoinWaitlistModal/index.tsx:171
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:128
-#: src/components/routes/admin/Dashboard/index.tsx:557
+#: src/components/routes/admin/Dashboard/index.tsx:499
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
@@ -3475,8 +3501,8 @@ msgid "EUR"
 msgstr "EUR"
 
 #: src/components/common/AdminOrdersTable/index.tsx:72
-#: src/components/routes/admin/Dashboard/index.tsx:412
-#: src/components/routes/admin/Dashboard/index.tsx:461
+#: src/components/routes/admin/Dashboard/index.tsx:354
+#: src/components/routes/admin/Dashboard/index.tsx:403
 #: src/components/routes/admin/Messages/index.tsx:163
 #: src/components/routes/admin/Messages/index.tsx:277
 #: src/components/routes/event/EventDashboard/index.tsx:299
@@ -3631,7 +3657,7 @@ msgstr "Evenement bijgewerkt"
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
-#: src/components/routes/admin/Dashboard/index.tsx:559
+#: src/components/routes/admin/Dashboard/index.tsx:501
 #: src/components/routes/admin/Events/index.tsx:77
 #: src/components/routes/organizer/Events/index.tsx:43
 msgid "Events"
@@ -3642,7 +3668,7 @@ msgstr "Evenementen"
 msgid "Events Performance"
 msgstr "Evenementenprestaties"
 
-#: src/components/routes/admin/Dashboard/index.tsx:606
+#: src/components/routes/admin/Dashboard/index.tsx:548
 msgid "Events Starting in Next 24 Hours"
 msgstr "Evenementen die beginnen in de komende 24 uur"
 
@@ -3741,7 +3767,7 @@ msgstr "Mislukt"
 msgid "Failed At"
 msgstr "Mislukt op"
 
-#: src/components/layouts/Admin/index.tsx:21
+#: src/components/layouts/Admin/index.tsx:22
 #: src/components/routes/admin/FailedJobs/index.tsx:114
 msgid "Failed Jobs"
 msgstr "Mislukte taken"
@@ -4301,7 +4327,7 @@ msgstr "Bruto-omzet"
 msgid "Gross sales"
 msgstr "Brutoverkoop"
 
-#: src/components/routes/admin/Dashboard/index.tsx:415
+#: src/components/routes/admin/Dashboard/index.tsx:357
 #: src/components/routes/event/EventDashboard/index.tsx:370
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:119
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:30
@@ -4321,7 +4347,7 @@ msgstr "Gasten"
 msgid "Have a promo code?"
 msgstr "Heb je een promotiecode?"
 
-#: src/components/routes/admin/Dashboard/index.tsx:80
+#: src/components/routes/admin/Dashboard/index.tsx:81
 msgid "Hello {0}, manage your platform from here."
 msgstr "Hallo {0}, beheer je platform vanaf hier."
 
@@ -4615,11 +4641,11 @@ msgstr "Belangrijk: Het wijzigen van uw e-mailadres zal de link naar deze bestel
 msgid "Important: Stripe reconnection required"
 msgstr "Belangrijk: Stripe herverbinding vereist"
 
-#: src/components/routes/admin/Dashboard/index.tsx:50
+#: src/components/routes/admin/Dashboard/index.tsx:51
 msgid "In {diffHours} hours"
 msgstr "Over {diffHours} uur"
 
-#: src/components/routes/admin/Dashboard/index.tsx:48
+#: src/components/routes/admin/Dashboard/index.tsx:49
 msgid "In {diffMinutes} minutes"
 msgstr "Over {diffMinutes} minuten"
 
@@ -4893,7 +4919,7 @@ msgstr "Laatste 12 maanden"
 msgid "Last 14 days"
 msgstr "Laatste 14 dagen"
 
-#: src/components/routes/admin/Dashboard/index.tsx:165
+#: src/components/routes/admin/Dashboard/index.tsx:166
 msgid "Last 14 Days"
 msgstr "Laatste 14 dagen"
 
@@ -5029,7 +5055,7 @@ msgid "LIVE"
 msgstr "LIVE"
 
 #: src/components/routes/admin/Attribution/index.tsx:134
-#: src/components/routes/admin/Dashboard/index.tsx:128
+#: src/components/routes/admin/Dashboard/index.tsx:129
 msgid "Live Events"
 msgstr "Live Evenementen"
 
@@ -5276,7 +5302,7 @@ msgstr "Bericht gepland"
 msgid "Message Sent"
 msgstr "Bericht verzonden"
 
-#: src/components/layouts/Admin/index.tsx:19
+#: src/components/layouts/Admin/index.tsx:20
 #: src/components/layouts/Event/index.tsx:120
 #: src/components/routes/event/messages.tsx:225
 msgid "Messages"
@@ -5319,7 +5345,7 @@ msgstr "Geoptimaliseerd voor mobiel"
 msgid "Mobile scanner with offline support and real-time tracking"
 msgstr "Mobiele scanner met offline ondersteuning en realtime tracking"
 
-#: src/components/routes/admin/Dashboard/index.tsx:169
+#: src/components/routes/admin/Dashboard/index.tsx:170
 msgid "Monetary values are approximate totals across all currencies"
 msgstr "Geldbedragen zijn geschatte totalen over alle valuta's"
 
@@ -5327,12 +5353,12 @@ msgstr "Geldbedragen zijn geschatte totalen over alle valuta's"
 msgid "Monitor and manage failed background jobs"
 msgstr "Bewaak en beheer mislukte achtergrondtaken"
 
-#: src/components/routes/admin/Dashboard/index.tsx:371
+#: src/components/routes/admin/PlatformRevenue/index.tsx:163
 #: src/components/routes/event/EventDashboard/index.tsx:283
 msgid "Month"
 msgstr "Maand"
 
-#: src/components/routes/admin/Dashboard/index.tsx:450
+#: src/components/routes/admin/Dashboard/index.tsx:392
 msgid "Most Viewed Events (Last 14 Days)"
 msgstr "Meest bekeken evenementen (Laatste 14 dagen)"
 
@@ -5431,7 +5457,7 @@ msgstr "Nooit"
 msgid "New Password"
 msgstr "Nieuw wachtwoord"
 
-#: src/components/routes/admin/Dashboard/index.tsx:231
+#: src/components/routes/admin/Dashboard/index.tsx:232
 msgid "New Signups"
 msgstr "Nieuwe aanmeldingen"
 
@@ -5537,7 +5563,7 @@ msgstr "Geen beëindigde evenementen om te laten zien."
 msgid "No events found"
 msgstr "Geen evenementen gevonden"
 
-#: src/components/routes/admin/Dashboard/index.tsx:645
+#: src/components/routes/admin/Dashboard/index.tsx:587
 msgid "No events starting in the next 24 hours"
 msgstr "Geen evenementen die beginnen in de komende 24 uur"
 
@@ -5602,7 +5628,7 @@ msgstr "Geen orders om te laten zien"
 msgid "No orders yet"
 msgstr "Nog geen bestellingen"
 
-#: src/components/routes/admin/Dashboard/index.tsx:533
+#: src/components/routes/admin/Dashboard/index.tsx:475
 msgid "No organizer activity in the last 14 days"
 msgstr "Geen organisatoractiviteit in de laatste 14 dagen"
 
@@ -5627,7 +5653,7 @@ msgstr "Er zijn momenteel geen betalingsmethoden beschikbaar. Neem contact op me
 msgid "No Payment Required"
 msgstr "Geen betaling vereist"
 
-#: src/components/routes/admin/Dashboard/index.tsx:438
+#: src/components/routes/admin/Dashboard/index.tsx:380
 msgid "No popular events in the last 14 days"
 msgstr "Geen populaire evenementen in de laatste 14 dagen"
 
@@ -5667,7 +5693,7 @@ msgstr "Geen vragen beantwoord door deze deelnemer."
 msgid "No questions have been asked for this order."
 msgstr "Er zijn geen vragen gesteld voor deze bestelling."
 
-#: src/components/routes/admin/Dashboard/index.tsx:594
+#: src/components/routes/admin/Dashboard/index.tsx:536
 msgid "No recent account signups"
 msgstr "Geen recente accountaanmeldingen"
 
@@ -5729,7 +5755,7 @@ msgstr "Geen gebruikers gevonden"
 msgid "No VAT settings configured"
 msgstr "Geen BTW-instellingen geconfigureerd"
 
-#: src/components/routes/admin/Dashboard/index.tsx:485
+#: src/components/routes/admin/Dashboard/index.tsx:427
 msgid "No viewed events in the last 14 days"
 msgstr "Geen bekeken evenementen in de laatste 14 dagen"
 
@@ -5783,6 +5809,10 @@ msgstr "Notitie"
 #: src/components/modals/ManageOrderModal/index.tsx:164
 msgid "Notes"
 msgstr "Opmerkingen"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:147
+msgid "Nothing collected yet"
+msgstr "Nog niets ontvangen"
 
 #: src/components/common/ReportTable/index.tsx:240
 msgid "Nothing to show yet"
@@ -6158,6 +6188,7 @@ msgstr "Bestelling is geannuleerd"
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
+#: src/components/routes/admin/PlatformRevenue/index.tsx:116
 #: src/components/routes/event/orders.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:103
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:60
@@ -6165,7 +6196,7 @@ msgstr "Bestelling is geannuleerd"
 msgid "Orders"
 msgstr "Bestellingen"
 
-#: src/components/routes/admin/Dashboard/index.tsx:195
+#: src/components/routes/admin/Dashboard/index.tsx:196
 msgid "Orders Completed"
 msgstr "Voltooide bestellingen"
 
@@ -6173,7 +6204,7 @@ msgstr "Voltooide bestellingen"
 msgid "Orders Exported"
 msgstr "Geëxporteerde bestellingen"
 
-#: src/components/routes/admin/Dashboard/index.tsx:213
+#: src/components/routes/admin/Dashboard/index.tsx:214
 msgid "Orders Total"
 msgstr "Totaal bestellingen"
 
@@ -6204,9 +6235,9 @@ msgstr "Naam organisatie"
 #: src/components/modals/EditUserModal/index.tsx:55
 #: src/components/modals/InviteUserModal/index.tsx:47
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:96
-#: src/components/routes/admin/Dashboard/index.tsx:413
-#: src/components/routes/admin/Dashboard/index.tsx:462
-#: src/components/routes/admin/Dashboard/index.tsx:508
+#: src/components/routes/admin/Dashboard/index.tsx:355
+#: src/components/routes/admin/Dashboard/index.tsx:404
+#: src/components/routes/admin/Dashboard/index.tsx:450
 #: src/components/routes/events/Dashboard/index.tsx:194
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:332
 msgid "Organizer"
@@ -6598,11 +6629,13 @@ msgstr "Een evenement plannen?"
 msgid "Platform"
 msgstr "Platform"
 
-#: src/components/routes/admin/Dashboard/index.tsx:287
+#: src/components/routes/admin/Dashboard/index.tsx:288
+#: src/components/routes/admin/PlatformRevenue/index.tsx:34
 msgid "Platform Commissions"
 msgstr "Platformcommissies"
 
-#: src/components/routes/admin/Dashboard/index.tsx:251
+#: src/components/routes/admin/Dashboard/index.tsx:252
+#: src/components/routes/admin/PlatformRevenue/index.tsx:55
 msgid "Platform Earnings"
 msgstr "Platforminkomsten"
 
@@ -6628,7 +6661,7 @@ msgstr "Platformkosten"
 msgid "Platform Fees Report"
 msgstr "Platformkosten rapport"
 
-#: src/components/routes/admin/Dashboard/index.tsx:177
+#: src/components/routes/admin/Dashboard/index.tsx:178
 msgid "Platform Revenue"
 msgstr "Platformomzet"
 
@@ -6753,7 +6786,7 @@ msgstr "Even geduld alstublieft terwijl we uw bestellingen klaarmaken voor expor
 msgid "Polish"
 msgstr "Pools"
 
-#: src/components/routes/admin/Dashboard/index.tsx:401
+#: src/components/routes/admin/Dashboard/index.tsx:343
 msgid "Popular Events (Last 14 Days)"
 msgstr "Populaire evenementen (Laatste 14 dagen)"
 
@@ -6928,8 +6961,8 @@ msgstr "Producten"
 msgid "Products sold"
 msgstr "Verkochte producten"
 
-#: src/components/routes/admin/Dashboard/index.tsx:414
-#: src/components/routes/admin/Dashboard/index.tsx:511
+#: src/components/routes/admin/Dashboard/index.tsx:356
+#: src/components/routes/admin/Dashboard/index.tsx:453
 #: src/components/routes/event/EventDashboard/index.tsx:332
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:125
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:68
@@ -7118,7 +7151,7 @@ msgstr "Productupdates van {0} ontvangen."
 msgid "Recent"
 msgstr "Recent"
 
-#: src/components/routes/admin/Dashboard/index.tsx:545
+#: src/components/routes/admin/Dashboard/index.tsx:487
 msgid "Recent Account Signups"
 msgstr "Recente accountaanmeldingen"
 
@@ -7412,6 +7445,7 @@ msgstr "Terug naar evenementpagina"
 
 #: src/components/common/AffiliateTable/index.tsx:157
 #: src/components/common/EventCard/index.tsx:235
+#: src/components/layouts/Admin/index.tsx:19
 #: src/components/routes/admin/Attribution/index.tsx:137
 #: src/components/routes/event/EventDashboard/index.tsx:343
 msgid "Revenue"
@@ -7693,6 +7727,10 @@ msgstr "Secundaire tekstkleur"
 #: src/components/common/InlineOrderSummary/index.tsx:284
 msgid "Secure Checkout"
 msgstr "Veilige afrekening"
+
+#: src/components/routes/admin/Dashboard/index.tsx:333
+msgid "See the full breakdown"
+msgstr "Bekijk het volledige overzicht"
 
 #: src/components/common/FilterModal/index.tsx:162
 #: src/components/common/FilterModal/index.tsx:181
@@ -8097,7 +8135,7 @@ msgstr "Aan de klant getoond voordat hij afrekent"
 msgid "Shows common address fields, including country"
 msgstr "Toont algemene adresvelden, inclusief land"
 
-#: src/components/routes/admin/Dashboard/index.tsx:558
+#: src/components/routes/admin/Dashboard/index.tsx:500
 msgid "Signed Up"
 msgstr "Aangemeld"
 
@@ -8267,7 +8305,7 @@ msgstr "Statistieken zijn gebaseerd op de aanmaakdatum van het account"
 #: src/components/forms/WebhookForm/index.tsx:157
 #: src/components/modals/EditUserModal/index.tsx:103
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:157
-#: src/components/routes/admin/Dashboard/index.tsx:561
+#: src/components/routes/admin/Dashboard/index.tsx:503
 #: src/components/routes/admin/Messages/index.tsx:120
 #: src/components/routes/admin/Messages/index.tsx:167
 #: src/components/routes/admin/Messages/index.tsx:293
@@ -8285,7 +8323,7 @@ msgid "Stop Impersonating"
 msgstr "Stop Imiteren"
 
 #: src/components/common/OrdersTable/index.tsx:412
-#: src/components/routes/admin/Dashboard/index.tsx:580
+#: src/components/routes/admin/Dashboard/index.tsx:522
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:86
 msgid "Stripe"
 msgstr "Stripe"
@@ -9175,7 +9213,7 @@ msgstr "Vanaf deze inchecklijst kunnen geen tickets worden verkocht."
 msgid "Tickets for"
 msgstr "Tickets voor"
 
-#: src/components/routes/admin/Dashboard/index.tsx:146
+#: src/components/routes/admin/Dashboard/index.tsx:147
 msgid "Tickets Sold"
 msgstr "Verkochte Tickets"
 
@@ -9254,19 +9292,19 @@ msgstr "Token ingetrokken"
 msgid "Tools"
 msgstr "Gereedschap"
 
-#: src/components/routes/admin/Dashboard/index.tsx:497
+#: src/components/routes/admin/Dashboard/index.tsx:439
 msgid "Top Organizers (Last 14 Days)"
 msgstr "Top organisatoren (Laatste 14 dagen)"
 
 #: src/components/common/AdminOrdersTable/index.tsx:81
 #: src/components/common/InlineOrderSummary/index.tsx:272
 #: src/components/common/OrderSummary/index.tsx:92
-#: src/components/routes/admin/Dashboard/index.tsx:341
-#: src/components/routes/admin/Dashboard/index.tsx:374
+#: src/components/routes/admin/PlatformRevenue/index.tsx:118
+#: src/components/routes/admin/PlatformRevenue/index.tsx:166
 msgid "Total"
 msgstr "Totaal"
 
-#: src/components/routes/admin/Dashboard/index.tsx:110
+#: src/components/routes/admin/Dashboard/index.tsx:111
 msgid "Total Accounts"
 msgstr "Totaal Accounts"
 
@@ -9278,7 +9316,8 @@ msgstr "Totaal deelnemers"
 msgid "Total Before Discounts"
 msgstr "Totaal vóór kortingen"
 
-#: src/components/routes/admin/Dashboard/index.tsx:311
+#: src/components/routes/admin/Dashboard/index.tsx:312
+#: src/components/routes/admin/PlatformRevenue/index.tsx:41
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:49
 msgid "Total Collected"
 msgstr "Totaal geïnd"
@@ -9327,11 +9366,11 @@ msgstr "Totaal Terugbetaald"
 msgid "Total Tax"
 msgstr "Totale belasting"
 
-#: src/components/routes/admin/Dashboard/index.tsx:92
+#: src/components/routes/admin/Dashboard/index.tsx:93
 msgid "Total Users"
 msgstr "Totaal Gebruikers"
 
-#: src/components/routes/admin/Dashboard/index.tsx:463
+#: src/components/routes/admin/Dashboard/index.tsx:405
 msgid "Total Views"
 msgstr "Totaal weergaven"
 
@@ -9634,7 +9673,7 @@ msgstr "Gebruikersbeheer"
 #: src/components/routes/account/ManageAccount/index.tsx:32
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:166
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:316
-#: src/components/routes/admin/Dashboard/index.tsx:560
+#: src/components/routes/admin/Dashboard/index.tsx:502
 #: src/components/routes/admin/Users/index.tsx:57
 msgid "Users"
 msgstr "Gebruikers"
@@ -9650,7 +9689,7 @@ msgstr "Gebruikers kunnen hun e-mailadres wijzigen in <0>Profielinstellingen</0>
 msgid "UTC"
 msgstr "UTC"
 
-#: src/components/layouts/Admin/index.tsx:20
+#: src/components/layouts/Admin/index.tsx:21
 msgid "UTM Analytics"
 msgstr "UTM-analyse"
 
@@ -9770,7 +9809,7 @@ msgid "Verification code"
 msgstr "Verificatiecode"
 
 #: src/components/routes/admin/Attribution/index.tsx:136
-#: src/components/routes/admin/Dashboard/index.tsx:577
+#: src/components/routes/admin/Dashboard/index.tsx:519
 msgid "Verified"
 msgstr "Geverifieerd"
 
@@ -9817,7 +9856,7 @@ msgid "View Details"
 msgstr "Details bekijken"
 
 #: src/components/common/AdminEventsTable/index.tsx:157
-#: src/components/routes/admin/Dashboard/index.tsx:634
+#: src/components/routes/admin/Dashboard/index.tsx:576
 msgid "View Event"
 msgstr "Bekijk evenement"
 
@@ -10117,7 +10156,8 @@ msgstr "Op welke producten is deze code van toepassing? (Geldt standaard voor al
 msgid "What products should this capacity apply to?"
 msgstr "Op welke producten moet deze capaciteit van toepassing zijn?"
 
-#: src/components/routes/admin/Dashboard/index.tsx:255
+#: src/components/routes/admin/Dashboard/index.tsx:256
+#: src/components/routes/admin/PlatformRevenue/index.tsx:68
 msgid "What the platform actually collected: voluntary Dehors contributions and sales commissions. Approximate totals across all currencies."
 msgstr "Wat het platform daadwerkelijk heeft ontvangen: vrijwillige Dehors-bijdragen en verkoopcommissies. Bij benadering, over alle valuta's."
 

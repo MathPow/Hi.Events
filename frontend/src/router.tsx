@@ -194,6 +194,13 @@ export const router: RouteObject[] = [
                 }
             },
             {
+                path: "platform-revenue",
+                async lazy() {
+                    const PlatformRevenue = await import("./components/routes/admin/PlatformRevenue");
+                    return { Component: PlatformRevenue.default };
+                }
+            },
+            {
                 path: "attribution",
                 async lazy() {
                     const Attribution = await import("./components/routes/admin/Attribution");
