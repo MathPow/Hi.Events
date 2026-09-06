@@ -198,6 +198,41 @@ export interface AdminDashboardData {
     recent_signups_count: number;
 }
 
+export interface PlatformRevenueByCurrency {
+    currency: string;
+    contributions: number;
+    contributions_orders: number;
+    commissions: number;
+    total: number;
+}
+
+export interface PlatformRevenueByMonth {
+    month: string;
+    contributions: number;
+    contributions_orders: number;
+    commissions: number;
+    total: number;
+}
+
+export interface PlatformRevenue {
+    days: number;
+    contributions_total: number;
+    commissions_total: number;
+    total: number;
+    contributions_orders: number;
+    recent_contributions_total: number;
+    recent_commissions_total: number;
+    recent_total: number;
+    recent_contributions_orders: number;
+    by_currency: PlatformRevenueByCurrency[];
+    monthly: PlatformRevenueByMonth[];
+}
+
+export interface GetPlatformRevenueParams {
+    days?: number;
+    months?: number;
+}
+
 export interface GetAdminDashboardParams {
     days?: number;
     limit?: number;
@@ -396,6 +431,16 @@ export const adminClient = {
             params: {
                 days: params.days || 14,
                 limit: params.limit || 10,
+            }
+        });
+        return response.data;
+    },
+
+    getPlatformRevenue: async (params: GetPlatformRevenueParams = {}) => {
+        const response = await api.get<PlatformRevenue>('admin/platform-revenue', {
+            params: {
+                days: params.days || 30,
+                months: params.months || 12,
             }
         });
         return response.data;

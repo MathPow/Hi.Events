@@ -56,13 +56,18 @@ msgstr "{0} <0>έκανε check-out</0> επιτυχώς"
 msgid "{0} Active Webhooks"
 msgstr "{0} Ενεργά Webhooks"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:490
+#: src/components/routes/product-widget/SelectProducts/index.tsx:487
 msgid "{0} available"
 msgstr "{0} διαθέσιμα"
 
 #: src/components/modals/CreateTaxOrFeeModal/index.tsx:36
 msgid "{0} created successfully"
 msgstr "{0} δημιουργήθηκε επιτυχώς"
+
+#: src/components/routes/admin/Dashboard/index.tsx:297
+#: src/components/routes/admin/Dashboard/index.tsx:321
+msgid "{0} in the last {revenueDays} days"
+msgstr "{0} τις τελευταίες {revenueDays} ημέρες"
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:142
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:399
@@ -74,11 +79,15 @@ msgstr "{0} απομένουν"
 msgid "{0} logo"
 msgstr "Λογότυπο {0}"
 
+#: src/components/routes/admin/Dashboard/index.tsx:274
+msgid "{0} orders"
+msgstr "{0} παραγγελίες"
+
 #: src/components/routes/events/Dashboard/index.tsx:141
 msgid "{0} organizers"
 msgstr "{0} διοργανωτές"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:644
+#: src/components/routes/product-widget/CollectInformation/index.tsx:674
 msgid "{0} tickets"
 msgstr "{0} εισιτήρια"
 
@@ -201,7 +210,7 @@ msgstr "1 ημέρα πριν την εκδήλωση"
 msgid "1 hour before event"
 msgstr "1 ώρα πριν την εκδήλωση"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:643
+#: src/components/routes/product-widget/CollectInformation/index.tsx:673
 msgid "1 ticket"
 msgstr "1 εισιτήριο"
 
@@ -360,8 +369,8 @@ msgstr "Πρόσβαση Απαγορευμένη"
 #: src/components/common/AdminOrdersTable/index.tsx:70
 #: src/components/routes/account/ManageAccount/index.tsx:24
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:53
-#: src/components/routes/admin/Dashboard/index.tsx:353
-#: src/components/routes/admin/Dashboard/index.tsx:400
+#: src/components/routes/admin/Dashboard/index.tsx:509
+#: src/components/routes/admin/Dashboard/index.tsx:556
 #: src/components/routes/admin/Messages/index.tsx:164
 #: src/components/routes/admin/Messages/index.tsx:281
 msgid "Account"
@@ -443,7 +452,7 @@ msgstr "Ημερομηνία ενεργοποίησης"
 msgid "Active"
 msgstr "Ενεργό"
 
-#: src/components/routes/admin/Dashboard/index.tsx:354
+#: src/components/routes/admin/Dashboard/index.tsx:510
 msgid "Active Events"
 msgstr "Ενεργές Εκδηλώσεις"
 
@@ -567,8 +576,8 @@ msgstr "Διεύθυνση γραμμή 1"
 
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:122
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:80
-#: src/components/routes/product-widget/CollectInformation/index.tsx:567
-#: src/components/routes/product-widget/CollectInformation/index.tsx:568
+#: src/components/routes/product-widget/CollectInformation/index.tsx:597
+#: src/components/routes/product-widget/CollectInformation/index.tsx:598
 msgid "Address Line 1"
 msgstr "Διεύθυνση Γραμμή 1"
 
@@ -578,8 +587,8 @@ msgstr "Διεύθυνση γραμμή 2"
 
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:127
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:85
-#: src/components/routes/product-widget/CollectInformation/index.tsx:572
-#: src/components/routes/product-widget/CollectInformation/index.tsx:573
+#: src/components/routes/product-widget/CollectInformation/index.tsx:602
+#: src/components/routes/product-widget/CollectInformation/index.tsx:603
 msgid "Address Line 2"
 msgstr "Διεύθυνση Γραμμή 2"
 
@@ -598,7 +607,7 @@ msgstr "Απαιτείται Πρόσβαση Διαχειριστή"
 #: src/components/common/GlobalMenu/index.tsx:61
 #: src/components/layouts/Admin/index.tsx:28
 #: src/components/layouts/OrganizerLayout/index.tsx:106
-#: src/components/routes/admin/Dashboard/index.tsx:70
+#: src/components/routes/admin/Dashboard/index.tsx:76
 msgid "Admin Dashboard"
 msgstr "Πίνακας Διαχείρισης"
 
@@ -658,7 +667,7 @@ msgid "All Archived Events"
 msgstr "Όλες οι Αρχειοθετημένες Εκδηλώσεις"
 
 #: src/components/common/MessageList/index.tsx:29
-#: src/components/routes/product-widget/CollectInformation/index.tsx:549
+#: src/components/routes/product-widget/CollectInformation/index.tsx:579
 msgid "All attendees"
 msgstr "Όλοι οι συμμετέχοντες"
 
@@ -837,7 +846,7 @@ msgstr "Εμφάνιση"
 msgid "Application Fees Configuration"
 msgstr "Ρύθμιση Χρεώσεων Εφαρμογής"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:578
+#: src/components/routes/product-widget/SelectProducts/index.tsx:555
 msgid "applied"
 msgstr "εφαρμόστηκε"
 
@@ -850,10 +859,11 @@ msgid "Applies to 1 product"
 msgstr "Ισχύει για 1 προϊόν"
 
 #: src/components/common/FilterModal/index.tsx:284
+#: src/components/common/InlineOrderSummary/index.tsx:191
 msgid "Apply"
 msgstr "Εφαρμογή"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:606
+#: src/components/routes/product-widget/SelectProducts/index.tsx:592
 msgid "Apply Promo Code"
 msgstr "Εφαρμογή Κωδικού Προσφοράς"
 
@@ -1084,7 +1094,7 @@ msgstr "Αριθμός παρουσιών και ρυθμοί check-in σε όλ
 
 #: src/components/common/AttendeeTicket/index.tsx:114
 #: src/components/common/QuestionsTable/index.tsx:461
-#: src/components/routes/product-widget/CollectInformation/index.tsx:675
+#: src/components/routes/product-widget/CollectInformation/index.tsx:705
 msgid "Attendee"
 msgstr "Συμμετέχων"
 
@@ -1272,9 +1282,9 @@ msgid "Back to Accounts"
 msgstr "Επιστροφή στους Λογαριασμούς"
 
 #: src/components/forms/StripeCheckoutForm/index.tsx:108
-#: src/components/routes/product-widget/CollectInformation/index.tsx:374
-#: src/components/routes/product-widget/CollectInformation/index.tsx:404
-#: src/components/routes/product-widget/CollectInformation/index.tsx:433
+#: src/components/routes/product-widget/CollectInformation/index.tsx:398
+#: src/components/routes/product-widget/CollectInformation/index.tsx:428
+#: src/components/routes/product-widget/CollectInformation/index.tsx:457
 msgid "Back to Event"
 msgstr "Επιστροφή στην Εκδήλωση"
 
@@ -1319,7 +1329,7 @@ msgstr "Όμορφη εμπειρία αγοράς σε κάθε συσκευή"
 msgid "Before your event can go live, there are a few things you need to do. Complete all the steps below to get started."
 msgstr "Πριν η εκδήλωσή σας δημοσιευτεί, πρέπει να ολοκληρώσετε μερικά βήματα. Συμπληρώστε όλα τα βήματα παρακάτω για να ξεκινήσετε."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:561
+#: src/components/routes/product-widget/CollectInformation/index.tsx:591
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:288
 msgid "Billing Address"
 msgstr "Διεύθυνση Χρέωσης"
@@ -1385,7 +1395,7 @@ msgstr "Οι αγοραστές βλέπουν καθαρή τιμή. Το τέ�
 msgid "By adding tracking pixels, you acknowledge that you and this platform are joint controllers of the data collected. You are responsible for ensuring you have a lawful basis for this processing under applicable privacy laws (GDPR, CCPA, etc.)."
 msgstr "Με την προσθήκη pixels παρακολούθησης, αναγνωρίζετε ότι εσείς και αυτή η πλατφόρμα είστε από κοινού υπεύθυνοι επεξεργασίας των δεδομένων που συλλέγονται. Είστε υπεύθυνοι για τη διασφάλιση ότι έχετε νόμιμη βάση για αυτή την επεξεργασία βάσει των ισχυόντων νόμων περί απορρήτου (ΓΚΠΔ, CCPA κ.λπ.)."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:777
+#: src/components/routes/product-widget/CollectInformation/index.tsx:807
 #: src/components/routes/product-widget/Payment/index.tsx:153
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Συνεχίζοντας, αποδέχεστε τους <0>Όρους Χρήσης {0}</0>"
@@ -1736,8 +1746,8 @@ msgstr "Επιλέξτε ποιος πληρώνει το τέλος πλατφ�
 #: src/components/common/CheckoutQuestion/index.tsx:162
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:134
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:92
-#: src/components/routes/product-widget/CollectInformation/index.tsx:581
-#: src/components/routes/product-widget/CollectInformation/index.tsx:582
+#: src/components/routes/product-widget/CollectInformation/index.tsx:611
+#: src/components/routes/product-widget/CollectInformation/index.tsx:612
 msgid "City"
 msgstr "Πόλη"
 
@@ -1753,16 +1763,11 @@ msgstr "Κλικ για αντιγραφή"
 msgid "Click to view notes"
 msgstr "Κλικ για προβολή σημειώσεων"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:611
-msgid "close"
-msgstr "κλείσιμο"
-
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:27
 #: src/components/common/CookieConsentBanner/index.tsx:37
 #: src/components/modals/JoinWaitlistModal/index.tsx:103
 #: src/components/modals/JoinWaitlistModal/index.tsx:130
 #: src/components/modals/RefundOrderModal/index.tsx:169
-#: src/components/routes/product-widget/SelectProducts/index.tsx:612
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -1858,15 +1863,20 @@ msgstr "Έρχεται Σύντομα"
 msgid "Comma seperated keywords that describe the event. These will be used by search engines to help categorize and index the event"
 msgstr "Λέξεις-κλειδιά χωρισμένες με κόμμα που περιγράφουν την εκδήλωση. Θα χρησιμοποιηθούν από μηχανές αναζήτησης για κατηγοριοποίηση και ευρετηρίαση"
 
+#: src/components/routes/admin/Dashboard/index.tsx:340
+#: src/components/routes/admin/Dashboard/index.tsx:373
+msgid "Commissions"
+msgstr "Προμήθειες"
+
 #: src/components/routes/profile/ManageProfile/index.tsx:204
 msgid "Communication Preferences"
 msgstr "Προτιμήσεις Επικοινωνίας"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:773
+#: src/components/routes/product-widget/CollectInformation/index.tsx:803
 msgid "Complete Order"
 msgstr "Ολοκλήρωση Παραγγελίας"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:384
+#: src/components/routes/product-widget/CollectInformation/index.tsx:408
 #: src/components/routes/product-widget/Payment/index.tsx:149
 msgid "Complete Payment"
 msgstr "Ολοκλήρωση Πληρωμής"
@@ -1884,11 +1894,11 @@ msgstr "Ολοκληρώστε τη ρύθμιση παρακάτω για να 
 msgid "Complete these steps to start selling tickets for your event."
 msgstr "Ολοκληρώστε αυτά τα βήματα για να ξεκινήσετε την πώληση εισιτηρίων για την εκδήλωσή σας."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:457
+#: src/components/routes/product-widget/CollectInformation/index.tsx:481
 msgid "Complete your order to secure your tickets. This offer is time-limited, so don't wait too long."
 msgstr "Ολοκληρώστε την παραγγελία σας για να εξασφαλίσετε τα εισιτήριά σας. Αυτή η προσφορά είναι χρονικά περιορισμένη, μην αναβάλλετε."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:382
+#: src/components/routes/product-widget/CollectInformation/index.tsx:406
 msgid "Complete your payment to secure your tickets."
 msgstr "Ολοκληρώστε την πληρωμή σας για να εξασφαλίσετε τα εισιτήριά σας."
 
@@ -1972,10 +1982,10 @@ msgstr "Ρυθμισμένη Έκπτωση"
 msgid "Confirm"
 msgstr "Επιβεβαίωση"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:505
-#: src/components/routes/product-widget/CollectInformation/index.tsx:506
-#: src/components/routes/product-widget/CollectInformation/index.tsx:722
-#: src/components/routes/product-widget/CollectInformation/index.tsx:723
+#: src/components/routes/product-widget/CollectInformation/index.tsx:535
+#: src/components/routes/product-widget/CollectInformation/index.tsx:536
+#: src/components/routes/product-widget/CollectInformation/index.tsx:752
+#: src/components/routes/product-widget/CollectInformation/index.tsx:753
 msgid "Confirm Email Address"
 msgstr "Επιβεβαίωση Διεύθυνσης Email"
 
@@ -2114,7 +2124,7 @@ msgstr "Email Επικοινωνίας"
 
 #: src/components/common/WidgetEditor/index.tsx:29
 #: src/components/common/WidgetEditor/index.tsx:222
-#: src/components/routes/product-widget/SelectProducts/index.tsx:564
+#: src/components/routes/product-widget/SelectProducts/index.tsx:608
 msgid "Continue"
 msgstr "Συνέχεια"
 
@@ -2133,7 +2143,7 @@ msgstr "Συνέχεια ρύθμισης"
 msgid "Continue Setup"
 msgstr "Συνέχεια Ρύθμισης"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:400
+#: src/components/routes/product-widget/SelectProducts/index.tsx:397
 msgid "Continue to Checkout"
 msgstr "Συνέχεια στην Ολοκλήρωση Αγοράς"
 
@@ -2145,9 +2155,14 @@ msgstr "Συνέχεια στη δημιουργία εκδήλωσης"
 msgid "Continue to next step"
 msgstr "Συνέχεια στο επόμενο βήμα"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:773
+#: src/components/routes/product-widget/CollectInformation/index.tsx:803
 msgid "Continue to Payment"
 msgstr "Συνέχεια στην Πληρωμή"
+
+#: src/components/routes/admin/Dashboard/index.tsx:339
+#: src/components/routes/admin/Dashboard/index.tsx:372
+msgid "Contributions"
+msgstr "Συνεισφορές"
 
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:47
 msgid "Control how platform fees are handled for this event"
@@ -2162,7 +2177,7 @@ msgstr "Έλεγχος τρόπου διαχείρισης τελών πλατφ
 msgid "Copied"
 msgstr "Αντιγράφηκε"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:684
+#: src/components/routes/product-widget/CollectInformation/index.tsx:714
 msgid "Copied from above"
 msgstr "Αντιγράφηκε από παραπάνω"
 
@@ -2203,7 +2218,7 @@ msgstr "Αντιγραφή Κωδικού"
 msgid "Copy customer link"
 msgstr "Αντιγραφή συνδέσμου πελάτη"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:525
+#: src/components/routes/product-widget/CollectInformation/index.tsx:555
 msgid "Copy details to first attendee"
 msgstr "Αντιγραφή στοιχείων στον πρώτο συμμετέχοντα"
 
@@ -2222,7 +2237,7 @@ msgstr "Αντιγραφή συνδέσμου"
 msgid "Copy Link"
 msgstr "Αντιγραφή Συνδέσμου"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:535
+#: src/components/routes/product-widget/CollectInformation/index.tsx:565
 msgid "Copy my details to:"
 msgstr "Αντιγραφή στοιχείων μου σε:"
 
@@ -2270,7 +2285,7 @@ msgstr "Δεν ήταν δυνατή η έναρξη της ρύθμισης Str
 #: src/components/common/CheckoutQuestion/index.tsx:174
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:152
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:110
-#: src/components/routes/product-widget/CollectInformation/index.tsx:602
+#: src/components/routes/product-widget/CollectInformation/index.tsx:632
 msgid "Country"
 msgstr "Χώρα"
 
@@ -2508,6 +2523,7 @@ msgstr "Η ετικέτα CTA είναι υποχρεωτική"
 #: src/components/forms/OrganizerForm/index.tsx:50
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:73
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:149
+#: src/components/routes/admin/Dashboard/index.tsx:338
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:51
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:99
@@ -2710,6 +2726,10 @@ msgstr "Θα χρησιμοποιηθεί το προεπιλεγμένο πρό
 msgid "Defaults to the year, e.g. 2026-1"
 msgstr "Προεπιλογή είναι το έτος, για παράδειγμα 2026-1"
 
+#: src/components/routes/admin/Dashboard/index.tsx:264
+msgid "Dehors Contributions"
+msgstr "Συνεισφορές Dehors"
+
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:28
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:30
 msgid "delete"
@@ -2845,7 +2865,7 @@ msgstr "Έκπτωση σε {0}"
 msgid "Discount Type"
 msgstr "Τύπος Έκπτωσης"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:417
+#: src/components/routes/product-widget/SelectProducts/index.tsx:414
 msgid "Dismiss this message"
 msgstr "Απόρριψη αυτού του μηνύματος"
 
@@ -3164,7 +3184,7 @@ msgstr "Δικαιούται επίσημη φορολογική απόδειξ�
 #: src/components/modals/InviteUserModal/index.tsx:61
 #: src/components/modals/JoinWaitlistModal/index.tsx:171
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:128
-#: src/components/routes/admin/Dashboard/index.tsx:401
+#: src/components/routes/admin/Dashboard/index.tsx:557
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
@@ -3192,10 +3212,10 @@ msgstr "Email & Πρότυπα"
 msgid "Email address"
 msgstr "Διεύθυνση email"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:496
-#: src/components/routes/product-widget/CollectInformation/index.tsx:497
-#: src/components/routes/product-widget/CollectInformation/index.tsx:712
-#: src/components/routes/product-widget/CollectInformation/index.tsx:713
+#: src/components/routes/product-widget/CollectInformation/index.tsx:526
+#: src/components/routes/product-widget/CollectInformation/index.tsx:527
+#: src/components/routes/product-widget/CollectInformation/index.tsx:742
+#: src/components/routes/product-widget/CollectInformation/index.tsx:743
 msgid "Email Address"
 msgstr "Διεύθυνση Email"
 
@@ -3204,8 +3224,8 @@ msgstr "Διεύθυνση Email"
 msgid "Email address copied to clipboard"
 msgstr "Η διεύθυνση email αντιγράφηκε στο πρόχειρο"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:116
-#: src/components/routes/product-widget/CollectInformation/index.tsx:123
+#: src/components/routes/product-widget/CollectInformation/index.tsx:117
+#: src/components/routes/product-widget/CollectInformation/index.tsx:124
 msgid "Email addresses do not match"
 msgstr "Οι διευθύνσεις email δεν ταιριάζουν"
 
@@ -3395,6 +3415,11 @@ msgstr "Εισάγετε τον αριθμό ΦΠΑ συμπεριλαμβάνο
 msgid "Enter unique affiliate code"
 msgstr "Εισάγετε μοναδικό κωδικό συνεργάτη"
 
+#: src/components/common/InlineOrderSummary/index.tsx:174
+#: src/components/routes/product-widget/SelectProducts/index.tsx:580
+msgid "Enter your code"
+msgstr "Εισαγάγετε τον κωδικό σας"
+
 #: src/components/common/ContactOrganizerModal/index.tsx:80
 #: src/components/routes/auth/Login/index.tsx:150
 #: src/components/routes/my-tickets/index.tsx:192
@@ -3449,8 +3474,8 @@ msgid "EUR"
 msgstr "EUR"
 
 #: src/components/common/AdminOrdersTable/index.tsx:72
-#: src/components/routes/admin/Dashboard/index.tsx:256
-#: src/components/routes/admin/Dashboard/index.tsx:305
+#: src/components/routes/admin/Dashboard/index.tsx:412
+#: src/components/routes/admin/Dashboard/index.tsx:461
 #: src/components/routes/admin/Messages/index.tsx:163
 #: src/components/routes/admin/Messages/index.tsx:277
 #: src/components/routes/event/EventDashboard/index.tsx:299
@@ -3605,7 +3630,7 @@ msgstr "Εκδήλωση Ενημερώθηκε"
 #: src/components/layouts/OrganizerLayout/index.tsx:90
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:159
 #: src/components/routes/admin/Attribution/index.tsx:133
-#: src/components/routes/admin/Dashboard/index.tsx:403
+#: src/components/routes/admin/Dashboard/index.tsx:559
 #: src/components/routes/admin/Events/index.tsx:77
 #: src/components/routes/organizer/Events/index.tsx:43
 msgid "Events"
@@ -3616,7 +3641,7 @@ msgstr "Εκδηλώσεις"
 msgid "Events Performance"
 msgstr "Απόδοση Εκδηλώσεων"
 
-#: src/components/routes/admin/Dashboard/index.tsx:450
+#: src/components/routes/admin/Dashboard/index.tsx:606
 msgid "Events Starting in Next 24 Hours"
 msgstr "Εκδηλώσεις που Ξεκινούν τις Επόμενες 24 Ώρες"
 
@@ -3975,7 +4000,7 @@ msgstr "Νόμισμα Τέλους"
 msgid "Fee Handling"
 msgstr "Διαχείριση Τελών"
 
-#: src/components/common/InlineOrderSummary/index.tsx:140
+#: src/components/common/InlineOrderSummary/index.tsx:209
 #: src/components/common/OrdersTable/index.tsx:387
 #: src/components/forms/ProductForm/index.tsx:438
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:54
@@ -3998,8 +4023,8 @@ msgstr "Φεστιβάλ"
 msgid "File is too large. Maximum size is 5MB."
 msgstr "Το αρχείο είναι πολύ μεγάλο. Μέγιστο μέγεθος 5MB."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:517
-#: src/components/routes/product-widget/CollectInformation/index.tsx:537
+#: src/components/routes/product-widget/CollectInformation/index.tsx:547
+#: src/components/routes/product-widget/CollectInformation/index.tsx:567
 msgid "Fill in your details above first"
 msgstr "Συμπληρώστε πρώτα τα στοιχεία σας παραπάνω"
 
@@ -4049,7 +4074,7 @@ msgstr "Πρώτες 7 ημέρες από την έναρξη εκδήλωση�
 msgid "First 90 days from event start"
 msgstr "Πρώτες 90 ημέρες από την έναρξη εκδήλωσης"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:548
+#: src/components/routes/product-widget/CollectInformation/index.tsx:578
 msgid "First attendee"
 msgstr "Πρώτος συμμετέχων"
 
@@ -4061,8 +4086,8 @@ msgstr "Πρώτος Αριθμός Τιμολογίου"
 #: src/components/modals/CreateAttendeeModal/index.tsx:129
 #: src/components/modals/ManageAttendeeModal/index.tsx:110
 #: src/components/modals/ManageOrderModal/index.tsx:144
-#: src/components/routes/product-widget/CollectInformation/index.tsx:479
-#: src/components/routes/product-widget/CollectInformation/index.tsx:695
+#: src/components/routes/product-widget/CollectInformation/index.tsx:509
+#: src/components/routes/product-widget/CollectInformation/index.tsx:725
 msgid "First name"
 msgstr "Όνομα"
 
@@ -4072,8 +4097,8 @@ msgstr "Όνομα"
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
 #: src/components/routes/auth/Register/index.tsx:126
-#: src/components/routes/product-widget/CollectInformation/index.tsx:478
-#: src/components/routes/product-widget/CollectInformation/index.tsx:694
+#: src/components/routes/product-widget/CollectInformation/index.tsx:508
+#: src/components/routes/product-widget/CollectInformation/index.tsx:724
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:53
 #: src/components/routes/profile/ManageProfile/index.tsx:152
@@ -4243,7 +4268,7 @@ msgstr "GitHub"
 msgid "Go back to profile"
 msgstr "Επιστροφή στο προφίλ"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:421
+#: src/components/routes/product-widget/CollectInformation/index.tsx:445
 msgid "Go to Event Page"
 msgstr "Μετάβαση στη Σελίδα Εκδήλωσης"
 
@@ -4275,7 +4300,7 @@ msgstr "Μεικτά Έσοδα"
 msgid "Gross sales"
 msgstr "Μεικτές πωλήσεις"
 
-#: src/components/routes/admin/Dashboard/index.tsx:259
+#: src/components/routes/admin/Dashboard/index.tsx:415
 #: src/components/routes/event/EventDashboard/index.tsx:370
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:119
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:30
@@ -4290,11 +4315,12 @@ msgstr "Διαχείριση Επισκεπτών"
 msgid "Guests"
 msgstr "Επισκέπτες"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:573
+#: src/components/common/InlineOrderSummary/index.tsx:168
+#: src/components/routes/product-widget/SelectProducts/index.tsx:572
 msgid "Have a promo code?"
 msgstr "Έχετε κωδικό προσφοράς;"
 
-#: src/components/routes/admin/Dashboard/index.tsx:74
+#: src/components/routes/admin/Dashboard/index.tsx:80
 msgid "Hello {0}, manage your platform from here."
 msgstr "Γεια σας {0}, διαχειριστείτε την πλατφόρμα σας από εδώ."
 
@@ -4353,8 +4379,8 @@ msgstr "Κρυφό από δημόσια προβολή"
 msgid "Hidden questions are only visible to the event organizer and not to the customer."
 msgstr "Οι κρυφές ερωτήσεις είναι ορατές μόνο στον διοργανωτή εκδήλωσης και όχι στον πελάτη."
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:438
-#: src/components/routes/product-widget/SelectProducts/index.tsx:538
+#: src/components/routes/product-widget/SelectProducts/index.tsx:435
+#: src/components/routes/product-widget/SelectProducts/index.tsx:535
 msgid "Hide"
 msgstr "Απόκρυψη"
 
@@ -4507,7 +4533,7 @@ msgstr "Συμφωνώ με τους <0>όρους και προϋποθέσει
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Επιβεβαιώνω ότι πρόκειται για συναλλακτικό μήνυμα σχετικό με αυτή την εκδήλωση"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:377
+#: src/components/routes/product-widget/SelectProducts/index.tsx:374
 msgid "If a new tab did not open automatically, please click the button below to continue to checkout."
 msgstr "Εάν δεν άνοιξε αυτόματα νέα καρτέλα, κάντε κλικ στο κουμπί παρακάτω για να συνεχίσετε στην ολοκλήρωση αγοράς."
 
@@ -4588,11 +4614,11 @@ msgstr "Σημαντικό: Η αλλαγή διεύθυνσης email θα εν
 msgid "Important: Stripe reconnection required"
 msgstr "Σημαντικό: Απαιτείται επανασύνδεση Stripe"
 
-#: src/components/routes/admin/Dashboard/index.tsx:44
+#: src/components/routes/admin/Dashboard/index.tsx:50
 msgid "In {diffHours} hours"
 msgstr "Σε {diffHours} ώρες"
 
-#: src/components/routes/admin/Dashboard/index.tsx:42
+#: src/components/routes/admin/Dashboard/index.tsx:48
 msgid "In {diffMinutes} minutes"
 msgstr "Σε {diffMinutes} λεπτά"
 
@@ -4775,7 +4801,7 @@ msgstr "Έκδοση επίσημων αποδείξεων δωρεάς για �
 msgid "Italian"
 msgstr "Ιταλικά"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:675
+#: src/components/routes/product-widget/CollectInformation/index.tsx:705
 msgid "Item"
 msgstr "Στοιχείο"
 
@@ -4842,7 +4868,7 @@ msgstr "Απλώς κάντε κλικ στο κουμπί παρακάτω γι
 msgid "Just looking for your tickets?"
 msgstr "Αναζητάτε μόνο τα εισιτήριά σας;"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:615
+#: src/components/routes/product-widget/CollectInformation/index.tsx:645
 msgid "Keep me updated on news and events from {0}"
 msgstr "Ενημερώστε με για νέα και εκδηλώσεις από {0}"
 
@@ -4866,7 +4892,7 @@ msgstr "Τελευταίους 12 μήνες"
 msgid "Last 14 days"
 msgstr "Τελευταίες 14 ημέρες"
 
-#: src/components/routes/admin/Dashboard/index.tsx:159
+#: src/components/routes/admin/Dashboard/index.tsx:165
 msgid "Last 14 Days"
 msgstr "Τελευταίες 14 Ημέρες"
 
@@ -4918,10 +4944,10 @@ msgstr "Επώνυμο"
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
 #: src/components/routes/auth/Register/index.tsx:132
-#: src/components/routes/product-widget/CollectInformation/index.tsx:485
-#: src/components/routes/product-widget/CollectInformation/index.tsx:486
-#: src/components/routes/product-widget/CollectInformation/index.tsx:701
-#: src/components/routes/product-widget/CollectInformation/index.tsx:702
+#: src/components/routes/product-widget/CollectInformation/index.tsx:515
+#: src/components/routes/product-widget/CollectInformation/index.tsx:516
+#: src/components/routes/product-widget/CollectInformation/index.tsx:731
+#: src/components/routes/product-widget/CollectInformation/index.tsx:732
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:60
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:60
 #: src/components/routes/profile/ManageProfile/index.tsx:154
@@ -5002,7 +5028,7 @@ msgid "LIVE"
 msgstr "ΔΗΜΟΣΙΕΥΜΕΝΟ"
 
 #: src/components/routes/admin/Attribution/index.tsx:134
-#: src/components/routes/admin/Dashboard/index.tsx:122
+#: src/components/routes/admin/Dashboard/index.tsx:128
 msgid "Live Events"
 msgstr "Δημοσιευμένες Εκδηλώσεις"
 
@@ -5292,7 +5318,7 @@ msgstr "Βελτιστοποιημένο για Κινητά"
 msgid "Mobile scanner with offline support and real-time tracking"
 msgstr "Σαρωτής κινητού με υποστήριξη εκτός σύνδεσης και παρακολούθηση σε πραγματικό χρόνο"
 
-#: src/components/routes/admin/Dashboard/index.tsx:163
+#: src/components/routes/admin/Dashboard/index.tsx:169
 msgid "Monetary values are approximate totals across all currencies"
 msgstr "Τα χρηματικά ποσά είναι κατά προσέγγιση σύνολα σε όλα τα νομίσματα"
 
@@ -5300,11 +5326,12 @@ msgstr "Τα χρηματικά ποσά είναι κατά προσέγγισ�
 msgid "Monitor and manage failed background jobs"
 msgstr "Παρακολούθηση και διαχείριση αποτυχημένων εργασιών παρασκηνίου"
 
+#: src/components/routes/admin/Dashboard/index.tsx:371
 #: src/components/routes/event/EventDashboard/index.tsx:283
 msgid "Month"
 msgstr "Μήνας"
 
-#: src/components/routes/admin/Dashboard/index.tsx:294
+#: src/components/routes/admin/Dashboard/index.tsx:450
 msgid "Most Viewed Events (Last 14 Days)"
 msgstr "Εκδηλώσεις με Περισσότερες Προβολές (Τελευταίες 14 Ημέρες)"
 
@@ -5403,7 +5430,7 @@ msgstr "Ποτέ"
 msgid "New Password"
 msgstr "Νέος Κωδικός"
 
-#: src/components/routes/admin/Dashboard/index.tsx:225
+#: src/components/routes/admin/Dashboard/index.tsx:231
 msgid "New Signups"
 msgstr "Νέες Εγγραφές"
 
@@ -5509,7 +5536,7 @@ msgstr "Δεν υπάρχουν τελειωμένες εκδηλώσεις γι
 msgid "No events found"
 msgstr "Δεν βρέθηκαν εκδηλώσεις"
 
-#: src/components/routes/admin/Dashboard/index.tsx:489
+#: src/components/routes/admin/Dashboard/index.tsx:645
 msgid "No events starting in the next 24 hours"
 msgstr "Δεν υπάρχουν εκδηλώσεις που ξεκινούν τις επόμενες 24 ώρες"
 
@@ -5574,7 +5601,7 @@ msgstr "Δεν υπάρχουν παραγγελίες για εμφάνιση"
 msgid "No orders yet"
 msgstr "Δεν υπάρχουν παραγγελίες ακόμα"
 
-#: src/components/routes/admin/Dashboard/index.tsx:377
+#: src/components/routes/admin/Dashboard/index.tsx:533
 msgid "No organizer activity in the last 14 days"
 msgstr "Δεν υπάρχει δραστηριότητα διοργανωτή τις τελευταίες 14 ημέρες"
 
@@ -5599,7 +5626,7 @@ msgstr "Δεν υπάρχουν διαθέσιμες μέθοδοι πληρωμ
 msgid "No Payment Required"
 msgstr "Δεν Απαιτείται Πληρωμή"
 
-#: src/components/routes/admin/Dashboard/index.tsx:282
+#: src/components/routes/admin/Dashboard/index.tsx:438
 msgid "No popular events in the last 14 days"
 msgstr "Δεν υπάρχουν δημοφιλείς εκδηλώσεις τις τελευταίες 14 ημέρες"
 
@@ -5639,7 +5666,7 @@ msgstr "Δεν έχουν απαντηθεί ερωτήσεις από αυτό�
 msgid "No questions have been asked for this order."
 msgstr "Δεν έχουν τεθεί ερωτήσεις για αυτή την παραγγελία."
 
-#: src/components/routes/admin/Dashboard/index.tsx:438
+#: src/components/routes/admin/Dashboard/index.tsx:594
 msgid "No recent account signups"
 msgstr "Δεν υπάρχουν πρόσφατες εγγραφές λογαριασμού"
 
@@ -5701,7 +5728,7 @@ msgstr "Δεν βρέθηκαν χρήστες"
 msgid "No VAT settings configured"
 msgstr "Δεν έχουν ρυθμιστεί ρυθμίσεις ΦΠΑ"
 
-#: src/components/routes/admin/Dashboard/index.tsx:329
+#: src/components/routes/admin/Dashboard/index.tsx:485
 msgid "No viewed events in the last 14 days"
 msgstr "Δεν υπάρχουν εκδηλώσεις που προβλήθηκαν τις τελευταίες 14 ημέρες"
 
@@ -5729,7 +5756,7 @@ msgid "Non-VAT registered businesses or individuals: Irish VAT at 23% applies"
 msgstr "Επιχειρήσεις ή άτομα μη εγγεγραμμένα για ΦΠΑ: Εφαρμόζεται ιρλανδικός ΦΠΑ 23%"
 
 #: src/components/common/PromoCodeTable/index.tsx:82
-#: src/components/routes/product-widget/CollectInformation/index.tsx:547
+#: src/components/routes/product-widget/CollectInformation/index.tsx:577
 msgid "None"
 msgstr "Κανένα"
 
@@ -5986,7 +6013,7 @@ msgstr "Παραγγελία"
 msgid "Order & Ticket"
 msgstr "Παραγγελία & Εισιτήριο"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:401
+#: src/components/routes/product-widget/CollectInformation/index.tsx:425
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:354
 msgid "Order cancelled"
 msgstr "Παραγγελία ακυρώθηκε"
@@ -5995,7 +6022,7 @@ msgstr "Παραγγελία ακυρώθηκε"
 msgid "Order Cancelled"
 msgstr "Παραγγελία Ακυρώθηκε"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:391
+#: src/components/routes/product-widget/CollectInformation/index.tsx:415
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:364
 msgid "Order complete"
 msgstr "Παραγγελία ολοκληρώθηκε"
@@ -6057,7 +6084,7 @@ msgstr "Η παραγγελία επισημάνθηκε ως πληρωμένη
 msgid "Order Marked as Paid"
 msgstr "Παραγγελία Επισημάνθηκε ως Πληρωμένη"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:416
+#: src/components/routes/product-widget/CollectInformation/index.tsx:440
 msgid "Order not found"
 msgstr "Η παραγγελία δεν βρέθηκε"
 
@@ -6101,7 +6128,7 @@ msgstr "Κατάσταση Παραγγελίας"
 msgid "Order statuses"
 msgstr "Καταστάσεις παραγγελίας"
 
-#: src/components/common/InlineOrderSummary/index.tsx:54
+#: src/components/common/InlineOrderSummary/index.tsx:71
 #: src/components/modals/ManageOrderModal/index.tsx:105
 msgid "Order Summary"
 msgstr "Σύνοψη Παραγγελίας"
@@ -6122,7 +6149,7 @@ msgstr "Παραγγελία Ενημερώθηκε"
 msgid "Order updated successfully"
 msgstr "Η παραγγελία ενημερώθηκε επιτυχώς"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:371
+#: src/components/routes/product-widget/CollectInformation/index.tsx:395
 msgid "Order was cancelled"
 msgstr "Η παραγγελία ακυρώθηκε"
 
@@ -6137,7 +6164,7 @@ msgstr "Η παραγγελία ακυρώθηκε"
 msgid "Orders"
 msgstr "Παραγγελίες"
 
-#: src/components/routes/admin/Dashboard/index.tsx:189
+#: src/components/routes/admin/Dashboard/index.tsx:195
 msgid "Orders Completed"
 msgstr "Παραγγελίες Ολοκληρώθηκαν"
 
@@ -6145,7 +6172,7 @@ msgstr "Παραγγελίες Ολοκληρώθηκαν"
 msgid "Orders Exported"
 msgstr "Παραγγελίες Εξήχθησαν"
 
-#: src/components/routes/admin/Dashboard/index.tsx:207
+#: src/components/routes/admin/Dashboard/index.tsx:213
 msgid "Orders Total"
 msgstr "Σύνολο Παραγγελιών"
 
@@ -6176,9 +6203,9 @@ msgstr "Όνομα Οργανισμού"
 #: src/components/modals/EditUserModal/index.tsx:55
 #: src/components/modals/InviteUserModal/index.tsx:47
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:96
-#: src/components/routes/admin/Dashboard/index.tsx:257
-#: src/components/routes/admin/Dashboard/index.tsx:306
-#: src/components/routes/admin/Dashboard/index.tsx:352
+#: src/components/routes/admin/Dashboard/index.tsx:413
+#: src/components/routes/admin/Dashboard/index.tsx:462
+#: src/components/routes/admin/Dashboard/index.tsx:508
 #: src/components/routes/events/Dashboard/index.tsx:194
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:332
 msgid "Organizer"
@@ -6570,6 +6597,14 @@ msgstr "Σχεδιάζετε εκδήλωση;"
 msgid "Platform"
 msgstr "Πλατφόρμα"
 
+#: src/components/routes/admin/Dashboard/index.tsx:287
+msgid "Platform Commissions"
+msgstr "Προμήθειες πλατφόρμας"
+
+#: src/components/routes/admin/Dashboard/index.tsx:251
+msgid "Platform Earnings"
+msgstr "Έσοδα πλατφόρμας"
+
 #: src/components/common/PlatformFeesSettings/index.tsx:57
 #: src/components/common/PlatformFeesSettings/index.tsx:153
 msgid "Platform fee"
@@ -6592,7 +6627,7 @@ msgstr "Τέλη Πλατφόρμας"
 msgid "Platform Fees Report"
 msgstr "Αναφορά Τελών Πλατφόρμας"
 
-#: src/components/routes/admin/Dashboard/index.tsx:171
+#: src/components/routes/admin/Dashboard/index.tsx:177
 msgid "Platform Revenue"
 msgstr "Έσοδα Πλατφόρμας"
 
@@ -6617,7 +6652,7 @@ msgstr "Παρακαλώ ελέγξτε ότι το email είναι έγκυρ�
 msgid "Please check your email to confirm your email address"
 msgstr "Παρακαλώ ελέγξτε το email σας για επιβεβαίωση της διεύθυνσης"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:368
+#: src/components/routes/product-widget/SelectProducts/index.tsx:365
 msgid "Please continue in the new tab"
 msgstr "Παρακαλώ συνεχίστε στη νέα καρτέλα"
 
@@ -6674,7 +6709,7 @@ msgstr "Παρακαλώ επιλέξτε εύρος ημερομηνιών"
 msgid "Please select an image."
 msgstr "Παρακαλώ επιλέξτε εικόνα."
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:299
+#: src/components/routes/product-widget/SelectProducts/index.tsx:296
 msgid "Please select at least one product"
 msgstr "Παρακαλώ επιλέξτε τουλάχιστον ένα προϊόν"
 
@@ -6717,7 +6752,7 @@ msgstr "Παρακαλώ περιμένετε ενώ προετοιμάζουμ�
 msgid "Polish"
 msgstr "Πολωνικά"
 
-#: src/components/routes/admin/Dashboard/index.tsx:245
+#: src/components/routes/admin/Dashboard/index.tsx:401
 msgid "Popular Events (Last 14 Days)"
 msgstr "Δημοφιλείς Εκδηλώσεις (Τελευταίες 14 Ημέρες)"
 
@@ -6892,8 +6927,8 @@ msgstr "Προϊόντα"
 msgid "Products sold"
 msgstr "Προϊόντα που πωλήθηκαν"
 
-#: src/components/routes/admin/Dashboard/index.tsx:258
-#: src/components/routes/admin/Dashboard/index.tsx:355
+#: src/components/routes/admin/Dashboard/index.tsx:414
+#: src/components/routes/admin/Dashboard/index.tsx:511
 #: src/components/routes/event/EventDashboard/index.tsx:332
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:125
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:68
@@ -6912,7 +6947,7 @@ msgstr "Προφίλ"
 msgid "Profile updated successfully"
 msgstr "Το προφίλ ενημερώθηκε επιτυχώς"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:240
+#: src/components/routes/product-widget/SelectProducts/index.tsx:237
 msgid "Promo {promo_code} code applied"
 msgstr "Εφαρμόστηκε κωδικός προσφοράς {promo_code}"
 
@@ -6924,9 +6959,17 @@ msgstr "Κωδικός προσφοράς"
 msgid "Promo Code"
 msgstr "Κωδικός Προσφοράς"
 
+#: src/components/routes/product-widget/CollectInformation/index.tsx:260
+msgid "Promo code applied"
+msgstr "Ο εκπτωτικός κωδικός εφαρμόστηκε"
+
 #: src/components/forms/ProductForm/index.tsx:510
 msgid "Promo Code page"
 msgstr "Σελίδα Κωδικού Προσφοράς"
+
+#: src/components/routes/product-widget/CollectInformation/index.tsx:262
+msgid "Promo code removed"
+msgstr "Ο εκπτωτικός κωδικός αφαιρέθηκε"
 
 #: src/components/routes/event/Reports/index.tsx:30
 msgid "Promo code usage and discount breakdown"
@@ -7074,7 +7117,7 @@ msgstr "Λήψη ενημερώσεων προϊόντων από {0}."
 msgid "Recent"
 msgstr "Πρόσφατο"
 
-#: src/components/routes/admin/Dashboard/index.tsx:389
+#: src/components/routes/admin/Dashboard/index.tsx:545
 msgid "Recent Account Signups"
 msgstr "Πρόσφατες Εγγραφές Λογαριασμού"
 
@@ -7202,16 +7245,21 @@ msgstr "Ερωτήσεις Εγγραφής"
 msgid "Remaining Uses"
 msgstr "Υπόλοιπες Χρήσεις"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:582
+#: src/components/routes/product-widget/SelectProducts/index.tsx:559
 msgid "remove"
 msgstr "αφαίρεση"
 
 #: src/components/common/Editor/Controls/InsertImageControl/index.tsx:146
 #: src/components/common/WaitlistTable/index.tsx:78
 #: src/components/common/WaitlistTable/index.tsx:111
-#: src/components/routes/product-widget/SelectProducts/index.tsx:583
+#: src/components/routes/product-widget/SelectProducts/index.tsx:560
 msgid "Remove"
 msgstr "Αφαίρεση"
+
+#: src/components/common/InlineOrderSummary/index.tsx:154
+#: src/components/common/InlineOrderSummary/index.tsx:155
+msgid "Remove promo code"
+msgstr "Αφαίρεση εκπτωτικού κωδικού"
 
 #: src/components/routes/organizer/Reports/ReportLayout/index.tsx:26
 msgid "Report not found"
@@ -7641,7 +7689,7 @@ msgstr "Δευτερεύον Χρώμα"
 msgid "Secondary Text Color"
 msgstr "Δευτερεύον Χρώμα Κειμένου"
 
-#: src/components/common/InlineOrderSummary/index.tsx:215
+#: src/components/common/InlineOrderSummary/index.tsx:284
 msgid "Secure Checkout"
 msgstr "Ασφαλής Ολοκλήρωση Αγοράς"
 
@@ -8019,8 +8067,8 @@ msgstr "Εμφάνιση πλαισίου εξουσιοδότησης μάρκ�
 msgid "Show marketing opt-in checkbox by default"
 msgstr "Εμφάνιση πλαισίου εξουσιοδότησης μάρκετινγκ ως προεπιλογή"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:438
-#: src/components/routes/product-widget/SelectProducts/index.tsx:537
+#: src/components/routes/product-widget/SelectProducts/index.tsx:435
+#: src/components/routes/product-widget/SelectProducts/index.tsx:534
 msgid "Show more"
 msgstr "Εμφάνιση περισσότερων"
 
@@ -8048,7 +8096,7 @@ msgstr "Εμφανίζεται στον πελάτη πριν το checkout"
 msgid "Shows common address fields, including country"
 msgstr "Εμφανίζει κοινά πεδία διεύθυνσης, συμπεριλαμβανομένης της χώρας"
 
-#: src/components/routes/admin/Dashboard/index.tsx:402
+#: src/components/routes/admin/Dashboard/index.tsx:558
 msgid "Signed Up"
 msgstr "Εγγράφηκε"
 
@@ -8111,7 +8159,7 @@ msgstr "Εξαντλημένο"
 
 #: src/components/common/ErrorDisplay/index.tsx:15
 #: src/components/routes/auth/AcceptInvitation/index.tsx:48
-#: src/components/routes/product-widget/CollectInformation/index.tsx:430
+#: src/components/routes/product-widget/CollectInformation/index.tsx:454
 #: src/components/routes/product-widget/Payment/PaymentMethods/Stripe/index.tsx:64
 msgid "Something went wrong"
 msgstr "Κάτι πήγε στραβά"
@@ -8150,7 +8198,7 @@ msgstr "Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξα
 msgid "Sorry for the inconvenience."
 msgstr "Ζητούμε συγγνώμη για την ταλαιπωρία."
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:308
+#: src/components/routes/product-widget/SelectProducts/index.tsx:305
 msgid "Sorry, this promo code is not recognized"
 msgstr "Λυπούμαστε, αυτός ο κωδικός προσφοράς δεν αναγνωρίζεται"
 
@@ -8191,8 +8239,8 @@ msgstr "Η ημερομηνία έναρξης είναι υποχρεωτική
 #: src/components/common/CheckoutQuestion/index.tsx:165
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:139
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:97
-#: src/components/routes/product-widget/CollectInformation/index.tsx:587
-#: src/components/routes/product-widget/CollectInformation/index.tsx:588
+#: src/components/routes/product-widget/CollectInformation/index.tsx:617
+#: src/components/routes/product-widget/CollectInformation/index.tsx:618
 msgid "State or Region"
 msgstr "Νομός ή Περιοχή"
 
@@ -8218,7 +8266,7 @@ msgstr "Τα στατιστικά βασίζονται στην ημερομην
 #: src/components/forms/WebhookForm/index.tsx:157
 #: src/components/modals/EditUserModal/index.tsx:103
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:157
-#: src/components/routes/admin/Dashboard/index.tsx:405
+#: src/components/routes/admin/Dashboard/index.tsx:561
 #: src/components/routes/admin/Messages/index.tsx:120
 #: src/components/routes/admin/Messages/index.tsx:167
 #: src/components/routes/admin/Messages/index.tsx:293
@@ -8236,7 +8284,7 @@ msgid "Stop Impersonating"
 msgstr "Διακοπή Υποκατάστασης"
 
 #: src/components/common/OrdersTable/index.tsx:412
-#: src/components/routes/admin/Dashboard/index.tsx:424
+#: src/components/routes/admin/Dashboard/index.tsx:580
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:86
 msgid "Stripe"
 msgstr "Stripe"
@@ -8292,7 +8340,7 @@ msgstr "Το θέμα θα εμφανιστεί εδώ"
 msgid "Subject:"
 msgstr "Θέμα:"
 
-#: src/components/common/InlineOrderSummary/index.tsx:132
+#: src/components/common/InlineOrderSummary/index.tsx:201
 #: src/components/common/OrderSummary/index.tsx:41
 msgid "Subtotal"
 msgstr "Υποσύνολο"
@@ -8556,7 +8604,7 @@ msgstr "Φορολογικές αποδείξεις"
 msgid "Tax Summary"
 msgstr "Σύνοψη Φόρου"
 
-#: src/components/common/InlineOrderSummary/index.tsx:173
+#: src/components/common/InlineOrderSummary/index.tsx:242
 #: src/components/forms/ProductForm/index.tsx:435
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:48
 msgid "Taxes"
@@ -8640,8 +8688,9 @@ msgstr "Σας ευχαριστούμε για την υποστήριξη κα�
 msgid "That PIN is not correct."
 msgstr "Αυτό το PIN δεν είναι σωστό."
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:200
-#: src/components/routes/product-widget/SelectProducts/index.tsx:248
+#: src/components/routes/product-widget/CollectInformation/index.tsx:271
+#: src/components/routes/product-widget/SelectProducts/index.tsx:198
+#: src/components/routes/product-widget/SelectProducts/index.tsx:245
 msgid "That promo code is invalid"
 msgstr "Αυτός ο κωδικός προσφοράς δεν είναι έγκυρος"
 
@@ -8696,7 +8745,7 @@ msgstr "Ο σύνδεσμος που προσπαθείτε να αποκτήσ�
 msgid "The link you clicked is invalid."
 msgstr "Ο σύνδεσμος που κάνατε κλικ δεν είναι έγκυρος."
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:522
+#: src/components/routes/product-widget/SelectProducts/index.tsx:519
 msgid "The maximum number of products for {0}is {1}"
 msgstr "Ο μέγιστος αριθμός προϊόντων για {0}είναι {1}"
 
@@ -8760,11 +8809,11 @@ msgstr "Θέατρο"
 msgid "Theme & Colors"
 msgstr "Θέμα & Χρώματα"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:334
+#: src/components/routes/product-widget/SelectProducts/index.tsx:331
 msgid "There are no products available for this event"
 msgstr "Δεν υπάρχουν διαθέσιμα προϊόντα για αυτή την εκδήλωση"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:447
+#: src/components/routes/product-widget/SelectProducts/index.tsx:444
 msgid "There are no products available in this category"
 msgstr "Δεν υπάρχουν διαθέσιμα προϊόντα σε αυτή την κατηγορία"
 
@@ -8917,7 +8966,7 @@ msgstr "Αυτή η παραγγελία έχει ήδη επιστραφεί."
 msgid "This order has been cancelled."
 msgstr "Αυτή η παραγγελία έχει ακυρωθεί."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:359
+#: src/components/routes/product-widget/CollectInformation/index.tsx:383
 msgid "This order has expired. Please start again."
 msgstr "Αυτή η παραγγελία έχει λήξει. Παρακαλώ ξεκινήστε από την αρχή."
 
@@ -8933,11 +8982,11 @@ msgstr "Αυτή η παραγγελία έχει ολοκληρωθεί."
 msgid "This order page is no longer available."
 msgstr "Αυτή η σελίδα παραγγελίας δεν είναι πλέον διαθέσιμη."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:372
+#: src/components/routes/product-widget/CollectInformation/index.tsx:396
 msgid "This order was abandoned. You can start a new order anytime."
 msgstr "Αυτή η παραγγελία εγκαταλείφθηκε. Μπορείτε να ξεκινήσετε νέα παραγγελία ανά πάσα στιγμή."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:402
+#: src/components/routes/product-widget/CollectInformation/index.tsx:426
 msgid "This order was cancelled. You can start a new order anytime."
 msgstr "Αυτή η παραγγελία ακυρώθηκε. Μπορείτε να ξεκινήσετε νέα παραγγελία ανά πάσα στιγμή."
 
@@ -9125,7 +9174,7 @@ msgstr "Δεν μπορούν να πωληθούν εισιτήρια από α
 msgid "Tickets for"
 msgstr "Εισιτήρια για"
 
-#: src/components/routes/admin/Dashboard/index.tsx:140
+#: src/components/routes/admin/Dashboard/index.tsx:146
 msgid "Tickets Sold"
 msgstr "Εισιτήρια που Πωλήθηκαν"
 
@@ -9204,17 +9253,19 @@ msgstr "Το διακριτικό ανακλήθηκε"
 msgid "Tools"
 msgstr "Εργαλεία"
 
-#: src/components/routes/admin/Dashboard/index.tsx:341
+#: src/components/routes/admin/Dashboard/index.tsx:497
 msgid "Top Organizers (Last 14 Days)"
 msgstr "Κορυφαίοι Διοργανωτές (Τελευταίες 14 Ημέρες)"
 
 #: src/components/common/AdminOrdersTable/index.tsx:81
-#: src/components/common/InlineOrderSummary/index.tsx:203
+#: src/components/common/InlineOrderSummary/index.tsx:272
 #: src/components/common/OrderSummary/index.tsx:92
+#: src/components/routes/admin/Dashboard/index.tsx:341
+#: src/components/routes/admin/Dashboard/index.tsx:374
 msgid "Total"
 msgstr "Σύνολο"
 
-#: src/components/routes/admin/Dashboard/index.tsx:104
+#: src/components/routes/admin/Dashboard/index.tsx:110
 msgid "Total Accounts"
 msgstr "Σύνολο Λογαριασμών"
 
@@ -9226,6 +9277,7 @@ msgstr "Σύνολο Συμμετεχόντων"
 msgid "Total Before Discounts"
 msgstr "Σύνολο Πριν Εκπτώσεις"
 
+#: src/components/routes/admin/Dashboard/index.tsx:311
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:49
 msgid "Total Collected"
 msgstr "Σύνολο Εισπράχθηκε"
@@ -9274,11 +9326,11 @@ msgstr "Σύνολο Επιστροφών"
 msgid "Total Tax"
 msgstr "Συνολικός Φόρος"
 
-#: src/components/routes/admin/Dashboard/index.tsx:86
+#: src/components/routes/admin/Dashboard/index.tsx:92
 msgid "Total Users"
 msgstr "Σύνολο Χρηστών"
 
-#: src/components/routes/admin/Dashboard/index.tsx:307
+#: src/components/routes/admin/Dashboard/index.tsx:463
 msgid "Total Views"
 msgstr "Σύνολο Προβολών"
 
@@ -9359,7 +9411,7 @@ msgstr "Αδύνατο check-out συμμετέχοντα"
 msgid "Unable to create product. Please check the your details"
 msgstr "Αδύνατη δημιουργία προϊόντος. Ελέγξτε τα στοιχεία σας"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:185
+#: src/components/routes/product-widget/SelectProducts/index.tsx:183
 msgid "Unable to create product. Please check your details"
 msgstr "Αδύνατη δημιουργία προϊόντος. Ελέγξτε τα στοιχεία σας"
 
@@ -9423,7 +9475,7 @@ msgstr "Άγνωστος Συμμετέχων"
 msgid "Unlimited"
 msgstr "Απεριόριστο"
 
-#: src/components/routes/product-widget/SelectProducts/index.tsx:485
+#: src/components/routes/product-widget/SelectProducts/index.tsx:482
 msgid "Unlimited available"
 msgstr "Απεριόριστα διαθέσιμα"
 
@@ -9581,7 +9633,7 @@ msgstr "Διαχείριση Χρηστών"
 #: src/components/routes/account/ManageAccount/index.tsx:32
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:166
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:316
-#: src/components/routes/admin/Dashboard/index.tsx:404
+#: src/components/routes/admin/Dashboard/index.tsx:560
 #: src/components/routes/admin/Users/index.tsx:57
 msgid "Users"
 msgstr "Χρήστες"
@@ -9717,7 +9769,7 @@ msgid "Verification code"
 msgstr "Κωδικός επαλήθευσης"
 
 #: src/components/routes/admin/Attribution/index.tsx:136
-#: src/components/routes/admin/Dashboard/index.tsx:421
+#: src/components/routes/admin/Dashboard/index.tsx:577
 msgid "Verified"
 msgstr "Επαληθευμένο"
 
@@ -9764,7 +9816,7 @@ msgid "View Details"
 msgstr "Προβολή Λεπτομερειών"
 
 #: src/components/common/AdminEventsTable/index.tsx:157
-#: src/components/routes/admin/Dashboard/index.tsx:478
+#: src/components/routes/admin/Dashboard/index.tsx:634
 msgid "View Event"
 msgstr "Προβολή Εκδήλωσης"
 
@@ -9802,7 +9854,7 @@ msgid "View Order"
 msgstr "Προβολή Παραγγελίας"
 
 #: src/components/forms/StripeCheckoutForm/index.tsx:96
-#: src/components/routes/product-widget/CollectInformation/index.tsx:394
+#: src/components/routes/product-widget/CollectInformation/index.tsx:418
 msgid "View Order Details"
 msgstr "Προβολή Λεπτομερειών Παραγγελίας"
 
@@ -9856,7 +9908,7 @@ msgstr "VK"
 msgid "Waiting"
 msgstr "Αναμονή"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:381
+#: src/components/routes/product-widget/CollectInformation/index.tsx:405
 msgid "Waiting for payment"
 msgstr "Αναμονή πληρωμής"
 
@@ -9871,7 +9923,7 @@ msgstr "Λίστα Αναμονής"
 msgid "Waitlist Enabled"
 msgstr "Λίστα Αναμονής Ενεργή"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:416
+#: src/components/routes/product-widget/CollectInformation/index.tsx:440
 msgid "Waitlist offer expired"
 msgstr "Η προσφορά λίστας αναμονής έληξε"
 
@@ -9903,7 +9955,7 @@ msgstr "Δεν βρέθηκε η παραγγελία. Ο σύνδεσμος μ�
 msgid "We couldn't find the ticket you're looking for. The link may have expired or the ticket details may have changed."
 msgstr "Δεν βρέθηκε το εισιτήριο. Ο σύνδεσμος μπορεί να έχει λήξει ή τα στοιχεία να άλλαξαν."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:419
+#: src/components/routes/product-widget/CollectInformation/index.tsx:443
 msgid "We couldn't find this order. It may have been removed."
 msgstr "Δεν βρέθηκε αυτή η παραγγελία. Μπορεί να έχει αφαιρεθεί."
 
@@ -9915,7 +9967,7 @@ msgstr "Δεν μπορέσαμε να φορτώσουμε τα δεδομέν�
 msgid "We couldn't reorder the categories. Please try again."
 msgstr "Δεν μπορέσαμε να αναδιατάξουμε τις κατηγορίες. Παρακαλώ δοκιμάστε ξανά."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:431
+#: src/components/routes/product-widget/CollectInformation/index.tsx:455
 msgid "We hit a snag loading this page. Please try again."
 msgstr "Παρουσιάστηκε πρόβλημα κατά τη φόρτωση αυτής της σελίδας. Παρακαλώ δοκιμάστε ξανά."
 
@@ -9948,7 +10000,7 @@ msgstr "Δεν μπορέσαμε να επαληθεύσουμε τον αρι�
 msgid "We'll notify you by email if a spot becomes available for {productDisplayName}."
 msgstr "Θα σας ειδοποιήσουμε μέσω email εάν διατεθεί θέση για {productDisplayName}."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:471
+#: src/components/routes/product-widget/CollectInformation/index.tsx:501
 msgid "We'll send your tickets to this email"
 msgstr "Θα σας στείλουμε τα εισιτήρια σε αυτό το email"
 
@@ -10063,6 +10115,10 @@ msgstr "Σε ποια προϊόντα ισχύει; (Ισχύει σε όλα �
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:48
 msgid "What products should this capacity apply to?"
 msgstr "Σε ποια προϊόντα πρέπει να ισχύει αυτή η χωρητικότητα;"
+
+#: src/components/routes/admin/Dashboard/index.tsx:255
+msgid "What the platform actually collected: voluntary Dehors contributions and sales commissions. Approximate totals across all currencies."
+msgstr "Όσα εισέπραξε πραγματικά η πλατφόρμα: εθελοντικές συνεισφορές Dehors και προμήθειες πωλήσεων. Κατά προσέγγιση σύνολα σε όλα τα νομίσματα."
 
 #: src/components/forms/QuestionForm/index.tsx:179
 msgid "What time will you be arriving?"
@@ -10433,7 +10489,7 @@ msgstr "Θα πάτε στο {0}!"
 msgid "You're on the waitlist!"
 msgstr "Είστε στη λίστα αναμονής!"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:454
+#: src/components/routes/product-widget/CollectInformation/index.tsx:478
 msgid "You've been offered a spot!"
 msgstr "Σας προσφέρθηκε μια θέση!"
 
@@ -10465,7 +10521,7 @@ msgstr "Η ιστοσελίδα σας 🎉"
 msgid "Your check-in list has been created successfully. Share the link below with your check-in staff."
 msgstr "Η λίστα check-in δημιουργήθηκε επιτυχώς. Μοιραστείτε τον παρακάτω σύνδεσμο με το προσωπικό."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:314
+#: src/components/routes/product-widget/CollectInformation/index.tsx:338
 msgid "Your contribution could not be applied, continuing without it."
 msgstr "Η συνεισφορά σας δεν εφαρμόστηκε, συνεχίζουμε χωρίς αυτήν."
 
@@ -10473,7 +10529,7 @@ msgstr "Η συνεισφορά σας δεν εφαρμόστηκε, συνεχ
 msgid "Your current order will be lost."
 msgstr "Η τρέχουσα παραγγελία σας θα χαθεί."
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:468
+#: src/components/routes/product-widget/CollectInformation/index.tsx:498
 msgid "Your Details"
 msgstr "Τα Στοιχεία σας"
 
@@ -10558,7 +10614,7 @@ msgstr "Ο κωδικός σας"
 msgid "Your payment is processing."
 msgstr "Η πληρωμή σας επεξεργάζεται."
 
-#: src/components/common/InlineOrderSummary/index.tsx:217
+#: src/components/common/InlineOrderSummary/index.tsx:286
 msgid "Your payment is protected with bank-level encryption"
 msgstr "Η πληρωμή σας προστατεύεται με κρυπτογράφηση τραπεζικού επιπέδου"
 
@@ -10591,7 +10647,7 @@ msgstr "Ο λογαριασμός Stripe είναι συνδεδεμένος κ�
 msgid "Your ticket for"
 msgstr "Το εισιτήριό σας για"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:392
+#: src/components/routes/product-widget/CollectInformation/index.tsx:416
 msgid "Your tickets have been confirmed."
 msgstr "Τα εισιτήριά σας επιβεβαιώθηκαν."
 
@@ -10603,7 +10659,7 @@ msgstr "Ο αριθμός ΦΠΑ σας είναι σε ουρά για επαλ
 msgid "Your VAT number will be validated when you save"
 msgstr "Ο αριθμός ΦΠΑ σας θα επαληθευτεί όταν αποθηκεύσετε"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:418
+#: src/components/routes/product-widget/CollectInformation/index.tsx:442
 msgid "Your waitlist offer has expired and we were unable to complete your order. Please rejoin the waitlist to be notified when more spots become available."
 msgstr "Η προσφορά λίστας αναμονής έληξε. Παρακαλώ εγγραφείτε ξανά για να ειδοποιηθείτε."
 
@@ -10611,7 +10667,7 @@ msgstr "Η προσφορά λίστας αναμονής έληξε. Παρακ
 msgid "YouTube"
 msgstr "YouTube"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:596
+#: src/components/routes/product-widget/CollectInformation/index.tsx:626
 msgid "ZIP / Postal Code"
 msgstr "ΤΚ / Ταχυδρομικός Κωδικός"
 
@@ -10621,24 +10677,6 @@ msgstr "ΤΚ / Ταχυδρομικός Κωδικός"
 msgid "Zip or Postal Code"
 msgstr "ΤΚ ή Ταχυδρομικός Κωδικός"
 
-#: src/components/routes/product-widget/CollectInformation/index.tsx:597
+#: src/components/routes/product-widget/CollectInformation/index.tsx:627
 msgid "ZIP or Postal Code"
 msgstr "ΤΚ ή Ταχυδρομικός Κωδικός"
-
-#: src/components/common/InlineOrderSummary/index.tsx:174
-#: src/components/routes/product-widget/SelectProducts/index.tsx:580
-msgid "Enter your code"
-msgstr "Εισαγάγετε τον κωδικό σας"
-
-#: src/components/routes/product-widget/CollectInformation/index.tsx:256
-msgid "Promo code applied"
-msgstr "Ο εκπτωτικός κωδικός εφαρμόστηκε"
-
-#: src/components/routes/product-widget/CollectInformation/index.tsx:258
-msgid "Promo code removed"
-msgstr "Ο εκπτωτικός κωδικός αφαιρέθηκε"
-
-#: src/components/common/InlineOrderSummary/index.tsx:154
-#: src/components/common/InlineOrderSummary/index.tsx:155
-msgid "Remove promo code"
-msgstr "Αφαίρεση εκπτωτικού κωδικού"

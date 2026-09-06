@@ -10,12 +10,16 @@ import {
     IconEye,
     IconCurrencyDollar,
     IconShoppingCart,
-    IconUserPlus
+    IconUserPlus,
+    IconCoins,
+    IconHeartHandshake,
+    IconPercentage
 } from "@tabler/icons-react";
 import {useGetMe} from "../../../../queries/useGetMe";
 import {useGetAdminStats} from "../../../../queries/useGetAdminStats";
 import {useGetUpcomingEvents} from "../../../../queries/useGetUpcomingEvents";
 import {useGetAdminDashboardData} from "../../../../queries/useGetAdminDashboardData";
+import {useGetPlatformRevenue} from "../../../../queries/useGetPlatformRevenue";
 import {eventHomepageUrl} from "../../../../utilites/urlHelper";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -31,6 +35,8 @@ const AdminDashboard = () => {
     const {data: stats, isLoading} = useGetAdminStats();
     const {data: upcomingEvents, isLoading: isLoadingEvents} = useGetUpcomingEvents(10);
     const {data: dashboardData, isLoading: isLoadingDashboard} = useGetAdminDashboardData({days: 14, limit: 10});
+    const revenueDays = 30;
+    const {data: revenue, isLoading: isLoadingRevenue} = useGetPlatformRevenue({days: revenueDays, months: 12});
 
     const formatEventDate = (dateString: string, eventTimezone?: string) => {
         const eventDate = dayjs.utc(dateString);
@@ -235,6 +241,156 @@ const AdminDashboard = () => {
                             </Group>
                         </Paper>
                     </SimpleGrid>
+                </div>
+
+                {/* Platform Earnings */}
+                <div>
+                    <Title order={2} mb="xs">
+                        <Group gap="xs">
+                            <IconCoins size={24} />
+                            <Trans>Platform Earnings</Trans>
+                        </Group>
+                    </Title>
+                    <Text size="xs" c="dimmed" mb="md">
+                        <Trans>What the platform actually collected: voluntary Dehors contributions and sales
+                            commissions. Approximate totals across all currencies.</Trans>
+                    </Text>
+                    <SimpleGrid cols={{base: 1, sm: 3}} spacing="md">
+                        <Paper shadow="sm" p="md" radius="md" withBorder>
+                            <Group gap="xs">
+                                <IconHeartHandshake size={32} color="var(--mantine-color-pink-6)" />
+                                <div style={{flex: 1}}>
+                                    <Text size="xs" c="dimmed" fw={500}>
+                                        {t`Dehors Contributions`}
+                                    </Text>
+                                    {isLoadingRevenue ? (
+                                        <Skeleton height={28} width={80} mt={4} />
+                                    ) : (
+                                        <>
+                                            <Text size="xl" fw={700}>
+                                                {formatCurrency(revenue?.contributions_total || 0)}
+                                            </Text>
+                                            <Text size="xs" c="dimmed">
+                                                <Trans>{formatNumber(revenue?.contributions_orders || 0)} orders</Trans>
+                                            </Text>
+                                        </>
+                                    )}
+                                </div>
+                            </Group>
+                        </Paper>
+
+                        <Paper shadow="sm" p="md" radius="md" withBorder>
+                            <Group gap="xs">
+                                <IconPercentage size={32} color="var(--mantine-color-indigo-6)" />
+                                <div style={{flex: 1}}>
+                                    <Text size="xs" c="dimmed" fw={500}>
+                                        {t`Platform Commissions`}
+                                    </Text>
+                                    {isLoadingRevenue ? (
+                                        <Skeleton height={28} width={80} mt={4} />
+                                    ) : (
+                                        <>
+                                            <Text size="xl" fw={700}>
+                                                {formatCurrency(revenue?.commissions_total || 0)}
+                                            </Text>
+                                            <Text size="xs" c="dimmed">
+                                                <Trans>{formatCurrency(revenue?.recent_commissions_total || 0)} in the
+                                                    last {revenueDays} days</Trans>
+                                            </Text>
+                                        </>
+                                    )}
+                                </div>
+                            </Group>
+                        </Paper>
+
+                        <Paper shadow="sm" p="md" radius="md" withBorder>
+                            <Group gap="xs">
+                                <IconCoins size={32} color="var(--mantine-color-teal-6)" />
+                                <div style={{flex: 1}}>
+                                    <Text size="xs" c="dimmed" fw={500}>
+                                        {t`Total Collected`}
+                                    </Text>
+                                    {isLoadingRevenue ? (
+                                        <Skeleton height={28} width={80} mt={4} />
+                                    ) : (
+                                        <>
+                                            <Text size="xl" fw={700}>
+                                                {formatCurrency(revenue?.total || 0)}
+                                            </Text>
+                                            <Text size="xs" c="dimmed">
+                                                <Trans>{formatCurrency(revenue?.recent_total || 0)} in the
+                                                    last {revenueDays} days</Trans>
+                                            </Text>
+                                        </>
+                                    )}
+                                </div>
+                            </Group>
+                        </Paper>
+                    </SimpleGrid>
+
+                    {!isLoadingRevenue && (revenue?.by_currency?.length || revenue?.monthly?.length) ? (
+                        <SimpleGrid cols={{base: 1, md: 2}} spacing="md" mt="md">
+                            {revenue?.by_currency && revenue.by_currency.length > 0 && (
+                                <Paper shadow="sm" radius="md" withBorder>
+                                    <Table striped highlightOnHover>
+                                        <Table.Thead>
+                                            <Table.Tr>
+                                                <Table.Th>{t`Currency`}</Table.Th>
+                                                <Table.Th ta="right">{t`Contributions`}</Table.Th>
+                                                <Table.Th ta="right">{t`Commissions`}</Table.Th>
+                                                <Table.Th ta="right">{t`Total`}</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody>
+                                            {revenue.by_currency.map((row) => (
+                                                <Table.Tr key={row.currency}>
+                                                    <Table.Td>
+                                                        <Badge variant="light">{row.currency}</Badge>
+                                                    </Table.Td>
+                                                    <Table.Td ta="right">
+                                                        {formatCurrency(row.contributions, row.currency)}
+                                                    </Table.Td>
+                                                    <Table.Td ta="right">
+                                                        {formatCurrency(row.commissions, row.currency)}
+                                                    </Table.Td>
+                                                    <Table.Td ta="right">
+                                                        <Text fw={600}>{formatCurrency(row.total, row.currency)}</Text>
+                                                    </Table.Td>
+                                                </Table.Tr>
+                                            ))}
+                                        </Table.Tbody>
+                                    </Table>
+                                </Paper>
+                            )}
+
+                            {revenue?.monthly && revenue.monthly.length > 0 && (
+                                <Paper shadow="sm" radius="md" withBorder>
+                                    <Table striped highlightOnHover>
+                                        <Table.Thead>
+                                            <Table.Tr>
+                                                <Table.Th>{t`Month`}</Table.Th>
+                                                <Table.Th ta="right">{t`Contributions`}</Table.Th>
+                                                <Table.Th ta="right">{t`Commissions`}</Table.Th>
+                                                <Table.Th ta="right">{t`Total`}</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody>
+                                            {revenue.monthly.map((row) => (
+                                                <Table.Tr key={row.month}>
+                                                    <Table.Td>{dayjs(`${row.month}-01`).format('MMM YYYY')}</Table.Td>
+                                                    <Table.Td ta="right">{formatCurrency(row.contributions)}</Table.Td>
+                                                    <Table.Td ta="right">{formatCurrency(row.commissions)}</Table.Td>
+                                                    <Table.Td ta="right">
+                                                        <Text fw={600}>{formatCurrency(row.total)}</Text>
+                                                    </Table.Td>
+                                                </Table.Tr>
+                                            ))}
+                                        </Table.Tbody>
+                                    </Table>
+                                </Paper>
+                            )}
+                        </SimpleGrid>
+                    ) : null}
                 </div>
 
                 {/* Popular Events */}

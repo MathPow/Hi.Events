@@ -210,6 +210,7 @@ use HiEvents\Http\Actions\Admin\Orders\GetAllOrdersAction;
 use HiEvents\Http\Actions\Admin\Attribution\GetUtmAttributionStatsAction;
 use HiEvents\Http\Actions\Admin\GetSystemInfoAction;
 use HiEvents\Http\Actions\Admin\Stats\GetAdminDashboardDataAction;
+use HiEvents\Http\Actions\Admin\Stats\GetPlatformRevenueAction;
 use HiEvents\Http\Actions\Admin\Stats\GetAdminStatsAction;
 use HiEvents\Http\Actions\Admin\RegistrationInvites\CreateRegistrationInviteAction;
 use HiEvents\Http\Actions\Admin\RegistrationInvites\GetAllRegistrationInvitesAction;
@@ -484,6 +485,7 @@ $router->prefix('/admin')->middleware(['auth:api'])->group(
     function (Router $router): void {
         $router->get('/stats', GetAdminStatsAction::class);
         $router->get('/dashboard', GetAdminDashboardDataAction::class);
+        $router->get('/platform-revenue', GetPlatformRevenueAction::class);
         $router->get('/attribution/stats', GetUtmAttributionStatsAction::class);
         $router->get('/accounts', GetAllAdminAccountsAction::class);
         $router->get('/accounts/{account_id}', GetAdminAccountAction::class);
