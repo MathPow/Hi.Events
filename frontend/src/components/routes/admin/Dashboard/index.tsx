@@ -65,6 +65,19 @@ const AdminDashboard = () => {
         }).format(amount);
     };
 
+    const revenueCurrency = revenue?.by_currency?.length === 1
+        ? revenue.by_currency[0].currency
+        : undefined;
+
+    const formatRevenue = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: revenueCurrency || 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(amount);
+    };
+
     const formatNumber = (num: number) => {
         return new Intl.NumberFormat().format(num);
     };
@@ -269,7 +282,7 @@ const AdminDashboard = () => {
                                     ) : (
                                         <>
                                             <Text size="xl" fw={700}>
-                                                {formatCurrency(revenue?.contributions_total || 0)}
+                                                {formatRevenue(revenue?.contributions_total || 0)}
                                             </Text>
                                             <Text size="xs" c="dimmed">
                                                 <Trans>{formatNumber(revenue?.contributions_orders || 0)} orders</Trans>
@@ -292,10 +305,10 @@ const AdminDashboard = () => {
                                     ) : (
                                         <>
                                             <Text size="xl" fw={700}>
-                                                {formatCurrency(revenue?.commissions_total || 0)}
+                                                {formatRevenue(revenue?.commissions_total || 0)}
                                             </Text>
                                             <Text size="xs" c="dimmed">
-                                                <Trans>{formatCurrency(revenue?.recent_commissions_total || 0)} in the
+                                                <Trans>{formatRevenue(revenue?.recent_commissions_total || 0)} in the
                                                     last {revenueDays} days</Trans>
                                             </Text>
                                         </>
@@ -316,10 +329,10 @@ const AdminDashboard = () => {
                                     ) : (
                                         <>
                                             <Text size="xl" fw={700}>
-                                                {formatCurrency(revenue?.total || 0)}
+                                                {formatRevenue(revenue?.total || 0)}
                                             </Text>
                                             <Text size="xs" c="dimmed">
-                                                <Trans>{formatCurrency(revenue?.recent_total || 0)} in the
+                                                <Trans>{formatRevenue(revenue?.recent_total || 0)} in the
                                                     last {revenueDays} days</Trans>
                                             </Text>
                                         </>

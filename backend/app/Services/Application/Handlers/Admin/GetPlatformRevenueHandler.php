@@ -30,6 +30,14 @@ class GetPlatformRevenueHandler
 
     private const BUCKET_MONTH = 'month';
 
+    private const PAID_CONTRIBUTION_FILTERS = <<<SQL
+        o.deleted_at IS NULL
+        AND o.status = :statusCompleted
+        AND o.payment_status = :paymentStatusPaid
+        AND o.platform_contribution > 0
+        AND (o.refund_status IS NULL OR o.refund_status <> :refundStatusRefunded)
+    SQL;
+
     public function __construct(
         private readonly ConfigRepository $config,
     )
@@ -75,6 +83,7 @@ class GetPlatformRevenueHandler
                 'commissions' => $row['commissions'],
                 'total' => $row['total'],
             ], $monthlyRows),
+            top_contributors: $this->getTopContributors($dto->topContributors),
         );
     }
 
@@ -125,6 +134,7 @@ class GetPlatformRevenueHandler
             : 'o.currency';
 
         $sinceCondition = $since !== null ? 'AND o.created_at >= :since' : '';
+        $filters = self::PAID_CONTRIBUTION_FILTERS;
 
         $query = <<<SQL
             SELECT
@@ -132,11 +142,7 @@ class GetPlatformRevenueHandler
                 COALESCE(SUM(o.platform_contribution), 0) AS amount,
                 COUNT(*) AS orders_count
             FROM orders o
-            WHERE o.deleted_at IS NULL
-              AND o.status = :statusCompleted
-              AND o.payment_status = :paymentStatusPaid
-              AND o.platform_contribution > 0
-              AND (o.refund_status IS NULL OR o.refund_status <> :refundStatusRefunded)
+            WHERE {$filters}
               {$sinceCondition}
             GROUP BY 1
         SQL;
@@ -186,6 +192,48 @@ class GetPlatformRevenueHandler
             'refundStatusRefunded' => OrderRefundStatus::REFUNDED->name,
             'since' => $since,
         ], static fn($value) => $value !== null));
+    }
+
+    /**
+     * Les plus gros contributeurs, regroupes par acheteur: une meme personne
+     * peut avoir donne sur plusieurs commandes.
+     */
+    private function getTopContributors(int $limit): array
+    {
+        $filters = self::PAID_CONTRIBUTION_FILTERS;
+
+        $query = <<<SQL
+            SELECT
+                lower(o.email) AS email,
+                (array_agg(o.first_name ORDER BY o.created_at DESC))[1] AS first_name,
+                (array_agg(o.last_name ORDER BY o.created_at DESC))[1] AS last_name,
+                o.currency AS currency,
+                SUM(o.platform_contribution) AS amount,
+                COUNT(*) AS orders_count,
+                MAX(o.created_at) AS last_contribution_at
+            FROM orders o
+            WHERE {$filters}
+            GROUP BY lower(o.email), o.currency
+            ORDER BY amount DESC
+            LIMIT :limit
+        SQL;
+
+        $rows = DB::select($query, [
+            'statusCompleted' => OrderStatus::COMPLETED->name,
+            'paymentStatusPaid' => OrderPaymentStatus::PAYMENT_RECEIVED->name,
+            'refundStatusRefunded' => OrderRefundStatus::REFUNDED->name,
+            'limit' => $limit,
+        ]);
+
+        return array_map(static fn($row) => [
+            'email' => $row->email,
+            'first_name' => $row->first_name,
+            'last_name' => $row->last_name,
+            'currency' => $row->currency,
+            'amount' => round((float)$row->amount, 2),
+            'orders_count' => (int)$row->orders_count,
+            'last_contribution_at' => $row->last_contribution_at,
+        ], $rows);
     }
 
     /**

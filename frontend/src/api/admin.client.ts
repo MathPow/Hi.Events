@@ -214,6 +214,16 @@ export interface PlatformRevenueByMonth {
     total: number;
 }
 
+export interface PlatformTopContributor {
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    currency: string;
+    amount: number;
+    orders_count: number;
+    last_contribution_at: string;
+}
+
 export interface PlatformRevenue {
     days: number;
     contributions_total: number;
@@ -226,11 +236,13 @@ export interface PlatformRevenue {
     recent_contributions_orders: number;
     by_currency: PlatformRevenueByCurrency[];
     monthly: PlatformRevenueByMonth[];
+    top_contributors: PlatformTopContributor[];
 }
 
 export interface GetPlatformRevenueParams {
     days?: number;
     months?: number;
+    topContributors?: number;
 }
 
 export interface GetAdminDashboardParams {
@@ -441,6 +453,7 @@ export const adminClient = {
             params: {
                 days: params.days || 30,
                 months: params.months || 12,
+                top_contributors: params.topContributors || 10,
             }
         });
         return response.data;

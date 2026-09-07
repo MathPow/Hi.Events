@@ -9,12 +9,16 @@ const PlatformRevenue = () => {
     const [days, setDays] = useState('30');
     const {data: revenue, isLoading} = useGetPlatformRevenue({days: Number(days), months: 12});
 
+    const singleCurrency = revenue?.by_currency?.length === 1
+        ? revenue.by_currency[0].currency
+        : undefined;
+
     const formatCurrency = (amount: number, currency?: string) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: currency || 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            currency: currency || singleCurrency || 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
         }).format(amount);
     };
 
@@ -150,6 +154,52 @@ const PlatformRevenue = () => {
                         </Paper>
                     )}
                 </div>
+
+                {!isLoading && revenue?.top_contributors && revenue.top_contributors.length > 0 && (
+                    <div>
+                        <Title order={2} mb="md">
+                            <Trans>Top contributors</Trans>
+                        </Title>
+                        <Paper shadow="sm" radius="md" withBorder>
+                            <Table striped highlightOnHover>
+                                <Table.Thead>
+                                    <Table.Tr>
+                                        <Table.Th>{t`Name`}</Table.Th>
+                                        <Table.Th>{t`Email`}</Table.Th>
+                                        <Table.Th ta="right">{t`Orders`}</Table.Th>
+                                        <Table.Th ta="right">{t`Last contribution`}</Table.Th>
+                                        <Table.Th ta="right">{t`Total`}</Table.Th>
+                                    </Table.Tr>
+                                </Table.Thead>
+                                <Table.Tbody>
+                                    {revenue.top_contributors.map((contributor) => (
+                                        <Table.Tr key={`${contributor.email}-${contributor.currency}`}>
+                                            <Table.Td>
+                                                <Text fw={500}>
+                                                    {[contributor.first_name, contributor.last_name]
+                                                        .filter(Boolean)
+                                                        .join(' ') || '-'}
+                                                </Text>
+                                            </Table.Td>
+                                            <Table.Td>
+                                                <Text size="sm" c="dimmed">{contributor.email}</Text>
+                                            </Table.Td>
+                                            <Table.Td ta="right">{formatNumber(contributor.orders_count)}</Table.Td>
+                                            <Table.Td ta="right">
+                                                {dayjs(contributor.last_contribution_at).format('MMM D, YYYY')}
+                                            </Table.Td>
+                                            <Table.Td ta="right">
+                                                <Text fw={600}>
+                                                    {formatCurrency(contributor.amount, contributor.currency)}
+                                                </Text>
+                                            </Table.Td>
+                                        </Table.Tr>
+                                    ))}
+                                </Table.Tbody>
+                            </Table>
+                        </Paper>
+                    </div>
+                )}
 
                 {!isLoading && revenue?.monthly && revenue.monthly.length > 0 && (
                     <div>

@@ -68,6 +68,18 @@ class GetPlatformRevenueHandlerTest extends TestCase
             [
                 $this->row(['bucket' => '2026-09', 'amount' => '15.00', 'orders_count' => 0]),
             ],
+            // Top contributors
+            [
+                $this->row([
+                    'email' => 'gros.donateur@example.com',
+                    'first_name' => 'Camille',
+                    'last_name' => 'Roy',
+                    'currency' => 'CAD',
+                    'amount' => '40.00',
+                    'orders_count' => 2,
+                    'last_contribution_at' => '2026-09-01 12:00:00',
+                ]),
+            ],
         ]);
 
         $result = $this->handler()->handle(new GetPlatformRevenueDTO(days: 30, months: 12));
@@ -103,6 +115,31 @@ class GetPlatformRevenueHandlerTest extends TestCase
         $this->assertSame(90.5, $result->monthly[0]['total']);
         $this->assertSame(15.0, $result->monthly[1]['commissions']);
         $this->assertSame(30, $result->days);
+
+        $this->assertSame([
+            [
+                'email' => 'gros.donateur@example.com',
+                'first_name' => 'Camille',
+                'last_name' => 'Roy',
+                'currency' => 'CAD',
+                'amount' => 40.0,
+                'orders_count' => 2,
+                'last_contribution_at' => '2026-09-01 12:00:00',
+            ],
+        ], $result->top_contributors);
+    }
+
+    public function testTopContributorsAreGroupedByBuyerAndCapped(): void
+    {
+        $this->mockDatabase([]);
+
+        $this->handler()->handle(new GetPlatformRevenueDTO(topContributors: 5));
+
+        $topContributorsQuery = end($this->queries);
+
+        $this->assertStringContainsString('GROUP BY lower(o.email), o.currency', $topContributorsQuery['query']);
+        $this->assertStringContainsString('ORDER BY amount DESC', $topContributorsQuery['query']);
+        $this->assertSame(5, $topContributorsQuery['bindings']['limit']);
     }
 
     public function testCommissionsExcludeTheContributionCarriedByTheStripeApplicationFee(): void

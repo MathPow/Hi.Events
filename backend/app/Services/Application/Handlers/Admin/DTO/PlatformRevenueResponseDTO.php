@@ -18,6 +18,7 @@ class PlatformRevenueResponseDTO extends BaseDataObject
         public readonly int    $recent_contributions_orders,
         public readonly array  $by_currency,
         public readonly array  $monthly,
+        public readonly array  $top_contributors,
     )
     {
     }
