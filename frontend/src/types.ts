@@ -27,7 +27,9 @@ export type ConfigKeys =
     | 'VITE_PLATFORM_SUPPORT_ENABLED'
     | 'VITE_PLATFORM_SUPPORT_LABEL'
     | 'VITE_PLATFORM_SUPPORT_DESCRIPTION'
-    | 'VITE_PLATFORM_SUPPORT_DEFAULT';
+    | 'VITE_PLATFORM_SUPPORT_DEFAULT'
+    | 'VITE_POSTHOG_KEY'
+    | 'VITE_POSTHOG_HOST';
 
 export enum StripePlatform {
     Canada = 'ca',

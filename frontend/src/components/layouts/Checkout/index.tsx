@@ -22,6 +22,7 @@ import {detectMode} from "../../../utilites/themeUtils.ts";
 import {CheckoutThemeProvider} from "./CheckoutThemeProvider.tsx";
 import {useOrganizerTrackingPixels} from "../../../hooks/useOrganizerTrackingPixels";
 import {trackPixelEvent, hasActivePixels} from "../../../utilites/trackingPixels";
+import {capturePostHogEvent} from "../../../utilites/posthog.ts";
 import {CookieConsentBanner} from "../../common/CookieConsentBanner";
 import {useGetEventPublic} from "../../../queries/useGetEventPublic.ts";
 
@@ -175,6 +176,27 @@ const Checkout = () => {
             contentName: event.title,
             contentId: event.id,
             transactionId: order.short_id,
+        });
+
+        if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem(key, '1');
+        }
+    }, [order?.status, order?.short_id, consentGranted]);
+
+    useEffect(() => {
+        if (!event || !order || !consentGranted) return;
+        if (!orderIsCompleted && !orderIsAwaitingOfflinePayment) return;
+
+        const key = `posthog_order_tracked_${order.short_id}`;
+        if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(key)) return;
+
+        capturePostHogEvent('order_completed', {
+            event_id: event.id,
+            event_title: event.title,
+            order_status: order.status,
+            value: Number(order.total_gross) || 0,
+            currency: order.currency,
+            attendee_count: order.attendees?.length ?? 0,
         });
 
         if (typeof sessionStorage !== 'undefined') {

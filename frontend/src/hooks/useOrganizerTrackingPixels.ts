@@ -68,6 +68,7 @@ export function useOrganizerTrackingPixels(
         setConsentState(granted ? 'granted' : 'denied');
         updateGoogleConsentMode(granted);
         setConsentGranted(granted);
+        window.dispatchEvent(new CustomEvent('hi_consent_change', {detail: {granted}}));
     }, []);
 
     // Don't show per-page banner if the global banner is already handling consent

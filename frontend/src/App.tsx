@@ -23,6 +23,7 @@ import {ThirdPartyScripts} from "./components/common/ThirdPartyScripts";
 import {getConfig} from "./utilites/config.ts";
 import {CookieConsentBanner} from "./components/common/CookieConsentBanner";
 import {isConsentPending, setConsentState, updateGoogleConsentMode} from "./utilites/trackingPixels/consent";
+import {initPostHog} from "./utilites/posthog.ts";
 import "./utilites/dateLocales.ts";
 
 declare global {
@@ -51,6 +52,7 @@ export const App: FC<
 
     useEffect(() => {
         setIsLoadedOnBrowser(!isSsr());
+        initPostHog();
     }, []);
 
     return (
