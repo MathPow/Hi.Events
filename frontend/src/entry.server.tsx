@@ -14,6 +14,10 @@ const getLocale = (req: express.Request): string => {
         return req.cookies.locale;
     }
 
+    if (req.originalUrl.split('?')[0] === '/') {
+        return 'fr';
+    }
+
     const acceptLanguage = req.headers['accept-language'];
     return acceptLanguage ? acceptLanguage.split(',')[0].split('-')[0] : 'en';
 }

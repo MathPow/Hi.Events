@@ -77,6 +77,10 @@ export const getClientLocale = () => {
             return getSupportedLocale(storedLocale);
         }
 
+        if (window.location.pathname === '/') {
+            return 'fr';
+        }
+
         return getSupportedLocale(window.navigator.language);
     }
 

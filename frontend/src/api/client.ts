@@ -42,8 +42,9 @@ api.interceptors.response.use(
             return Promise.reject(error);
         }
         const { status } = error.response;
-        const currentPath = window?.location.pathname;
-        const isAllowedUnauthenticatedPath = ALLOWED_UNAUTHENTICATED_PATHS.some(path => currentPath.includes(path));
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+        const isAllowedUnauthenticatedPath = currentPath === '/'
+            || ALLOWED_UNAUTHENTICATED_PATHS.some(path => currentPath.includes(path));
         const isManageEventPath = currentPath.startsWith('/manage/event/');
         const isAuthError = status === 401 || status === 403;
 
