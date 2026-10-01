@@ -43,6 +43,7 @@ import {ShareComponent} from "../../common/ShareIcon";
 import {EventDateRange} from "../../common/EventDateRange";
 import {CalendarOptionsPopover} from "../../common/CalendarOptionsPopover";
 import {isDateInPast} from "../../../utilites/dates.ts";
+import {findDefaultTicket, StickyBuyBar} from "./StickyBuyBar";
 
 interface EventHomepageProps {
     event?: Event;
@@ -179,6 +180,9 @@ const EventHomepage = ({...loaderData}: EventHomepageProps) => {
 
     const statusBadge = getStatusBadge();
 
+    const defaultTicket = findDefaultTicket(event);
+    const hasOtherProducts = (event.product_categories?.flatMap(c => c.products || []) || []).length > 1;
+
     const mapUrl = event.settings?.maps_url || (locationDetails ? getGoogleMapsUrl(locationDetails) : null);
 
     return (
@@ -232,7 +236,7 @@ const EventHomepage = ({...loaderData}: EventHomepageProps) => {
                 <AccentBlobs accentColor={themeSettings.accent} mode={themeSettings.mode}/>
 
                 <div className={classes.container}>
-                    <div className={classes.wrapper}>
+                    <div className={`${classes.wrapper} ${defaultTicket ? classes.withStickyBuyBar : ''}`}>
                         {/* Main unified card */}
                         <div className={classes.mainCard}>
                             {/* Hero Section */}
@@ -635,8 +639,18 @@ const EventHomepage = ({...loaderData}: EventHomepageProps) => {
                         </div>
                     </div>
 
+                    {defaultTicket && (
+                        <StickyBuyBar
+                            event={event}
+                            product={defaultTicket}
+                            visible={showScrollButton}
+                            promoCode={promoCodeValid ? promoCode : null}
+                            onSeeAllTickets={hasOtherProducts ? scrollToTickets : undefined}
+                        />
+                    )}
+
                     {/* Floating Scroll Button */}
-                    {showScrollButton && (
+                    {!defaultTicket && showScrollButton && (
                         <button
                             className={classes.scrollToTicketsButton}
                             onClick={scrollToTickets}
