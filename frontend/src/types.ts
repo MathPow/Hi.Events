@@ -337,6 +337,7 @@ export interface Event extends EventBase {
     organizer_id?: IdParam;
     location_details?: VenueAddress;
     statistics?: EventStatistics;
+    has_promo_codes?: boolean;
 }
 
 export interface EventStatistics {

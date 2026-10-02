@@ -549,7 +549,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                         })}
                     </div>
 
-                    <div className={'hi-promo-code-row'}>
+                    {(event?.has_promo_codes !== false || form.values.promo_code) && <div className={'hi-promo-code-row'}>
                         {form.values.promo_code ? (
                             <div className={'hi-promo-code-applied'}>
                                 <span><b>{form.values.promo_code}</b> {t`applied`}</span>
@@ -594,7 +594,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                 </Group>
                             </>
                         )}
-                    </div>
+                    </div>}
 
                     <div className={'hi-footer-row'}>
                         {event?.settings?.product_page_message && (

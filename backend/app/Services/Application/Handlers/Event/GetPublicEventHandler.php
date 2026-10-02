@@ -11,6 +11,7 @@ use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\DomainObjects\ProductCategoryDomainObject;
 use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
+use HiEvents\DomainObjects\PromoCodeDomainObject;
 use HiEvents\DomainObjects\TaxAndFeesDomainObject;
 use HiEvents\Repository\Eloquent\Value\OrderAndDirection;
 use HiEvents\Repository\Eloquent\Value\Relationship;
@@ -55,14 +56,16 @@ class GetPublicEventHandler
             ], name: 'organizer'))
             ->findById($data->eventId);
 
-        $promoCodeDomainObject = $this->promoCodeRepository->findFirstWhere([
-            PromoCodeDomainObjectAbstract::EVENT_ID => $data->eventId,
-            PromoCodeDomainObjectAbstract::CODE => $data->promoCode,
-        ]);
+        $validPromoCodes = $this->promoCodeRepository
+            ->findWhere([PromoCodeDomainObjectAbstract::EVENT_ID => $data->eventId])
+            ->filter(fn(PromoCodeDomainObject $promoCode) => $promoCode->isValid())
+            ->values();
 
-        if (!$promoCodeDomainObject?->isValid()) {
-            $promoCodeDomainObject = null;
-        }
+        $event->setPromoCodes($validPromoCodes);
+
+        $promoCodeDomainObject = $data->promoCode
+            ? $validPromoCodes->first(fn(PromoCodeDomainObject $promoCode) => $promoCode->getCode() === $data->promoCode)
+            : null;
 
         if (!$data->isAuthenticated) {
             $this->eventPageViewIncrementService->increment($data->eventId, $data->ipAddress);

@@ -45,11 +45,34 @@ class GetPublicEventHandlerTest extends TestCase
         $event->setProductCategories(collect());
 
         $this->setupEventRepositoryMock($event, $data->eventId);
-        $this->promoCodeRepository->shouldReceive('findFirstWhere')->once()->andReturnNull();
-        $this->ticketFilterService->shouldReceive('filter')->once()->withAnyArgs()->andReturn(collect());
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect());
+        $this->ticketFilterService->shouldReceive('filter')->once()->with(m::any(), null)->andReturn(collect());
         $this->eventPageViewIncrementService->shouldReceive('increment')->once()->with($data->eventId, $data->ipAddress);
 
-        $this->handler->handle($data);
+        $result = $this->handler->handle($data);
+
+        $this->assertTrue($result->getPromoCodes()->isEmpty());
+    }
+
+    public function testHandleExposesOnlyValidPromoCodes(): void
+    {
+        $data = new GetPublicEventDTO(eventId: 1, isAuthenticated: false, ipAddress: '127.0.0.1', promoCode: null);
+        $event = new EventDomainObject();
+        $event->setProductCategories(collect());
+        $expired = m::mock(PromoCodeDomainObject::class)->makePartial();
+        $expired->shouldReceive('isValid')->andReturn(false);
+        $active = m::mock(PromoCodeDomainObject::class)->makePartial();
+        $active->shouldReceive('isValid')->andReturn(true);
+
+        $this->setupEventRepositoryMock($event, $data->eventId);
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect([$expired, $active]));
+        $this->ticketFilterService->shouldReceive('filter')->once()->with(m::any(), null)->andReturn(collect());
+        $this->eventPageViewIncrementService->shouldReceive('increment')->once();
+
+        $result = $this->handler->handle($data);
+
+        $this->assertCount(1, $result->getPromoCodes());
+        $this->assertSame($active, $result->getPromoCodes()->first());
     }
 
     public function testHandleWithInvalidPromoCode(): void
@@ -59,10 +82,11 @@ class GetPublicEventHandlerTest extends TestCase
         $event->setProductCategories(collect());
         $promoCode = m::mock(PromoCodeDomainObject::class)->makePartial();
         $promoCode->shouldReceive('isValid')->andReturn(false);
+        $promoCode->shouldReceive('getCode')->andReturn('invalid');
 
         $this->setupEventRepositoryMock($event, $data->eventId);
-        $this->promoCodeRepository->shouldReceive('findFirstWhere')->once()->andReturn($promoCode);
-        $this->ticketFilterService->shouldReceive('filter')->once()->withAnyArgs()->andReturn(collect());
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect([$promoCode]));
+        $this->ticketFilterService->shouldReceive('filter')->once()->with(m::any(), null)->andReturn(collect());
         $this->eventPageViewIncrementService->shouldReceive('increment')->once()->with($data->eventId, $data->ipAddress);
 
         $this->handler->handle($data);
@@ -75,10 +99,11 @@ class GetPublicEventHandlerTest extends TestCase
         $event->setProductCategories(collect());
         $promoCode = m::mock(PromoCodeDomainObject::class)->makePartial();
         $promoCode->shouldReceive('isValid')->andReturn(true);
+        $promoCode->shouldReceive('getCode')->andReturn('VALID');
 
         $this->setupEventRepositoryMock($event, $data->eventId);
-        $this->promoCodeRepository->shouldReceive('findFirstWhere')->once()->andReturn($promoCode);
-        $this->ticketFilterService->shouldReceive('filter')->once()->withAnyArgs()->andReturn(collect());
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect([$promoCode]));
+        $this->ticketFilterService->shouldReceive('filter')->once()->with(m::any(), $promoCode)->andReturn(collect());
         $this->eventPageViewIncrementService->shouldReceive('increment')->once()->with($data->eventId, $data->ipAddress);
 
         $this->handler->handle($data);
