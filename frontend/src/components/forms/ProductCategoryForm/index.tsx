@@ -30,7 +30,7 @@ export const ProductCategoryForm = ({form}: ProductCategoryFormProps) => {
                 description={t`An optional description of this category to display on the event page.`}
                 onChange={(value) => form.setFieldValue("description", value)}
                 value={form.values.description || ""}
-                maxLength={5000}
+                maxLength={10000}
             />
 
             <Switch
