@@ -24,6 +24,8 @@ class PlatformFeePreviewResource extends BaseResource
             'pass_processing_fee_to_buyer' => $this->passProcessingFeeToBuyer,
             'processing_fee_when_platform_fee_passed' => $this->processingFeeWhenPlatformFeePassed,
             'processing_fee_when_platform_fee_absorbed' => $this->processingFeeWhenPlatformFeeAbsorbed,
+            'stripe_fee_percentage' => $this->stripeFeePercentage,
+            'stripe_fee_fixed' => $this->stripeFeeFixed,
         ];
     }
 }

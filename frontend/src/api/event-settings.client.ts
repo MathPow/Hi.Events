@@ -13,6 +13,8 @@ export interface PlatformFeePreview {
     pass_processing_fee_to_buyer?: boolean;
     processing_fee_when_platform_fee_passed?: number;
     processing_fee_when_platform_fee_absorbed?: number;
+    stripe_fee_percentage?: number;
+    stripe_fee_fixed?: number;
 }
 
 export const eventsSettingsClient = {

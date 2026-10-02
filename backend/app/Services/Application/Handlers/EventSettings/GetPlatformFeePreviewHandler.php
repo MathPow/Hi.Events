@@ -12,6 +12,7 @@ use HiEvents\Services\Application\Handlers\EventSettings\DTO\GetPlatformFeePrevi
 use HiEvents\Services\Application\Handlers\EventSettings\DTO\PlatformFeePreviewResponseDTO;
 use HiEvents\Services\Domain\Order\OrderProcessingFeePassThroughService;
 use HiEvents\Services\Infrastructure\CurrencyConversion\CurrencyConversionClientInterface;
+use Illuminate\Config\Repository;
 
 class GetPlatformFeePreviewHandler
 {
@@ -20,6 +21,7 @@ class GetPlatformFeePreviewHandler
         private readonly EventRepositoryInterface          $eventRepository,
         private readonly CurrencyConversionClientInterface $currencyConversionClient,
         private readonly OrderProcessingFeePassThroughService $processingFeeService,
+        private readonly Repository                        $config,
     )
     {
     }
@@ -50,6 +52,8 @@ class GetPlatformFeePreviewHandler
                 samplePrice: $dto->price,
                 platformFee: 0,
                 total: $dto->price,
+                stripeFeePercentage: (float)$this->config->get('services.stripe.processing_fee_percentage', 0),
+                stripeFeeFixed: (float)$this->config->get('services.stripe.processing_fee_fixed', 0),
             );
         }
 
@@ -89,6 +93,8 @@ class GetPlatformFeePreviewHandler
                 currency: $eventCurrency,
                 platformFeePassed: false,
             ),
+            stripeFeePercentage: (float)$this->config->get('services.stripe.processing_fee_percentage', 0),
+            stripeFeeFixed: (float)$this->config->get('services.stripe.processing_fee_fixed', 0),
         );
     }
 

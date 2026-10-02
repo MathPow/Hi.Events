@@ -24,9 +24,20 @@ interface FeeBreakdownProps {
     currency: string;
     passToBuyer: boolean;
     processingFee?: number;
+    stripeFeePercentage?: number;
+    stripeFeeFixed?: number;
 }
 
-const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuyer, processingFee = 0}: FeeBreakdownProps) => {
+const FeeBreakdown = ({
+    ticketPrice,
+    feePercentage,
+    fixedFee,
+    currency,
+    passToBuyer,
+    processingFee = 0,
+    stripeFeePercentage = 0,
+    stripeFeeFixed = 0,
+}: FeeBreakdownProps) => {
     const percentageRate = feePercentage / 100;
 
     let platformFee: number;
@@ -45,7 +56,10 @@ const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuy
     const roundedPlatformFee = Math.round(platformFee * 100) / 100;
 
     const buyerPays = (passToBuyer ? ticketPrice + roundedPlatformFee : ticketPrice) + processingFee;
-    const organizerReceives = passToBuyer ? ticketPrice : ticketPrice - roundedPlatformFee;
+    const stripeFees = processingFee > 0 || buyerPays <= 0
+        ? 0
+        : Math.round(((buyerPays * stripeFeePercentage / 100) + stripeFeeFixed) * 100) / 100;
+    const organizerReceives = (passToBuyer ? ticketPrice : ticketPrice - roundedPlatformFee) - stripeFees;
 
     return (
         <div className={classes.breakdown}>
@@ -70,6 +84,12 @@ const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuy
                 <span className={classes.breakdownLabelBold}>{t`Buyer pays`}</span>
                 <span className={classes.breakdownValueBold}>{formatCurrency(buyerPays, currency)}</span>
             </div>
+            {stripeFees > 0 && (
+                <div className={classes.breakdownRow}>
+                    <span className={classes.breakdownLabel}>{t`Stripe fees`}</span>
+                    <span className={classes.breakdownValue}>-{formatCurrency(stripeFees, currency)}</span>
+                </div>
+            )}
             <div className={classes.breakdownRow}>
                 <span className={classes.breakdownLabelBold}>{t`You receive`}</span>
                 <span className={classes.breakdownValueBold}>{formatCurrency(organizerReceives, currency)}</span>
@@ -234,6 +254,8 @@ export const PlatformFeesSettings = ({
                                         currency={feeCurrency}
                                         passToBuyer={true}
                                         processingFee={processingFeeFor(true)}
+                                        stripeFeePercentage={feePreview?.stripe_fee_percentage}
+                                        stripeFeeFixed={feePreview?.stripe_fee_fixed}
                                     />
                                 </Card>
                             </Grid.Col>
@@ -258,6 +280,8 @@ export const PlatformFeesSettings = ({
                                         currency={feeCurrency}
                                         passToBuyer={false}
                                         processingFee={processingFeeFor(false)}
+                                        stripeFeePercentage={feePreview?.stripe_fee_percentage}
+                                        stripeFeeFixed={feePreview?.stripe_fee_fixed}
                                     />
                                 </Card>
                             </Grid.Col>

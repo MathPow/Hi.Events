@@ -14,6 +14,7 @@ use HiEvents\Services\Application\Handlers\EventSettings\GetPlatformFeePreviewHa
 use HiEvents\Services\Domain\Order\OrderProcessingFeePassThroughService;
 use HiEvents\Services\Infrastructure\CurrencyConversion\CurrencyConversionClientInterface;
 use HiEvents\Values\MoneyValue;
+use Illuminate\Config\Repository;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tests\TestCase;
@@ -26,6 +27,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
     private EventRepositoryInterface $eventRepository;
     private CurrencyConversionClientInterface $currencyConversionClient;
     private OrderProcessingFeePassThroughService $processingFeeService;
+    private Repository $config;
     private GetPlatformFeePreviewHandler $handler;
 
     protected function setUp(): void
@@ -36,6 +38,12 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $this->eventRepository = Mockery::mock(EventRepositoryInterface::class);
         $this->currencyConversionClient = Mockery::mock(CurrencyConversionClientInterface::class);
         $this->processingFeeService = Mockery::mock(OrderProcessingFeePassThroughService::class);
+        $this->config = Mockery::mock(Repository::class);
+        $this->config->shouldReceive('get')->andReturnUsing(fn(string $key, $default = null) => match ($key) {
+            'services.stripe.processing_fee_percentage' => 2.9,
+            'services.stripe.processing_fee_fixed' => 0.30,
+            default => $default,
+        });
 
         $this->eventRepository->shouldReceive('loadRelation')->andReturnSelf();
 
@@ -44,6 +52,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
             $this->eventRepository,
             $this->currencyConversionClient,
             $this->processingFeeService,
+            $this->config,
         );
     }
 
@@ -238,5 +247,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $this->assertTrue($result->passProcessingFeeToBuyer);
         $this->assertEquals(1.80, $result->processingFeeWhenPlatformFeePassed);
         $this->assertEquals(1.75, $result->processingFeeWhenPlatformFeeAbsorbed);
+        $this->assertEquals(2.9, $result->stripeFeePercentage);
+        $this->assertEquals(0.30, $result->stripeFeeFixed);
     }
 }
