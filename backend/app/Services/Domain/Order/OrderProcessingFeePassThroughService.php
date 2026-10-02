@@ -44,6 +44,7 @@ class OrderProcessingFeePassThroughService
         int                              $quantity,
         string                           $currency,
         float                            $platformFee = 0.0,
+        ?bool                            $platformFeePassed = null,
     ): float
     {
         if (!$this->isEnabled($eventSettings) || $total <= 0) {
@@ -67,7 +68,7 @@ class OrderProcessingFeePassThroughService
             return Currency::round($stripeFixed + ($total * $stripeRate));
         }
 
-        $grossTotal = $this->platformFeeService->isEnabled($eventSettings)
+        $grossTotal = ($platformFeePassed ?? $this->platformFeeService->isEnabled($eventSettings))
             ? ($total + $platformFixed + $stripeFixed) / $denominator
             : (($total * (1 - $platformRate)) + $stripeFixed) / $denominator;
 

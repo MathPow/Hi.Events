@@ -4,11 +4,13 @@ namespace HiEvents\Services\Application\Handlers\EventSettings;
 
 use Brick\Money\Currency;
 use HiEvents\DomainObjects\AccountConfigurationDomainObject;
+use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Services\Application\Handlers\EventSettings\DTO\GetPlatformFeePreviewDTO;
 use HiEvents\Services\Application\Handlers\EventSettings\DTO\PlatformFeePreviewResponseDTO;
+use HiEvents\Services\Domain\Order\OrderProcessingFeePassThroughService;
 use HiEvents\Services\Infrastructure\CurrencyConversion\CurrencyConversionClientInterface;
 
 class GetPlatformFeePreviewHandler
@@ -17,13 +19,16 @@ class GetPlatformFeePreviewHandler
         private readonly AccountRepositoryInterface        $accountRepository,
         private readonly EventRepositoryInterface          $eventRepository,
         private readonly CurrencyConversionClientInterface $currencyConversionClient,
+        private readonly OrderProcessingFeePassThroughService $processingFeeService,
     )
     {
     }
 
     public function handle(GetPlatformFeePreviewDTO $dto): PlatformFeePreviewResponseDTO
     {
-        $event = $this->eventRepository->findById($dto->eventId);
+        $event = $this->eventRepository
+            ->loadRelation(EventSettingDomainObject::class)
+            ->findById($dto->eventId);
         $eventCurrency = $event->getCurrency();
 
         $account = $this->accountRepository
@@ -55,6 +60,7 @@ class GetPlatformFeePreviewHandler
         $fixedFeeConverted = $this->convertFixedFee($fixedFeeOriginal, $feeCurrency, $eventCurrency);
 
         $platformFee = $this->calculatePlatformFee($fixedFeeConverted, $percentageFee, $dto->price);
+        $eventSettings = $event->getEventSettings();
 
         return new PlatformFeePreviewResponseDTO(
             eventCurrency: $eventCurrency,
@@ -65,6 +71,24 @@ class GetPlatformFeePreviewHandler
             samplePrice: $dto->price,
             platformFee: $platformFee,
             total: round($dto->price + $platformFee, 2),
+            passProcessingFeeToBuyer: $eventSettings !== null && $this->processingFeeService->isEnabled($eventSettings),
+            processingFeeWhenPlatformFeePassed: $eventSettings === null ? 0 : $this->processingFeeService->calculateProcessingFee(
+                accountConfiguration: $configuration,
+                eventSettings: $eventSettings,
+                total: $dto->price,
+                quantity: 1,
+                currency: $eventCurrency,
+                platformFee: $platformFee,
+                platformFeePassed: true,
+            ),
+            processingFeeWhenPlatformFeeAbsorbed: $eventSettings === null ? 0 : $this->processingFeeService->calculateProcessingFee(
+                accountConfiguration: $configuration,
+                eventSettings: $eventSettings,
+                total: $dto->price,
+                quantity: 1,
+                currency: $eventCurrency,
+                platformFeePassed: false,
+            ),
         );
     }
 

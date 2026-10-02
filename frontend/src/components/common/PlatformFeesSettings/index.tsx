@@ -23,9 +23,10 @@ interface FeeBreakdownProps {
     fixedFee: number;
     currency: string;
     passToBuyer: boolean;
+    processingFee?: number;
 }
 
-const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuyer}: FeeBreakdownProps) => {
+const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuyer, processingFee = 0}: FeeBreakdownProps) => {
     const percentageRate = feePercentage / 100;
 
     let platformFee: number;
@@ -43,7 +44,7 @@ const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuy
     }
     const roundedPlatformFee = Math.round(platformFee * 100) / 100;
 
-    const buyerPays = passToBuyer ? ticketPrice + roundedPlatformFee : ticketPrice;
+    const buyerPays = (passToBuyer ? ticketPrice + roundedPlatformFee : ticketPrice) + processingFee;
     const organizerReceives = passToBuyer ? ticketPrice : ticketPrice - roundedPlatformFee;
 
     return (
@@ -56,6 +57,12 @@ const FeeBreakdown = ({ticketPrice, feePercentage, fixedFee, currency, passToBuy
                 <div className={classes.breakdownRow}>
                     <span className={classes.breakdownLabel}>{t`Platform fee`}</span>
                     <span className={classes.breakdownValue}>+{formatCurrency(roundedPlatformFee, currency)}</span>
+                </div>
+            )}
+            {processingFee > 0 && (
+                <div className={classes.breakdownRow}>
+                    <span className={classes.breakdownLabel}>{t`Processing fee`}</span>
+                    <span className={classes.breakdownValue}>+{formatCurrency(processingFee, currency)}</span>
                 </div>
             )}
             <div className={classes.breakdownDivider} />
@@ -114,6 +121,15 @@ export const PlatformFeesSettings = ({
     const configCurrency = configuration?.application_fees?.currency ?? 'USD';
 
     const numericPrice = typeof samplePrice === 'number' ? samplePrice : parseFloat(samplePrice) || 0;
+
+    const processingFeeFor = (platformFeePassed: boolean) => {
+        if (!feePreview?.pass_processing_fee_to_buyer || numericPrice <= 0) {
+            return 0;
+        }
+        return (platformFeePassed
+            ? feePreview.processing_fee_when_platform_fee_passed
+            : feePreview.processing_fee_when_platform_fee_absorbed) ?? 0;
+    };
 
     const handlePriceChange = (value: number | string) => {
         setSamplePrice(value);
@@ -217,6 +233,7 @@ export const PlatformFeesSettings = ({
                                         fixedFee={fixedFee}
                                         currency={feeCurrency}
                                         passToBuyer={true}
+                                        processingFee={processingFeeFor(true)}
                                     />
                                 </Card>
                             </Grid.Col>
@@ -240,6 +257,7 @@ export const PlatformFeesSettings = ({
                                         fixedFee={fixedFee}
                                         currency={feeCurrency}
                                         passToBuyer={false}
+                                        processingFee={processingFeeFor(false)}
                                     />
                                 </Card>
                             </Grid.Col>

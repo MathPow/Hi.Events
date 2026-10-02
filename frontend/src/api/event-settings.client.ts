@@ -10,6 +10,9 @@ export interface PlatformFeePreview {
     sample_price: number;
     platform_fee: number;
     total: number;
+    pass_processing_fee_to_buyer?: boolean;
+    processing_fee_when_platform_fee_passed?: number;
+    processing_fee_when_platform_fee_absorbed?: number;
 }
 
 export const eventsSettingsClient = {

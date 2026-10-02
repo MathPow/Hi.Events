@@ -21,6 +21,9 @@ class PlatformFeePreviewResource extends BaseResource
             'sample_price' => $this->samplePrice,
             'platform_fee' => $this->platformFee,
             'total' => $this->total,
+            'pass_processing_fee_to_buyer' => $this->passProcessingFeeToBuyer,
+            'processing_fee_when_platform_fee_passed' => $this->processingFeeWhenPlatformFeePassed,
+            'processing_fee_when_platform_fee_absorbed' => $this->processingFeeWhenPlatformFeeAbsorbed,
         ];
     }
 }

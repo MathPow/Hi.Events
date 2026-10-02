@@ -6,10 +6,12 @@ use Brick\Money\Currency;
 use HiEvents\DomainObjects\AccountConfigurationDomainObject;
 use HiEvents\DomainObjects\AccountDomainObject;
 use HiEvents\DomainObjects\EventDomainObject;
+use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Services\Application\Handlers\EventSettings\DTO\GetPlatformFeePreviewDTO;
 use HiEvents\Services\Application\Handlers\EventSettings\GetPlatformFeePreviewHandler;
+use HiEvents\Services\Domain\Order\OrderProcessingFeePassThroughService;
 use HiEvents\Services\Infrastructure\CurrencyConversion\CurrencyConversionClientInterface;
 use HiEvents\Values\MoneyValue;
 use Mockery;
@@ -23,6 +25,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
     private AccountRepositoryInterface $accountRepository;
     private EventRepositoryInterface $eventRepository;
     private CurrencyConversionClientInterface $currencyConversionClient;
+    private OrderProcessingFeePassThroughService $processingFeeService;
     private GetPlatformFeePreviewHandler $handler;
 
     protected function setUp(): void
@@ -32,11 +35,15 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $this->accountRepository = Mockery::mock(AccountRepositoryInterface::class);
         $this->eventRepository = Mockery::mock(EventRepositoryInterface::class);
         $this->currencyConversionClient = Mockery::mock(CurrencyConversionClientInterface::class);
+        $this->processingFeeService = Mockery::mock(OrderProcessingFeePassThroughService::class);
+
+        $this->eventRepository->shouldReceive('loadRelation')->andReturnSelf();
 
         $this->handler = new GetPlatformFeePreviewHandler(
             $this->accountRepository,
             $this->eventRepository,
-            $this->currencyConversionClient
+            $this->currencyConversionClient,
+            $this->processingFeeService,
         );
     }
 
@@ -46,6 +53,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $price = 100.0;
 
         $event = Mockery::mock(EventDomainObject::class);
+        $event->shouldReceive('getEventSettings')->andReturnNull();
         $event->shouldReceive('getCurrency')->andReturn('USD');
 
         $configuration = Mockery::mock(AccountConfigurationDomainObject::class);
@@ -86,6 +94,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $price = 100.0;
 
         $event = Mockery::mock(EventDomainObject::class);
+        $event->shouldReceive('getEventSettings')->andReturnNull();
         $event->shouldReceive('getCurrency')->andReturn('EUR');
 
         $configuration = Mockery::mock(AccountConfigurationDomainObject::class);
@@ -134,6 +143,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $price = 100.0;
 
         $event = Mockery::mock(EventDomainObject::class);
+        $event->shouldReceive('getEventSettings')->andReturnNull();
         $event->shouldReceive('getCurrency')->andReturn('USD');
 
         $account = Mockery::mock(AccountDomainObject::class);
@@ -165,6 +175,7 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         $price = 100.0;
 
         $event = Mockery::mock(EventDomainObject::class);
+        $event->shouldReceive('getEventSettings')->andReturnNull();
         $event->shouldReceive('getCurrency')->andReturn('USD');
 
         $configuration = Mockery::mock(AccountConfigurationDomainObject::class);
@@ -191,5 +202,41 @@ class GetPlatformFeePreviewHandlerTest extends TestCase
         // With 0% percentage, just the fixed fee
         $this->assertEquals(0.50, $result->platformFee);
         $this->assertEquals(100.50, $result->total);
+    }
+
+    public function testPreviewIncludesProcessingFeeForBothScenarios(): void
+    {
+        $eventId = 1;
+        $settings = Mockery::mock(EventSettingDomainObject::class);
+
+        $event = Mockery::mock(EventDomainObject::class);
+        $event->shouldReceive('getCurrency')->andReturn('CAD');
+        $event->shouldReceive('getEventSettings')->andReturn($settings);
+
+        $configuration = Mockery::mock(AccountConfigurationDomainObject::class);
+        $configuration->shouldReceive('getApplicationFeeCurrency')->andReturn('CAD');
+        $configuration->shouldReceive('getFixedApplicationFee')->andReturn(0.0);
+        $configuration->shouldReceive('getPercentageApplicationFee')->andReturn(0.0);
+
+        $account = Mockery::mock(AccountDomainObject::class);
+        $account->shouldReceive('getConfiguration')->andReturn($configuration);
+
+        $this->eventRepository->shouldReceive('findById')->with($eventId)->andReturn($event);
+        $this->accountRepository->shouldReceive('loadRelation')->andReturnSelf();
+        $this->accountRepository->shouldReceive('findByEventId')->with($eventId)->andReturn($account);
+
+        $this->processingFeeService->shouldReceive('isEnabled')->with($settings)->andReturnTrue();
+        $this->processingFeeService->shouldReceive('calculateProcessingFee')
+            ->withArgs(fn(...$args) => ($args[6] ?? null) === true)
+            ->andReturn(1.80);
+        $this->processingFeeService->shouldReceive('calculateProcessingFee')
+            ->withArgs(fn(...$args) => ($args[6] ?? null) === false)
+            ->andReturn(1.75);
+
+        $result = $this->handler->handle(new GetPlatformFeePreviewDTO(eventId: $eventId, price: 50.0));
+
+        $this->assertTrue($result->passProcessingFeeToBuyer);
+        $this->assertEquals(1.80, $result->processingFeeWhenPlatformFeePassed);
+        $this->assertEquals(1.75, $result->processingFeeWhenPlatformFeeAbsorbed);
     }
 }

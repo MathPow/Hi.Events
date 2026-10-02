@@ -162,7 +162,7 @@ msgstr "<0>Bu ürün için mevcut ürün sayısı</0><1>Bu değer, bu ürünle i
 msgid "<0>Webhooks instantly notify external services when events happen, like adding a new attendee to your CRM or mailing list upon registration, ensuring seamless automation.</0><1>Use third-party services like <2>Zapier</2>, <3>IFTTT</3> or <4>Make</4> to create custom workflows and automate tasks.</1>"
 msgstr "<0>Webhook'lar, kayıt sırasında CRM'inize veya posta listenize yeni bir katılımcı eklemek gibi olaylar gerçekleştiğinde harici hizmetleri anında bilgilendirir ve kusursuz otomasyon sağlar.</0><1>Özel iş akışları oluşturmak ve görevleri otomatikleştirmek için <2>Zapier</2>, <3>IFTTT</3> veya <4>Make</4> gibi üçüncü taraf hizmetleri kullanın.</1>"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:160
+#: src/components/common/PlatformFeesSettings/index.tsx:176
 msgid "≈ {0} at current rate"
 msgstr "≈ {0} mevcut kurdan"
 
@@ -341,11 +341,11 @@ msgstr "Hakkında"
 msgid "About Stripe Connect"
 msgstr "Stripe Connect Hakkında"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:192
+#: src/components/common/PlatformFeesSettings/index.tsx:208
 msgid "Absorb fee"
 msgstr "Ücreti karşıla"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:229
+#: src/components/common/PlatformFeesSettings/index.tsx:246
 msgid "Absorb Fee"
 msgstr "Ücreti karşıla"
 
@@ -567,7 +567,7 @@ msgstr "Webhook Ekle"
 msgid "Add your social media handles and website URL. These will be displayed on your public organizer page."
 msgstr "Sosyal medya hesaplarınızı ve web sitesi URL'nizi ekleyin. Bunlar herkese açık organizatör sayfanızda görüntülenecektir."
 
-#: src/components/common/PlatformFeesSettings/index.tsx:257
+#: src/components/common/PlatformFeesSettings/index.tsx:275
 msgid "Additional Fees"
 msgstr "Ek ücretler"
 
@@ -1404,7 +1404,7 @@ msgstr "Düğme Metni"
 msgid "Buy"
 msgstr "Satın Al"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:63
+#: src/components/common/PlatformFeesSettings/index.tsx:70
 msgid "Buyer pays"
 msgstr "Alıcı öder"
 
@@ -1412,7 +1412,7 @@ msgstr "Alıcı öder"
 msgid "Buyers are charged {0}, of which {1} appears on the official tax receipt. The remainder is the advantage received and is not receiptable."
 msgstr "Alıcıdan {0} tahsil edilir, bunun {1} kadarı resmi makbuzda görünür. Kalan kısım alınan menfaattir ve makbuza konu edilemez."
 
-#: src/components/common/PlatformFeesSettings/index.tsx:235
+#: src/components/common/PlatformFeesSettings/index.tsx:252
 msgid "Buyers see a clean price. The platform fee is deducted from your payout."
 msgstr "Alıcılar net bir fiyat görür. Platform ücreti ödemenizden düşülür."
 
@@ -2003,7 +2003,7 @@ msgstr "Etkinlik ayrıntılarını, konumu, ödeme seçeneklerini ve e-posta bil
 msgid "Configure how attendee details are collected during checkout"
 msgstr "Ödeme sırasında katılımcı bilgilerinin nasıl toplanacağını yapılandırın"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:264
+#: src/components/common/PlatformFeesSettings/index.tsx:282
 msgid "Configure Taxes & Fees"
 msgstr "Vergi ve ücretleri yapılandır"
 
@@ -6391,7 +6391,7 @@ msgstr "Kısmen İade Edildi"
 msgid "Partially refunded: {0}"
 msgstr "Kısmen iade edildi: {0}"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:191
+#: src/components/common/PlatformFeesSettings/index.tsx:207
 msgid "Pass fee to buyer"
 msgstr "Ücreti alıcıya aktar"
 
@@ -6403,7 +6403,7 @@ msgstr "İşlem ücretlerini alıcıya yansıt"
 msgid "Pass processing fees to buyer by default"
 msgstr "İşlem ücretlerini varsayılan olarak alıcıya yansıt"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:206
+#: src/components/common/PlatformFeesSettings/index.tsx:222
 msgid "Pass to Buyer"
 msgstr "Alıcıya aktar"
 
@@ -6662,12 +6662,12 @@ msgstr "Platform komisyonları"
 msgid "Platform Earnings"
 msgstr "Platform geliri"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:57
-#: src/components/common/PlatformFeesSettings/index.tsx:153
+#: src/components/common/PlatformFeesSettings/index.tsx:58
+#: src/components/common/PlatformFeesSettings/index.tsx:169
 msgid "Platform fee"
 msgstr "Platform ücreti"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:73
+#: src/components/common/PlatformFeesSettings/index.tsx:80
 msgid "Platform fee of {0} deducted from your payout"
 msgstr "Ödemenizden {0} platform ücreti düşülür"
 
@@ -6911,6 +6911,10 @@ msgstr "Gizlilik Politikası"
 #: src/components/modals/RefundOrderModal/index.tsx:150
 msgid "Process Refund"
 msgstr "İade İşle"
+
+#: src/components/common/PlatformFeesSettings/index.tsx:64
+msgid "Processing fee"
+msgstr "İşlem ücreti"
 
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:179
 msgid "Processing Fees"
@@ -7579,7 +7583,7 @@ msgstr "Tüm etkinlikler için satışlar, siparişler ve performans metrikleri"
 msgid "Sales:"
 msgstr "Satışlar:"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:175
+#: src/components/common/PlatformFeesSettings/index.tsx:191
 msgid "Sample ticket price"
 msgstr "Örnek bilet fiyatı"
 
@@ -7593,7 +7597,7 @@ msgstr "Örnek Mekan"
 msgid "San Francisco"
 msgstr "San Francisco"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:249
+#: src/components/common/PlatformFeesSettings/index.tsx:267
 #: src/components/common/QuestionAndAnswerList/index.tsx:142
 #: src/components/routes/event/Settings/Sections/EmailSettings/GeneralEmailSettings.tsx:81
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:129
@@ -7917,8 +7921,8 @@ msgstr "Bu hesaba hangi ücret yapılandırmasının uygulanacağını seçin. S
 msgid "Select..."
 msgstr "Seç..."
 
-#: src/components/common/PlatformFeesSettings/index.tsx:208
-#: src/components/common/PlatformFeesSettings/index.tsx:231
+#: src/components/common/PlatformFeesSettings/index.tsx:224
+#: src/components/common/PlatformFeesSettings/index.tsx:248
 msgid "Selected"
 msgstr "Seçildi"
 
@@ -8832,7 +8836,7 @@ msgstr "Aradığınız organizatör bulunamadı. Sayfa taşınmış, silinmiş v
 msgid "The page you are looking for does not exist"
 msgstr "Aradığınız sayfa mevcut değil"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:212
+#: src/components/common/PlatformFeesSettings/index.tsx:228
 msgid "The platform fee is added to the ticket price. Buyers pay more, but you receive the full ticket price."
 msgstr "Platform ücreti bilet fiyatına eklenir. Alıcılar daha fazla öder, ancak tam bilet fiyatını alırsınız."
 
@@ -9190,7 +9194,7 @@ msgstr "Bilet veya Ürün"
 msgid "Ticket Preview for"
 msgstr "Bilet Önizlemesi:"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:52
+#: src/components/common/PlatformFeesSettings/index.tsx:53
 msgid "Ticket price"
 msgstr "Bilet fiyatı"
 
@@ -10438,7 +10442,7 @@ msgstr "Kısmi iade yapıyorsunuz. Müşteriye {0} {1} iade edilecek."
 msgid "You are offline"
 msgstr "Çevrimdışısınız"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:259
+#: src/components/common/PlatformFeesSettings/index.tsx:277
 msgid "You can configure additional service fees and taxes in your account settings."
 msgstr "Hesap ayarlarınızda ek hizmet ücretleri ve vergileri yapılandırabilirsiniz."
 
@@ -10543,7 +10547,7 @@ msgstr "Mesaj göndermeden önce hesap e-postanızı doğrulamanız gerekir."
 msgid "You own 100% of your attendee data, always"
 msgstr "Katılımcı verilerinizin %100'üne her zaman sahipsiniz"
 
-#: src/components/common/PlatformFeesSettings/index.tsx:67
+#: src/components/common/PlatformFeesSettings/index.tsx:74
 msgid "You receive"
 msgstr "Aldığınız"
 
@@ -10712,7 +10716,7 @@ msgstr "Ödemeniz başarısız oldu, lütfen tekrar deneyin."
 msgid "Your payment was unsuccessful. Please try again."
 msgstr "Ödemeniz başarısız oldu. Lütfen tekrar deneyin."
 
-#: src/components/common/PlatformFeesSettings/index.tsx:149
+#: src/components/common/PlatformFeesSettings/index.tsx:165
 msgid "Your Plan"
 msgstr "Planınız"
 

@@ -113,6 +113,21 @@ class OrderProcessingFeePassThroughServiceTest extends TestCase
         $this->assertOrganizerNets($netWithoutPassThrough, 50.0 + $processingFee, 1);
     }
 
+    public function testExplicitPlatformScenarioOverridesEventSetting(): void
+    {
+        $accountConfig = $this->accountConfig();
+        $eventSettings = $this->eventSettings(passPlatformFee: false);
+
+        $platformFee = $this->platformFeeService->calculatePlatformFee(
+            $accountConfig, $this->eventSettings(passPlatformFee: true), 50.0, 1, 'CAD'
+        );
+        $processingFee = $this->service->calculateProcessingFee(
+            $accountConfig, $eventSettings, 50.0, 1, 'CAD', $platformFee, platformFeePassed: true
+        );
+
+        $this->assertOrganizerNets(50.0, 50.0 + $platformFee + $processingFee, 1);
+    }
+
     private function assertOrganizerNets(
         float  $expected,
         float  $buyerTotal,

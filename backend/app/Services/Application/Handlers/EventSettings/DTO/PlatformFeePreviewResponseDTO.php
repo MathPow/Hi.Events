@@ -15,6 +15,9 @@ class PlatformFeePreviewResponseDTO extends BaseDataObject
         public readonly float   $samplePrice,
         public readonly float   $platformFee,
         public readonly float   $total,
+        public readonly bool    $passProcessingFeeToBuyer = false,
+        public readonly float   $processingFeeWhenPlatformFeePassed = 0,
+        public readonly float   $processingFeeWhenPlatformFeeAbsorbed = 0,
     ) {
     }
 }
