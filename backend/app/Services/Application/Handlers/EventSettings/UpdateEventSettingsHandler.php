@@ -94,6 +94,7 @@ class UpdateEventSettingsHandler
 
                     // Platform fee settings
                     'pass_platform_fee_to_buyer' => $settings->pass_platform_fee_to_buyer,
+                    'pass_processing_fee_to_buyer' => $settings->pass_processing_fee_to_buyer,
 
                     // Homepage theme settings
                     'homepage_theme_settings' => $settings->homepage_theme_settings,

@@ -97,6 +97,7 @@ class UpdateEventSettingsRequest extends BaseRequest
 
             // Platform fee settings
             'pass_platform_fee_to_buyer' => ['boolean'],
+            'pass_processing_fee_to_buyer' => ['boolean'],
 
             // Homepage theme settings
             'homepage_theme_settings' => ['nullable', 'array'],

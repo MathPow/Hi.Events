@@ -16,6 +16,7 @@ use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Services\Domain\Order\OrderPlatformFeePassThroughService;
+use HiEvents\Services\Domain\Order\OrderProcessingFeePassThroughService;
 use HiEvents\Services\Domain\Product\DTO\AvailableProductQuantitiesDTO;
 use HiEvents\Services\Domain\Tax\TaxAndFeeCalculationService;
 use Illuminate\Support\Collection;
@@ -31,6 +32,7 @@ class ProductFilterService
         private readonly ProductPriceService                    $productPriceService,
         private readonly AvailableProductQuantitiesFetchService $fetchAvailableProductQuantitiesService,
         private readonly OrderPlatformFeePassThroughService     $platformFeeService,
+        private readonly OrderProcessingFeePassThroughService   $processingFeeService,
         private readonly AccountRepositoryInterface             $accountRepository,
         private readonly EventRepositoryInterface               $eventRepository,
     )
@@ -209,11 +211,28 @@ class ProductFilterService
             $feeTotal = $taxAndFees->feeTotal;
             $taxTotal = $taxAndFees->taxTotal;
 
-            $platformFee = $this->calculatePlatformFee($price->getPrice() + $feeTotal + $taxTotal);
+            $totalBeforePassThroughFees = $price->getPrice() + $feeTotal + $taxTotal;
+
+            $platformFee = $this->calculatePlatformFee($totalBeforePassThroughFees);
 
             if ($platformFee > 0) {
                 $feeTotal += $platformFee;
-                $this->addPlatformFeeToProduct($product);
+                $this->addPassThroughFeeToProduct(
+                    $product,
+                    OrderPlatformFeePassThroughService::PLATFORM_FEE_ID,
+                    OrderPlatformFeePassThroughService::getPlatformFeeName(),
+                );
+            }
+
+            $processingFee = $this->calculateProcessingFee($totalBeforePassThroughFees, $platformFee);
+
+            if ($processingFee > 0) {
+                $feeTotal += $processingFee;
+                $this->addPassThroughFeeToProduct(
+                    $product,
+                    OrderProcessingFeePassThroughService::PROCESSING_FEE_ID,
+                    OrderProcessingFeePassThroughService::getProcessingFeeName(),
+                );
             }
 
             $price
@@ -239,24 +258,40 @@ class ProductFilterService
         );
     }
 
-    private function addPlatformFeeToProduct(ProductDomainObject $product): void
+    private function calculateProcessingFee(float $total, float $platformFee): float
+    {
+        if ($this->accountConfiguration === null || $this->eventSettings === null) {
+            return 0.0;
+        }
+
+        return $this->processingFeeService->calculateProcessingFee(
+            accountConfiguration: $this->accountConfiguration,
+            eventSettings: $this->eventSettings,
+            total: $total,
+            quantity: 1,
+            currency: $this->eventCurrency,
+            platformFee: $platformFee,
+        );
+    }
+
+    private function addPassThroughFeeToProduct(ProductDomainObject $product, int $feeId, string $feeName): void
     {
         $existingTaxesAndFees = $product->getTaxAndFees() ?? collect();
 
-        $hasPlatformFee = $existingTaxesAndFees->contains(
-            fn(TaxAndFeesDomainObject $fee) => $fee->getId() === OrderPlatformFeePassThroughService::PLATFORM_FEE_ID
+        $hasFee = $existingTaxesAndFees->contains(
+            fn(TaxAndFeesDomainObject $fee) => $fee->getId() === $feeId
         );
 
-        if (!$hasPlatformFee) {
-            $platformFeeDomainObject = (new TaxAndFeesDomainObject())
-                ->setId(OrderPlatformFeePassThroughService::PLATFORM_FEE_ID)
+        if (!$hasFee) {
+            $feeDomainObject = (new TaxAndFeesDomainObject())
+                ->setId($feeId)
                 ->setAccountId(0)
-                ->setName(OrderPlatformFeePassThroughService::getPlatformFeeName())
+                ->setName($feeName)
                 ->setType('FEE')
                 ->setCalculationType('FIXED')
                 ->setRate(0);
 
-            $product->setTaxAndFees($existingTaxesAndFees->push($platformFeeDomainObject));
+            $product->setTaxAndFees($existingTaxesAndFees->push($feeDomainObject));
         }
     }
 

@@ -57,6 +57,11 @@ class PartialUpdateOrganizerSettingsHandler
                 $organizerSettings->getDefaultPassPlatformFeeToBuyer()
             ),
 
+            'default_pass_processing_fee_to_buyer' => $dto->getProvided(
+                'defaultPassProcessingFeeToBuyer',
+                $organizerSettings->getDefaultPassProcessingFeeToBuyer()
+            ),
+
             'social_media_handles' => array_filter([
                 'facebook' => $dto->getProvided('facebookHandle', $organizerSettings->getSocialMediaHandle('facebook')),
                 'instagram' => $dto->getProvided('instagramHandle', $organizerSettings->getSocialMediaHandle('instagram')),

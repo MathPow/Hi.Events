@@ -22,6 +22,7 @@ export const PaymentAndInvoicingSettings = () => {
     const form = useForm({
         initialValues: {
             require_billing_address: true,
+            pass_processing_fee_to_buyer: false,
             payment_providers: [] as PaymentProvider[],
             offline_payment_instructions: "",
             allow_orders_awaiting_offline_payment_to_check_in: false,
@@ -59,6 +60,7 @@ export const PaymentAndInvoicingSettings = () => {
                 invoice_notes: eventSettingsQuery.data.invoice_notes || "",
                 invoice_start_number: eventSettingsQuery.data.invoice_start_number || 1,
                 require_billing_address: eventSettingsQuery.data.require_billing_address ?? true,
+                pass_processing_fee_to_buyer: eventSettingsQuery.data.pass_processing_fee_to_buyer ?? false,
                 organization_name: eventSettingsQuery.data.organization_name || "",
                 organization_address: eventSettingsQuery.data.organization_address || "",
                 invoice_tax_details: eventSettingsQuery.data.invoice_tax_details || "",
@@ -171,6 +173,16 @@ export const PaymentAndInvoicingSettings = () => {
                                     />
                                 </Card>
                             )}
+                        </Paper>
+
+                        <Paper withBorder p="md" radius="md">
+                            <Text size="lg" fw={500} mb="md">{t`Processing Fees`}</Text>
+                            <Switch
+                                label={t`Pass processing fees to buyer`}
+                                description={t`Adds a processing fee at checkout that covers card payment fees, so you receive the full ticket price. Buyers see the exact amount before paying.`}
+                                checked={form.values.pass_processing_fee_to_buyer}
+                                onChange={(event) => form.setFieldValue('pass_processing_fee_to_buyer', event.currentTarget.checked)}
+                            />
                         </Paper>
 
                         <Paper withBorder p="md" radius="md">

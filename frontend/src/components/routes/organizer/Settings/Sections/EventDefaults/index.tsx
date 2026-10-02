@@ -23,6 +23,7 @@ export const EventDefaults = () => {
             default_attendee_details_collection_method: 'PER_TICKET' as 'PER_TICKET' | 'PER_ORDER',
             default_show_marketing_opt_in: true,
             default_allow_attendee_self_edit: false,
+            default_pass_processing_fee_to_buyer: false,
         }
     });
 
@@ -49,11 +50,12 @@ export const EventDefaults = () => {
                 default_attendee_details_collection_method: organizerSettingsQuery.data.default_attendee_details_collection_method || 'PER_TICKET',
                 default_show_marketing_opt_in: organizerSettingsQuery.data.default_show_marketing_opt_in ?? true,
                 default_allow_attendee_self_edit: organizerSettingsQuery.data.default_allow_attendee_self_edit ?? false,
+                default_pass_processing_fee_to_buyer: organizerSettingsQuery.data.default_pass_processing_fee_to_buyer ?? false,
             });
         }
     }, [organizerSettingsQuery.isFetched]);
 
-    const handleSubmit = (values: { default_attendee_details_collection_method: 'PER_TICKET' | 'PER_ORDER'; default_show_marketing_opt_in: boolean; default_allow_attendee_self_edit: boolean }) => {
+    const handleSubmit = (values: { default_attendee_details_collection_method: 'PER_TICKET' | 'PER_ORDER'; default_show_marketing_opt_in: boolean; default_allow_attendee_self_edit: boolean; default_pass_processing_fee_to_buyer: boolean }) => {
         updateMutation.mutate({
             organizerSettings: values,
             organizerId: organizerId,
@@ -88,6 +90,13 @@ export const EventDefaults = () => {
                         label={t`Show marketing opt-in checkbox by default`}
                         description={t`When enabled, new events will display a marketing opt-in checkbox during checkout. This can be overridden per event.`}
                         {...form.getInputProps('default_show_marketing_opt_in', {type: 'checkbox'})}
+                    />
+
+                    <Switch
+                        mt="md"
+                        label={t`Pass processing fees to buyer by default`}
+                        description={t`When enabled, new events add a processing fee at checkout that covers card payment fees, so you receive the full ticket price. This can be overridden per event.`}
+                        {...form.getInputProps('default_pass_processing_fee_to_buyer', {type: 'checkbox'})}
                     />
 
                     <SelfServiceSettings

@@ -132,6 +132,7 @@ class PartialUpdateEventSettingsHandler
 
                 // Platform fee settings
                 'pass_platform_fee_to_buyer' => $eventSettingsDTO->settings['pass_platform_fee_to_buyer'] ?? $existingSettings->getPassPlatformFeeToBuyer(),
+                'pass_processing_fee_to_buyer' => $eventSettingsDTO->settings['pass_processing_fee_to_buyer'] ?? $existingSettings->getPassProcessingFeeToBuyer(),
 
                 // Homepage theme settings
                 'homepage_theme_settings' => array_key_exists('homepage_theme_settings', $eventSettingsDTO->settings)

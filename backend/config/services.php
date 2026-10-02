@@ -42,6 +42,10 @@ return [
         // due de toute facon, contribution ou pas: elle reste a l'organisateur.
         'processing_fee_percentage' => env('STRIPE_PROCESSING_FEE_PERCENTAGE', 2.9),
 
+        // Part fixe des frais Stripe, dans la devise de l'evenement. Facturee a
+        // l'acheteur par billet quand l'evenement lui refile les frais de traitement.
+        'processing_fee_fixed' => env('STRIPE_PROCESSING_FEE_FIXED', 0.30),
+
         // Canadian platform (Optional)
         'ca_secret_key' => env('STRIPE_CA_SECRET_KEY', env('STRIPE_SECRET_KEY')),
         'ca_public_key' => env('STRIPE_CA_PUBLIC_KEY', env('STRIPE_PUBLIC_KEY')),

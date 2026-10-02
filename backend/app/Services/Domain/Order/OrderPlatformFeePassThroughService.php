@@ -69,7 +69,7 @@ class OrderPlatformFeePassThroughService
         return Currency::round($platformFee);
     }
 
-    private function getConvertedFixedFee(
+    public function getConvertedFixedFee(
         AccountConfigurationDomainObject $accountConfiguration,
         string                           $currency
     ): float

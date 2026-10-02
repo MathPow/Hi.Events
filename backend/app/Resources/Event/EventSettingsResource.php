@@ -76,6 +76,7 @@ class EventSettingsResource extends JsonResource
 
             // Platform fee settings
             'pass_platform_fee_to_buyer' => $this->getPassPlatformFeeToBuyer(),
+            'pass_processing_fee_to_buyer' => $this->getPassProcessingFeeToBuyer(),
 
             // Homepage theme settings
             'homepage_theme_settings' => $this->getHomepageThemeSettings(),

@@ -358,11 +358,11 @@ msgstr "強調色"
 msgid "Accept"
 msgstr "接受"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:92
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:94
 msgid "Accept bank transfers, checks, or other offline payment methods"
 msgstr "接受銀行轉賬、支票或其他線下支付方式"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:87
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:89
 msgid "Accept credit card payments with Stripe"
 msgstr "通過 Stripe 接受信用卡支付"
 
@@ -501,7 +501,7 @@ msgstr "添加描述"
 msgid "Add event details and manage event settings."
 msgstr "新增活動詳情並管理活動設定。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:154
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:156
 msgid "Add instructions for offline payments (e.g., bank transfer details, where to send checks, payment deadlines)"
 msgstr "添加線下支付的説明（例如，銀行轉賬詳情、支票寄送地址、付款截止日期）"
 
@@ -604,6 +604,10 @@ msgstr "地址第 2 行"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:603
 msgid "Address Line 2"
 msgstr "地址第 2 行"
+
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:182
+msgid "Adds a processing fee at checkout that covers card payment fees, so you receive the full ticket price. Buyers see the exact amount before paying."
+msgstr "在結帳時加入手續費以支付信用卡手續費，讓您收到完整票價。買家在付款前可看到確實金額。"
 
 #: src/components/layouts/Admin/index.tsx:12
 #: src/components/modals/EditUserModal/index.tsx:49
@@ -728,7 +732,7 @@ msgstr "累計：{0}"
 msgid "All Upcoming Events"
 msgstr "所有即將舉行的活動"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:167
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:169
 msgid "Allow attendees associated with unpaid orders to check in"
 msgstr "允許與未支付訂單關聯的參與者簽到"
 
@@ -1351,7 +1355,7 @@ msgstr "在活動上線之前，您需要完成以下幾項步驟。請完成以
 msgid "Billing Address"
 msgstr "賬單地址"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:177
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:189
 msgid "Billing Settings"
 msgstr "賬單設置"
 
@@ -1846,7 +1850,7 @@ msgid "Collapse this product when the event page is initially loaded"
 msgstr "當活動頁面初始加載時摺疊此產品"
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:43
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:34
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:35
 msgid "Collect attendee details for each ticket purchased."
 msgstr "為每張購買的門票收集參加者詳情。"
 
@@ -2739,7 +2743,7 @@ msgstr "拒絕"
 msgid "Default"
 msgstr "預設"
 
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:82
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:84
 msgid "Default attendee information collection"
 msgstr "預設參加者資料收集"
 
@@ -2903,7 +2907,7 @@ msgstr "關閉此訊息"
 msgid "Display a checkbox allowing customers to opt-in to receive marketing communications from this event organizer."
 msgstr "顯示一個複選框，允許客戶選擇接收此活動組織者的營銷通訊。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:200
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:212
 msgid "Document Label"
 msgstr "文檔標籤"
 
@@ -3334,7 +3338,7 @@ msgstr "啟用參與者自助服務"
 msgid "Enable attendee self-service by default"
 msgstr "預設啟用參與者自助服務"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:191
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:203
 msgid "Enable Invoicing"
 msgstr "啟用發票功能"
 
@@ -3554,7 +3558,7 @@ msgstr "活動日期顯示"
 
 #: src/components/routes/account/ManageAccount/sections/EventDefaultsSettings/index.tsx:5
 #: src/components/routes/organizer/Settings/index.tsx:38
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:73
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:75
 msgid "Event Defaults"
 msgstr "事件默認值"
 
@@ -4109,7 +4113,7 @@ msgstr "活動開始後的首90天"
 msgid "First attendee"
 msgstr "第一位參與者"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:216
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:228
 msgid "First Invoice Number"
 msgstr "第一張發票號碼"
 
@@ -4577,7 +4581,7 @@ msgstr "如果留空，地址將用於生成 Google 地圖連結"
 msgid "If checked, this category will be hidden from the public."
 msgstr "如果勾選，此類別將對公眾隱藏。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:168
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:170
 msgid "If enabled, check-in staff can either mark attendees as checked in or mark the order as paid and check in the attendees. If disabled, attendees associated with unpaid orders cannot be checked in."
 msgstr "如果啟用，登記工作人員可以將與會者標記為已登記或將訂單標記為已支付並登記與會者。如果禁用，關聯未支付訂單的與會者無法登記。"
 
@@ -4805,15 +4809,15 @@ msgstr "發票"
 msgid "Invoice downloaded successfully"
 msgstr "發票下載成功"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:262
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:274
 msgid "Invoice Notes"
 msgstr "發票備註"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:207
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:219
 msgid "Invoice Numbering"
 msgstr "發票編號"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:187
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:199
 msgid "Invoice Settings"
 msgstr "發票設置"
 
@@ -5013,7 +5017,7 @@ msgstr "最近使用"
 msgid "Last Used"
 msgstr "最近一次使用"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:201
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:213
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "留空以使用默認詞“發票”"
 
@@ -5145,7 +5149,7 @@ msgstr "查找我的門票"
 msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:180
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:192
 msgid "Make billing address mandatory during checkout"
 msgstr "在結賬時強制要求填寫賬單地址"
 
@@ -5179,7 +5183,7 @@ msgstr "管理活動"
 msgid "Manage order"
 msgstr "管理訂單"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:100
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:102
 msgid "Manage payment and invoicing settings for this event."
 msgstr "管理此活動的支付和發票設置。"
 
@@ -5836,11 +5840,11 @@ msgstr "通知設置"
 msgid "Notify organizer of new orders"
 msgstr "將新訂單通知組織者"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:227
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:239
 msgid "Number of days allowed for payment (leave blank to omit payment terms from invoices)"
 msgstr "允許支付的天數（留空以從發票中省略付款條款）"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:209
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:221
 msgid "Number Prefix"
 msgstr "號碼前綴"
 
@@ -5888,7 +5892,7 @@ msgstr "辦公室或場地名稱"
 msgid "Offline"
 msgstr "離線"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:146
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:148
 msgid "Offline orders are not reflected in event statistics until the order is marked as paid."
 msgstr "線下訂單在標記為已支付之前不會反映在活動統計中。"
 
@@ -5896,19 +5900,19 @@ msgstr "線下訂單在標記為已支付之前不會反映在活動統計中。
 msgid "Offline payment failed. Please try again or contact the event organizer."
 msgstr "線下支付失敗。請重試或聯繫活動組織者。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:152
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:154
 msgid "Offline Payment Instructions"
 msgstr "離線付款說明"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:91
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:93
 msgid "Offline Payments"
 msgstr "線下支付"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:140
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
 msgid "Offline Payments Information"
 msgstr "線下支付信息"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:135
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:137
 msgid "Offline Payments Settings"
 msgstr "線下支付設置"
 
@@ -6004,11 +6008,11 @@ msgstr "打開 Stripe 儀表板"
 msgid "Option {i}"
 msgstr "方案 {i}"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:263
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:275
 msgid "Optional additional information to appear on all invoices (e.g., payment terms, late payment fees, return policy)"
 msgstr "所有發票上顯示的可選附加信息（例如，付款條款、逾期付款費用、退貨政策）"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:210
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:222
 msgid "Optional prefix for invoice numbers (e.g., INV-)"
 msgstr "發票編號的可選前綴（例如，INV-）"
 
@@ -6227,16 +6231,16 @@ msgstr "訂單："
 msgid "Organic Accounts"
 msgstr "自然帳戶"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:245
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:257
 msgid "Organization Address"
 msgstr "組織地址"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:236
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:248
 msgid "Organization Details"
 msgstr "組織詳細信息"
 
 #: src/components/forms/OrganizerForm/index.tsx:28
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:238
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:250
 msgid "Organization Name"
 msgstr "組織名稱"
 
@@ -6391,6 +6395,14 @@ msgstr "部分退款：{0}"
 msgid "Pass fee to buyer"
 msgstr "將費用轉嫁給買家"
 
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:181
+msgid "Pass processing fees to buyer"
+msgstr "將手續費轉嫁給買家"
+
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:97
+msgid "Pass processing fees to buyer by default"
+msgstr "預設將手續費轉嫁給買家"
+
 #: src/components/common/PlatformFeesSettings/index.tsx:206
 msgid "Pass to Buyer"
 msgstr "轉嫁給買家"
@@ -6472,7 +6484,7 @@ msgstr "付款方式"
 msgid "Payment & Invoicing"
 msgstr "支付和發票"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:99
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:101
 msgid "Payment & Invoicing Settings"
 msgstr "支付和發票設置"
 
@@ -6484,7 +6496,7 @@ msgstr "付款與計劃"
 msgid "Payment Date"
 msgstr "付款日期"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:226
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:238
 msgid "Payment Due Period"
 msgstr "付款期限"
 
@@ -6502,7 +6514,7 @@ msgstr "支付説明"
 msgid "Payment method"
 msgstr "付款方式"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:106
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:108
 msgid "Payment Methods"
 msgstr "支付方式"
 
@@ -6537,7 +6549,7 @@ msgstr "支付狀態"
 msgid "Payment succeeded!"
 msgstr "付款成功！"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:224
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:236
 msgid "Payment Terms"
 msgstr "付款條款"
 
@@ -6563,12 +6575,12 @@ msgid "Per Attendee"
 msgstr "每位參與者"
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:47
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:38
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:39
 msgid "Per order"
 msgstr "每份訂單"
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:41
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:32
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:33
 msgid "Per ticket"
 msgstr "每張門票"
 
@@ -6899,6 +6911,10 @@ msgstr "私隱政策"
 #: src/components/modals/RefundOrderModal/index.tsx:150
 msgid "Process Refund"
 msgstr "處理退款"
+
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:179
+msgid "Processing Fees"
+msgstr "手續費"
 
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:373
 msgid "Processing order"
@@ -7325,7 +7341,7 @@ msgstr "報告"
 msgid "Request a new link"
 msgstr "請求新連結"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:179
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:191
 msgid "Require Billing Address"
 msgstr "要求賬單地址"
 
@@ -7584,13 +7600,13 @@ msgstr "舊金山"
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:141
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:166
 #: src/components/routes/event/Settings/Sections/MiscSettings/index.tsx:102
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:275
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:287
 #: src/components/routes/event/Settings/Sections/SeoSettings/index.tsx:85
 #: src/components/routes/event/Settings/Sections/WaitlistSettings/index.tsx:76
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:116
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:132
 #: src/components/routes/organizer/Settings/Sections/CharitySettings/index.tsx:110
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:103
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:112
 #: src/components/routes/organizer/Settings/Sections/SeoSettings/index.tsx:85
 #: src/components/routes/organizer/Settings/Sections/TrackingPixelSettings/index.tsx:261
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:88
@@ -8034,11 +8050,11 @@ msgstr "設定最低價格，用户可選擇支付更高的價格"
 msgid "Set default platform fee settings for new events created under this organizer."
 msgstr "為此主辦方創建的新活動設置預設平台費用設置。"
 
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:74
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:76
 msgid "Set default settings for new events created under this organizer."
 msgstr "為此主辦單位下創建的新活動設定預設設定。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:217
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:229
 msgid "Set the starting number for invoice numbering. This cannot be changed once invoices have been generated."
 msgstr "設置發票編號的起始編號。一旦發票生成，就無法更改。"
 
@@ -8121,7 +8137,7 @@ msgstr "顯示較少平台"
 msgid "Show marketing opt-in checkbox"
 msgstr "顯示營銷訂閱複選框"
 
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:88
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:90
 msgid "Show marketing opt-in checkbox by default"
 msgstr "預設顯示營銷訂閱複選框"
 
@@ -8343,7 +8359,7 @@ msgstr "停止模擬"
 
 #: src/components/common/OrdersTable/index.tsx:412
 #: src/components/routes/admin/Dashboard/index.tsx:535
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:86
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:88
 msgid "Stripe"
 msgstr "Stripe"
 
@@ -8488,7 +8504,7 @@ msgstr "成功更新電子郵件設置"
 msgid "Successfully Updated Event"
 msgstr "成功更新活動"
 
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:62
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:64
 msgid "Successfully Updated Event Defaults"
 msgstr "成功更新活動預設值"
 
@@ -8517,7 +8533,7 @@ msgstr "訂單更新成功"
 msgid "Successfully Updated Organizer"
 msgstr "主辦單位更新成功"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:75
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:77
 msgid "Successfully Updated Payment & Invoicing Settings"
 msgstr "支付和發票設置已成功更新"
 
@@ -8632,11 +8648,11 @@ msgstr "税費"
 msgid "Tax collected grouped by tax type and event"
 msgstr "按稅種和活動分組的已收稅款"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:253
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:265
 msgid "Tax Details"
 msgstr "税務詳情"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:254
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:266
 msgid "Tax information to appear at the bottom of all invoices (e.g., VAT number, tax registration)"
 msgstr "所有發票底部顯示的税務信息（例如，增值税號、税務註冊號）"
 
@@ -8959,7 +8975,7 @@ msgstr "此活動已結束"
 msgid "This event is not published yet"
 msgstr "呢個活動未發佈"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:153
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:155
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "這些信息將顯示在支付頁面、訂單摘要頁面和訂單確認電子郵件中。"
 
@@ -9666,7 +9682,7 @@ msgid "Use cover image"
 msgstr "使用封面圖片"
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:49
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:40
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:41
 msgid "Use order details for all attendees. Attendee names and emails will match the buyer's information."
 msgstr "為所有參加者使用訂單詳情。參加者姓名和電郵將與買家資料相符。"
 
@@ -10290,15 +10306,19 @@ msgstr "當顧客購買門票時，他們的訂單將會顯示在這裡。"
 msgid "When enabled, buyers can copy their own name and email onto all attendees at once. Turn this off to remove the \"All attendees\" option; buyers can still copy to the first attendee, and the rest must be entered individually."
 msgstr "啟用後，購買者可以一次過將自己的姓名和電郵複製給所有參加者。關閉此選項可移除「所有參加者」選項；購買者仍可複製給第一位參加者，其餘參加者須逐一填寫。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:192
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:204
 msgid "When enabled, invoices will be generated for ticket orders. Invoices will sent along with the order confirmation email. Attendees can also download their invoices from the order confirmation page."
 msgstr "啟用後，將為票務訂單生成發票。發票將隨訂單確認郵件一起發送。參與"
+
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:98
+msgid "When enabled, new events add a processing fee at checkout that covers card payment fees, so you receive the full ticket price. This can be overridden per event."
+msgstr "啟用後，新活動會在結帳時加入手續費以支付信用卡手續費，讓您收到完整票價。可按活動個別修改。"
 
 #: src/components/common/SelfServiceSettings/index.tsx:22
 msgid "When enabled, new events will allow attendees to manage their own ticket details via a secure link. This can be overridden per event."
 msgstr "啟用後，新活動將允許參與者通過安全連結管理自己的門票詳情。這可以按活動覆蓋。"
 
-#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:89
+#: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:91
 msgid "When enabled, new events will display a marketing opt-in checkbox during checkout. This can be overridden per event."
 msgstr "啟用後，新活動將在結帳時顯示營銷訂閱複選框。此設置可以針對每個活動單獨覆蓋。"
 
@@ -10306,7 +10326,7 @@ msgstr "啟用後，新活動將在結帳時顯示營銷訂閱複選框。此設
 msgid "When enabled, no application fees will be charged on Stripe Connect transactions. Use this for countries where application fees are not supported."
 msgstr "啟用後，Stripe Connect交易將不收取應用費用。用於不支持應用費用的國家。"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:142
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:144
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "啟用線下支付後，用户可以完成訂單並收到門票。他們的門票將清楚地顯示訂單未支付，簽到工具會通知簽到工作人員訂單是否需要支付。"
 
@@ -10527,7 +10547,7 @@ msgstr "您永遠擁有 100% 的參加者資料"
 msgid "You receive"
 msgstr "您收到"
 
-#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:144
+#: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:146
 msgid "You will have to mark an order as paid manually. This can be done on the manage order page."
 msgstr "您必須手動將訂單標記為已支付。這可以在訂單管理頁面上完成。"
 

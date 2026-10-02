@@ -36,6 +36,7 @@ class OrderItemProcessingService
         private readonly TaxAndFeeCalculationService        $taxCalculationService,
         private readonly ProductPriceService                $productPriceService,
         private readonly OrderPlatformFeePassThroughService $platformFeeService,
+        private readonly OrderProcessingFeePassThroughService $processingFeeService,
         private readonly AccountRepositoryInterface         $accountRepository,
         private readonly EventRepositoryInterface           $eventRepository,
     )
@@ -129,8 +130,10 @@ class OrderItemProcessingService
         $totalFee = $taxesAndFees->feeTotal;
         $rollUp = $taxesAndFees->rollUp;
 
+        $totalBeforePassThroughFees = $itemTotalWithDiscount + $taxesAndFees->feeTotal + $taxesAndFees->taxTotal;
+
         $platformFee = $this->calculatePlatformFee(
-            $itemTotalWithDiscount + $taxesAndFees->feeTotal + $taxesAndFees->taxTotal,
+            $totalBeforePassThroughFees,
             $productPriceDetails->quantity,
             $currency
         );
@@ -138,6 +141,18 @@ class OrderItemProcessingService
         if ($platformFee > 0) {
             $totalFee += $platformFee;
             $rollUp = $this->addPlatformFeeToRollup($rollUp, $platformFee);
+        }
+
+        $processingFee = $this->calculateProcessingFee(
+            $totalBeforePassThroughFees,
+            $productPriceDetails->quantity,
+            $currency,
+            $platformFee,
+        );
+
+        if ($processingFee > 0) {
+            $totalFee += $processingFee;
+            $rollUp = $this->addFeeToRollup($rollUp, OrderProcessingFeePassThroughService::getProcessingFeeName(), $processingFee);
         }
 
         $totalGross = Currency::round($itemTotalWithDiscount + $totalTax + $totalFee);
@@ -174,14 +189,35 @@ class OrderItemProcessingService
         );
     }
 
+    private function calculateProcessingFee(float $total, int $quantity, string $currency, float $platformFee): float
+    {
+        if ($this->accountConfiguration === null || $this->eventSettings === null) {
+            return 0.0;
+        }
+
+        return $this->processingFeeService->calculateProcessingFee(
+            $this->accountConfiguration,
+            $this->eventSettings,
+            $total,
+            $quantity,
+            $currency,
+            $platformFee,
+        );
+    }
+
     private function addPlatformFeeToRollup(array $rollUp, float $platformFee): array
+    {
+        return $this->addFeeToRollup($rollUp, OrderPlatformFeePassThroughService::getPlatformFeeName(), $platformFee);
+    }
+
+    private function addFeeToRollup(array $rollUp, string $name, float $fee): array
     {
         $rollUp['fees'] ??= [];
         $rollUp['fees'][] = [
-            'name' => OrderPlatformFeePassThroughService::getPlatformFeeName(),
-            'rate' => $platformFee,
+            'name' => $name,
+            'rate' => $fee,
             'type' => TaxCalculationType::FIXED->name,
-            'value' => $platformFee,
+            'value' => $fee,
         ];
 
         return $rollUp;

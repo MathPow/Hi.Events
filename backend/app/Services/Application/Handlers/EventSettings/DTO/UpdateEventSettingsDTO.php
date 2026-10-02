@@ -81,6 +81,7 @@ class UpdateEventSettingsDTO extends BaseDTO
 
         // Platform fee settings
         public readonly bool                    $pass_platform_fee_to_buyer = false,
+        public readonly bool                    $pass_processing_fee_to_buyer = false,
 
         // Homepage theme settings
         public readonly ?array                  $homepage_theme_settings = null,
@@ -166,6 +167,7 @@ class UpdateEventSettingsDTO extends BaseDTO
 
             // Platform fee defaults
             pass_platform_fee_to_buyer: false,
+            pass_processing_fee_to_buyer: false,
 
             // Homepage theme defaults (simplified 2-color + mode system)
             homepage_theme_settings: [
