@@ -783,7 +783,7 @@ msgstr "Gần xong rồi! Hoàn thành kết nối tài khoản Stripe để b�
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Sắp xong rồi! Chúng tôi đang chờ thanh toán của bạn được xử lý. Quá trình này chỉ mất vài giây."
 
-#: src/components/routes/auth/Register/index.tsx:111
+#: src/components/routes/auth/Register/index.tsx:113
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Đã có tài khoản? <0>{0}</0>"
 
@@ -1303,6 +1303,7 @@ msgid "Awaiting Payment"
 msgstr "Đang chờ thanh toán"
 
 #: src/components/forms/OrganizerForm/index.tsx:29
+#: src/components/routes/auth/Register/index.tsx:129
 msgid "Awesome Events Ltd."
 msgstr "Công ty TNHH Awesome Events"
 
@@ -1445,7 +1446,7 @@ msgstr "Theo loại tiền tệ (toàn thời gian)"
 msgid "By month"
 msgstr "Theo tháng"
 
-#: src/components/routes/auth/Register/index.tsx:179
+#: src/components/routes/auth/Register/index.tsx:189
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Bằng cách đăng ký, bạn đồng ý với các <0>Điều khoản dịch vụ của chúng tôi</0> và <1>Chính sách bảo mật</1>."
 
@@ -2052,12 +2053,12 @@ msgid "Confirm New Password"
 msgstr "Xác nhận mật khẩu mới"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:157
+#: src/components/routes/auth/Register/index.tsx:167
 msgid "Confirm password"
 msgstr "Xác nhận mật khẩu"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:156
+#: src/components/routes/auth/Register/index.tsx:166
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Xác nhận mật khẩu"
@@ -3239,7 +3240,7 @@ msgstr "Đủ điều kiện nhận biên nhận thuế chính thức."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:140
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -4151,7 +4152,7 @@ msgstr "Tên"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:126
+#: src/components/routes/auth/Register/index.tsx:136
 #: src/components/routes/product-widget/CollectInformation/index.tsx:508
 #: src/components/routes/product-widget/CollectInformation/index.tsx:724
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4300,7 +4301,7 @@ msgstr "Chỉ đường"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Nhận thanh toán ngay lập tức qua Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:109
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Get started"
 msgstr "Bắt đầu"
 
@@ -4793,7 +4794,7 @@ msgstr "Đã thu hồi lời mời"
 msgid "Invitation revoked!"
 msgstr "Lời mời bị thu hồi!"
 
-#: src/components/routes/auth/Register/index.tsx:94
+#: src/components/routes/auth/Register/index.tsx:96
 msgid "Invitation unavailable"
 msgstr "Lời mời không khả dụng"
 
@@ -4899,7 +4900,7 @@ msgid "Job queued for retry"
 msgstr "Công việc đã được xếp hàng để thử lại"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:127
+#: src/components/routes/auth/Register/index.tsx:137
 msgid "John"
 msgstr "John"
 
@@ -5012,7 +5013,7 @@ msgstr "Họ"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:132
+#: src/components/routes/auth/Register/index.tsx:142
 #: src/components/routes/product-widget/CollectInformation/index.tsx:515
 #: src/components/routes/product-widget/CollectInformation/index.tsx:516
 #: src/components/routes/product-widget/CollectInformation/index.tsx:731
@@ -5140,7 +5141,7 @@ msgid "Location"
 msgstr "Vị trí"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:114
+#: src/components/routes/auth/Register/index.tsx:116
 msgid "Log in"
 msgstr "Đăng nhập"
 
@@ -6277,9 +6278,14 @@ msgid "Organization Details"
 msgstr "Chi tiết tổ chức"
 
 #: src/components/forms/OrganizerForm/index.tsx:28
+#: src/components/routes/auth/Register/index.tsx:127
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:250
 msgid "Organization Name"
 msgstr "Tên tổ chức"
+
+#: src/components/routes/auth/Register/index.tsx:50
+msgid "Organization name is required"
+msgstr "Tên tổ chức là bắt buộc"
 
 #: src/components/common/AdminEventsTable/index.tsx:87
 #: src/components/common/AttendeeTicket/index.tsx:88
@@ -6446,7 +6452,7 @@ msgstr "Chuyển cho người mua"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:150
+#: src/components/routes/auth/Register/index.tsx:160
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Mật khẩu"
@@ -6455,7 +6461,7 @@ msgstr "Mật khẩu"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "Mật khẩu phải tối thiểu 8 ký tự"
 
-#: src/components/routes/auth/Register/index.tsx:46
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Password must be at least 8 characters"
 msgstr "Mật khẩu phải có ít nhất 8 ký tự"
 
@@ -6464,7 +6470,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Đặt lại mật khẩu thành công. Vui lòng sử dụng mật khẩu mới để đăng nhập."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:47
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Passwords are not the same"
 msgstr "Mật khẩu không giống nhau"
 
@@ -6738,7 +6744,7 @@ msgid "Please check your email and password and try again"
 msgstr "Vui lòng kiểm tra email và mật khẩu của bạn và thử lại"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:48
+#: src/components/routes/auth/Register/index.tsx:49
 msgid "Please check your email is valid"
 msgstr "Vui lòng kiểm tra email của bạn là hợp lệ"
 
@@ -7220,7 +7226,7 @@ msgid "Receipt number prefix"
 msgstr "Tiền tố số biên nhận"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:171
+#: src/components/routes/auth/Register/index.tsx:181
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Nhận cập nhật sản phẩm từ {0}."
@@ -7340,7 +7346,7 @@ msgstr "Hoàn tiền"
 msgid "Regional Settings"
 msgstr "Cài đặt khu vực"
 
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Register"
 msgstr "Đăng ký"
 
@@ -8256,7 +8262,7 @@ msgid "Slovak"
 msgstr "Tiếng Slovak"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:143
 msgid "Smith"
 msgstr "Smith"
 
@@ -8891,6 +8897,10 @@ msgstr "Liên kết bạn đã nhấp vào không hợp lệ."
 msgid "The maximum number of products for {0}is {1}"
 msgstr "Số lượng sản phẩm tối đa cho {0}là {1}"
 
+#: src/components/routes/auth/Register/index.tsx:128
+msgid "The name your buyers will see. You can change it later."
+msgstr "Tên mà người mua sẽ thấy. Bạn có thể đổi sau."
+
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
@@ -9051,11 +9061,11 @@ msgstr "Sự kiện này chưa được xuất bản"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Thông tin này sẽ được hiển thị trên trang thanh toán, trang tóm tắt đơn hàng và email xác nhận đơn hàng."
 
-#: src/components/routes/auth/Register/index.tsx:142
+#: src/components/routes/auth/Register/index.tsx:152
 msgid "This invitation is tied to this address."
 msgstr "Lời mời này gắn với địa chỉ email này."
 
-#: src/components/routes/auth/Register/index.tsx:99
+#: src/components/routes/auth/Register/index.tsx:101
 msgid "This invitation link is no longer valid. Ask for a new one."
 msgstr "Liên kết lời mời này không còn hiệu lực. Hãy yêu cầu liên kết mới."
 
@@ -10470,7 +10480,7 @@ msgstr "Làm việc"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Working..."
 msgstr "Làm việc ..."
 
@@ -10787,7 +10797,7 @@ msgid "Your organizer address"
 msgstr "Địa chỉ nhà tổ chức của bạn"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:151
+#: src/components/routes/auth/Register/index.tsx:161
 msgid "Your password"
 msgstr "Mật khẩu của bạn"
 

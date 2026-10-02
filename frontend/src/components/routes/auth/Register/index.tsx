@@ -28,6 +28,7 @@ export const Register = () => {
     const form = useForm({
         validateInputOnBlur: true,
         initialValues: {
+            organization_name: '',
             first_name: '',
             last_name: '',
             email: '',
@@ -46,6 +47,7 @@ export const Register = () => {
             password: hasLength({min: 8}, t`Password must be at least 8 characters`),
             password_confirmation: matchesField('password', t`Passwords are not the same`),
             email: isEmail(t`Please check your email is valid`),
+            organization_name: (value) => value.trim() === '' ? t`Organization name is required` : null,
         },
     });
     const errorHandler = useFormErrorResponseHandler();
@@ -119,6 +121,14 @@ export const Register = () => {
 
             <div className={classes.registerCard}>
                 <form onSubmit={form.onSubmit((values) => registerUser(values as RegisterAccountRequest))}>
+                    <TextInput
+                        mb="md"
+                        {...form.getInputProps('organization_name')}
+                        label={t`Organization Name`}
+                        description={t`The name your buyers will see. You can change it later.`}
+                        placeholder={t`Awesome Events Ltd.`}
+                        required
+                    />
 
                     <SimpleGrid verticalSpacing={{base: "md", sm: 0}} cols={{base: 1, sm: 2}} mb="md">
                         <TextInput

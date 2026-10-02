@@ -784,7 +784,7 @@ msgstr "Bijna klaar! Voltooi het verbinden van uw Stripe-account om betalingen t
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Bijna klaar! We wachten alleen nog tot je betaling is verwerkt. Dit duurt slechts enkele seconden."
 
-#: src/components/routes/auth/Register/index.tsx:111
+#: src/components/routes/auth/Register/index.tsx:113
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Heeft u al een account? <0>{0}</0>"
 
@@ -1304,6 +1304,7 @@ msgid "Awaiting Payment"
 msgstr "In afwachting van betaling"
 
 #: src/components/forms/OrganizerForm/index.tsx:29
+#: src/components/routes/auth/Register/index.tsx:129
 msgid "Awesome Events Ltd."
 msgstr "Awesome Events B.V."
 
@@ -1446,7 +1447,7 @@ msgstr "Per valuta (sinds het begin)"
 msgid "By month"
 msgstr "Per maand"
 
-#: src/components/routes/auth/Register/index.tsx:179
+#: src/components/routes/auth/Register/index.tsx:189
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Door je te registreren ga je akkoord met onze <0>Servicevoorwaarden</0> en <1>Privacybeleid</1>."
 
@@ -2053,12 +2054,12 @@ msgid "Confirm New Password"
 msgstr "Nieuw wachtwoord bevestigen"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:157
+#: src/components/routes/auth/Register/index.tsx:167
 msgid "Confirm password"
 msgstr "Wachtwoord bevestigen"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:156
+#: src/components/routes/auth/Register/index.tsx:166
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Wachtwoord bevestigen"
@@ -3240,7 +3241,7 @@ msgstr "Komt in aanmerking voor een officieel giftbewijs."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:140
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -4152,7 +4153,7 @@ msgstr "Voornaam"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:126
+#: src/components/routes/auth/Register/index.tsx:136
 #: src/components/routes/product-widget/CollectInformation/index.tsx:508
 #: src/components/routes/product-widget/CollectInformation/index.tsx:724
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4301,7 +4302,7 @@ msgstr "Routebeschrijving"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Ontvang onmiddellijk betaling via Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:109
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Get started"
 msgstr "Aan de slag"
 
@@ -4794,7 +4795,7 @@ msgstr "Uitnodiging ingetrokken"
 msgid "Invitation revoked!"
 msgstr "Uitnodiging ingetrokken!"
 
-#: src/components/routes/auth/Register/index.tsx:94
+#: src/components/routes/auth/Register/index.tsx:96
 msgid "Invitation unavailable"
 msgstr "Uitnodiging niet beschikbaar"
 
@@ -4900,7 +4901,7 @@ msgid "Job queued for retry"
 msgstr "Taak in wachtrij voor opnieuw proberen"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:127
+#: src/components/routes/auth/Register/index.tsx:137
 msgid "John"
 msgstr "Jan"
 
@@ -5013,7 +5014,7 @@ msgstr "Achternaam"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:132
+#: src/components/routes/auth/Register/index.tsx:142
 #: src/components/routes/product-widget/CollectInformation/index.tsx:515
 #: src/components/routes/product-widget/CollectInformation/index.tsx:516
 #: src/components/routes/product-widget/CollectInformation/index.tsx:731
@@ -5141,7 +5142,7 @@ msgid "Location"
 msgstr "Locatie"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:114
+#: src/components/routes/auth/Register/index.tsx:116
 msgid "Log in"
 msgstr "Log in"
 
@@ -6278,9 +6279,14 @@ msgid "Organization Details"
 msgstr "Organisatie details"
 
 #: src/components/forms/OrganizerForm/index.tsx:28
+#: src/components/routes/auth/Register/index.tsx:127
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:250
 msgid "Organization Name"
 msgstr "Naam organisatie"
+
+#: src/components/routes/auth/Register/index.tsx:50
+msgid "Organization name is required"
+msgstr "Naam van de organisatie is verplicht"
 
 #: src/components/common/AdminEventsTable/index.tsx:87
 #: src/components/common/AttendeeTicket/index.tsx:88
@@ -6447,7 +6453,7 @@ msgstr "Doorberekenen aan koper"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:150
+#: src/components/routes/auth/Register/index.tsx:160
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Wachtwoord"
@@ -6456,7 +6462,7 @@ msgstr "Wachtwoord"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "Wachtwoord moet minimaal 8 tekens bevatten"
 
-#: src/components/routes/auth/Register/index.tsx:46
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Password must be at least 8 characters"
 msgstr "Wachtwoord moet minstens 8 tekens bevatten"
 
@@ -6465,7 +6471,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Wachtwoord opnieuw ingesteld. Log in met je nieuwe wachtwoord."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:47
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Passwords are not the same"
 msgstr "Wachtwoorden zijn niet hetzelfde"
 
@@ -6739,7 +6745,7 @@ msgid "Please check your email and password and try again"
 msgstr "Controleer je e-mail en wachtwoord en probeer het opnieuw"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:48
+#: src/components/routes/auth/Register/index.tsx:49
 msgid "Please check your email is valid"
 msgstr "Controleer of je e-mailadres geldig is"
 
@@ -7221,7 +7227,7 @@ msgid "Receipt number prefix"
 msgstr "Voorvoegsel van het bewijsnummer"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:171
+#: src/components/routes/auth/Register/index.tsx:181
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Productupdates van {0} ontvangen."
@@ -7341,7 +7347,7 @@ msgstr "Terugbetalingen"
 msgid "Regional Settings"
 msgstr "Regionale instellingen"
 
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Register"
 msgstr "Registreer"
 
@@ -8257,7 +8263,7 @@ msgid "Slovak"
 msgstr "Slowaaks"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:143
 msgid "Smith"
 msgstr "Jansen"
 
@@ -8892,6 +8898,10 @@ msgstr "De link waarop je hebt geklikt is ongeldig."
 msgid "The maximum number of products for {0}is {1}"
 msgstr "Het maximum aantal producten voor {0}is {1}"
 
+#: src/components/routes/auth/Register/index.tsx:128
+msgid "The name your buyers will see. You can change it later."
+msgstr "De naam die je kopers zien. Je kunt hem later wijzigen."
+
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
@@ -9052,11 +9062,11 @@ msgstr "Dit evenement is nog niet gepubliceerd"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Deze informatie wordt weergegeven op de betaalpagina, de pagina met het overzicht van de bestelling en de e-mail ter bevestiging van de bestelling."
 
-#: src/components/routes/auth/Register/index.tsx:142
+#: src/components/routes/auth/Register/index.tsx:152
 msgid "This invitation is tied to this address."
 msgstr "Deze uitnodiging is gekoppeld aan dit adres."
 
-#: src/components/routes/auth/Register/index.tsx:99
+#: src/components/routes/auth/Register/index.tsx:101
 msgid "This invitation link is no longer valid. Ask for a new one."
 msgstr "Deze uitnodigingslink is niet meer geldig. Vraag om een nieuwe."
 
@@ -10471,7 +10481,7 @@ msgstr "Werken"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Working..."
 msgstr "Werken..."
 
@@ -10788,7 +10798,7 @@ msgid "Your organizer address"
 msgstr "Adres van je organisator"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:151
+#: src/components/routes/auth/Register/index.tsx:161
 msgid "Your password"
 msgstr "Uw wachtwoord"
 

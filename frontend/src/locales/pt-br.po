@@ -783,7 +783,7 @@ msgstr "Quase lá! Termine de conectar sua conta Stripe para começar a aceitar 
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Quase lá! Estamos apenas aguardando o processamento do seu pagamento. Isso deve levar apenas alguns segundos."
 
-#: src/components/routes/auth/Register/index.tsx:111
+#: src/components/routes/auth/Register/index.tsx:113
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Já tem uma conta? <0>{0}</0>"
 
@@ -1303,6 +1303,7 @@ msgid "Awaiting Payment"
 msgstr "Aguardando pagamento"
 
 #: src/components/forms/OrganizerForm/index.tsx:29
+#: src/components/routes/auth/Register/index.tsx:129
 msgid "Awesome Events Ltd."
 msgstr "Awesome Events Lda."
 
@@ -1445,7 +1446,7 @@ msgstr "Por moeda (desde o início)"
 msgid "By month"
 msgstr "Por mês"
 
-#: src/components/routes/auth/Register/index.tsx:179
+#: src/components/routes/auth/Register/index.tsx:189
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Ao se registrar, você concorda com nossos <0>Termos de Serviço</0> e <1>Política de Privacidade</1>."
 
@@ -2052,12 +2053,12 @@ msgid "Confirm New Password"
 msgstr "Confirmar nova senha"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:157
+#: src/components/routes/auth/Register/index.tsx:167
 msgid "Confirm password"
 msgstr "Confirmar senha"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:156
+#: src/components/routes/auth/Register/index.tsx:166
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Confirmar senha"
@@ -3239,7 +3240,7 @@ msgstr "Dá direito a um recibo fiscal oficial."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:140
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -4151,7 +4152,7 @@ msgstr "Primeiro nome"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:126
+#: src/components/routes/auth/Register/index.tsx:136
 #: src/components/routes/product-widget/CollectInformation/index.tsx:508
 #: src/components/routes/product-widget/CollectInformation/index.tsx:724
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4300,7 +4301,7 @@ msgstr "Como chegar"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Receba pagamentos imediatamente via Stripe Connect"
 
-#: src/components/routes/auth/Register/index.tsx:109
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Get started"
 msgstr "Começar"
 
@@ -4793,7 +4794,7 @@ msgstr "Convite revogado"
 msgid "Invitation revoked!"
 msgstr "Convite revogado!"
 
-#: src/components/routes/auth/Register/index.tsx:94
+#: src/components/routes/auth/Register/index.tsx:96
 msgid "Invitation unavailable"
 msgstr "Convite indisponível"
 
@@ -4899,7 +4900,7 @@ msgid "Job queued for retry"
 msgstr "Trabalho na fila para nova tentativa"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:127
+#: src/components/routes/auth/Register/index.tsx:137
 msgid "John"
 msgstr "João"
 
@@ -5012,7 +5013,7 @@ msgstr "Sobrenome"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:132
+#: src/components/routes/auth/Register/index.tsx:142
 #: src/components/routes/product-widget/CollectInformation/index.tsx:515
 #: src/components/routes/product-widget/CollectInformation/index.tsx:516
 #: src/components/routes/product-widget/CollectInformation/index.tsx:731
@@ -5140,7 +5141,7 @@ msgid "Location"
 msgstr "Localização"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:114
+#: src/components/routes/auth/Register/index.tsx:116
 msgid "Log in"
 msgstr "Fazer login"
 
@@ -6277,9 +6278,14 @@ msgid "Organization Details"
 msgstr "Detalhes da organização"
 
 #: src/components/forms/OrganizerForm/index.tsx:28
+#: src/components/routes/auth/Register/index.tsx:127
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:250
 msgid "Organization Name"
 msgstr "Nome da organização"
+
+#: src/components/routes/auth/Register/index.tsx:50
+msgid "Organization name is required"
+msgstr "O nome da organização é obrigatório"
 
 #: src/components/common/AdminEventsTable/index.tsx:87
 #: src/components/common/AttendeeTicket/index.tsx:88
@@ -6446,7 +6452,7 @@ msgstr "Passar para o comprador"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:150
+#: src/components/routes/auth/Register/index.tsx:160
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Senha"
@@ -6455,7 +6461,7 @@ msgstr "Senha"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "A senha deve ter um mínimo de 8 caracteres"
 
-#: src/components/routes/auth/Register/index.tsx:46
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Password must be at least 8 characters"
 msgstr "A senha deve ter pelo menos 8 caracteres"
 
@@ -6464,7 +6470,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Redefinição de senha bem-sucedida. Faça login com sua nova senha."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:47
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Passwords are not the same"
 msgstr "As senhas não são as mesmas"
 
@@ -6738,7 +6744,7 @@ msgid "Please check your email and password and try again"
 msgstr "Verifique seu e-mail e senha e tente novamente"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:48
+#: src/components/routes/auth/Register/index.tsx:49
 msgid "Please check your email is valid"
 msgstr "Verifique se seu e-mail é válido"
 
@@ -7220,7 +7226,7 @@ msgid "Receipt number prefix"
 msgstr "Prefixo do número do recibo"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:171
+#: src/components/routes/auth/Register/index.tsx:181
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Receber atualizações de produtos do {0}."
@@ -7340,7 +7346,7 @@ msgstr "Reembolsos"
 msgid "Regional Settings"
 msgstr "Configurações regionais"
 
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Register"
 msgstr "Registro"
 
@@ -8256,7 +8262,7 @@ msgid "Slovak"
 msgstr "Eslovaco"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:143
 msgid "Smith"
 msgstr "Smith"
 
@@ -8891,6 +8897,10 @@ msgstr "O link em que você clicou é inválido."
 msgid "The maximum number of products for {0}is {1}"
 msgstr "O número máximo de produtos para {0} é {1}"
 
+#: src/components/routes/auth/Register/index.tsx:128
+msgid "The name your buyers will see. You can change it later."
+msgstr "O nome que seus compradores vão ver. Você pode alterá-lo depois."
+
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
@@ -9051,11 +9061,11 @@ msgstr "Este evento ainda não foi publicado"
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Essas informações serão exibidas na página de pagamento, no resumo do pedido e no e-mail de confirmação do pedido."
 
-#: src/components/routes/auth/Register/index.tsx:142
+#: src/components/routes/auth/Register/index.tsx:152
 msgid "This invitation is tied to this address."
 msgstr "Este convite está vinculado a este endereço."
 
-#: src/components/routes/auth/Register/index.tsx:99
+#: src/components/routes/auth/Register/index.tsx:101
 msgid "This invitation link is no longer valid. Ask for a new one."
 msgstr "Este link de convite não é mais válido. Peça um novo."
 
@@ -10470,7 +10480,7 @@ msgstr "Trabalho"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Working..."
 msgstr "Trabalhando..."
 
@@ -10787,7 +10797,7 @@ msgid "Your organizer address"
 msgstr "Endereço do seu organizador"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:151
+#: src/components/routes/auth/Register/index.tsx:161
 msgid "Your password"
 msgstr "Sua senha"
 

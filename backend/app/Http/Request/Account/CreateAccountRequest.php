@@ -17,6 +17,7 @@ class CreateAccountRequest extends BaseRequest
         $currencies = include __DIR__ . '/../../../../data/currencies.php';
 
         return [
+            'organization_name' => ['nullable', 'string', 'max:255'],
             'first_name' => RulesHelper::REQUIRED_STRING,
             'last_name' => RulesHelper::STRING,
             'email' => RulesHelper::REQUIRED_EMAIL,

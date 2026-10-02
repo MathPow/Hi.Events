@@ -783,7 +783,7 @@ msgstr "Majdnem kész! Fejezze be Stripe fiókja csatlakoztatását a kifizetés
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Majdnem kész! Csak a fizetés feldolgozására várunk. Ez csak néhány másodpercet vesz igénybe."
 
-#: src/components/routes/auth/Register/index.tsx:111
+#: src/components/routes/auth/Register/index.tsx:113
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Már van fiókja? <0>{0}</0>"
 
@@ -1303,6 +1303,7 @@ msgid "Awaiting Payment"
 msgstr "Fizetésre vár"
 
 #: src/components/forms/OrganizerForm/index.tsx:29
+#: src/components/routes/auth/Register/index.tsx:129
 msgid "Awesome Events Ltd."
 msgstr "Awesome Events Kft."
 
@@ -1445,7 +1446,7 @@ msgstr "Pénznem szerint (összesen)"
 msgid "By month"
 msgstr "Hónap szerint"
 
-#: src/components/routes/auth/Register/index.tsx:179
+#: src/components/routes/auth/Register/index.tsx:189
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "A regisztrációval elfogadja <0>Szolgáltatási feltételeinket</0> és <1>Adatvédelmi irányelveinket</1>."
 
@@ -2052,12 +2053,12 @@ msgid "Confirm New Password"
 msgstr "Új jelszó megerősítése"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:134
-#: src/components/routes/auth/Register/index.tsx:157
+#: src/components/routes/auth/Register/index.tsx:167
 msgid "Confirm password"
 msgstr "Jelszó megerősítése"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:133
-#: src/components/routes/auth/Register/index.tsx:156
+#: src/components/routes/auth/Register/index.tsx:166
 #: src/components/routes/auth/ResetPassword/index.tsx:70
 msgid "Confirm Password"
 msgstr "Jelszó megerősítése"
@@ -3239,7 +3240,7 @@ msgstr "Hivatalos adóigazolásra jogosít."
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
-#: src/components/routes/auth/Register/index.tsx:140
+#: src/components/routes/auth/Register/index.tsx:150
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:78
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:68
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:68
@@ -4151,7 +4152,7 @@ msgstr "Keresztnév"
 #: src/components/modals/InviteUserModal/index.tsx:57
 #: src/components/modals/JoinWaitlistModal/index.tsx:161
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
-#: src/components/routes/auth/Register/index.tsx:126
+#: src/components/routes/auth/Register/index.tsx:136
 #: src/components/routes/product-widget/CollectInformation/index.tsx:508
 #: src/components/routes/product-widget/CollectInformation/index.tsx:724
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:53
@@ -4300,7 +4301,7 @@ msgstr "Útvonal"
 msgid "Get paid immediately via Stripe Connect"
 msgstr "Azonnali kifizetés Stripe Connect-en keresztül"
 
-#: src/components/routes/auth/Register/index.tsx:109
+#: src/components/routes/auth/Register/index.tsx:111
 msgid "Get started"
 msgstr "Kezdés"
 
@@ -4793,7 +4794,7 @@ msgstr "Meghívó visszavonva"
 msgid "Invitation revoked!"
 msgstr "Meghívó visszavonva!"
 
-#: src/components/routes/auth/Register/index.tsx:94
+#: src/components/routes/auth/Register/index.tsx:96
 msgid "Invitation unavailable"
 msgstr "A meghívó nem érhető el"
 
@@ -4899,7 +4900,7 @@ msgid "Job queued for retry"
 msgstr "Feladat újrapróbálásra sorba állítva"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:127
+#: src/components/routes/auth/Register/index.tsx:137
 msgid "John"
 msgstr "János"
 
@@ -5012,7 +5013,7 @@ msgstr "Vezetéknév"
 #: src/components/modals/InviteUserModal/index.tsx:58
 #: src/components/modals/JoinWaitlistModal/index.tsx:166
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
-#: src/components/routes/auth/Register/index.tsx:132
+#: src/components/routes/auth/Register/index.tsx:142
 #: src/components/routes/product-widget/CollectInformation/index.tsx:515
 #: src/components/routes/product-widget/CollectInformation/index.tsx:516
 #: src/components/routes/product-widget/CollectInformation/index.tsx:731
@@ -5140,7 +5141,7 @@ msgid "Location"
 msgstr "Helyszín"
 
 #: src/components/routes/auth/Login/index.tsx:104
-#: src/components/routes/auth/Register/index.tsx:114
+#: src/components/routes/auth/Register/index.tsx:116
 msgid "Log in"
 msgstr "Bejelentkezés"
 
@@ -6277,9 +6278,14 @@ msgid "Organization Details"
 msgstr "Szervezet részletei"
 
 #: src/components/forms/OrganizerForm/index.tsx:28
+#: src/components/routes/auth/Register/index.tsx:127
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:250
 msgid "Organization Name"
 msgstr "Szervezet neve"
+
+#: src/components/routes/auth/Register/index.tsx:50
+msgid "Organization name is required"
+msgstr "A szervezet neve kötelező"
 
 #: src/components/common/AdminEventsTable/index.tsx:87
 #: src/components/common/AttendeeTicket/index.tsx:88
@@ -6446,7 +6452,7 @@ msgstr "Áthárítás a vevőre"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:127
 #: src/components/routes/auth/Login/index.tsx:98
-#: src/components/routes/auth/Register/index.tsx:150
+#: src/components/routes/auth/Register/index.tsx:160
 #: src/components/routes/profile/ManageProfile/index.tsx:119
 msgid "Password"
 msgstr "Jelszó"
@@ -6455,7 +6461,7 @@ msgstr "Jelszó"
 msgid "Password must be a minimum  of 8 characters"
 msgstr "A jelszónak legalább 8 karakterből kell állnia"
 
-#: src/components/routes/auth/Register/index.tsx:46
+#: src/components/routes/auth/Register/index.tsx:47
 msgid "Password must be at least 8 characters"
 msgstr "A jelszónak legalább 8 karakter hosszúnak kell lennie."
 
@@ -6464,7 +6470,7 @@ msgid "Password reset successfully. Please login with your new password."
 msgstr "Jelszó sikeresen visszaállítva. Kérjük, jelentkezzen be új jelszavával."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:32
-#: src/components/routes/auth/Register/index.tsx:47
+#: src/components/routes/auth/Register/index.tsx:48
 msgid "Passwords are not the same"
 msgstr "A jelszavak nem egyeznek."
 
@@ -6738,7 +6744,7 @@ msgid "Please check your email and password and try again"
 msgstr "Kérjük, ellenőrizze e-mail címét és jelszavát, majd próbálja újra."
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:33
-#: src/components/routes/auth/Register/index.tsx:48
+#: src/components/routes/auth/Register/index.tsx:49
 msgid "Please check your email is valid"
 msgstr "Kérjük, ellenőrizze, hogy az e-mail címe érvényes-e."
 
@@ -7220,7 +7226,7 @@ msgid "Receipt number prefix"
 msgstr "Igazolás sorszámának előtagja"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:157
-#: src/components/routes/auth/Register/index.tsx:171
+#: src/components/routes/auth/Register/index.tsx:181
 #: src/components/routes/profile/ManageProfile/index.tsx:209
 msgid "Receive product updates from {0}."
 msgstr "Termékfrissítések fogadása a {0}-től."
@@ -7340,7 +7346,7 @@ msgstr "Visszatérítések"
 msgid "Regional Settings"
 msgstr "Regionális beállítások"
 
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Register"
 msgstr "Regisztráció"
 
@@ -8256,7 +8262,7 @@ msgid "Slovak"
 msgstr "Szlovák"
 
 #: src/components/routes/auth/AcceptInvitation/index.tsx:103
-#: src/components/routes/auth/Register/index.tsx:133
+#: src/components/routes/auth/Register/index.tsx:143
 msgid "Smith"
 msgstr "Smith"
 
@@ -8891,6 +8897,10 @@ msgstr "A link, amire kattintott, érvénytelen."
 msgid "The maximum number of products for {0}is {1}"
 msgstr "A termékek maximális száma {0} számára {1}"
 
+#: src/components/routes/auth/Register/index.tsx:128
+msgid "The name your buyers will see. You can change it later."
+msgstr "A név, amelyet a vásárlóid látni fognak. Később módosíthatod."
+
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
@@ -9051,11 +9061,11 @@ msgstr "Ez az esemény még nem került közzétételre."
 msgid "This information will be shown on the payment page, order summary page, and order confirmation email."
 msgstr "Ez az információ megjelenik a fizetési oldalon, a megrendelés összefoglaló oldalán és a megrendelés visszaigazoló e-mailben."
 
-#: src/components/routes/auth/Register/index.tsx:142
+#: src/components/routes/auth/Register/index.tsx:152
 msgid "This invitation is tied to this address."
 msgstr "Ez a meghívó ehhez a címhez van kötve."
 
-#: src/components/routes/auth/Register/index.tsx:99
+#: src/components/routes/auth/Register/index.tsx:101
 msgid "This invitation link is no longer valid. Ask for a new one."
 msgstr "Ez a meghívó link már nem érvényes. Kérj újat."
 
@@ -10470,7 +10480,7 @@ msgstr "Dolgozik"
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
 #: src/components/modals/ManageAttendeeModal/index.tsx:231
 #: src/components/modals/ManageOrderModal/index.tsx:175
-#: src/components/routes/auth/Register/index.tsx:175
+#: src/components/routes/auth/Register/index.tsx:185
 msgid "Working..."
 msgstr "Dolgozik..."
 
@@ -10787,7 +10797,7 @@ msgid "Your organizer address"
 msgstr "Szervezői címe"
 
 #: src/components/routes/auth/Login/index.tsx:99
-#: src/components/routes/auth/Register/index.tsx:151
+#: src/components/routes/auth/Register/index.tsx:161
 msgid "Your password"
 msgstr "Az Ön jelszava"
 
