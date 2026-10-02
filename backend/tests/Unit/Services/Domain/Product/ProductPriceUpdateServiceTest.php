@@ -103,6 +103,31 @@ class ProductPriceUpdateServiceTest extends TestCase
         }
     }
 
+    public function testSizedProductAppliesFirstPriceToEverySize(): void
+    {
+        $existingPrices = new Collection([
+            $this->createExistingPrice(id: 1, quantitySold: 0, label: 'S'),
+            $this->createExistingPrice(id: 2, quantitySold: 0, label: 'M'),
+        ]);
+        [$product, $event] = $this->createProductAndEvent($existingPrices);
+
+        $this->productPriceRepository->shouldReceive('updateWhere')
+            ->twice()
+            ->withArgs(fn(array $attributes) => $attributes['price'] === 25.00);
+        $this->productPriceRepository->shouldReceive('create')
+            ->once()
+            ->withArgs(fn(array $attributes) => $attributes['price'] === 25.00 && $attributes['label'] === 'L');
+
+        $productsData = $this->createUpsertDTO(ProductPriceType::SIZED, [
+            new ProductPriceDTO(price: 25.00, label: 'S', initial_quantity_available: 10, id: 1),
+            new ProductPriceDTO(price: 99.00, label: 'M', initial_quantity_available: 10, id: 2),
+            new ProductPriceDTO(price: 0.00, label: 'L', initial_quantity_available: 5),
+        ]);
+
+        $this->service->updatePrices($product, $productsData, $existingPrices, $event);
+        $this->assertTrue(true);
+    }
+
     private function createExistingPrice(int $id, int $quantitySold, string $label): MockInterface
     {
         $price = Mockery::mock(ProductPriceDomainObject::class);

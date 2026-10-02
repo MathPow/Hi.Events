@@ -26,6 +26,19 @@ class UpsertProductRequest extends BaseRequest
     {
         return [
             function ($validator) {
+                if ($this->input('type') !== ProductPriceType::SIZED->name) {
+                    return;
+                }
+
+                $labels = collect($this->input('prices', []))
+                    ->map(fn($price) => mb_strtolower(trim((string)($price['label'] ?? ''))))
+                    ->filter(fn($label) => $label !== '');
+
+                if ($labels->count() !== $labels->unique()->count()) {
+                    $validator->errors()->add('prices', __('Each size must have a unique name.'));
+                }
+            },
+            function ($validator) {
                 $wantsDonationType = $this->input('type') === ProductPriceType::DONATION->name;
                 $wantsCharitySplit = (float)$this->input('charity_amount', 0) > 0;
 
@@ -93,7 +106,7 @@ class UpsertProductRequest extends BaseRequest
             'max_per_order' => 'integer|nullable',
             'prices' => ['required', 'array'],
             'prices.*.price' => [...RulesHelper::MONEY, 'required'],
-            'prices.*.label' => ['nullable', ...RulesHelper::STRING, 'required_if:type,' . ProductPriceType::TIERED->name],
+            'prices.*.label' => ['nullable', ...RulesHelper::STRING, 'required_if:type,' . ProductPriceType::TIERED->name . ',' . ProductPriceType::SIZED->name],
             'prices.*.sale_start_date' => ['date', 'nullable', 'after:sale_start_date'],
             'prices.*.sale_end_date' => 'date|nullable|after:prices.*.sale_start_date',
             'prices.*.initial_quantity_available' => ['integer', 'nullable', 'min:0'],

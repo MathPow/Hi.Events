@@ -4,7 +4,6 @@ namespace HiEvents\Exports;
 
 use Carbon\Carbon;
 use HiEvents\DomainObjects\AttendeeDomainObject;
-use HiEvents\DomainObjects\Enums\ProductPriceType;
 use HiEvents\DomainObjects\Enums\QuestionTypeEnum;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\ProductDomainObject;
@@ -98,7 +97,7 @@ class AttendeesExport implements FromCollection, WithHeadings, WithMapping, With
         /** @var ProductDomainObject $ticket */
         $ticket = $attendee->getProduct();
         $ticketName = $ticket?->getTitle();
-        if ($ticket && $ticket->getType() === ProductPriceType::TIERED->name) {
+        if ($ticket && $ticket->hasMultiplePrices()) {
             $ticketName .= ' - ' . $ticket
                     ->getProductPrices()
                     ->first(fn(ProductPriceDomainObject $tp) => $tp->getId() === $attendee->getProductPriceId())

@@ -21,6 +21,7 @@ export const findDefaultTicket = (event: Event): Product | undefined => {
         && !product.is_sold_out
         && product.type !== ProductPriceType.Donation
         && product.type !== ProductPriceType.Tiered
+        && product.type !== ProductPriceType.Sized
         && product.prices?.length === 1
         && product.prices[0].is_available !== false
     );

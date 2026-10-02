@@ -4,6 +4,7 @@ import {Tooltip} from "@mantine/core";
 import {prettyDate, relativeDate} from "../../../utilites/dates.ts";
 import {IconInfoCircle} from "@tabler/icons-react";
 import {JoinWaitlistButton} from "../JoinWaitlistButton";
+import {hasMultiplePrices} from "../../../utilites/products.ts";
 
 interface ProductPriceSaleDateMessageProps {
     price: ProductPrice;
@@ -44,7 +45,7 @@ interface ProductAvailabilityMessageProps {
 
 export const ProductAvailabilityMessage = ({product, event}: ProductAvailabilityMessageProps) => {
     if (product.is_sold_out) {
-        if (product.waitlist_enabled && product.type !== 'TIERED') {
+        if (product.waitlist_enabled && !hasMultiplePrices(product)) {
             return <JoinWaitlistButton product={product} event={event} productPriceId={product.prices?.[0]?.id}/>;
         }
         return t`Sold out`;
@@ -74,7 +75,7 @@ interface ProductAndPriceAvailabilityProps {
 
 export const ProductPriceAvailability = ({product, price, event}: ProductAndPriceAvailabilityProps) => {
 
-    if (product.type === 'TIERED') {
+    if (hasMultiplePrices(product)) {
         return <ProductPriceSaleDateMessage price={price} event={event} product={product}/>
     }
 

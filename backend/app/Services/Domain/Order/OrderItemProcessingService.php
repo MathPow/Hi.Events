@@ -225,7 +225,7 @@ class OrderItemProcessingService
 
     private function getOrderItemLabel(ProductDomainObject $product, int $priceId): string
     {
-        if ($product->isTieredType()) {
+        if ($product->hasMultiplePrices()) {
             return $product->getTitle() . ' - ' . $product->getProductPrices()
                     ?->filter(fn($p) => $p->getId() === $priceId)->first()
                     ?->getLabel();

@@ -133,7 +133,7 @@ class ProductDomainObject extends Generated\ProductDomainObjectAbstract implemen
     public function isAvailable(): bool
     {
         // If all prices are hidden, it's not available
-        if ($this->getType() === ProductPriceType::TIERED->name && $this->getProductPrices()?->isEmpty()) {
+        if ($this->hasMultiplePrices() && $this->getProductPrices()?->isEmpty()) {
             return false;
         }
 
@@ -182,6 +182,16 @@ class ProductDomainObject extends Generated\ProductDomainObjectAbstract implemen
         return $this->getType() === ProductPriceType::TIERED->name;
     }
 
+    public function isSizedType(): bool
+    {
+        return $this->getType() === ProductPriceType::SIZED->name;
+    }
+
+    public function hasMultiplePrices(): bool
+    {
+        return $this->isTieredType() || $this->isSizedType();
+    }
+
     public function isDonationType(): bool
     {
         return $this->getType() === ProductPriceType::DONATION->name;
@@ -199,7 +209,7 @@ class ProductDomainObject extends Generated\ProductDomainObjectAbstract implemen
 
     public function getInitialQuantityAvailable(): ?int
     {
-        if ($this->getType() === ProductPriceType::TIERED->name) {
+        if ($this->hasMultiplePrices()) {
             return $this->getProductPrices()?->sum(fn(ProductPriceDomainObject $price) => $price->getInitialQuantityAvailable());
         }
 

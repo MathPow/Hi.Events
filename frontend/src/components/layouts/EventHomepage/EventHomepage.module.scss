@@ -799,6 +799,24 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     padding-top: 16px;
   }
 
+  :global(.hi-sized-price) {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-text-color);
+    margin-bottom: 12px;
+  }
+
+  :global(.hi-sized-heading) {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--secondary-text-color, var(--primary-text-color));
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+
   :global(.hi-price-tier-row) {
     margin-bottom: 12px;
 

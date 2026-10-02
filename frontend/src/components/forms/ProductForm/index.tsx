@@ -26,6 +26,7 @@ import {
     IconInfoCircle,
     IconPlus,
     IconReceipt,
+    IconRuler2,
     IconShirt,
     IconShoppingCart,
     IconTicket,
@@ -46,6 +47,7 @@ import {Fieldset} from "../../common/Fieldset";
 import {Editor} from "../../common/Editor";
 import {InputGroup} from "../../common/InputGroup";
 import {CharitySplitInput} from "./CharitySplitInput";
+import {SizedProductForm} from "./SizedProductForm";
 import {showError} from "../../../utilites/notifications.tsx";
 import classNames from "classnames";
 import {InputLabelWithHelp} from "../../common/InputLabelWithHelp";
@@ -175,6 +177,12 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
             value: 'TIERED',
             description: t`Multiple price options. Perfect for early bird products etc.`,
         },
+        {
+            icon: <IconRuler2/>,
+            label: t`Product with sizes`,
+            value: 'SIZED',
+            description: t`One price, a choice of sizes with their own stock. Perfect for t-shirts and apparel.`,
+        },
     ];
 
     const {eventId} = useParams();
@@ -188,7 +196,8 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
     // d'enregistrement, aucun recu ne sera emis, le champ n'aurait aucun effet.
     const isCharityEnabled = !!organizerSettings?.charity_registration_number;
     const showCharitySplit = isCharityEnabled && !isFreeProduct && !isDonationProduct
-        && form.values.type !== ProductPriceType.Tiered;
+        && form.values.type !== ProductPriceType.Tiered
+        && form.values.type !== ProductPriceType.Sized;
 
     // Le type DONATION annonce un don au sens fiscal. Tant que l'organisme n'est
     // pas configure (numero d'enregistrement absent), aucun recu ne peut etre
@@ -320,7 +329,11 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
                 }))}
             />
 
-            {form.values.type !== ProductPriceType.Tiered && (
+            {form.values.type === ProductPriceType.Sized && (
+                <SizedProductForm form={form} product={product} event={event}/>
+            )}
+
+            {form.values.type !== ProductPriceType.Tiered && form.values.type !== ProductPriceType.Sized && (
                 <InputGroup>
                     <NumberInput decimalScale={2}
                                  min={0}

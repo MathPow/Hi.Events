@@ -499,6 +499,7 @@ export enum ProductPriceType {
     Donation = 'DONATION',
     Free = 'FREE',
     Tiered = 'TIERED',
+    Sized = 'SIZED',
 }
 
 export enum ProductType {

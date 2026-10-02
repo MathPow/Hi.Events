@@ -3,6 +3,7 @@ import {IconTicket} from "@tabler/icons-react";
 import {UseFormReturnType} from "@mantine/form";
 import {ProductCategory, ProductType} from "../../../types.ts";
 import React from "react";
+import {hasMultiplePrices} from "../../../utilites/products.ts";
 import {t} from "@lingui/macro";
 
 interface ProductSelectorProps {
@@ -58,7 +59,7 @@ export const ProductSelector = ({
     const TierSelector = () => {
         return (
             <>
-                {eventProducts?.find(product => product.id == form.values.product_id)?.type === 'TIERED' && (
+                {hasMultiplePrices(eventProducts?.find(product => product.id == form.values.product_id)) && (
                     <Select
                         label={t`Product Tier`}
                         mt={20}

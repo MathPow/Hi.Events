@@ -11,4 +11,10 @@ enum ProductPriceType
     case DONATION;
     case TIERED;
     case REGISTRATION;
+    case SIZED;
+
+    public function hasMultiplePrices(): bool
+    {
+        return $this === self::TIERED || $this === self::SIZED;
+    }
 }

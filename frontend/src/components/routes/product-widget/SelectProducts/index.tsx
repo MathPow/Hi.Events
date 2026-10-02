@@ -25,11 +25,13 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {showError, showInfo, showSuccess} from "../../../../utilites/notifications.tsx";
 import {addQueryStringToUrl, isObjectEmpty, removeQueryStringFromUrl} from "../../../../utilites/helpers.ts";
 import {TieredPricing} from "./Prices/Tiered";
+import {SizedPricing} from "./Prices/Sized";
+import {hasMultiplePrices} from "../../../../utilites/products.ts";
+import {Event, Product, ProductPriceType} from "../../../../types.ts";
 import classNames from 'classnames';
 import '../../../../styles/widget/default.scss';
 import {ProductAvailabilityMessage} from "../../../common/ProductPriceAvailability";
 import {PoweredByFooter} from "../../../common/PoweredByFooter";
-import {Event, Product} from "../../../../types.ts";
 import {eventsClientPublic} from "../../../../api/event.client.ts";
 import {promoCodeClientPublic} from "../../../../api/promo-code.client.ts";
 import {IconChevronRight, IconTag, IconX} from "@tabler/icons-react"
@@ -491,7 +493,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                                     </>
                                                                 )}
 
-                                                                {(!product.is_available && product.type === 'TIERED') && (
+                                                                {(!product.is_available && hasMultiplePrices(product)) && (
                                                                     <ProductAvailabilityMessage product={product}
                                                                                                 event={event}/>
                                                                 )}
@@ -506,12 +508,21 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                     <Collapse transitionDuration={100} in={!isProductCollapsed}
                                                               className={'hi-product-content'} hidden={isProductCollapsed}>
                                                         <div className={'hi-price-tiers-rows'}>
-                                                            <TieredPricing
-                                                                productIndex={productIndex++}
-                                                                event={event}
-                                                                product={product}
-                                                                form={form}
-                                                            />
+                                                            {product.type === ProductPriceType.Sized ? (
+                                                                <SizedPricing
+                                                                    productIndex={productIndex++}
+                                                                    event={event}
+                                                                    product={product}
+                                                                    form={form}
+                                                                />
+                                                            ) : (
+                                                                <TieredPricing
+                                                                    productIndex={productIndex++}
+                                                                    event={event}
+                                                                    product={product}
+                                                                    form={form}
+                                                                />
+                                                            )}
                                                         </div>
 
                                                         {product.max_per_order && form.values.products && isObjectEmpty(form.errors) && (form.values.products[currentProductIndex]?.quantities.reduce((acc, {quantity}) => acc + Number(quantity), 0) > product.max_per_order) && (

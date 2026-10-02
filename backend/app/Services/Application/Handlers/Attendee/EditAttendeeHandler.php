@@ -4,7 +4,6 @@ namespace HiEvents\Services\Application\Handlers\Attendee;
 
 use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\Enums\CapacityChangeDirection;
-use HiEvents\DomainObjects\Enums\ProductPriceType;
 use HiEvents\DomainObjects\Generated\AttendeeDomainObjectAbstract;
 use HiEvents\DomainObjects\Generated\ProductDomainObjectAbstract;
 use HiEvents\DomainObjects\ProductDomainObject;
@@ -125,7 +124,7 @@ class EditAttendeeHandler
 
         $availableQuantity = $this->productRepository->getQuantityRemainingForProductPrice(
             productId: $editAttendeeDTO->product_id,
-            productPriceId: $product->getType() === ProductPriceType::TIERED->name
+            productPriceId: $product->hasMultiplePrices()
                 ? $editAttendeeDTO->product_price_id
                 : $product->getProductPrices()->first()->getId(),
         );

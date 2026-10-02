@@ -29,7 +29,11 @@ class CreateProductHandler
     public function handle(UpsertProductDTO $productsData): ProductDomainObject
     {
         $productPrices = $productsData->prices->map(fn(ProductPriceDTO $price) => ProductPriceDomainObject::hydrateFromArray([
-            ProductPriceDomainObjectAbstract::PRICE => $productsData->type === ProductPriceType::FREE ? 0.00 : $price->price,
+            ProductPriceDomainObjectAbstract::PRICE => match ($productsData->type) {
+                ProductPriceType::FREE => 0.00,
+                ProductPriceType::SIZED => $productsData->prices->first()->price,
+                default => $price->price,
+            },
             ProductPriceDomainObjectAbstract::LABEL => $price->label,
             ProductPriceDomainObjectAbstract::SALE_START_DATE => $price->sale_start_date,
             ProductPriceDomainObjectAbstract::SALE_END_DATE => $price->sale_end_date,

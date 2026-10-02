@@ -36,7 +36,18 @@ class ProductPriceUpdateService
     {
         $this->validateQuantityAvailable($productsData->prices, $existingPrices);
 
-        if ($productsData->type !== ProductPriceType::TIERED) {
+        if ($productsData->type === ProductPriceType::SIZED) {
+            $sharedPrice = $productsData->prices->first()->price;
+            $prices = $productsData->prices->map(fn(ProductPriceDTO $price) => new ProductPriceDTO(
+                price: $sharedPrice,
+                label: $price->label,
+                sale_start_date: $price->sale_start_date,
+                sale_end_date: $price->sale_end_date,
+                initial_quantity_available: $price->initial_quantity_available,
+                is_hidden: $price->is_hidden,
+                id: $price->id,
+            ));
+        } elseif ($productsData->type !== ProductPriceType::TIERED) {
             $prices = new Collection([new ProductPriceDTO(
                 price: $productsData->type === ProductPriceType::FREE ? 0.00 : $productsData->prices->first()->price,
                 label: null,

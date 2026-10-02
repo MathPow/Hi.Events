@@ -71,7 +71,8 @@ class ProductPriceService
             ProductPriceType::DONATION->name => max($product->getPrice(), $productOrderDetails->price),
             ProductPriceType::PAID->name => $product->getPrice(),
             ProductPriceType::FREE->name => 0.00,
-            ProductPriceType::TIERED->name => $product->getPriceById($productOrderDetails->price_id)?->getPrice()
+            ProductPriceType::TIERED->name,
+            ProductPriceType::SIZED->name => $product->getPriceById($productOrderDetails->price_id)?->getPrice()
         };
     }
 }

@@ -303,7 +303,7 @@ class ProductFilterService
     {
         $hidden = false;
 
-        if (!$product->isTieredType()) {
+        if (!$product->hasMultiplePrices()) {
             return false;
         }
 
@@ -341,7 +341,7 @@ class ProductFilterService
 
     private function getPriceAvailability(ProductPriceDomainObject $price, ProductDomainObject $product): bool
     {
-        if ($product->isTieredType()) {
+        if ($product->hasMultiplePrices()) {
             return !$price->isSoldOut()
                 && !$price->isBeforeSaleStartDate()
                 && !$price->isAfterSaleEndDate()

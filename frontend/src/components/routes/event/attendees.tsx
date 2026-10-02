@@ -21,6 +21,7 @@ import {withLoadingNotification} from "../../../utilites/withLoadingNotification
 import {FilterModal, FilterOption} from "../../common/FilterModal";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {getProductsFromEvent} from "../../../utilites/helpers.ts";
+import {hasMultiplePrices} from "../../../utilites/products.ts";
 
 const attendeeStatuses = [
     {label: t`Active`, value: 'ACTIVE'},
@@ -48,7 +49,7 @@ const Attendees = () => {
                 value: `product:${product.id}`
             });
 
-            if (product.type === 'TIERED' && product.prices) {
+            if (hasMultiplePrices(product) && product.prices) {
                 product.prices.forEach(price => {
                     options.push({
                         label: `${product.title} - ${price.label}`,

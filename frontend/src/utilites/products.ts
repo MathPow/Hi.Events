@@ -1,7 +1,11 @@
 import {Attendee, Product, ProductPriceType} from "../types.ts";
 
+export const hasMultiplePrices = (product?: Pick<Product, 'type'>): boolean => {
+    return product?.type === ProductPriceType.Tiered || product?.type === ProductPriceType.Sized;
+}
+
 export const getAttendeeProductTitle = (attendee: Attendee, product: Product): string => {
-    if (product.type !== ProductPriceType.Tiered) {
+    if (!hasMultiplePrices(product)) {
         return product.title;
     }
 
