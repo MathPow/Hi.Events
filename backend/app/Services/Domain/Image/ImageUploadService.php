@@ -6,6 +6,7 @@ use HiEvents\DomainObjects\ImageDomainObject;
 use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
 use HiEvents\Services\Infrastructure\Image\Exception\CouldNotUploadImageException;
 use HiEvents\Services\Infrastructure\Image\ImageMetadataService;
+use HiEvents\Services\Infrastructure\Image\ImageOptimizationService;
 use HiEvents\Services\Infrastructure\Image\ImageStorageService;
 use Illuminate\Http\UploadedFile;
 
@@ -15,6 +16,7 @@ class ImageUploadService
         private readonly ImageStorageService      $imageStorageService,
         private readonly ImageRepositoryInterface $imageRepository,
         private readonly ImageMetadataService     $imageMetadataService,
+        private readonly ImageOptimizationService $imageOptimizationService,
     ) {
     }
 
@@ -29,8 +31,16 @@ class ImageUploadService
         int          $accountId,
     ): ImageDomainObject
     {
-        $storedImage = $this->imageStorageService->store($image, $imageType);
-        $metadata = $this->imageMetadataService->extractMetadata($image);
+        $optimizedImage = $this->imageOptimizationService->optimize($image);
+
+        try {
+            $storedImage = $this->imageStorageService->store($optimizedImage, $imageType);
+            $metadata = $this->imageMetadataService->extractMetadata($optimizedImage);
+        } finally {
+            if ($optimizedImage !== $image) {
+                @unlink($optimizedImage->getRealPath());
+            }
+        }
 
         $data = [
             'account_id' => $accountId,

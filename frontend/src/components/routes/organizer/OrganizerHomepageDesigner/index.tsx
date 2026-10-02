@@ -191,7 +191,7 @@ const OrganizerHomepageDesigner = () => {
                                         <Group justify={'space-between'} mb="xs">
                                             <Text fw={500} size="sm">{t`Cover Image`}</Text>
                                             <Tooltip
-                                                label={t`We recommend dimensions of 1950px by 650px, a ratio of 3:1, and a maximum file size of 5MB`}>
+                                                label={t`We recommend dimensions of 1950px by 650px, a ratio of 3:1, and a maximum file size of 30MB`}>
                                                 <IconHelp size={16} style={{color: 'var(--mantine-color-gray-6)'}}/>
                                             </Tooltip>
                                         </Group>
@@ -212,7 +212,7 @@ const OrganizerHomepageDesigner = () => {
                                     <div>
                                         <Group justify={'space-between'} mb="xs">
                                             <Text fw={500} size="sm">{t`Logo`}</Text>
-                                            <Tooltip label={t`We recommend dimensions of 400px by 400px, and a maximum file size of 5MB`}>
+                                            <Tooltip label={t`We recommend dimensions of 400px by 400px, and a maximum file size of 30MB`}>
                                                 <IconHelp size={16} style={{color: 'var(--mantine-color-gray-6)'}}/>
                                             </Tooltip>
                                         </Group>

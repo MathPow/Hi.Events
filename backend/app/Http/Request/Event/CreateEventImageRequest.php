@@ -20,7 +20,7 @@ class CreateEventImageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'image.dimensions' => __('The image must be at least 600 pixels wide and 50 pixels tall, and no more than 4000 pixels wide and 4000 pixels tall.'),
+            'image.dimensions' => __('The image must be at least 600 pixels wide and 50 pixels tall, and no more than 10000 pixels wide and 10000 pixels tall.'),
         ];
     }
 }

@@ -9,6 +9,7 @@ use HiEvents\Services\Infrastructure\Image\DTO\ImageMetadataDTO;
 use HiEvents\Services\Infrastructure\Image\DTO\ImageStorageResponseDTO;
 use HiEvents\Services\Infrastructure\Image\Exception\CouldNotUploadImageException;
 use HiEvents\Services\Infrastructure\Image\ImageMetadataService;
+use HiEvents\Services\Infrastructure\Image\ImageOptimizationService;
 use HiEvents\Services\Infrastructure\Image\ImageStorageService;
 use Illuminate\Http\UploadedFile;
 use Mockery as m;
@@ -19,6 +20,7 @@ class ImageUploadServiceTest extends TestCase
     private ImageStorageService $imageStorageService;
     private ImageRepositoryInterface $imageRepository;
     private ImageMetadataService $imageMetadataService;
+    private ImageOptimizationService $imageOptimizationService;
     private ImageUploadService $service;
 
     protected function setUp(): void
@@ -28,12 +30,40 @@ class ImageUploadServiceTest extends TestCase
         $this->imageStorageService = m::mock(ImageStorageService::class);
         $this->imageRepository = m::mock(ImageRepositoryInterface::class);
         $this->imageMetadataService = m::mock(ImageMetadataService::class);
+        $this->imageOptimizationService = m::mock(ImageOptimizationService::class);
+        $this->imageOptimizationService->shouldReceive('optimize')->andReturnArg(0)->byDefault();
 
         $this->service = new ImageUploadService(
             $this->imageStorageService,
             $this->imageRepository,
-            $this->imageMetadataService
+            $this->imageMetadataService,
+            $this->imageOptimizationService,
         );
+    }
+
+    public function testStoresOptimizedImageAndDeletesItsTemporaryFile(): void
+    {
+        $original = m::mock(UploadedFile::class);
+        $tempPath = tempnam(sys_get_temp_dir(), 'img');
+        $optimized = m::mock(UploadedFile::class);
+        $optimized->shouldReceive('getRealPath')->andReturn($tempPath);
+
+        $this->imageOptimizationService->shouldReceive('optimize')->once()->with($original)->andReturn($optimized);
+        $this->imageStorageService->shouldReceive('store')->once()->with($optimized, 'cover')->andReturn(new ImageStorageResponseDTO(
+            filename: 'foo.jpg',
+            disk: 'public',
+            path: 'cover/foo.jpg',
+            size: 1000,
+            mime_type: 'image/jpeg'
+        ));
+        $this->imageMetadataService->shouldReceive('extractMetadata')->once()->with($optimized)->andReturn(null);
+        $this->imageRepository->shouldReceive('create')->once()
+            ->withArgs(fn(array $data) => $data['size'] === 1000)
+            ->andReturn(m::mock(ImageDomainObject::class));
+
+        $this->service->upload($original, 1, 'event', 'cover', 1);
+
+        $this->assertFileDoesNotExist($tempPath);
     }
 
     public function testUploadSuccessfullyCreatesImageRecordWithMetadata(): void
