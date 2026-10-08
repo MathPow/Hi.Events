@@ -27,9 +27,21 @@ class MessageResource extends JsonResource
             'status' => $this->getStatus(),
             'scheduled_at' => $this->getScheduledAt(),
             'message_preview' => $this->getMessagePreview(),
+            'attachments' => $this->getAttachmentNames(),
             $this->mergeWhen(!is_null($this->getSentByUser()), fn() => [
                 'sent_by_user' => new UserResource($this->getSentByUser()),
             ]),
         ];
+    }
+
+    private function getAttachmentNames(): array
+    {
+        $sendData = $this->getSendData();
+        $sendData = is_string($sendData) ? json_decode($sendData, true) : $sendData;
+
+        return collect($sendData['attachments'] ?? [])
+            ->map(fn(array $attachment) => ['name' => $attachment['name']])
+            ->values()
+            ->all();
     }
 }

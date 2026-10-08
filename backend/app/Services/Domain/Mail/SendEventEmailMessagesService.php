@@ -20,13 +20,17 @@ use HiEvents\Repository\Interfaces\MessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\UserRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
-use Illuminate\Contracts\Bus\Dispatcher;
+use HiEvents\Jobs\Message\DeleteMessageAttachmentsJob;
+use Illuminate\Contracts\Bus\QueueingDispatcher;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Log\Logger;
 
 class SendEventEmailMessagesService
 {
     private array $sentEmails = [];
+
+    /** @var SendEventEmailJob[] */
+    private array $pendingJobs = [];
 
     public function __construct(
         private readonly OrderRepositoryInterface    $orderRepository,
@@ -35,7 +39,7 @@ class SendEventEmailMessagesService
         private readonly MessageRepositoryInterface  $messageRepository,
         private readonly UserRepositoryInterface     $userRepository,
         private readonly Logger                      $logger,
-        private readonly Dispatcher                  $dispatcher,
+        private readonly QueueingDispatcher          $dispatcher,
     )
     {
     }
@@ -62,6 +66,7 @@ class SendEventEmailMessagesService
             $message = 'Unable to send message. Order or message ID not present.';
             $this->logger->error($message, $messageData->toArray());
             $this->updateMessageStatus($messageData, MessageStatus::FAILED);
+            $this->deleteAttachments($messageData);
 
             throw new UnableToSendMessageException($message);
         }
@@ -84,7 +89,49 @@ class SendEventEmailMessagesService
                 break;
         }
 
+        $this->dispatchPendingJobs($messageData);
+
         $this->updateMessageStatus($messageData, MessageStatus::SENT);
+    }
+
+    private function dispatchPendingJobs(SendMessageDTO $messageData): void
+    {
+        $jobs = $this->pendingJobs;
+        $this->pendingJobs = [];
+
+        if (empty($messageData->attachments)) {
+            foreach ($jobs as $job) {
+                $this->dispatcher->dispatch($job);
+            }
+
+            return;
+        }
+
+        if (empty($jobs)) {
+            $this->deleteAttachments($messageData);
+
+            return;
+        }
+
+        $attachments = $messageData->attachments;
+
+        $this->dispatcher
+            ->batch($jobs)
+            ->name('message-' . $messageData->id)
+            ->allowFailures()
+            ->finally(static function () use ($attachments) {
+                DeleteMessageAttachmentsJob::dispatch($attachments);
+            })
+            ->dispatch();
+    }
+
+    private function deleteAttachments(SendMessageDTO $messageData): void
+    {
+        if (empty($messageData->attachments)) {
+            return;
+        }
+
+        $this->dispatcher->dispatch(new DeleteMessageAttachmentsJob($messageData->attachments));
     }
 
     private function sendAttendeeMessages(SendMessageDTO $messageData, EventDomainObject $event): void
@@ -246,17 +293,15 @@ class SendEventEmailMessagesService
             return;
         }
 
-        $this->dispatcher->dispatch(
-            new SendEventEmailJob(
-                email: $emailAddress,
-                toName: $fullName,
-                eventMessage: new EventMessage(
-                    event: $event,
-                    eventSettings: $event->getEventSettings(),
-                    messageData: $messageData
-                ),
-                messageData: $messageData,
-            )
+        $this->pendingJobs[] = new SendEventEmailJob(
+            email: $emailAddress,
+            toName: $fullName,
+            eventMessage: new EventMessage(
+                event: $event,
+                eventSettings: $event->getEventSettings(),
+                messageData: $messageData
+            ),
+            messageData: $messageData,
         );
 
         $this->sentEmails[] = $emailAddress;

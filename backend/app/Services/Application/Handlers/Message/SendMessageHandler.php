@@ -7,6 +7,7 @@ use HiEvents\DomainObjects\Enums\MessageTypeEnum;
 use HiEvents\DomainObjects\MessageDomainObject;
 use HiEvents\DomainObjects\Status\MessageStatus;
 use HiEvents\Exceptions\AccountNotVerifiedException;
+use HiEvents\Exceptions\CouldNotStoreMessageAttachmentException;
 use HiEvents\Exceptions\MessagingTierLimitExceededException;
 use HiEvents\Helper\DateHelper;
 use HiEvents\Jobs\Event\SendMessagesJob;
@@ -18,6 +19,7 @@ use HiEvents\Repository\Interfaces\MessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
+use HiEvents\Services\Domain\Message\MessageAttachmentService;
 use HiEvents\Services\Domain\Message\MessagingEligibilityService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Illuminate\Config\Repository;
@@ -36,6 +38,7 @@ class SendMessageHandler
         private readonly HtmlPurifierService           $purifier,
         private readonly Repository                    $config,
         private readonly MessagingEligibilityService   $eligibilityService,
+        private readonly MessageAttachmentService      $attachmentService,
     )
     {
     }
@@ -43,6 +46,7 @@ class SendMessageHandler
     /**
      * @throws AccountNotVerifiedException
      * @throws MessagingTierLimitExceededException
+     * @throws CouldNotStoreMessageAttachmentException
      */
     public function handle(SendMessageDTO $messageData): MessageDomainObject
     {
@@ -99,6 +103,11 @@ class SendMessageHandler
             $status = MessageStatus::PROCESSING;
         }
 
+        $attachments = $this->attachmentService->store(
+            eventId: $messageData->event_id,
+            files: $messageData->attachment_files ?? [],
+        );
+
         $message = $this->messageRepository->create([
             'event_id' => $messageData->event_id,
             'subject' => $messageData->subject,
@@ -119,6 +128,7 @@ class SendMessageHandler
                 'account_id' => $messageData->account_id,
                 'attendee_ids' => $messageData->attendee_ids,
                 'product_ids' => $messageData->product_ids,
+                'attachments' => $attachments,
             ],
         ]);
 
@@ -139,6 +149,7 @@ class SendMessageHandler
                 'id' => $message->getId(),
                 'attendee_ids' => $message->getAttendeeIds(),
                 'product_ids' => $message->getProductIds(),
+                'attachments' => $attachments,
             ]);
 
             SendMessagesJob::dispatch($updatedData);

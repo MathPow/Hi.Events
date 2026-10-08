@@ -22,6 +22,8 @@ class SendMessageDTO extends BaseDTO
         public readonly ?array          $attendee_ids = [],
         public readonly ?array          $product_ids = [],
         public readonly ?string         $scheduled_at = null,
+        public readonly ?array          $attachments = [],
+        public readonly ?array          $attachment_files = [],
     )
     {
     }

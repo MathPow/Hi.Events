@@ -7,6 +7,7 @@ namespace HiEvents\Services\Application\Handlers\Message;
 use HiEvents\DomainObjects\MessageDomainObject;
 use HiEvents\DomainObjects\Status\MessageStatus;
 use HiEvents\Exceptions\ResourceNotFoundException;
+use HiEvents\Jobs\Message\DeleteMessageAttachmentsJob;
 use HiEvents\Repository\Interfaces\MessageRepositoryInterface;
 use Illuminate\Validation\ValidationException;
 
@@ -44,6 +45,13 @@ class CancelMessageHandler
             throw ValidationException::withMessages([
                 'status' => [__('This message can no longer be cancelled')],
             ]);
+        }
+
+        $sendData = $message->getSendData();
+        $sendData = is_string($sendData) ? json_decode($sendData, true) : $sendData;
+
+        if (!empty($sendData['attachments'])) {
+            DeleteMessageAttachmentsJob::dispatch($sendData['attachments']);
         }
 
         return $this->messageRepository->findFirst($messageId);

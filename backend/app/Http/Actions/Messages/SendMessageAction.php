@@ -4,6 +4,7 @@ namespace HiEvents\Http\Actions\Messages;
 
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\Exceptions\AccountNotVerifiedException;
+use HiEvents\Exceptions\CouldNotStoreMessageAttachmentException;
 use HiEvents\Exceptions\MessagingTierLimitExceededException;
 use HiEvents\Http\Actions\BaseAction;
 use HiEvents\Http\Request\Message\SendMessageRequest;
@@ -11,6 +12,7 @@ use HiEvents\Resources\Message\MessageResource;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
 use HiEvents\Services\Application\Handlers\Message\SendMessageHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 class SendMessageAction extends BaseAction
@@ -34,7 +36,7 @@ class SendMessageAction extends BaseAction
                 'subject' => $request->input('subject'),
                 'message' => $request->input('message'),
                 'type' => $request->input('message_type'),
-                'is_test' => $request->input('is_test'),
+                'is_test' => $request->boolean('is_test'),
                 'order_id' => $request->input('order_id'),
                 'attendee_ids' => $request->input('attendee_ids'),
                 'product_ids' => $request->input('product_ids'),
@@ -43,11 +45,14 @@ class SendMessageAction extends BaseAction
                 'sent_by_user_id' => $user->getId(),
                 'account_id' => $this->getAuthenticatedAccountId(),
                 'scheduled_at' => $request->input('scheduled_at'),
+                'attachment_files' => $request->file('attachments') ?? [],
             ]));
         } catch (AccountNotVerifiedException $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_UNAUTHORIZED);
         } catch (MessagingTierLimitExceededException $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_TOO_MANY_REQUESTS);
+        } catch (CouldNotStoreMessageAttachmentException $e) {
+            throw ValidationException::withMessages(['attachments' => $e->getMessage()]);
         }
 
         return $this->resourceResponse(MessageResource::class, $message);

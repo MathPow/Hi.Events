@@ -20,6 +20,7 @@ use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
 use HiEvents\Services\Application\Handlers\Message\SendMessageHandler;
+use HiEvents\Services\Domain\Message\MessageAttachmentService;
 use HiEvents\Services\Domain\Message\MessagingEligibilityService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Illuminate\Config\Repository;
@@ -35,6 +36,7 @@ class SendMessageHandlerScheduledTest extends TestCase
     private MessageRepositoryInterface $messageRepository;
     private AccountRepositoryInterface $accountRepository;
     private EventRepositoryInterface $eventRepository;
+    private MessageAttachmentService $attachmentService;
     private HtmlPurifierService $purifier;
     private Repository $config;
     private MessagingEligibilityService $eligibilityService;
@@ -50,6 +52,8 @@ class SendMessageHandlerScheduledTest extends TestCase
         $this->messageRepository = m::mock(MessageRepositoryInterface::class);
         $this->accountRepository = m::mock(AccountRepositoryInterface::class);
         $this->eventRepository = m::mock(EventRepositoryInterface::class);
+        $this->attachmentService = m::mock(MessageAttachmentService::class);
+        $this->attachmentService->shouldReceive('store')->andReturn([])->byDefault();
         $this->purifier = m::mock(HtmlPurifierService::class);
         $this->config = m::mock(Repository::class);
         $this->eligibilityService = m::mock(MessagingEligibilityService::class);
@@ -63,7 +67,8 @@ class SendMessageHandlerScheduledTest extends TestCase
             $this->eventRepository,
             $this->purifier,
             $this->config,
-            $this->eligibilityService
+            $this->eligibilityService,
+            $this->attachmentService,
         );
     }
 

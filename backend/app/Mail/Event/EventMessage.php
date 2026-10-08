@@ -6,6 +6,7 @@ use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\Mail\BaseMail;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -40,6 +41,16 @@ class EventMessage extends BaseMail
                 'event' => $this->event,
                 'eventSettings' => $this->eventSettings,
             ]
+        );
+    }
+
+    public function attachments(): array
+    {
+        return array_map(
+            static fn(array $attachment) => Attachment::fromStorageDisk($attachment['disk'], $attachment['path'])
+                ->as($attachment['name'])
+                ->withMime('application/pdf'),
+            $this->messageData->attachments ?? [],
         );
     }
 }

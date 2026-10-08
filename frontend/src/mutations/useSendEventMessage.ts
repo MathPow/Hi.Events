@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {IdParam, Message} from "../types.ts";
-import {messagesClient} from "../api/messages.client.ts";
+import {IdParam} from "../types.ts";
+import {messagesClient, SendMessageRequest} from "../api/messages.client.ts";
 import {GET_EVENT_MESSAGES_QUERY_KEY} from "../queries/useGetEventMessages.ts";
 
 export const useSendEventMessage = () => {
@@ -8,9 +8,9 @@ export const useSendEventMessage = () => {
 
     return useMutation({
         mutationFn: ({messageData, eventId}: {
-            messageData: Partial<Message>,
+            messageData: SendMessageRequest,
             eventId: IdParam,
-        }) => messagesClient.send(eventId, messageData as Message),
+        }) => messagesClient.send(eventId, messageData),
 
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({

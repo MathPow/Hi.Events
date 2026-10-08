@@ -20,9 +20,11 @@ use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
 use HiEvents\Services\Application\Handlers\Message\SendMessageHandler;
+use HiEvents\Services\Domain\Message\MessageAttachmentService;
 use HiEvents\Services\Domain\Message\MessagingEligibilityService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Illuminate\Config\Repository;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Mockery as m;
 use Tests\TestCase;
@@ -38,6 +40,7 @@ class SendMessageHandlerTest extends TestCase
     private Repository $config;
     private MessagingEligibilityService $eligibilityService;
     private EventRepositoryInterface $eventRepository;
+    private MessageAttachmentService $attachmentService;
 
     private SendMessageHandler $handler;
 
@@ -54,6 +57,8 @@ class SendMessageHandlerTest extends TestCase
         $this->config = m::mock(Repository::class);
         $this->eligibilityService = m::mock(MessagingEligibilityService::class);
         $this->eventRepository = m::mock(EventRepositoryInterface::class);
+        $this->attachmentService = m::mock(MessageAttachmentService::class);
+        $this->attachmentService->shouldReceive('store')->andReturn([])->byDefault();
 
         $this->handler = new SendMessageHandler(
             orderRepository: $this->orderRepository,
@@ -64,7 +69,8 @@ class SendMessageHandlerTest extends TestCase
             eventRepository: $this->eventRepository,
             purifier: $this->purifier,
             config: $this->config,
-            eligibilityService: $this->eligibilityService
+            eligibilityService: $this->eligibilityService,
+            attachmentService: $this->attachmentService,
         );
     }
 
@@ -188,5 +194,70 @@ class SendMessageHandlerTest extends TestCase
         $this->assertSame($message, $result);
 
         Bus::assertDispatched(SendMessagesJob::class);
+    }
+
+    public function testStoresAttachmentsAndPassesThemToJob(): void
+    {
+        $file = UploadedFile::fake()->create('programme.pdf', 50, 'application/pdf');
+        $storedAttachments = [
+            ['disk' => 'local', 'path' => 'message-attachments/101/abc.pdf', 'name' => 'programme.pdf'],
+        ];
+
+        $dto = new SendMessageDTO(
+            account_id: 1,
+            event_id: 101,
+            subject: 'Hello',
+            message: '<p>Test</p>',
+            type: MessageTypeEnum::ALL_ATTENDEES,
+            is_test: false,
+            send_copy_to_current_user: false,
+            sent_by_user_id: 99,
+            attachment_files: [$file],
+        );
+
+        $event = m::mock(EventDomainObject::class);
+        $event->shouldReceive('getTimezone')->andReturn('UTC');
+        $this->eventRepository->shouldReceive('findById')->with(101)->andReturn($event);
+
+        $account = m::mock(AccountDomainObject::class);
+        $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
+        $account->shouldReceive('getIsManuallyVerified')->andReturn(true);
+        $this->accountRepository->shouldReceive('findById')->with(1)->andReturn($account);
+        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(false);
+
+        $this->eligibilityService->shouldReceive('checkTierLimits')->andReturn(null);
+        $this->eligibilityService->shouldReceive('checkEligibility')->andReturn(null);
+        $this->purifier->shouldReceive('purify')->andReturn('<p>Test</p>');
+
+        $this->attendeeRepository->shouldReceive('countWhere')->andReturn(3);
+        $this->attendeeRepository->shouldReceive('findWhereIn')->andReturn(collect());
+        $this->productRepository->shouldReceive('findWhereIn')->andReturn(collect());
+        $this->orderRepository->shouldReceive('findFirstWhere')->andReturn(null);
+
+        $this->attachmentService->shouldReceive('store')
+            ->once()
+            ->with(101, [$file])
+            ->andReturn($storedAttachments);
+
+        $message = m::mock(MessageDomainObject::class);
+        $message->shouldReceive('getId')->andReturn(1);
+        $message->shouldReceive('getOrderId')->andReturn(null);
+        $message->shouldReceive('getAttendeeIds')->andReturn([]);
+        $message->shouldReceive('getProductIds')->andReturn([]);
+
+        $this->messageRepository->shouldReceive('create')
+            ->once()
+            ->withArgs(fn(array $data) => $data['send_data']['attachments'] === $storedAttachments)
+            ->andReturn($message);
+
+        Bus::fake();
+
+        $this->handler->handle($dto);
+
+        Bus::assertDispatched(SendMessagesJob::class, function (SendMessagesJob $job) use ($storedAttachments) {
+            $messageData = (new \ReflectionProperty($job, 'messageData'))->getValue($job);
+
+            return $messageData->attachments === $storedAttachments && $messageData->attachment_files === [];
+        });
     }
 }

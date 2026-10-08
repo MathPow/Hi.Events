@@ -7,6 +7,7 @@ use HiEvents\DomainObjects\Status\OutgoingMessageStatus;
 use HiEvents\Mail\Event\EventMessage;
 use HiEvents\Repository\Interfaces\OutgoingMessageRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +18,7 @@ use Throwable;
 
 class SendEventEmailJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
         private readonly string         $email,
@@ -39,7 +40,7 @@ class SendEventEmailJob implements ShouldQueue
         try {
             $mailer
                 ->to($this->email, $this->toName)
-                ->send($this->eventMessage);
+                ->sendNow($this->eventMessage);
         } catch (Throwable $exception) {
             $outgoingMessageRepository->create([
                 OutgoingMessageDomainObjectAbstract::MESSAGE_ID => $this->messageData->id,

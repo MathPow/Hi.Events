@@ -8,6 +8,7 @@ import {
     Button,
     Checkbox,
     ComboboxItemGroup,
+    FileInput,
     Group,
     LoadingOverlay,
     Menu,
@@ -22,6 +23,7 @@ import {
     IconClock,
     IconCopy,
     IconInfoCircle,
+    IconPaperclip,
     IconSend,
     IconTestPipe
 } from "@tabler/icons-react";
@@ -100,6 +102,8 @@ const AttendeeField = ({orderId, eventId, attendeeId, form}: {
 }
 
 const CUSTOM_PRESET = 'custom';
+const MAX_ATTACHMENTS = 5;
+const MAX_TOTAL_ATTACHMENT_SIZE_MB = 10;
 
 const getSchedulePresets = (event: Event) => {
     const now = dayjs.utc();
@@ -163,8 +167,22 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
             acknowledgement: false,
             order_statuses: ['COMPLETED'],
             scheduled_at: '',
+            attachments: [] as File[],
         },
         validate: {
+            attachments: (files) => {
+                if (files.length > MAX_ATTACHMENTS) {
+                    return t`You can attach a maximum of ${MAX_ATTACHMENTS} files`;
+                }
+                if (files.some(file => file.type !== 'application/pdf')) {
+                    return t`Attachments must be PDF files`;
+                }
+                const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+                if (totalSize > MAX_TOTAL_ATTACHMENT_SIZE_MB * 1024 * 1024) {
+                    return t`Attachments must not exceed ${MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total`;
+                }
+                return null;
+            },
             acknowledgement: (value) => value === true ? null : t`You must acknowledge that this email is not promotional`,
             scheduled_at: (value) => {
                 if (!isScheduled) return null;
@@ -354,6 +372,19 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                 value={form.values.message || ''}
                                 onChange={(value) => form.setFieldValue('message', value)}
                                 error={form.errors.message as string}
+                            />
+
+                            <FileInput
+                                multiple
+                                clearable
+                                accept="application/pdf"
+                                label={t`Attachments`}
+                                description={t`PDF only, up to ${MAX_ATTACHMENTS} files and ${MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total`}
+                                placeholder={t`Add PDF files`}
+                                leftSection={<IconPaperclip size={16}/>}
+                                {...form.getInputProps('attachments')}
+                                error={form.errors.attachments || Object.entries(form.errors)
+                                    .find(([key]) => key.startsWith('attachments.'))?.[1]}
                             />
                         </div>
 

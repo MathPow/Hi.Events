@@ -838,6 +838,7 @@ export interface Message {
     scheduled_at?: string | null;
     sent_by_user?: User;
     status?: 'SENT' | 'PROCESSING' | 'FAILED' | 'SCHEDULED' | 'CANCELLED' | 'PENDING_REVIEW';
+    attachments?: { name: string }[];
 }
 
 export interface OutgoingMessage {

@@ -4,6 +4,7 @@ import {relativeDate} from "../../../utilites/dates.ts";
 import {Avatar, Badge} from "@mantine/core";
 import {getInitials} from "../../../utilites/helpers.ts";
 import {t} from "@lingui/macro";
+import {IconPaperclip} from "@tabler/icons-react";
 
 interface MessageListProps {
     messages: Message[];
@@ -77,6 +78,12 @@ const MessageItem = ({message, isSelected, onSelect}: {
                         {message.status}
                     </Badge>
                     <span className={classes.typeLabel}>{typeLabel(message.type)}</span>
+                    {!!message.attachments?.length && (
+                        <span className={classes.attachmentCount} title={message.attachments.map(a => a.name).join(', ')}>
+                            <IconPaperclip size={12}/>
+                            {message.attachments.length}
+                        </span>
+                    )}
                 </div>
             </div>
         </div>

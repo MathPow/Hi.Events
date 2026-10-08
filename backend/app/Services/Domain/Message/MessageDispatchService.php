@@ -63,6 +63,7 @@ class MessageDispatchService
                 id: $message->getId(),
                 attendee_ids: $message->getAttendeeIds() ?? [],
                 product_ids: $message->getProductIds() ?? [],
+                attachments: $sendDataArray['attachments'] ?? [],
             ));
         } catch (Throwable $e) {
             Log::error('Failed to dispatch SendMessagesJob, reverting status', [
