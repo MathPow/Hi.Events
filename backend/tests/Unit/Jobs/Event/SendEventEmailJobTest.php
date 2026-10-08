@@ -19,6 +19,7 @@ class SendEventEmailJobTest extends TestCase
         $eventMessage = m::mock(EventMessage::class);
 
         $pendingMail = m::mock(PendingMail::class);
+        $pendingMail->shouldReceive('locale')->once()->with('fr')->andReturnSelf();
         $pendingMail->shouldReceive('sendNow')->once()->with($eventMessage);
         $pendingMail->shouldNotReceive('send');
 
@@ -43,6 +44,7 @@ class SendEventEmailJobTest extends TestCase
                 sent_by_user_id: 1,
                 id: 10,
             ),
+            locale: 'fr',
         );
 
         $job->handle($mailer, $outgoingMessageRepository);

@@ -25,6 +25,7 @@ class SendEventEmailJob implements ShouldQueue
         private readonly string         $toName,
         private readonly EventMessage   $eventMessage,
         private readonly SendMessageDTO $messageData,
+        private readonly ?string        $locale = null,
     )
     {
     }
@@ -40,6 +41,7 @@ class SendEventEmailJob implements ShouldQueue
         try {
             $mailer
                 ->to($this->email, $this->toName)
+                ->locale($this->locale)
                 ->sendNow($this->eventMessage);
         } catch (Throwable $exception) {
             $outgoingMessageRepository->create([

@@ -6,6 +6,7 @@ use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\Mail\BaseMail;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
+use HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -18,7 +19,8 @@ class EventMessage extends BaseMail
     public function __construct(
         private readonly EventDomainObject $event,
         private readonly EventSettingDomainObject $eventSettings,
-        private readonly SendMessageDTO $messageData
+        private readonly SendMessageDTO $messageData,
+        private readonly EventEmailBrandingDTO $branding,
     )
     {
         parent::__construct();
@@ -35,11 +37,12 @@ class EventMessage extends BaseMail
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.event.message',
+            view: 'emails.event.message',
             with: [
                 'messageData' => $this->messageData,
                 'event' => $this->event,
                 'eventSettings' => $this->eventSettings,
+                'branding' => $this->branding,
             ]
         );
     }

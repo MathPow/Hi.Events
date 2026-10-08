@@ -14,6 +14,7 @@ use HiEvents\Repository\Interfaces\MessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\UserRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
+use HiEvents\Services\Domain\Mail\EventEmailBrandingService;
 use HiEvents\Services\Domain\Mail\SendEventEmailMessagesService;
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Support\Facades\Bus;
@@ -49,7 +50,10 @@ class SendEventEmailMessagesServiceTest extends TestCase
 
         $this->createService()->send($this->createDto(MessageTypeEnum::ORDER_OWNER));
 
-        Bus::assertDispatched(SendEventEmailJob::class);
+        Bus::assertDispatched(
+            SendEventEmailJob::class,
+            fn(SendEventEmailJob $job) => (new \ReflectionProperty($job, 'locale'))->getValue($job) === 'fr',
+        );
         Bus::assertNothingBatched();
     }
 
@@ -94,6 +98,7 @@ class SendEventEmailMessagesServiceTest extends TestCase
         $order->setEmail('buyer@example.com');
         $order->setFirstName('Jane');
         $order->setLastName('Doe');
+        $order->setLocale('fr');
 
         $this->orderRepository->shouldReceive('findFirstWhere')->andReturn($order);
     }
@@ -116,6 +121,7 @@ class SendEventEmailMessagesServiceTest extends TestCase
             userRepository: m::mock(UserRepositoryInterface::class),
             logger: m::mock(Logger::class),
             dispatcher: Bus::getFacadeRoot(),
+            brandingService: app(EventEmailBrandingService::class),
         );
     }
 

@@ -6,8 +6,10 @@ use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\Enums\MessageTypeEnum;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
+use HiEvents\DomainObjects\ImageDomainObject;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
+use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\DomainObjects\Status\AttendeeStatus;
 use HiEvents\DomainObjects\Status\MessageStatus;
 use HiEvents\Exceptions\UnableToSendMessageException;
@@ -20,6 +22,7 @@ use HiEvents\Repository\Interfaces\MessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\UserRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Message\DTO\SendMessageDTO;
+use HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO;
 use HiEvents\Jobs\Message\DeleteMessageAttachmentsJob;
 use Illuminate\Contracts\Bus\QueueingDispatcher;
 use Illuminate\Support\Collection;
@@ -32,6 +35,8 @@ class SendEventEmailMessagesService
     /** @var SendEventEmailJob[] */
     private array $pendingJobs = [];
 
+    private ?EventEmailBrandingDTO $branding = null;
+
     public function __construct(
         private readonly OrderRepositoryInterface    $orderRepository,
         private readonly AttendeeRepositoryInterface $attendeeRepository,
@@ -40,6 +45,7 @@ class SendEventEmailMessagesService
         private readonly UserRepositoryInterface     $userRepository,
         private readonly Logger                      $logger,
         private readonly QueueingDispatcher          $dispatcher,
+        private readonly EventEmailBrandingService   $brandingService,
     )
     {
     }
@@ -51,11 +57,18 @@ class SendEventEmailMessagesService
     {
         $event = $this->eventRepository
             ->loadRelation(EventSettingDomainObject::class)
+            ->loadRelation(ImageDomainObject::class)
             ->loadRelation(new Relationship(
                 domainObject: OrganizerDomainObject::class,
+                nested: [
+                    new Relationship(ImageDomainObject::class),
+                    new Relationship(OrganizerSettingDomainObject::class),
+                ],
                 name: 'organizer'
             ))
             ->findById($messageData->event_id);
+
+        $this->branding = $this->brandingService->forEvent($event);
 
         $order = $this->orderRepository->findFirstWhere([
             'id' => $messageData->order_id,
@@ -142,7 +155,7 @@ class SendEventEmailMessagesService
             additionalWhere: [
                 'event_id' => $messageData->event_id,
             ],
-            columns: ['first_name', 'last_name', 'email']
+            columns: ['first_name', 'last_name', 'email', 'locale']
         );
 
         $this->emailAttendees($attendees, $messageData, $event);
@@ -157,7 +170,7 @@ class SendEventEmailMessagesService
                 'event_id' => $messageData->event_id,
                 'status' => AttendeeStatus::ACTIVE->name,
             ],
-            columns: ['first_name', 'last_name', 'email']
+            columns: ['first_name', 'last_name', 'email', 'locale']
         );
 
         $this->emailAttendees($attendees, $messageData, $event);
@@ -176,6 +189,7 @@ class SendEventEmailMessagesService
             fullName: $order->getFullName(),
             messageData: $messageData,
             event: $event,
+            locale: $order->getLocale(),
         );
     }
 
@@ -204,6 +218,7 @@ class SendEventEmailMessagesService
                 fullName: $attendee->getFullName(),
                 messageData: $messageData,
                 event: $event,
+                locale: $attendee->getLocale(),
             );
         });
     }
@@ -236,7 +251,7 @@ class SendEventEmailMessagesService
                 'event_id' => $messageData->event_id,
                 'status' => AttendeeStatus::ACTIVE->name,
             ],
-            columns: ['first_name', 'last_name', 'email']
+            columns: ['first_name', 'last_name', 'email', 'locale']
         );
 
         $this->emailAttendees($attendees, $messageData, $event);
@@ -255,6 +270,7 @@ class SendEventEmailMessagesService
             fullName: $user->getFullName(),
             messageData: $messageData,
             event: $event,
+            locale: $user->getLocale(),
         );
     }
 
@@ -278,6 +294,7 @@ class SendEventEmailMessagesService
                 fullName: $order->getFullName(),
                 messageData: $messageData,
                 event: $event,
+                locale: $order->getLocale(),
             );
         });
     }
@@ -287,6 +304,7 @@ class SendEventEmailMessagesService
         string            $fullName,
         SendMessageDTO    $messageData,
         EventDomainObject $event,
+        ?string           $locale = null,
     ): void
     {
         if (in_array($emailAddress, $this->sentEmails, true)) {
@@ -299,9 +317,11 @@ class SendEventEmailMessagesService
             eventMessage: new EventMessage(
                 event: $event,
                 eventSettings: $event->getEventSettings(),
-                messageData: $messageData
+                messageData: $messageData,
+                branding: $this->branding,
             ),
             messageData: $messageData,
+            locale: $locale,
         );
 
         $this->sentEmails[] = $emailAddress;
