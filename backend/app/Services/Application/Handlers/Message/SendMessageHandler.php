@@ -103,6 +103,10 @@ class SendMessageHandler
             $status = MessageStatus::PROCESSING;
         }
 
+        $orderId = $this->getOrderId($messageData);
+        $attendeeIds = $this->getAttendeeIds($messageData)->toArray();
+        $productIds = $this->getProductIds($messageData)->toArray();
+
         $attachments = $this->attachmentService->store(
             eventId: $messageData->event_id,
             files: $messageData->attachment_files ?? [],
@@ -113,9 +117,9 @@ class SendMessageHandler
             'subject' => $messageData->subject,
             'message' => $this->purifier->purify($messageData->message),
             'type' => $messageData->type->name,
-            'order_id' => $this->getOrderId($messageData),
-            'attendee_ids' => $this->getAttendeeIds($messageData)->toArray(),
-            'product_ids' => $this->getProductIds($messageData)->toArray(),
+            'order_id' => $orderId,
+            'attendee_ids' => $attendeeIds,
+            'product_ids' => $productIds,
             'sent_at' => $isScheduled ? null : Carbon::now()->toDateTimeString(),
             'sent_by_user_id' => $messageData->sent_by_user_id,
             'status' => $status->name,
@@ -182,7 +186,7 @@ class SendMessageHandler
     {
         $attendees = $this->attendeeRepository->findWhereIn(
             field: 'id',
-            values: $messageData->attendee_ids,
+            values: $messageData->attendee_ids ?? [],
             additionalWhere: [
                 'event_id' => $messageData->event_id,
             ],
@@ -197,7 +201,7 @@ class SendMessageHandler
     {
         $products = $this->productRepository->findWhereIn(
             field: 'id',
-            values: $messageData->product_ids,
+            values: $messageData->product_ids ?? [],
             additionalWhere: [
                 'event_id' => $messageData->event_id,
             ],

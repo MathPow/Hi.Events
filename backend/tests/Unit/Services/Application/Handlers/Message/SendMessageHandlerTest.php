@@ -260,4 +260,51 @@ class SendMessageHandlerTest extends TestCase
             return $messageData->attachments === $storedAttachments && $messageData->attachment_files === [];
         });
     }
+
+    public function testHandlesNullRecipientListsFromMultipartRequests(): void
+    {
+        $dto = SendMessageDTO::fromArray([
+            'account_id' => 1,
+            'event_id' => 101,
+            'subject' => 'Hello',
+            'message' => '<p>Test</p>',
+            'type' => MessageTypeEnum::ALL_ATTENDEES->name,
+            'is_test' => false,
+            'send_copy_to_current_user' => false,
+            'sent_by_user_id' => 99,
+            'attendee_ids' => null,
+            'product_ids' => null,
+            'order_statuses' => null,
+        ]);
+
+        $event = m::mock(EventDomainObject::class);
+        $event->shouldReceive('getTimezone')->andReturn('UTC');
+        $this->eventRepository->shouldReceive('findById')->andReturn($event);
+
+        $account = m::mock(AccountDomainObject::class);
+        $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
+        $account->shouldReceive('getIsManuallyVerified')->andReturn(true);
+        $this->accountRepository->shouldReceive('findById')->andReturn($account);
+        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(false);
+
+        $this->eligibilityService->shouldReceive('checkTierLimits')->andReturn(null);
+        $this->eligibilityService->shouldReceive('checkEligibility')->andReturn(null);
+        $this->purifier->shouldReceive('purify')->andReturn('<p>Test</p>');
+
+        $this->attendeeRepository->shouldReceive('countWhere')->andReturn(3);
+        $this->attendeeRepository->shouldReceive('findWhereIn')->with('id', [], m::any(), m::any())->andReturn(collect());
+        $this->productRepository->shouldReceive('findWhereIn')->with('id', [], m::any(), m::any())->andReturn(collect());
+        $this->orderRepository->shouldReceive('findFirstWhere')->andReturn(null);
+
+        $message = m::mock(MessageDomainObject::class);
+        $message->shouldReceive('getId')->andReturn(1);
+        $message->shouldReceive('getOrderId')->andReturn(null);
+        $message->shouldReceive('getAttendeeIds')->andReturn([]);
+        $message->shouldReceive('getProductIds')->andReturn([]);
+        $this->messageRepository->shouldReceive('create')->andReturn($message);
+
+        Bus::fake();
+
+        $this->assertSame($message, $this->handler->handle($dto));
+    }
 }
