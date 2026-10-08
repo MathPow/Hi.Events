@@ -16,6 +16,7 @@ class AffiliateRules
             'code' => ['required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9_-]+$/'],
             'email' => ['nullable', 'email', 'max:255'],
             'status' => ['nullable', Rule::in(AffiliateStatus::valuesArray())],
+            'promo_code_id' => ['nullable', 'integer'],
         ];
     }
 
@@ -25,6 +26,7 @@ class AffiliateRules
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'status' => ['nullable', Rule::in(AffiliateStatus::valuesArray())],
+            'promo_code_id' => ['nullable', 'integer'],
         ];
     }
 }

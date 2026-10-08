@@ -27,7 +27,8 @@ export const EditAffiliateModal = ({affiliateId, onClose}: EditAffiliateModalPro
         initialValues: {
             name: '',
             email: '',
-            status: 'ACTIVE'
+            status: 'ACTIVE',
+            promo_code_id: null,
         },
         validate: {
             name: (value) => !value ? t`Name is required` : null,
@@ -45,7 +46,8 @@ export const EditAffiliateModal = ({affiliateId, onClose}: EditAffiliateModalPro
             form.setValues({
                 name: affiliate.name,
                 email: affiliate.email || '',
-                status: affiliate.status
+                status: affiliate.status,
+                promo_code_id: affiliate.promo_code_id ? String(affiliate.promo_code_id) : null,
             });
         }
     }, [affiliate]);

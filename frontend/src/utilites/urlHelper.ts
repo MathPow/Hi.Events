@@ -29,6 +29,18 @@ export const eventHomepageUrl = (event: Event) => {
     return getConfig('VITE_FRONTEND_URL') + eventHomepagePath(event);
 }
 
+export const affiliatePartnerPageUrl = (publicToken: string) => {
+    return getConfig('VITE_FRONTEND_URL') + `/partner/${publicToken}`;
+}
+
+export const affiliateShareUrl = (event: Event, affiliateCode: string, promoCode?: string | null) => {
+    const params = new URLSearchParams({aff: affiliateCode});
+    if (promoCode) {
+        params.set('promo_code', promoCode);
+    }
+    return eventHomepageUrl(event) + '?' + params.toString();
+}
+
 export const eventCoverImageUrl = (event: Event) => {
     return event?.images?.find((image) => image.type === 'EVENT_COVER')?.url;
 }

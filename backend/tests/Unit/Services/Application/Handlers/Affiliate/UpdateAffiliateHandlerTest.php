@@ -5,6 +5,7 @@ namespace Tests\Unit\Services\Application\Handlers\Affiliate;
 use HiEvents\DomainObjects\AffiliateDomainObject;
 use HiEvents\DomainObjects\Status\AffiliateStatus;
 use HiEvents\Repository\Interfaces\AffiliateRepositoryInterface;
+use HiEvents\Services\Domain\Affiliate\AffiliatePromoCodeValidationService;
 use HiEvents\Services\Application\Handlers\Affiliate\UpdateAffiliateHandler;
 use HiEvents\Services\Application\Handlers\Affiliate\DTO\UpsertAffiliateDTO;
 use Mockery as m;
@@ -21,7 +22,9 @@ class UpdateAffiliateHandlerTest extends TestCase
         parent::setUp();
 
         $this->affiliateRepository = m::mock(AffiliateRepositoryInterface::class);
-        $this->handler = new UpdateAffiliateHandler($this->affiliateRepository);
+        $promoCodeValidationService = m::mock(AffiliatePromoCodeValidationService::class);
+        $promoCodeValidationService->shouldReceive('assertPromoCodeBelongsToEvent')->byDefault();
+        $this->handler = new UpdateAffiliateHandler($this->affiliateRepository, $promoCodeValidationService);
     }
 
     public function testHandleSuccessfullyUpdatesAffiliate(): void
@@ -54,6 +57,7 @@ class UpdateAffiliateHandlerTest extends TestCase
                 'name' => 'Updated Affiliate',
                 'email' => 'updated@example.com',
                 'status' => AffiliateStatus::ACTIVE->value,
+                'promo_code_id' => null,
             ])
             ->andReturn($updatedAffiliate);
 
@@ -91,6 +95,7 @@ class UpdateAffiliateHandlerTest extends TestCase
             ->with($affiliateId, [
                 'name' => 'Updated Affiliate',
                 'status' => AffiliateStatus::INACTIVE->value,
+                'promo_code_id' => null,
             ])
             ->andReturn($updatedAffiliate);
 
@@ -128,6 +133,7 @@ class UpdateAffiliateHandlerTest extends TestCase
             ->with($affiliateId, [
                 'name' => 'Updated Affiliate',
                 'status' => AffiliateStatus::ACTIVE->value,
+                'promo_code_id' => null,
             ])
             ->andReturn($updatedAffiliate);
 

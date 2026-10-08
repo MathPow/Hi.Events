@@ -6,6 +6,7 @@ use HiEvents\DomainObjects\AffiliateDomainObject;
 use HiEvents\DomainObjects\Status\AffiliateStatus;
 use HiEvents\Exceptions\ResourceConflictException;
 use HiEvents\Repository\Interfaces\AffiliateRepositoryInterface;
+use HiEvents\Services\Domain\Affiliate\AffiliatePromoCodeValidationService;
 use HiEvents\Services\Application\Handlers\Affiliate\CreateAffiliateHandler;
 use HiEvents\Services\Application\Handlers\Affiliate\DTO\UpsertAffiliateDTO;
 use Mockery as m;
@@ -14,6 +15,7 @@ use Tests\TestCase;
 class CreateAffiliateHandlerTest extends TestCase
 {
     private AffiliateRepositoryInterface $affiliateRepository;
+    private AffiliatePromoCodeValidationService $promoCodeValidationService;
     private CreateAffiliateHandler $handler;
 
     protected function setUp(): void
@@ -21,7 +23,17 @@ class CreateAffiliateHandlerTest extends TestCase
         parent::setUp();
 
         $this->affiliateRepository = m::mock(AffiliateRepositoryInterface::class);
-        $this->handler = new CreateAffiliateHandler($this->affiliateRepository);
+        $this->promoCodeValidationService = m::mock(AffiliatePromoCodeValidationService::class);
+        $this->promoCodeValidationService->shouldReceive('assertPromoCodeBelongsToEvent')->byDefault();
+        $this->handler = new CreateAffiliateHandler($this->affiliateRepository, $this->promoCodeValidationService);
+    }
+
+    private function matchesCreatePayload(array $expected, array $actual): bool
+    {
+        $token = $actual['public_token'] ?? null;
+        unset($actual['public_token']);
+
+        return is_string($token) && strlen($token) === 48 && $expected === $actual;
     }
 
     public function testHandleSuccessfullyCreatesAffiliate(): void
@@ -50,14 +62,15 @@ class CreateAffiliateHandlerTest extends TestCase
         $this->affiliateRepository
             ->shouldReceive('create')
             ->once()
-            ->with([
+            ->with(m::on(fn(array $data) => $this->matchesCreatePayload([
                 'event_id' => $eventId,
                 'account_id' => $accountId,
                 'name' => 'Test Affiliate',
                 'code' => $expectedCode,
                 'email' => 'test@example.com',
                 'status' => AffiliateStatus::ACTIVE->value,
-            ])
+                'promo_code_id' => null,
+            ], $data)))
             ->andReturn($expectedAffiliate);
 
         $result = $this->handler->handle($eventId, $accountId, $dto);
@@ -91,14 +104,15 @@ class CreateAffiliateHandlerTest extends TestCase
         $this->affiliateRepository
             ->shouldReceive('create')
             ->once()
-            ->with([
+            ->with(m::on(fn(array $data) => $this->matchesCreatePayload([
                 'event_id' => $eventId,
                 'account_id' => $accountId,
                 'name' => 'Test Affiliate',
                 'code' => $expectedCode,
                 'email' => null,
                 'status' => AffiliateStatus::INACTIVE->value,
-            ])
+                'promo_code_id' => null,
+            ], $data)))
             ->andReturn($expectedAffiliate);
 
         $result = $this->handler->handle($eventId, $accountId, $dto);
@@ -132,14 +146,15 @@ class CreateAffiliateHandlerTest extends TestCase
         $this->affiliateRepository
             ->shouldReceive('create')
             ->once()
-            ->with([
+            ->with(m::on(fn(array $data) => $this->matchesCreatePayload([
                 'event_id' => $eventId,
                 'account_id' => $accountId,
                 'name' => 'Test Affiliate',
                 'code' => $expectedCode,
                 'email' => 'test@example.com',
                 'status' => AffiliateStatus::ACTIVE->value,
-            ])
+                'promo_code_id' => null,
+            ], $data)))
             ->andReturn($expectedAffiliate);
 
         $result = $this->handler->handle($eventId, $accountId, $dto);

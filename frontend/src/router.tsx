@@ -637,6 +637,14 @@ export const router: RouteObject[] = [
         errorElement: <ErrorPage />,
     },
     {
+        path: "/partner/:token",
+        async lazy() {
+            const AffiliatePartnerPage = await import("./components/routes/partner");
+            return { Component: AffiliatePartnerPage.default };
+        },
+        errorElement: <ErrorPage />,
+    },
+    {
         path: "/my-tickets/:token",
         async lazy() {
             const MyTickets = await import("./components/routes/my-tickets");

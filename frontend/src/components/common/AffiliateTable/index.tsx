@@ -1,7 +1,7 @@
 import {t} from "@lingui/macro";
 import {Badge, Button, Group, Table as MantineTable, Text} from '@mantine/core';
 import {IdParam} from "../../../types.ts";
-import {IconCopy, IconCurrencyDollar, IconPencil, IconPlus, IconShare, IconTrash, IconUsers} from "@tabler/icons-react";
+import {IconChartBar, IconCopy, IconCurrencyDollar, IconPencil, IconPlus, IconShare, IconTrash, IconUsers} from "@tabler/icons-react";
 import {useClipboard, useDisclosure} from "@mantine/hooks";
 import {useState} from "react";
 import {NoResultsSplash} from "../NoResultsSplash";
@@ -15,8 +15,9 @@ import {Affiliate} from "../../../api/affiliate.client.ts";
 import classes from "./AffiliateTable.module.scss";
 import {Table, TableHead} from "../Table";
 import {ActionMenu} from "../ActionMenu";
-import {eventHomepageUrl} from "../../../utilites/urlHelper.ts";
+import {affiliatePartnerPageUrl, affiliateShareUrl} from "../../../utilites/urlHelper.ts";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
+import {useGetEventPromoCodes} from "../../../queries/useGetEventPromoCodes.ts";
 
 interface AffiliateTableProps {
     affiliates: Affiliate[];
@@ -32,6 +33,12 @@ export const AffiliateTable = ({affiliates, openCreateModal}: AffiliateTableProp
     const {eventId} = useParams();
     const copy = useClipboard()
     const {data: event} = useGetEvent(eventId);
+    const {data: promoCodes} = useGetEventPromoCodes(eventId, {perPage: 100});
+
+    const shareUrl = (affiliate: Affiliate) => {
+        const promoCode = promoCodes?.data?.find(code => code.id === affiliate.promo_code_id)?.code;
+        return affiliateShareUrl(event!, affiliate.code, promoCode);
+    };
 
     const handleDeleteAffiliate = (affiliateId: IdParam, eventId: IdParam) => {
         deleteMutation.mutate({affiliateId, eventId}, {
@@ -100,7 +107,7 @@ export const AffiliateTable = ({affiliates, openCreateModal}: AffiliateTableProp
                                             variant="subtle"
                                             color="gray"
                                             leftSection={<IconCopy size={12}/>}
-                                            onClick={() => copyToClipboard(eventHomepageUrl(event!) + `?aff=${affiliate.code}`)}
+                                            onClick={() => copyToClipboard(shareUrl(affiliate))}
                                             className={classes.copyButton}
                                         >
                                             {t`Copy URL`}
@@ -182,9 +189,13 @@ export const AffiliateTable = ({affiliates, openCreateModal}: AffiliateTableProp
                                                 {
                                                     label: t`Copy Affiliate Link`,
                                                     icon: <IconCopy size={14}/>,
-                                                    onClick: () => copyToClipboard(
-                                                        eventHomepageUrl(event!) + `?aff=${affiliate.code}`
-                                                    )
+                                                    onClick: () => copyToClipboard(shareUrl(affiliate))
+                                                },
+                                                {
+                                                    label: t`Copy Partner Page Link`,
+                                                    icon: <IconChartBar size={14}/>,
+                                                    visible: !!affiliate.public_token,
+                                                    onClick: () => copyToClipboard(affiliatePartnerPageUrl(affiliate.public_token!))
                                                 },
                                                 {
                                                     label: t`Share Affiliate Link`,
@@ -224,7 +235,7 @@ export const AffiliateTable = ({affiliates, openCreateModal}: AffiliateTableProp
                 <ShareModal
                     opened={shareModalOpen}
                     onClose={closeShareModal}
-                    url={eventHomepageUrl(event) + `?aff=${selectedAffiliate.code}`}
+                    url={shareUrl(selectedAffiliate)}
                     title={event.title}
                     modalTitle={t`Share Affiliate Link`}
                     shareText={t`Here is your affiliate link`}

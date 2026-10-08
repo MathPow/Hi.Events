@@ -21,7 +21,8 @@ export const CreateAffiliateModal = ({onClose}: CreateAffiliateModalProps) => {
             name: '',
             code: '',
             email: '',
-            status: 'ACTIVE'
+            status: 'ACTIVE',
+            promo_code_id: null,
         },
         validateInputOnBlur: true,
         validate: {

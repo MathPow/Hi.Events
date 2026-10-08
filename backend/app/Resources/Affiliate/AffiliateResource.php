@@ -25,6 +25,8 @@ class AffiliateResource extends BaseResource
             'total_sales' => $this->getTotalSales(),
             'total_sales_gross' => $this->getTotalSalesGross(),
             'status' => $this->getStatus(),
+            'promo_code_id' => $this->getPromoCodeId(),
+            'public_token' => $this->getPublicToken(),
             'created_at' => $this->getCreatedAt(),
             'updated_at' => $this->getUpdatedAt(),
         ];

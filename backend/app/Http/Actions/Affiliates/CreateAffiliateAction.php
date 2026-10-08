@@ -7,6 +7,7 @@ namespace HiEvents\Http\Actions\Affiliates;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\Status\AffiliateStatus;
 use HiEvents\Exceptions\ResourceConflictException;
+use HiEvents\Exceptions\ResourceNotFoundException;
 use HiEvents\Http\Actions\BaseAction;
 use HiEvents\Http\Request\Affiliate\CreateUpdateAffiliateRequest;
 use HiEvents\Http\ResponseCodes;
@@ -40,11 +41,16 @@ class CreateAffiliateAction extends BaseAction
                     code: $request->input('code'),
                     email: $request->input('email'),
                     status: AffiliateStatus::from($request->input('status', 'ACTIVE')),
+                    promo_code_id: $request->filled('promo_code_id') ? $request->integer('promo_code_id') : null,
                 )
             );
         } catch (ResourceConflictException $e) {
             throw ValidationException::withMessages([
                 'code' => $e->getMessage(),
+            ]);
+        } catch (ResourceNotFoundException $e) {
+            throw ValidationException::withMessages([
+                'promo_code_id' => $e->getMessage(),
             ]);
         }
 

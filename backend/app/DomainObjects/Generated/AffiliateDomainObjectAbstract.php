@@ -13,6 +13,7 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
     final public const ID = 'id';
     final public const EVENT_ID = 'event_id';
     final public const ACCOUNT_ID = 'account_id';
+    final public const PROMO_CODE_ID = 'promo_code_id';
     final public const NAME = 'name';
     final public const CODE = 'code';
     final public const EMAIL = 'email';
@@ -21,10 +22,12 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
     final public const STATUS = 'status';
     final public const CREATED_AT = 'created_at';
     final public const UPDATED_AT = 'updated_at';
+    final public const PUBLIC_TOKEN = 'public_token';
 
     protected int $id;
     protected int $event_id;
     protected int $account_id;
+    protected ?int $promo_code_id = null;
     protected string $name;
     protected string $code;
     protected ?string $email = null;
@@ -33,6 +36,7 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
     protected string $status = 'ACTIVE';
     protected ?string $created_at = null;
     protected ?string $updated_at = null;
+    protected ?string $public_token = null;
 
     public function toArray(): array
     {
@@ -40,6 +44,7 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
                     'id' => $this->id ?? null,
                     'event_id' => $this->event_id ?? null,
                     'account_id' => $this->account_id ?? null,
+                    'promo_code_id' => $this->promo_code_id ?? null,
                     'name' => $this->name ?? null,
                     'code' => $this->code ?? null,
                     'email' => $this->email ?? null,
@@ -48,6 +53,7 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
                     'status' => $this->status ?? null,
                     'created_at' => $this->created_at ?? null,
                     'updated_at' => $this->updated_at ?? null,
+                    'public_token' => $this->public_token ?? null,
                 ];
     }
 
@@ -82,6 +88,17 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
     public function getAccountId(): int
     {
         return $this->account_id;
+    }
+
+    public function setPromoCodeId(?int $promo_code_id): self
+    {
+        $this->promo_code_id = $promo_code_id;
+        return $this;
+    }
+
+    public function getPromoCodeId(): ?int
+    {
+        return $this->promo_code_id;
     }
 
     public function setName(string $name): self
@@ -170,5 +187,16 @@ abstract class AffiliateDomainObjectAbstract extends \HiEvents\DomainObjects\Abs
     public function getUpdatedAt(): ?string
     {
         return $this->updated_at;
+    }
+
+    public function setPublicToken(?string $public_token): self
+    {
+        $this->public_token = $public_token;
+        return $this;
+    }
+
+    public function getPublicToken(): ?string
+    {
+        return $this->public_token;
     }
 }

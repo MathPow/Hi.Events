@@ -11,6 +11,7 @@ use HiEvents\Http\Actions\Affiliates\CreateAffiliateAction;
 use HiEvents\Http\Actions\Affiliates\DeleteAffiliateAction;
 use HiEvents\Http\Actions\Affiliates\ExportAffiliatesAction;
 use HiEvents\Http\Actions\Affiliates\GetAffiliateAction;
+use HiEvents\Http\Actions\Affiliates\GetAffiliatePartnerPagePublicAction;
 use HiEvents\Http\Actions\Affiliates\GetAffiliatesAction;
 use HiEvents\Http\Actions\Affiliates\UpdateAffiliateAction;
 use HiEvents\Http\Actions\Attendees\CheckInAttendeeAction;
@@ -565,6 +566,10 @@ $router->prefix('/public')->group(
         // Promo codes
         $router->get('/events/{event_id}/promo-codes/{promo_code}', GetPromoCodePublic::class)
             ->middleware('throttle:10,1');
+
+        // Affiliate partner page
+        $router->get('/affiliates/partner/{token}', GetAffiliatePartnerPagePublicAction::class)
+            ->middleware('throttle:30,1');
 
         // Stripe payment gateway
         $router->post('/events/{event_id}/order/{order_short_id}/stripe/payment_intent', CreatePaymentIntentActionPublic::class);

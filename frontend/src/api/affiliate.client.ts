@@ -1,4 +1,5 @@
 import {api} from "./client";
+import {publicApi} from "./public-client";
 import {
     GenericDataResponse, GenericPaginatedResponse, IdParam, QueryFilters,
 } from "../types";
@@ -14,6 +15,8 @@ export interface Affiliate {
     total_sales: number;
     total_sales_gross: number;
     status: 'ACTIVE' | 'INACTIVE';
+    promo_code_id?: number | null;
+    public_token?: string;
     created_at: string;
     updated_at: string;
 }
@@ -23,12 +26,26 @@ export interface CreateAffiliateRequest {
     code: string;
     email?: string;
     status?: 'ACTIVE' | 'INACTIVE';
+    promo_code_id?: string | null;
 }
 
 export interface UpdateAffiliateRequest {
     name?: string;
     email?: string;
     status?: 'ACTIVE' | 'INACTIVE';
+    promo_code_id?: string | null;
+}
+
+export interface AffiliatePartnerPage {
+    event_id: number;
+    name: string;
+    code: string;
+    status: 'ACTIVE' | 'INACTIVE';
+    promo_code: string | null;
+    currency: string;
+    orders_count: number;
+    tickets_count: number;
+    total_gross: number;
 }
 
 export const affiliateClient = {
@@ -62,6 +79,13 @@ export const affiliateClient = {
         const response = await api.post(`events/${eventId}/affiliates/export`, {}, {
             responseType: 'blob'
         });
+        return response.data;
+    },
+}
+
+export const affiliateClientPublic = {
+    getPartnerPage: async (token: string) => {
+        const response = await publicApi.get<GenericDataResponse<AffiliatePartnerPage>>(`affiliates/partner/${token}`);
         return response.data;
     },
 }

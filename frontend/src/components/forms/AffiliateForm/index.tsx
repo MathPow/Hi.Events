@@ -1,11 +1,13 @@
 import {InputGroup} from "../../common/InputGroup";
-import {Button, TextInput} from "@mantine/core";
+import {Button, Select, TextInput} from "@mantine/core";
 import {t} from "@lingui/macro";
 import {UseFormReturnType} from "@mantine/form";
 import {CreateAffiliateRequest, UpdateAffiliateRequest} from "../../../api/affiliate.client.ts";
 import {CustomSelect, ItemProps} from "../../common/CustomSelect";
 import {IconCheck, IconRefresh, IconX} from "@tabler/icons-react";
 import {ShowForDesktop, ShowForMobile} from "../../common/Responsive/ShowHideComponents.tsx";
+import {useParams} from "react-router";
+import {useGetEventPromoCodes} from "../../../queries/useGetEventPromoCodes.ts";
 
 interface AffiliateFormProps {
     form: UseFormReturnType<CreateAffiliateRequest | UpdateAffiliateRequest>;
@@ -15,6 +17,13 @@ interface AffiliateFormProps {
 }
 
 export const AffiliateForm = ({form, isEditing = false, existingCode, onGenerateCode}: AffiliateFormProps) => {
+    const {eventId} = useParams();
+    const {data: promoCodes} = useGetEventPromoCodes(eventId, {perPage: 100});
+    const promoCodeOptions = (promoCodes?.data || []).map(promoCode => ({
+        value: String(promoCode.id),
+        label: promoCode.code,
+    }));
+
     const statusOptions: ItemProps[] = [
         {
             icon: <IconCheck/>,
@@ -100,6 +109,16 @@ export const AffiliateForm = ({form, isEditing = false, existingCode, onGenerate
                 form={form}
                 name={'status'}
                 optionList={statusOptions}
+            />
+
+            <Select
+                label={t`Linked promo code`}
+                description={t`Optional. The affiliate link will apply this promo code automatically, and orders using it count towards this affiliate on their partner page.`}
+                placeholder={t`No promo code`}
+                data={promoCodeOptions}
+                clearable
+                searchable
+                {...form.getInputProps('promo_code_id')}
             />
         </>
     );

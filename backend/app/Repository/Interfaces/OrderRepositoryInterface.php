@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HiEvents\Repository\Interfaces;
 
+use HiEvents\Repository\DTO\AffiliateSalesSummaryDTO;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrderItemDomainObject;
 use HiEvents\Http\DTO\QueryParamsDTO;
@@ -32,6 +33,8 @@ interface OrderRepositoryInterface extends RepositoryInterface
     public function countOrdersAssociatedWithProducts(int $eventId, array $productIds, array $orderStatuses): int;
 
     public function countActivePromoCodeUsage(int $promoCodeId): int;
+
+    public function getAffiliateSalesSummary(int $eventId, int $affiliateId, ?int $promoCodeId): AffiliateSalesSummaryDTO;
 
     public function getAllOrdersForAdmin(
         ?string $search = null,

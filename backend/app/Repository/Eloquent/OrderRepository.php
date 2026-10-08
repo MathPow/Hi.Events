@@ -8,11 +8,13 @@ use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\Generated\OrderDomainObjectAbstract;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrderItemDomainObject;
+use HiEvents\DomainObjects\Status\AttendeeStatus;
 use HiEvents\DomainObjects\Status\OrderPaymentStatus;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Http\DTO\QueryParamsDTO;
 use HiEvents\Models\Order;
 use HiEvents\Models\OrderItem;
+use HiEvents\Repository\DTO\AffiliateSalesSummaryDTO;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -203,6 +205,37 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         $this->resetModel();
 
         return $count;
+    }
+
+    public function getAffiliateSalesSummary(int $eventId, int $affiliateId, ?int $promoCodeId): AffiliateSalesSummaryDTO
+    {
+        $orders = DB::table('orders')
+            ->where('event_id', $eventId)
+            ->where('status', OrderStatus::COMPLETED->name)
+            ->whereNull('deleted_at')
+            ->where(static function ($query) use ($affiliateId, $promoCodeId) {
+                $query->where('affiliate_id', $affiliateId);
+
+                if ($promoCodeId !== null) {
+                    $query->orWhere('promo_code_id', $promoCodeId);
+                }
+            });
+
+        $totals = (clone $orders)
+            ->selectRaw('COUNT(*) AS orders_count, COALESCE(SUM(total_gross - total_refunded), 0) AS total_gross')
+            ->first();
+
+        $ticketsCount = DB::table('attendees')
+            ->whereIn('order_id', (clone $orders)->select('id'))
+            ->where('status', '!=', AttendeeStatus::CANCELLED->name)
+            ->whereNull('deleted_at')
+            ->count();
+
+        return new AffiliateSalesSummaryDTO(
+            ordersCount: (int)$totals->orders_count,
+            ticketsCount: $ticketsCount,
+            totalGross: round((float)$totals->total_gross, 2),
+        );
     }
 
     public function getAllOrdersForAdmin(
