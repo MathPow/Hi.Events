@@ -2,6 +2,7 @@
 
 namespace HiEvents\Services\Domain\Report\OrganizerReports;
 
+use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Services\Domain\Report\AbstractOrganizerReportService;
 use Illuminate\Support\Carbon;
@@ -11,6 +12,7 @@ class EventsPerformanceReport extends AbstractOrganizerReportService
     protected function getSqlQuery(Carbon $startDate, Carbon $endDate, ?string $currency = null): string
     {
         $completedStatus = OrderStatus::COMPLETED->name;
+        $defaultDurationHours = EventDomainObject::DEFAULT_DURATION_HOURS;
         $orderCurrencyFilter = $this->buildCurrencyFilter('o.currency', $currency);
         $eventCurrencyFilter = $this->buildCurrencyFilter('e.currency', $currency);
 
@@ -57,8 +59,8 @@ class EventsPerformanceReport extends AbstractOrganizerReportService
                 e.end_date,
                 e.status,
                 CASE
-                    WHEN e.end_date < NOW() THEN 'past'
-                    WHEN e.start_date <= NOW() AND (e.end_date >= NOW() OR e.end_date IS NULL) THEN 'ongoing'
+                    WHEN COALESCE(e.end_date, e.start_date + INTERVAL '$defaultDurationHours hours') < NOW() THEN 'past'
+                    WHEN e.start_date <= NOW() THEN 'ongoing'
                     WHEN e.status = 'LIVE' THEN 'on_sale'
                     ELSE 'upcoming'
                 END AS event_state,
