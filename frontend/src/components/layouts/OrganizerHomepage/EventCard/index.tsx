@@ -43,7 +43,7 @@ export const EventCard: React.FC<EventCardProps> = ({event, primaryColor = '#8b5
     // Check if event is live
     const now = dayjs();
     const startDate = dayjs(event.start_date);
-    const endDate = event.end_date ? dayjs(event.end_date) : startDate.add(2, 'hour');
+    const endDate = event.end_date ? dayjs(event.end_date) : startDate.add(8, 'hour');
     const isLive = now.isAfter(startDate) && now.isBefore(endDate);
 
     // Get products from event categories

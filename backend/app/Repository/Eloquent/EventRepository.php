@@ -57,21 +57,39 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             };
         }
 
-        $upcomingEventsFilter = $params->query_params->get('eventsStatus') === 'upcoming';
+        $eventsStatus = $params->query_params->get('eventsStatus');
+        $statusFilter = in_array($eventsStatus, ['upcoming', 'ended'], true) ? $eventsStatus : null;
 
-        if (!empty($params->filter_fields) && !$upcomingEventsFilter) {
+        if (!empty($params->filter_fields) && !$statusFilter) {
             $this->applyFilterFields($params, EventDomainObject::getAllowedFilterFields());
         }
 
-        // Apply custom filter for upcoming events, as it keeps things less complex on the front-end
-        if ($upcomingEventsFilter) {
-            $where[] = static function (Builder $builder) {
-                $builder
-                    ->where(EventDomainObjectAbstract::STATUS, '!=', EventStatus::ARCHIVED->getName())
-                    ->where(function ($query) {
-                        $query->whereNull(EventDomainObjectAbstract::END_DATE)
-                            ->orWhere(EventDomainObjectAbstract::END_DATE, '>=', now());
+        // Events without an end date are assumed to last DEFAULT_DURATION_HOURS
+        if ($statusFilter) {
+            $defaultEndThreshold = now()->subHours(EventDomainObject::DEFAULT_DURATION_HOURS);
+
+            $where[] = static function (Builder $builder) use ($statusFilter, $defaultEndThreshold) {
+                $builder->where(EventDomainObjectAbstract::STATUS, '!=', EventStatus::ARCHIVED->getName());
+
+                if ($statusFilter === 'upcoming') {
+                    $builder->where(function ($query) use ($defaultEndThreshold) {
+                        $query->where(EventDomainObjectAbstract::END_DATE, '>=', now())
+                            ->orWhere(function ($query) use ($defaultEndThreshold) {
+                                $query->whereNull(EventDomainObjectAbstract::END_DATE)
+                                    ->where(EventDomainObjectAbstract::START_DATE, '>=', $defaultEndThreshold);
+                            });
                     });
+
+                    return;
+                }
+
+                $builder->where(function ($query) use ($defaultEndThreshold) {
+                    $query->where(EventDomainObjectAbstract::END_DATE, '<', now())
+                        ->orWhere(function ($query) use ($defaultEndThreshold) {
+                            $query->whereNull(EventDomainObjectAbstract::END_DATE)
+                                ->where(EventDomainObjectAbstract::START_DATE, '<', $defaultEndThreshold);
+                        });
+                });
             };
 
             $organizerId = $params->filter_fields->first(fn($filter) => $filter->field === EventDomainObjectAbstract::ORGANIZER_ID)?->value;

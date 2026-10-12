@@ -14,6 +14,8 @@ use Illuminate\Support\Str;
 
 class EventDomainObject extends Generated\EventDomainObjectAbstract implements IsSortable, IsFilterable
 {
+    public const DEFAULT_DURATION_HOURS = 8;
+
     private ?Collection $products = null;
 
     private ?Collection $productCategories = null;
@@ -180,13 +182,24 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
 
     public function isEventInPast(): bool
     {
-        if ($this->getEndDate() === null) {
-            return false;
-        }
-        $endDate = Carbon::parse($this->getEndDate());
-        $endDate->setTimezone($this->getTimezone());
+        $endDate = $this->getEffectiveEndDate();
 
-        return $endDate->isPast();
+        return $endDate !== null && $endDate->isPast();
+    }
+
+    public function getEffectiveEndDate(): ?Carbon
+    {
+        if ($this->getEndDate() !== null) {
+            return Carbon::parse($this->getEndDate())->setTimezone($this->getTimezone());
+        }
+
+        if ($this->getStartDate() === null) {
+            return null;
+        }
+
+        return Carbon::parse($this->getStartDate())
+            ->setTimezone($this->getTimezone())
+            ->addHours(self::DEFAULT_DURATION_HOURS);
     }
 
     public function isEventInFuture(): bool
@@ -205,14 +218,7 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
         $startDate = Carbon::parse($this->getStartDate());
         $startDate->setTimezone($this->getTimezone());
 
-        if ($this->getEndDate() === null) {
-            return $startDate->isPast();
-        }
-
-        $endDate = Carbon::parse($this->getEndDate());
-        $endDate->setTimezone($this->getTimezone());
-
-        return $startDate->isPast() && $endDate->isFuture();
+        return $startDate->isPast() && $this->getEffectiveEndDate()->isFuture();
     }
 
     public function getLifecycleStatus(): string
