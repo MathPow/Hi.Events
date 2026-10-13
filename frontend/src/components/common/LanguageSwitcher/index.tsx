@@ -1,10 +1,14 @@
-import {Select} from "@mantine/core";
+import {Select, SelectProps} from "@mantine/core";
 import {dynamicActivateLocale, getClientLocale, localeToNameMap, SupportedLocales} from "../../../locales.ts";
 import {t} from "@lingui/macro";
 import {IconWorld} from "@tabler/icons-react";
 import {useLingui} from "@lingui/react";
 
-export const LanguageSwitcher = () => {
+export const LanguageSwitcher = ({classNames, comboboxProps, iconColor = '#ccc'}: {
+    classNames?: SelectProps['classNames'];
+    comboboxProps?: SelectProps['comboboxProps'];
+    iconColor?: string;
+}) => {
     useLingui();
 
     // Ideally these would be in the locales.ts file, but when they're there they don't translate
@@ -57,7 +61,10 @@ export const LanguageSwitcher = () => {
     return (
         <>
             <Select
-                leftSection={<IconWorld size={15} color={'#ccc'}/>}
+                leftSection={<IconWorld size={15} color={iconColor}/>}
+                classNames={classNames}
+                comboboxProps={comboboxProps}
+                aria-label={t`Language`}
                 width={180}
                 size={'xs'}
                 required

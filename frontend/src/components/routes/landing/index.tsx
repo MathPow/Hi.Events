@@ -4,6 +4,7 @@ import {t} from "@lingui/macro";
 import {Helmet} from "react-helmet-async";
 import {IconArrowDown, IconArrowRight} from "@tabler/icons-react";
 import {useRoughEdge} from "../../../hooks/useRoughEdge.ts";
+import {LanguageSwitcher} from "../../common/LanguageSwitcher";
 import {loadWordmarkLetters} from "./wordmarkLetters.ts";
 import classes from "./Landing.module.scss";
 
@@ -203,6 +204,13 @@ const Landing = () => {
                         <header className={classes.nav}>
                             <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
                             <div className={classes.navActions}>
+                                <LanguageSwitcher iconColor="currentColor" classNames={{
+                                    root: classes.language,
+                                    input: classes.languageInput,
+                                    section: classes.languageSection,
+                                    dropdown: classes.languageDropdown,
+                                    option: classes.languageOption,
+                                }} comboboxProps={{width: 'max-content', position: 'bottom-end', offset: 8}}/>
                                 <RegisterButton/>
                                 <Rough as={NavLink} to="/auth/login" amplitude={1.2} step={18}
                                        className={`${classes.button} ${classes['button-ghost']}`}>

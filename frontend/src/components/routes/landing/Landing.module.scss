@@ -224,7 +224,69 @@ $mobile: 700px;
 
 .navActions {
   display: flex;
+  align-items: center;
   gap: 0.6rem;
+  height: 2.75rem;
+
+  > input[type="hidden"] {
+    display: none;
+  }
+}
+
+.language.language {
+  width: 8.75rem;
+  margin-bottom: 0;
+}
+
+// Mantine's Select, dressed like the "Log in" ghost button on the video.
+// Doubled class so it outranks Mantine's own input styles.
+.language .languageInput.languageInput {
+  height: 2.75rem;
+  min-height: 2.75rem;
+  padding-left: 2.25rem;
+  border: 0;
+  border-radius: 0.7rem;
+  color: $creme;
+  background: rgb(255 247 233 / 0.14);
+  box-shadow: inset 0 0 0 1.5px rgb(255 247 233 / 0.7);
+  backdrop-filter: blur(6px);
+  font-family: $sans;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(255 247 233 / 0.24);
+  }
+}
+
+.language .languageSection.languageSection {
+  color: $creme;
+  pointer-events: none;
+}
+
+.languageDropdown.languageDropdown {
+  padding: 0.35rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: $creme;
+  box-shadow: 0 0.75rem 2rem rgb(53 41 36 / 0.25);
+}
+
+.languageOption.languageOption {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: $brun;
+  font-family: $sans;
+  font-weight: 500;
+
+  &:hover, &[data-combobox-selected] {
+    background: $peche;
+  }
+
+  &[data-checked] {
+    font-weight: 700;
+  }
 }
 
 .heroContent {
@@ -1155,6 +1217,42 @@ $mobile: 700px;
 
 @media (max-width: $mobile) {
   .navActions .button-ghost {
+    display: none;
+  }
+
+  .nav {
+    padding-inline: 1rem;
+  }
+
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .navActions .button {
+    min-height: 2.5rem;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  // On phones the switcher shrinks to a round globe; the list still opens on tap.
+  .language.language {
+    width: 2.5rem;
+  }
+
+  .language .languageInput.languageInput {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0;
+    border-radius: 50%;
+    color: transparent;
+  }
+
+  .language .languageSection.languageSection {
+    width: 2.5rem;
+  }
+
+  .language [data-position="right"] {
     display: none;
   }
 
