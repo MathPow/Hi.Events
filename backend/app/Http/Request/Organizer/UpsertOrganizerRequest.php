@@ -16,6 +16,7 @@ class UpsertOrganizerRequest extends BaseRequest
             'email' => ['email', 'required'],
             'phone' => ['string', "nullable", 'max:25'],
             'website' => ['url', 'nullable', 'max:255'],
+            'donation_url' => ['url', 'nullable', 'max:255'],
             'description' => ['string', 'nullable', 'max:1200'],
             'timezone' => ['timezone', 'required'],
             'currency' => ['required', Rule::in(array_values($currencies))],

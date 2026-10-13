@@ -6,7 +6,7 @@ import classes from './OrganizerHomepage.module.scss';
 import React, {useEffect, useState} from 'react';
 import {Event, GenericPaginatedResponse, Organizer} from "../../../types.ts";
 import {OrganizerDocumentHead} from "../../common/OrganizerDocumentHead";
-import {IconExternalLink, IconMail, IconMapPin, IconWorld} from '@tabler/icons-react';
+import {IconExternalLink, IconHeart, IconMail, IconMapPin, IconWorld} from '@tabler/icons-react';
 import {t} from "@lingui/macro";
 import {PoweredByFooter} from "../../common/PoweredByFooter";
 import {socialMediaConfig} from "../../../constants/socialMediaConfig";
@@ -75,6 +75,7 @@ export const OrganizerHomepage = ({
         })) : [];
 
     const websiteUrl = organizer.website;
+    const donationUrl = organizer.donation_url;
 
     const getGoogleMapsUrl = (locationDetails: any) => {
         if (!locationDetails) return '';
@@ -224,6 +225,18 @@ export const OrganizerHomepage = ({
                                                                     rel="noopener noreferrer"
                                                                 >
                                                                     {new URL(websiteUrl).hostname}
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                        {donationUrl && (
+                                                            <div className={classes.metaItem}>
+                                                                <IconHeart size={15} className={classes.metaIcon}/>
+                                                                <a
+                                                                    href={donationUrl}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    {t`Donate`}
                                                                 </a>
                                                             </div>
                                                         )}

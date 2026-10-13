@@ -19,6 +19,7 @@ class OrganizerResource extends JsonResource
             'email' => $this->getEmail(),
             'phone' => $this->getPhone(),
             'website' => $this->getWebsite(),
+            'donation_url' => $this->getDonationUrl(),
             'description' => $this->getDescription(),
             'timezone' => $this->getTimezone(),
             'currency' => $this->getCurrency(),

@@ -38,6 +38,7 @@ class EditOrganizerHandler
                 'email' => $organizerData->email,
                 'phone' => $organizerData->phone,
                 'website' => $organizerData->website,
+                'donation_url' => $organizerData->donation_url,
                 'description' => $this->htmlPurifierService->purify($organizerData->description),
                 'account_id' => $organizerData->account_id,
                 'timezone' => $organizerData->timezone,

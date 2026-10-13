@@ -18,6 +18,7 @@ class OrganizerResourcePublic extends JsonResource
             'id' => $this->getId(),
             'name' => $this->getName(),
             'website' => $this->getWebsite(),
+            'donation_url' => $this->getDonationUrl(),
             'description' => $this->getDescription(),
             'slug' => $this->getSlug(),
             'status' => $this->getStatus(),

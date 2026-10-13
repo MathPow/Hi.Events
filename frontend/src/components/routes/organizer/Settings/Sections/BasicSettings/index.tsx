@@ -25,6 +25,7 @@ const Settings = () => {
             email: '',
             phone: '',
             website: '',
+            donation_url: '',
             description: '',
             currency: '',
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -53,6 +54,7 @@ const Settings = () => {
             timezone: String(organizer?.timezone),
             phone: String(organizer?.phone || ''),
             website: String(organizer?.website || ''),
+            donation_url: String(organizer?.donation_url || ''),
             description: String(organizer?.description || ''),
         })
     }, [organizer]);
@@ -104,6 +106,14 @@ const Settings = () => {
                             placeholder={t`https://awesome-events.com`}
                         />
                     </InputGroup>
+                    <TextInput
+                        {...form.getInputProps('donation_url')}
+                        label={t`Donation link`}
+                        description={t`Shown on your public organizer page so visitors can donate.`}
+                        type={'url'}
+                        placeholder={t`https://awesome-events.com/donate`}
+                        mb="md"
+                    />
                     <InputGroup>
                         <Select
                             {...form.getInputProps('currency')}

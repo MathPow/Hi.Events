@@ -406,6 +406,7 @@ export interface Organizer {
     email: string;
     description?: string;
     website?: string;
+    donation_url?: string;
     timezone?: string;
     currency?: string;
     slug?: string;

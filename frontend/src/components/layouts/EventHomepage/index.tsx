@@ -13,6 +13,7 @@ import {
     IconCalendarOff,
     IconCalendarPlus,
     IconExternalLink,
+    IconHeart,
     IconMail,
     IconMapPin,
     IconMaximize,
@@ -145,6 +146,7 @@ const EventHomepage = ({...loaderData}: EventHomepageProps) => {
     const organizerLogo = imageUrl('ORGANIZER_LOGO', organizer?.images);
     const organizerLocation = organizer?.settings?.location_details;
     const websiteUrl = organizer?.website;
+    const donationUrl = organizer?.donation_url;
     const locationDetails = event.settings?.location_details;
     const isOnlineEvent = event.settings?.is_online_event;
     const hasLocation = isAddressSet(locationDetails) && !isOnlineEvent;
@@ -605,6 +607,17 @@ const EventHomepage = ({...loaderData}: EventHomepageProps) => {
                                                         return null;
                                                     }
                                                 })()}
+                                                {donationUrl && (
+                                                    <a
+                                                        href={donationUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className={classes.socialLink}
+                                                        title={t`Donate`}
+                                                    >
+                                                        <IconHeart size={18}/>
+                                                    </a>
+                                                )}
                                                 <button
                                                     onClick={() => setContactModalOpen(true)}
                                                     className={classes.contactButton}

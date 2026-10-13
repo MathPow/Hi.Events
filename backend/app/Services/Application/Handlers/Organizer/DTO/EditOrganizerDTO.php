@@ -16,6 +16,7 @@ class EditOrganizerDTO extends BaseDataObject
         public string          $currency,
         public ?string         $phone = null,
         public ?string         $website = null,
+        public ?string         $donation_url = null,
         public ?string         $description = null,
         public ?UploadedFile   $logo = null,
     )
