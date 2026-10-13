@@ -1,26 +1,24 @@
 import { Navigate, RouteObject } from "react-router";
 import ErrorPage from "./error-page.tsx";
-import { useEffect, useState } from "react";
 import { useGetMe } from "./queries/useGetMe.ts";
 import { publicEventRouteLoader } from "./routeLoaders/publicEventRouteLoader.ts";
 import { publicOrganizerRouteLoader } from "./routeLoaders/publicOrganizerRouteLoader.ts";
 import { organizerPreviewRouteLoader } from "./routeLoaders/organizerPreviewRouteLoader.ts";
+import Landing from "./components/routes/landing";
 
 const Root = () => {
-    const [redirectPath, setRedirectPath] = useState<string | null>(null);
     const me = useGetMe();
+    const searchParams = typeof window !== 'undefined' ? window.location.search : '';
 
-    useEffect(() => {
-        if (me.isFetched) {
-            const searchParams = typeof window !== 'undefined' ? window.location.search : '';
-            const basePath = me.isSuccess ? "/manage/events" : "/auth/login";
-            setRedirectPath(basePath + searchParams);
-        }
-    }, [me.isFetched]);
-
-    if (redirectPath) {
-        return <Navigate to={redirectPath} replace={true} />;
+    if (me.isSuccess) {
+        return <Navigate to={"/manage/events" + searchParams} replace={true} />;
     }
+
+    if (me.isFetched && searchParams) {
+        return <Navigate to={"/auth/login" + searchParams} replace={true} />;
+    }
+
+    return <Landing />;
 };
 
 export const router: RouteObject[] = [

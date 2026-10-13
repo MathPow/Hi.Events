@@ -1,0 +1,1213 @@
+@font-face {
+  font-family: FatFrank;
+  src: url('/landing/fonts/fatfrank.otf') format('opentype');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Allotrope;
+  src: url('/landing/fonts/allotrope-bold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Allotrope;
+  src: url('/landing/fonts/allotrope-medium.otf') format('opentype');
+  font-weight: 400 500;
+  font-display: swap;
+}
+
+$creme: #fff7e9;
+$sommet: #faf3df;
+$brun: #352924;
+$orange: #f98043;
+$abricot: #ffad7d;
+$peche: #fae6da;
+$terracotta: #c47762;
+$sable: #e3ad92;
+$display: FatFrank, 'Arial Black', sans-serif;
+$sans: Allotrope, Arial, sans-serif;
+$gutter: clamp(1rem, 2.8vw, 2.5rem);
+$content: min(calc(100% - 2 * #{$gutter}), 72rem);
+$ease: cubic-bezier(0.25, 1, 0.5, 1);
+$mobile: 700px;
+
+.landing {
+  font-family: $sans;
+  color: $brun;
+  background: $brun;
+  -webkit-font-smoothing: antialiased;
+
+  ::selection {
+    background: $orange;
+    color: $brun;
+  }
+
+  h1, h2, h3 {
+    font-family: $display;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 0.005em;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  :where(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 3px solid $brun;
+    outline-offset: 4px;
+  }
+
+  [data-reveal="waiting"] {
+    opacity: 0;
+    translate: 0 2.5rem;
+  }
+
+  [data-reveal="shown"] {
+    opacity: 1;
+    translate: 0 0;
+    transition: opacity 0.9s $ease, translate 0.9s $ease;
+  }
+}
+
+// The page slides over the footer, which waits behind it. Its bottom edge is
+// cut along the brown mountain ridge (same band as the DEHORS shop).
+.page {
+  position: relative;
+  z-index: 1;
+  overflow: clip;
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+  background: $creme;
+  mask-image: linear-gradient(#000, #000), url('/landing/section-brune-bande.svg');
+  mask-size: 100% 100%, min(116.666667%, 105rem) auto;
+  mask-position: 0 0, left 0 bottom -2px;
+  mask-repeat: repeat, repeat-x;
+  mask-composite: subtract, add;
+
+  @media (max-width: $mobile) {
+    mask-image: linear-gradient(#000, #000), url('/landing/section-brune-bande-mobile.svg');
+    mask-size: 100% 100%, 135.820896% auto;
+    mask-position: 0 0, left 75% bottom -2px;
+    mask-repeat: repeat, no-repeat;
+  }
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: $terracotta;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 0.7rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  transition: translate 0.25s $ease, background-color 0.2s ease;
+
+  &:hover {
+    translate: 0 -2px;
+  }
+}
+
+.button-orange {
+  color: $brun;
+  background: $orange;
+
+  &:hover {
+    background: #ff9258;
+  }
+}
+
+.button-dark {
+  color: $creme;
+  background: $brun;
+
+  &:hover {
+    background: #4a3a33;
+  }
+}
+
+.button-ghost {
+  color: $creme;
+  background: rgb(255 247 233 / 0.14);
+  box-shadow: inset 0 0 0 1.5px rgb(255 247 233 / 0.7);
+  backdrop-filter: blur(6px);
+
+  &:hover {
+    background: rgb(255 247 233 / 0.24);
+  }
+}
+
+.sticker {
+  position: absolute;
+  z-index: 3;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 0.4rem 0.8rem rgb(53 41 36 / 0.18));
+  animation: sticker-float 6s ease-in-out infinite alternate;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes sticker-float {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: 0 -0.6rem;
+  }
+}
+
+.photo {
+  overflow: hidden;
+  border-radius: 1.1rem;
+  background: $sable;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// --- Hero ---
+
+.heroWrap {
+  position: relative;
+  padding: 1.25rem $gutter 0;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: min(53rem, calc(100svh - 1.25rem));
+  border-radius: 1.5rem;
+  overflow: hidden;
+  color: $creme;
+  background: $brun url('/landing/photos/hero-poster.jpg') center / cover;
+}
+
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(53 41 36 / 0.45) 0%, rgb(53 41 36 / 0.15) 40%, rgb(53 41 36 / 0.55) 100%);
+}
+
+.nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.75rem clamp(1.25rem, 3vw, 3rem);
+}
+
+.brand {
+  font-family: $display;
+  font-size: 1.35rem;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.navActions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  padding: 2rem 1.5rem 6rem;
+  text-align: center;
+
+  h1 {
+    max-width: 11ch;
+    font-size: clamp(3.25rem, 10vw, 9rem);
+    line-height: 0.92;
+    text-wrap: balance;
+    animation: hero-rise 1.4s $ease both;
+  }
+
+  p {
+    max-width: 32rem;
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    animation: hero-rise 1.4s 0.15s $ease both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    h1, p {
+      animation: none;
+    }
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    translate: 0 3rem;
+  }
+}
+
+.heroFooter {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 clamp(1.25rem, 3vw, 3rem) 1.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.scrollDown {
+  position: absolute;
+  z-index: 4;
+  bottom: -2.25rem;
+  left: 50%;
+  width: 5.5rem;
+  translate: -50% 0;
+}
+
+.stickerTree {
+  position: relative;
+  width: 100%;
+  animation: none;
+}
+
+.scrollDownArrow {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  color: $brun;
+  z-index: 4;
+  background: $creme;
+  translate: -50% -50%;
+  transition: translate 0.3s $ease;
+
+  .scrollDown:hover & {
+    translate: -50% -30%;
+  }
+}
+
+.stickerCamera {
+  top: -0.25rem;
+  left: 42%;
+  width: clamp(5rem, 11vw, 9.5rem);
+  rotate: -6deg;
+}
+
+.stickerFlagLeft {
+  top: 9rem;
+  left: 0;
+  width: clamp(4.5rem, 10vw, 8.5rem);
+  rotate: -8deg;
+}
+
+.stickerFlagRight {
+  top: 8rem;
+  right: 0;
+  width: clamp(4.5rem, 10vw, 8rem);
+  rotate: 8deg;
+  animation-delay: -2s;
+}
+
+.stickerCrocs {
+  bottom: 9rem;
+  left: 2%;
+  width: clamp(6rem, 13vw, 11rem);
+  rotate: -10deg;
+  animation-delay: -4s;
+}
+
+.stickerBoing {
+  bottom: 6rem;
+  right: 1%;
+  width: clamp(6rem, 12vw, 10rem);
+  rotate: 6deg;
+  animation-delay: -1s;
+}
+
+// --- Intro ---
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 3rem 4rem;
+  width: $content;
+  margin: clamp(6rem, 11vw, 9rem) auto 0;
+}
+
+.introText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.introTitle {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(2.5rem, 5.4vw, 4.75rem);
+  line-height: 1;
+}
+
+.introPhotos {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 2fr 3.3fr 3.4fr;
+  align-items: end;
+  gap: 1rem;
+  margin-left: clamp(0rem, 18vw, 14rem);
+  margin-right: calc(-1 * (100vw - min(100vw - 2 * #{$gutter}, 72rem)) / 2 + #{$gutter});
+}
+
+.introPhotoSmall {
+  aspect-ratio: 200 / 170;
+}
+
+.introPhotoMedium {
+  aspect-ratio: 330 / 250;
+}
+
+.introPhotoLargeWrap {
+  position: relative;
+}
+
+.introPhotoLarge {
+  aspect-ratio: 340 / 400;
+}
+
+.stickerRound {
+  top: -1.5rem;
+  right: -0.5rem;
+  width: clamp(4.5rem, 8vw, 7.5rem);
+  rotate: 8deg;
+}
+
+// --- Steps ---
+
+.sectionHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem 4rem;
+
+  h2 {
+    font-size: clamp(2.5rem, 5.4vw, 4.75rem);
+    line-height: 1;
+  }
+}
+
+.sectionHeadAside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  max-width: 24rem;
+  line-height: 1.6;
+}
+
+.steps {
+  width: $content;
+  margin: clamp(6rem, 11vw, 10rem) auto 0;
+}
+
+.stepCards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: clamp(3rem, 6vw, 5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 15rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.25rem;
+  transition: rotate 0.4s $ease, translate 0.4s $ease;
+
+  h3 {
+    margin-top: auto;
+    font-size: 1.5rem;
+    line-height: 1.05;
+  }
+
+  p {
+    margin-top: 0.75rem;
+    padding-right: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  &:hover {
+    rotate: 0deg !important;
+    translate: 0 -0.4rem;
+  }
+}
+
+.stepNumber {
+  font-family: $display;
+  font-size: 2.75rem;
+  line-height: 1;
+}
+
+.stepArrow {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.75rem;
+}
+
+.stepCard1 {
+  color: $creme;
+  background: $brun;
+  rotate: -1deg;
+
+  .stepNumber, h3 {
+    color: $orange;
+  }
+}
+
+.stepCard2 {
+  background: $abricot;
+  margin-top: 4.5rem;
+  rotate: 2.5deg;
+}
+
+.stepCard3 {
+  color: $orange;
+  background: $sommet;
+  margin-top: 1.25rem;
+  rotate: -2deg;
+
+  p {
+    color: $terracotta;
+  }
+}
+
+.stepCard4 {
+  background: $orange;
+  margin-top: 4rem;
+  rotate: 1.5deg;
+}
+
+// --- Trust ---
+
+.trust {
+  margin-top: clamp(6rem, 11vw, 10rem);
+  text-align: center;
+
+  > div:first-child {
+    width: $content;
+    margin: 0 auto 3rem;
+  }
+
+  h2 {
+    max-width: 18ch;
+    margin: 0 auto;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+  }
+}
+
+.marquee {
+  overflow: hidden;
+  padding: 0.85rem 0;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: clamp(3rem, 8vw, 7rem);
+  width: max-content;
+  animation: marquee 40s linear infinite;
+
+  span {
+    font-family: $display;
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.marqueeReverse {
+  animation-direction: reverse;
+  color: $terracotta;
+}
+
+@keyframes marquee {
+  to {
+    translate: -50% 0;
+  }
+}
+
+// --- Fees ---
+
+.feesWrap {
+  padding: 0 $gutter;
+  margin-top: clamp(6rem, 11vw, 10rem);
+}
+
+.fees {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 3rem;
+  max-width: 85rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 3.5rem);
+  border-radius: 1.5rem;
+  background: $peche;
+}
+
+.feesText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding-left: clamp(0rem, 3vw, 2.5rem);
+  color: $orange;
+
+  h2 {
+    font-size: clamp(2.75rem, 5.4vw, 4.75rem);
+    line-height: 0.98;
+  }
+
+  p {
+    max-width: 24rem;
+    color: $terracotta;
+    line-height: 1.6;
+  }
+}
+
+.feesCardWrap {
+  position: relative;
+}
+
+.feesCard {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 1.25rem;
+  color: $creme;
+  background: $brun;
+
+  .eyebrow {
+    color: $abricot;
+  }
+
+  dl {
+    margin: 1.25rem 0 0;
+  }
+
+  dl > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgb(255 247 233 / 0.6);
+
+    &:last-child {
+      border-bottom: 1px solid rgb(255 247 233 / 0.6);
+    }
+  }
+
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0;
+    color: $orange;
+    font-family: $display;
+    font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+    white-space: nowrap;
+  }
+}
+
+.feesTotal {
+  display: block;
+  margin-top: 1.75rem;
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.feesFree {
+  display: block;
+  margin-top: 0.5rem;
+  color: $abricot;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.stickerStick {
+  bottom: -2.5rem;
+  left: -3rem;
+  width: clamp(7rem, 12vw, 10rem);
+  rotate: -8deg;
+}
+
+// --- Stripe ---
+
+.stripe {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  align-items: center;
+  gap: 3rem 5rem;
+  width: $content;
+  margin: clamp(6rem, 11vw, 10rem) auto 0;
+}
+
+.stripeText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  h2 {
+    font-size: clamp(2.75rem, 5.4vw, 4.75rem);
+    line-height: 0.98;
+  }
+
+  p {
+    max-width: 26rem;
+    line-height: 1.6;
+  }
+}
+
+.stripeCardWrap {
+  position: relative;
+  rotate: 1.5deg;
+}
+
+.stripeCard {
+  overflow: hidden;
+  border-radius: 1.25rem;
+}
+
+.stripeCardTop {
+  padding: 2rem 2rem 4.5rem;
+  background: $abricot;
+
+  h3 {
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+    line-height: 1.05;
+  }
+
+  p {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+}
+
+.stripeCardBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.75rem 2rem 2rem;
+  background: $orange;
+
+  span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  strong {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-family: $display;
+    font-weight: 400;
+    font-size: 1.35rem;
+    line-height: 1.1;
+
+    svg {
+      flex: none;
+    }
+  }
+}
+
+.stickerStripe {
+  top: 38%;
+  right: 1.5rem;
+  width: clamp(5rem, 8vw, 7rem);
+  rotate: 10deg;
+}
+
+// --- Features ---
+
+.featuresWrap {
+  padding: 0 $gutter;
+  margin-top: clamp(6rem, 11vw, 10rem);
+}
+
+.features {
+  max-width: 85rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 6.25rem);
+  border-radius: 1.5rem;
+  background: $abricot;
+
+  .eyebrow {
+    color: $brun;
+  }
+
+  h2 {
+    margin-bottom: 2rem;
+    font-size: clamp(2.5rem, 4.6vw, 4rem);
+    line-height: 1;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(0, 2.4fr) auto minmax(0, 2.6fr) auto;
+    align-items: center;
+    gap: 1rem 2rem;
+    padding: 1.4rem 1rem;
+    border-top: 1.5px solid $brun;
+    transition: background-color 0.2s ease;
+
+    &:last-child {
+      border-bottom: 1.5px solid $brun;
+    }
+
+    &:hover {
+      background: rgb(255 247 233 / 0.25);
+    }
+
+    strong {
+      font-family: $display;
+      font-weight: 400;
+      font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    }
+
+    > span:last-of-type {
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+.badge {
+  justify-self: start;
+  min-width: 4.5rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 0.4rem;
+  background: $creme;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.badgeDark {
+  color: $creme;
+  background: $brun;
+}
+
+// --- Community ---
+
+.community {
+  width: $content;
+  margin: clamp(6rem, 11vw, 9rem) auto 0;
+  text-align: center;
+
+  h2 {
+    font-size: clamp(3.5rem, 10vw, 8.5rem);
+    line-height: 0.95;
+  }
+
+  p {
+    max-width: 34rem;
+    margin: 1.5rem auto 0;
+    line-height: 1.6;
+  }
+}
+
+.communityTagline {
+  margin-top: 0.25rem !important;
+  color: $orange;
+  font-family: $display;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.communityPhotos {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  max-width: 54rem;
+  margin: 4rem auto 0;
+}
+
+.communityPhoto1, .communityPhoto2, .communityPhoto3 {
+  aspect-ratio: 350 / 405;
+  transition: rotate 0.4s $ease;
+}
+
+.communityPhoto1 {
+  rotate: -4deg;
+}
+
+.communityPhoto2 {
+  rotate: 1deg;
+  translate: 0 -0.5rem;
+}
+
+.communityPhoto3 {
+  rotate: 5deg;
+  translate: 0 1rem;
+}
+
+.stickerCommunityLeft {
+  top: -2.5rem;
+  left: -2rem;
+  width: clamp(5rem, 10vw, 8rem);
+  rotate: -12deg;
+}
+
+.stickerCommunityRight {
+  bottom: -3rem;
+  right: -2rem;
+  width: clamp(5rem, 10vw, 8rem);
+  rotate: 10deg;
+}
+
+// --- CTA ---
+
+.ctaWrap {
+  position: relative;
+  padding: 0 $gutter;
+  margin-top: clamp(6rem, 11vw, 9rem);
+}
+
+.cta {
+  max-width: 85rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 5rem);
+  border-radius: 1.5rem;
+  color: $creme;
+  background: $brun;
+
+  h2 {
+    max-width: 12ch;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 0.98;
+  }
+}
+
+.ctaRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 2.5rem;
+
+  p {
+    max-width: 24rem;
+    line-height: 1.6;
+  }
+}
+
+.stickerCta {
+  top: -3rem;
+  right: calc(#{$gutter} + 1rem);
+  width: clamp(5rem, 9vw, 8rem);
+  rotate: 8deg;
+}
+
+// --- Footer ---
+
+// Stuck to the bottom of the screen behind the page, it is already in place
+// when the page scrolls away. It slides up under the page by the height of the
+// mountain ridge, so its brown fills the cut-out.
+.footer {
+  position: relative;
+  z-index: 0;
+  overflow: clip;
+  margin-top: calc(-1 * min(7.5vw, 6.75rem));
+  padding-top: clamp(7rem, 12vw, 10rem);
+  color: $creme;
+  background: $brun;
+
+  @media (min-width: #{$mobile + 1}) {
+    position: sticky;
+    bottom: 0;
+  }
+
+  @media (max-width: $mobile) {
+    margin-top: -10vw;
+  }
+
+  .eyebrow {
+    color: $orange;
+  }
+}
+
+.footerInner {
+  display: flex;
+  justify-content: space-between;
+  gap: 2.5rem 4rem;
+  width: $content;
+  margin: 0 auto;
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  strong {
+    font-family: $display;
+    font-weight: 400;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  span {
+    color: rgb(255 247 233 / 0.75);
+  }
+}
+
+.footerLinks {
+  display: flex;
+  gap: 3rem 5rem;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  a {
+    width: fit-content;
+    font-weight: 500;
+    background: linear-gradient(currentColor, currentColor) left bottom / 0 1.5px no-repeat;
+    transition: background-size 0.3s $ease;
+
+    &:hover {
+      background-size: 100% 1.5px;
+    }
+  }
+
+  :focus-visible {
+    outline-color: $creme;
+  }
+}
+
+.footerLegal {
+  width: $content;
+  margin: 3rem auto 0;
+  color: rgb(255 247 233 / 0.55);
+  font-size: 0.8rem;
+}
+
+// 97% of the width, cut by the bottom of the page like on the DEHORS site.
+.footerWordmark {
+  display: block;
+  width: 97.2%;
+  height: auto;
+  margin: 3rem auto -2.6vw;
+  opacity: 0.5;
+
+  @media (max-width: $mobile) {
+    width: 95%;
+    margin-bottom: -5.2vw;
+  }
+}
+
+.footerWordmarkLetters {
+  :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  :global(.letter) {
+    transform-box: fill-box;
+    translate: 0 110%;
+    opacity: 0;
+  }
+}
+
+.footerWordmarkVisible :global(.letter) {
+  animation: footer-letter 0.9s $ease both;
+  animation-delay: calc(var(--rank) * 0.08s);
+}
+
+@keyframes footer-letter {
+  from {
+    translate: 0 110%;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+// --- Small screens ---
+
+@media (max-width: 960px) {
+  .intro, .stripe, .fees {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .introPhotos {
+    margin-left: 0;
+  }
+
+  .stepCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stepCard2, .stepCard3, .stepCard4 {
+    margin-top: 0;
+  }
+
+  .sectionHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .features li {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    > span:last-of-type {
+      grid-column: 1 / -1;
+    }
+
+    > svg, > a {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: $mobile) {
+  .navActions .button-ghost {
+    display: none;
+  }
+
+  .heroFooter {
+    display: none;
+  }
+
+  .stickerFlagLeft, .stickerFlagRight {
+    top: 6.5rem;
+  }
+
+  .stickerCamera {
+    top: auto;
+    bottom: 13rem;
+    left: auto;
+    right: 8%;
+    width: 4.5rem;
+  }
+
+  .introPhotos {
+    grid-template-columns: 1fr 1fr;
+    margin-right: 0;
+
+    > :first-child {
+      display: none;
+    }
+  }
+
+  .stepCards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepCard {
+    min-height: 12rem;
+  }
+
+  .stickerStick {
+    left: auto;
+    right: -0.5rem;
+  }
+
+  .communityPhotos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > :nth-child(3) {
+      display: none;
+    }
+  }
+
+  .ctaRow, .footerInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
