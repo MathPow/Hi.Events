@@ -45,6 +45,31 @@ const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) =
     </Rough>
 );
 
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+
+/** Glides to the anchor's target with an eased scroll instead of the browser's jump. */
+const smoothScrollTo = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = document.querySelector(event.currentTarget.hash);
+    if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+    event.preventDefault();
+
+    const start = window.scrollY;
+    const distance = target.getBoundingClientRect().top - 32;
+    const duration = Math.min(1400, Math.max(700, Math.abs(distance) * 0.9));
+    const startedAt = performance.now();
+
+    const step = (now: number) => {
+        const progress = Math.min(1, (now - startedAt) / duration);
+        window.scrollTo(0, start + distance * easeInOutCubic(progress));
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        }
+    };
+    requestAnimationFrame(step);
+};
+
 /** Fades sections in as they enter the viewport. Content stays visible without JS. */
 const useRevealOnScroll = () => {
     const root = useRef<HTMLDivElement>(null);
@@ -199,16 +224,16 @@ const Landing = () => {
                     <Sticker name="autocollant-drapeau-dehors" className={classes.stickerFlagRight}/>
                     <Sticker name="autocollant-crocs" className={classes.stickerCrocs}/>
                     <Sticker name="autocollant-boing" className={classes.stickerBoing}/>
-                    <a href="#intro" className={classes.scrollDown} aria-label={t`Scroll down`}>
-                        <Sticker name="autocollant-sapin" className={classes.stickerTree}/>
-                        <span className={classes.scrollDownArrow}><IconArrowDown size={18}/></span>
+                    <Sticker name="autocollant-sapin" className={classes.stickerTree}/>
+                    <a href="#intro" className={classes.scrollDown} aria-label={t`Scroll down`} onClick={smoothScrollTo}>
+                        <IconArrowDown size={24} stroke={2.4}/>
                     </a>
                 </section>
 
                 <section id="intro" className={classes.intro}>
                     <div className={classes.introText} data-reveal>
                         <p>{t`Billetterie Dehors is the local ticketing platform for races, outings and competitions. A small local team, fees that stay small, and a community of athletes that grows every week.`}</p>
-                        <Rough as="a" href="#steps" amplitude={1.2} step={18}
+                        <Rough as="a" href="#steps" onClick={smoothScrollTo} amplitude={1.2} step={18}
                                className={`${classes.button} ${classes['button-dark']}`}>
                             {t`How it works`}
                         </Rough>
@@ -231,7 +256,6 @@ const Landing = () => {
                 <section id="steps" className={classes.steps}>
                     <div className={classes.sectionHead} data-reveal>
                         <div>
-                            <span className={classes.eyebrow}>{t`How it works`}</span>
                             <h2>{t`Your ticketing in 4 steps`}</h2>
                         </div>
                         <div className={classes.sectionHeadAside}>
@@ -254,7 +278,6 @@ const Landing = () => {
 
                 <section className={classes.trust}>
                     <div data-reveal>
-                        <span className={classes.eyebrow}>{t`They trust us`}</span>
                         <h2>{t`Local organizers already trust us`}</h2>
                     </div>
                     {[false, true].map((reverse) => (
@@ -271,7 +294,6 @@ const Landing = () => {
                 <section id="fees" className={classes.feesWrap}>
                     <Rough className={classes.fees} amplitude={2} step={52} data-reveal>
                         <div className={classes.feesText}>
-                            <span className={classes.eyebrow}>{t`Fees`}</span>
                             <h2>{t`Fees that stay small.`}</h2>
                             <p>{t`No subscription, no hidden fees. Build the fees into your ticket price: the participants cover them.`}</p>
                             <RegisterButton/>
@@ -299,7 +321,6 @@ const Landing = () => {
 
                 <section className={classes.stripe}>
                     <div className={classes.stripeText} data-reveal>
-                        <span className={classes.eyebrow}>{t`Payments`}</span>
                         <h2>{t`Stripe, what's that?`}</h2>
                         <p>{t`Stripe is the online payment system used by millions of businesses. Your participants pay by card, and the money goes straight to your Stripe account, not ours.`}</p>
                         <RegisterButton variant="dark"/>
@@ -322,7 +343,6 @@ const Landing = () => {
 
                 <section className={classes.featuresWrap}>
                     <Rough className={classes.features} amplitude={2} step={52} data-reveal>
-                        <span className={classes.eyebrow}>{t`Features`}</span>
                         <h2>{t`Everything you need`}</h2>
                         <ul>
                             {features.map((feature) => (
@@ -346,7 +366,6 @@ const Landing = () => {
 
                 <section className={classes.community}>
                     <div data-reveal>
-                        <span className={classes.eyebrow}>{t`Dehors community`}</span>
                         <h2>{t`2,200+ athletes`}</h2>
                         <p className={classes.communityTagline}>{t`will see your event`}</p>
                         <p>{t`We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move.`}</p>
@@ -381,8 +400,8 @@ const Landing = () => {
                     <nav className={classes.footerLinks} aria-label={t`Footer`}>
                         <div>
                             <span className={classes.eyebrow}>{t`Ticketing`}</span>
-                            <a href="#steps">{t`How it works`}</a>
-                            <a href="#fees">{t`Fees`}</a>
+                            <a href="#steps" onClick={smoothScrollTo}>{t`How it works`}</a>
+                            <a href="#fees" onClick={smoothScrollTo}>{t`Fees`}</a>
                             <NavLink to="/auth/login">{t`Log in`}</NavLink>
                         </div>
                         <div>

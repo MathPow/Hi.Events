@@ -81,7 +81,8 @@ export const App: FC<
                         secondary: generateColors(getConfig("VITE_APP_SECONDARY_COLOR", "#3d0b44") as string),
                     },
                     primaryColor: "primary",
-                    fontFamily: "Outfit, sans-serif",
+                    fontFamily: "Allotrope, Arial, sans-serif",
+                    headings: {fontFamily: "FatFrank, 'Arial Black', sans-serif", fontWeight: "400"},
                     primaryShade: 8,
                 }}
             >

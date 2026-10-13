@@ -1,5 +1,27 @@
 @use "mixins";
 
+@font-face {
+  font-family: FatFrank;
+  src: url('/fonts/fatfrank.otf') format('opentype');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Allotrope;
+  src: url('/fonts/allotrope-bold.otf') format('opentype');
+  font-weight: 600 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Allotrope;
+  src: url('/fonts/allotrope-medium.otf') format('opentype');
+  font-weight: 100 500;
+  font-display: swap;
+}
+
+
 :root {
   --hi-text: var(--mantine-color-primary-9);
   --hi-primary: var(--mantine-color-primary-9);
@@ -41,7 +63,7 @@ html {
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
+  font-family: Allotrope, Arial, sans-serif;
   color: var(--hi-text);
   background-color: var(--checkout-background, var(--hi-color-gray)) !important;
   height: auto;
