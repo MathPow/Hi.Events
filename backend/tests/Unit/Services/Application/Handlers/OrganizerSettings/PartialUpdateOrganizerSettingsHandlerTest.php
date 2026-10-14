@@ -142,4 +142,71 @@ class PartialUpdateOrganizerSettingsHandlerTest extends TestCase
 
         $this->handler->handle($dto);
     }
+
+    public function testFaqsAreSanitizedAndEmptyEntriesDropped(): void
+    {
+        $organizer = new OrganizerDomainObject();
+        $organizer->setId(1);
+
+        $existingSettings = new OrganizerSettingDomainObject();
+        $existingSettings->setId(10);
+        $existingSettings->setOrganizerId(1);
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existingSettings);
+
+        $this->settingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->with(
+                Mockery::on(fn(array $attributes) => $attributes['faqs'] === [
+                    ['question' => 'Is parking available?', 'answer' => 'Yes, free parking on site.'],
+                    ['question' => 'Are dogs allowed?', 'answer' => 'On a leash.'],
+                ]),
+                Mockery::any()
+            );
+
+        $this->settingsRepository->shouldReceive('findFirst')->with(10)->once()->andReturn($existingSettings);
+
+        $dto = PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'faqs' => [
+                ['question' => ' Is parking available? ', 'answer' => '<em>Yes</em>, free parking on site.'],
+                ['question' => '   ', 'answer' => 'Orphan answer'],
+                ['question' => '<b>Are dogs allowed?</b>', 'answer' => 'On a leash.'],
+            ],
+        ]);
+
+        $this->handler->handle($dto);
+    }
+
+    public function testFaqsDefaultToExistingWhenNotProvided(): void
+    {
+        $organizer = new OrganizerDomainObject();
+        $organizer->setId(1);
+
+        $existingFaqs = [['question' => 'When?', 'answer' => 'Saturday.']];
+
+        $existingSettings = new OrganizerSettingDomainObject();
+        $existingSettings->setId(10);
+        $existingSettings->setOrganizerId(1);
+        $existingSettings->setFaqs($existingFaqs);
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existingSettings);
+
+        $this->settingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->with(Mockery::on(fn(array $attributes) => $attributes['faqs'] === $existingFaqs), Mockery::any());
+
+        $this->settingsRepository->shouldReceive('findFirst')->with(10)->once()->andReturn($existingSettings);
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'seo_title' => 'New Title',
+        ]));
+    }
 }

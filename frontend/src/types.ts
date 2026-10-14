@@ -418,6 +418,11 @@ export interface Organizer {
     status?: OrganizerStatus;
 }
 
+export interface OrganizerFaq {
+    question: string;
+    answer: string;
+}
+
 export interface OrganizerSettings {
     id: IdParam;
     organizer_id: IdParam;
@@ -454,6 +459,7 @@ export interface OrganizerSettings {
     allow_search_engine_indexing?: boolean;
     tracking_pixels?: TrackingPixelConfig[];
     tracking_consent_acknowledged?: boolean;
+    faqs?: OrganizerFaq[];
     charity_registration_number?: string | null;
     charity_legal_name?: string | null;
     charity_address?: string | null;

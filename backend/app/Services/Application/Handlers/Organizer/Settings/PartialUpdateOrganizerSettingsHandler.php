@@ -103,6 +103,7 @@ class PartialUpdateOrganizerSettingsHandler
 
             'tracking_pixels' => $dto->getProvided('trackingPixels', $organizerSettings->getTrackingPixels()),
             'tracking_consent_acknowledged' => $dto->getProvided('trackingConsentAcknowledged', $organizerSettings->getTrackingConsentAcknowledged()),
+            'faqs' => $this->sanitizeFaqs($dto->getProvided('faqs', $organizerSettings->getFaqs())),
             'charity_registration_number' => $dto->getProvided('charityRegistrationNumber', $organizerSettings->getCharityRegistrationNumber()),
             'charity_legal_name' => $dto->getProvided('charityLegalName', $organizerSettings->getCharityLegalName()),
             'charity_address' => $dto->getProvided('charityAddress', $organizerSettings->getCharityAddress()),
@@ -114,5 +115,17 @@ class PartialUpdateOrganizerSettingsHandler
         ]);
 
         return $this->organizerSettingsRepository->findFirst($organizerSettings->getId());
+    }
+
+    private function sanitizeFaqs(?array $faqs): array
+    {
+        return collect($faqs ?? [])
+            ->map(fn(array $faq) => [
+                'question' => trim(strip_tags($faq['question'] ?? '')),
+                'answer' => trim(strip_tags($faq['answer'] ?? '')),
+            ])
+            ->filter(fn(array $faq) => $faq['question'] !== '' && $faq['answer'] !== '')
+            ->values()
+            ->all();
     }
 }

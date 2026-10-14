@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router";
-import {ActionIcon, Anchor} from '@mantine/core';
+import {Accordion, ActionIcon, Anchor} from '@mantine/core';
 import {EventCard} from './EventCard';
 import {AccentBlobs} from '../../common/AccentBlobs';
 import classes from './OrganizerHomepage.module.scss';
@@ -87,6 +87,7 @@ export const OrganizerHomepage = ({
     const organizerCover = organizer.images?.find(img => img.type === 'ORGANIZER_COVER');
 
     const events = eventsData?.data || [];
+    const faqs = organizer.settings?.faqs ?? [];
 
     // Theme settings
     const rawThemeSettings = organizer?.settings?.homepage_theme_settings;
@@ -345,6 +346,34 @@ export const OrganizerHomepage = ({
                                 </div>
                             )}
                         </div>
+
+                        {faqs.length > 0 && (
+                            <section className={classes.faqSection} aria-labelledby="organizer-faq-title">
+                                <div className={classes.eventsHeader}>
+                                    <h2 id="organizer-faq-title" className={classes.eventsTitle}>
+                                        {t`Frequently asked questions`}
+                                    </h2>
+                                </div>
+                                <Accordion
+                                    multiple
+                                    chevronPosition="right"
+                                    classNames={{
+                                        item: classes.faqItem,
+                                        control: classes.faqControl,
+                                        label: classes.faqQuestion,
+                                        chevron: classes.faqChevron,
+                                        content: classes.faqAnswer,
+                                    }}
+                                >
+                                    {faqs.map((faq, index) => (
+                                        <Accordion.Item key={index} value={String(index)}>
+                                            <Accordion.Control>{faq.question}</Accordion.Control>
+                                            <Accordion.Panel>{faq.answer}</Accordion.Panel>
+                                        </Accordion.Item>
+                                    ))}
+                                </Accordion>
+                            </section>
+                        )}
 
                         {/* Footer */}
                         <div className={classes.footerSection}>

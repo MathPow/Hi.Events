@@ -508,6 +508,62 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.95rem;
 }
 
+// FAQ section - same container as the events section
+.faqSection {
+  @extend .eventsSection;
+  animation-delay: 0.2s;
+
+  @include mixins.respond-below(md) {
+    margin-top: 12px;
+  }
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--border-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.faqControl {
+  padding: 18px 32px;
+  background: transparent;
+  color: var(--primary-text-color);
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: var(--organizer-accent-soft, rgba(0, 0, 0, 0.03));
+  }
+
+  @include mixins.respond-below(md) {
+    padding: 16px 20px;
+  }
+}
+
+.faqQuestion {
+  font-family: $font-display;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.faqChevron {
+  color: var(--primary-color);
+}
+
+.faqAnswer {
+  padding: 0 32px 20px;
+  color: var(--secondary-color);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-line;
+
+  @include mixins.respond-below(md) {
+    padding: 0 20px 16px;
+  }
+}
+
 // Pagination inside events section
 .paginationWrapper {
   padding: 16px 32px 24px;

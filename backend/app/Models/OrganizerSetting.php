@@ -15,6 +15,7 @@ class OrganizerSetting extends BaseModel
             'homepage_theme_settings' => 'array',
             'location_details' => 'array',
             'tracking_pixels' => 'array',
+            'faqs' => 'array',
         ];
     }
 }

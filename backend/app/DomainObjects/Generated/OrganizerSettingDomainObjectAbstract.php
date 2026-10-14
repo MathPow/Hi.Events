@@ -37,6 +37,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     final public const CHARITY_SIGNATORY_NAME = 'charity_signatory_name';
     final public const CHARITY_RECEIPT_PREFIX = 'charity_receipt_prefix';
     final public const DEFAULT_PASS_PROCESSING_FEE_TO_BUYER = 'default_pass_processing_fee_to_buyer';
+    final public const FAQS = 'faqs';
 
     protected int $id;
     protected int $organizer_id;
@@ -65,6 +66,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     protected ?string $charity_signatory_name = null;
     protected ?string $charity_receipt_prefix = null;
     protected bool $default_pass_processing_fee_to_buyer = false;
+    protected array|string|null $faqs = null;
 
     public function toArray(): array
     {
@@ -96,6 +98,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
                     'charity_signatory_name' => $this->charity_signatory_name ?? null,
                     'charity_receipt_prefix' => $this->charity_receipt_prefix ?? null,
                     'default_pass_processing_fee_to_buyer' => $this->default_pass_processing_fee_to_buyer ?? null,
+                    'faqs' => $this->faqs ?? null,
                 ];
     }
 
@@ -395,5 +398,16 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     public function getDefaultPassProcessingFeeToBuyer(): bool
     {
         return $this->default_pass_processing_fee_to_buyer;
+    }
+
+    public function setFaqs(array|string|null $faqs): self
+    {
+        $this->faqs = $faqs;
+        return $this;
+    }
+
+    public function getFaqs(): array|string|null
+    {
+        return $this->faqs;
     }
 }

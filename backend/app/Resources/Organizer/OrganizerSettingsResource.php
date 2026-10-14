@@ -32,6 +32,7 @@ class OrganizerSettingsResource extends BaseResource
             'location_details' => $this->getLocationDetails(),
             'tracking_pixels' => $this->getTrackingPixels(),
             'tracking_consent_acknowledged' => $this->getTrackingConsentAcknowledged(),
+            'faqs' => $this->getFaqs() ?? [],
             'charity_registration_number' => $this->getCharityRegistrationNumber(),
             'charity_legal_name' => $this->getCharityLegalName(),
             'charity_address' => $this->getCharityAddress(),

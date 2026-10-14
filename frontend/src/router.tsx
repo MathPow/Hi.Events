@@ -326,6 +326,13 @@ export const router: RouteObject[] = [
                 }
             },
             {
+                path: "faq",
+                async lazy() {
+                    const Faq = await import("./components/routes/organizer/Faq");
+                    return { Component: Faq.default };
+                }
+            },
+            {
                 path: "webhooks",
                 async lazy() {
                     const Webhooks = await import("./components/routes/organizer/Webhooks");

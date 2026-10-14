@@ -130,6 +130,11 @@ class PartialUpdateOrganizerSettingsRequest extends BaseRequest
             'tracking_pixels.*.enabled' => ['required', 'boolean'],
             'tracking_consent_acknowledged' => ['sometimes', 'nullable', 'boolean'],
 
+            // FAQ
+            'faqs' => ['sometimes', 'nullable', 'array', 'max:50'],
+            'faqs.*.question' => ['required', 'string', 'max:255'],
+            'faqs.*.answer' => ['required', 'string', 'max:5000'],
+
             // Organisme de bienfaisance emetteur des recus officiels.
             // charity_registration_number vide = aucun recu emis.
             'charity_registration_number' => ['sometimes', 'nullable', 'string', 'max:255'],

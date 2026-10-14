@@ -10,6 +10,7 @@ import {
     IconExternalLink,
     IconEye,
     IconEyeOff,
+    IconHelpCircle,
     IconPaint,
     IconSettings,
     IconShare,
@@ -92,6 +93,7 @@ const OrganizerLayout = () => {
 
         { label: t`Tools` },
         { link: 'organizer-homepage-designer', label: t`Homepage Designer`, icon: IconPaint },
+        { link: 'faq', label: t`FAQ`, icon: IconHelpCircle },
 
         { label: t`Integrations` },
         { link: 'webhooks', label: t`Webhooks`, icon: IconWebhook },
