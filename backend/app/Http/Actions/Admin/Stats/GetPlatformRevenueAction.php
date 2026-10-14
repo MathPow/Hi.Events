@@ -23,10 +23,13 @@ class GetPlatformRevenueAction extends BaseAction
     {
         $this->minimumAllowedRole(Role::SUPERADMIN);
 
+        $breakdownDays = (int)$request->query('breakdown_days', 0);
+
         $revenue = $this->handler->handle(new GetPlatformRevenueDTO(
             days: max(1, min((int)$request->query('days', 30), 365)),
             months: max(1, min((int)$request->query('months', 12), 24)),
             topContributors: max(1, min((int)$request->query('top_contributors', 10), 50)),
+            breakdownDays: $breakdownDays > 0 ? min($breakdownDays, 365) : null,
         ));
 
         return $this->jsonResponse($revenue->toArray());

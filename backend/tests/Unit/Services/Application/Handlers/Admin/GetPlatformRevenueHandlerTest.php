@@ -188,7 +188,7 @@ class GetPlatformRevenueHandlerTest extends TestCase
             $this->row(['event_id' => 3, 'event_title' => 'Velo', 'organizer_id' => 11, 'organizer_name' => 'Dehors', 'currency' => 'CAD', 'paid_orders' => 4, 'contributions_orders' => 2, 'contributions' => '2.00']),
         ]]);
 
-        $result = $this->handler()->handle(new GetPlatformRevenueDTO(days: 30));
+        $result = $this->handler()->handle(new GetPlatformRevenueDTO(days: 30, breakdownDays: 30));
 
         $commissionQuery = $this->queries[7];
         $this->assertStringContainsString('GROUP BY o.event_id, f.currency', $commissionQuery['query']);
@@ -218,5 +218,17 @@ class GetPlatformRevenueHandlerTest extends TestCase
         $this->assertSame(4.0, $boreal['commissions']);
         $this->assertSame(71.4, $boreal['share']);
         $this->assertSame(28.6, $result->by_organizer[1]['share']);
+    }
+
+    public function testBreakdownCoversAllTimeByDefault(): void
+    {
+        $this->mockDatabase([]);
+
+        $this->handler()->handle(new GetPlatformRevenueDTO(days: 7));
+
+        $breakdownQuery = end($this->queries);
+        $this->assertStringContainsString('GROUP BY e.id', $breakdownQuery['query']);
+        $this->assertArrayNotHasKey('since', $breakdownQuery['bindings']);
+        $this->assertArrayNotHasKey('since', $this->queries[7]['bindings']);
     }
 }

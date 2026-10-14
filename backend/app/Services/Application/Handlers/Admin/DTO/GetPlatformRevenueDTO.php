@@ -10,6 +10,7 @@ class GetPlatformRevenueDTO extends BaseDataObject
         public readonly int $days = 30,
         public readonly int $months = 12,
         public readonly int $topContributors = 10,
+        public readonly ?int $breakdownDays = null,
     )
     {
     }

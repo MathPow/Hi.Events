@@ -60,7 +60,11 @@ class GetPlatformRevenueHandler
         usort($monthlyRows, static fn(array $a, array $b) => strcmp($a['bucket'], $b['bucket']));
 
         $topContributors = $this->getTopContributors($dto->topContributors);
-        $byEvent = $this->getContributionsByEvent($since);
+        // Par defaut depuis le debut: un evenement se lit sur toute sa vente,
+        // une fenetre glissante en couperait les premieres commandes.
+        $byEvent = $this->getContributionsByEvent(
+            $dto->breakdownDays !== null ? Carbon::now()->subDays($dto->breakdownDays) : null
+        );
 
         return new PlatformRevenueResponseDTO(
             days: $dto->days,
@@ -87,6 +91,7 @@ class GetPlatformRevenueHandler
                 'total' => $row['total'],
             ], $monthlyRows),
             top_contributors: $topContributors,
+            breakdown_days: $dto->breakdownDays,
             by_organizer: $this->groupByOrganizer($byEvent),
             by_event: $byEvent,
         );
@@ -247,8 +252,10 @@ class GetPlatformRevenueHandler
      * sa devise. Les commandes gratuites sont exclues du denominateur, le champ
      * de contribution n'y est jamais propose.
      */
-    private function getContributionsByEvent(Carbon $since): array
+    private function getContributionsByEvent(?Carbon $since): array
     {
+        $sinceCondition = $since !== null ? 'AND o.created_at >= :since' : '';
+
         $query = <<<SQL
             SELECT
                 e.id AS event_id,
@@ -267,7 +274,7 @@ class GetPlatformRevenueHandler
               AND o.payment_status = :paymentStatusPaid
               AND o.total_gross > 0
               AND (o.refund_status IS NULL OR o.refund_status <> :refundStatusRefunded)
-              AND o.created_at >= :since
+              {$sinceCondition}
             GROUP BY e.id, e.title, org.id, org.name, o.currency
         SQL;
 
@@ -283,12 +290,12 @@ class GetPlatformRevenueHandler
             'contributions_orders' => (int)$row->contributions_orders,
             'contributions' => round((float)$row->contributions, 2),
             'commissions' => $commissions[$row->event_id . '-' . $row->currency] ?? 0.0,
-        ], DB::select($query, [
+        ], DB::select($query, array_filter([
             'statusCompleted' => OrderStatus::COMPLETED->name,
             'paymentStatusPaid' => OrderPaymentStatus::PAYMENT_RECEIVED->name,
             'refundStatusRefunded' => OrderRefundStatus::REFUNDED->name,
             'since' => $since,
-        ]));
+        ], static fn($value) => $value !== null)));
 
         return $this->withPercentages($rows);
     }
@@ -299,8 +306,10 @@ class GetPlatformRevenueHandler
      *
      * @return array<string, float> indexe par "event_id-devise"
      */
-    private function getCommissionsByEvent(Carbon $since): array
+    private function getCommissionsByEvent(?Carbon $since): array
     {
+        $sinceCondition = $since !== null ? 'AND f.created_at >= :since' : '';
+
         $query = <<<SQL
             SELECT
                 o.event_id AS event_id,
@@ -320,18 +329,18 @@ class GetPlatformRevenueHandler
             WHERE f.deleted_at IS NULL
               AND f.status = :feeStatusPaid
               AND (o.refund_status IS NULL OR o.refund_status <> :refundStatusRefunded)
-              AND f.created_at >= :since
+              {$sinceCondition}
             GROUP BY o.event_id, f.currency
         SQL;
 
         $commissions = [];
-        foreach (DB::select($query, [
+        foreach (DB::select($query, array_filter([
             'stripe' => PaymentProviders::STRIPE->value,
             'contributionRetention' => $this->contributionRetentionRate(),
             'feeStatusPaid' => OrderApplicationFeeStatus::PAID->value,
             'refundStatusRefunded' => OrderRefundStatus::REFUNDED->name,
             'since' => $since,
-        ]) as $row) {
+        ], static fn($value) => $value !== null)) as $row) {
             $commissions[$row->event_id . '-' . $row->currency] = round((float)$row->amount, 2);
         }
 

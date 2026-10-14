@@ -260,6 +260,7 @@ export interface PlatformRevenue {
     by_currency: PlatformRevenueByCurrency[];
     monthly: PlatformRevenueByMonth[];
     top_contributors: PlatformTopContributor[];
+    breakdown_days: number | null;
     by_organizer: PlatformRevenueByOrganizer[];
     by_event: PlatformRevenueByEvent[];
 }
@@ -268,6 +269,7 @@ export interface GetPlatformRevenueParams {
     days?: number;
     months?: number;
     topContributors?: number;
+    breakdownDays?: number;
 }
 
 export interface GetAdminDashboardParams {
@@ -479,6 +481,7 @@ export const adminClient = {
                 days: params.days || 30,
                 months: params.months || 12,
                 top_contributors: params.topContributors || 10,
+                breakdown_days: params.breakdownDays || 0,
             }
         });
         return response.data;

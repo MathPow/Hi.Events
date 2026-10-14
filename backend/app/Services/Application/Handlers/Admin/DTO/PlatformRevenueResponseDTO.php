@@ -19,6 +19,7 @@ class PlatformRevenueResponseDTO extends BaseDataObject
         public readonly array  $by_currency,
         public readonly array  $monthly,
         public readonly array  $top_contributors,
+        public readonly ?int   $breakdown_days = null,
         public readonly array  $by_organizer = [],
         public readonly array  $by_event = [],
     )

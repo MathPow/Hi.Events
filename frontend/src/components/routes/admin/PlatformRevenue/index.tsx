@@ -8,7 +8,12 @@ import {RevenueBreakdown} from "./RevenueBreakdown";
 
 const PlatformRevenue = () => {
     const [days, setDays] = useState('30');
-    const {data: revenue, isLoading} = useGetPlatformRevenue({days: Number(days), months: 12});
+    const [breakdownDays, setBreakdownDays] = useState('0');
+    const {data: revenue, isLoading, isFetching} = useGetPlatformRevenue({
+        days: Number(days),
+        months: 12,
+        breakdownDays: Number(breakdownDays),
+    });
 
     const singleCurrency = revenue?.by_currency?.length === 1
         ? revenue.by_currency[0].currency
@@ -107,11 +112,25 @@ const PlatformRevenue = () => {
                 </SimpleGrid>
 
                 <div>
-                    <Title order={2} mb={4}>
-                        <Trans>By organizer and event</Trans>
-                    </Title>
+                    <Group justify="space-between" align="flex-end" mb={4} wrap="wrap">
+                        <Title order={2}>
+                            <Trans>By organizer and event</Trans>
+                        </Title>
+                        <SegmentedControl
+                            size="xs"
+                            value={breakdownDays}
+                            onChange={setBreakdownDays}
+                            disabled={isFetching}
+                            data={[
+                                {value: '0', label: t`All time`},
+                                {value: '30', label: t`30 days`},
+                                {value: '90', label: t`90 days`},
+                                {value: '365', label: t`1 year`},
+                            ]}
+                        />
+                    </Group>
                     <Text size="xs" c="dimmed" mb="md">
-                        <Trans>Over the selected period. Contribution rate: paid orders that added a contribution. % of revenue: share of the platform revenue in that currency. Click a column to sort.</Trans>
+                        <Trans>Paid orders only, counted by order date. Contribution rate: paid orders that added a contribution. % of revenue: share of the platform revenue in that currency. Click a column to sort.</Trans>
                     </Text>
                     {isLoading ? (
                         <Skeleton height={200} radius="md"/>
