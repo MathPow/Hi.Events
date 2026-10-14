@@ -224,6 +224,29 @@ export interface PlatformTopContributor {
     last_contribution_at: string;
 }
 
+export interface PlatformRevenueBreakdownRow {
+    organizer_id: number;
+    organizer_name: string;
+    currency: string;
+    paid_orders: number;
+    contributions_orders: number;
+    contributions: number;
+    commissions: number;
+    total: number;
+    participation_rate: number;
+    share: number;
+    average_contribution: number;
+}
+
+export interface PlatformRevenueByOrganizer extends PlatformRevenueBreakdownRow {
+    events_count: number;
+}
+
+export interface PlatformRevenueByEvent extends PlatformRevenueBreakdownRow {
+    event_id: number;
+    event_title: string;
+}
+
 export interface PlatformRevenue {
     days: number;
     contributions_total: number;
@@ -237,6 +260,8 @@ export interface PlatformRevenue {
     by_currency: PlatformRevenueByCurrency[];
     monthly: PlatformRevenueByMonth[];
     top_contributors: PlatformTopContributor[];
+    by_organizer: PlatformRevenueByOrganizer[];
+    by_event: PlatformRevenueByEvent[];
 }
 
 export interface GetPlatformRevenueParams {

@@ -59,6 +59,9 @@ class GetPlatformRevenueHandler
         $monthlyRows = array_values($monthly);
         usort($monthlyRows, static fn(array $a, array $b) => strcmp($a['bucket'], $b['bucket']));
 
+        $topContributors = $this->getTopContributors($dto->topContributors);
+        $byEvent = $this->getContributionsByEvent($since);
+
         return new PlatformRevenueResponseDTO(
             days: $dto->days,
             contributions_total: $this->sum($byCurrency, 'contributions'),
@@ -83,7 +86,9 @@ class GetPlatformRevenueHandler
                 'commissions' => $row['commissions'],
                 'total' => $row['total'],
             ], $monthlyRows),
-            top_contributors: $this->getTopContributors($dto->topContributors),
+            top_contributors: $topContributors,
+            by_organizer: $this->groupByOrganizer($byEvent),
+            by_event: $byEvent,
         );
     }
 
@@ -234,6 +239,164 @@ class GetPlatformRevenueHandler
             'orders_count' => (int)$row->orders_count,
             'last_contribution_at' => $row->last_contribution_at,
         ], $rows);
+    }
+
+    /**
+     * Taux de participation par evenement sur la periode: commandes payees,
+     * commandes avec contribution, et part de chaque evenement dans le total de
+     * sa devise. Les commandes gratuites sont exclues du denominateur, le champ
+     * de contribution n'y est jamais propose.
+     */
+    private function getContributionsByEvent(Carbon $since): array
+    {
+        $query = <<<SQL
+            SELECT
+                e.id AS event_id,
+                e.title AS event_title,
+                org.id AS organizer_id,
+                org.name AS organizer_name,
+                o.currency AS currency,
+                COUNT(*) AS paid_orders,
+                COUNT(*) FILTER (WHERE o.platform_contribution > 0) AS contributions_orders,
+                COALESCE(SUM(o.platform_contribution), 0) AS contributions
+            FROM orders o
+            INNER JOIN events e ON e.id = o.event_id
+            INNER JOIN organizers org ON org.id = e.organizer_id
+            WHERE o.deleted_at IS NULL
+              AND o.status = :statusCompleted
+              AND o.payment_status = :paymentStatusPaid
+              AND o.total_gross > 0
+              AND (o.refund_status IS NULL OR o.refund_status <> :refundStatusRefunded)
+              AND o.created_at >= :since
+            GROUP BY e.id, e.title, org.id, org.name, o.currency
+        SQL;
+
+        $commissions = $this->getCommissionsByEvent($since);
+
+        $rows = array_map(static fn($row) => [
+            'event_id' => (int)$row->event_id,
+            'event_title' => $row->event_title,
+            'organizer_id' => (int)$row->organizer_id,
+            'organizer_name' => $row->organizer_name,
+            'currency' => $row->currency,
+            'paid_orders' => (int)$row->paid_orders,
+            'contributions_orders' => (int)$row->contributions_orders,
+            'contributions' => round((float)$row->contributions, 2),
+            'commissions' => $commissions[$row->event_id . '-' . $row->currency] ?? 0.0,
+        ], DB::select($query, [
+            'statusCompleted' => OrderStatus::COMPLETED->name,
+            'paymentStatusPaid' => OrderPaymentStatus::PAYMENT_RECEIVED->name,
+            'refundStatusRefunded' => OrderRefundStatus::REFUNDED->name,
+            'since' => $since,
+        ]));
+
+        return $this->withPercentages($rows);
+    }
+
+    /**
+     * Meme calcul que getCommissions (part contribution retiree des frais
+     * Stripe), ventile par evenement.
+     *
+     * @return array<string, float> indexe par "event_id-devise"
+     */
+    private function getCommissionsByEvent(Carbon $since): array
+    {
+        $query = <<<SQL
+            SELECT
+                o.event_id AS event_id,
+                f.currency AS currency,
+                COALESCE(SUM(
+                    GREATEST(
+                        f.amount - CASE
+                            WHEN f.payment_method = :stripe
+                                THEN COALESCE(o.platform_contribution, 0) * :contributionRetention
+                            ELSE 0
+                        END,
+                        0
+                    )
+                ), 0) AS amount
+            FROM order_application_fees f
+            INNER JOIN orders o ON o.id = f.order_id AND o.deleted_at IS NULL
+            WHERE f.deleted_at IS NULL
+              AND f.status = :feeStatusPaid
+              AND (o.refund_status IS NULL OR o.refund_status <> :refundStatusRefunded)
+              AND f.created_at >= :since
+            GROUP BY o.event_id, f.currency
+        SQL;
+
+        $commissions = [];
+        foreach (DB::select($query, [
+            'stripe' => PaymentProviders::STRIPE->value,
+            'contributionRetention' => $this->contributionRetentionRate(),
+            'feeStatusPaid' => OrderApplicationFeeStatus::PAID->value,
+            'refundStatusRefunded' => OrderRefundStatus::REFUNDED->name,
+            'since' => $since,
+        ]) as $row) {
+            $commissions[$row->event_id . '-' . $row->currency] = round((float)$row->amount, 2);
+        }
+
+        return $commissions;
+    }
+
+    private function groupByOrganizer(array $eventRows): array
+    {
+        $organizers = [];
+
+        foreach ($eventRows as $row) {
+            $key = $row['organizer_id'] . '-' . $row['currency'];
+            $organizers[$key] ??= [
+                'organizer_id' => $row['organizer_id'],
+                'organizer_name' => $row['organizer_name'],
+                'currency' => $row['currency'],
+                'events_count' => 0,
+                'paid_orders' => 0,
+                'contributions_orders' => 0,
+                'contributions' => 0.0,
+                'commissions' => 0.0,
+            ];
+            $organizers[$key]['events_count']++;
+            $organizers[$key]['commissions'] = round($organizers[$key]['commissions'] + $row['commissions'], 2);
+            $organizers[$key]['paid_orders'] += $row['paid_orders'];
+            $organizers[$key]['contributions_orders'] += $row['contributions_orders'];
+            $organizers[$key]['contributions'] = round($organizers[$key]['contributions'] + $row['contributions'], 2);
+        }
+
+        return $this->withPercentages(array_values($organizers));
+    }
+
+    /**
+     * Ajoute total, participation_rate, share (part du revenu plateforme de la
+     * devise) et average_contribution, puis trie par revenu decroissant. La part
+     * se calcule par devise: additionner des CAD et des EUR n'aurait pas de sens.
+     */
+    private function withPercentages(array $rows): array
+    {
+        $rows = array_map(static fn(array $row) => $row + [
+            'total' => round($row['contributions'] + $row['commissions'], 2),
+        ], $rows);
+
+        $totalsByCurrency = [];
+        foreach ($rows as $row) {
+            $totalsByCurrency[$row['currency']] = ($totalsByCurrency[$row['currency']] ?? 0) + $row['total'];
+        }
+
+        $rows = array_map(static function (array $row) use ($totalsByCurrency) {
+            $currencyTotal = $totalsByCurrency[$row['currency']];
+
+            return $row + [
+                'participation_rate' => $row['paid_orders'] > 0
+                    ? round($row['contributions_orders'] / $row['paid_orders'] * 100, 1)
+                    : 0.0,
+                'share' => $currencyTotal > 0 ? round($row['total'] / $currencyTotal * 100, 1) : 0.0,
+                'average_contribution' => $row['contributions_orders'] > 0
+                    ? round($row['contributions'] / $row['contributions_orders'], 2)
+                    : 0.0,
+            ];
+        }, $rows);
+
+        usort($rows, static fn(array $a, array $b) => [$b['total'], $b['paid_orders']] <=> [$a['total'], $a['paid_orders']]);
+
+        return $rows;
     }
 
     /**

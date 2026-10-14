@@ -80,7 +80,7 @@ msgid "{0} logo"
 msgstr "logo {0}"
 
 #: src/components/routes/admin/Dashboard/index.tsx:288
-#: src/components/routes/admin/PlatformRevenue/index.tsx:96
+#: src/components/routes/admin/PlatformRevenue/index.tsx:98
 msgid "{0} orders"
 msgstr "{0} zamówień"
 
@@ -132,6 +132,10 @@ msgstr "Sprzedano {sold}"
 #: src/components/common/EventCard/index.tsx:119
 msgid "{totalCount} ticket types"
 msgstr "{totalCount} typów biletów"
+
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:59
+msgid "% of revenue"
+msgstr "% przychodu"
 
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:100
 msgid "+1 234 567 890"
@@ -227,6 +231,10 @@ msgstr "1 typ biletu"
 msgid "1 week before event"
 msgstr "1 tydzień przed wydarzeniem"
 
+#: src/components/routes/admin/PlatformRevenue/index.tsx:69
+msgid "1 year"
+msgstr "1 rok"
+
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:123
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:81
 msgid "123 Main Street"
@@ -257,15 +265,15 @@ msgstr "2,9% + 0,30 $"
 msgid "20"
 msgstr "20"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:66
+#: src/components/routes/admin/PlatformRevenue/index.tsx:67
 msgid "30 days"
 msgstr "30 dni"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:65
+#: src/components/routes/admin/PlatformRevenue/index.tsx:66
 msgid "7 days"
 msgstr "7 dni"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:67
+#: src/components/routes/admin/PlatformRevenue/index.tsx:68
 msgid "90 days"
 msgstr "90 dni"
 
@@ -768,6 +776,10 @@ msgstr "Wszystkie nieudane zadania usunięte"
 msgid "All jobs queued for retry"
 msgstr "Wszystkie zadania w kolejce do ponowienia"
 
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:127
+msgid "All organizers"
+msgstr "Wszyscy organizatorzy"
+
 #: src/components/common/PromoCodeTable/index.tsx:131
 msgid "All Products"
 msgstr "Wszystkie produkty"
@@ -776,7 +788,7 @@ msgstr "Wszystkie produkty"
 msgid "All Statuses"
 msgstr "Wszystkie statusy"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:94
+#: src/components/routes/admin/PlatformRevenue/index.tsx:96
 msgid "All time: {0}"
 msgstr "Od początku: {0}"
 
@@ -1350,6 +1362,10 @@ msgstr "Dostępne do zwrotu"
 msgid "Available Tokens"
 msgstr "Dostępne tokeny"
 
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:56
+msgid "Average"
+msgstr "Średnia"
+
 #: src/components/common/OrderStatusBadge/index.tsx:11
 #: src/components/modals/SendMessageModal/index.tsx:352
 msgid "Awaiting offline payment"
@@ -1522,13 +1538,25 @@ msgstr "Dodając piksele śledzące, potwierdzasz, że Ty i ta platforma jesteś
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
 msgstr "Kontynuując, zgadzasz się na <0>{0} Warunki korzystania z usługi</0>"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:109
+#: src/components/routes/admin/PlatformRevenue/index.tsx:129
 msgid "By currency (all time)"
 msgstr "Według waluty (od początku)"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:207
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:92
+msgid "By event"
+msgstr "Według wydarzenia"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:227
 msgid "By month"
 msgstr "Według miesiąca"
+
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:89
+msgid "By organizer"
+msgstr "Według organizatora"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:111
+msgid "By organizer and event"
+msgstr "Według organizatora i wydarzenia"
 
 #: src/components/routes/auth/Register/index.tsx:189
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
@@ -1997,8 +2025,9 @@ msgstr "Wkrótce"
 msgid "Comma seperated keywords that describe the event. These will be used by search engines to help categorize and index the event"
 msgstr "Słowa kluczowe oddzielone przecinkami opisujące wydarzenie. Będą używane przez wyszukiwarki do kategoryzacji i indeksowania wydarzenia"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:121
-#: src/components/routes/admin/PlatformRevenue/index.tsx:215
+#: src/components/routes/admin/PlatformRevenue/index.tsx:141
+#: src/components/routes/admin/PlatformRevenue/index.tsx:235
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:57
 msgid "Commissions"
 msgstr "Prowizje"
 
@@ -2294,8 +2323,13 @@ msgstr "Przejdź do następnego kroku"
 msgid "Continue to Payment"
 msgstr "Przejdź do płatności"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:119
-#: src/components/routes/admin/PlatformRevenue/index.tsx:214
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:54
+msgid "Contribution rate"
+msgstr "Wskaźnik wpłat"
+
+#: src/components/routes/admin/PlatformRevenue/index.tsx:139
+#: src/components/routes/admin/PlatformRevenue/index.tsx:234
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:55
 msgid "Contributions"
 msgstr "Wpłaty"
 
@@ -2672,7 +2706,7 @@ msgstr "Etykieta CTA jest wymagana"
 #: src/components/forms/OrganizerForm/index.tsx:50
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:73
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:149
-#: src/components/routes/admin/PlatformRevenue/index.tsx:118
+#: src/components/routes/admin/PlatformRevenue/index.tsx:138
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:51
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:99
@@ -2880,7 +2914,7 @@ msgstr "Domyślnie rok, na przykład 2026-1"
 #~ msgstr "Społeczność Dehors"
 
 #: src/components/routes/admin/Dashboard/index.tsx:278
-#: src/components/routes/admin/PlatformRevenue/index.tsx:31
+#: src/components/routes/admin/PlatformRevenue/index.tsx:32
 msgid "Dehors Contributions"
 msgstr "Wpłaty Dehors"
 
@@ -3351,7 +3385,7 @@ msgstr "Uprawnia do oficjalnego pokwitowania podatkowego."
 #: src/components/modals/JoinWaitlistModal/index.tsx:171
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:128
 #: src/components/routes/admin/Dashboard/index.tsx:512
-#: src/components/routes/admin/PlatformRevenue/index.tsx:168
+#: src/components/routes/admin/PlatformRevenue/index.tsx:188
 #: src/components/routes/auth/AcceptInvitation/index.tsx:112
 #: src/components/routes/auth/ForgotPassword/index.tsx:65
 #: src/components/routes/auth/Login/index.tsx:93
@@ -3645,6 +3679,7 @@ msgstr "EUR"
 #: src/components/routes/admin/Dashboard/index.tsx:416
 #: src/components/routes/admin/Messages/index.tsx:163
 #: src/components/routes/admin/Messages/index.tsx:277
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:139
 #: src/components/routes/event/EventDashboard/index.tsx:299
 #: src/components/routes/events/Dashboard/index.tsx:184
 #: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:19
@@ -3799,6 +3834,7 @@ msgstr "Wydarzenie zaktualizowane"
 #: src/components/routes/admin/Attribution/index.tsx:133
 #: src/components/routes/admin/Dashboard/index.tsx:514
 #: src/components/routes/admin/Events/index.tsx:77
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:103
 #: src/components/routes/organizer/Events/index.tsx:43
 msgid "Events"
 msgstr "Wydarzenia"
@@ -4236,6 +4272,10 @@ msgstr "Filtruj uczestników"
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:123
 msgid "Filter by Event"
 msgstr "Filtruj według wydarzenia"
+
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:131
+msgid "Filter by organizer"
+msgstr "Filtruj według organizatora"
 
 #: src/components/routes/event/orders.tsx:123
 msgid "Filter Orders"
@@ -5205,7 +5245,7 @@ msgstr "Ostatnie 7 dni"
 msgid "Last 90 days"
 msgstr "Ostatnie 90 dni"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:170
+#: src/components/routes/admin/PlatformRevenue/index.tsx:190
 msgid "Last contribution"
 msgstr "Ostatnia wpłata"
 
@@ -5630,7 +5670,7 @@ msgstr "Wartości pieniężne są przybliżonymi sumami we wszystkich walutach"
 msgid "Monitor and manage failed background jobs"
 msgstr "Monitoruj i zarządzaj nieudanymi zadaniami w tle"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:213
+#: src/components/routes/admin/PlatformRevenue/index.tsx:233
 #: src/components/routes/event/EventDashboard/index.tsx:283
 msgid "Month"
 msgstr "Miesiąc"
@@ -5704,7 +5744,7 @@ msgstr "Nam placerat elementum..."
 #: src/components/routes/account/ManageAccount/sections/AccountSettings/index.tsx:63
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:98
 #: src/components/routes/admin/Configurations/index.tsx:219
-#: src/components/routes/admin/PlatformRevenue/index.tsx:167
+#: src/components/routes/admin/PlatformRevenue/index.tsx:187
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:75
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:231
 msgid "Name"
@@ -5928,6 +5968,10 @@ msgstr "Brak innych dostępnych organizatorów"
 msgid "No Paid Orders"
 msgstr "Brak opłaconych zamówień"
 
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:81
+msgid "No paid orders over this period"
+msgstr "Brak opłaconych zamówień w tym okresie"
+
 #: src/components/layouts/OrganizerHomepage/index.tsx:315
 msgid "No past events"
 msgstr "Brak przeszłych wydarzeń"
@@ -6114,7 +6158,7 @@ msgstr "Notatka"
 msgid "Notes"
 msgstr "Notatki"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:151
+#: src/components/routes/admin/PlatformRevenue/index.tsx:171
 msgid "Nothing collected yet"
 msgstr "Nic jeszcze nie wpłynęło"
 
@@ -6508,8 +6552,8 @@ msgstr "Zamówienie zostało anulowane"
 #: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/admin/Attribution/index.tsx:138
 #: src/components/routes/admin/Orders/index.tsx:44
-#: src/components/routes/admin/PlatformRevenue/index.tsx:120
-#: src/components/routes/admin/PlatformRevenue/index.tsx:169
+#: src/components/routes/admin/PlatformRevenue/index.tsx:140
+#: src/components/routes/admin/PlatformRevenue/index.tsx:189
 #: src/components/routes/event/orders.tsx:115
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:103
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:60
@@ -6565,6 +6609,7 @@ msgstr "Nazwa organizacji jest wymagana"
 #: src/components/routes/admin/Dashboard/index.tsx:368
 #: src/components/routes/admin/Dashboard/index.tsx:417
 #: src/components/routes/admin/Dashboard/index.tsx:463
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:102
 #: src/components/routes/events/Dashboard/index.tsx:194
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:332
 msgid "Organizer"
@@ -6645,6 +6690,10 @@ msgstr "Wiadomości wychodzące"
 msgid "Outings calendar"
 msgstr "Kalendarz wyjść"
 
+#: src/components/routes/admin/PlatformRevenue/index.tsx:114
+msgid "Over the selected period. Contribution rate: paid orders that added a contribution. % of revenue: share of the platform revenue in that currency. Click a column to sort."
+msgstr "W wybranym okresie. Wskaźnik wpłat: opłacone zamówienia z dodaną wpłatą. % przychodu: udział w przychodzie platformy w tej walucie. Kliknij kolumnę, aby posortować."
+
 #: src/components/layouts/Event/index.tsx:87
 msgid "Overview"
 msgstr "Przegląd"
@@ -6684,6 +6733,10 @@ msgstr "opłacony"
 #: src/components/routes/admin/Attribution/index.tsx:51
 msgid "Paid Accounts"
 msgstr "Opłacone konta"
+
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:53
+msgid "Paid orders"
+msgstr "Opłacone zamówienia"
 
 #: src/components/routes/landing/index.tsx:343
 msgid "Paid out on Stripe's schedule"
@@ -6993,7 +7046,7 @@ msgid "Platform"
 msgstr "Platforma"
 
 #: src/components/routes/admin/Dashboard/index.tsx:301
-#: src/components/routes/admin/PlatformRevenue/index.tsx:38
+#: src/components/routes/admin/PlatformRevenue/index.tsx:39
 msgid "Platform Commissions"
 msgstr "Prowizje platformy"
 
@@ -7011,7 +7064,7 @@ msgid "Platform contribution enabled"
 msgstr "Wkład na platformę włączony"
 
 #: src/components/routes/admin/Dashboard/index.tsx:265
-#: src/components/routes/admin/PlatformRevenue/index.tsx:59
+#: src/components/routes/admin/PlatformRevenue/index.tsx:60
 msgid "Platform Earnings"
 msgstr "Przychody platformy"
 
@@ -9834,7 +9887,7 @@ msgstr "Token unieważniony"
 msgid "Tools"
 msgstr "Narzędzia"
 
-#: src/components/routes/admin/PlatformRevenue/index.tsx:161
+#: src/components/routes/admin/PlatformRevenue/index.tsx:181
 msgid "Top contributors"
 msgstr "Najwięksi darczyńcy"
 
@@ -9845,9 +9898,10 @@ msgstr "Najlepsi organizatorzy (ostatnie 14 dni)"
 #: src/components/common/AdminOrdersTable/index.tsx:81
 #: src/components/common/InlineOrderSummary/index.tsx:272
 #: src/components/common/OrderSummary/index.tsx:92
-#: src/components/routes/admin/PlatformRevenue/index.tsx:122
-#: src/components/routes/admin/PlatformRevenue/index.tsx:171
-#: src/components/routes/admin/PlatformRevenue/index.tsx:216
+#: src/components/routes/admin/PlatformRevenue/index.tsx:142
+#: src/components/routes/admin/PlatformRevenue/index.tsx:191
+#: src/components/routes/admin/PlatformRevenue/index.tsx:236
+#: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:58
 msgid "Total"
 msgstr "Razem"
 
@@ -9864,7 +9918,7 @@ msgid "Total Before Discounts"
 msgstr "Razem przed rabatami"
 
 #: src/components/routes/admin/Dashboard/index.tsx:325
-#: src/components/routes/admin/PlatformRevenue/index.tsx:45
+#: src/components/routes/admin/PlatformRevenue/index.tsx:46
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:49
 msgid "Total Collected"
 msgstr "Razem zebrano"
@@ -10727,7 +10781,7 @@ msgid "What products should this capacity apply to?"
 msgstr "Do jakich produktów powinna dotyczyć ta pojemność?"
 
 #: src/components/routes/admin/Dashboard/index.tsx:269
-#: src/components/routes/admin/PlatformRevenue/index.tsx:72
+#: src/components/routes/admin/PlatformRevenue/index.tsx:74
 msgid "What the platform actually collected: voluntary Dehors contributions and sales commissions. Approximate totals across all currencies."
 msgstr "Co platforma faktycznie otrzymała: dobrowolne wpłaty Dehors i prowizje od sprzedaży. Przybliżone sumy dla wszystkich walut."
 

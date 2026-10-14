@@ -135,7 +135,7 @@ class GetPlatformRevenueHandlerTest extends TestCase
 
         $this->handler()->handle(new GetPlatformRevenueDTO(topContributors: 5));
 
-        $topContributorsQuery = end($this->queries);
+        $topContributorsQuery = collect($this->queries)->first(fn(array $q) => str_contains($q['query'], 'lower(o.email)'));
 
         $this->assertStringContainsString('GROUP BY lower(o.email), o.currency', $topContributorsQuery['query']);
         $this->assertStringContainsString('ORDER BY amount DESC', $topContributorsQuery['query']);
@@ -175,5 +175,48 @@ class GetPlatformRevenueHandlerTest extends TestCase
         $this->assertArrayNotHasKey('since', $this->queries[1]['bindings']);
         $this->assertArrayHasKey('since', $this->queries[2]['bindings']);
         $this->assertArrayHasKey('since', $this->queries[3]['bindings']);
+    }
+
+    public function testBreakdownByEventAndOrganizerWithPercentages(): void
+    {
+        $this->mockDatabase([[], [], [], [], [], [], [], [
+            $this->row(['event_id' => 1, 'currency' => 'CAD', 'amount' => '4.00']),
+            $this->row(['event_id' => 3, 'currency' => 'CAD', 'amount' => '2.00']),
+        ], [
+            $this->row(['event_id' => 1, 'event_title' => 'Course', 'organizer_id' => 10, 'organizer_name' => 'Boreal', 'currency' => 'CAD', 'paid_orders' => 20, 'contributions_orders' => 5, 'contributions' => '6.00']),
+            $this->row(['event_id' => 2, 'event_title' => 'Rando', 'organizer_id' => 10, 'organizer_name' => 'Boreal', 'currency' => 'CAD', 'paid_orders' => 10, 'contributions_orders' => 0, 'contributions' => '0']),
+            $this->row(['event_id' => 3, 'event_title' => 'Velo', 'organizer_id' => 11, 'organizer_name' => 'Dehors', 'currency' => 'CAD', 'paid_orders' => 4, 'contributions_orders' => 2, 'contributions' => '2.00']),
+        ]]);
+
+        $result = $this->handler()->handle(new GetPlatformRevenueDTO(days: 30));
+
+        $commissionQuery = $this->queries[7];
+        $this->assertStringContainsString('GROUP BY o.event_id, f.currency', $commissionQuery['query']);
+        $this->assertArrayHasKey('since', $commissionQuery['bindings']);
+
+        $breakdownQuery = end($this->queries);
+        $this->assertStringContainsString('GROUP BY e.id', $breakdownQuery['query']);
+        $this->assertStringContainsString('o.total_gross > 0', $breakdownQuery['query']);
+        $this->assertArrayHasKey('since', $breakdownQuery['bindings']);
+
+        $course = $result->by_event[0];
+        $this->assertSame('Course', $course['event_title']);
+        $this->assertSame(4.0, $course['commissions']);
+        $this->assertSame(10.0, $course['total']);
+        $this->assertSame(25.0, $course['participation_rate']);
+        $this->assertSame(71.4, $course['share']);
+        $this->assertSame(1.2, $course['average_contribution']);
+
+        $this->assertSame(0.0, $result->by_event[2]['participation_rate']);
+        $this->assertSame(0.0, $result->by_event[2]['average_contribution']);
+
+        $boreal = $result->by_organizer[0];
+        $this->assertSame('Boreal', $boreal['organizer_name']);
+        $this->assertSame(2, $boreal['events_count']);
+        $this->assertSame(30, $boreal['paid_orders']);
+        $this->assertSame(16.7, $boreal['participation_rate']);
+        $this->assertSame(4.0, $boreal['commissions']);
+        $this->assertSame(71.4, $boreal['share']);
+        $this->assertSame(28.6, $result->by_organizer[1]['share']);
     }
 }

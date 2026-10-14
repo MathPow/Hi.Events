@@ -4,6 +4,7 @@ import {IconCoins, IconHeartHandshake, IconPercentage} from "@tabler/icons-react
 import {useState} from "react";
 import dayjs from "dayjs";
 import {useGetPlatformRevenue} from "../../../../queries/useGetPlatformRevenue";
+import {RevenueBreakdown} from "./RevenueBreakdown";
 
 const PlatformRevenue = () => {
     const [days, setDays] = useState('30');
@@ -65,6 +66,7 @@ const PlatformRevenue = () => {
                                 {value: '7', label: t`7 days`},
                                 {value: '30', label: t`30 days`},
                                 {value: '90', label: t`90 days`},
+                                {value: '365', label: t`1 year`},
                             ]}
                         />
                     </Group>
@@ -103,6 +105,24 @@ const PlatformRevenue = () => {
                         </Paper>
                     ))}
                 </SimpleGrid>
+
+                <div>
+                    <Title order={2} mb={4}>
+                        <Trans>By organizer and event</Trans>
+                    </Title>
+                    <Text size="xs" c="dimmed" mb="md">
+                        <Trans>Over the selected period. Contribution rate: paid orders that added a contribution. % of revenue: share of the platform revenue in that currency. Click a column to sort.</Trans>
+                    </Text>
+                    {isLoading ? (
+                        <Skeleton height={200} radius="md"/>
+                    ) : (
+                        <RevenueBreakdown
+                            byOrganizer={revenue?.by_organizer ?? []}
+                            byEvent={revenue?.by_event ?? []}
+                            formatCurrency={formatCurrency}
+                        />
+                    )}
+                </div>
 
                 <div>
                     <Title order={2} mb="md">
