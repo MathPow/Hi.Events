@@ -222,7 +222,8 @@ export const CollectInformation = () => {
 
     // Une commande gratuite ne cree pas de PaymentIntent: il n'y a rien a quoi
     // rattacher la contribution, donc on ne la demande pas.
-    const canContribute = order?.is_payment_required === true;
+    const canContribute = order?.is_payment_required === true
+        && event?.organizer?.settings?.platform_support_enabled !== false;
 
     const mutation = useMutation({
         mutationFn: (orderData: FinaliseOrderPayload) => orderClientPublic.finaliseOrder(Number(eventId), String(orderShortId), orderData),

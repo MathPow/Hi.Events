@@ -7,7 +7,11 @@ use HiEvents\DomainObjects\OrderItemDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Exceptions\ResourceConflictException;
 use HiEvents\Helper\Currency;
+use HiEvents\DomainObjects\EventDomainObject;
+use HiEvents\DomainObjects\OrganizerSettingDomainObject;
+use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
+use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Services\Domain\Order\OrderManagementService;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -16,6 +20,8 @@ class SetPlatformContributionHandler
     public function __construct(
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly OrderManagementService   $orderManagementService,
+        private readonly EventRepositoryInterface $eventRepository,
+        private readonly OrganizerSettingsRepositoryInterface $organizerSettingsRepository,
     )
     {
     }
@@ -44,6 +50,12 @@ class SetPlatformContributionHandler
             throw new ResourceConflictException(__('A contribution cannot be added to a free order.'));
         }
 
+        // L'organisateur peut retirer la contribution de son parcours d'achat:
+        // l'endpoint etant public, on ne se fie pas au seul front pour la masquer.
+        if ($contribution > 0 && !$this->isPlatformSupportEnabled($eventId)) {
+            throw new ResourceConflictException(__('Contributions are not accepted for this event.'));
+        }
+
         $this->orderRepository->updateFromArray($order->getId(), [
             'platform_contribution' => Currency::round(max(0, $contribution)),
         ]);
@@ -53,5 +65,18 @@ class SetPlatformContributionHandler
             ->findById($order->getId());
 
         return $this->orderManagementService->updateOrderTotals($refreshed, $refreshed->getOrderItems());
+    }
+
+    private function isPlatformSupportEnabled(int $eventId): bool
+    {
+        /** @var EventDomainObject $event */
+        $event = $this->eventRepository->findById($eventId);
+
+        /** @var OrganizerSettingDomainObject|null $settings */
+        $settings = $this->organizerSettingsRepository->findFirstWhere([
+            'organizer_id' => $event->getOrganizerId(),
+        ]);
+
+        return $settings?->getPlatformSupportEnabled() ?? true;
     }
 }

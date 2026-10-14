@@ -26,6 +26,7 @@ class PartialUpdateOrganizerSettingsDTO extends BaseDataObject
         public readonly bool|Optional|null                            $defaultPassPlatformFeeToBuyer,
         public readonly bool|Optional|null                            $defaultPassProcessingFeeToBuyer,
         public readonly bool|Optional|null                            $defaultAllowAttendeeSelfEdit,
+        public readonly bool|Optional|null                            $platformSupportEnabled,
 
         // Social
         public readonly string|Optional|null                          $facebookHandle,

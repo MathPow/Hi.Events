@@ -431,6 +431,7 @@ export interface OrganizerSettings {
     default_pass_platform_fee_to_buyer?: boolean;
     default_pass_processing_fee_to_buyer?: boolean;
     default_allow_attendee_self_edit?: boolean;
+    platform_support_enabled?: boolean;
     homepage_visibility: 'PUBLIC' | 'PRIVATE' | 'PASSWORD_PROTECTED';
     homepage_theme_settings: HomepageThemeSettings;
     website_url?: string;

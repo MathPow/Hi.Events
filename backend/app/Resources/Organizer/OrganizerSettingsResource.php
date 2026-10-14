@@ -20,6 +20,7 @@ class OrganizerSettingsResource extends BaseResource
             'default_pass_platform_fee_to_buyer' => $this->getDefaultPassPlatformFeeToBuyer(),
             'default_pass_processing_fee_to_buyer' => $this->getDefaultPassProcessingFeeToBuyer(),
             'default_allow_attendee_self_edit' => $this->getDefaultAllowAttendeeSelfEdit(),
+            'platform_support_enabled' => $this->getPlatformSupportEnabled() ?? true,
             'social_media_handles' => $this->getSocialMediaHandles(),
             'homepage_theme_settings' => $this->getHomepageThemeSettings(),
             'homepage_visibility' => $this->getHomepageVisibility(),

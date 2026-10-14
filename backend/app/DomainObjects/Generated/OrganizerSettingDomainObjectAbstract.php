@@ -38,6 +38,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     final public const CHARITY_RECEIPT_PREFIX = 'charity_receipt_prefix';
     final public const DEFAULT_PASS_PROCESSING_FEE_TO_BUYER = 'default_pass_processing_fee_to_buyer';
     final public const FAQS = 'faqs';
+    final public const PLATFORM_SUPPORT_ENABLED = 'platform_support_enabled';
 
     protected int $id;
     protected int $organizer_id;
@@ -67,6 +68,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     protected ?string $charity_receipt_prefix = null;
     protected bool $default_pass_processing_fee_to_buyer = false;
     protected array|string|null $faqs = null;
+    protected bool $platform_support_enabled = true;
 
     public function toArray(): array
     {
@@ -99,6 +101,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
                     'charity_receipt_prefix' => $this->charity_receipt_prefix ?? null,
                     'default_pass_processing_fee_to_buyer' => $this->default_pass_processing_fee_to_buyer ?? null,
                     'faqs' => $this->faqs ?? null,
+                    'platform_support_enabled' => $this->platform_support_enabled ?? null,
                 ];
     }
 
@@ -409,5 +412,16 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     public function getFaqs(): array|string|null
     {
         return $this->faqs;
+    }
+
+    public function setPlatformSupportEnabled(bool $platform_support_enabled): self
+    {
+        $this->platform_support_enabled = $platform_support_enabled;
+        return $this;
+    }
+
+    public function getPlatformSupportEnabled(): bool
+    {
+        return $this->platform_support_enabled;
     }
 }

@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Services\Application\Handlers\Order\Public;
 
+use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\OrderDomainObject;
+use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Exceptions\ResourceConflictException;
+use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
+use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Order\Public\SetPlatformContributionHandler;
 use HiEvents\Services\Domain\Order\OrderManagementService;
 use Illuminate\Support\Collection;
@@ -18,6 +22,7 @@ class SetPlatformContributionHandlerTest extends TestCase
     private SetPlatformContributionHandler $handler;
     private OrderRepositoryInterface $orderRepository;
     private OrderManagementService $orderManagementService;
+    private OrganizerSettingsRepositoryInterface $organizerSettingsRepository;
 
     protected function setUp(): void
     {
@@ -27,9 +32,19 @@ class SetPlatformContributionHandlerTest extends TestCase
         $this->orderRepository->shouldReceive('loadRelation')->andReturnSelf();
         $this->orderManagementService = m::mock(OrderManagementService::class);
 
+        $event = new EventDomainObject();
+        $event->setId(1);
+        $event->setOrganizerId(7);
+        $eventRepository = m::mock(EventRepositoryInterface::class);
+        $eventRepository->shouldReceive('findById')->with(1)->andReturn($event);
+
+        $this->organizerSettingsRepository = m::mock(OrganizerSettingsRepositoryInterface::class);
+
         $this->handler = new SetPlatformContributionHandler(
             $this->orderRepository,
             $this->orderManagementService,
+            $eventRepository,
+            $this->organizerSettingsRepository,
         );
     }
 
@@ -60,6 +75,7 @@ class SetPlatformContributionHandlerTest extends TestCase
     public function testStoresTheRoundedContributionAndRecalculatesTheTotals(): void
     {
         $order = $this->makeOrder(OrderStatus::RESERVED);
+        $this->givenPlatformSupportEnabled(true);
 
         $this->orderRepository->shouldReceive('findFirstWhere')->andReturn($order);
         $this->orderRepository->shouldReceive('findById')->with(10)->andReturn($order);
@@ -114,6 +130,50 @@ class SetPlatformContributionHandlerTest extends TestCase
         $this->expectException(ResourceConflictException::class);
 
         $this->handler->handle(1, 'abc123', 5.00);
+    }
+
+    public function testThrowsWhenTheOrganizerDisabledContributions(): void
+    {
+        $this->orderRepository
+            ->shouldReceive('findFirstWhere')
+            ->andReturn($this->makeOrder(OrderStatus::RESERVED));
+        $this->givenPlatformSupportEnabled(false);
+
+        $this->orderRepository->shouldNotReceive('updateFromArray');
+
+        $this->expectException(ResourceConflictException::class);
+
+        $this->handler->handle(1, 'abc123', 1.00);
+    }
+
+    public function testAZeroContributionIsAcceptedEvenWhenDisabled(): void
+    {
+        $order = $this->makeOrder(OrderStatus::RESERVED);
+
+        $this->orderRepository->shouldReceive('findFirstWhere')->andReturn($order);
+        $this->orderRepository->shouldReceive('findById')->with(10)->andReturn($order);
+        $this->organizerSettingsRepository->shouldNotReceive('findFirstWhere');
+
+        $this->orderRepository
+            ->shouldReceive('updateFromArray')
+            ->once()
+            ->with(10, ['platform_contribution' => 0.0])
+            ->andReturn($order);
+
+        $this->orderManagementService->shouldReceive('updateOrderTotals')->once()->andReturn($order);
+
+        $this->handler->handle(1, 'abc123', 0.0);
+    }
+
+    private function givenPlatformSupportEnabled(bool $enabled): void
+    {
+        $settings = new OrganizerSettingDomainObject();
+        $settings->setPlatformSupportEnabled($enabled);
+
+        $this->organizerSettingsRepository
+            ->shouldReceive('findFirstWhere')
+            ->with(['organizer_id' => 7])
+            ->andReturn($settings);
     }
 
     private function makeOrder(OrderStatus $status, bool $isPaymentRequired = true): OrderDomainObject

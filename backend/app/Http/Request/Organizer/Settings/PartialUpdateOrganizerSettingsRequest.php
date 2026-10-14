@@ -67,6 +67,7 @@ class PartialUpdateOrganizerSettingsRequest extends BaseRequest
             'default_pass_platform_fee_to_buyer' => ['sometimes', 'nullable', 'boolean'],
             'default_pass_processing_fee_to_buyer' => ['sometimes', 'nullable', 'boolean'],
             'default_allow_attendee_self_edit' => ['sometimes', 'nullable', 'boolean'],
+            'platform_support_enabled' => ['sometimes', 'boolean'],
 
             // Social handles
             'facebook_handle' => ['sometimes', 'nullable', 'string', 'max:255'],
