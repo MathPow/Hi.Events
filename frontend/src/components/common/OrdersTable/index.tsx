@@ -1,6 +1,6 @@
 import {t} from "@lingui/macro";
 import {Anchor, Button, Group, Menu, Popover, Text, Tooltip} from '@mantine/core';
-import {DonationReceipt, Event, IdParam, Invoice, MessageType, Order} from "../../../types.ts";
+import {DonationReceipt, Event, IdParam, Invoice, MessageType, Order, ProductPriceType} from "../../../types.ts";
 import {
     IconAlertCircle,
     IconBasketCog,
@@ -33,7 +33,7 @@ import {NoResultsSplash} from "../NoResultsSplash";
 import {RefundOrderModal} from "../../modals/RefundOrderModal";
 import classes from "./OrdersTable.module.scss";
 import {useResendOrderConfirmation} from "../../../mutations/useResendOrderConfirmation.ts";
-import {formatNumber} from "../../../utilites/helpers.ts";
+import {formatNumber, getProductsFromEvent} from "../../../utilites/helpers.ts";
 import {useUrlHash} from "../../../hooks/useUrlHash.ts";
 import {useMarkOrderAsPaid} from "../../../mutations/useMarkOrderAsPaid.ts";
 import {orderClient} from "../../../api/order.client.ts";
@@ -228,6 +228,27 @@ export const OrdersTable = ({orders, event}: OrdersTableProps) => {
         );
     }
 
+    // Meme regle que DonationBreakdownService: un produit DONATION compte en
+    // entier, un billet-benefice seulement pour sa part charity_amount.
+    const productsById = useMemo(
+        () => new Map((getProductsFromEvent(event) ?? []).map(product => [product.id, product])),
+        [event],
+    );
+
+    const donationAmount = (order: Order): number => (order.order_items ?? []).reduce((total, item) => {
+        const product = productsById.get(item.product_id);
+        if (!product) {
+            return total;
+        }
+        if (product.type === ProductPriceType.Donation) {
+            return total + item.price * item.quantity;
+        }
+        if (product.charity_amount && product.charity_amount > 0) {
+            return total + Math.min(product.charity_amount, item.price) * item.quantity;
+        }
+        return total;
+    }, 0);
+
     const columns = useMemo<TanStackTableColumn<Order>[]>(
         () => [
             {
@@ -385,7 +406,15 @@ export const OrdersTable = ({orders, event}: OrdersTableProps) => {
                             <Text className={classes.amountBreakdown}>
                                 {t`Tax`}: {formatCurrency(order.total_tax, order.currency)} •
                                 {' '}{t`Fees`}: {formatCurrency(order.total_fee, order.currency)}
+                                {donationAmount(order) > 0 && (
+                                    <> •{' '}{t`Donation`}: {formatCurrency(donationAmount(order), order.currency)}</>
+                                )}
                             </Text>
+                            {order.donation_receipt && (
+                                <Text className={classes.amountBreakdown}>
+                                    {t`Receipt #${order.donation_receipt.receipt_number}`}
+                                </Text>
+                            )}
                             {order.refund_status && (
                                 <Text className={classes.refundedAmount} data-refund-status={order.refund_status}>
                                     {order.refund_status === 'REFUNDED' && t`Refunded: ${formatCurrency(order.total_refunded, order.currency)}`}
@@ -485,7 +514,7 @@ export const OrdersTable = ({orders, event}: OrdersTableProps) => {
                 },
             },
         ],
-        [event.id, emailPopoverId]
+        [event.id, emailPopoverId, productsById]
     );
 
     if (orders.length === 0) {
