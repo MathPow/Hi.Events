@@ -4,6 +4,7 @@ import {
     GenericPaginatedResponse,
     IdParam,
     Order,
+    OrderDepositStatus,
     QueryFilters,
     StripePaymentIntent
 } from "../types.ts";
@@ -56,6 +57,20 @@ export interface RefundOrderPayload {
     cancel_order: boolean;
 }
 
+export interface UpdateOrderDepositRequest {
+    status: OrderDepositStatus;
+    retained_amount?: number | null;
+    note?: string | null;
+    notify?: boolean;
+}
+
+export interface SplitDepositRetentionRequest {
+    amount: number;
+    note: string;
+    order_ids: IdParam[];
+    notify?: boolean;
+}
+
 export const orderClient = {
     all: async (eventId: IdParam, pagination: QueryFilters) => {
         const response = await api.get<GenericPaginatedResponse<Order>>(
@@ -92,6 +107,21 @@ export const orderClient = {
         });
 
         return new Blob([response.data]);
+    },
+
+    deposits: async (eventId: IdParam) => {
+        const response = await api.get<GenericDataResponse<Order[]>>(`events/${eventId}/deposits`);
+        return response.data;
+    },
+
+    updateDeposit: async (eventId: IdParam, orderId: IdParam, payload: UpdateOrderDepositRequest) => {
+        const response = await api.put<GenericDataResponse<Order>>(`events/${eventId}/orders/${orderId}/deposit`, payload);
+        return response.data;
+    },
+
+    splitDepositRetention: async (eventId: IdParam, payload: SplitDepositRetentionRequest) => {
+        const response = await api.post<GenericDataResponse<Order[]>>(`events/${eventId}/deposits/split`, payload);
+        return response.data;
     },
 
     markAsPaid: async (eventId: IdParam, orderId: IdParam) => {

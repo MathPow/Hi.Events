@@ -24,8 +24,10 @@ import {
     IconUsersGroup,
     IconWebhook,
     IconListCheck,
+    IconShieldLock,
 } from "@tabler/icons-react";
 import {t} from "@lingui/macro";
+import {getProductsFromEvent} from "../../../utilites/helpers.ts";
 import {useGetEvent} from "../../../queries/useGetEvent";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings";
 import {useGetEventStats} from "../../../queries/useGetEventStats";
@@ -80,6 +82,8 @@ const EventLayout = () => {
         })
     }
 
+    const hasDeposits = !!getProductsFromEvent(event)?.some(product => (product.deposit_amount || 0) > 0);
+
     const navItems: NavItem[] = [
         {link: '/manage/organizer/' + event?.organizer?.id, label: t`Organizer Dashboard`, icon: IconArrowLeft},
 
@@ -110,6 +114,7 @@ const EventLayout = () => {
         {label: t`Ticketing & Sales`},
         {link: 'products', label: t`Tickets & Products`, icon: IconTicket},
         {link: 'orders', label: t`Orders`, icon: IconReceipt, badge: eventStats?.total_orders},
+        ...(hasDeposits ? [{link: 'deposits', label: t`Deposits`, icon: IconShieldLock}] : []),
         {link: 'promo-codes', label: t`Promo Codes`, icon: IconDiscount2},
         {link: 'affiliates', label: t`Affiliates`, icon: IconTrendingUp},
 

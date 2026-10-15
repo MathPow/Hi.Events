@@ -1,0 +1,67 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 8px;
+  background: var(--mantine-color-body);
+
+  span {
+    font-size: 0.8rem;
+    color: var(--mantine-color-dimmed);
+  }
+
+  strong {
+    font-size: 1.25rem;
+  }
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.splitButton {
+  max-width: 100%;
+  height: auto;
+  min-height: 36px;
+  padding-block: 6px;
+
+  :global(.mantine-Button-label) {
+    white-space: normal;
+    text-align: left;
+  }
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 8px;
+  background: var(--mantine-color-body);
+}
+
+.mono {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.muted {
+  font-size: 0.8rem;
+  color: var(--mantine-color-dimmed);
+  white-space: pre-line;
+}
+
+.perPerson {
+  font-size: 0.9rem;
+  color: var(--mantine-color-dimmed);
+}

@@ -70,6 +70,7 @@ class EmailTokenContextBuilder
                 'email' => $order->getEmail() ?? '',
                 'is_awaiting_offline_payment' => $order->isOrderAwaitingOfflinePayment(),
                 'is_offline_payment' => $order->getPaymentProvider() === PaymentProviders::OFFLINE->value,
+                'deposit_amount' => $order->getDepositAmount() > 0 ? Currency::format($order->getDepositAmount(), $event->getCurrency()) : '',
             ],
 
             // Organizer object
@@ -83,6 +84,7 @@ class EmailTokenContextBuilder
                 'support_email' => $eventSettings->getSupportEmail() ?? $organizer->getEmail() ?? '',
                 'offline_payment_instructions' => $eventSettings->getOfflinePaymentInstructions() ?? '',
                 'post_checkout_message' => $eventSettings->getPostCheckoutMessage() ?? '',
+                'deposit_instructions' => $eventSettings->getDepositInstructions() ?? '',
             ],
         ];
 
@@ -176,7 +178,8 @@ class EmailTokenContextBuilder
                 'is_awaiting_offline_payment' => false,
                 'is_offline_payment' => false,
                 'locale' => Locale::EN->value,
-                'currency' => 'USD'
+                'currency' => 'USD',
+                'deposit_amount' => '$100.00',
             ],
             'organizer' => [
                 'name' => 'ACME Events Inc.',
@@ -186,6 +189,7 @@ class EmailTokenContextBuilder
                 'support_email' => 'support@example.com',
                 'offline_payment_instructions' => __('Please transfer the total amount to the following bank account within 5 business days.'),
                 'post_checkout_message' => __('Thank you for your purchase! We look forward to seeing you at the event.'),
+                'deposit_instructions' => __('Send the deposit by a separate Interac e-Transfer. It will not be cashed unless there is damage.'),
             ],
         ];
 

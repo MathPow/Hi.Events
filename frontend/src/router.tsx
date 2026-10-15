@@ -427,6 +427,13 @@ export const router: RouteObject[] = [
                 }
             },
             {
+                path: "deposits",
+                async lazy() {
+                    const Deposits = await import("./components/routes/event/Deposits");
+                    return { Component: Deposits.default };
+                }
+            },
+            {
                 path: "affiliates",
                 async lazy() {
                     const Affiliates = await import("./components/routes/event/Affiliates");

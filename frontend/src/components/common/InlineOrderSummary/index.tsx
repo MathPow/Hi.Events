@@ -275,6 +275,18 @@ export const InlineOrderSummary = ({
                                 <span className={classes.totalsCurrency}>{order.currency}</span>
                             </span>
                         </div>
+
+                        {!!order.deposit_amount && order.deposit_amount > 0 && (
+                            <div className={classNames(classes.totalsRow, classes.depositRow)}>
+                                <span className={classes.totalsLabel}>
+                                    {t`Security deposit`}
+                                    <span className={classes.depositHint}>{t`Sent separately, not included in the total`}</span>
+                                </span>
+                                <span className={classes.totalsValue}>
+                                    {formatCurrency(order.deposit_amount, order.currency)}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {showBuyerProtection && order.is_payment_required && (

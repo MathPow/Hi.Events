@@ -92,6 +92,9 @@ use HiEvents\Http\Actions\ApiTokens\CreateApiTokenAction;
 use HiEvents\Http\Actions\ApiTokens\DeleteApiTokenAction;
 use HiEvents\Http\Actions\ApiTokens\GetApiTokensAction;
 use HiEvents\Http\Actions\Orders\DownloadDonationReceiptAction;
+use HiEvents\Http\Actions\Orders\Deposits\GetEventDepositsAction;
+use HiEvents\Http\Actions\Orders\Deposits\SplitDepositRetentionAction;
+use HiEvents\Http\Actions\Orders\Deposits\UpdateOrderDepositAction;
 use HiEvents\Http\Actions\Orders\DownloadOrderInvoiceAction;
 use HiEvents\Http\Actions\Orders\EditOrderAction;
 use HiEvents\Http\Actions\Orders\ExportOrdersAction;
@@ -401,6 +404,9 @@ $router->middleware(['auth:api'])->group(
         $router->post('/events/{event_id}/orders/export', ExportOrdersAction::class);
         $router->get('/events/{event_id}/orders/{order_id}/invoice', DownloadOrderInvoiceAction::class);
         $router->get('/events/{event_id}/orders/{order_id}/donation-receipt', DownloadDonationReceiptAction::class);
+        $router->get('/events/{event_id}/deposits', GetEventDepositsAction::class);
+        $router->post('/events/{event_id}/deposits/split', SplitDepositRetentionAction::class);
+        $router->put('/events/{event_id}/orders/{order_id}/deposit', UpdateOrderDepositAction::class);
 
         // Questions
         $router->post('/events/{event_id}/questions', CreateQuestionAction::class);

@@ -60,6 +60,9 @@ class Order extends BaseModel
     {
         return [
             'platform_contribution' => 'float',
+            'deposit_amount' => 'float',
+            'deposit_retained_amount' => 'float',
+            'deposit_resolved_at' => 'datetime',
             'total_before_additions' => 'float',
             'total_tax' => 'float',
             'total_gross' => 'float',

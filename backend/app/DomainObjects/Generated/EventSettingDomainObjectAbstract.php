@@ -69,6 +69,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const WAITLIST_OFFER_TIMEOUT_MINUTES = 'waitlist_offer_timeout_minutes';
     final public const ALLOW_COPY_DETAILS_TO_ALL_ATTENDEES = 'allow_copy_details_to_all_attendees';
     final public const PASS_PROCESSING_FEE_TO_BUYER = 'pass_processing_fee_to_buyer';
+    final public const DEPOSIT_INSTRUCTIONS = 'deposit_instructions';
 
     protected int $id;
     protected int $event_id;
@@ -129,6 +130,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?int $waitlist_offer_timeout_minutes = null;
     protected bool $allow_copy_details_to_all_attendees = true;
     protected bool $pass_processing_fee_to_buyer = false;
+    protected ?string $deposit_instructions = null;
 
     public function toArray(): array
     {
@@ -192,6 +194,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'waitlist_offer_timeout_minutes' => $this->waitlist_offer_timeout_minutes ?? null,
                     'allow_copy_details_to_all_attendees' => $this->allow_copy_details_to_all_attendees ?? null,
                     'pass_processing_fee_to_buyer' => $this->pass_processing_fee_to_buyer ?? null,
+                    'deposit_instructions' => $this->deposit_instructions ?? null,
                 ];
     }
 
@@ -843,5 +846,16 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getPassProcessingFeeToBuyer(): bool
     {
         return $this->pass_processing_fee_to_buyer;
+    }
+
+    public function setDepositInstructions(?string $deposit_instructions): self
+    {
+        $this->deposit_instructions = $deposit_instructions;
+        return $this;
+    }
+
+    public function getDepositInstructions(): ?string
+    {
+        return $this->deposit_instructions;
     }
 }

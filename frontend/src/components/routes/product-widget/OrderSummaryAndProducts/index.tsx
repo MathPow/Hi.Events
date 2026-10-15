@@ -37,6 +37,7 @@ import {EventDateRange} from "../../../common/EventDateRange";
 import {OnlineEventDetails} from "../../../common/OnlineEventDetails";
 import {AddToCalendarCTA} from "../../../common/AddToCalendarCTA";
 import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
+import {DepositInstructions} from "../../../common/DepositInstructions";
 import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
 import {EditAttendeeModal} from "./EditAttendeeModal";
 import {EditOrderModal} from "./EditOrderModal";
@@ -588,6 +589,7 @@ export const OrderSummaryAndProducts = () => {
                 />
 
                 {order?.status === 'AWAITING_OFFLINE_PAYMENT' && <OfflinePaymentInstructions event={event}/>}
+                {order?.deposit_status === 'PENDING' && <DepositInstructions event={event} order={order}/>}
 
                 <h1 className={classes.heading}>{t`Order Details`}</h1>
 

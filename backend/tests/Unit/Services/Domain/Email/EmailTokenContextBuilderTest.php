@@ -242,6 +242,7 @@ class EmailTokenContextBuilderTest extends TestCase
             'getOrderItems' => $orderItems,
             'getCurrency' => 'USD',
             'getLocale' => 'en',
+            'getDepositAmount' => 0.0,
         ]);
     }
 
@@ -272,6 +273,7 @@ class EmailTokenContextBuilderTest extends TestCase
             'getSupportEmail' => 'support@event.com',
             'getOfflinePaymentInstructions' => $offlinePaymentInstructions,
             'getPostCheckoutMessage' => 'Thank you for your purchase!',
+            'getDepositInstructions' => null,
             'getLocationDetails' => null,
         ]);
     }

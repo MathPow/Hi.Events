@@ -26,6 +26,7 @@ export const PaymentAndInvoicingSettings = () => {
             payment_providers: [] as PaymentProvider[],
             offline_payment_instructions: "",
             allow_orders_awaiting_offline_payment_to_check_in: false,
+            deposit_instructions: "",
             enable_invoicing: false,
             invoice_label: "",
             invoice_prefix: "",
@@ -41,6 +42,7 @@ export const PaymentAndInvoicingSettings = () => {
             payment_providers: Array.isArray(values.payment_providers) ? values.payment_providers : [],
             offline_payment_instructions: isEmptyHtml(values.offline_payment_instructions) ? null : values.offline_payment_instructions,
             invoice_notes: isEmptyHtml(values.invoice_notes) ? null : values.invoice_notes,
+            deposit_instructions: isEmptyHtml(values.deposit_instructions) ? null : values.deposit_instructions,
             invoice_tax_details: isEmptyHtml(values.invoice_tax_details) ? null : values.invoice_tax_details,
         }),
     });
@@ -53,6 +55,7 @@ export const PaymentAndInvoicingSettings = () => {
                 payment_providers: eventSettingsQuery.data.payment_providers || [],
                 offline_payment_instructions: eventSettingsQuery.data.offline_payment_instructions || "",
                 allow_orders_awaiting_offline_payment_to_check_in: eventSettingsQuery.data.allow_orders_awaiting_offline_payment_to_check_in || false,
+                deposit_instructions: eventSettingsQuery.data.deposit_instructions || "",
                 enable_invoicing: eventSettingsQuery.data.enable_invoicing || false,
                 invoice_label: eventSettingsQuery.data.invoice_label || "",
                 invoice_prefix: eventSettingsQuery.data.invoice_prefix || "",
@@ -173,6 +176,21 @@ export const PaymentAndInvoicingSettings = () => {
                                     />
                                 </Card>
                             )}
+                        </Paper>
+
+                        <Paper withBorder p="md" radius="md">
+                            <Text size="lg" fw={500} mb="xs">{t`Security Deposits`}</Text>
+                            <Text size="sm" c="dimmed" mb="md">
+                                {t`Set a deposit amount on a product to ask for a security deposit. Participants send it separately; it is not included in the order total. Track, return or retain deposits from the Deposits page.`}
+                            </Text>
+                            <Editor
+                                editorType={'simple'}
+                                value={form.values.deposit_instructions}
+                                error={form.errors.deposit_instructions as string}
+                                label={t`Deposit Instructions`}
+                                description={t`Shown with the deposit amount on the order page and confirmation email (e.g., where to send the Interac e-Transfer).`}
+                                onChange={(value) => form.setFieldValue('deposit_instructions', value)}
+                            />
                         </Paper>
 
                         <Paper withBorder p="md" radius="md">

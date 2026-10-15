@@ -100,6 +100,17 @@ export const OrderSummary = ({event, order, showFreeWhenZeroTotal = true}: Order
                         />
                     </div>
                 </div>
+                {!!order.deposit_amount && order.deposit_amount > 0 && (
+                    <div className={`${classes.itemRow} ${classes.deposit}`}>
+                        <div className={classes.itemName}>
+                            {t`Security deposit`}
+                            <div className={classes.depositHint}>{t`Sent separately, not included in the total`}</div>
+                        </div>
+                        <div className={classes.itemValue}>
+                            <Currency currency={event.currency} price={order.deposit_amount}/>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )

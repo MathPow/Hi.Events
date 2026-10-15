@@ -8,10 +8,14 @@ use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\Generated\OrderDomainObjectAbstract;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrderItemDomainObject;
+use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\PromoCodeDomainObject;
+use HiEvents\DomainObjects\Status\OrderDepositStatus;
 use HiEvents\DomainObjects\Status\OrderStatus;
+use HiEvents\Helper\Currency;
 use HiEvents\Helper\IdHelper;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
+use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
 use HiEvents\Services\Domain\Tax\TaxAndFeeOrderRollupService;
 use Illuminate\Support\Collection;
 
@@ -20,6 +24,7 @@ class OrderManagementService
     public function __construct(
         readonly private OrderRepositoryInterface    $orderRepository,
         readonly private TaxAndFeeOrderRollupService $taxAndFeeOrderRollupService,
+        readonly private ProductRepositoryInterface  $productRepository,
     )
     {
     }
@@ -95,10 +100,45 @@ class OrderManagementService
             'total_fee' => $totalFee,
             'total_gross' => $totalGross,
             'taxes_and_fees_rollup' => $rollup,
+            ...$this->depositFields($order, $orderItems),
         ]);
 
         return $this->orderRepository
             ->loadRelation(OrderItemDomainObject::class)
             ->findById($order->getId());
+    }
+
+    /**
+     * Le depot est envoye a part et n'entre pas dans total_gross. Les montants
+     * sont figes sur la commande pour qu'une modification du produit apres la
+     * vente ne change pas ce que le participant a deja envoye.
+     *
+     * @param Collection<OrderItemDomainObject> $orderItems
+     */
+    private function depositFields(OrderDomainObject $order, Collection $orderItems): array
+    {
+        $productIds = $orderItems->map(fn(OrderItemDomainObject $item) => $item->getProductId())->unique()->values()->all();
+        if ($productIds === []) {
+            return [];
+        }
+
+        $depositsByProduct = $this->productRepository
+            ->findWhereIn('id', $productIds)
+            ->mapWithKeys(fn(ProductDomainObject $product) => [$product->getId() => (float)$product->getDepositAmount()]);
+
+        $deposit = Currency::round($orderItems->sum(
+            fn(OrderItemDomainObject $item) => $item->getQuantity() * ($depositsByProduct[$item->getProductId()] ?? 0)
+        ));
+
+        if ($deposit <= 0) {
+            return $order->getDepositStatus() === OrderDepositStatus::PENDING->name
+                ? ['deposit_amount' => 0, 'deposit_status' => null]
+                : [];
+        }
+
+        return [
+            'deposit_amount' => $deposit,
+            'deposit_status' => $order->getDepositStatus() ?? OrderDepositStatus::PENDING->name,
+        ];
     }
 }

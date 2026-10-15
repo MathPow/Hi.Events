@@ -189,6 +189,11 @@ Congratulations! Your order for <strong>{{ event.title }}</strong> on <strong>{{
 <strong>Order Number:</strong> {{ order.number }}<br>
 <strong>Total Amount:</strong> {{ order.total }}<br>
 
+{% if order.deposit_amount != '' %}
+<strong>Security Deposit:</strong> {{ order.deposit_amount }}, to send separately. It is not included in the total.<br>
+{{ settings.deposit_instructions }}<br>
+{% endif %}
+
 If you have any questions or need assistance, please contact <a href="mailto:{{ settings.support_email }}">{{ settings.support_email }}</a>.<br>
 
 Best regards,<br>

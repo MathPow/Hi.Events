@@ -381,6 +381,21 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
                 <CharitySplitInput form={form} currency={event?.currency}/>
             )}
 
+            {!isDonationProduct && (
+                <NumberInput
+                    decimalScale={2}
+                    min={0}
+                    mb={20}
+                    leftSection={event?.currency ? getCurrencySymbol(event.currency) : undefined}
+                    value={form.values.deposit_amount ?? ''}
+                    onChange={(value) => form.setFieldValue('deposit_amount', value === '' ? null : Number(value))}
+                    error={form.errors.deposit_amount}
+                    label={t`Security deposit (per unit)`}
+                    description={t`Optional. Sent separately by the participant and not included in the price. You return or retain it after the event from the Deposits page.`}
+                    placeholder="0.00"
+                />
+            )}
+
             {form.values.type === ProductPriceType.Tiered && (
                 <Fieldset legend={t`Price Tiers`} mt={20} mb={20}>
                     <div className={classes.priceTiers}>

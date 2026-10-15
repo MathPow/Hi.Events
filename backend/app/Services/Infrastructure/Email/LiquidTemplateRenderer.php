@@ -142,6 +142,11 @@ class LiquidTemplateRenderer
                 'example' => 'Please transfer payment to account...',
             ],
             [
+                'token' => '{{ settings.deposit_instructions }}',
+                'description' => __('Instructions for sending the security deposit'),
+                'example' => 'Send the deposit by Interac e-Transfer to...',
+            ],
+            [
                 'token' => '{{ settings.post_checkout_message }}',
                 'description' => __('Message shown after checkout'),
                 'example' => 'Thank you for your purchase!',
@@ -153,6 +158,11 @@ class LiquidTemplateRenderer
                 'token' => '{{ order.url }}',
                 'description' => __('Link to view the order summary'),
                 'example' => 'https://example.com/order/ABC123',
+            ],
+            [
+                'token' => '{{ order.deposit_amount }}',
+                'description' => __('The security deposit to send separately, if any'),
+                'example' => '$100.00',
             ],
             [
                 'token' => '{{ order.number }}',

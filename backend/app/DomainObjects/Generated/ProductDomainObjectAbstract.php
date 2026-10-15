@@ -38,6 +38,7 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     final public const HIGHLIGHT_MESSAGE = 'highlight_message';
     final public const WAITLIST_ENABLED = 'waitlist_enabled';
     final public const CHARITY_AMOUNT = 'charity_amount';
+    final public const DEPOSIT_AMOUNT = 'deposit_amount';
 
     protected int $id;
     protected int $event_id;
@@ -67,6 +68,7 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     protected ?string $highlight_message = null;
     protected ?bool $waitlist_enabled = null;
     protected ?float $charity_amount = null;
+    protected ?float $deposit_amount = null;
 
     public function toArray(): array
     {
@@ -99,6 +101,7 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
                     'highlight_message' => $this->highlight_message ?? null,
                     'waitlist_enabled' => $this->waitlist_enabled ?? null,
                     'charity_amount' => $this->charity_amount ?? null,
+                    'deposit_amount' => $this->deposit_amount ?? null,
                 ];
     }
 
@@ -408,5 +411,16 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     public function getCharityAmount(): ?float
     {
         return $this->charity_amount;
+    }
+
+    public function setDepositAmount(?float $deposit_amount): self
+    {
+        $this->deposit_amount = $deposit_amount;
+        return $this;
+    }
+
+    public function getDepositAmount(): ?float
+    {
+        return $this->deposit_amount;
     }
 }

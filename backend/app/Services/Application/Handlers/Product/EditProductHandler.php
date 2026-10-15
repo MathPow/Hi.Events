@@ -127,6 +127,7 @@ class EditProductHandler
                 'highlight_message' => $productsData->highlight_message,
                 'waitlist_enabled' => $productsData->waitlist_enabled,
                 'charity_amount' => $productsData->charity_amount,
+                'deposit_amount' => $productsData->deposit_amount ?: null,
             ],
             where: $where
         );

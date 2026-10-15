@@ -95,6 +95,7 @@ class CreateProductService
             'highlight_message' => $productsData->getHighlightMessage(),
             'waitlist_enabled' => $productsData->getWaitlistEnabled(),
             'charity_amount' => $productsData->getCharityAmount(),
+            'deposit_amount' => $productsData->getDepositAmount(),
         ]);
     }
 

@@ -27,6 +27,7 @@ import {addQueryStringToUrl, isObjectEmpty, removeQueryStringFromUrl} from "../.
 import {TieredPricing} from "./Prices/Tiered";
 import {SizedPricing} from "./Prices/Sized";
 import {hasMultiplePrices} from "../../../../utilites/products.ts";
+import {formatCurrency} from "../../../../utilites/currency.ts";
 import {Event, Product, ProductPriceType} from "../../../../types.ts";
 import classNames from 'classnames';
 import '../../../../styles/widget/default.scss';
@@ -524,6 +525,15 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                                 />
                                                             )}
                                                         </div>
+
+                                                        {!!product.deposit_amount && product.deposit_amount > 0 && (
+                                                            <div className={'hi-product-deposit-row'}>
+                                                                <Trans>
+                                                                    + Security deposit of {formatCurrency(product.deposit_amount, event.currency)} per
+                                                                    unit, sent separately and returned after the event
+                                                                </Trans>
+                                                            </div>
+                                                        )}
 
                                                         {product.max_per_order && form.values.products && isObjectEmpty(form.errors) && (form.values.products[currentProductIndex]?.quantities.reduce((acc, {quantity}) => acc + Number(quantity), 0) > product.max_per_order) && (
                                                             <div className={'hi-product-quantity-error'}>

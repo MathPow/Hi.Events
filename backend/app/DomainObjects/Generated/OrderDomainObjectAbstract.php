@@ -18,7 +18,6 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     final public const TOTAL_BEFORE_ADDITIONS = 'total_before_additions';
     final public const TOTAL_REFUNDED = 'total_refunded';
     final public const TOTAL_GROSS = 'total_gross';
-    final public const PLATFORM_CONTRIBUTION = 'platform_contribution';
     final public const CURRENCY = 'currency';
     final public const FIRST_NAME = 'first_name';
     final public const LAST_NAME = 'last_name';
@@ -45,6 +44,12 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     final public const NOTES = 'notes';
     final public const STATISTICS_DECREMENTED_AT = 'statistics_decremented_at';
     final public const OPTED_INTO_MARKETING_AT = 'opted_into_marketing_at';
+    final public const PLATFORM_CONTRIBUTION = 'platform_contribution';
+    final public const DEPOSIT_AMOUNT = 'deposit_amount';
+    final public const DEPOSIT_STATUS = 'deposit_status';
+    final public const DEPOSIT_RETAINED_AMOUNT = 'deposit_retained_amount';
+    final public const DEPOSIT_NOTE = 'deposit_note';
+    final public const DEPOSIT_RESOLVED_AT = 'deposit_resolved_at';
 
     protected int $id;
     protected int $event_id;
@@ -54,7 +59,6 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     protected float $total_before_additions = 0.0;
     protected float $total_refunded = 0.0;
     protected float $total_gross = 0.0;
-    protected float $platform_contribution = 0.0;
     protected string $currency;
     protected ?string $first_name = null;
     protected ?string $last_name = null;
@@ -81,6 +85,12 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     protected ?string $notes = null;
     protected ?string $statistics_decremented_at = null;
     protected ?string $opted_into_marketing_at = null;
+    protected float $platform_contribution = 0.0;
+    protected float $deposit_amount = 0.0;
+    protected ?string $deposit_status = null;
+    protected float $deposit_retained_amount = 0.0;
+    protected ?string $deposit_note = null;
+    protected ?string $deposit_resolved_at = null;
 
     public function toArray(): array
     {
@@ -93,7 +103,6 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
                     'total_before_additions' => $this->total_before_additions ?? null,
                     'total_refunded' => $this->total_refunded ?? null,
                     'total_gross' => $this->total_gross ?? null,
-                    'platform_contribution' => $this->platform_contribution ?? null,
                     'currency' => $this->currency ?? null,
                     'first_name' => $this->first_name ?? null,
                     'last_name' => $this->last_name ?? null,
@@ -120,6 +129,12 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
                     'notes' => $this->notes ?? null,
                     'statistics_decremented_at' => $this->statistics_decremented_at ?? null,
                     'opted_into_marketing_at' => $this->opted_into_marketing_at ?? null,
+                    'platform_contribution' => $this->platform_contribution ?? null,
+                    'deposit_amount' => $this->deposit_amount ?? null,
+                    'deposit_status' => $this->deposit_status ?? null,
+                    'deposit_retained_amount' => $this->deposit_retained_amount ?? null,
+                    'deposit_note' => $this->deposit_note ?? null,
+                    'deposit_resolved_at' => $this->deposit_resolved_at ?? null,
                 ];
     }
 
@@ -506,5 +521,60 @@ abstract class OrderDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     public function getPlatformContribution(): float
     {
         return $this->platform_contribution;
+    }
+
+    public function setDepositAmount(float $deposit_amount): self
+    {
+        $this->deposit_amount = $deposit_amount;
+        return $this;
+    }
+
+    public function getDepositAmount(): float
+    {
+        return $this->deposit_amount;
+    }
+
+    public function setDepositStatus(?string $deposit_status): self
+    {
+        $this->deposit_status = $deposit_status;
+        return $this;
+    }
+
+    public function getDepositStatus(): ?string
+    {
+        return $this->deposit_status;
+    }
+
+    public function setDepositRetainedAmount(float $deposit_retained_amount): self
+    {
+        $this->deposit_retained_amount = $deposit_retained_amount;
+        return $this;
+    }
+
+    public function getDepositRetainedAmount(): float
+    {
+        return $this->deposit_retained_amount;
+    }
+
+    public function setDepositNote(?string $deposit_note): self
+    {
+        $this->deposit_note = $deposit_note;
+        return $this;
+    }
+
+    public function getDepositNote(): ?string
+    {
+        return $this->deposit_note;
+    }
+
+    public function setDepositResolvedAt(?string $deposit_resolved_at): self
+    {
+        $this->deposit_resolved_at = $deposit_resolved_at;
+        return $this;
+    }
+
+    public function getDepositResolvedAt(): ?string
+    {
+        return $this->deposit_resolved_at;
     }
 }

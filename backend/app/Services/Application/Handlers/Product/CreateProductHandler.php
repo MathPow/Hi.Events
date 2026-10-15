@@ -67,6 +67,7 @@ class CreateProductHandler
                 ->setHighlightMessage($productsData->highlight_message)
                 ->setWaitlistEnabled($productsData->waitlist_enabled)
                 ->setCharityAmount($productsData->charity_amount)
+                ->setDepositAmount($productsData->deposit_amount ?: null)
                 ->setProductPrices($productPrices)
                 ->setEventId($productsData->event_id)
                 ->setProductType($productsData->product_type->name)

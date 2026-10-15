@@ -42,6 +42,7 @@ class UpsertProductDTO extends BaseDTO
         public readonly ?string          $highlight_message = null,
         public readonly ?bool            $waitlist_enabled = null,
         public readonly ?float           $charity_amount = null,
+        public readonly ?float           $deposit_amount = null,
     )
     {
     }

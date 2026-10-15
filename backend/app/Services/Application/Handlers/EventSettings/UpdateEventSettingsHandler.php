@@ -70,6 +70,7 @@ class UpdateEventSettingsHandler
                     'payment_providers' => $settings->payment_providers,
                     'offline_payment_instructions' => $this->purifier->purify($settings->offline_payment_instructions),
                     'allow_orders_awaiting_offline_payment_to_check_in' => $settings->allow_orders_awaiting_offline_payment_to_check_in,
+                    'deposit_instructions' => $this->purifier->purify($settings->deposit_instructions),
 
                     // Invoice settings
                     'enable_invoicing' => $settings->enable_invoicing,

@@ -130,6 +130,7 @@ class UpsertProductRequest extends BaseRequest
             // Part du prix qui constitue un don, par unite. Bornee au prix
             // lui-meme: au-dela, le recu depasserait la somme reellement recue.
             'charity_amount' => ['nullable', ...RulesHelper::MONEY, 'lte:prices.0.price'],
+            'deposit_amount' => ['nullable', ...RulesHelper::MONEY],
         ];
     }
 

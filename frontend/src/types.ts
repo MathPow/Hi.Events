@@ -228,6 +228,7 @@ export interface EventSettings {
 
     // Payment settings
     offline_payment_instructions: string;
+    deposit_instructions?: string | null;
     payment_providers: PaymentProvider[];
     allow_orders_awaiting_offline_payment_to_check_in: boolean;
 
@@ -586,6 +587,7 @@ export interface Product {
     waitlist_enabled?: boolean | null;
     /** Part du prix qui constitue un don, par unite. Alimente le recu officiel. */
     charity_amount?: number | null;
+    deposit_amount?: number | null;
     has_waiting_entries?: boolean;
     waitlist_entry_count?: number;
 }
@@ -656,6 +658,8 @@ interface TaxesAndFeesRollup {
     taxes: TaxOrFee[];
 }
 
+export type OrderDepositStatus = 'PENDING' | 'RECEIVED' | 'RETURNED' | 'RETAINED';
+
 export interface Order {
     id: IdParam;
     short_id: string;
@@ -694,6 +698,11 @@ export interface Order {
     latest_invoice?: Invoice;
     donation_receipt?: DonationReceipt;
     platform_contribution?: number;
+    deposit_amount?: number;
+    deposit_status?: OrderDepositStatus | null;
+    deposit_retained_amount?: number;
+    deposit_note?: string | null;
+    deposit_resolved_at?: string | null;
     session_identifier?: string;
 }
 

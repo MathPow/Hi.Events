@@ -20,6 +20,7 @@ class Product extends BaseModel
             ProductDomainObjectAbstract::SALES_VOLUME => 'float',
             ProductDomainObjectAbstract::SALES_TAX_VOLUME => 'float',
             ProductDomainObjectAbstract::CHARITY_AMOUNT => 'float',
+            ProductDomainObjectAbstract::DEPOSIT_AMOUNT => 'float',
         ];
     }
 

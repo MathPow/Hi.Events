@@ -15,6 +15,7 @@ import {
 } from "../../../../mutations/useTransitionOrderToOfflinePaymentPublic.ts";
 import {Card} from "../../../common/Card";
 import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
+import {DepositInstructions} from "../../../common/DepositInstructions";
 import {showError} from "../../../../utilites/notifications.tsx";
 import {getConfig} from "../../../../utilites/config.ts";
 import classes from "./Payment.module.scss";
@@ -108,6 +109,8 @@ const Payment = () => {
                         <OfflinePaymentMethod event={checkoutEvent as Event}/>
                     </div>
                 )}
+
+                {(checkoutEvent && order) && <DepositInstructions event={checkoutEvent as Event} order={order}/>}
 
                 {(isStripeEnabled && isOfflineEnabled) && (
                     <div className={classes.paymentMethodSelector}>

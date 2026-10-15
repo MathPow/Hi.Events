@@ -55,6 +55,14 @@
 - **{{ __('Order Number:') }}** {{ $order->getPublicId() }}
 - **{{ __('Total Amount:') }}** {{ Currency::format($order->getTotalGross(), $event->getCurrency()) }}
 
+@if($order->getDepositAmount() > 0)
+<div style="border-radius: 4px; background-color: #fdf1e6; color: #6b3a14; margin: 1rem 0 1.5rem; padding: 1rem;">
+<h2>{{ __('Security Deposit') }}</h2>
+{{ __('A security deposit of :amount must be sent separately. It is not included in the total above.', ['amount' => Currency::format($order->getDepositAmount(), $event->getCurrency())]) }}
+{!! $eventSettings->getDepositInstructions() !!}
+</div>
+@endif
+
 <x-mail::button :url="$orderUrl">
     {{ __('View Order Summary & Tickets') }}
 </x-mail::button>
