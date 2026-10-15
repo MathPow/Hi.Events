@@ -4,10 +4,11 @@ import {t} from "@lingui/macro";
 import {IconWorld} from "@tabler/icons-react";
 import {useLingui} from "@lingui/react";
 
-export const LanguageSwitcher = ({classNames, comboboxProps, iconColor = '#ccc'}: {
+export const LanguageSwitcher = ({classNames, comboboxProps, iconColor = '#ccc', locales}: {
     classNames?: SelectProps['classNames'];
     comboboxProps?: SelectProps['comboboxProps'];
     iconColor?: string;
+    locales?: SupportedLocales[];
 }) => {
     useLingui();
 
@@ -68,7 +69,7 @@ export const LanguageSwitcher = ({classNames, comboboxProps, iconColor = '#ccc'}
                 width={180}
                 size={'xs'}
                 required
-                data={Object.keys(localeToNameMap).map(locale => ({
+                data={(locales ?? Object.keys(localeToNameMap)).map(locale => ({
                     value: locale,
                     label: getLocaleName(locale as SupportedLocales),
                 }))}

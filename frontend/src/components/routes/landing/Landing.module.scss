@@ -47,13 +47,13 @@ $mobile: 700px;
 
   [data-reveal="waiting"] {
     opacity: 0;
-    translate: 0 2.5rem;
   }
 
+  // Like the DEHORS shop collage: a short fade and a slightly longer rise with
+  // a small bounce, each element a beat after the one before it.
   [data-reveal="shown"] {
-    opacity: 1;
-    translate: 0 0;
-    transition: opacity 0.9s $ease, translate 0.9s $ease;
+    animation: reveal-fade 0.5s ease-out var(--reveal-delay, 0s) backwards,
+    reveal-rise 0.8s cubic-bezier(0.34, 1.32, 0.64, 1) var(--reveal-delay, 0s) backwards;
   }
 }
 
@@ -94,58 +94,228 @@ $mobile: 700px;
   align-items: center;
   justify-content: center;
   min-height: 2.75rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: 0.7rem;
+  padding: 0.65rem 1.4rem;
+  border: 0;
+  font-family: $sans;
   font-weight: 700;
   font-size: 0.95rem;
   line-height: 1.1;
   white-space: nowrap;
-  transition: translate 0.25s $ease, background-color 0.2s ease;
+  cursor: pointer;
+  background: none;
 
-  &:hover {
-    translate: 0 -2px;
+  // Hover like the DEHORS shop: no transition, the button hops one pixel five
+  // times a second, its outline boils between three cuts on another beat, and
+  // its letters bob. Pressed, it sits down and stays still.
+  @media (hover: hover) {
+    &:hover {
+      animation: button-hop 0.4s steps(1) infinite;
+
+      .shakyLetter {
+        animation: shaky-straight 0.8s steps(1) infinite;
+      }
+    }
+  }
+
+  &:focus-visible {
+    animation: button-hop 0.4s steps(1) infinite;
+
+    .shakyLetter {
+      animation: shaky-straight 0.8s steps(1) infinite;
+    }
+  }
+
+  &:active {
+    animation: none;
+    translate: 0 1px;
+  }
+}
+
+.buttonRough {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: calc(-1 * var(--rough-margin, 0px));
+    background: var(--button-fill, transparent);
+    mask-image: var(--rough-shape);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    &:hover::before {
+      animation: rough-boil 0.6s steps(1) infinite;
+    }
+  }
+
+  &:focus-visible::before {
+    animation: rough-boil 0.6s steps(1) infinite;
   }
 }
 
 .button-orange {
-  color: $brun;
-  background: $orange;
-
-  &:hover {
-    background: #ff9258;
-  }
+  color: $creme;
+  --button-fill: #f47d3c;
 }
 
 .button-dark {
   color: $creme;
-  background: $brun;
-
-  &:hover {
-    background: #4a3a33;
-  }
+  --button-fill: #{$brun};
 }
 
 .button-ghost {
   color: $creme;
-  background: rgb(255 247 233 / 0.14);
-  box-shadow: inset 0 0 0 1.5px rgb(255 247 233 / 0.7);
-  backdrop-filter: blur(6px);
+}
 
-  &:hover {
-    background: rgb(255 247 233 / 0.24);
+@keyframes button-hop {
+  0% {
+    translate: 0 -1px;
   }
+
+  50% {
+    translate: 0 0;
+  }
+}
+
+@keyframes rough-boil {
+  0% {
+    mask-image: var(--rough-shape);
+  }
+
+  33.333% {
+    mask-image: var(--rough-shape-2);
+  }
+
+  66.667% {
+    mask-image: var(--rough-shape-3);
+  }
+}
+
+@keyframes shaky-straight {
+  0%, 50%, 100% {
+    transform: none;
+  }
+
+  25% {
+    transform: translateY(-1px);
+  }
+
+  75% {
+    transform: translateY(1px);
+  }
+}
+
+.shaky {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.28em;
+}
+
+.shakyWord {
+  display: inline-flex;
+}
+
+.shakyLetter {
+  display: inline-block;
 }
 
 .sticker {
   position: absolute;
   z-index: 3;
-  height: auto;
-  pointer-events: none;
+  display: block;
   filter: drop-shadow(0 0.4rem 0.8rem rgb(53 41 36 / 0.18));
+  perspective: 40rem;
+  transition: scale 0.3s $ease;
   animation: sticker-float 6s ease-in-out infinite alternate;
+
+  img, .stickerBack {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+  }
+}
+
+.stickerFlap {
+  display: none;
+}
+
+// On hover the sticker grows a little and its top-right half peels off along
+// the diagonal, then lays back down: the flap shows the back of the sticker,
+// a bit darker toward the fold, while it stands up.
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .sticker:hover {
+    scale: 1.08;
+
+    .stickerFlat {
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    .stickerFlap {
+      position: absolute;
+      inset: 0;
+      display: block;
+      transform-style: preserve-3d;
+      animation: sticker-peel 0.7s both;
+    }
+
+    .stickerFront {
+      animation: sticker-light 0.7s both;
+    }
+  }
+}
+
+.stickerFront, .stickerBack {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+// The front overlaps the flat half by 2px so no gap shows once laid down.
+.stickerFront {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 2px) 100%, 0 2px);
+}
+
+.sticker .stickerBack {
+  height: 100%;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  background: linear-gradient(to bottom left, rgb(53 41 36 / 0), rgb(53 41 36 / 0.22) 50%), var(--image) center / cover no-repeat;
+  mask: var(--image) center / cover no-repeat;
+  transform: rotateY(180deg) scaleX(-1);
+}
+
+@keyframes sticker-peel {
+  0% {
+    transform: rotate3d(var(--w), var(--h), 0, 0deg);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.4, 1);
+  }
+
+  40% {
+    transform: rotate3d(var(--w), var(--h), 0, -165deg);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.25, 1);
+  }
+
+  100% {
+    transform: rotate3d(var(--w), var(--h), 0, 0deg);
+  }
+}
+
+@keyframes sticker-light {
+  0%, 100% {
+    filter: brightness(1);
+  }
+
+  40% {
+    filter: brightness(0.65);
   }
 }
 
@@ -172,6 +342,19 @@ $mobile: 700px;
   }
 }
 
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    translate: 0 2rem;
+    scale: 0.96;
+  }
+}
+
 // --- Hero ---
 
 .heroWrap {
@@ -183,11 +366,11 @@ $mobile: 700px;
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: min(53rem, calc(100svh - 1.25rem));
+  min-height: max(36rem, calc(100svh - 3.5rem));
   border-radius: 1.5rem;
   overflow: hidden;
   color: $creme;
-  background: $brun url('/landing/photos/hero-poster.jpg') center / cover;
+  background: $brun url('/landing/photos/hero-poster.webp') center / cover;
 }
 
 .heroVideo {
@@ -196,6 +379,38 @@ $mobile: 700px;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+// The video slides down a quarter of the scroll, so it seems to scroll slower
+// than the page, and the headline drifts away and fades, both driven by the
+// browser's scroll timeline (no listener).
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .heroVideo {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 1000px;
+    }
+
+    .heroContent {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 80vh;
+    }
+  }
+}
+
+@keyframes hero-parallax {
+  to {
+    translate: 0 250px;
+    scale: 1.06;
+  }
+}
+
+@keyframes hero-drift {
+  to {
+    opacity: 0.15;
+  }
 }
 
 .heroShade {
@@ -238,7 +453,7 @@ $mobile: 700px;
   margin-bottom: 0;
 }
 
-// Mantine's Select, dressed like the "Log in" ghost button on the video.
+// Mantine's Select as a ghost button on the video: no fill or outline until hovered.
 // Doubled class so it outranks Mantine's own input styles.
 .language .languageInput.languageInput {
   height: 2.75rem;
@@ -247,16 +462,15 @@ $mobile: 700px;
   border: 0;
   border-radius: 0.7rem;
   color: $creme;
-  background: rgb(255 247 233 / 0.14);
-  box-shadow: inset 0 0 0 1.5px rgb(255 247 233 / 0.7);
-  backdrop-filter: blur(6px);
+  background: transparent;
   font-family: $sans;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background: rgb(255 247 233 / 0.24);
+    background: rgb(255 247 233 / 0.14);
   }
 }
 
@@ -297,28 +511,66 @@ $mobile: 700px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.75rem;
-  padding: 2rem 1.5rem 6rem;
+  padding: 1rem 1.5rem 5rem;
   text-align: center;
+}
+
+.heroTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   h1 {
     max-width: 11ch;
-    font-size: clamp(3.25rem, 10vw, 9rem);
-    line-height: 0.92;
+    font-size: clamp(3.25rem, 11vw, 10.5rem);
+    line-height: 0.9;
     text-wrap: balance;
-    animation: hero-rise 1.4s $ease both;
+  }
+}
+
+// Each word rises at its own speed on scroll (--speed, set by HeroTitle).
+// On load, the words arrive spread apart, one high and one low in turn, and
+// the whole title lands from a bigger size, slowing down for a long time.
+.heroWord {
+  display: inline-block;
+  transform: translateY(calc(var(--scroll, 0px) * var(--speed, 0) * -1));
+  will-change: transform;
+  animation: hero-word 2.2s cubic-bezier(0.25, 1, 0.5, 1) both;
+
+  :nth-child(odd) > & {
+    --from: -55%;
   }
 
-  p {
-    max-width: 32rem;
-    font-size: clamp(1rem, 1.4vw, 1.25rem);
-    animation: hero-rise 1.4s 0.15s $ease both;
+  :nth-child(even) > & {
+    --from: 70%;
+  }
+}
+
+.heroTitle h1 {
+  animation: hero-land 2.2s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+@keyframes hero-word {
+  from {
+    translate: 0 var(--from);
+    opacity: 0;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    h1, p {
-      animation: none;
-    }
+  30% {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-land {
+  from {
+    scale: 1.45;
+    word-spacing: 0.25em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroWord, .heroTitle h1 {
+    animation: none;
   }
 }
 
@@ -623,40 +875,179 @@ $mobile: 700px;
   }
 }
 
-.marquee {
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   overflow: hidden;
-  padding: 0.85rem 0;
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-.marqueeTrack {
+// Clipped on the sides only: a pill leaning toward the cursor may overflow up or down.
+.trustScroller {
   display: flex;
-  gap: clamp(3rem, 8vw, 7rem);
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow: clip visible;
+  text-align: left;
+}
+
+.trustRowLeft {
+  margin-left: -3.75rem;
+}
+
+.trustRowRight {
+  margin-left: -16.25rem;
+}
+
+// Each copy keeps the gap after its last pill, so the track slides exactly one copy (a quarter) and the loop never jumps.
+.trustTrack {
+  display: flex;
   width: max-content;
-  align-items: center;
-  animation: marquee 40s linear infinite;
+  animation: trust-left var(--duration) linear infinite;
+
+  .trustRowRight & {
+    animation-name: trust-right;
+  }
+
+  .trustScroller:hover & {
+    animation-play-state: paused;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
 }
 
-.marqueeReverse {
-  animation-direction: reverse;
-  color: $terracotta;
-}
+@keyframes trust-left {
+  from {
+    translate: 0 0;
+  }
 
-.trustLogo {
-  flex: none;
-  height: calc(clamp(2.75rem, 5vw, 4rem) * var(--logo-scale, 1));
-  aspect-ratio: var(--logo-ratio, 3);
-  background: currentColor;
-  mask: var(--logo) center / contain no-repeat;
-}
-
-@keyframes marquee {
   to {
-    translate: -50% 0;
+    translate: -25% 0;
+  }
+}
+
+@keyframes trust-right {
+  from {
+    translate: -25% 0;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+.trustCopy {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0 1.25rem 0 0;
+  list-style: none;
+
+  > li {
+    flex: none;
+  }
+}
+
+.trustPill {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 1.125rem;
+  padding: 0.75rem 2rem 0.75rem 0.75rem;
+  border-radius: 62rem;
+  background: rgb(227 173 146 / 0.35);
+
+  // The fill grows as a circle from the cursor's entry point and shrinks toward its exit point.
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--tint);
+    clip-path: circle(0% at var(--origin-x, 50%) var(--origin-y, 50%));
+    transition: clip-path 0.55s cubic-bezier(0.33, 1, 0.68, 1);
+    pointer-events: none;
+  }
+}
+
+.trustPillFilled::before {
+  clip-path: circle(150% at var(--origin-x, 50%) var(--origin-y, 50%));
+}
+
+.trustAvatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  font-family: $display;
+  font-size: 1.375rem;
+  line-height: 1;
+  background: var(--tint);
+  transition: background-color 0.35s, color 0.35s;
+
+  .trustPillDark & {
+    color: $creme;
+  }
+
+  .trustPillFilled & {
+    background-color: $creme;
+  }
+
+  .trustPillFilled.trustPillDark & {
+    color: var(--tint);
+  }
+}
+
+.trustName {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: color 0.35s;
+
+  .trustPillFilled.trustPillDark & {
+    color: $creme;
+  }
+}
+
+@media (max-width: $mobile) {
+  .trustScroller {
+    gap: 0.75rem;
+  }
+
+  .trustRowLeft {
+    margin-left: -2.5rem;
+  }
+
+  .trustRowRight {
+    margin-left: -9.375rem;
+  }
+
+  .trustCopy {
+    gap: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .trustPill {
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+  }
+
+  .trustAvatar {
+    font-size: 1rem;
+  }
+
+  .trustName {
+    font-size: 1rem;
   }
 }
 
@@ -955,12 +1346,19 @@ $mobile: 700px;
   }
 }
 
+// Sized by useMatchWidth to span the big number's widest line.
 .communityTagline {
+  max-width: none !important;
   margin-top: 0.25rem !important;
   color: $orange;
   font-family: $display;
   font-size: clamp(1.5rem, 3vw, 2.5rem);
   line-height: 1.1;
+
+  span {
+    display: inline-block;
+    white-space: nowrap;
+  }
 }
 
 .communityPhotos {

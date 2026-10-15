@@ -6,6 +6,10 @@ import {IconArrowDown, IconArrowRight} from "@tabler/icons-react";
 import {useRoughEdge} from "../../../hooks/useRoughEdge.ts";
 import {LanguageSwitcher} from "../../common/LanguageSwitcher";
 import {loadWordmarkLetters} from "./wordmarkLetters.ts";
+import {TrustedOrganizers} from "./TrustedOrganizers.tsx";
+import {HeroTitle} from "./HeroTitle.tsx";
+import {LandingButton} from "./LandingButton.tsx";
+import {useMatchWidth} from "./useMatchWidth.ts";
 import classes from "./Landing.module.scss";
 
 const ASSETS = '/landing';
@@ -13,13 +17,7 @@ const HERO_VIDEO = `${ASSETS}/hero.mp4`;
 const CONTACT_EMAIL = 'billets@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
-const TRUSTED_ORGANIZERS = [
-    {name: 'Dehors', logo: 'dehors', ratio: 5.05, scale: 0.7},
-    {name: 'Boréal Sports & Événements', logo: 'boreal', ratio: 3.32, scale: 1},
-    {name: "Su'l Pace", logo: 'sulpace', ratio: 1.78, scale: 1.05},
-    {name: 'Ultra Tales', logo: 'ultratales', ratio: 3.11, scale: 0.95},
-    {name: 'Course en Blanc', logo: 'course-en-blanc', ratio: 1.35, scale: 1.2},
-];
+const TRUSTED_ORGANIZERS = ['DEHORS', 'Boréal', "Su'l Pace"];
 
 const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, children, ...props}: {
     as?: T;
@@ -34,22 +32,46 @@ const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, c
     return <Component ref={ref} className={className} {...props}>{children}</Component>;
 };
 
-const Sticker = ({name, className, style}: { name: string, className?: string, style?: CSSProperties }) => (
-    <img src={`${ASSETS}/stickers/${name}.png`} alt="" aria-hidden="true" loading="lazy" decoding="async"
-         className={`${classes.sticker} ${className ?? ''}`} style={style}/>
-);
+const STICKER_SIZES: Record<string, [number, number]> = {
+    'autocollant-appareil-photo': [289, 289],
+    'autocollant-boing': [289, 216],
+    'autocollant-crocs': [361, 216],
+    'autocollant-drapeau-dehors': [288, 288],
+    'autocollant-drapeau': [289, 288],
+    'autocollant-perfectly-round': [289, 289],
+    'autocollant-perfect-stick': [361, 144],
+    'autocollant-sapin': [217, 288],
+};
+
+/**
+ * A sticker cut in two along its diagonal: the bottom-left half stays flat,
+ * the top-right half is a flap that peels up and lays back down on hover
+ * (the "Ce qui nous guide" stickers of the DEHORS shop, faster).
+ */
+const Sticker = ({name, className}: { name: string, className?: string }) => {
+    const src = `${ASSETS}/stickers/${name}.webp`;
+    const [width, height] = STICKER_SIZES[name] ?? [1, 1];
+
+    return (
+        <span className={`${classes.sticker} ${className ?? ''}`} aria-hidden="true"
+              style={{'--w': width, '--h': height, '--image': `url('${src}')`} as CSSProperties}>
+            <img className={classes.stickerFlat} src={src} alt="" loading="lazy" decoding="async"/>
+            <span className={classes.stickerFlap}>
+                <img className={classes.stickerFront} src={src} alt="" loading="lazy" decoding="async"/>
+                <span className={classes.stickerBack}/>
+            </span>
+        </span>
+    );
+};
 
 const Photo = ({name, className}: { name: string, className?: string }) => (
     <Rough className={`${classes.photo} ${className ?? ''}`} amplitude={2.2} step={34}>
-        <img src={`${ASSETS}/photos/${name}.jpg`} alt="" loading="lazy" decoding="async"/>
+        <img src={`${ASSETS}/photos/${name}.webp`} alt="" loading="lazy" decoding="async"/>
     </Rough>
 );
 
 const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) => (
-    <Rough as={NavLink} to="/auth/register" amplitude={1.2} step={18}
-           className={`${classes.button} ${classes[`button-${variant}`]}`}>
-        {t`Create my account`}
-    </Rough>
+    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Create my account`}/>
 );
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -89,13 +111,13 @@ const useRevealOnScroll = () => {
         }
 
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.setAttribute('data-reveal', 'shown');
-                    observer.unobserve(entry.target);
-                }
+            entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
+                const item = entry.target as HTMLElement;
+                item.style.setProperty('--reveal-delay', `${index * 0.14}s`);
+                item.setAttribute('data-reveal', 'shown');
+                observer.unobserve(item);
             });
-        }, {rootMargin: '0px 0px -12% 0px'});
+        }, {rootMargin: '0px 0px -10% 0px'});
 
         items.forEach((item) => {
             item.setAttribute('data-reveal', 'waiting');
@@ -119,7 +141,7 @@ const HeroVideo = () => {
 
     return (
         <video ref={video} className={classes.heroVideo} autoPlay muted loop playsInline preload="metadata"
-               poster={`${ASSETS}/photos/hero-poster.jpg`} aria-hidden="true">
+               poster={`${ASSETS}/photos/hero-poster.webp`} aria-hidden="true">
             <source src={HERO_VIDEO} type="video/mp4"/>
         </video>
     );
@@ -176,6 +198,21 @@ const FooterWordmark = () => {
                 dangerouslySetInnerHTML={{__html: letters}}/>;
 };
 
+/** The orange tagline spans exactly the width of the big number above it. */
+const CommunityHeading = () => {
+    const title = useRef<HTMLHeadingElement>(null);
+    const tagline = useRef<HTMLSpanElement>(null);
+    useMatchWidth(title, tagline);
+
+    return (
+        <div data-reveal>
+            <h2 ref={title}>{t`2,200+ athletes`}</h2>
+            <p className={classes.communityTagline}><span ref={tagline}>{t`will see your event`}</span></p>
+            <p>{t`We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move.`}</p>
+        </div>
+    );
+};
+
 const Landing = () => {
     const root = useRevealOnScroll();
 
@@ -210,7 +247,7 @@ const Landing = () => {
                         <header className={classes.nav}>
                             <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
                             <div className={classes.navActions}>
-                                <LanguageSwitcher iconColor="currentColor" classNames={{
+                                <LanguageSwitcher iconColor="currentColor" locales={['fr', 'en']} classNames={{
                                     root: classes.language,
                                     input: classes.languageInput,
                                     section: classes.languageSection,
@@ -218,18 +255,14 @@ const Landing = () => {
                                     option: classes.languageOption,
                                 }} comboboxProps={{width: 'max-content', position: 'bottom-end', offset: 8}}/>
                                 <RegisterButton/>
-                                <Rough as={NavLink} to="/auth/login" amplitude={1.2} step={18}
-                                       className={`${classes.button} ${classes['button-ghost']}`}>
-                                    {t`Log in`}
-                                </Rough>
+                                <LandingButton as={NavLink} to="/auth/login" variant="ghost" label={t`Log in`}/>
                             </div>
                         </header>
                         <div className={classes.heroContent}>
-                            <h1>{t`Fewer fees, more people.`}</h1>
-                            <p>{t`The Quebec ticketing platform built for the sports community.`}</p>
+                            <HeroTitle/>
                         </div>
                         <div className={classes.heroFooter}>
-                            <span>{t`Sports ticketing / Québec`}</span>
+                            <span>{t`2,200+ athletes`}</span>
                             <span>{t`2.5% + Stripe fees`}</span>
                         </div>
                     </Rough>
@@ -247,10 +280,8 @@ const Landing = () => {
                 <section id="intro" className={classes.intro}>
                     <div className={classes.introText} data-reveal>
                         <p>{t`Billetterie Dehors is the local ticketing platform for races, outings and competitions. A small local team, fees that stay small, and a community of athletes that grows every week.`}</p>
-                        <Rough as="a" href="#steps" onClick={smoothScrollTo} amplitude={1.2} step={18}
-                               className={`${classes.button} ${classes['button-dark']}`}>
-                            {t`How it works`}
-                        </Rough>
+                        <LandingButton as="a" href="#steps" onClick={smoothScrollTo} variant="dark"
+                                       label={t`How it works`}/>
                     </div>
                     <h2 className={classes.introTitle} data-reveal>
                         <span>{t`Free or paid.`}</span>
@@ -294,26 +325,7 @@ const Landing = () => {
                     <div data-reveal>
                         <h2>{t`Local organizers already trust us`}</h2>
                     </div>
-                    {[false, true].map((reverse) => (
-                        <div key={String(reverse)} className={classes.marquee} aria-hidden={reverse}>
-                            <div className={`${classes.marqueeTrack} ${reverse ? classes.marqueeReverse : ''}`}>
-                                {Array.from({length: 4}).flatMap((_, copy) => TRUSTED_ORGANIZERS.map(({name, logo, ratio, scale}) => (
-                                    <span
-                                        key={`${copy}-${logo}`}
-                                        role="img"
-                                        aria-label={name}
-                                        aria-hidden={copy > 0 || reverse}
-                                        className={classes.trustLogo}
-                                        style={{
-                                            '--logo': `url(/landing/logos/${logo}.svg)`,
-                                            '--logo-ratio': ratio,
-                                            '--logo-scale': scale,
-                                        } as CSSProperties}
-                                    />
-                                )))}
-                            </div>
-                        </div>
-                    ))}
+                    <TrustedOrganizers names={TRUSTED_ORGANIZERS}/>
                 </section>
 
                 <section id="fees" className={classes.feesWrap}>
@@ -390,11 +402,7 @@ const Landing = () => {
                 </section>
 
                 <section className={classes.community}>
-                    <div data-reveal>
-                        <h2>{t`2,200+ athletes`}</h2>
-                        <p className={classes.communityTagline}>{t`will see your event`}</p>
-                        <p>{t`We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move.`}</p>
-                    </div>
+                    <CommunityHeading/>
                     <div className={classes.communityPhotos} data-reveal>
                         <Photo name="photo-b" className={classes.communityPhoto1}/>
                         <Photo name="photo-c" className={classes.communityPhoto2}/>
