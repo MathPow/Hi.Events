@@ -13,7 +13,13 @@ const HERO_VIDEO = `${ASSETS}/hero.mp4`;
 const CONTACT_EMAIL = 'billets@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
-const TRUSTED_ORGANIZERS = ['DEHORS', 'Boréal', "Su'l Pace"];
+const TRUSTED_ORGANIZERS = [
+    {name: 'Dehors', logo: 'dehors', ratio: 5.05, scale: 0.7},
+    {name: 'Boréal Sports & Événements', logo: 'boreal', ratio: 3.32, scale: 1},
+    {name: "Su'l Pace", logo: 'sulpace', ratio: 1.78, scale: 1.05},
+    {name: 'Ultra Tales', logo: 'ultratales', ratio: 3.11, scale: 0.95},
+    {name: 'Course en Blanc', logo: 'course-en-blanc', ratio: 1.35, scale: 1.2},
+];
 
 const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, children, ...props}: {
     as?: T;
@@ -291,8 +297,19 @@ const Landing = () => {
                     {[false, true].map((reverse) => (
                         <div key={String(reverse)} className={classes.marquee} aria-hidden={reverse}>
                             <div className={`${classes.marqueeTrack} ${reverse ? classes.marqueeReverse : ''}`}>
-                                {Array.from({length: 4}).flatMap((_, copy) => TRUSTED_ORGANIZERS.map((name) => (
-                                    <span key={`${copy}-${name}`} aria-hidden={copy > 0 || reverse}>{name}</span>
+                                {Array.from({length: 4}).flatMap((_, copy) => TRUSTED_ORGANIZERS.map(({name, logo, ratio, scale}) => (
+                                    <span
+                                        key={`${copy}-${logo}`}
+                                        role="img"
+                                        aria-label={name}
+                                        aria-hidden={copy > 0 || reverse}
+                                        className={classes.trustLogo}
+                                        style={{
+                                            '--logo': `url(/landing/logos/${logo}.svg)`,
+                                            '--logo-ratio': ratio,
+                                            '--logo-scale': scale,
+                                        } as CSSProperties}
+                                    />
                                 )))}
                             </div>
                         </div>

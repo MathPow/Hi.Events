@@ -633,14 +633,8 @@ $mobile: 700px;
   display: flex;
   gap: clamp(3rem, 8vw, 7rem);
   width: max-content;
+  align-items: center;
   animation: marquee 40s linear infinite;
-
-  span {
-    font-family: $display;
-    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -650,6 +644,14 @@ $mobile: 700px;
 .marqueeReverse {
   animation-direction: reverse;
   color: $terracotta;
+}
+
+.trustLogo {
+  flex: none;
+  height: calc(clamp(2.75rem, 5vw, 4rem) * var(--logo-scale, 1));
+  aspect-ratio: var(--logo-ratio, 3);
+  background: currentColor;
+  mask: var(--logo) center / contain no-repeat;
 }
 
 @keyframes marquee {
