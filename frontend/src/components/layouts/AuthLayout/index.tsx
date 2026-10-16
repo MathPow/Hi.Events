@@ -1,10 +1,11 @@
-import {Navigate, Outlet} from "react-router";
+import {Link, Navigate, Outlet} from "react-router";
 import classes from "./Auth.module.scss";
 import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {PoweredByFooter} from "../../common/PoweredByFooter";
 import {LanguageSwitcher} from "../../common/LanguageSwitcher";
 import {
+    IconArrowLeft,
     IconChartBar,
     IconCreditCard,
     IconDeviceMobile,
@@ -15,10 +16,12 @@ import {
     IconTicket,
     IconUsers,
 } from '@tabler/icons-react';
-import {useCallback, useMemo, useRef} from "react";
+import {MouseEvent, useCallback, useMemo, useRef} from "react";
 import {getConfig} from "../../../utilites/config.ts";
 import {isHiEvents} from "../../../utilites/helpers.ts";
 import {showInfo} from "../../../utilites/notifications.tsx";
+import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
+import {usePhotoPan} from "./usePhotoPan.ts";
 
 const allFeatures = [
     {
@@ -64,6 +67,8 @@ const allFeatures = [
 ];
 
 const FeaturePanel = () => {
+    const photo = useRef<HTMLDivElement>(null);
+    usePhotoPan(photo);
     const selectedFeatures = useMemo(() => {
         const shuffled = [...allFeatures].sort(() => 0.5 - Math.random());
         return shuffled.slice(0, 4);
@@ -71,11 +76,21 @@ const FeaturePanel = () => {
 
     return (
         <div className={classes.rightPanel}>
-            <div className={classes.backgroundImage} />
-            <div className={classes.backgroundOverlay} />
-            <div className={classes.gridPattern} />
-            <div className={`${classes.glowEffect} ${classes.glowTop}`} />
-            <div className={`${classes.glowEffect} ${classes.glowBottom}`} />
+            <div className={classes.photo}>
+                <div ref={photo} className={classes.photoImage}/>
+            </div>
+            <img
+                src={'/landing/stickers/autocollant-drapeau-dehors.webp'}
+                className={`${classes.sticker} ${classes.stickerFlag}`}
+                alt={''}
+                aria-hidden
+            />
+            <img
+                src={'/landing/stickers/autocollant-sapin.webp'}
+                className={`${classes.sticker} ${classes.stickerTree}`}
+                alt={''}
+                aria-hidden
+            />
 
             <div className={classes.overlay}>
                 <div className={classes.content}>
@@ -107,11 +122,16 @@ const FeaturePanel = () => {
 };
 
 const AuthLayout = () => {
+    useDehorsAppTheme();
     const me = useGetMe();
     const clickCountRef = useRef(0);
     const clickTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
-    const handleLogoClick = useCallback(() => {
+    // Five clicks on the "Powered by" line, outside its links, show the version.
+    const handleVersionClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+        if ((event.target as HTMLElement).closest('a')) {
+            return;
+        }
         clickCountRef.current += 1;
         clearTimeout(clickTimerRef.current);
         clickTimerRef.current = setTimeout(() => { clickCountRef.current = 0; }, 2000);
@@ -131,12 +151,16 @@ const AuthLayout = () => {
             <div className={classes.splitLayout}>
                 <div className={classes.leftPanel}>
                     <main className={classes.container}>
-                        <div className={classes.logo} onClick={handleLogoClick} style={{cursor: 'pointer'}}>
+                        <Link to={'/'} className={classes.backHome}>
+                            <IconArrowLeft size={16}/>
+                            {t`Back to home`}
+                        </Link>
+                        <Link to={'/'} className={classes.logo}>
                             <img
                                 src={getConfig("VITE_APP_LOGO_DARK", "/logos/hi-events-stacked-light.svg")}
                                 alt={t`${getConfig("VITE_APP_NAME", "Hi.Events")} logo`}
                             />
-                        </div>
+                        </Link>
                         <div className={classes.wrapper}>
                             <Outlet />
                             {/*
@@ -152,7 +176,11 @@ const AuthLayout = () => {
                              *
                              * If you wish to remove this notice, a commercial license is available at: https://hi.events/licensing
                              */}
-                            {!isHiEvents() && <PoweredByFooter />}
+                            {!isHiEvents() && (
+                                <div onClick={handleVersionClick}>
+                                    <PoweredByFooter />
+                                </div>
+                            )}
                             <div className={classes.languageSwitcher}>
                                 <LanguageSwitcher />
                             </div>

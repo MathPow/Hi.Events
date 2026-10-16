@@ -103,25 +103,24 @@
   }
 
   :global(.mantine-TextInput-input) {
-    border-radius: var(--hi-radius-md);
-    border: 1.5px solid var(--hi-color-gray-2);
+    border-radius: 1rem;
+    border: 2px solid transparent;
     padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    background: white;
+    font-size: 0.9375rem;
+    background: var(--dehors-champ);
 
     @include mixins.respond-below(sm) {
       font-size: 1rem;
     }
 
     &:focus {
-      border-color: var(--mantine-color-secondary-5);
-      box-shadow: 0 0 0 3px var(--mantine-color-secondary-1);
+      border-color: var(--dehors-brun);
     }
   }
 
   :global(.mantine-Button-root) {
     height: 38px;
-    border-radius: var(--hi-radius-md);
+    border-radius: 999px;
     font-weight: 600;
     font-size: 0.8125rem;
     padding: 0 1.25rem;
