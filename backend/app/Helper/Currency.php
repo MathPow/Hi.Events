@@ -30,8 +30,9 @@ class Currency
         return in_array(strtoupper($currencyCode), self::ZERO_DECIMAL_CURRENCIES, true);
     }
 
-    public static function format(float|int $amount, string $currencyCode, string $locale = 'en_US'): string
+    public static function format(float|int $amount, string $currencyCode, ?string $locale = null): string
     {
+        $locale ??= str_starts_with(app()->getLocale(), 'fr') ? 'fr_CA' : 'en_US';
         $currencyCode = strtoupper($currencyCode);
         $formatter = new NumberFormatter($locale . '@currency=' . $currencyCode, NumberFormatter::CURRENCY);
         return $formatter->formatCurrency($amount, $currencyCode);

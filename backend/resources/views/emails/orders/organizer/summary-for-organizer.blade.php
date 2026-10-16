@@ -7,21 +7,18 @@
 <x-mail::message>
 # {{ __('You\'ve received a new order!') }} 🎉
 
-<br>
-{{ __('Congratulations! You\'ve received a new order for ') }} <b>{{ $event->getTitle() }}</b>! {{ __('Please find the details below.') }}
-<br>
-<br>
+{{ __('Congratulations! You\'ve received a new order for **:event**. Please find the details below.', ['event' => $event->getTitle()]) }}
 
 @if($order->isOrderAwaitingOfflinePayment())
-<div style="border-radius: 4px; background-color: #f8d7da; color: #842029; margin-bottom: 1.5rem; padding: 1rem;">
+<div style="border-radius: 8px; background-color: #fdf1e6; color: #6b3a14; margin-bottom: 1.5rem; padding: 1rem;">
 <p>
 {{ __('ℹ️ This order is pending payment. Please mark the payment as received on the order management page once payment is received.') }}
 </p>
 </div>
 @endif
 
-{{ __('Name') }}: <b>{{ $order->getFullName() }}</b><br>
-{{ __('Email') }}: <b>{{ $order->getEmail() }}</b><br>
+{{ __('Name:') }} <b>{{ $order->getFullName() }}</b><br>
+{{ __('Email:') }} <b>{{ $order->getEmail() }}</b><br>
 {{ __('Order Amount:') }} <b>{{ Currency::format($order->getTotalGross(), $event->getCurrency()) }}</b><br>
 {{ __('Order ID:') }} <b>{{ $order->getPublicId() }}</b><br>
 {{ __('Order Status:') }} <b>{{ $order->getHumanReadableStatus() }}</b>
@@ -32,9 +29,3 @@
 </x-mail::button>
 
 </x-mail::message>
-
-
-
-
-
-

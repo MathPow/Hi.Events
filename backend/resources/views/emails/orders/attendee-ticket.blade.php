@@ -11,7 +11,7 @@
 @php /** @see \HiEvents\Mail\Attendee\AttendeeTicketMail */ @endphp
 
 <x-mail::message>
-# {{ __('You\'re going to') }} {{ $event->getTitle() }}! 🎉
+# {{ __('You\'re going to :event!', ['event' => $event->getTitle()]) }} 🎉
 <br>
 <br>
 @if($order->isOrderAwaitingOfflinePayment())
@@ -28,20 +28,20 @@
 @php /** @var AttendeeDomainObject $ticketAttendee */ @endphp
 @php $ticketAttendee = $ticket['attendee']; @endphp
 
-<table style="width: 100%; margin: 24px 0; border: 1px solid #e8e5ef; border-radius: 6px;" cellpadding="0" cellspacing="0">
+<table style="width: 100%; margin: 24px 0; border: 1px solid #f1dccd; border-radius: 12px;" cellpadding="0" cellspacing="0">
 <tr>
 <td style="padding: 20px; text-align: center;">
-<div style="font-size: 16px; font-weight: 700; color: #1a1a1a;">{{ $ticketAttendee->getFullName() }}</div>
+<div style="font-size: 16px; font-weight: 700; color: #352924;">{{ $ticketAttendee->getFullName() }}</div>
 <div style="margin: 16px 0;">
 <img src="{{ $message->embedData($ticket['qrCode'], $ticketAttendee->getPublicId() . '.png', 'image/png') }}"
 alt="{{ $ticketAttendee->getPublicId() }}"
 width="180" height="180"
 style="display: block; margin: 0 auto; width: 180px; height: 180px;">
 </div>
-<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #888;">{{ __('Ticket ID') }}</div>
-<div style="font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #1a1a1a;">{{ $ticketAttendee->getPublicId() }}</div>
+<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #9c8478;">{{ __('Ticket ID') }}</div>
+<div style="font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #352924;">{{ $ticketAttendee->getPublicId() }}</div>
 <div style="margin-top: 14px;">
-<a href="{{ $ticket['ticketUrl'] }}" style="font-size: 13px; color: #4a3bbd;">{{ __('View this ticket online') }}</a>
+<a href="{{ $ticket['ticketUrl'] }}" style="font-size: 13px; color: #e86c2a;">{{ __('View this ticket online') }}</a>
 </div>
 </td>
 </tr>

@@ -7,13 +7,19 @@
 
 @php /** @see \HiEvents\Mail\Order\OrderSummary */ @endphp
 
+@php
+    $eventStart = (new Carbon(DateHelper::convertFromUTC($event->getStartDate(), $event->getTimezone())))->locale(app()->getLocale());
+    $eventDate = $eventStart->isoFormat('LL');
+    $eventTime = $eventStart->isoFormat('LT');
+@endphp
+
 <x-mail::message>
 # {{ __('Your Order is Confirmed! ') }} 🎉
 
 @if($order->isOrderAwaitingOfflinePayment() === false)
 
 <p>
-{{ __('Congratulations! Your order for :eventTitle on :eventDate at :eventTime was successful. Please find your order details below.', ['eventTitle' => $event->getTitle(), 'eventDate' => (new Carbon(DateHelper::convertFromUTC($event->getStartDate(), $event->getTimezone())))->format('F j, Y'), 'eventTime' => (new Carbon(DateHelper::convertFromUTC($event->getStartDate(), $event->getTimezone())))->format('g:i A')]) }}
+{{ __('Congratulations! Your order for :eventTitle on :eventDate at :eventTime was successful. Please find your order details below.', ['eventTitle' => $event->getTitle(), 'eventDate' => $eventDate, 'eventTime' => $eventTime]) }}
 </p>
 
 @else
@@ -37,7 +43,7 @@
 # {{ __('Event Details') }}
 **{{ __('Event Name:') }}** {{ $event->getTitle() }}
     <br>
-**{{ __('Date & Time:') }}** {{ __(':date at :time', ['date' => (new Carbon(DateHelper::convertFromUTC($event->getStartDate(), $event->getTimezone())))->format('F j, Y'), 'time' => (new Carbon(DateHelper::convertFromUTC($event->getStartDate(), $event->getTimezone())))->format('g:i A')]) }}
+**{{ __('Date & Time:') }}** {{ __(':date at :time', ['date' => $eventDate, 'time' => $eventTime]) }}
 
 </p>
 

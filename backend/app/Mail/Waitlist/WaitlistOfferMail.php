@@ -69,7 +69,7 @@ class WaitlistOfferMail extends BaseMail
             return null;
         }
 
-        return Carbon::parse($expiresAt)->isoFormat('MMMM D, YYYY [at] h:mm A (z)');
+        return Carbon::parse($expiresAt)->locale(app()->getLocale())->isoFormat('LLL (z)');
     }
 
     private function buildProductName(): ?string
