@@ -9,7 +9,6 @@ import {
     Skeleton,
     Text,
     TextInput,
-    Tooltip
 } from "@mantine/core";
 import {IconArrowRight, IconCheck, IconCircleCheck, IconClock} from "@tabler/icons-react";
 import {t, Trans} from "@lingui/macro";
@@ -20,7 +19,7 @@ import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {useGetEventQuestionsPublic} from "../../../../queries/useGetEventQuestionsPublic.ts";
 import {CheckoutOrderQuestions, CheckoutProductQuestions} from "../../../common/CheckoutQuestion";
 import {Event, IdParam, Question} from "../../../../types.ts";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {InputGroup} from "../../../common/InputGroup";
 import {Card} from "../../../common/Card";
 import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
@@ -77,7 +76,7 @@ export const CollectInformation = () => {
     const requireBillingAddress = event?.settings?.require_billing_address;
     const isPerOrderCollection = event?.settings?.attendee_details_collection_method === 'PER_ORDER';
     const allowCopyToAllAttendees = event?.settings?.allow_copy_details_to_all_attendees ?? true;
-    const [copyOption, setCopyOption] = useState<'none' | 'first' | 'all'>('none');
+    const [copyOption, setCopyOption] = useState<'none' | 'first' | 'all'>('first');
 
     const isEmailValid = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -151,11 +150,6 @@ export const CollectInformation = () => {
 
     const totalTicketAttendees = getTicketAttendeeIndices().length;
 
-    const areOrderDetailsComplete = () => {
-        const {first_name, last_name, email} = form.values.order;
-        return first_name.trim() !== '' && last_name.trim() !== '' && isEmailValid(email);
-    };
-
     const copyDetailsToAttendees = (option: 'none' | 'first' | 'all') => {
         if (!products) return;
 
@@ -167,26 +161,23 @@ export const CollectInformation = () => {
             const isFirst = index === ticketIndices[0];
             const shouldCopy = option === 'all' ? isTicketAttendee : (option === 'first' && isFirst);
 
-            if (isTicketAttendee) {
-                if (shouldCopy) {
-                    return {
-                        ...product,
-                        first_name: form.values.order.first_name,
-                        last_name: form.values.order.last_name,
-                        email: form.values.order.email,
-                        email_confirmation: form.values.order.email,
-                    };
-                } else {
-                    return {
-                        ...product,
-                        first_name: "",
-                        last_name: "",
-                        email: "",
-                        email_confirmation: "",
-                    };
-                }
+            if (!isTicketAttendee) {
+                return product;
             }
-            return product;
+
+            const {first_name, last_name, email} = form.values.order;
+
+            if (shouldCopy) {
+                return {...product, first_name, last_name, email, email_confirmation: email};
+            }
+
+            return {
+                ...product,
+                first_name: product.first_name === first_name ? "" : product.first_name,
+                last_name: product.last_name === last_name ? "" : product.last_name,
+                email: product.email === email ? "" : product.email,
+                email_confirmation: product.email_confirmation === email ? "" : product.email_confirmation,
+            };
         });
 
         form.setValues({
@@ -198,21 +189,42 @@ export const CollectInformation = () => {
     const handleCopyOptionChange = (value: string) => {
         const option = value as 'none' | 'first' | 'all';
 
-        // Only allow copying if order details are complete
-        if (option !== 'none' && !areOrderDetailsComplete()) {
-            return;
-        }
-
         setCopyOption(option);
         copyDetailsToAttendees(option);
     };
 
-    // Reset copy option if order details become incomplete
+    // Les participants copies suivent l'acheteur pendant qu'il tape. Un champ du
+    // participant modifie a la main ne vaut plus l'ancienne valeur copiee: on n'y
+    // touche plus, pour qu'on puisse y mettre le nom ou le courriel de quelqu'un d'autre.
+    const previousOrderDetails = useRef({first_name: "", last_name: "", email: ""});
+
     useEffect(() => {
-        if (copyOption !== 'none' && !areOrderDetailsComplete()) {
-            setCopyOption('none');
-            copyDetailsToAttendees('none');
+        const previous = previousOrderDetails.current;
+        const {first_name, last_name, email} = form.values.order;
+        previousOrderDetails.current = {first_name, last_name, email};
+
+        if (copyOption === 'none' || isPerOrderCollection) {
+            return;
         }
+
+        const ticketIndices = getTicketAttendeeIndices();
+        const targets = copyOption === 'all' ? ticketIndices : ticketIndices.slice(0, 1);
+
+        if (targets.length === 0) {
+            return;
+        }
+
+        const follow = (current: string, before: string, next: string) => current === before ? next : current;
+
+        form.setFieldValue('products', form.values.products.map((product, index) => targets.includes(index)
+            ? {
+                ...product,
+                first_name: follow(product.first_name, previous.first_name, first_name),
+                last_name: follow(product.last_name, previous.last_name, last_name),
+                email: follow(product.email, previous.email, email),
+                email_confirmation: follow(product.email_confirmation, previous.email, email),
+            }
+            : product));
     }, [form.values.order.first_name, form.values.order.last_name, form.values.order.email]);
 
     // Doit etre applique AVANT finaliseOrder: le PaymentIntent est cree a l'etape
@@ -544,43 +556,26 @@ export const CollectInformation = () => {
                     {orderRequiresAttendeeDetails && !isPerOrderCollection && totalTicketAttendees > 0 && !lock && (
                         <div className={classes.copyDetailsSection}>
                             {totalTicketAttendees === 1 ? (
-                                <Tooltip
-                                    label={t`Fill in your details above first`}
-                                    disabled={areOrderDetailsComplete()}
-                                    position="right"
-                                    withArrow
-                                >
-                                    <div style={{display: 'inline-block'}}>
-                                        <Checkbox
-                                            size="sm"
-                                            label={t`Copy details to first attendee`}
-                                            checked={copyOption === 'first'}
-                                            disabled={!areOrderDetailsComplete()}
-                                            onChange={(e) => handleCopyOptionChange(e.currentTarget.checked ? 'first' : 'none')}
-                                        />
-                                    </div>
-                                </Tooltip>
+                                <Checkbox
+                                    size="sm"
+                                    label={t`Copy details to first attendee`}
+                                    checked={copyOption === 'first'}
+                                    onChange={(e) => handleCopyOptionChange(e.currentTarget.checked ? 'first' : 'none')}
+                                />
                             ) : (
                                 <div className={classes.copyDetailsMultiple}>
                                     <Text size="sm" c="dimmed"
                                           className={classes.copyLabel}>{t`Copy my details to:`}</Text>
-                                    <Tooltip
-                                        label={t`Fill in your details above first`}
-                                        disabled={areOrderDetailsComplete()}
-                                        withArrow
-                                    >
-                                        <SegmentedControl
-                                            size="xs"
-                                            value={copyOption}
-                                            onChange={handleCopyOptionChange}
-                                            disabled={!areOrderDetailsComplete()}
-                                            data={[
-                                                {label: t`None`, value: 'none'},
-                                                {label: t`First attendee`, value: 'first'},
-                                                ...(allowCopyToAllAttendees ? [{label: t`All attendees`, value: 'all'}] : []),
-                                            ]}
-                                        />
-                                    </Tooltip>
+                                    <SegmentedControl
+                                        size="xs"
+                                        value={copyOption}
+                                        onChange={handleCopyOptionChange}
+                                        data={[
+                                            {label: t`None`, value: 'none'},
+                                            {label: t`First attendee`, value: 'first'},
+                                            ...(allowCopyToAllAttendees ? [{label: t`All attendees`, value: 'all'}] : []),
+                                        ]}
+                                    />
                                 </div>
                             )}
                         </div>
