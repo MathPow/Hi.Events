@@ -12,12 +12,23 @@ $gutter: clamp(1rem, 2.8vw, 2.5rem);
 $content: min(calc(100% - 2 * #{$gutter}), 72rem);
 $ease: cubic-bezier(0.25, 1, 0.5, 1);
 $mobile: 700px;
+// Height over width of the DEHORS mountain (dehors-icone.svg).
+$icon-ratio: 1.162674;
+// The height of the shop's mountain ridges between sections.
+$ridge: min(7.5vw, 6.75rem);
+$ridge-mobile: 10vw;
 
+// Body text at 20px, 16px on phones, like the DEHORS shop.
 .landing {
   font-family: $sans;
+  font-size: 1.25rem;
   color: $brun;
   background: $brun;
   -webkit-font-smoothing: antialiased;
+
+  @media (max-width: $mobile) {
+    font-size: 1rem;
+  }
 
   ::selection {
     background: $orange;
@@ -44,17 +55,27 @@ $mobile: 700px;
     outline: 3px solid $brun;
     outline-offset: 4px;
   }
+}
 
-  [data-reveal="waiting"] {
-    opacity: 0;
-  }
+// The arrival from below as the page scrolls (useRiseOnScroll). Without
+// specificity: a block that moves itself with `translate` keeps it.
+:where(.landing [data-rise]) {
+  translate: var(--rise, none);
+}
 
-  // Like the DEHORS shop collage: a short fade and a slightly longer rise with
-  // a small bounce, each element a beat after the one before it.
-  [data-reveal="shown"] {
-    animation: reveal-fade 0.5s ease-out var(--reveal-delay, 0s) backwards,
-    reveal-rise 0.8s cubic-bezier(0.34, 1.32, 0.64, 1) var(--reveal-delay, 0s) backwards;
-  }
+// A stopped section (useStackOnScroll) fades a little as the next one covers it.
+.landing [data-stacked] > * {
+  opacity: calc(1 - var(--stack-fade, 0));
+}
+
+// Lenis drives the scroll (smoothScroll.ts): the page keeps its own height and
+// the browser's smooth scrolling doesn't fight it.
+:global(html.lenis), :global(html.lenis body) {
+  height: auto;
+}
+
+:global(html.lenis) {
+  scroll-behavior: auto !important;
 }
 
 // The page slides over the footer, which waits behind it. Its bottom edge is
@@ -63,7 +84,6 @@ $mobile: 700px;
   position: relative;
   z-index: 1;
   overflow: clip;
-  padding-bottom: clamp(5rem, 9vw, 8rem);
   background: $creme;
   mask-image: linear-gradient(#000, #000), url('/landing/section-brune-bande.svg');
   mask-size: 100% 100%, min(116.666667%, 105rem) auto;
@@ -83,22 +103,26 @@ $mobile: 700px;
   display: block;
   margin-bottom: 0.75rem;
   color: $terracotta;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+
+  @media (max-width: $mobile) {
+    font-size: 0.875rem;
+  }
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.75rem;
-  padding: 0.65rem 1.4rem;
+  min-height: 3rem;
+  padding: 0.65rem 1.5rem;
   border: 0;
   font-family: $sans;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   line-height: 1.1;
   white-space: nowrap;
   cursor: pointer;
@@ -225,97 +249,33 @@ $mobile: 700px;
   display: inline-block;
 }
 
+// Like the "Ce qui nous guide" stickers of the DEHORS shop: two poses, tilted a
+// little one way then the other with nothing in between, like frame-by-frame
+// animation. `--tilt-delay` puts them out of step so they don't all flip at
+// once. `transform` leaves `rotate` and `translate` free to place and float them.
 .sticker {
   position: absolute;
   z-index: 3;
   display: block;
+  height: auto;
   filter: drop-shadow(0 0.4rem 0.8rem rgb(53 41 36 / 0.18));
-  perspective: 40rem;
-  transition: scale 0.3s $ease;
-  animation: sticker-float 6s ease-in-out infinite alternate;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 
-  img, .stickerBack {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
+    sticker-tilt 2.4s steps(1) var(--tilt-delay, 0s) infinite;
   }
 }
 
-.stickerFlap {
-  display: none;
-}
-
-// On hover the sticker grows a little and its top-right half peels off along
-// the diagonal, then lays back down: the flap shows the back of the sticker,
-// a bit darker toward the fold, while it stands up.
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .sticker:hover {
-    scale: 1.08;
-
-    .stickerFlat {
-      clip-path: polygon(0 0, 100% 100%, 0 100%);
-    }
-
-    .stickerFlap {
-      position: absolute;
-      inset: 0;
-      display: block;
-      transform-style: preserve-3d;
-      animation: sticker-peel 0.7s both;
-    }
-
-    .stickerFront {
-      animation: sticker-light 0.7s both;
-    }
-  }
-}
-
-.stickerFront, .stickerBack {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-}
-
-// The front overlaps the flat half by 2px so no gap shows once laid down.
-.stickerFront {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 2px) 100%, 0 2px);
-}
-
-.sticker .stickerBack {
-  height: 100%;
-  clip-path: polygon(0 0, 100% 0, 100% 100%);
-  background: linear-gradient(to bottom left, rgb(53 41 36 / 0), rgb(53 41 36 / 0.22) 50%), var(--image) center / cover no-repeat;
-  mask: var(--image) center / cover no-repeat;
-  transform: rotateY(180deg) scaleX(-1);
-}
-
-@keyframes sticker-peel {
+@keyframes sticker-tilt {
   0% {
-    transform: rotate3d(var(--w), var(--h), 0, 0deg);
-    animation-timing-function: cubic-bezier(0.3, 0, 0.4, 1);
+    transform: rotate(-2.5deg);
   }
 
-  40% {
-    transform: rotate3d(var(--w), var(--h), 0, -165deg);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.25, 1);
-  }
-
-  100% {
-    transform: rotate3d(var(--w), var(--h), 0, 0deg);
-  }
-}
-
-@keyframes sticker-light {
-  0%, 100% {
-    filter: brightness(1);
-  }
-
-  40% {
-    filter: brightness(0.65);
+  50%, 100% {
+    transform: rotate(2.5deg);
   }
 }
 
@@ -342,16 +302,83 @@ $mobile: 700px;
   }
 }
 
-@keyframes reveal-fade {
-  from {
-    opacity: 0;
+// --- Opening ---
+
+// The DEHORS shop's opening (Opening.tsx), over the whole landing page. It
+// reaches under Safari's toolbar on iPhone (100lvh); the script centres the
+// mountain in the visible screen.
+.opening {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100vh;
+  height: 100lvh;
+
+  // Until the script measures the screen, the window is cut here, where it
+  // will place its own: the mountain min(8rem, 100vw - 4rem) wide, centred in
+  // the visible screen. Without a script to take it over, it steps aside.
+  &:not([data-live]) {
+    --window-width: min(8rem, calc(100vw - 4rem));
+    mask-image: linear-gradient(#000, #000), url('/landing/dehors-icone.svg');
+    mask-size: 100% 100%, var(--window-width) auto;
+    mask-position: 0 0, 50% calc(50vh - var(--window-width) * #{$icon-ratio * 0.5});
+    mask-position: 0 0, 50% calc(50dvh - var(--window-width) * #{$icon-ratio * 0.5});
+    mask-repeat: no-repeat;
+    mask-composite: subtract, add;
+    animation: opening-fallback 0.4s ease 10s both;
   }
 }
 
-@keyframes reveal-rise {
-  from {
-    translate: 0 2rem;
-    scale: 0.96;
+@keyframes opening-fallback {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+:global(body):has(.opening[data-live]) {
+  overflow: hidden;
+}
+
+// On iPhone, Safari 26 shows the page under its toolbar, where the fixed
+// opening doesn't reach: until the window opens, the page is cut down to a box
+// around it, on orange.
+.landing:has(> .opening[data-live]:not([data-open])) {
+  background: $orange;
+}
+
+.opening[data-live]:not([data-open]) ~ .page {
+  clip-path: inset(calc(50vh - 6rem) calc(50% - 5rem) calc(100% - 50vh - 6rem));
+  clip-path: inset(calc(50dvh - 6rem) calc(50% - 5rem) calc(100% - 50dvh - 6rem));
+}
+
+.openingScene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.openingBackdrop {
+  fill: $orange;
+}
+
+// Safari 26 tints its toolbar on iPhone from an opaque fixed element touching
+// the bottom of the screen: this strip, almost all below it, keeps it orange.
+.openingTint {
+  display: none;
+
+  @media (hover: none) and (pointer: coarse) {
+    position: fixed;
+    z-index: 1;
+    right: 0;
+    bottom: -8px;
+    left: 0;
+    display: block;
+    height: 12px;
+    background: $orange;
+    pointer-events: none;
   }
 }
 
@@ -368,9 +395,15 @@ $mobile: 700px;
   flex-direction: column;
   min-height: max(36rem, calc(100svh - 3.5rem));
   border-radius: 1.5rem;
+
+  // On a tall screen it stops growing: the next section already shows below.
+  @media (min-width: #{$mobile + 1}) {
+    min-height: max(36rem, min(calc(100svh - 3.5rem), 48rem));
+  }
+
   overflow: hidden;
   color: $creme;
-  background: $brun url('/landing/photos/hero-poster.webp') center / cover;
+  background: $brun url('/landing/photos/hero-groupe.webp') center / cover;
 }
 
 .heroVideo {
@@ -379,6 +412,8 @@ $mobile: 700px;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  // A little dimmer and flatter, for the bright windows and shirts not to fight the headline.
+  filter: brightness(0.82) contrast(0.92) saturate(1.05);
 }
 
 // The video slides down a quarter of the scroll, so it seems to scroll slower
@@ -413,10 +448,14 @@ $mobile: 700px;
   }
 }
 
+// Brown over the picture: darker behind the headline, at the top for the nav
+// and at the bottom for the stats.
 .heroShade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgb(53 41 36 / 0.45) 0%, rgb(53 41 36 / 0.15) 40%, rgb(53 41 36 / 0.55) 100%);
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 50%, rgb(53 41 36 / 0.45), rgb(53 41 36 / 0) 100%),
+    linear-gradient(180deg, rgb(53 41 36 / 0.55) 0%, rgb(53 41 36 / 0.3) 40%, rgb(53 41 36 / 0.65) 100%);
 }
 
 .nav {
@@ -449,22 +488,22 @@ $mobile: 700px;
 }
 
 .language.language {
-  width: 8.75rem;
+  width: 10.5rem;
   margin-bottom: 0;
 }
 
 // Mantine's Select as a ghost button on the video: no fill or outline until hovered.
 // Doubled class so it outranks Mantine's own input styles.
 .language .languageInput.languageInput {
-  height: 2.75rem;
-  min-height: 2.75rem;
+  height: 3rem;
+  min-height: 3rem;
   padding-left: 2.25rem;
   border: 0;
   border-radius: 0.7rem;
   color: $creme;
   background: transparent;
   font-family: $sans;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -479,27 +518,61 @@ $mobile: 700px;
   pointer-events: none;
 }
 
+// The open list of the DEHORS shop's menus: a cream panel with the site's
+// rough-cut edge (cut by cutLanguageList). The shadow sits on the dropdown and
+// not on the panel, so it follows the cut.
 .languageDropdown.languageDropdown {
-  padding: 0.35rem;
+  padding: 0;
   border: 0;
-  border-radius: 0.8rem;
-  background: $creme;
-  box-shadow: 0 0.75rem 2rem rgb(53 41 36 / 0.25);
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0.75rem 1.25rem rgb(53 41 36 / 0.2));
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: language-open 0.18s $ease;
+  }
 }
 
+@keyframes language-open {
+  from {
+    opacity: 0;
+    translate: 0 -0.375rem;
+  }
+}
+
+.languageOptions.languageOptions {
+  padding: 0.375rem;
+  border-radius: 1.25rem;
+  background: $creme;
+}
+
+// A choice reached by the mouse or the keyboard takes the sand background of
+// the shop's fields; the chosen one is bold, with a tick on the right.
 .languageOption.languageOption {
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.875rem;
   color: $brun;
   font-family: $sans;
+  font-size: 1.25rem;
   font-weight: 500;
+  line-height: 1.3;
 
   &:hover, &[data-combobox-selected] {
-    background: $peche;
+    background: rgb(227 173 146 / 0.32);
   }
 
   &[data-checked] {
     font-weight: 700;
+  }
+
+  svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: $brun;
   }
 }
 
@@ -521,56 +594,162 @@ $mobile: 700px;
   align-items: center;
 
   h1 {
-    max-width: 11ch;
-    font-size: clamp(3.25rem, 11vw, 10.5rem);
-    line-height: 0.9;
-    text-wrap: balance;
+    font-size: clamp(2.25rem, 8.5vw, 9rem);
+    line-height: 0.95;
   }
 }
 
+// Each half of the headline on its own long line ("Moins de frais," then
+// "Plus de monde."), wrapping only where the screen is too narrow.
+.heroLine {
+  display: block;
+  text-wrap: balance;
+}
+
+.heroSubtitle {
+  max-width: 42rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  text-wrap: balance;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-shadow: 0 0.05em 0.6em rgb(53 41 36 / 0.45);
+
+  @media (max-width: $mobile) {
+    font-size: 1rem;
+  }
+}
+
+// The "fewer" and "more" of the headline (HeroTitle), stickers among its
+// words: the word in colour over a cream copy of itself, outlined and cut a
+// little roughly (the SVG filter), tilted, swinging like the other stickers.
+.stickerWord {
+  position: relative;
+  display: inline-block;
+  margin-inline: 0.03em;
+  filter: drop-shadow(0 0.02em 0.04em rgb(53 41 36 / 0.35));
+
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    color: $creme;
+    -webkit-text-stroke: 0.12em $creme;
+    filter: url('#hero-sticker-edge');
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: sticker-tilt 2.4s steps(1) var(--tilt-delay, 0s) infinite;
+  }
+}
+
+.stickerWordFewer {
+  color: #ef6b66;
+  rotate: -4deg;
+}
+
+.stickerWordMore {
+  color: #5aab7b;
+  rotate: 3deg;
+  --tilt-delay: -1.2s;
+}
+
+.stickerWordFilter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+// A sticker and the word after it, on the same line.
+.heroWordGroup {
+  white-space: nowrap;
+}
+
 // Each word rises at its own speed on scroll (--speed, set by HeroTitle).
-// On load, the words arrive spread apart, one high and one low in turn, and
-// the whole title lands from a bigger size, slowing down for a long time.
 .heroWord {
   display: inline-block;
   transform: translateY(calc(var(--scroll, 0px) * var(--speed, 0) * -1));
   will-change: transform;
-  animation: hero-word 2.2s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
 
-  :nth-child(odd) > & {
-    --from: -55%;
+// When the opening's mountain opens onto the page (or on arriving from another
+// page), everything converges like on the DEHORS shop's home: the headline
+// arrives big, its words spread apart, one high and one low in turn, the nav
+// comes down from the top, the stats and the arrow rise from the bottom, and
+// it all slows down for a long time before settling. `translate` and `scale`
+// add up with what is already set (the words' scroll speed).
+@media (prefers-reduced-motion: no-preference) {
+  .landing {
+    .nav {
+      --from-y: -6rem;
+    }
+
+    .heroFooter {
+      --from-y: 12rem;
+    }
+
+    .heroSubtitle {
+      --from-y: 5rem;
+    }
+
+    .scrollDownWrap {
+      --from-x: -50%;
+      --from-y: 12rem;
+    }
   }
 
-  :nth-child(even) > & {
-    --from: 70%;
+  .landing[data-entrance] {
+    .heroTitle h1 {
+      animation: hero-land 2.4s $ease both;
+    }
+
+    .heroWord, .heroSubtitle, .nav, .heroFooter, .scrollDownWrap {
+      animation: hero-converge 2.4s $ease both;
+    }
   }
 }
 
-.heroTitle h1 {
-  animation: hero-land 2.2s cubic-bezier(0.25, 1, 0.5, 1) both;
+// While the opening waits, its window already shows the hero where the
+// entrance takes it from. Held 10s at most, like the opening without its
+// script (.opening); with no script at all, the hero stays in place.
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .landing:not([data-entrance]) {
+    .heroTitle h1 {
+      animation: hero-land-wait 1ms 10s backwards;
+    }
+
+    .heroWord, .heroSubtitle, .nav, .heroFooter, .scrollDownWrap {
+      animation: hero-converge-wait 1ms 10s backwards;
+    }
+  }
 }
 
-@keyframes hero-word {
+@keyframes hero-converge {
   from {
-    translate: 0 var(--from);
-    opacity: 0;
-  }
-
-  30% {
-    opacity: 1;
+    translate: var(--from-x, 0) var(--from-y, 0);
   }
 }
 
 @keyframes hero-land {
   from {
-    scale: 1.45;
+    scale: 1.65;
     word-spacing: 0.25em;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .heroWord, .heroTitle h1 {
-    animation: none;
+// The same starts under other names: a running animation that changed only its
+// timing would carry on from where it was instead of starting over.
+@keyframes hero-converge-wait {
+  from {
+    translate: var(--from-x, 0) var(--from-y, 0);
+  }
+}
+
+@keyframes hero-land-wait {
+  from {
+    scale: 1.65;
+    word-spacing: 0.25em;
   }
 }
 
@@ -588,35 +767,86 @@ $mobile: 700px;
   justify-content: space-between;
   gap: 1rem;
   padding: 0 clamp(1.25rem, 3vw, 3rem) 1.75rem;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.scrollDown {
+.scrollDownWrap {
   position: absolute;
   z-index: 4;
   bottom: -2rem;
   left: 50%;
+  translate: -50% 0;
+}
+
+// The orange fill and the cream ring around it are both cut by hand
+// (useRoughButton, round), the ring from the same outline a little larger.
+// On hover, like the site's buttons, it hops and both boil between three cuts.
+.scrollDown {
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   width: 4rem;
   height: 4rem;
-  border-radius: 50%;
   color: $creme;
-  background: $orange;
-  box-shadow: 0 0 0 0.375rem $creme, 0 0.6rem 1.4rem rgb(53 41 36 / 0.25);
-  translate: -50% 0;
-  transition: background-color 0.25s ease, scale 0.35s $ease;
+  filter: drop-shadow(0 0.6rem 1.4rem rgb(53 41 36 / 0.25));
+  transition: scale 0.35s $ease;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    mask-image: var(--rough-shape);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  &::before {
+    z-index: -1;
+    inset: calc(-1 * var(--rough-margin, 0px));
+    background: $orange;
+    transition: background-color 0.25s ease;
+  }
+
+  &::after {
+    z-index: -2;
+    inset: calc(-1 * var(--rough-margin, 0px) - 0.375rem);
+    background: $creme;
+  }
 
   svg {
     animation: arrow-nudge 2.4s $ease infinite;
   }
 
-  &:hover {
-    background: #ff9258;
-    scale: 1.06;
+  @media (hover: hover) {
+    &:hover {
+      scale: 1.06;
+      animation: button-hop 0.4s steps(1) infinite;
+
+      &::before {
+        background: #ff9258;
+      }
+
+      &::before, &::after {
+        animation: rough-boil 0.6s steps(1) infinite;
+      }
+    }
+  }
+
+  &:focus-visible {
+    animation: button-hop 0.4s steps(1) infinite;
+
+    &::before, &::after {
+      animation: rough-boil 0.6s steps(1) infinite;
+    }
+  }
+
+  &:active {
+    animation: none;
+    translate: 0 1px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -640,50 +870,146 @@ $mobile: 700px;
   }
 }
 
-.stickerTree {
-  bottom: -2.75rem;
-  left: calc(50% + 2.5rem);
-  width: clamp(3.5rem, 6vw, 5rem);
-  rotate: 8deg;
-  animation-delay: -3s;
+// --- Scrolled nav ---
+
+// The DEHORS shop's header, once the hero's nav has scrolled away (ScrolledNav):
+// fixed at the top, the links centred on the bar between two equal columns.
+// The cream pill is a layer of its own (navigation.svg): its shadow follows the
+// drawn outline without touching the text.
+.scrolledNav {
+  position: fixed;
+  z-index: 50;
+  top: 1.25rem;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  width: min(calc(100% - 5rem), 85rem);
+  min-height: 4.8125rem;
+  padding: 0.8125rem 1.1875rem 0.8125rem 1.5rem;
+  color: $brun;
+  font-size: 1.25rem;
+  font-weight: 700;
+  translate: -50% calc(-100% - 2rem);
+  visibility: hidden;
+  transition: translate 0.45s cubic-bezier(0.3, 0.8, 0.3, 1), visibility 0s linear 0.45s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: url('/landing/navigation.svg') center / 100% 100% no-repeat;
+    filter: drop-shadow(0 0.3125rem 0.875rem rgb(53 41 36 / 0.16));
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
-.stickerCamera {
-  top: -0.25rem;
-  left: 42%;
-  width: clamp(5rem, 11vw, 9.5rem);
-  rotate: -6deg;
+.scrolledNavShown {
+  translate: -50% 0;
+  visibility: visible;
+  transition: translate 0.45s cubic-bezier(0.3, 0.8, 0.3, 1), visibility 0s;
 }
 
-.stickerFlagLeft {
-  top: 9rem;
-  left: 0;
-  width: clamp(4.5rem, 10vw, 8.5rem);
-  rotate: -8deg;
+.scrolledNavBrand {
+  width: 3rem;
+
+  span {
+    display: block;
+    aspect-ratio: 1;
+    background: $orange;
+    mask: url('/landing/billet-montagne.svg') center / contain no-repeat;
+  }
 }
 
-.stickerFlagRight {
-  top: 8rem;
-  right: 0;
-  width: clamp(4.5rem, 10vw, 8rem);
-  rotate: 8deg;
-  animation-delay: -2s;
+// The page's sections, right after the mountain.
+.scrolledNavLinks {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 2.2vw, 2.25rem);
+  padding-inline: 1.75rem 1rem;
+  font-size: 1rem;
+
+  a {
+    padding-block: 0.5em;
+  }
 }
 
-.stickerCrocs {
-  bottom: 9rem;
-  left: 2%;
-  width: clamp(6rem, 13vw, 11rem);
-  rotate: -10deg;
-  animation-delay: -4s;
+.scrolledNavActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
 }
 
-.stickerBoing {
-  bottom: 6rem;
-  right: 1%;
-  width: clamp(6rem, 12vw, 10rem);
-  rotate: 6deg;
-  animation-delay: -1s;
+// Every text link shakes like the shop's (.secousse): on hover its letters
+// wiggle one after the other, a tiny amplitude so the word stays readable.
+// Buttons keep their own straight bob (.button).
+@media (hover: hover) {
+  .landing a:not(.button):hover .shakyLetter {
+    animation: shaky-tilt 0.8s steps(1) infinite;
+  }
+}
+
+.landing a:not(.button):focus-visible .shakyLetter {
+  animation: shaky-tilt 0.8s steps(1) infinite;
+}
+
+@keyframes shaky-tilt {
+  0%, 50%, 100% {
+    transform: none;
+  }
+
+  25% {
+    transform: translateY(-1px) rotate(-5deg);
+  }
+
+  75% {
+    transform: translateY(1px) rotate(5deg);
+  }
+}
+
+// On smaller screens the links go; on phones the bar spans the screen near its
+// top, with rounder, slightly uneven corners than the stretched pill would have.
+@media (max-width: 1150px) {
+  .scrolledNav {
+    gap: 1rem;
+  }
+
+  .scrolledNavLinks {
+    display: none;
+  }
+}
+
+@media (max-width: $mobile) {
+  .scrolledNav {
+    top: 0.375rem;
+    width: calc(100% - 2rem);
+    min-height: 4rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+
+    &::before {
+      background: $creme;
+      border-radius: 1.5rem 1.375rem 1.5rem 1.625rem / 1.625rem 1.5rem 1.375rem 1.5rem;
+    }
+
+    .button {
+      min-height: 2.75rem;
+      padding: 0.55rem 1rem;
+      font-size: 1rem;
+    }
+  }
+
+  .scrolledNavBrand {
+    width: 2.75rem;
+  }
+
+  .scrolledNavLogin {
+    display: none;
+  }
 }
 
 // --- Intro ---
@@ -702,7 +1028,6 @@ $mobile: 700px;
   align-items: flex-start;
   gap: 1.5rem;
   padding-top: 0.75rem;
-  font-size: 1rem;
   line-height: 1.6;
 }
 
@@ -744,6 +1069,7 @@ $mobile: 700px;
   right: -0.5rem;
   width: clamp(4.5rem, 8vw, 7.5rem);
   rotate: 8deg;
+  --tilt-delay: -1.2s;
 }
 
 // --- Steps ---
@@ -777,20 +1103,33 @@ $mobile: 700px;
 .stepCards {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin: clamp(3rem, 6vw, 5rem) 0 0;
+  gap: 2.75rem 1.5rem;
+  margin: clamp(4.5rem, 8vw, 7rem) 0 0;
   padding: 0;
   list-style: none;
 }
 
+// Each card hangs from its pin: it tilts around it, and straightens on hover.
 .stepCard {
   position: relative;
   display: flex;
+  transform-origin: 50% 0;
+  transition: rotate 0.5s $ease;
+
+  &:hover {
+    rotate: 0deg !important;
+  }
+}
+
+.stepCardBody {
+  position: relative;
+  flex: 1;
+  display: flex;
   flex-direction: column;
-  min-height: 15rem;
-  padding: 1.75rem 1.5rem;
+  min-height: 18rem;
+  padding: 2.25rem 1.5rem 1.75rem;
   border-radius: 1.25rem;
-  transition: rotate 0.4s $ease, translate 0.4s $ease;
+  background: var(--card);
 
   h3 {
     margin-top: auto;
@@ -801,13 +1140,30 @@ $mobile: 700px;
   p {
     margin-top: 0.75rem;
     padding-right: 1.5rem;
-    font-size: 0.875rem;
     line-height: 1.5;
   }
+}
 
-  &:hover {
-    rotate: 0deg !important;
-    translate: 0 -0.4rem;
+// A round pushpin in the card's own colour, with a brown border and a shine.
+.stepPin {
+  position: absolute;
+  z-index: 1;
+  top: -1rem;
+  left: 50%;
+  width: 2.25rem;
+  translate: -50% 0;
+  filter: drop-shadow(0.15rem 0.35rem 0.2rem rgb(53 41 36 / 0.35));
+
+  circle {
+    fill: var(--pin);
+    stroke: $brun;
+    stroke-width: 2.5;
+  }
+
+  .stepPinShine {
+    fill: #fff;
+    stroke: none;
+    opacity: 0.55;
   }
 }
 
@@ -824,8 +1180,9 @@ $mobile: 700px;
 }
 
 .stepCard1 {
+  --card: #{$brun};
+  --pin: #ef6b66;
   color: $creme;
-  background: $brun;
   rotate: -1deg;
 
   .stepNumber, h3 {
@@ -834,14 +1191,16 @@ $mobile: 700px;
 }
 
 .stepCard2 {
-  background: $abricot;
+  --card: #{$abricot};
+  --pin: #5aab7b;
   margin-top: 4.5rem;
   rotate: 2.5deg;
 }
 
 .stepCard3 {
+  --card: #{$sommet};
+  --pin: #{$orange};
   color: $orange;
-  background: $sommet;
   margin-top: 1.25rem;
   rotate: -2deg;
 
@@ -851,7 +1210,8 @@ $mobile: 700px;
 }
 
 .stepCard4 {
-  background: $orange;
+  --card: #{$orange};
+  --pin: #{$creme};
   margin-top: 4rem;
   rotate: 1.5deg;
 }
@@ -911,10 +1271,6 @@ $mobile: 700px;
     animation-name: trust-right;
   }
 
-  .trustScroller:hover & {
-    animation-play-state: paused;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
@@ -957,10 +1313,12 @@ $mobile: 700px;
   isolation: isolate;
   display: flex;
   align-items: center;
-  gap: 1.125rem;
-  padding: 0.75rem 2rem 0.75rem 0.75rem;
+  justify-content: center;
+  min-height: 6.25rem;
+  padding: 1rem 2.5rem;
   border-radius: 62rem;
-  background: rgb(227 173 146 / 0.35);
+  color: $brun;
+  transition: color 0.35s;
 
   // The fill grows as a circle from the cursor's entry point and shrinks toward its exit point.
   &::before {
@@ -980,43 +1338,16 @@ $mobile: 700px;
   clip-path: circle(150% at var(--origin-x, 50%) var(--origin-y, 50%));
 }
 
-.trustAvatar {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  font-family: $display;
-  font-size: 1.375rem;
-  line-height: 1;
-  background: var(--tint);
-  transition: background-color 0.35s, color 0.35s;
-
-  .trustPillDark & {
-    color: $creme;
-  }
-
-  .trustPillFilled & {
-    background-color: $creme;
-  }
-
-  .trustPillFilled.trustPillDark & {
-    color: var(--tint);
-  }
+.trustPillFilled.trustPillDark {
+  color: $creme;
 }
 
-.trustName {
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
-  transition: color 0.35s;
-
-  .trustPillFilled.trustPillDark & {
-    color: $creme;
-  }
+// The organizer's white logo as a mask, in the pill's text colour.
+.trustLogo {
+  display: block;
+  height: calc(4.4rem * var(--logo-scale, 1));
+  background: currentColor;
+  mask: var(--logo) center / contain no-repeat;
 }
 
 @media (max-width: $mobile) {
@@ -1038,16 +1369,12 @@ $mobile: 700px;
   }
 
   .trustPill {
-    gap: 0.75rem;
-    padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+    min-height: 4.25rem;
+    padding: 0.75rem 1.5rem;
   }
 
-  .trustAvatar {
-    font-size: 1rem;
-  }
-
-  .trustName {
-    font-size: 1rem;
+  .trustLogo {
+    height: calc(3rem * var(--logo-scale, 1));
   }
 }
 
@@ -1146,7 +1473,7 @@ $mobile: 700px;
   display: block;
   margin-top: 0.5rem;
   color: $abricot;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
@@ -1155,17 +1482,22 @@ $mobile: 700px;
   left: -3rem;
   width: clamp(7rem, 12vw, 10rem);
   rotate: -8deg;
+  --tilt-delay: -1.8s;
 }
 
 // --- Stripe ---
 
+// It stops under the features (data-stack): its air above is padding, so
+// stopped at the top of the screen it stays clear of the scrolled nav.
 .stripe {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
   align-items: center;
   gap: 3rem 5rem;
   width: $content;
-  margin: clamp(6rem, 11vw, 10rem) auto 0;
+  margin: 0 auto;
+  padding-top: clamp(6rem, 11vw, 10rem);
 }
 
 .stripeText {
@@ -1206,7 +1538,6 @@ $mobile: 700px;
 
   p {
     margin-top: 1rem;
-    font-size: 0.9rem;
     line-height: 1.6;
   }
 }
@@ -1219,7 +1550,7 @@ $mobile: 700px;
   background: $orange;
 
   span {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -1247,21 +1578,52 @@ $mobile: 700px;
   right: 1.5rem;
   width: clamp(5rem, 8vw, 7rem);
   rotate: 10deg;
+  --tilt-delay: -0.6s;
 }
 
 // --- Features ---
 
-.featuresWrap {
-  padding: 0 $gutter;
+// The last sections under one mountain ridge, like the sections of the DEHORS
+// shop: the ridge (its section-creme-tuile.svg, as a mask) takes 7.5% of the
+// width, keeps its 1440px size beyond and repeats. Positioned, it slides over
+// the stopped section before it (data-stack). Its orange runs to the bottom
+// of the page, where the footer's ridge cuts into it.
+.mountain {
+  position: relative;
   margin-top: clamp(6rem, 11vw, 10rem);
+  padding-top: $ridge;
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+  background: $orange;
+  mask:
+    url('/landing/section-creme-tuile.svg') left top / min(116.666667%, 105rem) auto repeat-x,
+    linear-gradient(#000, #000) left #{$ridge} / 100% 100% no-repeat;
+
+  // Selected text turns cream on the orange, like on the shop's orange section.
+  ::selection {
+    background: $creme;
+  }
+
+  // On phones the ridge is the one of the shop's mobile mock-up, wider and shifted.
+  @media (max-width: $mobile) {
+    padding-top: $ridge-mobile;
+    mask:
+      url('/landing/section-creme.svg') 75% 0 / 135.820896% auto no-repeat,
+      linear-gradient(#000, #000) left #{$ridge-mobile} / 100% 100% no-repeat;
+  }
+}
+
+.featuresWrap {
+  padding: clamp(2.5rem, 5vw, 4rem) $gutter clamp(3rem, 6vw, 5rem);
+
+  @media (max-width: $mobile) {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
 }
 
 .features {
-  max-width: 85rem;
+  max-width: 72rem;
   margin: 0 auto;
-  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 6.25rem);
-  border-radius: 1.5rem;
-  background: $abricot;
 
   .eyebrow {
     color: $brun;
@@ -1274,48 +1636,249 @@ $mobile: 700px;
   }
 
   ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
+  // Each feature is a question of the DEHORS shop's FAQ: a rough-cut tile of
+  // see-through cream that deepens on hover.
   li {
-    display: grid;
-    grid-template-columns: minmax(0, 2.4fr) auto minmax(0, 2.6fr) auto;
-    align-items: center;
-    gap: 1rem 2rem;
-    padding: 1.4rem 1rem;
-    border-top: 1.5px solid $brun;
-    transition: background-color 0.2s ease;
-
-    &:last-child {
-      border-bottom: 1.5px solid $brun;
-    }
+    border-radius: 1.5rem;
+    background: rgb(255 247 233 / 0.35);
+    transition: background-color 0.15s ease;
 
     &:hover {
-      background: rgb(255 247 233 / 0.25);
+      background: rgb(255 247 233 / 0.55);
     }
+  }
+}
 
-    strong {
-      font-family: $display;
-      font-weight: 400;
-      font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+// The list with, on its right, the picture of the open feature, held below
+// the scrolled nav while the list goes by.
+.featuresLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  align-items: start;
+  gap: clamp(2rem, 4vw, 3.5rem);
+
+  @media (max-width: 960px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.featuresAside {
+  position: sticky;
+  top: 7.5rem;
+  padding: 0.5rem;
+
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+// The cream frame of the shop's collage photos (SectionMission.vue): a 12px
+// mat, 24px corners, cut by hand, tilted. It turns a little at each new
+// picture and grows on hover, with the bounce of the shop's collage.
+.featureFrame {
+  padding: 0.75rem;
+  border-radius: 1.5rem;
+  background: $creme;
+  rotate: var(--angle, -3deg);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: rotate 0.5s cubic-bezier(0.34, 1.32, 0.64, 1), scale 0.35s cubic-bezier(0.34, 1.32, 0.64, 1);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      scale: 1.04;
     }
+  }
+}
 
-    > span:last-of-type {
-      font-size: 0.875rem;
-      line-height: 1.5;
+.featureFrameInner {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 0.75rem;
+  background: $peche;
+}
+
+.featurePicture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 0.35s ease;
+  }
+}
+
+.featurePictureContain {
+  padding: 8%;
+  object-fit: contain;
+}
+
+.featurePictureShown {
+  opacity: 1;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: feature-picture-in 0.6s cubic-bezier(0.34, 1.32, 0.64, 1);
+  }
+}
+
+@keyframes feature-picture-in {
+  from {
+    scale: 1.08;
+  }
+}
+
+// In the answer, where the picture has no room beside the list.
+.featureFrameInline {
+  display: none;
+
+  @media (max-width: 960px) {
+    display: block;
+    width: min(15rem, 70%);
+    margin: 0.25rem 0 1.5rem 1.5rem;
+  }
+}
+
+.featureTitle {
+  font-size: inherit;
+}
+
+.featureButton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1rem 2rem;
+  width: 100%;
+  min-height: 4.5rem;
+  margin: 0;
+  padding: 1rem 1rem 1rem 1.5rem;
+  border: 0;
+  border-radius: 1.5rem;
+  color: inherit;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  // Inside, since the tile's cut would clip an outline drawn around it.
+  &:focus-visible {
+    outline-offset: -4px;
+  }
+}
+
+.featureName {
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  line-height: 1.15;
+}
+
+// The FAQ's 40px round button, cut by hand like the tiles: cream with the
+// plus, brown with the minus once open. It hops like the site's buttons.
+.featurePastille {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: $brun;
+  background: $creme;
+  mask: url('/landing/rond-dessine.svg') center / 100% 100% no-repeat;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  svg {
+    grid-area: 1 / 1;
+    transition: opacity 0.2s ease, rotate 0.25s ease;
+  }
+
+  @media (hover: hover) {
+    .featureButton:hover > & {
+      animation: button-hop 0.4s steps(1) infinite;
+    }
+  }
+}
+
+.featureMinus {
+  opacity: 0;
+  rotate: -90deg;
+}
+
+.featureOpen {
+  .featurePastille {
+    color: $creme;
+    background: $brun;
+  }
+
+  .featurePlus {
+    opacity: 0;
+    rotate: 90deg;
+  }
+
+  .featureMinus {
+    opacity: 1;
+    rotate: 0deg;
+  }
+}
+
+// The answer slides from 0 to its height (grid 0fr → 1fr). It only turns
+// invisible at the end of the closing, for the fold to stay visible.
+.featureAnswer {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.3s cubic-bezier(0.33, 1, 0.68, 1), visibility 0s linear 0.3s;
+
+  .featureOpen & {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition: grid-template-rows 0.3s cubic-bezier(0.33, 1, 0.68, 1), visibility 0s;
+  }
+}
+
+.featureFold {
+  min-height: 0;
+  overflow: hidden;
+}
+
+// The answer keeps to the button's bottom margin: the question line doesn't
+// move on opening.
+.featureText {
+  max-width: 48rem;
+  padding: 0 1rem 1rem 1.5rem;
+  line-height: 1.4;
+
+  // Underlined by its background: a text decoration doesn't reach the
+  // shaking letters, which are inline blocks.
+  a {
+    font-weight: 700;
+    background: linear-gradient($orange, $orange) left bottom / 100% 0.125rem no-repeat;
+
+    &:hover {
+      background-image: linear-gradient($brun, $brun);
     }
   }
 }
 
 .badge {
   justify-self: start;
-  min-width: 4.5rem;
-  padding: 0.3rem 0.75rem;
+  min-width: 6rem;
+  font-family: $sans;
+  padding: 0.35rem 0.9rem;
   border-radius: 0.4rem;
   background: $creme;
-  font-size: 0.65rem;
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-align: center;
@@ -1330,8 +1893,8 @@ $mobile: 700px;
 // --- Community ---
 
 .community {
-  width: $content;
-  margin: clamp(6rem, 11vw, 9rem) auto 0;
+  position: relative;
+  padding: clamp(3rem, 7vw, 6rem) $gutter 0;
   text-align: center;
 
   h2 {
@@ -1346,11 +1909,27 @@ $mobile: 700px;
   }
 }
 
+.communityWord {
+  display: inline-block;
+}
+
+// Rises in its turn (--order) the first time its block shows (useRevealOnShow).
+.revealItem {
+  transition: opacity 0.5s $ease, translate 0.9s cubic-bezier(0.34, 1.32, 0.64, 1);
+  transition-delay: calc(var(--order, 0) * 0.1s);
+
+  [data-reveal='waiting'] & {
+    opacity: 0;
+    translate: 0 0.55em;
+    transition: none;
+  }
+}
+
 // Sized by useMatchWidth to span the big number's widest line.
 .communityTagline {
   max-width: none !important;
   margin-top: 0.25rem !important;
-  color: $orange;
+  color: $creme;
   font-family: $display;
   font-size: clamp(1.5rem, 3vw, 2.5rem);
   line-height: 1.1;
@@ -1401,6 +1980,7 @@ $mobile: 700px;
   right: -2rem;
   width: clamp(5rem, 10vw, 8rem);
   rotate: 10deg;
+  --tilt-delay: -1.2s;
 }
 
 // --- CTA ---
@@ -1412,38 +1992,75 @@ $mobile: 700px;
 }
 
 .cta {
+  // The unit of the bite at its top right.
+  --bite: clamp(0.35rem, 1vw + 0.1rem, 1rem);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.75rem clamp(2rem, 4vw, 4rem);
   max-width: 85rem;
   margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 5rem);
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4.5vw, 4rem);
   border-radius: 1.5rem;
   color: $creme;
   background: $brun;
+  // Bitten at the top right: a deep round notch, and three teeth marks around
+  // it, the middle one the largest, like the shop's bitten logo. Positions from
+  // the top right corner, in --bite units.
+  mask-image:
+    radial-gradient(circle at calc(100% + var(--bite) * 0.5) calc(var(--bite) * -0.5),
+      #0000 calc(var(--bite) * 7), #000 calc(var(--bite) * 7 + 1px)),
+    radial-gradient(circle at calc(100% - var(--bite) * 1.89) calc(var(--bite) * 6.08),
+      #0000 calc(var(--bite) * 2.6), #000 calc(var(--bite) * 2.6 + 1px)),
+    radial-gradient(circle at calc(100% - var(--bite) * 4.45) calc(var(--bite) * 4.45),
+      #0000 calc(var(--bite) * 3.2), #000 calc(var(--bite) * 3.2 + 1px)),
+    radial-gradient(circle at calc(100% - var(--bite) * 6.08) calc(var(--bite) * 1.89),
+      #0000 calc(var(--bite) * 2.6), #000 calc(var(--bite) * 2.6 + 1px));
+  mask-composite: intersect;
 
-  h2 {
-    max-width: 12ch;
-    font-size: clamp(2.75rem, 7vw, 6rem);
-    line-height: 0.98;
+  @media (max-width: 960px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // The cream outlines of the DEHORS stickers, a seamless tile faint over the brown.
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: url('/landing/motif-creme.svg') center / 42rem repeat;
+    opacity: 0.12;
+    pointer-events: none;
+
+    @media (max-width: $mobile) {
+      background-size: 30rem;
+    }
   }
 }
 
-.ctaRow {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-top: 2.5rem;
+.ctaText {
+  h2 {
+    font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+    line-height: 1;
+    text-wrap: balance;
+  }
 
   p {
-    max-width: 24rem;
+    max-width: 34rem;
+    margin-top: 1rem;
+    color: rgb(255 247 233 / 0.82);
     line-height: 1.6;
   }
 }
 
-.stickerCta {
-  top: -3rem;
-  right: calc(#{$gutter} + 1rem);
-  width: clamp(5rem, 9vw, 8rem);
-  rotate: 8deg;
+// At the bottom of the card, on the right beside the text.
+.ctaActions {
+  align-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
 }
 
 // --- Footer ---
@@ -1518,6 +2135,10 @@ $mobile: 700px;
     &:hover {
       background-size: 100% 1.5px;
     }
+
+    .shaky {
+      justify-content: flex-start;
+    }
   }
 
   :focus-visible {
@@ -1529,7 +2150,11 @@ $mobile: 700px;
   width: $content;
   margin: 3rem auto 0;
   color: rgb(255 247 233 / 0.55);
-  font-size: 0.8rem;
+  font-size: 1rem;
+
+  @media (max-width: $mobile) {
+    font-size: 0.875rem;
+  }
 }
 
 // 97% of the width, cut by the bottom of the page like on the DEHORS site.
@@ -1602,17 +2227,6 @@ $mobile: 700px;
     align-items: flex-start;
   }
 
-  .features li {
-    grid-template-columns: minmax(0, 1fr) auto;
-
-    > span:last-of-type {
-      grid-column: 1 / -1;
-    }
-
-    > svg, > a {
-      display: none;
-    }
-  }
 }
 
 @media (max-width: $mobile) {
@@ -1621,6 +2235,7 @@ $mobile: 700px;
   }
 
   .nav {
+    gap: 0.5rem;
     padding-inline: 1rem;
   }
 
@@ -1629,9 +2244,9 @@ $mobile: 700px;
   }
 
   .navActions .button {
-    min-height: 2.5rem;
-    padding: 0.55rem 0.9rem;
-    font-size: 0.85rem;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.875rem;
   }
 
   // On phones the switcher shrinks to a round globe; the list still opens on tap.
@@ -1660,18 +2275,6 @@ $mobile: 700px;
     display: none;
   }
 
-  .stickerFlagLeft, .stickerFlagRight {
-    top: 6.5rem;
-  }
-
-  .stickerCamera {
-    top: auto;
-    bottom: 13rem;
-    left: auto;
-    right: 8%;
-    width: 4.5rem;
-  }
-
   .introPhotos {
     grid-template-columns: 1fr 1fr;
     margin-right: 0;
@@ -1685,13 +2288,44 @@ $mobile: 700px;
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .stepCard {
+  .stepCardBody {
     min-height: 12rem;
   }
 
   .stickerStick {
     left: auto;
     right: -0.5rem;
+  }
+
+  // The FAQ's phone layout, 20px corners; the badge goes under the name.
+  .features li {
+    border-radius: 1.25rem;
+  }
+
+  .featureButton {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "name pastille" "badge pastille";
+    gap: 0.5rem 0.75rem;
+    min-height: 4.25rem;
+    padding: 0.875rem 0.75rem 0.875rem 1.125rem;
+    border-radius: 1.25rem;
+
+    .badge {
+      grid-area: badge;
+    }
+  }
+
+  .featureName {
+    grid-area: name;
+  }
+
+  .featurePastille {
+    grid-area: pastille;
+  }
+
+  .featureText {
+    padding: 0 0.75rem 0.875rem 1.125rem;
+    line-height: 1.45;
   }
 
   .communityPhotos {
@@ -1702,7 +2336,7 @@ $mobile: 700px;
     }
   }
 
-  .ctaRow, .footerInner {
+  .footerInner {
     flex-direction: column;
     align-items: flex-start;
   }

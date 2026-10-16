@@ -1,11 +1,28 @@
 import {CSSProperties, PointerEvent, useEffect, useRef} from "react";
 import classes from "./Landing.module.scss";
 
+export interface Organizer {
+    name: string;
+    // Its white logo in /landing/organizers, used as a mask.
+    logo: string;
+    // Width over height of the logo's viewBox.
+    ratio: number;
+}
+
 const COPIES = 4;
 const MIN_NAMES_PER_COPY = 7;
 const SECONDS_PER_NAME = 6.4;
 const TINTS = ['#352924', '#e3ad92', '#ffad7d', '#f98043'];
 const DARK_TINTS = new Set(['#352924', '#f98043']);
+
+// The rows' pace, like the shop's (RelaisBenevoles.vue): the CSS animation's,
+// times its playback rate. Slowed down under the mouse, sped up by the page's
+// scroll (MOMENTUM per px scrolled per ms, MAX_MOMENTUM more at most), it eases
+// toward its target.
+const HOVER_PACE = 0.2;
+const MOMENTUM = 3;
+const MAX_MOMENTUM = 8;
+const SUPPLENESS = 0.08;
 
 const PULL = 0.1;
 const MAX_OFFSET = 6;
@@ -21,28 +38,38 @@ interface Motion {
     targetScale: number;
 }
 
-const initials = (name: string) =>
-    name.split(/\s+/).map((word) => word.match(/\p{L}/u)?.[0] ?? '').join('').toLocaleUpperCase('fr-CA');
-
-const buildRow = (names: string[], tintOffset: number) => {
-    const repeated = Array.from({length: Math.ceil(MIN_NAMES_PER_COPY / names.length)}, () => names).flat();
+const buildRow = (organizers: Organizer[], tintOffset: number) => {
+    const repeated = Array.from({length: Math.ceil(MIN_NAMES_PER_COPY / organizers.length)}, () => organizers).flat();
     return {
         duration: `${repeated.length * SECONDS_PER_NAME}s`,
-        pills: repeated.map((name, index) => {
+        pills: repeated.map((organizer, index) => {
             const tint = TINTS[(index + tintOffset) % TINTS.length];
-            return {name, initials: initials(name), tint, dark: DARK_TINTS.has(tint)};
+            return {...organizer, tint, dark: DARK_TINTS.has(tint)};
         }),
     };
 };
 
+// A wide wordmark is shorter than a squarer logo, for both to weigh the same.
+const logoStyle = (organizer: Organizer) => ({
+    '--logo': `url('/landing/organizers/${organizer.logo}.svg')`,
+    '--logo-scale': (1 / Math.sqrt(organizer.ratio)).toFixed(3),
+    aspectRatio: String(organizer.ratio),
+}) as CSSProperties;
+
 const clampOffset = (value: number) => Math.min(Math.max(value, -MAX_OFFSET), MAX_OFFSET);
 
-/** Two rows of pills scrolling in opposite directions; a hovered pill leans toward the cursor and fills with its tint. */
-export const TrustedOrganizers = ({names}: { names: string[] }) => {
+/**
+ * Two rows of the organizers' logos scrolling in opposite directions, at the
+ * pace of the shop's: slower under the mouse, faster as the page scrolls. A
+ * hovered pill leans toward the cursor and fills with its tint.
+ */
+export const TrustedOrganizers = ({organizers}: { organizers: Organizer[] }) => {
     const rows = [
-        {...buildRow(names, 0), className: classes.trustRowLeft},
-        {...buildRow(names, 1), className: classes.trustRowRight},
+        {...buildRow(organizers, 0), className: classes.trustRowLeft},
+        {...buildRow(organizers, 1), className: classes.trustRowRight},
     ];
+    const scroller = useRef<HTMLDivElement>(null);
+    const hovering = useRef(false);
     const motions = useRef(new Map<HTMLElement, Motion>());
     const hovered = useRef<HTMLElement | null>(null);
     const frame = useRef<number | null>(null);
@@ -51,6 +78,55 @@ export const TrustedOrganizers = ({names}: { names: string[] }) => {
         if (frame.current !== null) {
             cancelAnimationFrame(frame.current);
         }
+    }, []);
+
+    // The pace runs only while the rows are on screen.
+    useEffect(() => {
+        const element = scroller.current;
+        if (!element || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+        let loop: number | null = null;
+        let pace = 1;
+        let lastY = 0;
+        let lastTime = 0;
+
+        const tick = (now: number) => {
+            loop = requestAnimationFrame(tick);
+            const speed = Math.abs(window.scrollY - lastY) / Math.max(now - lastTime, 1);
+            lastY = window.scrollY;
+            lastTime = now;
+            const target = (hovering.current ? HOVER_PACE : 1) + Math.min(speed * MOMENTUM, MAX_MOMENTUM);
+            pace += (target - pace) * SUPPLENESS;
+            if (Math.abs(target - pace) < 0.001) {
+                pace = target;
+            }
+            element.querySelectorAll<HTMLElement>(`.${classes.trustTrack}`).forEach((track) => {
+                track.getAnimations().forEach((animation) => {
+                    if (animation.playbackRate !== pace) {
+                        animation.playbackRate = pace;
+                    }
+                });
+            });
+        };
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry?.isIntersecting && loop === null) {
+                lastY = window.scrollY;
+                lastTime = performance.now();
+                loop = requestAnimationFrame(tick);
+            } else if (!entry?.isIntersecting && loop !== null) {
+                cancelAnimationFrame(loop);
+                loop = null;
+            }
+        });
+        observer.observe(element);
+
+        return () => {
+            observer.disconnect();
+            if (loop !== null) {
+                cancelAnimationFrame(loop);
+            }
+        };
     }, []);
 
     const animate = () => {
@@ -95,6 +171,9 @@ export const TrustedOrganizers = ({names}: { names: string[] }) => {
     };
 
     const release = (event: PointerEvent) => {
+        if (event.type !== 'pointermove') {
+            hovering.current = false;
+        }
         const pill = hovered.current;
         if (!pill) {
             return;
@@ -142,10 +221,10 @@ export const TrustedOrganizers = ({names}: { names: string[] }) => {
     return (
         <>
             <ul className={classes.visuallyHidden}>
-                {names.map((name) => <li key={name}>{name}</li>)}
+                {organizers.map((organizer) => <li key={organizer.name}>{organizer.name}</li>)}
             </ul>
-            <div className={classes.trustScroller} aria-hidden="true" onPointerMove={follow}
-                 onPointerLeave={release} onPointerCancel={release}>
+            <div ref={scroller} className={classes.trustScroller} aria-hidden="true" onPointerMove={follow}
+                 onPointerEnter={() => hovering.current = true} onPointerLeave={release} onPointerCancel={release}>
                 {rows.map((row, rowIndex) => (
                     <div key={rowIndex} className={row.className}>
                         <div className={classes.trustTrack} style={{'--duration': row.duration} as CSSProperties}>
@@ -155,8 +234,7 @@ export const TrustedOrganizers = ({names}: { names: string[] }) => {
                                         <li key={index}>
                                             <span className={`${classes.trustPill} ${pill.dark ? classes.trustPillDark : ''}`}
                                                   style={{'--tint': pill.tint} as CSSProperties}>
-                                                <span className={classes.trustAvatar}>{pill.initials}</span>
-                                                <span className={classes.trustName}>{pill.name}</span>
+                                                <span className={classes.trustLogo} style={logoStyle(pill)}/>
                                             </span>
                                         </li>
                                     ))}

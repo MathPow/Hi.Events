@@ -15,10 +15,17 @@ const LAYERS = [
     {step: 44, amplitude: 1.2},
     {step: 14, amplitude: 0.15},
 ];
+// A round button is rough all the way around, in small bumps: a few big ones
+// would turn the circle into a polygon.
+const ROUND_LAYERS = [
+    {step: 16, amplitude: 1},
+    {step: 7, amplitude: 0.25},
+];
 const END_FADE = 1.5;
 const OUTLINES = 3;
 const SAMPLE = 6;
-const MARGIN = Math.ceil(LAYERS.reduce((sum, layer) => sum + layer.amplitude, 0) * 1.25 + 2);
+const MARGIN = Math.ceil(Math.max(...[LAYERS, ROUND_LAYERS].map((layers) =>
+    layers.reduce((sum, layer) => sum + layer.amplitude, 0))) * 1.25 + 2);
 
 type PointNormal = [x: number, y: number, nx: number, ny: number];
 
@@ -97,9 +104,20 @@ const pill = (width: number, height: number) => {
     return {perimeter, point};
 };
 
-const roughPath = (width: number, height: number, seed: number) => {
-    const {perimeter, point} = pill(width, height);
-    const noises = LAYERS.map((layer, i) => ({
+const circle = (size: number) => {
+    const r = size / 2;
+    const point = (s: number): PointNormal => {
+        const angle = s / r - Math.PI / 2;
+        const [nx, ny] = [Math.cos(angle), Math.sin(angle)];
+        return [r + r * nx, r + r * ny, nx, ny];
+    };
+
+    return {perimeter: 2 * Math.PI * r, point};
+};
+
+const roughPath = (width: number, height: number, seed: number, round: boolean) => {
+    const {perimeter, point} = round ? circle(Math.min(width, height)) : pill(width, height);
+    const noises = (round ? ROUND_LAYERS : LAYERS).map((layer, i) => ({
         amplitude: layer.amplitude,
         noise: loopingNoise(perimeter, layer.step, random(seed + i * 7919)),
     }));
@@ -109,7 +127,7 @@ const roughPath = (width: number, height: number, seed: number) => {
     for (let j = 0; j < count; j++) {
         const s = (j / count) * perimeter;
         const [x, y, nx, ny] = point(s);
-        const offset = endFade(x, width, height)
+        const offset = (round ? 1 : endFade(x, width, height))
             * noises.reduce((sum, {amplitude, noise}) => sum + amplitude * noise(s), 0);
         points.push([MARGIN + x + nx * offset, MARGIN + y + ny * offset]);
     }
@@ -128,8 +146,11 @@ const roughPath = (width: number, height: number, seed: number) => {
 const asMask = (width: string, height: string, path: string) =>
     `url("data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path d="${path}"/></svg>`)}")`;
 
-/** Callback ref that draws the rough outlines for the element and redraws them when it resizes. */
-export const useRoughButton = <T extends HTMLElement>() => {
+/**
+ * Callback ref that draws the rough outlines for the element and redraws them
+ * when it resizes; `round` cuts a circle instead of a pill.
+ */
+export const useRoughButton = <T extends HTMLElement>({round = false}: { round?: boolean } = {}) => {
     const observer = useRef<ResizeObserver | null>(null);
     const seed = useRef(Math.floor(Math.random() * 2 ** 32));
 
@@ -155,9 +176,9 @@ export const useRoughButton = <T extends HTMLElement>() => {
             const [w, h] = [(width + 2 * MARGIN).toFixed(1), (height + 2 * MARGIN).toFixed(1)];
             for (let i = 0; i < OUTLINES; i++) {
                 element.style.setProperty(`--rough-shape${i ? `-${i + 1}` : ''}`,
-                    asMask(w, h, roughPath(width, height, seed.current + i * 104729)));
+                    asMask(w, h, roughPath(width, height, seed.current + i * 104729, round)));
             }
         });
         observer.current.observe(element);
-    }, []);
+    }, [round]);
 };
