@@ -33,6 +33,9 @@ class EventSettingsResourcePublic extends JsonResource
 
             'product_page_message' => $this->getProductPageMessage(),
             'continue_button_text' => $this->getContinueButtonText(),
+            'product_info_message' => $this->getProductInfoMessage(),
+            'product_info_button_text' => $this->getProductInfoButtonText(),
+            'product_info_button_url' => $this->getProductInfoButtonUrl(),
             'required_attendee_details' => $this->getRequireAttendeeDetails(),
             'attendee_details_collection_method' => $this->getAttendeeDetailsCollectionMethod(),
             'email_footer_message' => $this->getEmailFooterMessage(),

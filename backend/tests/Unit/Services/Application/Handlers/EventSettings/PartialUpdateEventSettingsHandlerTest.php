@@ -39,6 +39,34 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
         $this->assertFalse($dto->allow_copy_details_to_all_attendees);
     }
 
+    public function test_omitted_product_info_keys_keep_existing_values(): void
+    {
+        $dto = $this->runPartialUpdate(
+            existingValue: true,
+            settings: [],
+        );
+
+        $this->assertSame('<p>Existing message</p>', $dto->product_info_message);
+        $this->assertSame('Donate', $dto->product_info_button_text);
+        $this->assertSame('https://example.com/donate', $dto->product_info_button_url);
+    }
+
+    public function test_explicit_null_product_info_values_clear_the_block(): void
+    {
+        $dto = $this->runPartialUpdate(
+            existingValue: true,
+            settings: [
+                'product_info_message' => null,
+                'product_info_button_text' => null,
+                'product_info_button_url' => null,
+            ],
+        );
+
+        $this->assertNull($dto->product_info_message);
+        $this->assertNull($dto->product_info_button_text);
+        $this->assertNull($dto->product_info_button_url);
+    }
+
     /**
      * Drives the partial handler and returns the UpdateEventSettingsDTO it forwards
      * to the (mocked) full handler, so we can assert how the field was resolved.
@@ -47,6 +75,9 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
     {
         $existingSettings = (new EventSettingDomainObject())
             ->setAllowCopyDetailsToAllAttendees($existingValue)
+            ->setProductInfoMessage('<p>Existing message</p>')
+            ->setProductInfoButtonText('Donate')
+            ->setProductInfoButtonUrl('https://example.com/donate')
             ->setPaymentProviders([]);
 
         $repository = Mockery::mock(EventSettingsRepositoryInterface::class);

@@ -43,6 +43,10 @@ class UpdateEventSettingsHandler
                     'attendee_details_collection_method' => $settings->attendee_details_collection_method->name,
                     'continue_button_text' => trim($settings->continue_button_text),
 
+                    'product_info_message' => $this->purifier->purify($settings->product_info_message),
+                    'product_info_button_text' => $this->trimToNull($settings->product_info_button_text),
+                    'product_info_button_url' => $this->trimToNull($settings->product_info_button_url),
+
                     'homepage_background_color' => $settings->homepage_background_color,
                     'homepage_primary_color' => $settings->homepage_primary_color,
                     'homepage_primary_text_color' => $settings->homepage_primary_text_color,
@@ -126,5 +130,12 @@ class UpdateEventSettingsHandler
         }
 
         return $result;
+    }
+
+    private function trimToNull(?string $value): ?string
+    {
+        $trimmed = trim((string)$value);
+
+        return $trimmed === '' ? null : $trimmed;
     }
 }

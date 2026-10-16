@@ -70,6 +70,9 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const ALLOW_COPY_DETAILS_TO_ALL_ATTENDEES = 'allow_copy_details_to_all_attendees';
     final public const PASS_PROCESSING_FEE_TO_BUYER = 'pass_processing_fee_to_buyer';
     final public const DEPOSIT_INSTRUCTIONS = 'deposit_instructions';
+    final public const PRODUCT_INFO_MESSAGE = 'product_info_message';
+    final public const PRODUCT_INFO_BUTTON_TEXT = 'product_info_button_text';
+    final public const PRODUCT_INFO_BUTTON_URL = 'product_info_button_url';
 
     protected int $id;
     protected int $event_id;
@@ -131,6 +134,9 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected bool $allow_copy_details_to_all_attendees = true;
     protected bool $pass_processing_fee_to_buyer = false;
     protected ?string $deposit_instructions = null;
+    protected ?string $product_info_message = null;
+    protected ?string $product_info_button_text = null;
+    protected ?string $product_info_button_url = null;
 
     public function toArray(): array
     {
@@ -195,6 +201,9 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'allow_copy_details_to_all_attendees' => $this->allow_copy_details_to_all_attendees ?? null,
                     'pass_processing_fee_to_buyer' => $this->pass_processing_fee_to_buyer ?? null,
                     'deposit_instructions' => $this->deposit_instructions ?? null,
+                    'product_info_message' => $this->product_info_message ?? null,
+                    'product_info_button_text' => $this->product_info_button_text ?? null,
+                    'product_info_button_url' => $this->product_info_button_url ?? null,
                 ];
     }
 
@@ -857,5 +866,38 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getDepositInstructions(): ?string
     {
         return $this->deposit_instructions;
+    }
+
+    public function setProductInfoMessage(?string $product_info_message): self
+    {
+        $this->product_info_message = $product_info_message;
+        return $this;
+    }
+
+    public function getProductInfoMessage(): ?string
+    {
+        return $this->product_info_message;
+    }
+
+    public function setProductInfoButtonText(?string $product_info_button_text): self
+    {
+        $this->product_info_button_text = $product_info_button_text;
+        return $this;
+    }
+
+    public function getProductInfoButtonText(): ?string
+    {
+        return $this->product_info_button_text;
+    }
+
+    public function setProductInfoButtonUrl(?string $product_info_button_url): self
+    {
+        $this->product_info_button_url = $product_info_button_url;
+        return $this;
+    }
+
+    public function getProductInfoButtonUrl(): ?string
+    {
+        return $this->product_info_button_url;
     }
 }

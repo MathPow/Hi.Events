@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {Button, NumberInput, Switch} from "@mantine/core";
+import {Button, NumberInput, Paper, Switch, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useParams} from "react-router";
 import {useEffect} from "react";
@@ -13,7 +13,7 @@ import {Editor} from "../../../../../common/Editor";
 import {HeadingWithDescription} from "../../../../../common/Card/CardHeading";
 import {isEmptyHtml} from "../../../../../../utilites/helpers.ts";
 import {CustomSelect, ItemProps} from "../../../../../common/CustomSelect";
-import {IconUser, IconUsers} from "@tabler/icons-react";
+import {IconLink, IconUser, IconUsers} from "@tabler/icons-react";
 
 export const HomepageAndCheckoutSettings = () => {
     const {eventId} = useParams();
@@ -23,6 +23,9 @@ export const HomepageAndCheckoutSettings = () => {
         initialValues: {
             pre_checkout_message: '',
             post_checkout_message: '',
+            product_info_message: '',
+            product_info_button_text: '',
+            product_info_button_url: '',
             order_timeout_in_minutes: 15,
             attendee_details_collection_method: 'PER_TICKET' as 'PER_TICKET' | 'PER_ORDER',
             show_marketing_opt_in: true,
@@ -32,6 +35,9 @@ export const HomepageAndCheckoutSettings = () => {
             ...values,
             pre_checkout_message: isEmptyHtml(values.pre_checkout_message) ? null : values.pre_checkout_message,
             post_checkout_message: isEmptyHtml(values.post_checkout_message) ? null : values.post_checkout_message,
+            product_info_message: isEmptyHtml(values.product_info_message) ? null : values.product_info_message,
+            product_info_button_text: values.product_info_button_text.trim() || null,
+            product_info_button_url: values.product_info_button_url.trim() || null,
         }),
     });
 
@@ -56,6 +62,9 @@ export const HomepageAndCheckoutSettings = () => {
             form.setValues({
                 pre_checkout_message: eventSettingsQuery.data.pre_checkout_message,
                 post_checkout_message: eventSettingsQuery.data.post_checkout_message,
+                product_info_message: eventSettingsQuery.data.product_info_message || '',
+                product_info_button_text: eventSettingsQuery.data.product_info_button_text || '',
+                product_info_button_url: eventSettingsQuery.data.product_info_button_url || '',
                 order_timeout_in_minutes: eventSettingsQuery.data.order_timeout_in_minutes,
                 attendee_details_collection_method: eventSettingsQuery.data.attendee_details_collection_method || 'PER_TICKET',
                 show_marketing_opt_in: eventSettingsQuery.data.show_marketing_opt_in ?? true,
@@ -108,6 +117,35 @@ export const HomepageAndCheckoutSettings = () => {
                         )}
                         onChange={(value) => form.setFieldValue('post_checkout_message', value)}
                     />
+
+                    <Paper withBorder p="md" radius="md" mb="md">
+                        <Text size="lg" fw={500} mb="xs">{t`Information block`}</Text>
+                        <Text size="sm" c="dimmed" mb="md">
+                            {t`Shown below the promo code field on the ticket selection. Use it to share important information or invite buyers to make an extra donation on another platform.`}
+                        </Text>
+                        <Editor
+                            editorType={'simple'}
+                            label={t`Message`}
+                            value={form.values.product_info_message || ''}
+                            error={form.errors.product_info_message as string}
+                            onChange={(value) => form.setFieldValue('product_info_message', value)}
+                        />
+                        <TextInput
+                            label={t`Button text`}
+                            description={t`Leave the button text and link empty to show the message without a button.`}
+                            placeholder={t`e.g. Make a donation`}
+                            maxLength={100}
+                            {...form.getInputProps('product_info_button_text')}
+                        />
+                        <TextInput
+                            label={t`Button link`}
+                            description={t`Opens in a new tab.`}
+                            placeholder={'https://'}
+                            type={'url'}
+                            leftSection={<IconLink size={16}/>}
+                            {...form.getInputProps('product_info_button_url')}
+                        />
+                    </Paper>
 
                     <CustomSelect
                         optionList={attendeeCollectionOptions}

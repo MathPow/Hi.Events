@@ -73,4 +73,74 @@ class UpdateEventSettingsRequestTest extends TestCase
 
         $this->assertFalse($validator->errors()->has('allow_copy_details_to_all_attendees'));
     }
+
+    public function test_product_info_block_accepts_message_with_button(): void
+    {
+        $validator = Validator::make(
+            [
+                'product_info_message' => '<p>Support the cause with an extra donation.</p>',
+                'product_info_button_text' => 'Donate',
+                'product_info_button_url' => 'https://example.com/donate',
+            ],
+            (new UpdateEventSettingsRequest)->rules()
+        );
+
+        $this->assertFalse($validator->errors()->hasAny([
+            'product_info_message',
+            'product_info_button_text',
+            'product_info_button_url',
+        ]));
+    }
+
+    public function test_product_info_block_accepts_message_without_button(): void
+    {
+        $validator = Validator::make(
+            [
+                'product_info_message' => '<p>Bring a headlamp.</p>',
+                'product_info_button_text' => null,
+                'product_info_button_url' => null,
+            ],
+            (new UpdateEventSettingsRequest)->rules()
+        );
+
+        $this->assertFalse($validator->errors()->hasAny([
+            'product_info_button_text',
+            'product_info_button_url',
+        ]));
+    }
+
+    public function test_product_info_button_url_requires_button_text(): void
+    {
+        $validator = Validator::make(
+            ['product_info_button_url' => 'https://example.com/donate'],
+            (new UpdateEventSettingsRequest)->rules()
+        );
+
+        $this->assertTrue($validator->errors()->has('product_info_button_text'));
+    }
+
+    public function test_product_info_button_text_requires_button_url(): void
+    {
+        $validator = Validator::make(
+            ['product_info_button_text' => 'Donate'],
+            (new UpdateEventSettingsRequest)->rules()
+        );
+
+        $this->assertTrue($validator->errors()->has('product_info_button_url'));
+    }
+
+    public function test_product_info_button_url_rejects_non_http_schemes(): void
+    {
+        foreach (['javascript:alert(1)', 'ftp://example.com/file', 'not a url'] as $url) {
+            $validator = Validator::make(
+                ['product_info_button_text' => 'Donate', 'product_info_button_url' => $url],
+                (new UpdateEventSettingsRequest)->rules()
+            );
+
+            $this->assertTrue(
+                $validator->errors()->has('product_info_button_url'),
+                "Expected '{$url}' to be rejected"
+            );
+        }
+    }
 }

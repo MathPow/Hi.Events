@@ -35,7 +35,7 @@ import {ProductAvailabilityMessage} from "../../../common/ProductPriceAvailabili
 import {PoweredByFooter} from "../../../common/PoweredByFooter";
 import {eventsClientPublic} from "../../../../api/event.client.ts";
 import {promoCodeClientPublic} from "../../../../api/promo-code.client.ts";
-import {IconChevronRight, IconTag, IconX} from "@tabler/icons-react"
+import {IconChevronRight, IconExternalLink, IconTag, IconX} from "@tabler/icons-react"
 import {getSessionIdentifier} from "../../../../utilites/sessionIdentifier.ts";
 import {Constants} from "../../../../constants.ts";
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
@@ -314,6 +314,11 @@ const SelectProducts = (props: SelectProductsProps) => {
         || selectedProductQuantitySum === 0
         || props.widgetMode === 'preview'
         || products?.every(product => product.is_sold_out);
+
+    const productInfoMessage = event?.settings?.product_info_message;
+    const productInfoButtonText = event?.settings?.product_info_button_text;
+    const productInfoButtonUrl = event?.settings?.product_info_button_url;
+    const hasProductInfoButton = !!productInfoButtonText && !!productInfoButtonUrl;
 
     let productIndex = 0;
 
@@ -616,6 +621,25 @@ const SelectProducts = (props: SelectProductsProps) => {
                             </>
                         )}
                     </div>}
+
+                    {(productInfoMessage || hasProductInfoButton) && (
+                        <div className={'hi-product-info-block'}>
+                            {productInfoMessage && (
+                                <div className={'hi-product-info-message'}
+                                     dangerouslySetInnerHTML={{__html: productInfoMessage}}/>
+                            )}
+                            {hasProductInfoButton && (
+                                <Button component={'a'}
+                                        href={productInfoButtonUrl as string}
+                                        target={'_blank'}
+                                        rel={'noopener noreferrer'}
+                                        className={'hi-product-info-button'}
+                                        rightSection={<IconExternalLink stroke={1.5} size={16}/>}>
+                                    {productInfoButtonText}
+                                </Button>
+                            )}
+                        </div>
+                    )}
 
                     <div className={'hi-footer-row'}>
                         {event?.settings?.product_page_message && (

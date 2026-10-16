@@ -151,9 +151,83 @@ class UpdateEventSettingsHandlerTest extends TestCase
         );
     }
 
+    public function testPurifiesProductInfoMessageAndNormalisesButtonFields(): void
+    {
+        Event::fake();
+
+        $purifier = Mockery::mock(HtmlPurifierService::class);
+        $purifier->shouldReceive('purify')
+            ->with('<p>Donate</p><script>alert(1)</script>')
+            ->once()
+            ->andReturn('<p>Donate</p>');
+        $purifier->shouldReceive('purify')->andReturnUsing(fn($v) => $v);
+
+        $handler = new UpdateEventSettingsHandler(
+            eventSettingsRepository: $this->eventSettingsRepository,
+            purifier: $purifier,
+            databaseManager: $this->databaseManager,
+        );
+
+        $this->eventSettingsRepository
+            ->shouldReceive('findFirstWhere')
+            ->with(['event_id' => 1])
+            ->twice()
+            ->andReturn(new EventSettingDomainObject());
+
+        $captured = null;
+        $this->eventSettingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->andReturnUsing(function (array $attributes) use (&$captured) {
+                $captured = $attributes;
+                return 1;
+            });
+
+        $handler->handle($this->createDTO(
+            product_info_message: '<p>Donate</p><script>alert(1)</script>',
+            product_info_button_text: '  Make a donation  ',
+            product_info_button_url: ' https://example.com/donate ',
+        ));
+
+        $this->assertSame('<p>Donate</p>', $captured['product_info_message']);
+        $this->assertSame('Make a donation', $captured['product_info_button_text']);
+        $this->assertSame('https://example.com/donate', $captured['product_info_button_url']);
+    }
+
+    public function testStoresBlankProductInfoButtonFieldsAsNull(): void
+    {
+        Event::fake();
+
+        $this->eventSettingsRepository
+            ->shouldReceive('findFirstWhere')
+            ->with(['event_id' => 1])
+            ->twice()
+            ->andReturn(new EventSettingDomainObject());
+
+        $captured = null;
+        $this->eventSettingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->andReturnUsing(function (array $attributes) use (&$captured) {
+                $captured = $attributes;
+                return 1;
+            });
+
+        $this->handler->handle($this->createDTO(
+            product_info_button_text: '   ',
+            product_info_button_url: null,
+        ));
+
+        $this->assertNull($captured['product_info_button_text']);
+        $this->assertNull($captured['product_info_button_url']);
+    }
+
     private function createDTO(
-        ?bool $waitlist_auto_process = null,
-        bool  $allow_copy_details_to_all_attendees = true,
+        ?bool   $waitlist_auto_process = null,
+        bool    $allow_copy_details_to_all_attendees = true,
+        ?string $product_info_message = null,
+        ?string $product_info_button_text = null,
+        ?string $product_info_button_url = null,
     ): UpdateEventSettingsDTO
     {
         return UpdateEventSettingsDTO::fromArray([
@@ -182,6 +256,9 @@ class UpdateEventSettingsHandlerTest extends TestCase
             'allow_copy_details_to_all_attendees' => $allow_copy_details_to_all_attendees,
             'waitlist_auto_process' => $waitlist_auto_process,
             'waitlist_offer_timeout_minutes' => 60,
+            'product_info_message' => $product_info_message,
+            'product_info_button_text' => $product_info_button_text,
+            'product_info_button_url' => $product_info_button_url,
         ]);
     }
 }

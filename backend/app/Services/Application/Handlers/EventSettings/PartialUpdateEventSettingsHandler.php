@@ -56,6 +56,15 @@ class PartialUpdateEventSettingsHandler
                 'continue_button_text' => array_key_exists('continue_button_text', $eventSettingsDTO->settings)
                     ? $eventSettingsDTO->settings['continue_button_text']
                     : $existingSettings->getContinueButtonText(),
+                'product_info_message' => array_key_exists('product_info_message', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['product_info_message']
+                    : $existingSettings->getProductInfoMessage(),
+                'product_info_button_text' => array_key_exists('product_info_button_text', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['product_info_button_text']
+                    : $existingSettings->getProductInfoButtonText(),
+                'product_info_button_url' => array_key_exists('product_info_button_url', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['product_info_button_url']
+                    : $existingSettings->getProductInfoButtonUrl(),
 
                 'homepage_background_color' => $eventSettingsDTO->settings['homepage_background_color'] ?? $existingSettings->getHomepageBackgroundColor(),
                 'homepage_primary_color' => $eventSettingsDTO->settings['homepage_primary_color'] ?? $existingSettings->getHomepagePrimaryColor(),

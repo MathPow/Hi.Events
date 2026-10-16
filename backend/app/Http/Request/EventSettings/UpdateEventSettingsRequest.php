@@ -23,6 +23,10 @@ class UpdateEventSettingsRequest extends BaseRequest
             'email_footer_message' => ['string', "nullable"],
 
             'continue_button_text' => ['string', 'nullable', 'max:100'],
+
+            'product_info_message' => ['string', 'nullable', 'max:10000'],
+            'product_info_button_text' => ['string', 'nullable', 'max:100', 'required_with:product_info_button_url'],
+            'product_info_button_url' => ['nullable', 'url:http,https', 'max:2048', 'required_with:product_info_button_text'],
             'support_email' => ['email', 'nullable'],
             'require_attendee_details' => ['boolean'],
             'attendee_details_collection_method' => [Rule::in(AttendeeDetailsCollectionMethod::valuesArray())],
@@ -135,6 +139,9 @@ class UpdateEventSettingsRequest extends BaseRequest
             'location_details.country.required_with' => __('The country field is required'),
             'location_details.country.max' => __('The country field should be a 2 character ISO 3166 code'),
             'price_display_mode.in' => 'The price display mode must be either inclusive or exclusive.',
+            'product_info_button_text.required_with' => __('The button text is required when a button link is set.'),
+            'product_info_button_url.required_with' => __('The button link is required when a button text is set.'),
+            'product_info_button_url.url' => __('The button link must be a valid URL starting with http:// or https://.'),
 
             // Payment messages
             'payment_providers.*.in' => __('Invalid payment provider selected.'),
