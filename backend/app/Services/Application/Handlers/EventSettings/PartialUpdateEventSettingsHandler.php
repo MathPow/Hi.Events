@@ -65,6 +65,9 @@ class PartialUpdateEventSettingsHandler
                 'product_info_button_url' => array_key_exists('product_info_button_url', $eventSettingsDTO->settings)
                     ? $eventSettingsDTO->settings['product_info_button_url']
                     : $existingSettings->getProductInfoButtonUrl(),
+                'product_info_icon' => array_key_exists('product_info_icon', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['product_info_icon']
+                    : $existingSettings->getProductInfoIcon(),
 
                 'homepage_background_color' => $eventSettingsDTO->settings['homepage_background_color'] ?? $existingSettings->getHomepageBackgroundColor(),
                 'homepage_primary_color' => $eventSettingsDTO->settings['homepage_primary_color'] ?? $existingSettings->getHomepagePrimaryColor(),

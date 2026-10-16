@@ -39,6 +39,7 @@ import {IconChevronRight, IconExternalLink, IconTag, IconX} from "@tabler/icons-
 import {getSessionIdentifier} from "../../../../utilites/sessionIdentifier.ts";
 import {Constants} from "../../../../constants.ts";
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
+import {getProductInfoIcon} from "../../../../constants/productInfoIcons.ts";
 import {CHECKOUT_PREFILL_PARAM_KEYS} from "../../../../hooks/useCheckoutPrefill.ts";
 
 const AFFILIATE_EXPIRY_DAYS = 30;
@@ -319,6 +320,7 @@ const SelectProducts = (props: SelectProductsProps) => {
     const productInfoButtonText = event?.settings?.product_info_button_text;
     const productInfoButtonUrl = event?.settings?.product_info_button_url;
     const hasProductInfoButton = !!productInfoButtonText && !!productInfoButtonUrl;
+    const ProductInfoIcon = getProductInfoIcon(event?.settings?.product_info_icon);
 
     let productIndex = 0;
 
@@ -625,8 +627,12 @@ const SelectProducts = (props: SelectProductsProps) => {
                     {(productInfoMessage || hasProductInfoButton) && (
                         <div className={'hi-product-info-block'}>
                             {productInfoMessage && (
-                                <div className={'hi-product-info-message'}
-                                     dangerouslySetInnerHTML={{__html: productInfoMessage}}/>
+                                <div className={'hi-product-info-row'}>
+                                    <ProductInfoIcon className={'hi-product-info-icon'} size={20} stroke={1.75}
+                                                     aria-hidden="true"/>
+                                    <div className={'hi-product-info-message'}
+                                         dangerouslySetInnerHTML={{__html: productInfoMessage}}/>
+                                </div>
                             )}
                             {hasProductInfoButton && (
                                 <Button component={'a'}

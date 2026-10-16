@@ -206,6 +206,7 @@ export interface EventSettings {
     product_info_message?: string | null;
     product_info_button_text?: string | null;
     product_info_button_url?: string | null;
+    product_info_icon?: string | null;
     post_checkout_message: string;
     support_email?: string;
     notify_organizer_of_new_orders: boolean;

@@ -7,6 +7,7 @@ use HiEvents\DomainObjects\Enums\HomepageBackgroundType;
 use HiEvents\DomainObjects\Enums\HomepageFontFamily;
 use HiEvents\DomainObjects\Enums\PaymentProviders;
 use HiEvents\DomainObjects\Enums\PriceDisplayMode;
+use HiEvents\DomainObjects\Enums\ProductInfoIcon;
 use HiEvents\DomainObjects\Enums\TicketDateDisplayMode;
 use HiEvents\Http\Request\BaseRequest;
 use HiEvents\Validators\Rules\RulesHelper;
@@ -27,6 +28,7 @@ class UpdateEventSettingsRequest extends BaseRequest
             'product_info_message' => ['string', 'nullable', 'max:10000'],
             'product_info_button_text' => ['string', 'nullable', 'max:100', 'required_with:product_info_button_url'],
             'product_info_button_url' => ['nullable', 'url:http,https', 'max:2048', 'required_with:product_info_button_text'],
+            'product_info_icon' => ['nullable', 'string', Rule::in(ProductInfoIcon::valuesArray())],
             'support_email' => ['email', 'nullable'],
             'require_attendee_details' => ['boolean'],
             'attendee_details_collection_method' => [Rule::in(AttendeeDetailsCollectionMethod::valuesArray())],

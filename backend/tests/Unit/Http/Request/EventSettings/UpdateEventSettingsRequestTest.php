@@ -143,4 +143,26 @@ class UpdateEventSettingsRequestTest extends TestCase
             );
         }
     }
+
+    public function test_product_info_icon_accepts_known_icons_and_null(): void
+    {
+        foreach (['heart', 'gift', null] as $icon) {
+            $validator = Validator::make(
+                ['product_info_icon' => $icon],
+                (new UpdateEventSettingsRequest)->rules()
+            );
+
+            $this->assertFalse($validator->errors()->has('product_info_icon'));
+        }
+    }
+
+    public function test_product_info_icon_rejects_unknown_icon(): void
+    {
+        $validator = Validator::make(
+            ['product_info_icon' => 'skull'],
+            (new UpdateEventSettingsRequest)->rules()
+        );
+
+        $this->assertTrue($validator->errors()->has('product_info_icon'));
+    }
 }

@@ -37,12 +37,14 @@ class EventSettingsResourcePublicTest extends TestCase
         $settings = (new EventSettingDomainObject())
             ->setProductInfoMessage('<p>Support the cause</p>')
             ->setProductInfoButtonText('Donate')
-            ->setProductInfoButtonUrl('https://example.com/donate');
+            ->setProductInfoButtonUrl('https://example.com/donate')
+            ->setProductInfoIcon('heart');
 
         $resource = (new EventSettingsResourcePublic($settings))->toArray(Request::create('/'));
 
         $this->assertSame('<p>Support the cause</p>', $resource['product_info_message']);
         $this->assertSame('Donate', $resource['product_info_button_text']);
         $this->assertSame('https://example.com/donate', $resource['product_info_button_url']);
+        $this->assertSame('heart', $resource['product_info_icon']);
     }
 }

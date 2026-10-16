@@ -73,6 +73,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const PRODUCT_INFO_MESSAGE = 'product_info_message';
     final public const PRODUCT_INFO_BUTTON_TEXT = 'product_info_button_text';
     final public const PRODUCT_INFO_BUTTON_URL = 'product_info_button_url';
+    final public const PRODUCT_INFO_ICON = 'product_info_icon';
 
     protected int $id;
     protected int $event_id;
@@ -137,6 +138,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?string $product_info_message = null;
     protected ?string $product_info_button_text = null;
     protected ?string $product_info_button_url = null;
+    protected ?string $product_info_icon = null;
 
     public function toArray(): array
     {
@@ -204,6 +206,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'product_info_message' => $this->product_info_message ?? null,
                     'product_info_button_text' => $this->product_info_button_text ?? null,
                     'product_info_button_url' => $this->product_info_button_url ?? null,
+                    'product_info_icon' => $this->product_info_icon ?? null,
                 ];
     }
 
@@ -899,5 +902,16 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getProductInfoButtonUrl(): ?string
     {
         return $this->product_info_button_url;
+    }
+
+    public function setProductInfoIcon(?string $product_info_icon): self
+    {
+        $this->product_info_icon = $product_info_icon;
+        return $this;
+    }
+
+    public function getProductInfoIcon(): ?string
+    {
+        return $this->product_info_icon;
     }
 }

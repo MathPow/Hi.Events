@@ -281,16 +281,31 @@
     border-radius: 8px;
     background-color: color-mix(in srgb, var(--widget-secondary-color, var(--hi-primary)) 10%, var(--widget-background-color, var(--hi-color-white)));
 
-    .hi-product-info-message {
+    .hi-product-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
       width: 100%;
+    }
+
+    .hi-product-info-icon {
+      flex-shrink: 0;
+      margin-top: 1px;
+      color: var(--widget-secondary-color, var(--hi-primary));
+    }
+
+    .hi-product-info-message {
+      flex: 1;
+      min-width: 0;
       overflow-wrap: anywhere;
 
+      // The editor writes its paragraph margins inline, which would push the text below the icon.
       > :first-child {
-        margin-top: 0;
+        margin-top: 0 !important;
       }
 
       > :last-child {
-        margin-bottom: 0;
+        margin-bottom: 0 !important;
       }
     }
 

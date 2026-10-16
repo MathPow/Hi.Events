@@ -61,6 +61,7 @@ class UpdateEventSettingsDTO extends BaseDTO
         public readonly ?string                 $product_info_message = null,
         public readonly ?string                 $product_info_button_text = null,
         public readonly ?string                 $product_info_button_url = null,
+        public readonly ?string                 $product_info_icon = null,
 
         // Invoice settings
         public readonly bool                    $enable_invoicing = false,

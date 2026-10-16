@@ -46,6 +46,7 @@ class UpdateEventSettingsHandler
                     'product_info_message' => $this->purifier->purify($settings->product_info_message),
                     'product_info_button_text' => $this->trimToNull($settings->product_info_button_text),
                     'product_info_button_url' => $this->trimToNull($settings->product_info_button_url),
+                    'product_info_icon' => $settings->product_info_icon,
 
                     'homepage_background_color' => $settings->homepage_background_color,
                     'homepage_primary_color' => $settings->homepage_primary_color,

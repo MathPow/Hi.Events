@@ -49,6 +49,7 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
         $this->assertSame('<p>Existing message</p>', $dto->product_info_message);
         $this->assertSame('Donate', $dto->product_info_button_text);
         $this->assertSame('https://example.com/donate', $dto->product_info_button_url);
+        $this->assertSame('gift', $dto->product_info_icon);
     }
 
     public function test_explicit_null_product_info_values_clear_the_block(): void
@@ -59,12 +60,14 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
                 'product_info_message' => null,
                 'product_info_button_text' => null,
                 'product_info_button_url' => null,
+                'product_info_icon' => null,
             ],
         );
 
         $this->assertNull($dto->product_info_message);
         $this->assertNull($dto->product_info_button_text);
         $this->assertNull($dto->product_info_button_url);
+        $this->assertNull($dto->product_info_icon);
     }
 
     /**
@@ -78,6 +81,7 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
             ->setProductInfoMessage('<p>Existing message</p>')
             ->setProductInfoButtonText('Donate')
             ->setProductInfoButtonUrl('https://example.com/donate')
+            ->setProductInfoIcon('gift')
             ->setPaymentProviders([]);
 
         $repository = Mockery::mock(EventSettingsRepositoryInterface::class);

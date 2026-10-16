@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {Button, NumberInput, Paper, Switch, Text, TextInput} from "@mantine/core";
+import {Button, Center, Input, NumberInput, Paper, SegmentedControl, Switch, Text, TextInput, Tooltip, VisuallyHidden} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useParams} from "react-router";
 import {useEffect} from "react";
@@ -14,6 +14,12 @@ import {HeadingWithDescription} from "../../../../../common/Card/CardHeading";
 import {isEmptyHtml} from "../../../../../../utilites/helpers.ts";
 import {CustomSelect, ItemProps} from "../../../../../common/CustomSelect";
 import {IconLink, IconUser, IconUsers} from "@tabler/icons-react";
+import {
+    DEFAULT_PRODUCT_INFO_ICON,
+    getProductInfoIconLabels,
+    PRODUCT_INFO_ICONS,
+    ProductInfoIconKey,
+} from "../../../../../../constants/productInfoIcons.ts";
 
 export const HomepageAndCheckoutSettings = () => {
     const {eventId} = useParams();
@@ -26,6 +32,7 @@ export const HomepageAndCheckoutSettings = () => {
             product_info_message: '',
             product_info_button_text: '',
             product_info_button_url: '',
+            product_info_icon: DEFAULT_PRODUCT_INFO_ICON as string,
             order_timeout_in_minutes: 15,
             attendee_details_collection_method: 'PER_TICKET' as 'PER_TICKET' | 'PER_ORDER',
             show_marketing_opt_in: true,
@@ -55,6 +62,21 @@ export const HomepageAndCheckoutSettings = () => {
             description: t`Use order details for all attendees. Attendee names and emails will match the buyer's information.`,
         },
     ];
+    const iconLabels = getProductInfoIconLabels();
+    const iconOptions = (Object.keys(PRODUCT_INFO_ICONS) as ProductInfoIconKey[]).map((key) => {
+        const Icon = PRODUCT_INFO_ICONS[key];
+        return {
+            value: key,
+            label: (
+                <Tooltip label={iconLabels[key]} withArrow openDelay={300}>
+                    <Center>
+                        <Icon size={18} stroke={1.75}/>
+                        <VisuallyHidden>{iconLabels[key]}</VisuallyHidden>
+                    </Center>
+                </Tooltip>
+            ),
+        };
+    });
     const formErrorHandle = useFormErrorResponseHandler();
 
     useEffect(() => {
@@ -65,6 +87,7 @@ export const HomepageAndCheckoutSettings = () => {
                 product_info_message: eventSettingsQuery.data.product_info_message || '',
                 product_info_button_text: eventSettingsQuery.data.product_info_button_text || '',
                 product_info_button_url: eventSettingsQuery.data.product_info_button_url || '',
+                product_info_icon: eventSettingsQuery.data.product_info_icon || DEFAULT_PRODUCT_INFO_ICON,
                 order_timeout_in_minutes: eventSettingsQuery.data.order_timeout_in_minutes,
                 attendee_details_collection_method: eventSettingsQuery.data.attendee_details_collection_method || 'PER_TICKET',
                 show_marketing_opt_in: eventSettingsQuery.data.show_marketing_opt_in ?? true,
@@ -121,7 +144,7 @@ export const HomepageAndCheckoutSettings = () => {
                     <Paper withBorder p="md" radius="md" mb="md">
                         <Text size="lg" fw={500} mb="xs">{t`Information block`}</Text>
                         <Text size="sm" c="dimmed" mb="md">
-                            {t`Shown below the promo code field on the ticket selection. Use it to share important information or invite buyers to make an extra donation on another platform.`}
+                            {t`Shown below the promo code field on the ticket selection, and in a compact version on the details step, just above the secure checkout notice. Use it to share important information or invite buyers to make an extra donation on another platform.`}
                         </Text>
                         <Editor
                             editorType={'simple'}
@@ -130,6 +153,13 @@ export const HomepageAndCheckoutSettings = () => {
                             error={form.errors.product_info_message as string}
                             onChange={(value) => form.setFieldValue('product_info_message', value)}
                         />
+                        <Input.Wrapper label={t`Icon`} description={t`Shown next to the message.`} mb="md">
+                            <SegmentedControl
+                                mt={6}
+                                data={iconOptions}
+                                {...form.getInputProps('product_info_icon')}
+                            />
+                        </Input.Wrapper>
                         <TextInput
                             label={t`Button text`}
                             description={t`Leave the button text and link empty to show the message without a button.`}

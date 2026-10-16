@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {ReactNode, useState} from "react";
 import {Button, Collapse, Popover, TextInput} from "@mantine/core";
 import {IconCalendarEvent, IconChevronDown, IconInfoCircle, IconShieldCheck, IconTag, IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
@@ -13,6 +13,7 @@ interface InlineOrderSummaryProps {
     order: Order;
     defaultExpanded?: boolean;
     showBuyerProtection?: boolean;
+    notice?: ReactNode;
     onPromoCodeChange?: (promoCode: string | null) => void;
     isPromoCodePending?: boolean;
 }
@@ -22,6 +23,7 @@ export const InlineOrderSummary = ({
     order,
     defaultExpanded = true,
     showBuyerProtection = true,
+    notice,
     onPromoCodeChange,
     isPromoCodePending = false,
 }: InlineOrderSummaryProps) => {
@@ -288,6 +290,8 @@ export const InlineOrderSummary = ({
                             </div>
                         )}
                     </div>
+
+                    {notice}
 
                     {showBuyerProtection && order.is_payment_required && (
                         <div className={classes.buyerProtection}>

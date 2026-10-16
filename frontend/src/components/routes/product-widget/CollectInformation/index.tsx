@@ -26,6 +26,7 @@ import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
 import {getConfig} from "../../../../utilites/config.ts";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
+import {ProductInfoNotice} from "../../../common/ProductInfoNotice";
 import {PlatformSupportInput, platformSupportDefaultAmount, platformSupportEnabled} from "../../../common/PlatformSupportInput";
 import {eventCheckoutPath, eventHomepagePath} from "../../../../utilites/urlHelper.ts";
 import {showError, showInfo, showSuccess} from "../../../../utilites/notifications.tsx";
@@ -502,6 +503,7 @@ export const CollectInformation = () => {
                         event={event}
                         order={order}
                         defaultExpanded={true}
+                        notice={<ProductInfoNotice settings={event.settings}/>}
                         onPromoCodeChange={handlePromoCodeChange}
                         isPromoCodePending={promoCodeMutation.isPending}
                     />

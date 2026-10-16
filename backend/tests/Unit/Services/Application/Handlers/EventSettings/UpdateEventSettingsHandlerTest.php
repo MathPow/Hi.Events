@@ -187,11 +187,13 @@ class UpdateEventSettingsHandlerTest extends TestCase
             product_info_message: '<p>Donate</p><script>alert(1)</script>',
             product_info_button_text: '  Make a donation  ',
             product_info_button_url: ' https://example.com/donate ',
+            product_info_icon: 'heart',
         ));
 
         $this->assertSame('<p>Donate</p>', $captured['product_info_message']);
         $this->assertSame('Make a donation', $captured['product_info_button_text']);
         $this->assertSame('https://example.com/donate', $captured['product_info_button_url']);
+        $this->assertSame('heart', $captured['product_info_icon']);
     }
 
     public function testStoresBlankProductInfoButtonFieldsAsNull(): void
@@ -228,6 +230,7 @@ class UpdateEventSettingsHandlerTest extends TestCase
         ?string $product_info_message = null,
         ?string $product_info_button_text = null,
         ?string $product_info_button_url = null,
+        ?string $product_info_icon = null,
     ): UpdateEventSettingsDTO
     {
         return UpdateEventSettingsDTO::fromArray([
@@ -259,6 +262,7 @@ class UpdateEventSettingsHandlerTest extends TestCase
             'product_info_message' => $product_info_message,
             'product_info_button_text' => $product_info_button_text,
             'product_info_button_url' => $product_info_button_url,
+            'product_info_icon' => $product_info_icon,
         ]);
     }
 }
