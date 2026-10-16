@@ -219,6 +219,7 @@ const Checkout = () => {
                             <div className={classes.actionBar}>
                                 <Group justify="space-between" wrap="nowrap">
                                     <Button
+                                        className={classes.backButton}
                                         title={t`Back to event page`}
                                         variant="subtle"
                                         leftSection={<IconArrowLeft size={20}/>}
