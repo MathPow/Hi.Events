@@ -46,8 +46,7 @@ class UpdateOrganizerStatusHandler
 
         if ($account->getAccountVerifiedAt() === null) {
             throw new AccountNotVerifiedException(
-                __('You must verify your account before you can update an organizer\'s status.
-                You can resend the confirmation by visiting your profile page.'),
+                __('Please confirm your email address before changing an organizer\'s status. Open your profile page and click "Resend email confirmation" to receive the link again.'),
             );
         }
 
