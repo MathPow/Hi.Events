@@ -1,0 +1,49 @@
+.main {
+  padding-top: 1.5rem;
+  padding-bottom: 4rem;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.375rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  color: var(--dehors-brun);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(53 41 36 / 0.1);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 2px;
+  }
+
+  &.navLinkActive {
+    background: var(--dehors-brun);
+    color: var(--dehors-creme);
+  }
+
+  @media (max-width: 1023px) {
+    width: 2.375rem;
+    padding: 0;
+    justify-content: center;
+
+    .navLabel {
+      display: none;
+    }
+  }
+}

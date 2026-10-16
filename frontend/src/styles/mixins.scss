@@ -114,3 +114,13 @@ $breakpoints: (
     @return #ffffff; // Light text for dark backgrounds
   }
 }
+
+// Hand-drawn pill edge from the DEHORS website: two caps sized from the height and a stretched middle.
+@mixin etiquette($height) {
+  $cap: calc(#{$height} * 20 / 46);
+  $layers: url('/images/dehors/etiquette-gauche.svg') left center / #{$cap} 100% no-repeat,
+  url('/images/dehors/etiquette-droite.svg') right center / #{$cap} 100% no-repeat,
+  url('/images/dehors/etiquette-milieu.svg') center / calc(100% - 1.9 * #{$cap}) 100% no-repeat;
+  -webkit-mask: $layers;
+  mask: $layers;
+}

@@ -87,7 +87,7 @@ const AccountSettings = () => {
                         {isUserAdmin && (
                             <div className={classes.footer}>
                                 <Button disabled={updateMutation.isPending} type={'submit'}
-                                        fullWidth>{t`Save Settings`}</Button>
+                                        size={'md'}>{t`Save Settings`}</Button>
                             </div>
                         )}
                     </form>

@@ -3,14 +3,20 @@ import {t} from "@lingui/macro";
 import {NavItem, BreadcrumbItem} from "../AppLayout/types";
 import AppLayout from "../AppLayout";
 import {useIsCurrentUserSuperAdmin} from "../../../hooks/useIsCurrentUserAdmin.ts";
-import {useNavigate} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 
 const AdminLayout = () => {
     const isSuperAdmin = useIsCurrentUserSuperAdmin();
     const navigate = useNavigate();
+    const location = useLocation();
     const navItems: NavItem[] = [
         {label: t`Admin`},
-        {link: '', label: t`Dashboard`, icon: IconLayoutDashboard},
+        {
+            link: '',
+            label: t`Dashboard`,
+            icon: IconLayoutDashboard,
+            isActive: () => location.pathname.replace(/\/$/, '') === '/admin',
+        },
         {link: 'accounts', label: t`Accounts`, icon: IconBuildingBank},
         {link: 'users', label: t`Users`, icon: IconUsers},
         {link: 'registration-invites', label: t`Invitations`, icon: IconUserPlus},

@@ -27,38 +27,43 @@ export const Topbar: React.FC<TopbarProps> = ({
                                               }) => {
     return (
         <div className={`${classes.topBar} ${topBarShadow ? classes.withShadow : ''}`}>
-            <div className={classes.topBarMain}>
-                <div className={classes.burger}>
-                    <Burger
-                        color={'#fff'}
-                        opened={sidebarOpen}
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        size={'sm'}
-                    />
-                </div>
-                <div className={classes.logo}>
-                    <NavLink to={ `/manage/events` }>
-                        <img src={getConfig("VITE_APP_LOGO_LIGHT", "/logos/hi-events-text-dark.svg")} alt={`${getConfig("VITE_APP_NAME", "Hi.Events")} logo`} className={classes.logo}/>
-                    </NavLink>
-                </div>
+            <div className={classes.topBarShell}>
+                <div className={classes.topBarMain}>
+                    <div className={classes.burger}>
+                        <Burger
+                            opened={sidebarOpen}
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            size={'sm'}
+                        />
+                    </div>
+                    <div className={classes.logo}>
+                        <NavLink to={ `/manage/events` }>
+                            <img src={getConfig("VITE_APP_LOGO_DARK", "/logos/hi-events-text-light.svg")} alt={`${getConfig("VITE_APP_NAME", "Hi.Events")} logo`} className={classes.logo}/>
+                        </NavLink>
+                    </div>
 
-                {topBarContent}
-                <div className={classes.actionGroup}>
-                    {actionGroupContent}
+                    {topBarContent}
+                    <div className={classes.actionGroup}>
+                        {actionGroupContent}
 
-                    <div className={classes.menu}>
-                        <GlobalMenu/>
+                        <div className={classes.menu}>
+                            <GlobalMenu/>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div className={classes.breadcrumbsRow}>
                 <div className={classes.breadcrumbs}>
-                    <Breadcrumbs separator={<span style={{margin: '0 4px', color: '#aaa'}}>/</span>}>
-                        {breadcrumbItems.map((item, index) => (
-                            <NavLink key={index} to={item.link ?? '#'}>
+                    <Breadcrumbs separator={<span className={classes.separator}>/</span>}>
+                        {breadcrumbItems.map((item, index) => item.link ? (
+                            <NavLink key={index} to={item.link}>
                                 {item.content}
                             </NavLink>
+                        ) : (
+                            <span key={index} className={classes.currentPage} aria-current={'page'}>
+                                {item.content}
+                            </span>
                         ))}
                     </Breadcrumbs>
                 </div>

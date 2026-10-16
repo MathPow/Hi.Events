@@ -4,11 +4,13 @@
   display: flex;
   flex-direction: column;
   grid-area: sidebar;
-  background: linear-gradient(180deg, var(--mantine-color-primary-9), var(--mantine-color-secondary-9));
-  color: var(--hi-color-white);
+  background: var(--dehors-brun);
+  color: var(--dehors-creme);
   position: relative;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
-  height: 100vh;
+  box-shadow: 0 0.75rem 2rem rgb(53 41 36 / 0.18);
+  height: calc(100vh - 1.5rem);
+  margin: 0.75rem 0 0.75rem 0.75rem;
+  border-radius: 1.5rem;
 
   &.closed {
       @media (min-width: 768px) {
@@ -22,9 +24,9 @@
     align-items: center;
     position: relative;
     z-index: 1;
-    padding: 8px 0;
-    margin-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.5rem 0;
+    margin: 0 1rem 0.5rem;
+    border-bottom: 1px solid var(--dehors-creme-voile);
     flex-shrink: 0;
 
     a {
@@ -42,7 +44,7 @@
     scrollbar-color: transparent transparent;
 
     &:hover {
-      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      scrollbar-color: rgb(255 247 233 / 0.2) transparent;
     }
 
     &::-webkit-scrollbar {
@@ -57,7 +59,7 @@
     }
 
     &:hover::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgb(255 247 233 / 0.2);
     }
 
     &::-webkit-scrollbar-track {
@@ -65,12 +67,12 @@
     }
 
     .sectionHeading {
-      padding: 16px 20px 8px;
+      padding: 1rem 1.375rem 0.375rem;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.06em;
+      color: var(--dehors-sable);
     }
 
     a,
@@ -78,25 +80,28 @@
     .link {
       display: flex;
       align-items: center;
-      color: rgba(255, 255, 255, 0.85);
-      padding: 4px 10px;
+      border-radius: 1.1875rem;
+      color: var(--dehors-creme-doux);
+      min-height: 2.375rem;
+      padding: 0.4375rem 0.875rem;
+      line-height: 1.25;
       text-decoration: none;
-      margin: 3px 10px;
-      border-radius: var(--hi-radius-md);
-      font-size: 0.9em;
-      font-weight: 500;
-      transition: all 0.2s ease;
+      margin: 2px 0.625rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      transition: background-color 0.2s ease, color 0.2s ease;
       position: relative;
       overflow: hidden;
       cursor: pointer;
-      width: calc(100% - 20px);
+      width: calc(100% - 1.25rem);
       background: none;
       border: none;
       text-align: left;
 
+      // Counts stay quiet; orange is kept for what still needs to be done.
       .navBadge {
-        background: var(--hi-primary);
-        color: white;
+        background: rgb(255 247 233 / 0.14);
+        color: var(--dehors-creme);
         padding: 2px 6px;
         border-radius: 12px;
         font-size: 0.75em;
@@ -104,21 +109,22 @@
         margin-left: auto;
       }
 
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 0;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-        border-radius: 10px;
-        transition: width 0.25s ease;
-        z-index: -1;
+      .navBadge.navBadgeAttention {
+        background: var(--dehors-orange);
+      }
+
+      .attentionDot {
+        width: 0.5rem;
+        height: 0.5rem;
+        min-width: 0.5rem;
+        margin-left: auto;
+        border-radius: 50%;
+        background: var(--dehors-orange);
+        box-shadow: 0 0 0 3px rgb(244 125 60 / 0.25);
       }
 
       &.loading {
-        background-color: rgba(255, 255, 255, 0.08);
+        background-color: var(--dehors-creme-voile);
         animation: pulse 1.5s infinite;
       }
 
@@ -131,31 +137,36 @@
         }
       }
 
+      &:hover {
+        background: var(--dehors-creme-voile);
+        color: var(--dehors-creme);
+      }
+
       &.linkActive {
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-        font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        background: var(--dehors-creme);
+        color: var(--dehors-brun);
+        font-weight: 700;
 
         .linkIcon {
-          color: rgba(255, 255, 255, 1);
+          color: var(--dehors-brun);
+        }
+
+        .navBadge:not(.navBadgeAttention) {
+          background: rgb(53 41 36 / 0.1);
+          color: var(--dehors-brun);
         }
       }
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.08);
-        color: white;
-        transform: translateY(-1px);
-
-        &::before {
-          width: 100%;
-        }
+      &:focus-visible {
+        outline: none;
+        background: var(--dehors-creme-voile);
+        box-shadow: inset 0 0 0 2px var(--dehors-orange);
       }
 
       svg {
-        margin-right: 12px;
+        margin-right: 0.75rem;
         min-width: 20px;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--dehors-sable);
         transition: color 0.2s ease;
       }
     }
@@ -174,6 +185,8 @@
     width: 100%;
     height: 100vh;
     height: 100dvh;
+    margin: 0;
+    border-radius: 0;
     z-index: 200;
     transform: translateX(-100%);
     top: 0;
@@ -187,7 +200,7 @@
   .sidebarClose {
     width: 24px;
     height: 24px;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--dehors-sable);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -201,7 +214,7 @@
 
     &:hover {
       transform: translateY(-50%) scale(1.4);
-      color: white;
+      color: var(--dehors-creme);
     }
 
     @media (max-width: 767px) {

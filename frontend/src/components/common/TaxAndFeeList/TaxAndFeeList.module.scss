@@ -1,67 +1,44 @@
 .taxes {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+  gap: 1rem;
 
   .taxBlock {
-    border: 1px solid var(--mantine-color-gray-3);
-    border-radius: 12px;
     display: flex;
     flex-direction: column;
-    background: var(--mantine-color-white);
-    transition: all 0.2s ease;
+    border-radius: 1.25rem;
+    background: var(--dehors-champ, var(--mantine-color-gray-0));
+    transition: background-color 0.2s ease;
     overflow: hidden;
 
     &:hover {
-      border-color: var(--mantine-color-primary-3);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: var(--dehors-champ-survol, var(--mantine-color-gray-1));
     }
 
     &.taxType {
-      .header {
-        background: var(--mantine-color-primary-0);
-        color: var(--mantine-color-primary-8);
-      }
-
       .iconWrapper {
-        background: var(--mantine-color-primary-1);
-        color: var(--mantine-color-primary-7);
-      }
-
-      .rateBadge {
-        background: var(--mantine-color-primary-1);
-        color: var(--mantine-color-primary-8);
+        background: var(--dehors-brun, var(--mantine-color-primary-7));
+        color: var(--dehors-creme, #fff);
       }
     }
 
     &.feeType {
-      .header {
-        background: var(--mantine-color-secondary-0);
-        color: var(--mantine-color-secondary-8);
-      }
-
       .iconWrapper {
-        background: var(--mantine-color-secondary-1);
-        color: var(--mantine-color-secondary-7);
-      }
-
-      .rateBadge {
-        background: var(--mantine-color-secondary-1);
-        color: var(--mantine-color-secondary-8);
+        background: var(--dehors-orange, var(--mantine-color-secondary-7));
+        color: var(--dehors-creme, #fff);
       }
     }
 
     .header {
       display: flex;
       align-items: center;
-      padding: 10px 12px;
-      gap: 8px;
+      padding: 0.875rem 0.75rem 0 1rem;
+      gap: 0.625rem;
 
       .iconWrapper {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
+        width: 1.875rem;
+        height: 1.875rem;
+        border-radius: 999px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -70,16 +47,17 @@
 
       .type {
         flex: 1;
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.875rem;
+        font-weight: 700;
         text-transform: capitalize;
-        letter-spacing: 0.02em;
+        color: var(--dehors-texte-doux, var(--mantine-color-gray-7));
       }
 
       .action {
         display: flex;
 
         .menuButton {
+          border-radius: 999px;
           opacity: 0.7;
           transition: opacity 0.2s ease;
 
@@ -94,14 +72,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px;
-      gap: 12px;
+      padding: 0.75rem 1rem 1rem;
+      gap: 0.75rem;
     }
 
     .name {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--mantine-color-gray-8);
+      font-size: 1.125rem;
+      font-weight: 700;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -113,23 +90,26 @@
     }
 
     .rateBadge {
-      font-weight: 600;
-      font-size: 0.9rem;
+      height: 2rem;
+      padding-inline: 0.875rem;
+      font-size: 1rem;
+      font-weight: 700;
+      background: var(--dehors-creme, #fff);
+      color: var(--dehors-brun, var(--mantine-color-gray-9));
     }
   }
 }
 
 .noTaxes {
   text-align: center;
-  padding: 40px 20px;
-  color: var(--mantine-color-gray-6);
-  background: var(--mantine-color-gray-0);
-  border-radius: 12px;
-  border: 1px dashed var(--mantine-color-gray-3);
-  margin-top: 20px;
+  padding: 2.5rem 1.25rem;
+  color: var(--dehors-texte-doux, var(--mantine-color-gray-6));
+  border-radius: 1.25rem;
+  border: 2px dashed var(--dehors-trait, var(--mantine-color-gray-3));
 
   p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    font-weight: 600;
   }
 }

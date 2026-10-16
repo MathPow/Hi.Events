@@ -86,6 +86,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --bg-color: var(--event-bg-color);
   --content-bg-color: var(--event-content-bg-color);
   --accent-contrast: var(--event-accent-contrast);
+  --accent-text: var(--event-accent-text);
   --accent-soft: var(--event-accent-soft);
   --accent-muted: var(--event-accent-muted);
   --border-color: var(--event-border-color);
@@ -353,7 +354,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--primary-color);
+  color: var(--accent-text);
   transition: all $transition-fast;
 
   svg {
@@ -389,7 +390,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: var(--primary-color);
+  color: var(--accent-text);
   font-weight: 500;
   font-size: 0.85rem;
   text-decoration: none;
@@ -477,7 +478,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   a {
-    color: var(--primary-color);
+    color: var(--accent-text);
     text-decoration: none;
 
     &:hover {
@@ -523,7 +524,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .readMoreToggle {
-  color: var(--primary-color);
+  color: var(--accent-text);
   font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
@@ -582,11 +583,15 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--primary-color);
-  font-weight: 500;
-  font-size: 0.9rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--accent-contrast);
+  font-weight: 600;
+  font-size: 0.875rem;
   text-decoration: none;
-  margin-top: 8px;
+  margin-top: 12px;
+  transition: all $transition-fast;
 
   svg {
     width: 0.85rem;
@@ -594,7 +599,8 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:hover {
-    text-decoration: underline;
+    filter: brightness(0.94);
+    transform: translateY(-1px);
   }
 }
 
@@ -626,7 +632,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mapPin {
-  color: var(--primary-color);
+  color: var(--accent-text);
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
@@ -994,7 +1000,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
   }
 
@@ -1028,7 +1034,47 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.9rem;
 
     b {
-      color: var(--primary-color);
+      color: var(--accent-text);
+    }
+  }
+
+  :global(.hi-product-info-block) {
+    gap: 14px;
+    margin-top: 14px;
+    padding: 16px 18px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--primary-color);
+    border-radius: $radius-sm;
+    color: var(--primary-text-color);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  :global(.hi-product-info-message) {
+    a {
+      color: var(--accent-text);
+      text-decoration: underline;
+    }
+  }
+
+  :global(.hi-product-info-button) {
+    height: auto;
+    padding: 8px 18px;
+    background: var(--primary-color);
+    color: var(--accent-contrast);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all $transition-fast;
+
+    :global(.mantine-Button-label) {
+      color: var(--accent-contrast);
+    }
+
+    &:hover {
+      background: var(--primary-color);
+      filter: brightness(0.94);
+      transform: translateY(-1px);
     }
   }
 }
@@ -1098,7 +1144,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
   }
 }
@@ -1111,7 +1157,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--secondary-color);
 
   svg {
-    color: var(--primary-color);
+    color: var(--accent-text);
     width: 0.75rem;
     height: 0.75rem;
   }
@@ -1121,7 +1167,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
   }
 }
@@ -1141,7 +1187,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   a {
-    color: var(--primary-color);
+    color: var(--accent-text);
     text-decoration: none;
 
     &:hover {
@@ -1242,7 +1288,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transition: color $transition-fast;
 
   &:hover {
-    color: var(--primary-color);
+    color: var(--accent-text);
   }
 }
 
@@ -1264,7 +1310,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
   }
 }
@@ -1347,7 +1393,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   gap: 6px;
   background: var(--accent-soft);
-  color: var(--primary-color);
+  color: var(--accent-text);
   padding: 6px 12px;
   border-radius: $radius-sm;
   font-size: 0.85rem;

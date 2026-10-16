@@ -19,6 +19,7 @@ export interface ThemeCSSVariables {
     '--theme-text-tertiary': string;
     '--theme-border': string;
     '--theme-accent-contrast': string;
+    '--theme-accent-text': string;
     '--theme-accent-soft': string;
     '--theme-accent-muted': string;
     '--theme-accent-tint-10': string;
@@ -134,9 +135,93 @@ export function getAccentMuted(accent: string, mode: 'light' | 'dark'): string {
     return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
 }
 
+function rgbToHsl({r, g, b}: { r: number; g: number; b: number }): { h: number; s: number; l: number } {
+    const rn = r / 255;
+    const gn = g / 255;
+    const bn = b / 255;
+    const max = Math.max(rn, gn, bn);
+    const min = Math.min(rn, gn, bn);
+    const l = (max + min) / 2;
+
+    if (max === min) {
+        return {h: 0, s: 0, l};
+    }
+
+    const d = max - min;
+    const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    let h: number;
+    if (max === rn) {
+        h = (gn - bn) / d + (gn < bn ? 6 : 0);
+    } else if (max === gn) {
+        h = (bn - rn) / d + 2;
+    } else {
+        h = (rn - gn) / d + 4;
+    }
+
+    return {h: h / 6, s, l};
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+    const hueToChannel = (p: number, q: number, t: number): number => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+    };
+
+    let r = l;
+    let g = l;
+    let b = l;
+    if (s !== 0) {
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hueToChannel(p, q, h + 1 / 3);
+        g = hueToChannel(p, q, h);
+        b = hueToChannel(p, q, h - 1 / 3);
+    }
+
+    const toHex = (c: number) => Math.round(c * 255).toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export const ACCENT_TEXT_MIN_CONTRAST = 4.5;
+
+/**
+ * Accent variant safe for text and icons on the theme surface: the accent itself when it
+ * already meets WCAG AA, otherwise the same hue darkened (light mode) or lightened (dark mode)
+ * just enough to reach it. Fills such as buttons keep using the raw accent.
+ */
+export function getAccentText(accent: string, mode: 'light' | 'dark'): string {
+    const surface = getDerivedColors(mode).surface;
+    const rgb = hexToRgb(accent);
+    if (!rgb || getContrastRatio(accent, surface) >= ACCENT_TEXT_MIN_CONTRAST) {
+        return accent;
+    }
+
+    const {h, s, l} = rgbToHsl(rgb);
+    const passes = (lightness: number) =>
+        getContrastRatio(hslToHex(h, s, lightness), surface) >= ACCENT_TEXT_MIN_CONTRAST;
+
+    let passing = mode === 'light' ? 0 : 1;
+    let failing = l;
+    for (let i = 0; i < 24; i++) {
+        const mid = (passing + failing) / 2;
+        if (passes(mid)) {
+            passing = mid;
+        } else {
+            failing = mid;
+        }
+    }
+
+    return hslToHex(h, s, passing);
+}
+
 export function computeThemeVariables(settings: HomepageThemeSettings): ThemeCSSVariables {
     const derived = getDerivedColors(settings.mode);
     const accentContrast = getContrastColor(settings.accent);
+    const accentText = getAccentText(settings.accent, settings.mode);
     const accentSoft = getAccentSoft(settings.accent, settings.mode);
     const accentMuted = getAccentMuted(settings.accent, settings.mode);
 
@@ -149,6 +234,7 @@ export function computeThemeVariables(settings: HomepageThemeSettings): ThemeCSS
         '--theme-text-tertiary': derived.textTertiary,
         '--theme-border': derived.border,
         '--theme-accent-contrast': accentContrast,
+        '--theme-accent-text': accentText,
         '--theme-accent-soft': accentSoft,
         '--theme-accent-muted': accentMuted,
         '--theme-accent-tint-10': `color-mix(in srgb, ${settings.accent} 10%, ${derived.surface})`,
@@ -250,20 +336,7 @@ export function checkContrast(foreground: string, background: string): ContrastR
  * Returns true if there are readability problems
  */
 export function hasContrastIssues(settings: HomepageThemeSettings): boolean {
-    const derived = getDerivedColors(settings.mode);
-
-    // Check accent color on surface (buttons)
+    // Accent text on the surface is auto-corrected by getAccentText, so only button text can fail
     const accentContrast = getContrastColor(settings.accent);
-    const buttonTextContrast = checkContrast(accentContrast, settings.accent);
-    if (!buttonTextContrast.passesAA) {
-        return true;
-    }
-
-    // Check accent color on surface (links, icons) - needs at least 3:1
-    const accentOnSurface = checkContrast(settings.accent, derived.surface);
-    if (accentOnSurface.ratio < 3) {
-        return true;
-    }
-
-    return false;
+    return !checkContrast(accentContrast, settings.accent).passesAA;
 }

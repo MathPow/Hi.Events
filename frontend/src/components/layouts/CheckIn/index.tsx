@@ -29,8 +29,10 @@ import {PinPromptModal} from "../../common/CheckIn/PinPromptModal";
 import {DoorSaleModal} from "../../common/CheckIn/DoorSaleModal";
 import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/checkInPin.ts";
 import {Button} from "@mantine/core";
+import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 
 const CheckIn = () => {
+    useDehorsAppTheme();
     const networkStatus = useNetwork();
     const {checkInListShortId} = useParams();
     const CheckInListQuery = useGetCheckInListPublic(checkInListShortId);
@@ -427,6 +429,7 @@ const CheckIn = () => {
         <div className={classes.container}>
             <Header
                 fullWidth
+                variant={'floating'}
                 rightContent={(
                     <>
                         {!networkStatus.online && (
@@ -435,7 +438,6 @@ const CheckIn = () => {
                         <ActionIcon
                             display={'flex'}
                             variant={'transparent'}
-                            color={'white'}
                             onClick={() => infoModalHandlers.open()}
                         >
                             <IconInfoCircle/>

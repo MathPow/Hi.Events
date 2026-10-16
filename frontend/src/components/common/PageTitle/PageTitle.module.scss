@@ -7,15 +7,17 @@
 .title {
   margin-bottom: 0.5rem !important;
   margin-top: 0;
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+  line-height: 1.05;
 
   @include mixins.respond-below(md) {
-    font-size: 25px !important;
+    font-size: 1.875rem !important;
   }
 }
 
 .subheading {
   font-size: 1rem;
-  color: var(--hi-color-text-muted, #6c757d);
+  color: var(--dehors-texte-doux);
   font-weight: normal;
   line-height: 1.4;
   margin-bottom: 20px;

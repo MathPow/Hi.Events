@@ -6,7 +6,7 @@
   }
 
   min-height: 100vh;
-  background: var(--hi-gradient);
+  background: var(--dehors-creme);
   padding: 3rem 1rem;
   display: flex;
   flex-direction: column;
@@ -43,10 +43,9 @@
 
 .logo {
   margin-bottom: 1rem;
-  opacity: 0.9;
 
   img {
-    height: 55px;
+    height: 64px;
     width: auto;
   }
 
@@ -60,28 +59,24 @@
 }
 
 .welcomeTitle {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--hi-color-white);
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem);
+  font-weight: 400;
+  color: var(--dehors-brun);
   margin: 0;
-  line-height: 1.2;
-
-  @media (max-width: 768px) {
-    font-size: 1.5rem;
-  }
+  line-height: 1.1;
 }
 
 // Clean Main Card
 .welcomeCard {
-  background: var(--hi-color-white);
-  border-radius: 16px !important;
+  background: var(--dehors-surface);
+  border-radius: 1.5rem !important;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-  border: none !important;
+  box-shadow: 0 0.75rem 2rem rgb(53 41 36 / 0.08) !important;
+  border: 1px solid var(--dehors-trait) !important;
 
   @media (max-width: 768px) {
-    border-radius: 12px !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 1.25rem !important;
   }
 }
 
@@ -113,7 +108,7 @@
 .progressBar {
   width: 100%;
   height: 6px;
-  background-color: var(--hi-color-gray-2);
+  background-color: var(--dehors-champ);
   border-radius: 3px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -121,7 +116,7 @@
 
 .progressFill {
   height: 100%;
-  background: var(--hi-gradient);
+  background: var(--dehors-orange);
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -136,9 +131,10 @@
 }
 
 .stepTitle {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--hi-text);
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.875rem;
+  font-weight: 400;
+  color: var(--dehors-brun);
   margin: 0 0 0.5rem 0;
   line-height: 1.3;
   text-align: center;
@@ -151,7 +147,7 @@
 
 .stepDescription {
   font-size: 1rem;
-  color: var(--hi-secondary-text);
+  color: var(--dehors-texte-doux);
   margin: 0;
   line-height: 1.5;
 
@@ -185,20 +181,24 @@
     display: flex;
     align-items: center;
     padding: 0 16px !important;
-    border: 1px solid var(--hi-color-gray-2) !important;
-    border-radius: 8px !important;
-    background: var(--hi-color-white) !important;
+    border: 2px solid transparent !important;
+    border-radius: 1rem !important;
+    background: var(--dehors-champ) !important;
     font-size: 1rem !important;
-    color: var(--hi-text) !important;
-    transition: border-color 0.15s ease !important;
+    color: var(--dehors-brun) !important;
+    transition: border-color 0.15s ease, background-color 0.15s ease !important;
+
+    &:hover {
+      background: var(--dehors-champ-survol) !important;
+    }
 
     &:focus {
-      border-color: var(--hi-primary) !important;
+      border-color: var(--dehors-brun) !important;
       outline: none !important;
     }
 
     &::placeholder {
-      color: var(--hi-color-gray-dark) !important;
+      color: rgb(53 41 36 / 0.5) !important;
     }
 
     @media (max-width: 768px) {
@@ -212,9 +212,9 @@
   :global(.mantine-DateTimePicker-label),
   :global(.mantine-TextInput-label),
   :global(.mantine-Select-label) {
-    font-weight: 500 !important;
+    font-weight: 700 !important;
     font-size: 0.95rem !important;
-    color: var(--hi-text) !important;
+    color: var(--dehors-brun) !important;
     margin-bottom: 8px !important;
   }
 }
@@ -240,9 +240,10 @@
 }
 
 .categoryCard {
-  background: var(--hi-color-white);
-  border: 1px solid var(--hi-color-gray-2);
-  border-radius: 8px;
+  background: var(--dehors-champ);
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  color: var(--dehors-brun);
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -253,9 +254,7 @@
   min-height: 72px;
 
   &:hover {
-    border-color: var(--hi-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--dehors-champ-survol);
   }
 
   &:disabled {
@@ -271,8 +270,8 @@
 }
 
 .categoryCardSelected {
-  border-color: var(--hi-primary) !important;
-  background: var(--hi-secondary) !important;
+  border-color: var(--dehors-brun) !important;
+  background: var(--dehors-champ-survol) !important;
 }
 
 .categoryEmoji {
@@ -286,7 +285,7 @@
 
 .categoryText {
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 700;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -300,9 +299,9 @@
 
 // Email Verification Specific
 .emailDisplay {
-  background: var(--hi-color-gray);
-  border: 1px solid var(--hi-color-gray-2);
-  border-radius: 8px;
+  background: var(--dehors-champ);
+  border: none;
+  border-radius: 1rem;
   padding: 1rem;
   margin-top: 1rem;
   margin-bottom: 0;
@@ -325,15 +324,15 @@
 .pinInput {
   // Clean PinInput styling
   :global(.mantine-PinInput-input) {
-    border: 1px solid var(--hi-color-gray-2);
-    border-radius: 8px;
-    font-weight: 600;
+    border: 2px solid transparent;
+    border-radius: 0.75rem;
+    font-weight: 700;
     text-align: center;
-    background: var(--hi-color-white);
-    color: var(--hi-text);
+    background: var(--dehors-champ);
+    color: var(--dehors-brun);
 
     &:focus {
-      border-color: var(--hi-primary);
+      border-color: var(--dehors-brun);
       outline: none;
     }
 
@@ -417,24 +416,22 @@
 
 // Clean button
 .primaryButton {
-  background: var(--hi-primary) !important;
+  background: var(--dehors-orange) !important;
+  color: var(--dehors-creme) !important;
   border: none !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
   font-size: 1rem !important;
   height: 48px !important;
-  transition: all 0.2s ease !important;
   margin-top: 1em;
 
   &:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--hi-primary) 85%, var(--hi-primary-alt) 15%) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    background: var(--dehors-orange-survol) !important;
   }
 
   &:disabled {
-    background: var(--hi-color-gray-dark) !important;
-    opacity: 0.7 !important;
+    background: var(--mantine-color-disabled) !important;
+    color: var(--mantine-color-disabled-color) !important;
   }
 
   @media (max-width: 768px) {
@@ -447,17 +444,16 @@
   margin-top: 1.5rem;
 
   :global(.mantine-Button-root) {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: var(--dehors-brun) !important;
     font-size: 0.9rem !important;
     background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 6px !important;
+    border: 2px solid var(--dehors-trait) !important;
+    border-radius: 999px !important;
     padding: 8px 16px !important;
-    transition: opacity 0.15s ease !important;
+    transition: background-color 0.15s ease !important;
 
     &:hover {
-      color: white !important;
-      opacity: 0.8 !important;
+      background: var(--dehors-champ) !important;
     }
   }
 

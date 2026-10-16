@@ -1,8 +1,14 @@
 .container {
   margin-bottom: var(--hi-spacing-xl);
 
-  .tabsCard {
-    padding: 0;
+  .title {
+    margin: 1rem 0 1.25rem;
+    font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+    line-height: 1.05;
+  }
+
+  .tabsList {
+    margin-bottom: 1.75rem;
   }
 
   .emailChangeAlert {
@@ -10,7 +16,11 @@
   }
 
   .tabWrapper {
-    padding: var(--hi-spacing-xl);
+    padding: 1.75rem;
+
+    @media (max-width: 575px) {
+      padding: 1.25rem;
+    }
   }
 
   .fieldsetLegend {
@@ -18,9 +28,14 @@
     align-items: center;
     gap: 0.5rem;
   }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.75rem;
+  }
 }
 
 .emailNotVerified {
   margin-bottom: var(--hi-spacing-lg);
 }
-

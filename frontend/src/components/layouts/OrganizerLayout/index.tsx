@@ -165,16 +165,6 @@ const OrganizerLayout = () => {
             link: `/manage/organizer/${organizerId}`,
             content: organizer?.name,
         },
-        {
-            content: (
-                <span
-                    className={classes.createEventBreadcrumb}
-                    onClick={() => setShowCreateEventModal(true)}
-                >
-                    <IconCalendarPlus size={16} /> {t`Create Event`}
-                </span>
-            ),
-        }
     ];
 
     const callouts: CalloutConfig[] = [
@@ -235,24 +225,29 @@ const OrganizerLayout = () => {
                     </div>
                 )}
                 breadcrumbContentRight={(
-                    <>
+                    <div className={classes.breadcrumbActions}>
                         {organizer && !isMobile && (
-                            <>
-                                <Button
-                                    onClick={openShareModal}
-                                    variant="transparent"
-                                    leftSection={<IconShare size={16} />}
-                                >
-                                    <span className={classes.shareButtonTextDesktop}>
-                                        {t`Share Organizer Page`}
-                                    </span>
-                                    <span className={classes.shareButtonTextMobile}>
-                                        {t`Share`}
-                                    </span>
-                                </Button>
-                            </>
+                            <Button
+                                onClick={openShareModal}
+                                variant="transparent"
+                                leftSection={<IconShare size={16} />}
+                            >
+                                <span className={classes.shareButtonTextDesktop}>
+                                    {t`Share Organizer Page`}
+                                </span>
+                                <span className={classes.shareButtonTextMobile}>
+                                    {t`Share`}
+                                </span>
+                            </Button>
                         )}
-                    </>
+                        <Button
+                            size={'sm'}
+                            onClick={() => setShowCreateEventModal(true)}
+                            leftSection={<IconCalendarPlus size={16} />}
+                        >
+                            {t`Create Event`}
+                        </Button>
+                    </div>
                 )}
                 actionGroupContent={(
                     <Button

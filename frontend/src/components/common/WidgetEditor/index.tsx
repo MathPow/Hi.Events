@@ -341,7 +341,7 @@ export default App;
                             {t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum...`}
                         </p>
 
-                        <div className={classes.widgetWrapper}>
+                        <div className={classes.widgetWrapper} data-dehors-apercu>
                             {!eventQuery.isFetched ?
                                 <LoadingMask/> :
                                 <SelectProducts

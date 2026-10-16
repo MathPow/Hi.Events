@@ -328,9 +328,9 @@ export const EventDashboard = () => {
                         legendProps={{verticalAlign: 'bottom', height: 50}}
 
                         series={[
-                            {name: 'orders_created', color: 'blue.6', label: t`Completed Orders`},
-                            {name: 'products_sold', color: 'blue.2', label: t`Products Sold`},
-                            {name: 'attendees_registered', color: 'blue.4', label: t`Attendees Registered`},
+                            {name: 'orders_created', color: '#f47d3c', label: t`Completed Orders`},
+                            {name: 'products_sold', color: '#e3ad92', label: t`Products Sold`},
+                            {name: 'attendees_registered', color: '#352924', label: t`Attendees Registered`},
                         ]}
                         curveType="bump"
                         tickLine="none"
@@ -366,9 +366,9 @@ export const EventDashboard = () => {
                         withLegend
                         legendProps={{verticalAlign: 'bottom', height: 50}}
                         series={[
-                            {name: 'total_fees', label: t`Total Fees`, color: 'primary.3'},
-                            {name: 'total_sales_gross', label: t`Gross Sales`, color: 'grape.5'},
-                            {name: 'total_tax', label: t`Total Tax`, color: 'grape.7'},
+                            {name: 'total_fees', label: t`Total Fees`, color: '#e3ad92'},
+                            {name: 'total_sales_gross', label: t`Gross Sales`, color: '#f47d3c'},
+                            {name: 'total_tax', label: t`Total Tax`, color: '#352924'},
                             {name: 'total_refunded', label: t`Total Refunded`, color: 'red.6'},
                         ]}
                         curveType="natural"

@@ -1,4 +1,3 @@
-import {Card} from "../../../common/Card";
 import {Tabs} from "@mantine/core";
 import classes from "./ManageAccount.module.scss";
 import {IconAdjustmentsCog, IconCreditCard, IconKey, IconReceiptTax, IconUsers} from "@tabler/icons-react";
@@ -6,6 +5,7 @@ import {Outlet, useLocation, useNavigate} from "react-router";
 import {t} from "@lingui/macro";
 import {useIsCurrentUserAdmin} from "../../../../hooks/useIsCurrentUserAdmin.ts";
 import { useGetAccount } from "../../../../queries/useGetAccount.ts";
+import {useEffect, useRef} from "react";
 
 export const ManageAccount = () => {
     const navigate = useNavigate();
@@ -13,40 +13,54 @@ export const ManageAccount = () => {
     const tabValue = location.pathname.split('/').pop() || 'settings';
     const isUserAdmin = useIsCurrentUserAdmin();
     const {data: account} = useGetAccount();
+    const tabsListRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const list = tabsListRef.current;
+        const activeTab = list?.querySelector<HTMLElement>('[data-active]');
+        if (!list || !activeTab) {
+            return;
+        }
+        const offset = activeTab.getBoundingClientRect().left - list.getBoundingClientRect().left;
+        list.scrollTo({left: list.scrollLeft + offset - (list.clientWidth - activeTab.offsetWidth) / 2});
+    }, [tabValue, isUserAdmin]);
 
     return (
         <div className={classes.container}>
-            <h1>{t`Account Settings`}</h1>
-            <Card className={classes.tabsCard}>
-                <Tabs value={tabValue} onChange={(value) => navigate(`/account/${value}`)}>
-                    <Tabs.List grow>
-                        <Tabs.Tab value="settings" leftSection={<IconAdjustmentsCog/>}>
-                            {t`Account`}
+            <h1 className={classes.title}>{t`Account Settings`}</h1>
+            <Tabs
+                variant={'pills'}
+                className={classes.tabs}
+                value={tabValue}
+                onChange={(value) => navigate(`/account/${value}`)}
+            >
+                <Tabs.List ref={tabsListRef}>
+                    <Tabs.Tab value="settings" leftSection={<IconAdjustmentsCog/>}>
+                        {t`Account`}
+                    </Tabs.Tab>
+                    <Tabs.Tab value="taxes-and-fees" leftSection={<IconReceiptTax/>}>
+                        {t`Tax & Fees`}
+                    </Tabs.Tab>
+
+                    {isUserAdmin && (
+                        <Tabs.Tab value="users" leftSection={<IconUsers/>}>
+                            {t`Users`}
                         </Tabs.Tab>
-                        <Tabs.Tab value="taxes-and-fees" leftSection={<IconReceiptTax/>}>
-                            {t`Tax & Fees`}
+                    )}
+
+                    {isUserAdmin && (
+                        <Tabs.Tab value="api-tokens" leftSection={<IconKey/>}>
+                            {t`API tokens`}
                         </Tabs.Tab>
+                    )}
 
-                        {isUserAdmin && (
-                            <Tabs.Tab value="users" leftSection={<IconUsers/>}>
-                                {t`Users`}
-                            </Tabs.Tab>
-                        )}
-
-                        {isUserAdmin && (
-                            <Tabs.Tab value="api-tokens" leftSection={<IconKey/>}>
-                                {t`API tokens`}
-                            </Tabs.Tab>
-                        )}
-
-                        {(isUserAdmin && account && account.is_saas_mode_enabled) && (
-                            <Tabs.Tab value="payment" leftSection={<IconCreditCard/>}>
-                                {t`Payment & Plan`}
-                            </Tabs.Tab>
-                        )}
-                    </Tabs.List>
-                </Tabs>
-            </Card>
+                    {(isUserAdmin && account && account.is_saas_mode_enabled) && (
+                        <Tabs.Tab value="payment" leftSection={<IconCreditCard/>}>
+                            {t`Payment & Plan`}
+                        </Tabs.Tab>
+                    )}
+                </Tabs.List>
+            </Tabs>
             <div className={classes.tabWrapper}>
                 <Outlet/>
             </div>

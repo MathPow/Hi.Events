@@ -288,7 +288,7 @@ const LivePreview = ({
             </UnstyledButton>
 
             <Collapse in={isOpen}>
-                <div className={classes.previewContent}>
+                <div className={classes.previewContent} data-dehors-apercu>
                     <div className={classes.previewPane}>
                         <Text size="xs" fw={600} c="dimmed" tt="uppercase" mb={6}>
                             {t`Order`}

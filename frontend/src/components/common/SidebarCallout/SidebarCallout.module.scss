@@ -1,36 +1,12 @@
 @use "../../../styles/mixins.scss";
 
 .calloutBox {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+  background: var(--dehors-creme-voile);
+  border-radius: 1.25rem;
   padding: 20px;
   text-align: center;
   position: relative;
   overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(255, 182, 193, 0.15) 0%, transparent 70%);
-    animation: pulse 6s ease-in-out infinite;
-    pointer-events: none;
-  }
-  
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(0.9);
-      opacity: 0.3;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 0.6;
-    }
-  }
 }
 
 .closeButton {
@@ -38,12 +14,12 @@
   top: 8px;
   right: 8px;
   z-index: 2;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--dehors-sable);
   transition: all 0.2s ease;
   
   &:hover {
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--dehors-creme);
+    background: var(--dehors-creme-voile);
   }
 }
 
@@ -53,22 +29,22 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--dehors-orange);
   border-radius: 50%;
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
   
   svg {
-    color: white;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    color: var(--dehors-creme);
   }
 }
 
 .calloutTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: white;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--dehors-creme);
   margin: 0 0 8px 0;
   position: relative;
   z-index: 1;
@@ -76,7 +52,7 @@
 
 .calloutText {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--dehors-creme-doux);
   margin: 0 0 16px 0;
   line-height: 1.5;
   position: relative;
@@ -84,17 +60,15 @@
 }
 
 .calloutButton {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  color: white !important;
-  font-weight: 600;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: var(--dehors-orange) !important;
+  border: none !important;
+  color: var(--dehors-creme) !important;
+  font-weight: 700;
+  border-radius: 999px !important;
   position: relative;
   z-index: 1;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.25) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background: var(--dehors-orange-survol) !important;
   }
 }

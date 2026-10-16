@@ -31,9 +31,10 @@
     gap: 2px;
 
     .number {
+      font-family: FatFrank, 'Arial Black', sans-serif;
       font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+      font-weight: 400;
+      letter-spacing: 0;
       line-height: 1.2;
       align-self: end;
 
@@ -43,9 +44,9 @@
     }
 
     .description {
-      font-size: 0.85rem;
-      color: var(--hi-color-gray-dark);
-      font-weight: 400;
+      font-size: 0.8125rem;
+      color: var(--dehors-texte-doux);
+      font-weight: 700;
       align-self: start;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -56,19 +57,20 @@
     margin-left: 1rem;
     align-self: flex-start;
 
+    // Overrides the per-stat colors passed inline: the DEHORS palette keeps every icon orange.
     .icon {
       width: 40px;
       height: 40px;
-      border-radius: 10px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #ffffff;
+      background-color: var(--dehors-orange) !important;
+      color: var(--dehors-creme);
 
       @include mixins.respond-below(md) {
         width: 36px;
         height: 36px;
-        border-radius: 10px;
       }
     }
   }

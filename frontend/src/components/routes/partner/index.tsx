@@ -45,6 +45,7 @@ const themeStylesFor = (event?: Event) => {
             '--event-secondary-color': cssVars['--theme-text-secondary'],
             '--event-secondary-text-color': cssVars['--theme-text-tertiary'],
             '--event-accent-contrast': cssVars['--theme-accent-contrast'],
+            '--event-accent-text': cssVars['--theme-accent-text'],
             '--event-accent-soft': cssVars['--theme-accent-soft'],
             '--event-accent-muted': cssVars['--theme-accent-muted'],
             '--event-border-color': cssVars['--theme-border'],

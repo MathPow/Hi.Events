@@ -1,6 +1,7 @@
-import {Button, Group} from "@mantine/core";
+import {Tabs} from "@mantine/core";
 import {t} from "@lingui/macro";
 import {useNavigate} from "react-router";
+import classes from "./EventsDashboardStatusButtons.module.scss";
 
 interface EventsDashboardStatusButtonsProps {
     baseUrl: string;
@@ -11,26 +12,17 @@ export const EventsDashboardStatusButtons = ({baseUrl, eventsState}: EventsDashb
     const navigate = useNavigate();
 
     return (
-        <Group mt={10} mb={15}>
-            <Button
-                size={'compact-sm'}
-                variant={eventsState === 'upcoming' || !eventsState ? 'light' : 'transparent'}
-                onClick={() => navigate(baseUrl + '/upcoming' + window.location.search)}
-            >
-                {t`Upcoming`}
-            </Button>
-            <Button size={'compact-sm'}
-                    variant={eventsState === 'ended' ? 'light' : 'transparent'}
-                    onClick={() => navigate(baseUrl + '/ended' + window.location.search)}
-            >
-                {t`Ended`}
-            </Button>
-            <Button size={'compact-sm'}
-                    variant={eventsState === 'archived' ? 'light' : 'transparent'}
-                    onClick={() => navigate(baseUrl + '/archived' + window.location.search)}
-            >
-                {t`Archived`}
-            </Button>
-        </Group>
+        <Tabs
+            variant={'pills'}
+            className={classes.statusTabs}
+            value={eventsState || 'upcoming'}
+            onChange={(value) => navigate(baseUrl + '/' + value + window.location.search)}
+        >
+            <Tabs.List>
+                <Tabs.Tab value={'upcoming'}>{t`Upcoming`}</Tabs.Tab>
+                <Tabs.Tab value={'ended'}>{t`Ended`}</Tabs.Tab>
+                <Tabs.Tab value={'archived'}>{t`Archived`}</Tabs.Tab>
+            </Tabs.List>
+        </Tabs>
     );
 }

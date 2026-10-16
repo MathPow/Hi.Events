@@ -8,8 +8,8 @@
   min-width: 280px;
 
   &:hover {
-    border-color: var(--mantine-color-gray-4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-color: var(--dehors-sable);
+    box-shadow: 0 0.5rem 1.25rem rgb(53 41 36 / 0.08);
 
     .title {
       color: var(--mantine-color-primary-filled);
@@ -119,9 +119,9 @@
   }
 
   &.status-draft {
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--mantine-color-gray-7);
-    border: 1px dashed var(--mantine-color-gray-5);
+    background: var(--dehors-creme);
+    color: var(--dehors-brun);
+    border: 1px dashed var(--dehors-sable);
   }
 
   &.status-ended,
@@ -148,8 +148,8 @@
   position: absolute;
   bottom: 10px;
   left: 10px;
-  background: var(--mantine-color-white);
-  border-radius: var(--hi-radius-sm);
+  background: var(--dehors-creme);
+  border-radius: 0.75rem;
   padding: 6px 10px;
   display: flex;
   flex-direction: column;
@@ -159,16 +159,17 @@
 }
 
 .dateDay {
+  font-family: FatFrank, 'Arial Black', sans-serif;
   font-size: 18px;
-  font-weight: 700;
-  color: var(--mantine-color-dark-9);
+  font-weight: 400;
+  color: var(--dehors-brun);
   line-height: 1;
 }
 
 .dateMonth {
   font-size: 10px;
   font-weight: 600;
-  color: var(--mantine-color-primary-filled);
+  color: var(--dehors-orange);
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-top: 2px;
@@ -286,8 +287,8 @@
   align-items: center;
   gap: 24px;
   padding: 12px 18px;
-  background: var(--mantine-color-gray-0);
-  border-radius: var(--hi-radius-md);
+  background: var(--dehors-champ);
+  border-radius: 1rem;
   flex-shrink: 0;
 
   @include mixins.respond-below(lg, true) {
@@ -367,7 +368,7 @@
   }
 
   &:hover {
-    background: var(--mantine-color-gray-1);
+    background: var(--dehors-champ);
     color: var(--mantine-color-text);
   }
 }

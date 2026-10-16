@@ -224,7 +224,7 @@ const TicketDesigner = () => {
                     </Button>
                 </div>
                 
-                <div className={classes.previewContent}>
+                <div className={classes.previewContent} data-dehors-apercu>
                     <TicketPreview
                         settings={form.values}
                         eventId={eventId}

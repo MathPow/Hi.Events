@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Outlet} from "react-router";
+import {Outlet, useLocation} from "react-router";
 import classes from './AppLayout.module.scss';
 import {Topbar} from "./Topbar";
 import {Sidebar} from "./Sidebar";
@@ -8,6 +8,7 @@ import {IconLayoutSidebar} from "@tabler/icons-react";
 import {UnstyledButton, VisuallyHidden} from "@mantine/core";
 import {t} from "@lingui/macro";
 import ImpersonationBanner from "../../common/ImpersonationBanner";
+import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 
 interface AppLayoutProps {
     navItems: NavItem[];
@@ -39,6 +40,19 @@ const SidebarToggleButton: React.FC<SidebarToggleButtonProps> = ({open, onClick}
     );
 };
 
+// The sidebar entry for the current page, so the breadcrumbs can end with where the user is.
+const findCurrentNavItem = (navItems: NavItem[], pathname: string): NavItem | undefined => {
+    const segments = pathname.split('/');
+
+    return navItems.find((item) => {
+        if (!item.link || item.link.startsWith('/')) {
+            return false;
+        }
+        const isInPath = segments.includes(item.link);
+        return item.isActive ? item.isActive(isInPath) : isInPath;
+    });
+};
+
 const AppLayout: React.FC<AppLayoutProps> = ({
                                                  navItems,
                                                  breadcrumbItems,
@@ -48,6 +62,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                                                  actionGroupContent = null,
                                                  sidebarFooter = null,
                                              }) => {
+    useDehorsAppTheme();
+    const location = useLocation();
+    const currentNavItem = findCurrentNavItem(navItems, location.pathname);
+    const breadcrumbsWithCurrentPage = currentNavItem
+        ? [...breadcrumbItems, {content: currentNavItem.label}]
+        : breadcrumbItems;
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
         if (typeof window === 'undefined') return true; // SSR default
         return window.innerWidth >= 768; // Desktop open, mobile closed
@@ -87,7 +107,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                     sidebarOpen={sidebarOpen}
                     setSidebarOpen={setSidebarOpen}
                     topBarShadow={topBarShadow}
-                    breadcrumbItems={breadcrumbItems}
+                    breadcrumbItems={breadcrumbsWithCurrentPage}
                     topBarContent={topBarContent}
                     breadcrumbContentRight={breadcrumbContentRight}
                     actionGroupContent={actionGroupContent}

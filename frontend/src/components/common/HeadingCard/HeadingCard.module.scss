@@ -20,3 +20,37 @@
     place-content: flex-end;
   }
 }
+
+:global(body.dehors-app) .card {
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  padding: 0;
+  margin-bottom: 1.25rem;
+  background: transparent;
+  border: none;
+
+  .heading {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .subHeading {
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    color: var(--dehors-texte-doux);
+  }
+
+  .button :global(.mantine-Button-root) {
+    height: 2.75rem;
+    padding-inline: 1.375rem;
+    font-size: 1rem;
+    background: var(--dehors-orange);
+    color: var(--dehors-creme);
+
+    &:hover {
+      background: var(--dehors-orange-survol);
+    }
+  }
+}

@@ -4,9 +4,18 @@ import {t} from "@lingui/macro";
 import {IconWorld} from "@tabler/icons-react";
 import {useLingui} from "@lingui/react";
 
-export const LanguageSwitcher = ({classNames, comboboxProps, iconColor = '#ccc', locales}: {
+export const LanguageSwitcher = ({
+    classNames,
+    comboboxProps,
+    checkIconPosition,
+    onDropdownOpen,
+    iconColor = '#ccc',
+    locales,
+}: {
     classNames?: SelectProps['classNames'];
     comboboxProps?: SelectProps['comboboxProps'];
+    checkIconPosition?: SelectProps['checkIconPosition'];
+    onDropdownOpen?: SelectProps['onDropdownOpen'];
     iconColor?: string;
     locales?: SupportedLocales[];
 }) => {
@@ -65,6 +74,8 @@ export const LanguageSwitcher = ({classNames, comboboxProps, iconColor = '#ccc',
                 leftSection={<IconWorld size={15} color={iconColor}/>}
                 classNames={classNames}
                 comboboxProps={comboboxProps}
+                checkIconPosition={checkIconPosition}
+                onDropdownOpen={onDropdownOpen}
                 aria-label={t`Language`}
                 width={180}
                 size={'xs'}

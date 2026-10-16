@@ -31,6 +31,8 @@ import {getProductsFromEvent} from "../../../utilites/helpers.ts";
 import {useGetEvent} from "../../../queries/useGetEvent";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings";
 import {useGetEventStats} from "../../../queries/useGetEventStats";
+import {useGetEventImages} from "../../../queries/useGetEventImages.ts";
+import {useGetAccount} from "../../../queries/useGetAccount.ts";
 import Truncate from "../../common/Truncate";
 import {BreadcrumbItem, NavItem} from "../AppLayout/types.ts";
 import AppLayout from "../AppLayout";
@@ -63,6 +65,8 @@ const EventLayout = () => {
     const {data: event, isFetched: isEventFetched} = useGetEvent(eventId);
     const {data: eventSettings, isFetched: isEventSettingsFetched} = useGetEventSettings(eventId);
     const {data: eventStats} = useGetEventStats(eventId);
+    const {data: eventImages, isFetched: isEventImagesFetched} = useGetEventImages(eventId);
+    const {data: account, isFetched: isAccountFetched} = useGetAccount();
     const {data: me} = useGetMe();
 
     const resendEmailConfirmationMutation = useResendEmailConfirmation();
@@ -82,7 +86,21 @@ const EventLayout = () => {
         })
     }
 
-    const hasDeposits = !!getProductsFromEvent(event)?.some(product => (product.deposit_amount || 0) > 0);
+    const products = getProductsFromEvent(event);
+    const hasDeposits = !!products?.some(product => (product.deposit_amount || 0) > 0);
+
+    // Same steps as the Getting Started page: point to the pages that still need work.
+    const isSetupStatusKnown = isEventFetched && isEventImagesFetched && isAccountFetched;
+    const needsProducts = isSetupStatusKnown && !products?.length;
+    const needsDetails = isSetupStatusKnown && !event?.description;
+    const needsImages = isSetupStatusKnown && !eventImages?.length;
+    const remainingSetupSteps = isSetupStatusKnown ? [
+        needsProducts,
+        needsDetails,
+        !account?.stripe_connect_setup_complete,
+        needsImages,
+        event?.status !== 'LIVE',
+    ].filter(Boolean).length : 0;
 
     const navItems: NavItem[] = [
         {link: '/manage/organizer/' + event?.organizer?.id, label: t`Organizer Dashboard`, icon: IconArrowLeft},
@@ -93,7 +111,9 @@ const EventLayout = () => {
             link: 'getting-started',
             label: t`Getting Started`,
             icon: IconStar,
-            showWhen: () => !eventSettings?.hide_getting_started_page
+            showWhen: () => !eventSettings?.hide_getting_started_page,
+            badge: remainingSetupSteps > 0 ? remainingSetupSteps : undefined,
+            attention: remainingSetupSteps > 0,
         },
         {link: 'dashboard', label: t`Dashboard`, icon: IconDashboard},
         {
@@ -105,14 +125,14 @@ const EventLayout = () => {
 
         // 2. EVENT SETUP
         {label: t`Setup & Design`},
-        {link: 'settings', label: t`Event Settings`, icon: IconSettings},
-        {link: 'homepage-designer', label: t`Homepage Designer`, icon: IconPaint},
+        {link: 'settings', label: t`Event Settings`, icon: IconSettings, attention: needsDetails},
+        {link: 'homepage-designer', label: t`Homepage Designer`, icon: IconPaint, attention: needsImages},
         {link: 'ticket-designer', label: t`Ticket Designer`, icon: IconTicket},
         {link: 'questions', label: t`Registration Questions`, icon: IconUserQuestion},
 
         // 3. Ticketing & Sales
         {label: t`Ticketing & Sales`},
-        {link: 'products', label: t`Tickets & Products`, icon: IconTicket},
+        {link: 'products', label: t`Tickets & Products`, icon: IconTicket, attention: needsProducts},
         {link: 'orders', label: t`Orders`, icon: IconReceipt, badge: eventStats?.total_orders},
         ...(hasDeposits ? [{link: 'deposits', label: t`Deposits`, icon: IconShieldLock}] : []),
         {link: 'promo-codes', label: t`Promo Codes`, icon: IconDiscount2},

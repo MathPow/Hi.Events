@@ -8,6 +8,8 @@ export interface NavItem {
     comingSoon?: boolean;
     isActive?: (isActive: boolean) => boolean;
     badge?: string | number | null | undefined;
+    // Something on this page still needs to be done: shows an orange dot, or makes the badge orange.
+    attention?: boolean;
     onClick?: () => void;
     showWhen?: () => boolean | undefined;
     loading?: boolean;

@@ -2,6 +2,11 @@
 
 .container {
   min-width: 300px;
+
+  // The search bar below sticks to the top instead, to keep room for the attendee list.
+  > header {
+    position: static;
+  }
 }
 
 .header {
@@ -11,13 +16,15 @@
   display: flex;
   flex-direction: column;
   padding: 15px;
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+  background-color: var(--dehors-creme);
+  border-bottom: 1px solid var(--dehors-trait);
 
   .title {
     margin-bottom: 10px;
     margin-top: 0px;
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
   }
 
   .search {
@@ -73,9 +80,9 @@
   .attendee {
     display: flex;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--dehors-surface);
     padding: 15px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--dehors-trait);
 
     .details {
       flex: 1;
@@ -90,7 +97,7 @@
       }
 
       .product {
-        color: #999;
+        color: var(--dehors-texte-doux);
         font-size: 1em;
         display: flex;
         align-items: center;
@@ -111,7 +118,7 @@
 
   .checkInCount {
     font-size: 1em;
-    color: #999;
+    color: var(--dehors-texte-doux);
     margin-bottom: 10px;
 
     h4 {

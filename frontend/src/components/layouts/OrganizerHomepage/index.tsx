@@ -107,6 +107,7 @@ export const OrganizerHomepage = ({
         '--organizer-secondary-color': cssVars['--theme-text-secondary'],
         '--organizer-secondary-text-color': cssVars['--theme-text-tertiary'],
         '--organizer-accent-contrast': cssVars['--theme-accent-contrast'],
+        '--organizer-accent-text': cssVars['--theme-accent-text'],
         '--organizer-accent-soft': cssVars['--theme-accent-soft'],
         '--organizer-accent-muted': cssVars['--theme-accent-muted'],
         '--organizer-border-color': cssVars['--theme-border'],

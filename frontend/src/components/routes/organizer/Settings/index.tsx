@@ -132,7 +132,6 @@ const Settings = () => {
             <Stack gap="xs">
                 {SECTIONS.map((section) => (
                     <MantineNavLink
-                        style={{ borderRadius: '5px' }}
                         key={section.id}
                         active={activeSection === section.id}
                         label={section.label}

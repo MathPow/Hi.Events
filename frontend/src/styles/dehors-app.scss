@@ -1,0 +1,465 @@
+:root {
+  --dehors-creme: #fff7e9;
+  --dehors-brun: #352924;
+  --dehors-orange: #f47d3c;
+  --dehors-orange-survol: #e86c2a;
+  --dehors-orange-clair: #ffad7d;
+  --dehors-sable: #e3ad92;
+  --dehors-terracotta: #c47762;
+  --dehors-surface: #ffffff;
+  --dehors-champ: rgb(227 173 146 / 0.3);
+  --dehors-champ-survol: rgb(227 173 146 / 0.46);
+  --dehors-trait: rgb(227 173 146 / 0.55);
+  --dehors-texte-doux: rgb(53 41 36 / 0.7);
+  --dehors-creme-doux: rgb(255 247 233 / 0.78);
+  --dehors-creme-voile: rgb(255 247 233 / 0.09);
+}
+
+// Organizer app styled after the DEHORS website (dehorsqc.com). Scoped to body.dehors-app,
+// set by the back-office layouts (see useDehorsAppTheme), so menus and modals rendered in
+// portals pick it up while public event and checkout pages keep their own theme.
+//
+// Previews of public pages rendered inside the back office (widget, ticket, checkout questions)
+// are marked with data-dehors-apercu: the variables below are restored there and the component
+// rules skip them, so organizers see what their buyers will see.
+$hors-apercu: ':not([data-dehors-apercu] *)';
+
+$variables: (
+  hi-text: var(--dehors-brun),
+  hi-primary: var(--dehors-brun),
+  hi-secondary-text: var(--dehors-brun),
+  hi-link-color: var(--dehors-brun),
+  hi-color-gray: var(--dehors-creme),
+  hi-color-gray-2: var(--dehors-trait),
+  hi-color-gray-dark: var(--dehors-texte-doux),
+  hi-radius-md: 1.25rem,
+  hi-radius-lg: 1.25rem,
+  hi-gradient: var(--dehors-brun),
+  checkout-surface: var(--dehors-surface),
+  checkout-border: var(--dehors-trait),
+  checkout-accent-soft: var(--dehors-champ),
+
+  // Mantine's surface color: cards, papers and data boxes are white on the cream page.
+  mantine-color-body: var(--dehors-surface),
+  mantine-color-text: var(--dehors-brun),
+  mantine-color-dimmed: var(--dehors-texte-doux),
+  mantine-color-placeholder: rgb(53 41 36 / 0.5),
+  mantine-color-anchor: var(--dehors-brun),
+  mantine-color-default: var(--dehors-surface),
+  mantine-color-default-hover: var(--dehors-champ),
+  mantine-color-default-color: var(--dehors-brun),
+  mantine-color-default-border: var(--dehors-trait),
+  mantine-color-disabled: rgb(227 173 146 / 0.22),
+  mantine-color-disabled-color: rgb(53 41 36 / 0.45),
+  mantine-color-disabled-border: transparent,
+  mantine-radius-default: 0.875rem,
+  mantine-radius-md: 1.25rem,
+
+  mantine-color-primary-filled: var(--dehors-orange),
+  mantine-color-primary-filled-hover: var(--dehors-orange-survol),
+  mantine-color-primary-light: var(--dehors-champ),
+  mantine-color-primary-light-hover: var(--dehors-champ-survol),
+  mantine-color-primary-light-color: var(--dehors-brun),
+  mantine-color-primary-outline: var(--dehors-brun),
+  mantine-color-primary-outline-hover: var(--dehors-champ),
+  mantine-primary-color-filled: var(--dehors-orange),
+  mantine-primary-color-filled-hover: var(--dehors-orange-survol),
+  mantine-primary-color-light: var(--dehors-champ),
+  mantine-primary-color-light-hover: var(--dehors-champ-survol),
+  mantine-primary-color-light-color: var(--dehors-brun),
+  mantine-primary-color-contrast: var(--dehors-creme),
+  mantine-color-secondary-5: var(--dehors-orange),
+  mantine-color-secondary-6: var(--dehors-orange-survol),
+  mantine-color-gray-light: var(--dehors-champ),
+  mantine-color-gray-light-hover: var(--dehors-champ-survol),
+  mantine-color-gray-light-color: var(--dehors-brun),
+);
+
+// Resolved on the root element, where these variables still hold their original values.
+:root {
+  @each $nom, $valeur in $variables {
+    --dehors-origine-#{$nom}: var(--#{$nom});
+  }
+}
+
+body.dehors-app [data-dehors-apercu] {
+  @each $nom, $valeur in $variables {
+    --#{$nom}: var(--dehors-origine-#{$nom});
+  }
+}
+
+body.dehors-app {
+  @each $nom, $valeur in $variables {
+    --#{$nom}: #{$valeur};
+  }
+
+  --dehors-onglet: 2.5rem;
+
+  background-color: var(--dehors-creme) !important;
+  color: var(--dehors-brun);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  // Display font for headings, as on the site; rich text keeps its own look.
+  :where(h1, h2):not(:where(.mantine-RichTextEditor-root, [data-dehors-apercu]) *) {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  ::selection {
+    background: var(--dehors-orange);
+    color: var(--dehors-brun);
+  }
+
+  .mantine-focus-auto:focus-visible,
+  .mantine-focus-always:focus {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+
+  .card.default#{$hors-apercu} {
+    box-shadow: none;
+  }
+
+
+  // Buttons
+  .mantine-Button-root#{$hors-apercu} {
+    --button-radius: 999px;
+    transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease;
+
+    // Filled is Mantine's default variant, rendered without a data-variant attribute.
+    &:is(:not([data-variant]), [data-variant='filled']) {
+      color: var(--dehors-creme);
+    }
+
+    // Create actions are color="green" across the back office; on the site every call to action is orange.
+    &:is(:not([data-variant]), [data-variant='filled'])[style*='var(--mantine-color-green-filled)']:where(:not(:disabled, [data-disabled])) {
+      background: var(--dehors-orange);
+
+      &:hover {
+        background: var(--dehors-orange-survol);
+      }
+    }
+
+    &:where(:not(:disabled, [data-disabled], [data-loading])):active {
+      scale: 1.01;
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      &:where(:not([data-variant]), [data-variant='filled'], [data-variant='light'], [data-variant='outline'], [data-variant='default']):where(:not(:disabled, [data-disabled], [data-loading])):hover {
+        scale: 1.03;
+      }
+    }
+  }
+
+  .mantine-Button-label#{$hors-apercu} {
+    font-weight: 700;
+  }
+
+  // Inputs
+  .mantine-Input-wrapper:is([data-variant='default'], [data-variant='filled'])#{$hors-apercu} {
+    --input-bg: var(--dehors-champ);
+    --input-bd: transparent;
+    --input-bd-focus: var(--dehors-brun);
+    --input-height-sm: 2.75rem;
+  }
+
+  // Set on the property, not --input-radius: components passing radius="sm" set that variable inline.
+  .mantine-Input-input:where(:not([data-variant='unstyled']))#{$hors-apercu} {
+    border-radius: 1rem;
+    border-width: 2px;
+    color: var(--dehors-brun);
+    font-size: 1rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+
+    &:hover:where(:not(:disabled, [data-disabled])) {
+      background-color: var(--dehors-champ-survol);
+    }
+  }
+
+  .mantine-InputWrapper-label#{$hors-apercu} {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .mantine-InputWrapper-description#{$hors-apercu} {
+    color: var(--dehors-texte-doux);
+    font-size: 0.8125rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .mantine-InputWrapper-required#{$hors-apercu} {
+    color: var(--dehors-orange);
+  }
+
+  .mantine-Checkbox-input#{$hors-apercu} {
+    border: 2px solid var(--dehors-brun);
+    border-radius: 0.375rem;
+  }
+
+  .mantine-Checkbox-label#{$hors-apercu} {
+    font-weight: 600;
+  }
+
+  .mantine-Fieldset-root {
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .mantine-Fieldset-legend {
+    padding: 0;
+    margin-bottom: 0.75rem;
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-weight: 400;
+  }
+
+  // Side menus of the settings pages
+  .mantine-NavLink-root {
+    border-radius: 999px;
+    color: var(--dehors-brun);
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background-color: var(--dehors-champ);
+    }
+
+    &[data-active] {
+      background-color: var(--dehors-brun);
+      color: var(--dehors-creme);
+    }
+  }
+
+  .mantine-NavLink-label {
+    font-weight: 700;
+  }
+
+  // Segmented controls look like the site's filters too.
+  .mantine-SegmentedControl-root {
+    --sc-radius: 999px;
+    background: var(--dehors-champ);
+    padding: 0.25rem;
+  }
+
+  .mantine-SegmentedControl-indicator {
+    background: var(--dehors-brun);
+    box-shadow: none;
+  }
+
+  .mantine-SegmentedControl-control::before {
+    display: none;
+  }
+
+  .mantine-SegmentedControl-label {
+    font-weight: 700;
+    color: var(--dehors-brun);
+
+    &[data-active] {
+      color: var(--dehors-creme);
+    }
+  }
+
+  // Rich text editor
+  .mantine-RichTextEditor-root {
+    border-color: var(--dehors-trait);
+    border-radius: 1rem;
+    background: var(--dehors-surface);
+  }
+
+  .mantine-RichTextEditor-toolbar {
+    background: transparent;
+    border-bottom-color: var(--dehors-trait);
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .mantine-RichTextEditor-content {
+    background: transparent;
+  }
+
+  .mantine-RichTextEditor-control {
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--dehors-brun);
+
+    &:where(:not(:disabled, [data-disabled])):hover {
+      background: var(--dehors-champ);
+    }
+
+    &[data-active] {
+      background: var(--dehors-champ-survol);
+      color: var(--dehors-brun);
+    }
+  }
+
+  // Dropdowns, menus, popovers
+  .mantine-Menu-dropdown,
+  .mantine-Combobox-dropdown,
+  .mantine-Popover-dropdown {
+    background: var(--dehors-creme);
+    border: 1px solid var(--dehors-trait);
+    border-radius: 1rem;
+    box-shadow: 0 0.75rem 2rem rgb(53 41 36 / 0.14);
+  }
+
+  .mantine-Menu-dropdown,
+  .mantine-Combobox-dropdown {
+    padding: 0.375rem;
+  }
+
+  .mantine-Menu-item,
+  .mantine-Combobox-option {
+    border-radius: 0.625rem;
+    font-weight: 600;
+  }
+
+  .mantine-Menu-item:where(:not([data-disabled]))[data-hovered],
+  .mantine-Combobox-option:where(:not([data-combobox-disabled])):hover {
+    background-color: var(--dehors-champ);
+  }
+
+  .mantine-Combobox-option[data-combobox-selected] {
+    background-color: var(--dehors-champ-survol);
+    color: var(--dehors-brun);
+  }
+
+  .mantine-Menu-divider {
+    border-color: var(--dehors-trait);
+  }
+
+  .mantine-Tooltip-tooltip {
+    background: var(--dehors-brun);
+    color: var(--dehors-creme);
+    border-radius: 0.625rem;
+    font-weight: 600;
+  }
+
+  // Modals
+  .mantine-Modal-overlay {
+    background: rgb(53 41 36 / 0.45);
+  }
+
+  .mantine-Modal-content {
+    background: var(--dehors-creme);
+    border-radius: 1.5rem;
+  }
+
+  .mantine-Modal-header {
+    background: var(--dehors-creme);
+  }
+
+  .mantine-Modal-title {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-weight: 400;
+  }
+
+  .mantine-Modal-close {
+    border-radius: 999px;
+    color: var(--dehors-brun);
+    background: var(--dehors-champ);
+
+    &:hover {
+      background: var(--dehors-champ-survol);
+    }
+  }
+
+  // Tables
+  .mantine-Table-table {
+    --table-border-color: var(--dehors-trait);
+    --table-hover-color: rgb(227 173 146 / 0.14);
+  }
+
+  .mantine-Table-th {
+    color: var(--dehors-texte-doux);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  // Badges, avatars, code, alerts
+  .mantine-Badge-root#{$hors-apercu} {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+  }
+
+  .mantine-Avatar-placeholder {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-weight: 400;
+    background: var(--dehors-champ-survol);
+    color: var(--dehors-brun);
+  }
+
+  .mantine-Code-root {
+    background: var(--dehors-champ);
+    color: var(--dehors-brun);
+    border-radius: 0.5rem;
+  }
+
+  .mantine-Alert-root#{$hors-apercu} {
+    border-radius: 1rem;
+  }
+
+  // Pill tabs, like the website's filters: a sand track, the chosen tab in brown.
+  .mantine-Tabs-root[data-variant='pills'] {
+    .mantine-Tabs-list {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      gap: 0.25rem;
+      max-width: 100%;
+      padding: 0.375rem;
+      border-radius: 999px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      background: var(--dehors-champ);
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .mantine-Tabs-tab {
+      flex: none;
+      height: var(--dehors-onglet);
+      padding: 0 1.125rem;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--dehors-brun);
+      font-size: 1rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background-color 0.2s ease, color 0.2s ease;
+
+      &:hover {
+        background: var(--dehors-champ-survol);
+      }
+
+      &[data-active] {
+        background: var(--dehors-brun);
+        color: var(--dehors-creme);
+      }
+
+      &:focus-visible {
+        outline: 3px solid var(--dehors-orange);
+        outline-offset: -3px;
+      }
+    }
+
+    .mantine-Tabs-tabSection svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    @media (max-width: 575px) {
+      .mantine-Tabs-tab {
+        padding: 0 0.875rem;
+      }
+
+      .mantine-Tabs-tabSection {
+        display: none;
+      }
+    }
+  }
+}

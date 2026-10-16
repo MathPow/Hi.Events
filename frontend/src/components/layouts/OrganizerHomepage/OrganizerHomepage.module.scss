@@ -86,6 +86,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --bg-color: var(--organizer-bg-color);
   --content-bg-color: var(--organizer-content-bg-color);
   --accent-contrast: var(--organizer-accent-contrast);
+  --accent-text: var(--organizer-accent-text);
   --accent-soft: var(--organizer-accent-soft);
   --accent-muted: var(--organizer-accent-muted);
   --border-color: var(--organizer-border-color);
@@ -260,7 +261,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transition: color $transition-fast;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
   }
 }
@@ -273,7 +274,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
 .metaIcon {
   flex-shrink: 0;
-  color: var(--primary-color);
+  color: var(--accent-text);
 }
 
 // Profile actions
@@ -347,7 +348,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   a {
-    color: var(--primary-color);
+    color: var(--accent-text);
     text-decoration: none;
 
     &:hover {
@@ -549,7 +550,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .faqChevron {
-  color: var(--primary-color);
+  color: var(--accent-text);
 }
 
 .faqAnswer {
@@ -591,7 +592,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     &:hover:not([data-active]) {
       background: var(--accent-soft);
       border-color: var(--primary-color);
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
 
     &[data-active] {
@@ -637,7 +638,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transition: color $transition-fast;
 
   &:hover {
-    color: var(--primary-color);
+    color: var(--accent-text);
   }
 }
 
@@ -664,7 +665,7 @@ $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--accent-text);
     }
   }
 }
