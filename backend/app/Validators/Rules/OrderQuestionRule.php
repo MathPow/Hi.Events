@@ -20,7 +20,7 @@ class OrderQuestionRule extends BaseQuestionRule
 
         if (array_diff($requiredQuestionIds->toArray(), $orderQuestions->pluck('question_id')->toArray())) {
             throw ValidationException::withMessages([
-                'Required questions have not been answered. You may need to reload the page.'
+                __('Required questions have not been answered. You may need to reload the page.')
             ]);
         }
     }
@@ -35,7 +35,7 @@ class OrderQuestionRule extends BaseQuestionRule
             $answer = $response['answer'] ?? $response;
 
             if (!$questionDomainObject) {
-                $validationMessages[$key . '.answer'][] = 'This question is outdated. Please reload the page.';
+                $validationMessages[$key . '.answer'][] = __('This question is outdated. Please reload the page.');
                 continue;
             }
 
@@ -48,7 +48,7 @@ class OrderQuestionRule extends BaseQuestionRule
             }
 
             if (!$questionDomainObject->isAnswerValid($answer)) {
-                $validationMessages[$key . '.answer'][] = 'Please select an option';
+                $validationMessages[$key . '.answer'][] = __('Please select an option');
             }
 
             $validationMessages = $this->validateResponseLength($questionDomainObject, $response, $key, $validationMessages);

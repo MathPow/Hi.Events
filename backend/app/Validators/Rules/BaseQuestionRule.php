@@ -112,7 +112,7 @@ abstract class BaseQuestionRule implements ValidationRule, DataAwareRule, Valida
         }
 
         if (empty($response) || (is_array($response) && empty($response['answer']))) {
-            $validationMessages[$key . '.answer'][] = 'This field is required.';
+            $validationMessages[$key . '.answer'][] = __('This field is required.');
         }
 
         return $validationMessages;

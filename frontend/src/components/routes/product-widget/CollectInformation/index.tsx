@@ -199,6 +199,22 @@ export const CollectInformation = () => {
     // touche plus, pour qu'on puisse y mettre le nom ou le courriel de quelqu'un d'autre.
     const previousOrderDetails = useRef({first_name: "", last_name: "", email: ""});
 
+    // Le bouton est au bas d'un long formulaire: sans ca, une question obligatoire
+    // laissee vide plus haut donne l'impression que le bouton ne fait rien.
+    const shouldScrollToError = useRef(false);
+
+    useEffect(() => {
+        if (!shouldScrollToError.current || Object.keys(form.errors).length === 0) {
+            return;
+        }
+
+        shouldScrollToError.current = false;
+
+        const field = document.querySelector<HTMLElement>('[aria-invalid="true"]');
+        field?.scrollIntoView({behavior: 'smooth', block: 'center'});
+        field?.focus({preventScroll: true});
+    }, [form.errors]);
+
     useEffect(() => {
         const previous = previousOrderDetails.current;
         const {first_name, last_name, email} = form.values.order;
@@ -251,6 +267,7 @@ export const CollectInformation = () => {
 
         onError: (error: any) => {
             if (error?.response?.data?.errors && Object.keys(error?.response?.data?.errors).length > 0) {
+                shouldScrollToError.current = true;
                 form.setErrors(error.response.data.errors);
             } else if (error?.response?.data?.message) {
                 notifications.show({
@@ -479,7 +496,9 @@ export const CollectInformation = () => {
     });
 
     return (
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+        <form onSubmit={form.onSubmit(handleSubmit, () => {
+            shouldScrollToError.current = true;
+        })}>
 
             <CheckoutContent>
                 {isFromWaitlist && (
