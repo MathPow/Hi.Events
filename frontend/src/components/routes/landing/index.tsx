@@ -825,7 +825,7 @@ const Landing = () => {
             title: t`On the DEHORS calendar`,
             text: <Trans>Your event shows up in the <a href={`${DEHORS_SITE}/calendrier`} target="_blank" rel="noopener"><ShakyText
                 text={t`DEHORS calendar`}/></a>, the one the community checks to plan its outings.</Trans>,
-            picture: 'photos/hero-poster',
+            picture: 'features/coucher-soleil',
         },
     ].map(({picture, contain, ...feature}) => ({...feature, picture: {src: `${ASSETS}/${picture}.webp`, contain}}));
     const missingPicture: FeaturePicture = {src: `${ASSETS}/features/foret-ruisseau.webp`};
