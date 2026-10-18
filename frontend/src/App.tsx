@@ -22,7 +22,7 @@ import {StartupChecks} from "./StartupChecks.tsx";
 import {ThirdPartyScripts} from "./components/common/ThirdPartyScripts";
 import {getConfig} from "./utilites/config.ts";
 import {CookieConsentBanner} from "./components/common/CookieConsentBanner";
-import {isConsentPending, setConsentState, updateGoogleConsentMode} from "./utilites/trackingPixels/consent";
+import {setConsentState, updateGoogleConsentMode} from "./utilites/trackingPixels/consent";
 import {initPostHog} from "./utilites/posthog.ts";
 import "./utilites/dateLocales.ts";
 
@@ -41,8 +41,8 @@ export const App: FC<
     }>
 > = (props) => {
     const [isLoadedOnBrowser, setIsLoadedOnBrowser] = React.useState(false);
-    const showGlobalConsentBanner = getConfig('VITE_COOKIE_CONSENT_ENABLED') === 'true'
-        && !isSsr() && isConsentPending();
+    // The biscuit stays once a choice is made, to change it: the banner is there as soon as the browser is.
+    const showGlobalConsentBanner = getConfig('VITE_COOKIE_CONSENT_ENABLED') === 'true' && isLoadedOnBrowser;
 
     const handleGlobalConsent = useCallback((granted: boolean) => {
         setConsentState(granted ? 'granted' : 'denied');
