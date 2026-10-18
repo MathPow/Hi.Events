@@ -14,6 +14,7 @@ use HiEvents\Services\Application\Handlers\Attendee\CreateAttendeeHandler;
 use HiEvents\Services\Application\Handlers\Attendee\DTO\CreateAttendeeDTO;
 use HiEvents\Services\Application\Handlers\CheckInList\Public\DTO\AttendeeAndActionDTO;
 use HiEvents\Services\Application\Handlers\CheckInList\Public\DTO\CreateDoorSaleDTO;
+use HiEvents\Services\Domain\Account\OrganizerEmailQuotaService;
 use HiEvents\Services\Domain\CheckInList\CreateAttendeeCheckInService;
 use HiEvents\Services\Domain\DoorSale\DoorSaleListService;
 use Illuminate\Support\Collection;
@@ -31,6 +32,7 @@ class CreateDoorSaleHandler
         private readonly DoorSaleListService          $doorSaleListService,
         private readonly CreateAttendeeHandler        $createAttendeeHandler,
         private readonly CreateAttendeeCheckInService $createAttendeeCheckInService,
+        private readonly OrganizerEmailQuotaService   $emailQuotaService,
     )
     {
     }
@@ -76,7 +78,9 @@ class CreateDoorSaleHandler
                     email: $doorSale->email ?? $this->placeholderEmail(),
                     product_id: $product->getId(),
                     event_id: $checkInList->getEventId(),
-                    send_confirmation_email: $doorSale->email !== null,
+                    // Passe le plafond du compte, la vente se fait quand meme, sans courriel.
+                    send_confirmation_email: $doorSale->email !== null
+                        && $this->emailQuotaService->tryConsumeForEvent($checkInList->getEventId()),
                     amount_paid: $price->getPrice(),
                     locale: $doorSale->locale,
                     product_price_id: $price->getId(),

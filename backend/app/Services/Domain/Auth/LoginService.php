@@ -55,6 +55,7 @@ readonly class LoginService
 
         if ($accountId) {
             $this->validateUserStatus($accountId, $userAccounts);
+            $this->validateAccountIsNotSuspended($accountId, $accounts);
         }
 
         $userRole = $this->getUserRole($accountId, $userAccounts);
@@ -135,6 +136,18 @@ readonly class LoginService
             $this->logger->info(__('Attempt to log in to a non-active account'), $currentAccount->toArray());
 
             throw new UnauthorizedException(__('User account is not active'));
+        }
+    }
+
+    private function validateAccountIsNotSuspended(int $accountId, Collection $accounts): void
+    {
+        /** @var AccountDomainObject|null $account */
+        $account = $accounts->first(fn(AccountDomainObject $account) => $account->getId() === $accountId);
+
+        if ($account?->isSuspended()) {
+            $this->logger->info('Attempt to log in to a suspended account', ['accountId' => $accountId]);
+
+            throw new UnauthorizedException(__('This account has been suspended. Contact support for more information.'));
         }
     }
 

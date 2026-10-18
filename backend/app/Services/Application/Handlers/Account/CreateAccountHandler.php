@@ -32,6 +32,10 @@ use Throwable;
 
 class CreateAccountHandler
 {
+    private const UNTRUSTED_MESSAGING_TIER_ID = 1;
+
+    private const PREMIUM_MESSAGING_TIER_ID = 3;
+
     public function __construct(
         private readonly UserRepositoryInterface                 $userRepository,
         private readonly AccountRepositoryInterface              $accountRepository,
@@ -72,7 +76,7 @@ class CreateAccountHandler
                 'short_id' => IdHelper::shortId(IdHelper::ACCOUNT_PREFIX),
                 'account_verified_at' => $isSaasMode ? null : now()->toDateTimeString(),
                 'account_configuration_id' => $this->getAccountConfigurationId($accountData),
-                'account_messaging_tier_id' => $this->getDefaultMessagingTierId(),
+                'account_messaging_tier_id' => $this->getDefaultMessagingTierId($registrationInvite !== null),
             ]);
 
             $user = $this->getExistingUser($accountData) ?? $this->userRepository->create([
@@ -303,9 +307,13 @@ class CreateAccountHandler
         return $appHost === $referrerHost;
     }
 
-    private function getDefaultMessagingTierId(): int
+    /**
+     * Une inscription publique part du palier Untrusted: peu d'envois, pas de
+     * liens, messages verifies avant envoi. Une invitation vient d'un
+     * superadmin, elle garde Premium comme les comptes crees avant l'ouverture.
+     */
+    private function getDefaultMessagingTierId(bool $isInvited): int
     {
-        // Self-hosted instances get Premium tier, SaaS gets Untrusted
-        return $this->config->get('app.is_hi_events') ? 1 : 3;
+        return $isInvited ? self::PREMIUM_MESSAGING_TIER_ID : self::UNTRUSTED_MESSAGING_TIER_ID;
     }
 }

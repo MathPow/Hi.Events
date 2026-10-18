@@ -14,6 +14,7 @@ use HiEvents\Services\Domain\PromoCode\PromoCodeUsageValidationService;
 use HiEvents\Services\Application\Handlers\Order\CreateOrderHandler;
 use HiEvents\Services\Application\Handlers\Order\DTO\CreateOrderPublicDTO;
 use HiEvents\Services\Application\Handlers\Order\DTO\ProductOrderDetailsDTO;
+use HiEvents\Services\Domain\Account\AccountSuspensionService;
 use HiEvents\Services\Domain\Order\OrderItemProcessingService;
 use HiEvents\Services\Domain\Order\OrderManagementService;
 use HiEvents\Services\Domain\Product\AvailableProductQuantitiesFetchService;
@@ -63,6 +64,7 @@ class CreateOrderHandlerTest extends TestCase
             $this->orderItemProcessingService,
             $this->availabilityService,
             $this->databaseManager,
+            Mockery::mock(AccountSuspensionService::class, ['isSuspended' => false]),
         );
     }
 
@@ -173,6 +175,7 @@ class CreateOrderHandlerTest extends TestCase
         $event->shouldReceive('getId')->andReturn($eventId);
         $event->shouldReceive('getStatus')->andReturn(EventStatus::LIVE->name);
         $event->shouldReceive('getEventSettings')->andReturn($eventSettings);
+        $event->shouldReceive('getAccountId')->andReturn(1);
 
         $this->eventRepository->shouldReceive('loadRelation')->andReturnSelf();
         $this->eventRepository->shouldReceive('findById')->with($eventId)->andReturn($event);

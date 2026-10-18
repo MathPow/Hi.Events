@@ -11,6 +11,7 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\PromoCodeRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Order\CreateOrderHandler;
 use HiEvents\Services\Application\Handlers\Order\DTO\CreateOrderPublicDTO;
+use HiEvents\Services\Domain\Account\AccountSuspensionService;
 use HiEvents\Services\Domain\Order\OrderItemProcessingService;
 use HiEvents\Services\Domain\Order\OrderManagementService;
 use HiEvents\Services\Domain\Product\AvailableProductQuantitiesFetchService;
@@ -55,6 +56,7 @@ class CreateOrderHandlerPromoCodeTest extends TestCase
         $event = Mockery::mock(EventDomainObject::class);
         $event->shouldReceive('getEventSettings')->andReturn($eventSettings);
         $event->shouldReceive('getCurrency')->andReturn('USD');
+        $event->shouldReceive('getAccountId')->andReturn(1);
 
         $eventRepository = Mockery::mock(EventRepositoryInterface::class);
         $eventRepository->shouldReceive('loadRelation')->andReturnSelf();
@@ -104,6 +106,7 @@ class CreateOrderHandlerPromoCodeTest extends TestCase
             $orderItemProcessingService,
             $availabilityService,
             $databaseManager,
+            Mockery::mock(AccountSuspensionService::class, ['isSuspended' => false]),
         );
 
         $dto = new CreateOrderPublicDTO(

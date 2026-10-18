@@ -40,6 +40,8 @@ class AccountResource extends JsonResource
                 'configuration' => new AccountConfigurationResource($this->getConfiguration()),
             ]),
             'requires_manual_verification' => config('app.saas_mode_enabled') && !$this->getIsManuallyVerified(),
+            'platform_payments_allowed' => $this->getPlatformPaymentsAllowed(),
+            'donation_receipts_allowed' => $this->getDonationReceiptsAllowed(),
         ];
     }
 }

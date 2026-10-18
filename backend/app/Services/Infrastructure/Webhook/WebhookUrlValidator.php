@@ -14,6 +14,10 @@ class WebhookUrlValidator
 
     private const DEFAULT_PORTS = ['http' => 80, 'https' => 443];
 
+    // Le serveur heberge d'autres services sur des ports non standards de son
+    // adresse publique: une adresse publique ne suffit pas, le port compte aussi.
+    private const ALLOWED_PORTS = [80, 443];
+
     private const BLOCKED_HOSTS = [
         'localhost',
         '127.0.0.1',
@@ -74,6 +78,10 @@ class WebhookUrlValidator
             throw new UnsafeWebhookUrlException(__('The :attribute cannot point to cloud metadata endpoints.'));
         }
 
+        if (! in_array($port, self::ALLOWED_PORTS, true)) {
+            throw new UnsafeWebhookUrlException(__('The :attribute must use port 80 or 443.'));
+        }
+
         $ipAddresses = $this->resolveHostAddresses($host);
 
         foreach ($ipAddresses as $ipAddress) {
@@ -129,7 +137,17 @@ class WebhookUrlValidator
             return false;
         }
 
-        if (filter_var($normalised, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        // GLOBAL_RANGE ecarte aussi le partage d'adresses des operateurs et de
+        // Tailscale (100.64.0.0/10), les bancs de test et la documentation.
+        if (filter_var(
+            $normalised,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_GLOBAL_RANGE
+        ) === false) {
+            return false;
+        }
+
+        if ($this->isMulticast($normalised)) {
             return false;
         }
 
@@ -152,6 +170,21 @@ class WebhookUrlValidator
         }
 
         return true;
+    }
+
+    private function isMulticast(string $ipAddress): bool
+    {
+        $binary = @inet_pton($ipAddress);
+
+        if ($binary === false) {
+            return false;
+        }
+
+        if (strlen($binary) === 4) {
+            return (ord($binary[0]) & 0xF0) === 0xE0;
+        }
+
+        return ord($binary[0]) === 0xFF;
     }
 
     private function normaliseToRoutableIp(string $ipAddress): string

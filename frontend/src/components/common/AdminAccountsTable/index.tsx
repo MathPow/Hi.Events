@@ -61,7 +61,12 @@ const AdminAccountsTable = ({accounts, onImpersonate, isLoading}: AdminAccountsT
                 <div key={account.id} className={classes.accountCard}>
                     <div className={classes.cardHeader}>
                         <div className={classes.accountInfo}>
-                            <h3 className={classes.accountName}>{account.name}</h3>
+                            <h3 className={classes.accountName}>
+                                {account.name}
+                                {account.suspended_at && (
+                                    <Badge color="red" size="sm" ml="xs">{t`Suspended`}</Badge>
+                                )}
+                            </h3>
                             <span className={classes.accountEmail}>{account.email}</span>
                         </div>
                         <Button

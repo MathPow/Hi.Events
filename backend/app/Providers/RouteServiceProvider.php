@@ -29,6 +29,32 @@ class RouteServiceProvider extends ServiceProvider
                 ->by($request->user()?->id ?: $request->ip());
         });
 
+        // Inscription et connexion: assez pour une personne qui se trompe, trop
+        // peu pour un robot. Les courriels de compte (mot de passe oublie,
+        // confirmation) sont limites par adresse, pour ne pas servir a bombarder
+        // une boite de reception.
+        RateLimiter::for('register', function (Request $request) {
+            return Limit::perHour(10)->by($request->ip());
+        });
+
+        RateLimiter::for('login', function (Request $request) {
+            return [
+                Limit::perMinute(10)->by('email:' . strtolower((string)$request->input('email')) . '|' . $request->ip()),
+                Limit::perMinute(30)->by('ip:' . $request->ip()),
+            ];
+        });
+
+        RateLimiter::for('account-email', function (Request $request) {
+            return [
+                Limit::perHour(5)->by('account-email:' . ($request->user()?->id ?? strtolower((string)$request->input('email')))),
+                Limit::perHour(20)->by('ip:' . $request->ip()),
+            ];
+        });
+
+        RateLimiter::for('account-code', function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+        });
+
         RateLimiter::for('self-service-email', function (Request $request) {
             return Limit::perHour(20)->by($request->route('order_short_id') ?? $request->ip());
         });

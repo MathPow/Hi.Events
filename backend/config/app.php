@@ -25,6 +25,7 @@ return [
     'saas_default_pass_platform_fee_to_buyer' => env('APP_SAAS_DEFAULT_PASS_PLATFORM_FEE_TO_BUYER', false),
     'disable_registration' => env('APP_DISABLE_REGISTRATION', false),
     'api_rate_limit_per_minute' => env('APP_API_RATE_LIMIT_PER_MINUTE', 180),
+    'untrusted_account_daily_email_limit' => env('APP_UNTRUSTED_ACCOUNT_DAILY_EMAIL_LIMIT', 50),
     'stripe_connect_account_type' => env('APP_STRIPE_CONNECT_ACCOUNT_TYPE', 'express'),
     'platform_support_email' => env('APP_PLATFORM_SUPPORT_EMAIL', 'support@example.com'),
     'enforce_email_confirmation_during_registration' => env('APP_ENFORCE_EMAIL_CONFIRMATION_DURING_REGISTRATION', false),

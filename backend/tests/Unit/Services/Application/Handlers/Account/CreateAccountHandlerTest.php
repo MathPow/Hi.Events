@@ -4,6 +4,7 @@ namespace Tests\Unit\Services\Application\Handlers\Account;
 
 use HiEvents\DomainObjects\AccountConfigurationDomainObject;
 use HiEvents\DomainObjects\AccountDomainObject;
+use HiEvents\DomainObjects\AccountRegistrationInviteDomainObject;
 use HiEvents\DomainObjects\AccountUserDomainObject;
 use HiEvents\DomainObjects\UserDomainObject;
 use HiEvents\Repository\Interfaces\AccountAttributionRepositoryInterface;
@@ -28,6 +29,8 @@ class CreateAccountHandlerTest extends TestCase
     private AccountRepositoryInterface $accountRepository;
 
     private CreateAccountHandler $handler;
+
+    private AccountRegistrationInviteService $registrationInviteService;
 
     protected function setUp(): void
     {
@@ -59,6 +62,8 @@ class CreateAccountHandlerTest extends TestCase
         $accountUserRepository = m::mock(AccountUserRepositoryInterface::class);
         $accountUserRepository->shouldReceive('create')->andReturn(m::mock(AccountUserDomainObject::class));
 
+        $this->registrationInviteService = m::mock(AccountRegistrationInviteService::class);
+
         $this->handler = new CreateAccountHandler(
             userRepository: $userRepository,
             accountRepository: $this->accountRepository,
@@ -70,7 +75,7 @@ class CreateAccountHandlerTest extends TestCase
             accountUserRepository: $accountUserRepository,
             accountConfigurationRepository: $configurationRepository,
             accountAttributionRepository: m::mock(AccountAttributionRepositoryInterface::class),
-            registrationInviteService: m::mock(AccountRegistrationInviteService::class),
+            registrationInviteService: $this->registrationInviteService,
             logger: new NullLogger(),
         );
     }
@@ -89,6 +94,36 @@ class CreateAccountHandlerTest extends TestCase
         $this->handler->handle($this->dto(organizationName: '   '));
     }
 
+    public function testPublicSignUpStartsOnTheUntrustedMessagingTier(): void
+    {
+        $this->expectAccountCreatedWith(fn(array $attributes) => $attributes['account_messaging_tier_id'] === 1);
+
+        $this->handler->handle($this->dto(organizationName: 'Course en blanc'));
+    }
+
+    public function testInvitedSignUpKeepsThePremiumMessagingTier(): void
+    {
+        $invite = m::mock(AccountRegistrationInviteDomainObject::class);
+        $this->registrationInviteService->shouldReceive('findUsableByToken')->with('invite-token')->andReturn($invite);
+        $this->registrationInviteService->shouldReceive('assertUsableForEmail');
+        $this->registrationInviteService->shouldReceive('consume')->once();
+
+        $this->expectAccountCreatedWith(fn(array $attributes) => $attributes['account_messaging_tier_id'] === 3);
+
+        $this->handler->handle($this->dto(organizationName: 'Course en blanc', registrationToken: 'invite-token'));
+    }
+
+    private function expectAccountCreatedWith(callable $matcher): void
+    {
+        $account = m::mock(AccountDomainObject::class);
+        $account->shouldReceive('getId')->andReturn(1);
+
+        $this->accountRepository->shouldReceive('create')
+            ->once()
+            ->withArgs($matcher)
+            ->andReturn($account);
+    }
+
     private function expectAccountNamed(string $name): void
     {
         $account = m::mock(AccountDomainObject::class);
@@ -100,7 +135,7 @@ class CreateAccountHandlerTest extends TestCase
             ->andReturn($account);
     }
 
-    private function dto(?string $organizationName): CreateAccountDTO
+    private function dto(?string $organizationName, ?string $registrationToken = null): CreateAccountDTO
     {
         return new CreateAccountDTO(
             email: 'jane@example.com',
@@ -111,6 +146,7 @@ class CreateAccountHandlerTest extends TestCase
             timezone: 'America/Toronto',
             currency_code: 'CAD',
             organization_name: $organizationName,
+            registration_token: $registrationToken,
         );
     }
 }

@@ -9,6 +9,7 @@ use HiEvents\Http\Actions\BaseAction;
 use HiEvents\Resources\Event\EventResourcePublic;
 use HiEvents\Services\Application\Handlers\Event\DTO\GetPublicEventDTO;
 use HiEvents\Services\Application\Handlers\Event\GetPublicEventHandler;
+use HiEvents\Services\Domain\Account\AccountSuspensionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,8 +18,9 @@ use Psr\Log\LoggerInterface;
 class GetEventPublicAction extends BaseAction
 {
     public function __construct(
-        private readonly GetPublicEventHandler $getPublicEventHandler,
-        private readonly LoggerInterface       $logger,
+        private readonly GetPublicEventHandler    $getPublicEventHandler,
+        private readonly LoggerInterface          $logger,
+        private readonly AccountSuspensionService $accountSuspensionService,
     )
     {
     }
@@ -45,6 +47,10 @@ class GetEventPublicAction extends BaseAction
 
     private function canUserViewEvent(EventDomainObject $event): bool
     {
+        if ($this->accountSuspensionService->isSuspended($event->getAccountId())) {
+            return $this->isUserAuthenticated() && $this->getAuthenticatedUserRole() === Role::SUPERADMIN;
+        }
+
         if ($event->getStatus() === EventStatus::LIVE->name) {
             return true;
         }

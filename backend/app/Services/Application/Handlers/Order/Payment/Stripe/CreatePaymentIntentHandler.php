@@ -29,6 +29,7 @@ use HiEvents\Services\Infrastructure\Session\CheckoutSessionManagementService;
 use HiEvents\Services\Infrastructure\Stripe\StripeClientFactory;
 use HiEvents\Services\Infrastructure\Stripe\StripeConfigurationService;
 use HiEvents\Values\MoneyValue;
+use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
 use Stripe\Exception\ApiErrorException;
 use Throwable;
@@ -44,6 +45,7 @@ readonly class CreatePaymentIntentHandler
         private StripeClientFactory                $stripeClientFactory,
         private StripeConfigurationService         $stripeConfigurationService,
         private StripePayeeResolutionService       $payeeResolutionService,
+        private Repository                         $config,
     )
     {
     }
@@ -98,6 +100,17 @@ readonly class CreatePaymentIntentHandler
             ?? $this->stripeConfigurationService->getPrimaryPlatform();
 
         $stripeAccountId = $payee->stripeAccountId;
+
+        // Sans compte Connect, l'argent arriverait sur le compte Stripe de la
+        // plateforme: elle deviendrait le vendeur d'un inconnu (remboursements,
+        // contestations). Seul un compte approuve par un superadmin y a droit.
+        $chargesPlatformAccount = !$this->config->get('app.saas_mode_enabled') || $stripeAccountId === null;
+
+        if ($chargesPlatformAccount && !$account->getPlatformPaymentsAllowed()) {
+            throw new CreatePaymentIntentFailedException(
+                __('This organizer has not finished setting up online payments yet. Please contact the organizer.')
+            );
+        }
 
         // If no platform is configured, we can still process payments with regular Stripe keys
         if (!$stripePlatform) {

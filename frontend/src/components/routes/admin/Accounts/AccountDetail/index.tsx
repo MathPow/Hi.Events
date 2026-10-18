@@ -1,4 +1,4 @@
-import {Container, Title, Stack, Card, Text, Group, Button, Badge, Skeleton, Select} from "@mantine/core";
+import {Container, Title, Stack, Card, Text, Group, Button, Badge, Skeleton, Select, Switch} from "@mantine/core";
 import {t} from "@lingui/macro";
 import {useParams, useNavigate} from "react-router";
 import {useGetAdminAccount} from "../../../../../queries/useGetAdminAccount";
@@ -6,7 +6,9 @@ import {useGetAllConfigurations} from "../../../../../queries/useGetAllConfigura
 import {useGetMessagingTiers} from "../../../../../queries/useGetMessagingTiers";
 import {useAssignConfiguration} from "../../../../../mutations/useAssignConfiguration";
 import {useUpdateAccountMessagingTier} from "../../../../../mutations/useUpdateAccountMessagingTier";
-import {IconArrowLeft, IconCalendar, IconWorld, IconEdit, IconBuildingBank, IconUsers} from "@tabler/icons-react";
+import {useUpdateAccountTrustSettings} from "../../../../../mutations/useUpdateAccountTrustSettings";
+import {UpdateAccountTrustSettingsRequest} from "../../../../../api/admin.client";
+import {IconArrowLeft, IconCalendar, IconWorld, IconEdit, IconBuildingBank, IconUsers, IconShieldCheck} from "@tabler/icons-react";
 import {useState} from "react";
 import {EditAccountVatSettingsModal} from "../../../../modals/EditAccountVatSettingsModal";
 import {showSuccess, showError} from "../../../../../utilites/notifications";
@@ -21,6 +23,7 @@ const AccountDetail = () => {
     const {data: messagingTiersData} = useGetMessagingTiers();
     const assignConfigMutation = useAssignConfiguration(accountId!);
     const updateTierMutation = useUpdateAccountMessagingTier(accountId!);
+    const updateTrustMutation = useUpdateAccountTrustSettings(accountId!);
     const [showVatModal, setShowVatModal] = useState(false);
 
     const account = accountData?.data;
@@ -51,6 +54,17 @@ const AccountDetail = () => {
         updateTierMutation.mutate(parseInt(value, 10), {
             onSuccess: () => showSuccess(t`Messaging tier updated successfully`),
             onError: () => showError(t`Failed to update messaging tier`),
+        });
+    };
+
+    const handleTrustSettingChange = (settings: UpdateAccountTrustSettingsRequest) => {
+        updateTrustMutation.mutate(settings, {
+            onSuccess: () => showSuccess(t`Account updated`),
+            onError: (error: any) => showError(
+                error?.response?.data?.errors?.suspended?.[0]
+                || error?.response?.data?.message
+                || t`Failed to update account`
+            ),
         });
     };
 
@@ -115,7 +129,12 @@ const AccountDetail = () => {
                         </Button>
                     </Group>
 
-                    <Title order={1}>{account.name}</Title>
+                    <Group gap="sm">
+                        <Title order={1}>{account.name}</Title>
+                        {account.suspended_at && (
+                            <Badge color="red" size="lg">{t`Suspended`}</Badge>
+                        )}
+                    </Group>
 
                     <Card className={classes.accountCard}>
                         <Stack gap="md">
@@ -168,6 +187,42 @@ const AccountDetail = () => {
                                     </Stack>
                                 </div>
                             </div>
+                        </Stack>
+                    </Card>
+
+                    <Card className={classes.accountCard}>
+                        <Stack gap="md">
+                            <Group gap="xs">
+                                <IconShieldCheck size={20}/>
+                                <Text size="lg" fw={600}>{t`Trust and safety`}</Text>
+                            </Group>
+
+                            <Switch
+                                checked={account.platform_payments_allowed}
+                                onChange={(event) => handleTrustSettingChange({platform_payments_allowed: event.currentTarget.checked})}
+                                disabled={updateTrustMutation.isPending}
+                                label={t`Accept payments on the platform's Stripe account`}
+                                description={t`Without its own connected Stripe account, this account's ticket sales are charged to the platform's Stripe account, and the platform must pay the organizer back. Only turn this on for organizers you know.`}
+                            />
+
+                            <Switch
+                                checked={account.donation_receipts_allowed}
+                                onChange={(event) => handleTrustSettingChange({donation_receipts_allowed: event.currentTarget.checked})}
+                                disabled={updateTrustMutation.isPending}
+                                label={t`Issue official donation receipts`}
+                                description={t`Lets this account issue official tax receipts under the charity registration number it entered. Check that the number belongs to this organizer before turning this on.`}
+                            />
+
+                            <Switch
+                                color="red"
+                                checked={!!account.suspended_at}
+                                onChange={(event) => handleTrustSettingChange({suspended: event.currentTarget.checked})}
+                                disabled={updateTrustMutation.isPending}
+                                label={account.suspended_at
+                                    ? t`Suspended since ${formatDate(account.suspended_at)}`
+                                    : t`Suspend account`}
+                                description={t`Blocks sign-in and takes the account's events and organizer pages offline. Nothing is deleted: lifting the suspension restores everything.`}
+                            />
                         </Stack>
                     </Card>
 

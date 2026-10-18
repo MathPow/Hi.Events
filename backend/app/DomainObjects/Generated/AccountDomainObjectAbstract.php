@@ -27,6 +27,9 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     final public const STRIPE_CONNECT_ACCOUNT_TYPE = 'stripe_connect_account_type';
     final public const IS_MANUALLY_VERIFIED = 'is_manually_verified';
     final public const COUNTRY = 'country';
+    final public const PLATFORM_PAYMENTS_ALLOWED = 'platform_payments_allowed';
+    final public const DONATION_RECEIPTS_ALLOWED = 'donation_receipts_allowed';
+    final public const SUSPENDED_AT = 'suspended_at';
 
     protected int $id;
     protected ?int $account_configuration_id = null;
@@ -45,6 +48,9 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     protected ?string $stripe_connect_account_type = null;
     protected bool $is_manually_verified = false;
     protected ?string $country = null;
+    protected bool $platform_payments_allowed = false;
+    protected bool $donation_receipts_allowed = false;
+    protected ?string $suspended_at = null;
 
     public function toArray(): array
     {
@@ -66,6 +72,9 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
                     'stripe_connect_account_type' => $this->stripe_connect_account_type ?? null,
                     'is_manually_verified' => $this->is_manually_verified ?? null,
                     'country' => $this->country ?? null,
+                    'platform_payments_allowed' => $this->platform_payments_allowed ?? null,
+                    'donation_receipts_allowed' => $this->donation_receipts_allowed ?? null,
+                    'suspended_at' => $this->suspended_at ?? null,
                 ];
     }
 
@@ -254,5 +263,38 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     public function getCountry(): ?string
     {
         return $this->country;
+    }
+
+    public function setPlatformPaymentsAllowed(bool $platform_payments_allowed): self
+    {
+        $this->platform_payments_allowed = $platform_payments_allowed;
+        return $this;
+    }
+
+    public function getPlatformPaymentsAllowed(): bool
+    {
+        return $this->platform_payments_allowed;
+    }
+
+    public function setDonationReceiptsAllowed(bool $donation_receipts_allowed): self
+    {
+        $this->donation_receipts_allowed = $donation_receipts_allowed;
+        return $this;
+    }
+
+    public function getDonationReceiptsAllowed(): bool
+    {
+        return $this->donation_receipts_allowed;
+    }
+
+    public function setSuspendedAt(?string $suspended_at): self
+    {
+        $this->suspended_at = $suspended_at;
+        return $this;
+    }
+
+    public function getSuspendedAt(): ?string
+    {
+        return $this->suspended_at;
     }
 }

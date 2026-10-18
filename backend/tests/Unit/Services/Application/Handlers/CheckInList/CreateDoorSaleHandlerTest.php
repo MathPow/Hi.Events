@@ -14,6 +14,7 @@ use HiEvents\Services\Application\Handlers\Attendee\CreateAttendeeHandler;
 use HiEvents\Services\Application\Handlers\Attendee\DTO\CreateAttendeeDTO;
 use HiEvents\Services\Application\Handlers\CheckInList\Public\CreateDoorSaleHandler;
 use HiEvents\Services\Application\Handlers\CheckInList\Public\DTO\CreateDoorSaleDTO;
+use HiEvents\Services\Domain\Account\OrganizerEmailQuotaService;
 use HiEvents\Services\Domain\CheckInList\CreateAttendeeCheckInService;
 use HiEvents\Services\Domain\DoorSale\DoorSaleListService;
 use Mockery;
@@ -27,6 +28,8 @@ class CreateDoorSaleHandlerTest extends TestCase
 
     private CreateAttendeeCheckInService $createAttendeeCheckInService;
 
+    private OrganizerEmailQuotaService $emailQuotaService;
+
     private int $quantityRemaining = 10;
 
     protected function setUp(): void
@@ -36,6 +39,8 @@ class CreateDoorSaleHandlerTest extends TestCase
         $this->doorSaleListService = Mockery::mock(DoorSaleListService::class);
         $this->createAttendeeHandler = Mockery::mock(CreateAttendeeHandler::class);
         $this->createAttendeeCheckInService = Mockery::mock(CreateAttendeeCheckInService::class);
+        $this->emailQuotaService = Mockery::mock(OrganizerEmailQuotaService::class);
+        $this->emailQuotaService->shouldReceive('tryConsumeForEvent')->andReturnTrue()->byDefault();
 
         $this->doorSaleListService->shouldReceive('getSellableCheckInList')->andReturn($this->checkInList());
         $this->doorSaleListService->shouldReceive('verifyProductIsOnCheckInList')->andReturn($this->product());
@@ -112,6 +117,20 @@ class CreateDoorSaleHandlerTest extends TestCase
         $this->handler()->handle($this->doorSale(email: 'alex@example.com'));
     }
 
+    public function test_it_still_sells_but_skips_the_email_once_the_account_hit_its_email_cap(): void
+    {
+        $this->emailQuotaService->shouldReceive('tryConsumeForEvent')->andReturnFalse();
+        $this->createAttendeeCheckInService->shouldReceive('checkInAttendees');
+
+        $this->createAttendeeHandler
+            ->shouldReceive('handle')
+            ->once()
+            ->withArgs(fn(CreateAttendeeDTO $dto) => $dto->send_confirmation_email === false)
+            ->andReturn($this->attendee());
+
+        $this->handler()->handle($this->doorSale(email: 'alex@example.com'));
+    }
+
     public function test_it_sends_nothing_when_the_buyer_gives_no_address(): void
     {
         $this->createAttendeeCheckInService->shouldReceive('checkInAttendees');
@@ -135,6 +154,7 @@ class CreateDoorSaleHandlerTest extends TestCase
             $service,
             $this->createAttendeeHandler,
             $this->createAttendeeCheckInService,
+            $this->emailQuotaService,
         );
 
         $this->expectException(DoorSalesNotEnabledException::class);
@@ -153,6 +173,7 @@ class CreateDoorSaleHandlerTest extends TestCase
             $service,
             $this->createAttendeeHandler,
             $this->createAttendeeCheckInService,
+            $this->emailQuotaService,
         );
 
         $this->expectException(ProductNotOnCheckInListException::class);
@@ -166,6 +187,7 @@ class CreateDoorSaleHandlerTest extends TestCase
             $this->doorSaleListService,
             $this->createAttendeeHandler,
             $this->createAttendeeCheckInService,
+            $this->emailQuotaService,
         );
     }
 

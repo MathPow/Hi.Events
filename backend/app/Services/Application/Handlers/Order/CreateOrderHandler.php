@@ -17,6 +17,7 @@ use HiEvents\Repository\Interfaces\AffiliateRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\PromoCodeRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Order\DTO\CreateOrderPublicDTO;
+use HiEvents\Services\Domain\Account\AccountSuspensionService;
 use HiEvents\Services\Domain\Order\OrderItemProcessingService;
 use HiEvents\Services\Domain\Order\OrderManagementService;
 use HiEvents\Services\Domain\PromoCode\PromoCodeUsageValidationService;
@@ -37,6 +38,7 @@ class CreateOrderHandler
         private readonly OrderItemProcessingService             $orderItemProcessingService,
         private readonly AvailableProductQuantitiesFetchService $availableProductQuantitiesFetchService,
         private readonly DatabaseManager                        $databaseManager,
+        private readonly AccountSuspensionService               $accountSuspensionService,
     )
     {
     }
@@ -58,6 +60,10 @@ class CreateOrderHandler
                 ->findById($eventId);
 
             $this->validateEventStatus($event, $createOrderPublicDTO);
+
+            if ($this->accountSuspensionService->isSuspended($event->getAccountId())) {
+                throw new UnauthorizedException(__('This event is not live.'));
+            }
 
             // Remove the session's stale reservations before promo usage is counted in getPromoCode()
             if ($deleteExistingOrdersForSession) {

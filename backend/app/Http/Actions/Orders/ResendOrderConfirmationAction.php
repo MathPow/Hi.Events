@@ -13,6 +13,7 @@ use HiEvents\Mail\Order\OrderSummary;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
+use HiEvents\Services\Domain\Account\OrganizerEmailQuotaService;
 use HiEvents\Services\Domain\Email\MailBuilderService;
 use Illuminate\Http\Response;
 use Illuminate\Mail\Mailer;
@@ -24,6 +25,7 @@ class ResendOrderConfirmationAction extends BaseAction
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly Mailer                   $mailer,
         private readonly MailBuilderService       $mailBuilderService,
+        private readonly OrganizerEmailQuotaService $emailQuotaService,
     )
     {
     }
@@ -48,6 +50,8 @@ class ResendOrderConfirmationAction extends BaseAction
         }
 
         if ($order->isOrderCompleted()) {
+            $this->emailQuotaService->consumeForAccount($this->getAuthenticatedAccountId());
+
             $event = $this->eventRepository
                 ->loadRelation(new Relationship(OrganizerDomainObject::class, name: 'organizer'))
                 ->loadRelation(new Relationship(EventSettingDomainObject::class))

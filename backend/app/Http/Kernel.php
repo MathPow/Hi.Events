@@ -9,6 +9,7 @@ use HiEvents\Http\Middleware\LogImpersonationMiddleware;
 use HiEvents\Http\Middleware\PreventRequestsDuringMaintenance;
 use HiEvents\Http\Middleware\RedirectIfAuthenticated;
 use HiEvents\Http\Middleware\ExchangeApiTokenForJwt;
+use HiEvents\Http\Middleware\RejectSuspendedAccount;
 use HiEvents\Http\Middleware\SetAccountContext;
 use HiEvents\Http\Middleware\SetUserLocaleMiddleware;
 use HiEvents\Http\Middleware\TrimStrings;
@@ -78,6 +79,7 @@ class Kernel extends HttpKernel
             ThrottleRequests::class . ':api',
             SubstituteBindings::class,
             SetAccountContext::class,
+            RejectSuspendedAccount::class,
             SetUserLocaleMiddleware::class,
             LogImpersonationMiddleware::class,
         ],

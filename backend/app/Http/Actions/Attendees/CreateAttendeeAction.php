@@ -11,17 +11,18 @@ use HiEvents\Http\ResponseCodes;
 use HiEvents\Resources\Attendee\AttendeeResource;
 use HiEvents\Services\Application\Handlers\Attendee\CreateAttendeeHandler;
 use HiEvents\Services\Application\Handlers\Attendee\DTO\CreateAttendeeDTO;
+use HiEvents\Services\Domain\Account\OrganizerEmailQuotaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class CreateAttendeeAction extends BaseAction
 {
-    private CreateAttendeeHandler $createAttendeeHandler;
-
-    public function __construct(CreateAttendeeHandler $createAttendeeHandler)
+    public function __construct(
+        private readonly CreateAttendeeHandler      $createAttendeeHandler,
+        private readonly OrganizerEmailQuotaService $emailQuotaService,
+    )
     {
-        $this->createAttendeeHandler = $createAttendeeHandler;
     }
 
     /**
@@ -30,6 +31,10 @@ class CreateAttendeeAction extends BaseAction
     public function __invoke(CreateAttendeeRequest $request, int $eventId): JsonResponse
     {
         $this->isActionAuthorized($eventId, EventDomainObject::class);
+
+        if ($request->boolean('send_confirmation_email')) {
+            $this->emailQuotaService->consumeForAccount($this->getAuthenticatedAccountId());
+        }
 
         try {
             $attendee = $this->createAttendeeHandler->handle(CreateAttendeeDTO::fromArray(

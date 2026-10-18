@@ -12,6 +12,8 @@ use Psr\Log\LoggerInterface;
 
 class ImageStorageService
 {
+    private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
     public function __construct(
         private readonly FilesystemManager $filesystemManager,
         private readonly Repository        $config,
@@ -25,13 +27,8 @@ class ImageStorageService
      */
     public function store(UploadedFile $image, string $imageType): ImageStorageResponseDTO
     {
-        $filename = Str::slug(
-                title: str_ireplace(
-                    search: '.' . $image->getClientOriginalExtension(),
-                    replace: '',
-                    subject: $image->getClientOriginalName()
-                )
-            ) . '-' . Str::random(5) . '.' . $image->getClientOriginalExtension();
+        $filename = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME))
+            . '-' . Str::random(5) . '.' . $this->getSafeExtension($image);
 
         $disk = $this->config->get('filesystems.public');
 
@@ -61,5 +58,24 @@ class ImageStorageService
             size: $image->getSize(),
             mime_type: $image->getMimeType()
         );
+    }
+
+    /**
+     * L'extension vient du contenu reellement detecte, jamais du nom envoye.
+     * Le serveur choisit le type de reponse d'apres l'extension: une image
+     * valide nommee « x.html » serait sinon servie comme une page de notre
+     * domaine, avec ses scripts.
+     *
+     * @throws CouldNotUploadImageException
+     */
+    private function getSafeExtension(UploadedFile $image): string
+    {
+        $extension = strtolower((string)$image->guessExtension());
+
+        if (!in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
+            throw new CouldNotUploadImageException(__('Could not upload image'));
+        }
+
+        return $extension;
     }
 }

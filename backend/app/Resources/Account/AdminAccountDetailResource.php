@@ -28,6 +28,9 @@ class AdminAccountDetailResource extends BaseResource
             'updated_at' => $this->resource->updated_at,
             'events_count' => $this->resource->events_count ?? 0,
             'users_count' => $this->resource->users_count ?? 0,
+            'platform_payments_allowed' => (bool)$this->resource->platform_payments_allowed,
+            'donation_receipts_allowed' => (bool)$this->resource->donation_receipts_allowed,
+            'suspended_at' => $this->resource->suspended_at,
             'configuration' => $configuration ? [
                 'id' => $configuration->id,
                 'name' => $configuration->name,

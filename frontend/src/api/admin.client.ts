@@ -37,6 +37,7 @@ export interface AdminAccount {
     created_at: string;
     events_count: number;
     users_count: number;
+    suspended_at?: string | null;
     users: AdminAccountUser[];
     messaging_tier?: {
         id: number;
@@ -125,6 +126,14 @@ export interface AdminAccountDetail extends AdminAccount {
     configuration?: AccountConfiguration;
     vat_setting?: AccountVatSetting;
     messaging_tier?: AccountMessagingTier;
+    platform_payments_allowed: boolean;
+    donation_receipts_allowed: boolean;
+}
+
+export interface UpdateAccountTrustSettingsRequest {
+    platform_payments_allowed?: boolean;
+    donation_receipts_allowed?: boolean;
+    suspended?: boolean;
 }
 
 
@@ -694,6 +703,11 @@ export const adminClient = {
         const response = await api.put(`admin/accounts/${accountId}/messaging-tier`, {
             messaging_tier_id: tierId
         });
+        return response.data;
+    },
+
+    updateAccountTrustSettings: async (accountId: IdParam, settings: UpdateAccountTrustSettingsRequest) => {
+        const response = await api.put(`admin/accounts/${accountId}/trust-settings`, settings);
         return response.data;
     },
 

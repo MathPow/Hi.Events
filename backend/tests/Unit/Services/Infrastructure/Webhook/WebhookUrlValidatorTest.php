@@ -57,6 +57,12 @@ class WebhookUrlValidatorTest extends TestCase
             'ftp scheme' => ['ftp://example.com/hook'],
             'file scheme' => ['file:///etc/passwd'],
             'gopher scheme' => ['gopher://example.com/hook'],
+            'shared address space (tailscale)' => ['http://100.100.1.1/hook'],
+            'benchmarking range' => ['http://198.18.0.1/hook'],
+            'ipv4 multicast' => ['http://224.0.0.1/hook'],
+            'ipv6 multicast' => ['http://[ff02::1]/hook'],
+            'non standard port' => ['https://8.8.8.8:8000/hook'],
+            'non standard https port' => ['https://8.8.8.8:8443/hook'],
         ];
     }
 
@@ -84,7 +90,7 @@ class WebhookUrlValidatorTest extends TestCase
     {
         $this->assertSame(443, $this->validator->validate('https://8.8.8.8/hook')->port);
         $this->assertSame(80, $this->validator->validate('http://8.8.8.8/hook')->port);
-        $this->assertSame(8443, $this->validator->validate('https://8.8.8.8:8443/hook')->port);
+        $this->assertSame(443, $this->validator->validate('https://8.8.8.8:443/hook')->port);
     }
 
     public function test_it_pins_the_resolved_address_for_curl(): void

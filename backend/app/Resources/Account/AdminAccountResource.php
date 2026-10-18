@@ -18,6 +18,7 @@ class AdminAccountResource extends BaseResource
             'created_at' => $this->resource->created_at,
             'events_count' => $this->resource->events_count ?? 0,
             'users_count' => $this->resource->users_count ?? 0,
+            'suspended_at' => $this->resource->suspended_at,
             'users' => $this->resource->users->map(function ($user) {
                 return [
                     'id' => $user->id,

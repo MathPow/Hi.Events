@@ -9,6 +9,11 @@
   @include auth.auth-card;
   width: 100%;
 
+  .turnstile {
+    margin-bottom: 1rem;
+    min-height: 65px;
+  }
+
   form {
     @include auth.auth-inputs;
     @include auth.auth-button(0.5rem);

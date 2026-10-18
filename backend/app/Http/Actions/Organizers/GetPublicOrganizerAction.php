@@ -2,11 +2,13 @@
 
 namespace HiEvents\Http\Actions\Organizers;
 
+use HiEvents\DomainObjects\Enums\Role;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\Status\OrganizerStatus;
 use HiEvents\Http\Actions\BaseAction;
 use HiEvents\Resources\Organizer\OrganizerResourcePublic;
 use HiEvents\Services\Application\Handlers\Organizer\GetPublicOrganizerHandler;
+use HiEvents\Services\Domain\Account\AccountSuspensionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Psr\Log\LoggerInterface;
@@ -16,7 +18,7 @@ class GetPublicOrganizerAction extends BaseAction
     public function __construct(
         private readonly GetPublicOrganizerHandler $handler,
         private readonly LoggerInterface           $logger,
-
+        private readonly AccountSuspensionService  $accountSuspensionService,
     )
     {
     }
@@ -41,6 +43,10 @@ class GetPublicOrganizerAction extends BaseAction
 
     private function canUserViewOrganizer(OrganizerDomainObject $organizer): bool
     {
+        if ($this->accountSuspensionService->isSuspended($organizer->getAccountId())) {
+            return $this->isUserAuthenticated() && $this->getAuthenticatedUserRole() === Role::SUPERADMIN;
+        }
+
         if ($organizer->getStatus() === OrganizerStatus::LIVE->name) {
             return true;
         }

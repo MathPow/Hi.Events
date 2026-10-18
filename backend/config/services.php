@@ -31,6 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Verification anti-robot de Cloudflare sur l'inscription. Sans cle
+    // secrete, la verification est desactivee.
+    'turnstile' => [
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    ],
+
     'stripe' => [
         'secret_key' => env('STRIPE_SECRET_KEY'),
         'public_key' => env('STRIPE_PUBLIC_KEY'),

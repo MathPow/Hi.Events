@@ -210,6 +210,7 @@ use HiEvents\Http\Actions\Admin\Messages\ApproveMessageAction;
 use HiEvents\Http\Actions\Admin\Messages\GetAllMessagesAction as GetAllAdminMessagesAction;
 use HiEvents\Http\Actions\Admin\GetMessagingTiersAction;
 use HiEvents\Http\Actions\Admin\Accounts\UpdateAccountMessagingTierAction;
+use HiEvents\Http\Actions\Admin\Accounts\UpdateAccountTrustSettingsAction;
 use HiEvents\Http\Actions\Admin\Orders\GetAllOrdersAction;
 use HiEvents\Http\Actions\Admin\Attribution\GetUtmAttributionStatsAction;
 use HiEvents\Http\Actions\Admin\GetSystemInfoAction;
@@ -244,10 +245,10 @@ $router = app()->get('router');
 $router->prefix('/auth')->group(
     function (Router $router): void {
         // Auth
-        $router->post('/login', LoginAction::class)->name('auth.login');
+        $router->post('/login', LoginAction::class)->name('auth.login')->middleware('throttle:login');
         $router->post('/logout', LogoutAction::class)->name('auth.logout');
-        $router->post('/register', CreateAccountAction::class)->name('auth.register');
-        $router->post('/forgot-password', ForgotPasswordAction::class)->name('auth.forgot-password');
+        $router->post('/register', CreateAccountAction::class)->name('auth.register')->middleware('throttle:register');
+        $router->post('/forgot-password', ForgotPasswordAction::class)->name('auth.forgot-password')->middleware('throttle:account-email');
 
         // Invitations
         $router->get('/invitation/{invite_token}', GetUserInvitationAction::class)->name('auth.invitation');
@@ -259,7 +260,7 @@ $router->prefix('/auth')->group(
 
         // Reset Passwords
         $router->get('/reset-password/{reset_token}', ValidateResetPasswordTokenAction::class)->name('auth.validate-reset-password-token');
-        $router->post('/reset-password/{reset_token}', ResetPasswordAction::class)->name('auth.reset-password');
+        $router->post('/reset-password/{reset_token}', ResetPasswordAction::class)->name('auth.reset-password')->middleware('throttle:account-code');
     }
 );
 
@@ -290,8 +291,8 @@ $router->middleware(['auth:api'])->group(
         $router->delete('/users/{user_id}/invitation', DeleteInvitationAction::class);
         $router->delete('/users/{user_id}/email-change', CancelEmailChangeAction::class);
         $router->post('/users/{user_id}/confirm-email/{resetToken}', ConfirmEmailAddressAction::class);
-        $router->post('/users/{user_id}/resend-email-confirmation', ResendEmailConfirmationAction::class);
-        $router->post('/users/{user_id}/confirm-email-with-code', ConfirmEmailWithCodeAction::class);
+        $router->post('/users/{user_id}/resend-email-confirmation', ResendEmailConfirmationAction::class)->middleware('throttle:account-email');
+        $router->post('/users/{user_id}/confirm-email-with-code', ConfirmEmailWithCodeAction::class)->middleware('throttle:account-code');
 
         // Accounts
         $router->get('/accounts/{account_id?}', GetAccountAction::class);
@@ -526,6 +527,7 @@ $router->prefix('/admin')->middleware(['auth:api'])->group(
         // Messaging Tiers
         $router->get('/messaging-tiers', GetMessagingTiersAction::class);
         $router->put('/accounts/{account_id}/messaging-tier', UpdateAccountMessagingTierAction::class);
+        $router->put('/accounts/{account_id}/trust-settings', UpdateAccountTrustSettingsAction::class);
 
         // System Info
         $router->get('/system-info', GetSystemInfoAction::class);

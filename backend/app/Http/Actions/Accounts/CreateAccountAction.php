@@ -18,6 +18,7 @@ use HiEvents\Services\Application\Handlers\Account\Exceptions\AccountRegistratio
 use HiEvents\Services\Application\Handlers\Auth\DTO\LoginCredentialsDTO;
 use HiEvents\Services\Application\Handlers\Auth\LoginHandler;
 use HiEvents\Services\Application\Locale\LocaleService;
+use HiEvents\Services\Infrastructure\Turnstile\TurnstileVerificationService;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -29,6 +30,7 @@ class CreateAccountAction extends BaseAuthAction
         private readonly CreateAccountHandler $createAccountHandler,
         private readonly LoginHandler         $loginHandler,
         private readonly LocaleService        $localeService,
+        private readonly TurnstileVerificationService $turnstileVerificationService,
     )
     {
     }
@@ -39,6 +41,15 @@ class CreateAccountAction extends BaseAuthAction
      */
     public function __invoke(CreateAccountRequest $request): JsonResponse
     {
+        if (!$this->turnstileVerificationService->verify(
+            token: $request->input('turnstile_token'),
+            ipAddress: $this->getClientIp($request),
+        )) {
+            throw ValidationException::withMessages([
+                'turnstile_token' => __('The security check failed. Please try again.'),
+            ]);
+        }
+
         try {
             $accountData = $this->createAccountHandler->handle(CreateAccountDTO::fromArray([
                 'organization_name' => $request->validated('organization_name'),

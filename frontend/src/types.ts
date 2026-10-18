@@ -29,7 +29,8 @@ export type ConfigKeys =
     | 'VITE_PLATFORM_SUPPORT_DESCRIPTION'
     | 'VITE_PLATFORM_SUPPORT_DEFAULT'
     | 'VITE_POSTHOG_KEY'
-    | 'VITE_POSTHOG_HOST';
+    | 'VITE_POSTHOG_HOST'
+    | 'VITE_TURNSTILE_SITE_KEY';
 
 export enum StripePlatform {
     Canada = 'ca',
@@ -51,6 +52,7 @@ export interface RegisterAccountRequest extends AcceptInvitationRequest {
     locale: SupportedLocales;
     organization_name?: string;
     registration_token?: string | null;
+    turnstile_token?: string;
     utm_source?: string | null;
     utm_medium?: string | null;
     utm_campaign?: string | null;
@@ -130,6 +132,8 @@ export interface Account {
     is_saas_mode_enabled?: boolean;
     configuration?: AccountConfiguration;
     requires_manual_verification?: boolean;
+    platform_payments_allowed?: boolean;
+    donation_receipts_allowed?: boolean;
     stripe_platform: string;
     stripe_hi_events_primary_platform?: string;
 }

@@ -12,6 +12,7 @@ use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\AttendeeRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Attendee\DTO\ResendAttendeeTicketDTO;
+use HiEvents\Services\Domain\Account\OrganizerEmailQuotaService;
 use HiEvents\Services\Domain\Attendee\SendAttendeeTicketService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -23,6 +24,7 @@ readonly class ResendAttendeeTicketHandler
         private AttendeeRepositoryInterface $attendeeRepository,
         private EventRepositoryInterface    $eventRepository,
         private LoggerInterface             $logger,
+        private OrganizerEmailQuotaService  $emailQuotaService,
     )
     {
     }
@@ -48,6 +50,8 @@ readonly class ResendAttendeeTicketHandler
         if ($attendee->getStatus() !== AttendeeStatus::ACTIVE->name) {
             throw new ResourceConflictException('You cannot resend the ticket of an inactive attendee');
         }
+
+        $this->emailQuotaService->consumeForEvent($resendAttendeeProductDTO->eventId);
 
         $event = $this->eventRepository
             ->loadRelation(new Relationship(OrganizerDomainObject::class, name: 'organizer'))

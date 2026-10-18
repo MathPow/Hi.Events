@@ -121,4 +121,9 @@ class AccountDomainObject extends Generated\AccountDomainObjectAbstract
     {
         return $this->getPrimaryStripePlatform() !== null;
     }
+
+    public function isSuspended(): bool
+    {
+        return $this->getSuspendedAt() !== null;
+    }
 }

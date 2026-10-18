@@ -30,6 +30,7 @@ export const clientBuildEnv: { [K in ConfigKeys]: string } = {
     'VITE_PLATFORM_SUPPORT_DEFAULT': import.meta.env.VITE_PLATFORM_SUPPORT_DEFAULT,
     'VITE_POSTHOG_KEY': import.meta.env.VITE_POSTHOG_KEY,
     'VITE_POSTHOG_HOST': import.meta.env.VITE_POSTHOG_HOST,
+    'VITE_TURNSTILE_SITE_KEY': import.meta.env.VITE_TURNSTILE_SITE_KEY,
 }
 
 export const getConfig = (key: ConfigKeys, fallback?: string): string | undefined => {

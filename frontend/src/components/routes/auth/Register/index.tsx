@@ -1,4 +1,4 @@
-import {Alert, Button, Checkbox, LoadingOverlay, PasswordInput, SimpleGrid, TextInput} from "@mantine/core";
+import {Alert, Button, Checkbox, LoadingOverlay, PasswordInput, SimpleGrid, Text, TextInput} from "@mantine/core";
 import {hasLength, isEmail, matchesField, useForm} from "@mantine/form";
 import {RegisterAccountRequest} from "../../../../types.ts";
 import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorResponseHandler.tsx";
@@ -7,12 +7,13 @@ import {NavLink, useLocation, useNavigate} from "react-router";
 import {t, Trans} from "@lingui/macro";
 import classes from "./Register.module.scss";
 import {getClientLocale} from "../../../../locales.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getUserCurrency} from "../../../../utilites/currency.ts";
 import {getConfig} from "../../../../utilites/config.ts";
 import {captureUtmData, getStoredUtmData, clearStoredUtmData} from "../../../../utilites/utm.ts";
 import {useGetRegistrationInvite} from "../../../../queries/useGetRegistrationInvite.ts";
 import {IconAlertCircle} from "@tabler/icons-react";
+import {Turnstile} from "../../../common/Turnstile";
 
 export const Register = () => {
     const navigate = useNavigate();
@@ -24,6 +25,8 @@ export const Register = () => {
     const registrationToken = new URLSearchParams(location.search).get('registration_token');
     const inviteQuery = useGetRegistrationInvite(registrationToken);
     const invitedEmail = inviteQuery.data?.data?.email ?? null;
+    const turnstileSiteKey = getConfig('VITE_TURNSTILE_SITE_KEY');
+    const [turnstileResetKey, setTurnstileResetKey] = useState(0);
 
     const form = useForm({
         validateInputOnBlur: true,
@@ -42,6 +45,7 @@ export const Register = () => {
             registration_token: registrationToken ?? '',
             currency_code: getUserCurrency(),
             marketing_opt_in: false,
+            turnstile_token: '',
         },
         validate: {
             password: hasLength({min: 8}, t`Password must be at least 8 characters`),
@@ -64,6 +68,8 @@ export const Register = () => {
             },
             onError: (error: any) => {
                 errorHandler(form, error, error.response?.data?.message);
+                // Le jeton a ete consomme par la verification: il en faut un nouveau.
+                setTurnstileResetKey((key) => key + 1);
             },
         });
     }
@@ -181,7 +187,25 @@ export const Register = () => {
                         label={<Trans>Receive product updates from {getConfig("VITE_APP_NAME", "Hi.Events")}.</Trans>}
                     />
 
-                    <Button color="secondary.5" type="submit" fullWidth disabled={mutate.isPending}>
+                    {turnstileSiteKey && (
+                        <div className={classes.turnstile}>
+                            <Turnstile
+                                siteKey={turnstileSiteKey}
+                                resetKey={turnstileResetKey}
+                                onToken={(token) => form.setFieldValue('turnstile_token', token)}
+                            />
+                            {form.errors.turnstile_token && (
+                                <Text c="red" size="xs" mt={4}>{form.errors.turnstile_token}</Text>
+                            )}
+                        </div>
+                    )}
+
+                    <Button
+                        color="secondary.5"
+                        type="submit"
+                        fullWidth
+                        disabled={mutate.isPending || (!!turnstileSiteKey && !form.values.turnstile_token)}
+                    >
                         {mutate.isPending ? t`Working...` : t`Register`}
                     </Button>
                 </form>

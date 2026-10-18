@@ -10,6 +10,7 @@ use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\DomainObjects\Status\DonationReceiptStatus;
 use HiEvents\Repository\Eloquent\Value\Relationship;
+use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\DonationReceiptRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use Illuminate\Database\DatabaseManager;
@@ -18,10 +19,12 @@ use Psr\Log\LoggerInterface;
 /**
  * Emission d'un recu officiel aux fins de l'impot pour une commande.
  *
- * Trois conditions doivent etre reunies, sinon on ne fait rien silencieusement:
+ * Quatre conditions doivent etre reunies, sinon on ne fait rien silencieusement:
  *   1. l'organisateur a un numero d'enregistrement d'organisme (l'interrupteur);
- *   2. la commande contient une part de don admissible;
- *   3. aucun recu ISSUED n'existe deja pour cette commande.
+ *   2. un superadmin a autorise le compte a emettre des recus: le numero est
+ *      saisi librement, rien ne prouve qu'il appartient a l'organisateur;
+ *   3. la commande contient une part de don admissible;
+ *   4. aucun recu ISSUED n'existe deja pour cette commande.
  */
 class DonationReceiptCreateService
 {
@@ -29,6 +32,7 @@ class DonationReceiptCreateService
         private readonly OrderRepositoryInterface           $orderRepository,
         private readonly DonationReceiptRepositoryInterface $donationReceiptRepository,
         private readonly DonationBreakdownService           $donationBreakdownService,
+        private readonly AccountRepositoryInterface         $accountRepository,
         private readonly DatabaseManager                    $databaseManager,
         private readonly LoggerInterface                    $logger,
     )
@@ -52,6 +56,15 @@ class DonationReceiptCreateService
         $registrationNumber = trim((string)$settings?->getCharityRegistrationNumber());
 
         if ($organizer === null || $registrationNumber === '') {
+            return null;
+        }
+
+        if (!$this->accountRepository->findById($organizer->getAccountId())->getDonationReceiptsAllowed()) {
+            $this->logger->info('Donation receipt skipped: account not allowed to issue receipts', [
+                'orderId' => $orderId,
+                'accountId' => $organizer->getAccountId(),
+            ]);
+
             return null;
         }
 

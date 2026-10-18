@@ -3,11 +3,12 @@ import {useForm} from "@mantine/form";
 import {useEffect} from "react";
 import {t, Trans} from "@lingui/macro";
 import {Alert, Button, TextInput, Textarea} from "@mantine/core";
-import {IconAlertTriangle} from "@tabler/icons-react";
+import {IconAlertTriangle, IconLock} from "@tabler/icons-react";
 import {Card} from "../../../../../common/Card";
 import {HeadingWithDescription} from "../../../../../common/Card/CardHeading";
 import {useGetOrganizerSettings} from "../../../../../../queries/useGetOrganizerSettings.ts";
 import {useUpdateOrganizerSettings} from "../../../../../../mutations/useUpdateOrganizerSettings.ts";
+import {useGetAccount} from "../../../../../../queries/useGetAccount.ts";
 import {useFormErrorResponseHandler} from "../../../../../../hooks/useFormErrorResponseHandler.tsx";
 import {showSuccess} from "../../../../../../utilites/notifications.tsx";
 import {InputGroup} from "../../../../../common/InputGroup";
@@ -21,6 +22,7 @@ import {InputGroup} from "../../../../../common/InputGroup";
 export const CharitySettings = () => {
     const {organizerId} = useParams();
     const organizerSettingsQuery = useGetOrganizerSettings(organizerId);
+    const {data: account} = useGetAccount();
     const updateMutation = useUpdateOrganizerSettings();
     const formErrorHandle = useFormErrorResponseHandler();
 
@@ -63,6 +65,16 @@ export const CharitySettings = () => {
                 heading={t`Tax receipts`}
                 description={t`Issue official donation receipts for the charitable portion of an order.`}
             />
+
+            {account && account.donation_receipts_allowed === false && (
+                <Alert icon={<IconLock size={18}/>} color="blue" mb={20} variant="light">
+                    <Trans>
+                        Official receipts must be activated for your account by our team before any is
+                        issued. Fill in your charity details, then contact us so we can check your
+                        registration number.
+                    </Trans>
+                </Alert>
+            )}
 
             <Alert icon={<IconAlertTriangle size={18}/>} color="orange" mb={20} variant="light">
                 <Trans>
