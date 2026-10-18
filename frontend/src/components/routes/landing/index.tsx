@@ -1,13 +1,16 @@
 import {CSSProperties, ElementType, Fragment, ReactNode, RefObject, useCallback, useEffect, useId, useRef, useState} from "react";
 import {NavLink} from "react-router";
 import {t, Trans} from "@lingui/macro";
+import {i18n} from "@lingui/core";
 import {Helmet} from "react-helmet-async";
-import {IconArrowDown, IconArrowRight, IconMinus, IconPlus} from "@tabler/icons-react";
+import {IconArrowDown, IconArrowRight, IconBrandInstagram, IconMinus, IconPlus} from "@tabler/icons-react";
 import {useRoughEdge} from "../../../hooks/useRoughEdge.ts";
 import {roughEdgeClipPath} from "../../../utilites/roughEdge.ts";
 import {LanguageSwitcher} from "../../common/LanguageSwitcher";
+import {dynamicActivateLocale} from "../../../locales.ts";
 import {loadWordmarkLetters} from "./wordmarkLetters.ts";
 import {Organizer, TrustedOrganizers} from "./TrustedOrganizers.tsx";
+import {FeesComparator} from "./FeesComparator.tsx";
 import {HeroTitle} from "./HeroTitle.tsx";
 import {LandingButton, ShakyText} from "./LandingButton.tsx";
 import {useRoughButton} from "./roughButton.ts";
@@ -22,12 +25,14 @@ const HERO_VIDEO = `${ASSETS}/hero.mp4`;
 const CONTACT_EMAIL = 'support@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
+// Stripe's Canadian site, in French for the French page.
+const stripeSite = (locale: string) => `https://stripe.com/${locale.startsWith('fr') ? 'fr-ca' : 'en-ca'}`;
 const TRUSTED_ORGANIZERS: Organizer[] = [
-    {name: 'DEHORS', logo: 'dehors', ratio: 1080 / 288},
-    {name: 'Boréal Sports & Événements', logo: 'boreal', ratio: 1152 / 432},
-    {name: "Su'l Pace", logo: 'sulpace', ratio: 1008 / 585.56},
-    {name: 'Course en Blanc', logo: 'course-en-blanc', ratio: 496 / 372},
-    {name: 'Ultratales', logo: 'ultratales', ratio: 1008 / 360},
+    {name: 'DEHORS', logo: 'dehors', ratio: 1080 / 288, url: '/events/1/dehorsqc'},
+    {name: 'Boréal Sports & Événements', logo: 'boreal', ratio: 1152 / 432, url: '/events/2/boreal-sports-evenements'},
+    {name: "Su'l Pace", logo: 'sulpace', ratio: 1008 / 585.56, url: '/events/3/sul-pace'},
+    {name: 'Course en Blanc', logo: 'course-en-blanc', ratio: 496 / 372, url: '/events/4/melysa-bolduc'},
+    {name: 'Ultratales', logo: 'ultratales', ratio: 1008 / 360, url: '/events/1/dehorsqc'},
 ];
 
 const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, children, ...props}: {
@@ -43,11 +48,12 @@ const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, c
     return <Component ref={ref} className={className} {...props}>{children}</Component>;
 };
 
+// Each file's size. A sticker is a WebP unless its name gives another extension.
 const STICKER_SIZES: Record<string, [number, number]> = {
     'autocollant-drapeau-dehors': [288, 288],
     'autocollant-drapeau': [289, 288],
-    'autocollant-perfectly-round': [289, 289],
-    'autocollant-perfect-stick': [361, 144],
+    'autocollant-sac-a-dos.svg': [144, 144],
+    'autocollant-feu-de-camp.svg': [144, 144],
 };
 
 /**
@@ -58,7 +64,7 @@ const Sticker = ({name, className}: { name: string, className?: string }) => {
     const [width, height] = STICKER_SIZES[name] ?? [1, 1];
 
     return (
-        <img className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/${name}.webp`}
+        <img className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/${name.includes('.') ? name : `${name}.webp`}`}
              width={width} height={height} alt="" aria-hidden="true" loading="lazy" decoding="async"
              draggable={false}/>
     );
@@ -92,14 +98,128 @@ const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) =
     <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Create my account`}/>
 );
 
+const sectionLinks = () => [
+    {href: '#steps', label: t`How it works`},
+    {href: '#fees', label: t`Fees`},
+    {href: '#payments', label: t`Payments`},
+    {href: '#features', label: t`Features`},
+    {href: '#visibility', label: t({message: 'Visibility', context: 'landing section'})},
+];
+
+const MENU_ID = 'landing-menu';
+// The landing's two languages, each named in itself.
+const LANGUAGES = [{locale: 'fr', name: 'Français'}, {locale: 'en', name: 'English'}];
+
+/** Like LanguageSwitcher: kept in the cookie, then the page reloads in it. */
+const chooseLanguage = (locale: string) => {
+    document.cookie = `locale=${locale};path=/;max-age=31536000`;
+    dynamicActivateLocale(locale).finally(() => {
+        window.location.href = window.location.pathname + window.location.search;
+    });
+};
+// Wider than this, the sections' links are back in the bar.
+const MENU_UP_TO = 1150;
+
+/** The shop's menu button (EnteteSite.vue): two strokes that turn into a cross. */
+const MenuButton = ({open, onToggle, buttonRef}: {
+    open: boolean;
+    onToggle: () => void;
+    buttonRef?: RefObject<HTMLButtonElement>;
+}) => (
+    <button ref={buttonRef} type="button" className={classes.menuButton} aria-expanded={open} aria-controls={MENU_ID}
+            aria-label={open ? t`Close the menu` : t`Open the menu`} onClick={onToggle}>
+        <span className={classes.menuButtonStroke} aria-hidden="true"/>
+        <span className={classes.menuButtonStroke} aria-hidden="true"/>
+    </button>
+);
+
+/**
+ * The shop's mobile menu (EnteteSite.vue), in the scrolled bar: the page's
+ * sections, the account's two buttons and the language, then on phones
+ * Instagram, the cream bar grown around them. Closing, it folds up instead of
+ * vanishing.
+ */
+const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => {
+    const [rendered, setRendered] = useState(open);
+    const nav = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        if (open) {
+            setRendered(true);
+            return;
+        }
+        const element = nav.current;
+        if (!element || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            setRendered(false);
+            return;
+        }
+        const {height, marginTop} = getComputedStyle(element);
+        element.style.overflow = 'clip';
+        element.style.pointerEvents = 'none';
+        const fold = element.animate(
+            [{height, marginTop, opacity: 1}, {opacity: 0, offset: 0.25}, {height: '0px', marginTop: '0px', opacity: 0}],
+            {duration: 450, easing: 'cubic-bezier(0.3, 0.8, 0.3, 1)'},
+        );
+        fold.onfinish = () => setRendered(false);
+
+        return () => {
+            fold.onfinish = null;
+            fold.cancel();
+        };
+    }, [open]);
+
+    // Its first link takes the focus, without a ring after a tap or a click.
+    useEffect(() => {
+        if (open && rendered) {
+            nav.current?.querySelector('a')?.focus({focusVisible: false} as FocusOptions);
+        }
+    }, [open, rendered]);
+
+    if (!rendered) {
+        return null;
+    }
+
+    return (
+        <nav ref={nav} id={MENU_ID} className={classes.menu} aria-label={t`Menu`}>
+            {sectionLinks().map((link) => (
+                <a key={link.href} href={link.href} onClick={(event) => {
+                    onClose();
+                    smoothScrollTo(event);
+                }}><ShakyText text={link.label}/></a>
+            ))}
+            <div className={classes.menuActions}>
+                <LandingButton as={NavLink} to="/auth/register" label={t`Create my account`} onClick={onClose}/>
+                <LandingButton as={NavLink} to="/auth/login" variant="dark" label={t`Log in`} onClick={onClose}/>
+            </div>
+            <div className={classes.menuLanguages} role="group" aria-label={t`Language`}>
+                {LANGUAGES.map(({locale, name}) => (
+                    <button key={locale} type="button" lang={locale} aria-pressed={i18n.locale.startsWith(locale)}
+                            onClick={() => chooseLanguage(locale)}>{name}</button>
+                ))}
+            </div>
+            <a href={DEHORS_INSTAGRAM} className={classes.menuInstagram} target="_blank" rel="noopener">
+                <IconBrandInstagram aria-hidden="true"/>
+                <ShakyText text="@dehors.qc"/>
+            </a>
+        </nav>
+    );
+};
+
 /**
  * The DEHORS shop's header, once the hero's own nav has scrolled away: a cream
  * pill fixed at the top of the screen with the mountain followed by the page's
  * sections, and the buttons. It comes down from above, and goes back up near
- * the top.
+ * the top. On narrower screens it holds the menu, and comes down with it.
  */
-const ScrolledNav = ({heroNav}: { heroNav: RefObject<HTMLElement> }) => {
+const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
+    heroNav: RefObject<HTMLElement>;
+    menuOpen: boolean;
+    onMenuToggle: () => void;
+    onMenuClose: () => void;
+}) => {
     const [shown, setShown] = useState(false);
+    const header = useRef<HTMLElement>(null);
+    const menuButton = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const nav = heroNav.current;
@@ -135,19 +255,54 @@ const ScrolledNav = ({heroNav}: { heroNav: RefObject<HTMLElement> }) => {
         };
     }, [heroNav]);
 
+    // The menu closes on a press or a focus outside the bar, on Escape (back to
+    // its button), and once the screen is wide enough for the links.
+    useEffect(() => {
+        if (!menuOpen) {
+            return;
+        }
+        const outside = (event: Event) => {
+            const target = event.target;
+            if (target instanceof Element && !header.current?.contains(target)
+                && !target.closest(`[aria-controls="${MENU_ID}"]`)) {
+                onMenuClose();
+            }
+        };
+        const escape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onMenuClose();
+                menuButton.current?.focus();
+            }
+        };
+        const resize = () => {
+            if (window.innerWidth > MENU_UP_TO) {
+                onMenuClose();
+            }
+        };
+        document.addEventListener('pointerdown', outside);
+        document.addEventListener('focusin', outside);
+        window.addEventListener('keydown', escape);
+        window.addEventListener('resize', resize);
+
+        return () => {
+            document.removeEventListener('pointerdown', outside);
+            document.removeEventListener('focusin', outside);
+            window.removeEventListener('keydown', escape);
+            window.removeEventListener('resize', resize);
+        };
+    }, [menuOpen, onMenuClose]);
+
     return (
-        <header className={`${classes.scrolledNav} ${shown ? classes.scrolledNavShown : ''}`}>
-            <a href="#top" className={classes.scrolledNavBrand} aria-label="Billetterie Dehors" onClick={smoothScrollTo}>
+        <header ref={header} className={`${classes.scrolledNav} ${shown || menuOpen ? classes.scrolledNavShown : ''} `
+            + `${menuOpen ? classes.scrolledNavOpen : ''}`}>
+            <a href="#top" className={classes.scrolledNavBrand} aria-label="Billetterie Dehors" onClick={(event) => {
+                onMenuClose();
+                smoothScrollTo(event);
+            }}>
                 <span aria-hidden="true"/>
             </a>
             <nav className={classes.scrolledNavLinks}>
-                {[
-                    {href: '#steps', label: t`How it works`},
-                    {href: '#fees', label: t`Fees`},
-                    {href: '#payments', label: t`Payments`},
-                    {href: '#features', label: t`Features`},
-                    {href: '#visibility', label: t({message: 'Visibility', context: 'landing section'})},
-                ].map((link) => (
+                {sectionLinks().map((link) => (
                     <a key={link.href} href={link.href} onClick={smoothScrollTo}><ShakyText text={link.label}/></a>
                 ))}
             </nav>
@@ -155,6 +310,8 @@ const ScrolledNav = ({heroNav}: { heroNav: RefObject<HTMLElement> }) => {
                 <NavLink to="/auth/login" className={classes.scrolledNavLogin}><ShakyText text={t`Log in`}/></NavLink>
                 <RegisterButton/>
             </div>
+            <MenuButton open={menuOpen} onToggle={onMenuToggle} buttonRef={menuButton}/>
+            <MobileMenu open={menuOpen} onClose={onMenuClose}/>
         </header>
     );
 };
@@ -311,6 +468,28 @@ const HeroVideo = () => {
     );
 };
 
+/**
+ * The footer waits stuck behind the page only while it fits on the screen:
+ * taller, its top would never show. It then simply follows the page.
+ */
+const useFooterFits = (footer: RefObject<HTMLElement>) => {
+    useEffect(() => {
+        const element = footer.current;
+        if (!element) {
+            return;
+        }
+        const check = () => element.toggleAttribute('data-tall', element.offsetHeight > window.innerHeight);
+        const observer = new ResizeObserver(check);
+        observer.observe(element);
+        window.addEventListener('resize', check, {passive: true});
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', check);
+        };
+    }, [footer]);
+};
+
 /** The DEHORS wordmark at the bottom of the footer: its letters rise one by one once uncovered. */
 const FooterWordmark = () => {
     const [letters, setLetters] = useState('');
@@ -433,6 +612,38 @@ const Feature = ({title, badge, darkBadge, picture, open, onToggle, children}: {
     );
 };
 
+/**
+ * The steps as cards in the shop's colours, each tilted its own way, the
+ * second and fourth set lower: a staircase to climb. A card straightens under
+ * the mouse; one with somewhere to go is a link.
+ */
+const StepCards = ({steps}: { steps: { title: string, text: string, to?: string }[] }) => (
+    <ol className={classes.stepCards}>
+        {steps.map((step, index) => {
+            const content = (
+                <>
+                    <span className={classes.stepNumber}>{String(index + 1).padStart(2, '0')}</span>
+                    <h3>{step.title}</h3>
+                    <p>{step.text}</p>
+                    <IconArrowRight className={classes.stepArrow} size={22} stroke={1.8}/>
+                </>
+            );
+
+            return (
+                <li key={step.title} className={`${classes.stepCard} ${classes[`stepCard${index + 1}`]}`} data-rise>
+                    {step.to ? (
+                        <Rough as={NavLink} to={step.to} amplitude={1.8} step={36} className={classes.stepCardBody}>
+                            {content}
+                        </Rough>
+                    ) : (
+                        <Rough amplitude={1.8} step={36} className={classes.stepCardBody}>{content}</Rough>
+                    )}
+                </li>
+            );
+        })}
+    </ol>
+);
+
 // Between the words, but never inside the number ("2 200+").
 const WORD_BREAK = / (?=\D)/;
 
@@ -517,21 +728,31 @@ const Landing = () => {
     useEffect(() => opening ? undefined : installSmoothScroll(), [opening]);
 
     const heroNav = useRef<HTMLElement>(null);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
+    const closeMenu = useCallback(() => setMenuOpen(false), []);
+    const footer = useRef<HTMLElement>(null);
+    useFooterFits(footer);
 
     const steps = [
-        {title: t`Create your account`, text: t`A few minutes and your ticketing is ready.`},
+        {title: t`Create your free account`, text: t`A few minutes and your ticketing is ready.`, to: '/auth/register'},
         {title: t`Add your colours`, text: t`Your logo, your colours: ticketing that looks like your brand.`},
-        {title: t`Connect Stripe`, text: t`Payments go straight to your account.`},
+        {title: t`Connect your Stripe`, text: t`Payments go straight to your account.`},
         {title: t`Gather your people`, text: t`Put your tickets on sale, share the link and scan at the door.`},
     ];
 
     const features = [
-        {title: t`Free or paid`, text: t`All events are welcome, whatever the price.`, picture: 'groupe-crete'},
-        {title: t`Scan at the door`, text: t`Validate tickets in a blink on event day.`, picture: 'file-sentier'},
-        {title: t`Sell your merch`, text: t`Sell your merch with the tickets, handed over at the event.`, picture: 'autocollants', contain: true},
-        {title: t`Your colours`, text: t`Ticketing that looks like your brand, not ours.`, picture: 'groupe-drapeau'},
-        {title: t`Attendee list`, text: t`Keep track of your people, from the first ticket to check-in.`, picture: 'montee-foret'},
-    ].map(({picture, contain, ...feature}) => ({...feature, picture: {src: `${ASSETS}/features/${picture}.webp`, contain}}));
+        {title: t`Free or paid, one link`, text: t`Each event gets a page to share anywhere: free or paid tickets, bought in a few clicks.`, picture: 'features/groupe-crete'},
+        {title: t`Simple, in your colours`, text: t`A dashboard that's easy to pick up, and ticketing that looks like your brand.`, picture: 'features/groupe-drapeau'},
+        {title: t`Your participants, from ticket to door`, text: t`An up-to-date list, emails to keep them posted, and ticket scanning on the day.`, picture: 'features/file-sentier'},
+        {title: t`Sell your merch`, text: t`Sell your merch with the tickets, handed over at the event.`, picture: 'features/autocollants', contain: true},
+        {
+            title: t`On the DEHORS calendar`,
+            text: <Trans>Your event shows up in the <a href={`${DEHORS_SITE}/calendrier`} target="_blank" rel="noopener"><ShakyText
+                text={t`DEHORS calendar`}/></a>, the one the community checks to plan its outings.</Trans>,
+            picture: 'photos/hero-poster',
+        },
+    ].map(({picture, contain, ...feature}) => ({...feature, picture: {src: `${ASSETS}/${picture}.webp`, contain}}));
     const missingPicture: FeaturePicture = {src: `${ASSETS}/features/foret-ruisseau.webp`};
     const featurePictures = [FEATURES_PICTURE, ...features.map((feature) => feature.picture), missingPicture];
     // One feature open at a time; the picture beside the list is its own, the section's when none is.
@@ -551,7 +772,7 @@ const Landing = () => {
 
             {opening && <Opening onReveal={startEntrance} onDone={endOpening}/>}
 
-            <ScrolledNav heroNav={heroNav}/>
+            <ScrolledNav heroNav={heroNav} menuOpen={menuOpen} onMenuToggle={toggleMenu} onMenuClose={closeMenu}/>
 
             <main className={classes.page}>
                 <section id="top" className={classes.heroWrap}>
@@ -572,6 +793,7 @@ const Landing = () => {
                                                   checkIconPosition="right" onDropdownOpen={cutLanguageList}/>
                                 <LandingButton as={NavLink} to="/auth/login" variant="ghost" label={t`Log in`}/>
                                 <RegisterButton/>
+                                <MenuButton open={menuOpen} onToggle={toggleMenu}/>
                             </div>
                         </header>
                         <div className={classes.heroContent}>
@@ -586,55 +808,22 @@ const Landing = () => {
                 </section>
 
                 <section id="intro" className={classes.intro}>
+                    <h2 className={classes.introTitle} data-rise><Trans>Made by organizers,<br/>for organizers.</Trans></h2>
                     <div className={classes.introText} data-rise>
-                        <p>{t`Billetterie Dehors is the local ticketing platform for races, outings and competitions. A small local team, fees that stay small, and a community of athletes that grows every week.`}</p>
+                        <p>{t`Billetterie Dehors is the online ticketing platform for local races, outings and competitions. Small fees, the money straight into your account, and your event shown to our whole community.`}</p>
                         <LandingButton as="a" href="#steps" onClick={smoothScrollTo} variant="dark"
                                        label={t`How it works`}/>
                     </div>
-                    <h2 className={classes.introTitle} data-rise>
-                        <span>{t`Free or paid.`}</span>
-                        <span>{t`Small or big.`}</span>
-                        <span>{t`Everyone is welcome.`}</span>
-                    </h2>
-                    <div className={classes.introPhotos} data-rise>
-                        <Photo name="photo-a" className={classes.introPhotoSmall}/>
-                        <Photo name="photo-b" className={classes.introPhotoMedium}/>
-                        <div className={classes.introPhotoLargeWrap}>
-                            <Photo name="photo-c" className={classes.introPhotoLarge}/>
-                            <Sticker name="autocollant-perfectly-round" className={classes.stickerRound}/>
-                        </div>
+                    <div className={classes.introPhotoSmall} data-rise>
+                        <Photo name="photo-a"/>
                     </div>
-                </section>
-
-                <section id="steps" className={classes.steps}>
-                    <div className={classes.sectionHead} data-rise>
-                        <div>
-                            <h2>{t`Your ticketing in 4 steps`}</h2>
-                        </div>
-                        <div className={classes.sectionHeadAside}>
-                            <p>{t`From creating your account to scanning at the door, everything takes a few minutes. One step at a time.`}</p>
-                            <RegisterButton variant="dark"/>
-                        </div>
+                    <div className={classes.introPhotoMedium} data-rise>
+                        <Photo name="photo-b"/>
                     </div>
-                    <ol className={classes.stepCards}>
-                        {steps.map((step, index) => (
-                            <li key={step.title} className={`${classes.stepCard} ${classes[`stepCard${index + 1}`]}`}
-                                data-rise>
-                                <Rough amplitude={1.8} step={36} className={classes.stepCardBody}>
-                                    <span className={classes.stepNumber}>{String(index + 1).padStart(2, '0')}</span>
-                                    <h3>{step.title}</h3>
-                                    <p>{step.text}</p>
-                                    <IconArrowRight className={classes.stepArrow} size={18}/>
-                                </Rough>
-                                {/* Pinned at the middle of its top edge, outside the card's rough clip. */}
-                                <svg className={classes.stepPin} viewBox="0 0 36 36" aria-hidden="true"
-                                     focusable="false">
-                                    <circle cx="18" cy="18" r="14"/>
-                                    <circle className={classes.stepPinShine} cx="13.5" cy="13" r="4"/>
-                                </svg>
-                            </li>
-                        ))}
-                    </ol>
+                    <div className={classes.introPhotoLarge} data-rise>
+                        <Photo name="photo-c"/>
+                        <Sticker name="autocollant-sac-a-dos.svg" className={classes.stickerBackpack}/>
+                    </div>
                 </section>
 
                 <section className={classes.trust}>
@@ -644,30 +833,26 @@ const Landing = () => {
                     <TrustedOrganizers organizers={TRUSTED_ORGANIZERS}/>
                 </section>
 
+                <section id="steps" className={classes.steps}>
+                    <div className={classes.sectionHead} data-rise>
+                        <h2>{t`Your ticketing in 4 steps`}</h2>
+                    </div>
+                    <StepCards steps={steps}/>
+                </section>
+
                 <section id="fees" className={classes.feesWrap}>
                     <Rough className={classes.fees} amplitude={2} step={52} data-rise>
                         <div className={classes.feesText}>
                             <h2>{t`Fees that stay small.`}</h2>
-                            <p>{t`No subscription, no hidden fees. Build the fees into your ticket price: the participants cover them.`}</p>
+                            <p>{t`2.5% per ticket, plus Stripe's payment fees. No subscription, no hidden fees, and no fees at all if your event is free.`}</p>
                             <RegisterButton/>
                         </div>
                         <div className={classes.feesCardWrap}>
                             <Rough className={classes.feesCard} amplitude={1.8} step={36}>
-                                <span className={classes.eyebrow}>{t`Per ticket sold`}</span>
-                                <dl>
-                                    <div>
-                                        <dt>Billetterie Dehors</dt>
-                                        <dd>{t`2.5%`}</dd>
-                                    </div>
-                                    <div>
-                                        <dt>{t`Stripe (payment)`}</dt>
-                                        <dd>{t`2.9% + $0.30`}</dd>
-                                    </div>
-                                </dl>
-                                <strong className={classes.feesTotal}>{t`That's it.`}</strong>
-                                <span className={classes.feesFree}>{t`Free event? No fees.`}</span>
+                                <FeesComparator/>
                             </Rough>
-                            <Sticker name="autocollant-perfect-stick" className={classes.stickerStick}/>
+                            <Sticker name="autocollant-feu-de-camp.svg" className={classes.stickerCampfire}/>
+                            <p className={classes.feesNote}>{t`Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price.`}</p>
                         </div>
                     </Rough>
                 </section>
@@ -675,22 +860,27 @@ const Landing = () => {
                 <section id="payments" className={classes.stripe} data-stack>
                     <div className={classes.stripeText} data-rise>
                         <h2>{t`Stripe, what's that?`}</h2>
-                        <p>{t`Stripe is the online payment system used by millions of businesses. Your participants pay by card, and the money goes straight to your Stripe account, not ours.`}</p>
-                        <RegisterButton variant="dark"/>
+                        <p>{t`Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do.`}</p>
+                        <LandingButton as="a" href={stripeSite(i18n.locale)} target="_blank" rel="noopener" variant="dark"
+                                       label={t`Learn more about Stripe`}/>
                     </div>
                     <div className={classes.stripeCardWrap} data-rise>
-                        <Rough className={classes.stripeCard} amplitude={1.8} step={36}>
-                            <div className={classes.stripeCardTop}>
-                                <h3>{t`Your money, before the big day.`}</h3>
-                                <p>{t`With the big players, the money often stays locked until the event. Here, it's paid out on Stripe's schedule.`}</p>
-                            </div>
-                            <div className={classes.stripeCardBottom}>
-                                <span>{t`Paid out on Stripe's schedule`}</span>
-                                <span>{t`Not locked until the event`}</span>
-                                <strong>{t`Invest in your event right now`}<IconArrowRight size={18}/></strong>
-                            </div>
-                        </Rough>
-                        <Sticker name="autocollant-perfectly-round" className={classes.stickerStripe}/>
+                        <div className={classes.stripeCardStack}>
+                            <Rough className={classes.stripeCardUnder} amplitude={1.2} step={40}>
+                                <div className={classes.stripeCardUnderFoot}>
+                                    <span>{t`Get paid from the presale.`}</span>
+                                    <span className={classes.stripeCardUnderMark} aria-hidden="true"/>
+                                </div>
+                            </Rough>
+                            <Rough className={classes.stripeCard} amplitude={1.2} step={40}>
+                                <h3>{t`Your account, your money.`}</h3>
+                                <span className={classes.stripeChip} aria-hidden="true"/>
+                                <div className={classes.stripeCardBottom}>
+                                    <span>{t`Free to open, no subscription`}</span>
+                                    <span className={classes.stripeLogo} role="img" aria-label="Stripe"/>
+                                </div>
+                            </Rough>
+                        </div>
                     </div>
                 </section>
 
@@ -733,27 +923,19 @@ const Landing = () => {
                         </div>
                     </section>
 
-                    <section className={classes.ctaWrap}>
-                        <Rough className={classes.cta} amplitude={2} step={52} data-rise>
-                            <div className={classes.ctaText}>
-                                <h2>{t`Ready to gather your people?`}</h2>
-                                <p>{t`A small Quebec team, ready to help you launch your first event. Missing a feature? We'll add it with you.`}</p>
-                            </div>
-                            <div className={classes.ctaActions}>
-                                <RegisterButton/>
-                                <LandingButton as="a" href={`mailto:${CONTACT_EMAIL}`} variant="ghost"
-                                               label={t`Write to us`}/>
-                            </div>
-                        </Rough>
-                    </section>
                 </div>
             </main>
 
-            <footer className={classes.footer}>
+            <footer ref={footer} className={classes.footer}>
                 <div className={classes.footerInner}>
-                    <div className={classes.footerBrand}>
-                        <strong>Billetterie Dehors</strong>
-                        <span>{t`Made in Québec, for people on the move.`}</span>
+                    <div className={classes.footerCta}>
+                        <h2>{t`Ready to gather your people?`}</h2>
+                        <p>{t`A small Quebec team, ready to help you launch your first event.`}</p>
+                        <div className={classes.footerCtaActions}>
+                            <RegisterButton/>
+                            <LandingButton as="a" href={`mailto:${CONTACT_EMAIL}`} variant="ghost"
+                                           label={t`Write to us`}/>
+                        </div>
                     </div>
                     <nav className={classes.footerLinks} aria-label={t`Footer`}>
                         <div>
@@ -770,7 +952,10 @@ const Landing = () => {
                         </div>
                     </nav>
                 </div>
-                <div className={classes.footerLegal}>© {new Date().getFullYear()} Billetterie Dehors</div>
+                <div className={classes.footerLegal}>
+                    <span>© {new Date().getFullYear()} Billetterie Dehors</span>
+                    <span>{t`Made in Québec, for people on the move.`}</span>
+                </div>
                 <FooterWordmark/>
             </footer>
         </div>

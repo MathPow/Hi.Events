@@ -1,4 +1,5 @@
 import {CSSProperties, PointerEvent, useEffect, useRef} from "react";
+import {Link} from "react-router";
 import classes from "./Landing.module.scss";
 
 export interface Organizer {
@@ -7,6 +8,8 @@ export interface Organizer {
     logo: string;
     // Width over height of the logo's viewBox.
     ratio: number;
+    // Its billetterie page, when it has one.
+    url?: string;
 }
 
 const COPIES = 4;
@@ -38,8 +41,41 @@ interface Motion {
     targetScale: number;
 }
 
+// Seeded, for the server and the browser to draw the same order.
+const seededRandom = (seed: number) => () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+};
+
+const shuffle = <T, >(items: T[], random: () => number) => {
+    const shuffled = [...items];
+    for (let index = shuffled.length - 1; index > 0; index--) {
+        const other = Math.floor(random() * (index + 1));
+        [shuffled[index], shuffled[other]] = [shuffled[other], shuffled[index]];
+    }
+    return shuffled;
+};
+
+/**
+ * Each row in its own order, each round of names reshuffled, never the same
+ * logo twice in a row, the copies' seam included.
+ */
+const repeatShuffled = (organizers: Organizer[], seed: number) => {
+    const random = seededRandom(seed);
+    const rounds = Math.ceil(MIN_NAMES_PER_COPY / organizers.length);
+    let repeated: Organizer[] = [];
+    for (let attempt = 0; attempt < 50; attempt++) {
+        repeated = Array.from({length: rounds}, () => shuffle(organizers, random)).flat();
+        if (organizers.length < 2 || repeated.every((organizer, index) => organizer !== repeated[(index + 1) % repeated.length])) {
+            break;
+        }
+    }
+    return repeated;
+};
+
 const buildRow = (organizers: Organizer[], tintOffset: number) => {
-    const repeated = Array.from({length: Math.ceil(MIN_NAMES_PER_COPY / organizers.length)}, () => organizers).flat();
+    // Seeds far apart: close ones draw close orders.
+    const repeated = repeatShuffled(organizers, (tintOffset + 1) * 104729);
     return {
         duration: `${repeated.length * SECONDS_PER_NAME}s`,
         pills: repeated.map((organizer, index) => {
@@ -220,8 +256,12 @@ export const TrustedOrganizers = ({organizers}: { organizers: Organizer[] }) => 
 
     return (
         <>
-            <ul className={classes.visuallyHidden}>
-                {organizers.map((organizer) => <li key={organizer.name}>{organizer.name}</li>)}
+            <ul className={`${classes.visuallyHidden} ${classes.trustNames}`}>
+                {organizers.map((organizer) => (
+                    <li key={organizer.name}>
+                        {organizer.url ? <Link to={organizer.url}>{organizer.name}</Link> : organizer.name}
+                    </li>
+                ))}
             </ul>
             <div ref={scroller} className={classes.trustScroller} aria-hidden="true" onPointerMove={follow}
                  onPointerEnter={() => hovering.current = true} onPointerLeave={release} onPointerCancel={release}>
@@ -230,14 +270,24 @@ export const TrustedOrganizers = ({organizers}: { organizers: Organizer[] }) => 
                         <div className={classes.trustTrack} style={{'--duration': row.duration} as CSSProperties}>
                             {Array.from({length: COPIES}).map((_, copy) => (
                                 <ul key={copy} className={classes.trustCopy}>
-                                    {row.pills.map((pill, index) => (
-                                        <li key={index}>
-                                            <span className={`${classes.trustPill} ${pill.dark ? classes.trustPillDark : ''}`}
-                                                  style={{'--tint': pill.tint} as CSSProperties}>
-                                                <span className={classes.trustLogo} style={logoStyle(pill)}/>
-                                            </span>
-                                        </li>
-                                    ))}
+                                    {row.pills.map((pill, index) => {
+                                        const pillClass = `${classes.trustPill} ${pill.dark ? classes.trustPillDark : ''}`;
+                                        const pillStyle = {'--tint': pill.tint} as CSSProperties;
+                                        const logo = <span className={classes.trustLogo} style={logoStyle(pill)}/>;
+
+                                        return (
+                                            <li key={index}>
+                                                {/* Out of the tab order: the list above holds the same links. */}
+                                                {pill.url ? (
+                                                    <Link to={pill.url} tabIndex={-1} className={pillClass} style={pillStyle}>
+                                                        {logo}
+                                                    </Link>
+                                                ) : (
+                                                    <span className={pillClass} style={pillStyle}>{logo}</span>
+                                                )}
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             ))}
                         </div>

@@ -6,6 +6,8 @@ $abricot: #ffad7d;
 $peche: #fae6da;
 $terracotta: #c47762;
 $sable: #e3ad92;
+// The empty mountain of the shop's opening, before the cream fills it.
+$orange-pale: #f6a972;
 $display: FatFrank, 'Arial Black', sans-serif;
 $sans: Allotrope, Arial, sans-serif;
 $gutter: clamp(1rem, 2.8vw, 2.5rem);
@@ -49,6 +51,11 @@ $ridge-mobile: 10vw;
   :where(a) {
     color: inherit;
     text-decoration: none;
+  }
+
+  // No grey or blue square on a tap, like the shop: the buttons show their own press.
+  :where(a, button) {
+    -webkit-tap-highlight-color: transparent;
   }
 
   :focus-visible {
@@ -316,18 +323,29 @@ $ridge-mobile: 10vw;
   height: 100vh;
   height: 100lvh;
 
-  // Until the script measures the screen, the window is cut here, where it
-  // will place its own: the mountain min(8rem, 100vw - 4rem) wide, centred in
-  // the visible screen. Without a script to take it over, it steps aside.
+  // Until the script measures the screen, the empty mountain is drawn here,
+  // where it will place its own: min(8rem, 100vw - 4rem) wide, centred in the
+  // visible screen. Without a script to take it over, it steps aside.
   &:not([data-live]) {
-    --window-width: min(8rem, calc(100vw - 4rem));
-    mask-image: linear-gradient(#000, #000), url('/landing/dehors-icone.svg');
-    mask-size: 100% 100%, var(--window-width) auto;
-    mask-position: 0 0, 50% calc(50vh - var(--window-width) * #{$icon-ratio * 0.5});
-    mask-position: 0 0, 50% calc(50dvh - var(--window-width) * #{$icon-ratio * 0.5});
-    mask-repeat: no-repeat;
-    mask-composite: subtract, add;
+    --mountain-width: min(8rem, calc(100vw - 4rem));
     animation: opening-fallback 0.4s ease 10s both;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: calc(50vh - var(--mountain-width) * #{$icon-ratio * 0.5});
+      top: calc(50dvh - var(--mountain-width) * #{$icon-ratio * 0.5});
+      left: 50%;
+      width: var(--mountain-width);
+      aspect-ratio: 1 / #{$icon-ratio};
+      background: $orange-pale;
+      mask: url('/landing/dehors-icone.svg') center / contain no-repeat;
+      translate: -50% 0;
+    }
+
+    .openingLogo {
+      visibility: hidden;
+    }
   }
 }
 
@@ -362,6 +380,14 @@ $ridge-mobile: 10vw;
 
 .openingBackdrop {
   fill: $orange;
+}
+
+.openingEmpty {
+  fill: $orange-pale;
+}
+
+.openingWave {
+  fill: $creme;
 }
 
 // Safari 26 tints its toolbar on iPhone from an opaque fixed element touching
@@ -1012,62 +1038,315 @@ $ridge-mobile: 10vw;
   }
 }
 
+// --- Mobile menu ---
+
+// The shop's (EnteteSite.vue): two strokes at the end of the bar that turn
+// into a cross, once the sections' links leave it.
+.menuButton {
+  display: none;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  color: $brun;
+  background: transparent;
+  cursor: pointer;
+
+  .nav & {
+    color: $creme;
+  }
+}
+
+.menuButtonStroke {
+  display: block;
+  width: 1.25rem;
+  height: 0.1875rem;
+  border-radius: 1rem;
+  background: currentColor;
+  transition: transform 0.2s ease;
+
+  [aria-expanded='true'] > &:first-child {
+    transform: translateY(0.34375rem) rotate(45deg);
+  }
+
+  [aria-expanded='true'] > &:last-child {
+    transform: translateY(-0.34375rem) rotate(-45deg);
+  }
+}
+
+// Under the bar, a cream panel of the page's sections; the main button and
+// Instagram only join it on phones.
+.menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  border-radius: 1.25rem;
+  background: $creme;
+  box-shadow: 0 0.75rem 1.875rem rgb(53 41 36 / 0.13);
+  font-size: 1.125rem;
+  animation: menu-entrance 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
+
+  // Folding (MobileMenu), it crops its links without squeezing them.
+  > * {
+    flex-shrink: 0;
+  }
+
+  > a:not(.menuInstagram) {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.625rem;
+  }
+}
+
+// The account's two buttons, full width, under the sections.
+.menuActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 0.75rem;
+  padding: 0 0.25rem 0.25rem;
+
+  .button {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+// The two languages side by side, the current one filled.
+.menuLanguages {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  button {
+    min-height: 2.5rem;
+    padding: 0.4rem 1.1rem;
+    border: 2px solid rgb(53 41 36 / 0.2);
+    border-radius: 999px;
+    color: $brun;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+
+    &:hover {
+      border-color: $brun;
+    }
+
+    &[aria-pressed='true'] {
+      border-color: $brun;
+      color: $creme;
+      background: $brun;
+    }
+  }
+}
+
+.menuInstagram {
+  display: none;
+}
+
+@keyframes menu-entrance {
+  from {
+    opacity: 0;
+    translate: 0 -0.75rem;
+  }
+}
+
+@media (max-width: 1150px) {
+  .menuButton {
+    display: flex;
+  }
+}
+
+@media (min-width: 1151px) {
+  .menu {
+    display: none;
+  }
+}
+
+@media (max-width: $mobile) {
+  // The main button leaves the bars for the menu.
+  .navActions .button, .scrolledNavActions .button {
+    display: none;
+  }
+
+  // Orange strokes on a cream round drawn by hand, on the photo; on the cream
+  // bar the round fades, and comes back sand-coloured once the menu is open.
+  .menuButton {
+    position: relative;
+    isolation: isolate;
+    width: 2.875rem;
+    height: 2.875rem;
+
+    &, .nav & {
+      color: $orange;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background: $creme;
+      mask: url('/landing/rond-dessine.svg') center / 100% 100% no-repeat;
+      transition: opacity 0.25s ease, background-color 0.25s ease;
+    }
+
+    .scrolledNav &::before {
+      opacity: 0;
+    }
+
+    .scrolledNavOpen & {
+      color: $brun;
+
+      &::before {
+        opacity: 1;
+        background: $sable;
+      }
+    }
+  }
+
+  // Open, the bar grows and holds the menu, like the shop's mobile mock-up: the
+  // mountain and the cross on top, below the sections in big capitals, centred,
+  // the main button full width and Instagram.
+  .scrolledNav {
+    flex-wrap: wrap;
+  }
+
+  .scrolledNavOpen {
+    padding: 1.25rem 1rem 1.5rem 1.5rem;
+
+    &::before {
+      border-radius: 2rem 1.75rem 2rem 1.875rem / 1.875rem 2rem 1.75rem 2rem;
+    }
+  }
+
+  .menu {
+    position: static;
+    flex-basis: 100%;
+    margin-top: 1.75rem;
+    padding: 0 0.5rem 0 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+
+    > a:not(.menuInstagram) {
+      justify-content: center;
+      min-height: 0;
+      padding: 0.125rem 0;
+      border-radius: 0;
+      font-family: $display;
+      // « Comment ça marche » holds on one line on a phone.
+      font-size: clamp(1.5rem, 7vw, 2.5rem);
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+  }
+
+  .menuActions {
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+    padding: 0;
+
+    .button {
+      min-height: 3.25rem;
+      font-size: 1.125rem;
+    }
+  }
+
+  .menuInstagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-top: 1.25rem;
+    font-size: 1.125rem;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}
+
 // --- Intro ---
 
+// The photos climb in steps to the right edge of the screen; the title and the
+// text fill the corner the steps leave free, the text resting on the first.
 .intro {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: 3rem 4rem;
-  width: $content;
-  margin: clamp(6rem, 11vw, 9rem) auto 0;
+  grid-template-columns: 2.4fr 3.2fr 3.4fr;
+  grid-template-areas:
+    "title title large"
+    "text medium large"
+    "small medium large";
+  align-items: end;
+  gap: 1.75rem 1rem;
+  margin: clamp(6rem, 11vw, 9rem) $gutter 0 calc((100% - #{$content}) / 2);
 }
 
 .introText {
+  grid-area: text;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
-  padding-top: 0.75rem;
+  margin-top: 1.5rem;
   line-height: 1.6;
 }
 
+// A subtitle under the hero, smaller than the sections' titles.
 .introTitle {
-  display: flex;
-  flex-direction: column;
-  font-size: clamp(2.5rem, 5.4vw, 4.75rem);
+  grid-area: title;
+  align-self: start;
+  font-size: clamp(1.65rem, 3.6vw, 3.25rem);
   line-height: 1;
-}
-
-.introPhotos {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 2fr 3.3fr 3.4fr;
-  align-items: end;
-  gap: 1rem;
-  margin-left: clamp(0rem, 18vw, 14rem);
-  margin-right: calc(-1 * (100vw - min(100vw - 2 * #{$gutter}, 72rem)) / 2 + #{$gutter});
+  text-wrap: balance;
 }
 
 .introPhotoSmall {
-  aspect-ratio: 200 / 170;
+  grid-area: small;
+
+  .photo {
+    aspect-ratio: 200 / 150;
+  }
 }
 
 .introPhotoMedium {
-  aspect-ratio: 330 / 250;
-}
+  grid-area: medium;
 
-.introPhotoLargeWrap {
-  position: relative;
+  .photo {
+    aspect-ratio: 330 / 250;
+  }
 }
 
 .introPhotoLarge {
-  aspect-ratio: 340 / 400;
+  grid-area: large;
+  position: relative;
+
+  .photo {
+    aspect-ratio: 340 / 400;
+  }
 }
 
-.stickerRound {
-  top: -1.5rem;
-  right: -0.5rem;
-  width: clamp(4.5rem, 8vw, 7.5rem);
+.stickerBackpack {
+  top: -2rem;
+  right: -1rem;
+  width: clamp(5.5rem, 9.5vw, 8.5rem);
   rotate: 8deg;
   --tilt-delay: -1.2s;
 }
@@ -1077,8 +1356,11 @@ $ridge-mobile: 10vw;
 .sectionHead {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: center;
   gap: 2rem 4rem;
+  width: min(100%, 72rem);
+  margin: 0 auto;
+  text-align: center;
 
   h2 {
     font-size: clamp(2.5rem, 5.4vw, 4.75rem);
@@ -1086,30 +1368,25 @@ $ridge-mobile: 10vw;
   }
 }
 
-.sectionHeadAside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.25rem;
-  max-width: 24rem;
-  line-height: 1.6;
-}
-
+// The title on the page's column, the strips as wide as the fees' block.
 .steps {
-  width: $content;
-  margin: clamp(6rem, 11vw, 10rem) auto 0;
+  margin-top: clamp(6rem, 11vw, 10rem);
+  padding: 0 $gutter;
 }
 
+// Each card keeps its own height: set lower or higher, its bottom moves too.
 .stepCards {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
   gap: 2.75rem 1.5rem;
-  margin: clamp(4.5rem, 8vw, 7rem) 0 0;
+  max-width: 72rem;
+  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
   padding: 0;
   list-style: none;
 }
 
-// Each card hangs from its pin: it tilts around it, and straightens on hover.
+// Each card tilts around its top, and straightens under the mouse.
 .stepCard {
   position: relative;
   display: flex;
@@ -1126,50 +1403,28 @@ $ridge-mobile: 10vw;
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 18rem;
-  padding: 2.25rem 1.5rem 1.75rem;
+  min-height: 20rem;
+  padding: 2rem 1.75rem 1.75rem;
   border-radius: 1.25rem;
   background: var(--card);
 
   h3 {
     margin-top: auto;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     line-height: 1.05;
   }
 
   p {
-    margin-top: 0.75rem;
-    padding-right: 1.5rem;
+    margin-top: 1.25rem;
+    padding-right: 2rem;
+    font-size: 1rem;
     line-height: 1.5;
-  }
-}
-
-// A round pushpin in the card's own colour, with a brown border and a shine.
-.stepPin {
-  position: absolute;
-  z-index: 1;
-  top: -1rem;
-  left: 50%;
-  width: 2.25rem;
-  translate: -50% 0;
-  filter: drop-shadow(0.15rem 0.35rem 0.2rem rgb(53 41 36 / 0.35));
-
-  circle {
-    fill: var(--pin);
-    stroke: $brun;
-    stroke-width: 2.5;
-  }
-
-  .stepPinShine {
-    fill: #fff;
-    stroke: none;
-    opacity: 0.55;
   }
 }
 
 .stepNumber {
   font-family: $display;
-  font-size: 2.75rem;
+  font-size: clamp(2.75rem, 4vw, 3.5rem);
   line-height: 1;
 }
 
@@ -1181,28 +1436,25 @@ $ridge-mobile: 10vw;
 
 .stepCard1 {
   --card: #{$brun};
-  --pin: #ef6b66;
   color: $creme;
-  rotate: -1deg;
+  rotate: -2deg;
 
-  .stepNumber, h3 {
+  .stepNumber, h3, .stepArrow {
     color: $orange;
   }
 }
 
 .stepCard2 {
   --card: #{$abricot};
-  --pin: #5aab7b;
-  margin-top: 4.5rem;
-  rotate: 2.5deg;
+  margin-top: 7.25rem;
+  rotate: 3deg;
 }
 
 .stepCard3 {
   --card: #{$sommet};
-  --pin: #{$orange};
   color: $orange;
-  margin-top: 1.25rem;
-  rotate: -2deg;
+  margin-top: 1.5rem;
+  rotate: -2.5deg;
 
   p {
     color: $terracotta;
@@ -1211,9 +1463,8 @@ $ridge-mobile: 10vw;
 
 .stepCard4 {
   --card: #{$orange};
-  --pin: #{$creme};
-  margin-top: 4rem;
-  rotate: 1.5deg;
+  margin-top: 8rem;
+  rotate: 2.5deg;
 }
 
 // --- Trust ---
@@ -1242,6 +1493,27 @@ $ridge-mobile: 10vw;
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+// Shown while a keyboard user tabs through its links, the rows being out of the tab order.
+.trustNames:focus-within {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  width: auto;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  padding: 0 $gutter;
+  overflow: visible;
+  clip-path: none;
+  list-style: none;
+  white-space: normal;
+
+  a {
+    color: inherit;
+  }
 }
 
 // Clipped on the sides only: a pill leaning toward the cursor may overflow up or down.
@@ -1422,7 +1694,6 @@ $ridge-mobile: 10vw;
 }
 
 .feesCard {
-  padding: clamp(1.5rem, 3vw, 2.5rem);
   border-radius: 1.25rem;
   color: $creme;
   background: $brun;
@@ -1430,21 +1701,76 @@ $ridge-mobile: 10vw;
   .eyebrow {
     color: $abricot;
   }
+}
 
-  dl {
-    margin: 1.25rem 0 0;
+.feesCompare {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.feesSetting {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feesSettingHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+
+  strong {
+    color: $orange;
+    font-family: $display;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1;
   }
+}
 
-  dl > div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.5rem 0;
-    border-top: 1px solid rgb(255 247 233 / 0.6);
+// Mantine's slider in the shop's colours, above its own rules.
+.feesCard .feesCompare .feesSlider {
+  --slider-color: #{$orange};
+  --slider-track-bg: rgb(255 247 233 / 0.2);
+}
 
-    &:last-child {
-      border-bottom: 1px solid rgb(255 247 233 / 0.6);
+.feesCard .feesSliderThumb {
+  border: 4px solid $orange;
+  background: $creme;
+}
+
+// Each total over a bar as long as its share of Eventbrite's.
+.feesResults {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0.5rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(255 247 233 / 0.6);
+
+  > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+
+    // On its own row under the name and the total, however short.
+    &::after {
+      content: '';
+      grid-column: 1 / -1;
+      width: calc(var(--share) * 100%);
+      height: 0.6rem;
+      border-radius: 1rem;
+      background: rgb(255 247 233 / 0.3);
+      transition: width 0.3s $ease;
+    }
+
+    &:first-child::after {
+      background: $orange;
     }
   }
 
@@ -1454,34 +1780,42 @@ $ridge-mobile: 10vw;
 
   dd {
     margin: 0;
-    color: $orange;
     font-family: $display;
     font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+    line-height: 1;
     white-space: nowrap;
+  }
+
+  > div:first-child dd {
+    color: $orange;
   }
 }
 
 .feesTotal {
   display: block;
-  margin-top: 1.75rem;
   font-family: $display;
   font-weight: 400;
   font-size: clamp(2.25rem, 4vw, 3.25rem);
+  line-height: 1;
 }
 
-.feesFree {
-  display: block;
-  margin-top: 0.5rem;
-  color: $abricot;
-  font-size: 1rem;
-  font-weight: 700;
+.feesNote {
+  margin-top: 1.25rem;
+  padding-top: 0.5rem;
+  color: $terracotta;
+  font-size: 0.8rem;
+  line-height: 1.5;
+
+  &::before {
+    content: '* ';
+  }
 }
 
-.stickerStick {
-  bottom: -2.5rem;
-  left: -3rem;
-  width: clamp(7rem, 12vw, 10rem);
-  rotate: -8deg;
+.stickerCampfire {
+  top: -3.25rem;
+  right: -2.5rem;
+  width: clamp(5.5rem, 9vw, 8rem);
+  rotate: 8deg;
   --tilt-delay: -1.8s;
 }
 
@@ -1519,66 +1853,125 @@ $ridge-mobile: 10vw;
 
 .stripeCardWrap {
   position: relative;
-  rotate: 1.5deg;
+  rotate: -3deg;
+}
+
+// A payment card in the shop's orange, cut a little by hand, a brown DEHORS
+// card tilted under it. The account across the top like a bank's name, the
+// chip, then the fact along the bottom and Stripe's logo.
+// Room below for the brown card, which hangs lower than the orange one.
+.stripeCardStack {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 3.5rem;
 }
 
 .stripeCard {
-  overflow: hidden;
-  border-radius: 1.25rem;
-}
-
-.stripeCardTop {
-  padding: 2rem 2rem 4.5rem;
-  background: $abricot;
-
-  h3 {
-    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
-    line-height: 1.05;
-  }
-
-  p {
-    margin-top: 1rem;
-    line-height: 1.6;
-  }
-}
-
-.stripeCardBottom {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.75rem 2rem 2rem;
+  aspect-ratio: 85.6 / 54;
+  padding: clamp(1.25rem, 2.4vw, 1.75rem) clamp(1.25rem, 2.4vw, 2rem);
+  border-radius: 1.25rem;
   background: $orange;
+  transition: translate 0.35s $ease, rotate 0.35s $ease;
+}
 
-  span {
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
+.stripeCardUnder {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: 1.25rem;
+  color: $creme;
+  background: $brun;
+  rotate: 4deg;
+  translate: 0.4rem 3.4rem;
+  transition: translate 0.35s $ease, rotate 0.35s $ease;
+}
 
-  strong {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 1rem;
-    font-family: $display;
-    font-weight: 400;
-    font-size: 1.35rem;
-    line-height: 1.1;
+// Under the mouse the two cards draw a little apart, each turning a touch its own way.
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .stripeCardStack:hover {
+    .stripeCard {
+      translate: 0 -0.3rem;
+      rotate: -1deg;
+    }
 
-    svg {
-      flex: none;
+    .stripeCardUnder {
+      translate: 0.4rem 3.75rem;
+      rotate: 5deg;
     }
   }
 }
 
-.stickerStripe {
-  top: 38%;
-  right: 1.5rem;
-  width: clamp(5rem, 8vw, 7rem);
-  rotate: 10deg;
-  --tilt-delay: -0.6s;
+// Along the band of the brown card that shows under the orange one.
+.stripeCardUnderFoot {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 0.75rem;
+  left: 1.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: $display;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  line-height: 1;
+}
+
+.stripeCardUnderMark {
+  flex: none;
+  width: 1.4rem;
+  aspect-ratio: 1 / #{$icon-ratio};
+  background: $orange;
+  mask: url('/landing/dehors-icone.svg') center / contain no-repeat;
+}
+
+.stripeCard h3 {
+  text-wrap: balance;
+  font-size: clamp(1.75rem, 2.8vw, 2.4rem);
+  line-height: 1;
+}
+
+// The chip drawn in the shop's cream, cut in pads by brown lines.
+.stripeChip {
+  display: block;
+  width: 3.25rem;
+  height: 2.5rem;
+  margin-top: 1.1rem;
+  border: 2px solid $brun;
+  border-radius: 0.5rem;
+  background: linear-gradient($brun, $brun) center / 100% 2px no-repeat,
+  linear-gradient(90deg, transparent calc(33% - 1px), $brun 0 calc(33% + 1px), transparent 0 calc(66% - 1px),
+    $brun 0 calc(66% + 1px), transparent 0) center / 100% 100% no-repeat,
+  $sommet;
+}
+
+.stripeCardBottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+
+  span {
+    max-width: 13rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+}
+
+// Stripe's own wordmark, in white, one of the colours its brand allows.
+.stripeLogo {
+  flex: none;
+  width: clamp(4rem, 6vw, 5rem);
+  aspect-ratio: 360.02 / 149.84;
+  background: #fff;
+  mask: url('/landing/logos/stripe.svg') center / contain no-repeat;
 }
 
 // --- Features ---
@@ -1592,7 +1985,7 @@ $ridge-mobile: 10vw;
   position: relative;
   margin-top: clamp(6rem, 11vw, 10rem);
   padding-top: $ridge;
-  padding-bottom: clamp(5rem, 9vw, 8rem);
+  padding-bottom: clamp(9rem, 15vw, 13rem);
   background: $orange;
   mask:
     url('/landing/section-creme-tuile.svg') left top / min(116.666667%, 105rem) auto repeat-x,
@@ -1983,86 +2376,6 @@ $ridge-mobile: 10vw;
   --tilt-delay: -1.2s;
 }
 
-// --- CTA ---
-
-.ctaWrap {
-  position: relative;
-  padding: 0 $gutter;
-  margin-top: clamp(6rem, 11vw, 9rem);
-}
-
-.cta {
-  // The unit of the bite at its top right.
-  --bite: clamp(0.35rem, 1vw + 0.1rem, 1rem);
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1.75rem clamp(2rem, 4vw, 4rem);
-  max-width: 85rem;
-  margin: 0 auto;
-  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4.5vw, 4rem);
-  border-radius: 1.5rem;
-  color: $creme;
-  background: $brun;
-  // Bitten at the top right: a deep round notch, and three teeth marks around
-  // it, the middle one the largest, like the shop's bitten logo. Positions from
-  // the top right corner, in --bite units.
-  mask-image:
-    radial-gradient(circle at calc(100% + var(--bite) * 0.5) calc(var(--bite) * -0.5),
-      #0000 calc(var(--bite) * 7), #000 calc(var(--bite) * 7 + 1px)),
-    radial-gradient(circle at calc(100% - var(--bite) * 1.89) calc(var(--bite) * 6.08),
-      #0000 calc(var(--bite) * 2.6), #000 calc(var(--bite) * 2.6 + 1px)),
-    radial-gradient(circle at calc(100% - var(--bite) * 4.45) calc(var(--bite) * 4.45),
-      #0000 calc(var(--bite) * 3.2), #000 calc(var(--bite) * 3.2 + 1px)),
-    radial-gradient(circle at calc(100% - var(--bite) * 6.08) calc(var(--bite) * 1.89),
-      #0000 calc(var(--bite) * 2.6), #000 calc(var(--bite) * 2.6 + 1px));
-  mask-composite: intersect;
-
-  @media (max-width: 960px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  // The cream outlines of the DEHORS stickers, a seamless tile faint over the brown.
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    background: url('/landing/motif-creme.svg') center / 42rem repeat;
-    opacity: 0.12;
-    pointer-events: none;
-
-    @media (max-width: $mobile) {
-      background-size: 30rem;
-    }
-  }
-}
-
-.ctaText {
-  h2 {
-    font-size: clamp(2.25rem, 4.2vw, 3.75rem);
-    line-height: 1;
-    text-wrap: balance;
-  }
-
-  p {
-    max-width: 34rem;
-    margin-top: 1rem;
-    color: rgb(255 247 233 / 0.82);
-    line-height: 1.6;
-  }
-}
-
-// At the bottom of the card, on the right beside the text.
-.ctaActions {
-  align-self: end;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1rem;
-}
-
 // --- Footer ---
 
 // Stuck to the bottom of the screen behind the page, it is already in place
@@ -2082,6 +2395,11 @@ $ridge-mobile: 10vw;
     bottom: 0;
   }
 
+  // Taller than the screen (useFooterFits): it follows the page instead.
+  &[data-tall] {
+    position: relative;
+  }
+
   @media (max-width: $mobile) {
     margin-top: -10vw;
   }
@@ -2099,24 +2417,32 @@ $ridge-mobile: 10vw;
   margin: 0 auto;
 }
 
-.footerBrand {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-
-  strong {
-    font-family: $display;
-    font-weight: 400;
-    font-size: 1.5rem;
-    text-transform: uppercase;
+// The call to action opens the footer, the links beside it.
+.footerCta {
+  h2 {
+    font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+    line-height: 1;
+    text-wrap: balance;
   }
 
-  span {
-    color: rgb(255 247 233 / 0.75);
+  p {
+    max-width: 30rem;
+    margin-top: 1rem;
+    color: rgb(255 247 233 / 0.82);
+    line-height: 1.6;
   }
 }
 
+.footerCtaActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: 1.75rem;
+}
+
 .footerLinks {
+  flex: none;
   display: flex;
   gap: 3rem 5rem;
 
@@ -2147,6 +2473,10 @@ $ridge-mobile: 10vw;
 }
 
 .footerLegal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 2rem;
   width: $content;
   margin: 3rem auto 0;
   color: rgb(255 247 233 / 0.55);
@@ -2205,13 +2535,24 @@ $ridge-mobile: 10vw;
 
 // --- Small screens ---
 
-@media (max-width: 960px) {
-  .intro, .stripe, .fees {
-    grid-template-columns: minmax(0, 1fr);
+// Too narrow for the text beside the small photo: it goes above the first two.
+@media (max-width: 1100px) {
+  .intro {
+    grid-template-columns: 2fr 3.3fr 3.4fr;
+    grid-template-areas:
+      "title title title"
+      "text text large"
+      "small medium large";
   }
 
-  .introPhotos {
-    margin-left: 0;
+  .introText {
+    max-width: 34rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .stripe, .fees {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .stepCards {
@@ -2223,6 +2564,11 @@ $ridge-mobile: 10vw;
   }
 
   .sectionHead {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footerInner {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -2247,6 +2593,7 @@ $ridge-mobile: 10vw;
     min-height: 2.75rem;
     padding: 0.55rem 0.75rem;
     font-size: 0.875rem;
+    white-space: nowrap;
   }
 
   // On phones the switcher shrinks to a round globe; the list still opens on tap.
@@ -2275,13 +2622,16 @@ $ridge-mobile: 10vw;
     display: none;
   }
 
-  .introPhotos {
+  .intro {
     grid-template-columns: 1fr 1fr;
-    margin-right: 0;
+    grid-template-areas:
+      "title title"
+      "text text"
+      "medium large";
+  }
 
-    > :first-child {
-      display: none;
-    }
+  .introPhotoSmall {
+    display: none;
   }
 
   .stepCards {
@@ -2289,11 +2639,10 @@ $ridge-mobile: 10vw;
   }
 
   .stepCardBody {
-    min-height: 12rem;
+    min-height: 14rem;
   }
 
-  .stickerStick {
-    left: auto;
+  .stickerCampfire {
     right: -0.5rem;
   }
 
@@ -2336,8 +2685,4 @@ $ridge-mobile: 10vw;
     }
   }
 
-  .footerInner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }

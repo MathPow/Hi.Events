@@ -11,19 +11,35 @@ const HEIGHT = 49.995;
 const ZOOM_CENTER = {x: 24.5, y: 35.5};
 const INSCRIBED_RADIUS = 14;
 
+// The shop's timings (IntroChargement.vue): the empty mountain shows a moment
+// before the wave fills it, then a pause, it draws in, and opens onto the page.
+const EMPTY_FOR = 100;
+const FILL_FOR = 450;
 // A slow network never holds the visitor on the opening.
-const MAX_WAIT = 2000;
+const MAX_WAIT = 8000;
+const PAUSE_FOR = 220;
+const SHRINK_FOR = 300;
+const SHRINK_SCALE = 0.7;
 // Zoom speed in log of scale per second, reached after the ramp up.
 const ZOOM_SPEED = 7;
 const RAMP_UP_FOR = 200;
+const FADE_FOR = 220;
 // The CSS steps the opening aside at 10s when no script took it over (.opening).
 const FALLBACK_AFTER = 10000;
+
+// The cream wave, in a 100 × 100 frame stretched over the mountain's.
+const WAVE_EMPTY = 'M 0 100 V 105 H 100 V 100 Z';
+const WAVE_FULL = 'M 0 0 H 100 V 100 H 0 Z';
 
 // What the window waits for, fetched with the page for the window to show it from the start.
 const POSTER = '/landing/photos/hero-groupe.webp';
 
 const ICON_ID = 'landing-opening-icon';
+const SILHOUETTE_ID = 'landing-opening-silhouette';
 const WINDOW_ID = 'landing-opening-window';
+
+const ease = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
+const smooth = (t: number) => t * t * (3 - 2 * t);
 
 const pageReady = () => {
     const poster = new Image();
@@ -37,21 +53,26 @@ const pageReady = () => {
 };
 
 /**
- * The DEHORS shop's opening, cut to its zoom, on the first load of the landing
- * page: an orange screen with the mountain cut out of it, a window onto the
- * page, which grows as soon as the page is ready until it covers the screen.
- * Rendered by the server so it is there from the first paint, cut by CSS until
- * the script measures the screen (.opening); the page under it stays readable
- * to screen readers.
+ * The DEHORS shop's opening (IntroChargement.vue) on the first load of the
+ * landing page: an orange screen with the empty mountain, which a cream wave
+ * fills from the bottom while the page loads, waiting at 88% for it. Filled,
+ * the mountain draws in, then opens: a window onto the page that grows until
+ * it covers the screen, the cream fading as it starts. Rendered by the server
+ * so it is there from the first paint, the mountain drawn by CSS until the
+ * script measures the screen (.opening); the page under it stays readable to
+ * screen readers.
  */
 export const Opening = memo(({onReveal, onDone}: { onReveal: () => void, onDone: () => void }) => {
     const root = useRef<HTMLDivElement>(null);
     const backdrop = useRef<SVGRectElement>(null);
     const hole = useRef<SVGUseElement>(null);
+    const logo = useRef<SVGGElement>(null);
+    const wave = useRef<SVGPathElement>(null);
 
     useEffect(() => {
-        const [element, backdropElement, holeElement] = [root.current, backdrop.current, hole.current];
-        if (!element || !backdropElement || !holeElement) {
+        const [element, backdropElement, holeElement, logoElement, waveElement]
+            = [root.current, backdrop.current, hole.current, logo.current, wave.current];
+        if (!element || !backdropElement || !holeElement || !logoElement || !waveElement) {
             return;
         }
 
@@ -80,80 +101,130 @@ export const Opening = memo(({onReveal, onDone}: { onReveal: () => void, onDone:
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let unit = 1;
         let center = {x: 0, y: 0};
-        let zooming = false;
+        let opened = false;
+        let ready = false;
         let frame = 0;
+        let timeout: number | undefined;
 
         const measure = () => {
             const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            // Same size as the window cut by CSS: min(8rem, 100vw - 4rem).
+            // Same size as the mountain drawn by CSS: min(8rem, 100vw - 4rem).
             unit = Math.min(8 * rem, window.innerWidth - 4 * rem) / WIDTH;
             center = {x: window.innerWidth / 2, y: window.innerHeight / 2};
         };
 
-        /** Where to put ZOOM_CENTER on screen for the mountain to stay centred. */
-        const centredAnchor = () => ({
-            x: center.x + (ZOOM_CENTER.x - WIDTH / 2) * unit,
-            y: center.y + (ZOOM_CENTER.y - HEIGHT / 2) * unit,
+        /** Where to put ZOOM_CENTER on screen for the mountain to stay centred at this scale. */
+        const centredAnchor = (scale: number) => ({
+            x: center.x + (ZOOM_CENTER.x - WIDTH / 2) * unit * scale,
+            y: center.y + (ZOOM_CENTER.y - HEIGHT / 2) * unit * scale,
         });
 
-        const place = (scale: number, anchor = centredAnchor()) => {
-            holeElement.setAttribute('transform', `translate(${anchor.x} ${anchor.y}) scale(${unit * scale}) `
-                + `translate(${-ZOOM_CENTER.x} ${-ZOOM_CENTER.y})`);
+        const place = (scale: number, anchor = centredAnchor(scale)) => {
+            const transform = `translate(${anchor.x} ${anchor.y}) scale(${unit * scale}) `
+                + `translate(${-ZOOM_CENTER.x} ${-ZOOM_CENTER.y})`;
+            logoElement.setAttribute('transform', transform);
+            holeElement.setAttribute('transform', transform);
         };
 
         const resize = () => {
             measure();
-            if (!zooming) {
+            if (!opened) {
                 place(1);
             }
         };
 
-        // The script's window takes over from the CSS one at the same place, in the same frame.
+        // The script's mountain takes over from the CSS one at the same place, in the same frame.
         measure();
         place(1);
-        backdropElement.setAttribute('mask', `url(#${WINDOW_ID})`);
         element.setAttribute('data-live', '');
         window.addEventListener('resize', resize);
 
-        const zoom = () => {
-            if (zooming || done) {
-                return;
-            }
-            zooming = true;
+        pageReady().then(() => {
+            ready = true;
             if (reducedMotion) {
                 finish();
-                return;
             }
+        });
 
-            const anchor = centredAnchor();
-            const corner = Math.hypot(
-                Math.max(anchor.x, window.innerWidth - anchor.x),
-                Math.max(anchor.y, window.innerHeight - anchor.y),
-            );
-            const finalScale = corner / (INSCRIBED_RADIUS * unit);
-            reveal();
-
+        if (reducedMotion) {
+            waveElement.setAttribute('d', WAVE_FULL);
+            timeout = window.setTimeout(finish, MAX_WAIT);
+        } else {
             const start = performance.now();
-            // The zoom speeds up during the ramp, then grows at a constant rate of
-            // its log, which reads as a steady speed despite the exploding scale.
-            const animate = (now: number) => {
-                const z = (now - start) / 1000;
+            let previous = start;
+            let progress = 0;
+            let filledAt = 0;
+            let zoomAnchor = {x: 0, y: 0};
+            let finalScale = 1;
+
+            const fill = (now: number) => {
+                const elapsed = now - start;
+                const delta = Math.min(now - previous, 64);
+                previous = now;
+                if (elapsed < EMPTY_FOR) {
+                    return;
+                }
+
+                // The wave waits for the page at 88%, then finishes its way smoothly.
+                const target = ready || elapsed >= MAX_WAIT ? 1 : 0.88;
+                progress = Math.min(target, progress + delta / FILL_FOR);
+                if (progress >= 1) {
+                    waveElement.setAttribute('d', WAVE_FULL);
+                    filledAt = now;
+                    return;
+                }
+
+                // The level rises from the bottom, like water filling the mountain.
+                const y = 105 - progress * 110;
+                const crest = Math.sin(elapsed / 330) * 3.5;
+                const trough = Math.cos(elapsed / 410) * 3.5;
+                waveElement.setAttribute('d', `M 0 100 V ${y} C 16 ${y + crest}, 34 ${y + trough}, 50 ${y} `
+                    + `S 84 ${y - crest}, 100 ${y} V 100 Z`);
+            };
+
+            /** Filled: a short pause, the mountain draws in, then opens onto the page. */
+            const open = (now: number) => {
+                const t = now - filledAt - PAUSE_FOR;
+                if (t < SHRINK_FOR) {
+                    place(1 - (1 - SHRINK_SCALE) * ease(Math.max(t, 0) / SHRINK_FOR));
+                    return false;
+                }
+
+                if (!opened) {
+                    opened = true;
+                    zoomAnchor = centredAnchor(SHRINK_SCALE);
+                    const corner = Math.hypot(
+                        Math.max(zoomAnchor.x, window.innerWidth - zoomAnchor.x),
+                        Math.max(zoomAnchor.y, window.innerHeight - zoomAnchor.y),
+                    );
+                    finalScale = corner / (INSCRIBED_RADIUS * unit);
+                    backdropElement.setAttribute('mask', `url(#${WINDOW_ID})`);
+                    reveal();
+                }
+
+                // The zoom speeds up during the ramp, then grows at a constant rate of
+                // its log, which reads as a steady speed despite the exploding scale.
+                const z = (t - SHRINK_FOR) / 1000;
                 const ramp = RAMP_UP_FOR / 1000;
                 const logScale = z < ramp ? ZOOM_SPEED * z * z / (2 * ramp) : ZOOM_SPEED * (z - ramp / 2);
-                const scale = Math.exp(logScale);
-                place(scale, anchor);
+                const scale = SHRINK_SCALE * Math.exp(logScale);
+                place(scale, zoomAnchor);
+                // The cream mountain fades as the zoom starts, for the page to show in the window.
+                logoElement.setAttribute('opacity', String(1 - smooth(Math.min(z * 1000 / FADE_FOR, 1))));
+                return scale >= finalScale;
+            };
 
-                if (scale >= finalScale) {
+            const animate = (now: number) => {
+                if (!filledAt) {
+                    fill(now);
+                } else if (open(now)) {
                     finish();
                     return;
                 }
                 frame = requestAnimationFrame(animate);
             };
             frame = requestAnimationFrame(animate);
-        };
-
-        pageReady().then(zoom);
-        const timeout = window.setTimeout(zoom, MAX_WAIT);
+        }
 
         return () => {
             cancelAnimationFrame(frame);
@@ -171,6 +242,9 @@ export const Opening = memo(({onReveal, onDone}: { onReveal: () => void, onDone:
             <svg className={classes.openingScene} focusable="false">
                 <defs>
                     <path id={ICON_ID} d={ICON}/>
+                    <clipPath id={SILHOUETTE_ID}>
+                        <use href={`#${ICON_ID}`}/>
+                    </clipPath>
                     {/* White everywhere but the mountain: there, the orange becomes a window onto the page. */}
                     <mask id={WINDOW_ID} maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
                         <rect width="100%" height="100%" fill="white"/>
@@ -178,6 +252,13 @@ export const Opening = memo(({onReveal, onDone}: { onReveal: () => void, onDone:
                     </mask>
                 </defs>
                 <rect ref={backdrop} className={classes.openingBackdrop} width="100%" height="100%"/>
+                <g ref={logo} className={classes.openingLogo}>
+                    <g clipPath={`url(#${SILHOUETTE_ID})`}>
+                        <rect className={classes.openingEmpty} width={WIDTH} height={HEIGHT}/>
+                        <path ref={wave} className={classes.openingWave} d={WAVE_EMPTY}
+                              transform={`scale(${WIDTH / 100} ${HEIGHT / 100})`}/>
+                    </g>
+                </g>
             </svg>
             <span className={classes.openingTint}/>
         </div>
