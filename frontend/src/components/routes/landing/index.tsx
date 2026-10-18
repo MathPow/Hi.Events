@@ -472,6 +472,81 @@ const HeroVideo = () => {
  * The footer waits stuck behind the page only while it fits on the screen:
  * taller, its top would never show. It then simply follows the page.
  */
+// How far the backdrop slides each way: the 2rem it overflows by (.feesRock).
+const BACKDROP_DRIFT = 32;
+
+/**
+ * A window onto a backdrop that stays put while its block scrolls past, and
+ * drifts a little against the scroll: BACKDROP_DRIFT px down while the block
+ * crosses the screen. The page's mask stops `background-attachment: fixed`
+ * from doing the window, so the backdrop, as tall as the screen, is set back
+ * at its top each frame. Under a finger the native scroll would run ahead of
+ * it: there the backdrop only drifts inside its block.
+ */
+const WindowBackdrop = ({className}: { className: string }) => {
+    const backdrop = useRef<HTMLSpanElement>(null);
+
+    useEffect(() => {
+        const element = backdrop.current;
+        const frameElement = element?.parentElement;
+        if (!element || !frameElement) {
+            return;
+        }
+        const fixed = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const drifts = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!fixed && !drifts) {
+            return;
+        }
+        let frame: number | null = null;
+        let visible = false;
+        const place = () => {
+            frame = null;
+            const box = frameElement.getBoundingClientRect();
+            const half = window.innerHeight / 2;
+            // From 1 as the block enters at the bottom to -1 as it leaves at the top.
+            const progress = Math.min(Math.max((box.top + box.height / 2 - half) / (half + box.height / 2), -1), 1);
+            const drift = drifts ? -progress * BACKDROP_DRIFT : 0;
+            element.style.setProperty('--backdrop-y', `${((fixed ? -box.top : 0) + drift).toFixed(2)}px`);
+        };
+        const schedule = () => {
+            if (visible && frame === null) {
+                frame = requestAnimationFrame(place);
+            }
+        };
+        // Lenis just moved the page: follow in the same frame.
+        const placeNow = () => {
+            if (visible) {
+                place();
+            }
+        };
+        const observer = new IntersectionObserver(([entry]) => {
+            visible = entry?.isIntersecting ?? false;
+            schedule();
+        });
+        observer.observe(frameElement);
+        element.setAttribute(fixed ? 'data-fixed' : 'data-drift', '');
+        const stopFollowingLenis = onSmoothScroll(placeNow);
+        window.addEventListener('scroll', schedule, {passive: true});
+        window.addEventListener('resize', schedule, {passive: true});
+
+        return () => {
+            observer.disconnect();
+            stopFollowingLenis();
+            window.removeEventListener('scroll', schedule);
+            window.removeEventListener('resize', schedule);
+            if (frame !== null) {
+                cancelAnimationFrame(frame);
+            }
+        };
+    }, []);
+
+    return (
+        <span className={className} aria-hidden="true">
+            <span ref={backdrop}/>
+        </span>
+    );
+};
+
 const useFooterFits = (footer: RefObject<HTMLElement>) => {
     useEffect(() => {
         const element = footer.current;
@@ -842,10 +917,11 @@ const Landing = () => {
 
                 <section id="fees" className={classes.feesWrap}>
                     <Rough className={classes.fees} amplitude={2} step={52} data-rise>
+                        <WindowBackdrop className={classes.feesRock}/>
                         <div className={classes.feesText}>
                             <h2>{t`Fees that stay small.`}</h2>
                             <p>{t`2.5% per ticket, plus Stripe's payment fees. No subscription, no hidden fees, and no fees at all if your event is free.`}</p>
-                            <RegisterButton/>
+                            <RegisterButton variant="dark"/>
                         </div>
                         <div className={classes.feesCardWrap}>
                             <Rough className={classes.feesCard} amplitude={1.8} step={36}>
