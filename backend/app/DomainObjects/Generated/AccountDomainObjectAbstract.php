@@ -30,6 +30,7 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     final public const PLATFORM_PAYMENTS_ALLOWED = 'platform_payments_allowed';
     final public const DONATION_RECEIPTS_ALLOWED = 'donation_receipts_allowed';
     final public const SUSPENDED_AT = 'suspended_at';
+    final public const IS_PUBLIC_SIGNUP = 'is_public_signup';
 
     protected int $id;
     protected ?int $account_configuration_id = null;
@@ -51,6 +52,7 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     protected bool $platform_payments_allowed = false;
     protected bool $donation_receipts_allowed = false;
     protected ?string $suspended_at = null;
+    protected bool $is_public_signup = false;
 
     public function toArray(): array
     {
@@ -75,6 +77,7 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
                     'platform_payments_allowed' => $this->platform_payments_allowed ?? null,
                     'donation_receipts_allowed' => $this->donation_receipts_allowed ?? null,
                     'suspended_at' => $this->suspended_at ?? null,
+                    'is_public_signup' => $this->is_public_signup ?? null,
                 ];
     }
 
@@ -296,5 +299,16 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     public function getSuspendedAt(): ?string
     {
         return $this->suspended_at;
+    }
+
+    public function setIsPublicSignup(bool $is_public_signup): self
+    {
+        $this->is_public_signup = $is_public_signup;
+        return $this;
+    }
+
+    public function getIsPublicSignup(): bool
+    {
+        return $this->is_public_signup;
     }
 }

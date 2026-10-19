@@ -14,10 +14,13 @@ use HiEvents\Repository\Interfaces\AccountUserRepositoryInterface;
 use HiEvents\Repository\Interfaces\UserRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Account\CreateAccountHandler;
 use HiEvents\Services\Application\Handlers\Account\DTO\CreateAccountDTO;
+use HiEvents\Services\Application\Handlers\Account\Exceptions\AccountRegistrationDisabledException;
 use HiEvents\Services\Domain\Account\AccountRegistrationInviteService;
 use HiEvents\Services\Domain\Account\AccountUserAssociationService;
 use HiEvents\Services\Domain\User\EmailConfirmationService;
+use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Config\Repository;
+use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Hashing\HashManager;
 use Mockery as m;
@@ -31,6 +34,8 @@ class CreateAccountHandlerTest extends TestCase
     private CreateAccountHandler $handler;
 
     private AccountRegistrationInviteService $registrationInviteService;
+
+    private Repository $config;
 
     protected function setUp(): void
     {
@@ -47,8 +52,13 @@ class CreateAccountHandlerTest extends TestCase
         $databaseManager = m::mock(DatabaseManager::class);
         $databaseManager->shouldReceive('transaction')->andReturnUsing(fn(callable $callback) => $callback());
 
-        $config = m::mock(Repository::class);
-        $config->shouldReceive('get')->andReturnNull();
+        $this->config = m::mock(Repository::class);
+        $this->config->shouldReceive('get')->andReturnNull()->byDefault();
+
+        $lock = m::mock(Lock::class);
+        $lock->shouldReceive('block')->andReturnUsing(fn(int $seconds, callable $callback) => $callback());
+        $cache = m::mock(CacheRepository::class);
+        $cache->shouldReceive('lock')->with('public-signup', 10)->andReturn($lock);
 
         $configuration = m::mock(AccountConfigurationDomainObject::class);
         $configuration->shouldReceive('getId')->andReturn(1);
@@ -69,13 +79,14 @@ class CreateAccountHandlerTest extends TestCase
             accountRepository: $this->accountRepository,
             hashManager: $hashManager,
             databaseManager: $databaseManager,
-            config: $config,
+            config: $this->config,
             emailConfirmationService: m::mock(EmailConfirmationService::class)->shouldIgnoreMissing(),
             accountUserAssociationService: new AccountUserAssociationService($accountUserRepository),
             accountUserRepository: $accountUserRepository,
             accountConfigurationRepository: $configurationRepository,
             accountAttributionRepository: m::mock(AccountAttributionRepositoryInterface::class),
             registrationInviteService: $this->registrationInviteService,
+            cache: $cache,
             logger: new NullLogger(),
         );
     }
@@ -109,6 +120,42 @@ class CreateAccountHandlerTest extends TestCase
         $this->registrationInviteService->shouldReceive('consume')->once();
 
         $this->expectAccountCreatedWith(fn(array $attributes) => $attributes['account_messaging_tier_id'] === 3);
+
+        $this->handler->handle($this->dto(organizationName: 'Course en blanc', registrationToken: 'invite-token'));
+    }
+
+    public function testPublicSignUpIsRefusedOnceTheLimitIsReached(): void
+    {
+        $this->config->shouldReceive('get')->with('app.public_signup_limit')->andReturn('25');
+        $this->accountRepository->shouldReceive('countWhere')->with(['is_public_signup' => true])->andReturn(25);
+        $this->accountRepository->shouldNotReceive('create');
+
+        $this->expectException(AccountRegistrationDisabledException::class);
+
+        $this->handler->handle($this->dto(organizationName: 'Course en blanc'));
+    }
+
+    public function testPublicSignUpBelowTheLimitIsCountedAsPublic(): void
+    {
+        $this->config->shouldReceive('get')->with('app.public_signup_limit')->andReturn('25');
+        $this->accountRepository->shouldReceive('countWhere')->with(['is_public_signup' => true])->andReturn(24);
+
+        $this->expectAccountCreatedWith(fn(array $attributes) => $attributes['is_public_signup'] === true);
+
+        $this->handler->handle($this->dto(organizationName: 'Course en blanc'));
+    }
+
+    public function testInvitedSignUpIgnoresThePublicSignUpLimit(): void
+    {
+        $this->config->shouldReceive('get')->with('app.public_signup_limit')->andReturn('25');
+        $this->accountRepository->shouldNotReceive('countWhere');
+
+        $invite = m::mock(AccountRegistrationInviteDomainObject::class);
+        $this->registrationInviteService->shouldReceive('findUsableByToken')->with('invite-token')->andReturn($invite);
+        $this->registrationInviteService->shouldReceive('assertUsableForEmail');
+        $this->registrationInviteService->shouldReceive('consume')->once();
+
+        $this->expectAccountCreatedWith(fn(array $attributes) => $attributes['is_public_signup'] === false);
 
         $this->handler->handle($this->dto(organizationName: 'Course en blanc', registrationToken: 'invite-token'));
     }

@@ -23,6 +23,7 @@ use HiEvents\Services\Application\Handlers\Account\Exceptions\AccountRegistratio
 use HiEvents\Services\Domain\Account\AccountRegistrationInviteService;
 use HiEvents\Services\Domain\Account\AccountUserAssociationService;
 use HiEvents\Services\Domain\User\EmailConfirmationService;
+use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Config\Repository;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Hashing\HashManager;
@@ -36,6 +37,8 @@ class CreateAccountHandler
 
     private const PREMIUM_MESSAGING_TIER_ID = 3;
 
+    private const PUBLIC_SIGNUP_LOCK = 'public-signup';
+
     public function __construct(
         private readonly UserRepositoryInterface                 $userRepository,
         private readonly AccountRepositoryInterface              $accountRepository,
@@ -48,6 +51,7 @@ class CreateAccountHandler
         private readonly AccountConfigurationRepositoryInterface $accountConfigurationRepository,
         private readonly AccountAttributionRepositoryInterface   $accountAttributionRepository,
         private readonly AccountRegistrationInviteService        $registrationInviteService,
+        private readonly CacheRepository                         $cache,
         private readonly LoggerInterface                         $logger,
     )
     {
@@ -60,10 +64,55 @@ class CreateAccountHandler
     {
         $registrationInvite = $this->resolveRegistrationInvite($accountData);
 
-        if ($registrationInvite === null && $this->config->get('app.disable_registration')) {
+        if ($registrationInvite !== null) {
+            return $this->createAccount($accountData, $registrationInvite);
+        }
+
+        if ($this->config->get('app.disable_registration')) {
             throw new AccountRegistrationDisabledException();
         }
 
+        // Une inscription publique a la fois: des requetes simultanees verraient
+        // toutes le meme nombre de comptes et passeraient la limite ensemble.
+        return $this->cache->lock(self::PUBLIC_SIGNUP_LOCK, 10)->block(5, function () use ($accountData) {
+            $this->assertPublicSignupLimitNotReached();
+
+            return $this->createAccount($accountData, null);
+        });
+    }
+
+    /**
+     * Filet de securite si des robots passent Turnstile: au-dela de
+     * APP_PUBLIC_SIGNUP_LIMIT comptes publics, l'inscription se ferme. Vide,
+     * pas de limite. Un compte invite ne compte pas.
+     *
+     * @throws AccountRegistrationDisabledException
+     */
+    private function assertPublicSignupLimitNotReached(): void
+    {
+        $limit = $this->config->get('app.public_signup_limit');
+
+        if ($limit === null || $limit === '') {
+            return;
+        }
+
+        if ($this->accountRepository->countWhere(['is_public_signup' => true]) >= (int)$limit) {
+            $this->logger->warning('Public sign-up limit reached, account creation refused', [
+                'limit' => (int)$limit,
+            ]);
+
+            throw new AccountRegistrationDisabledException();
+        }
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function createAccount(
+        CreateAccountDTO                        $accountData,
+        ?AccountRegistrationInviteDomainObject $registrationInvite,
+    ): AccountDomainObject
+    {
         $isSaasMode = $this->config->get('app.saas_mode_enabled');
         $passwordHash = $this->hashManager->make($accountData->password);;
 
@@ -77,6 +126,7 @@ class CreateAccountHandler
                 'account_verified_at' => $isSaasMode ? null : now()->toDateTimeString(),
                 'account_configuration_id' => $this->getAccountConfigurationId($accountData),
                 'account_messaging_tier_id' => $this->getDefaultMessagingTierId($registrationInvite !== null),
+                'is_public_signup' => $registrationInvite === null,
             ]);
 
             $user = $this->getExistingUser($accountData) ?? $this->userRepository->create([
