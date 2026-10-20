@@ -8,7 +8,9 @@ import {MobileNav} from "./MobileNav";
 import {IconLayoutSidebar} from "@tabler/icons-react";
 import {UnstyledButton, VisuallyHidden} from "@mantine/core";
 import {t} from "@lingui/macro";
+import {Helmet} from "react-helmet-async";
 import ImpersonationBanner from "../../common/ImpersonationBanner";
+import {InstallAppPrompt} from "../../common/InstallAppPrompt";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 
 interface AppLayoutProps {
@@ -107,6 +109,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
     return (
         <>
+            {/* Only the back office is installable: an attendee saving an event page keeps a plain bookmark. */}
+            <Helmet>
+                <link rel="manifest" href="/site.webmanifest"/>
+                <meta name="mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-title" content="DEHORS"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+            </Helmet>
             <ImpersonationBanner />
             <div id={`${entityType}-manage-container`}
                  className={`${classes.container} ${sidebarOpen ? classes.open : classes.closed} ${mobilePrimaryAction ? classes.withPrimaryAction : ''}`}>
@@ -137,6 +147,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                 sheetFooter={sidebarFooter}
                 primaryAction={mobilePrimaryAction}
             />
+
+            <InstallAppPrompt/>
 
             {!sidebarOpen && (
                 <SidebarToggleButton
