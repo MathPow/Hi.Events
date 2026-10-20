@@ -1,0 +1,7 @@
+@use "../../../../../../styles/mixins";
+
+.table {
+  @include mixins.respond-below(md) {
+    @include mixins.stacked-table;
+  }
+}

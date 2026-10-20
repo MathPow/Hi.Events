@@ -19,6 +19,11 @@
     flex-direction: column;
   }
 
+  // Phones: match the 1rem gutter of the back-office main area.
+  @include mixins.respond-below(md) {
+    margin: 0 -1rem;
+  }
+
   .sidebar {
     min-width: 380px;
     max-width: 380px;

@@ -11,7 +11,8 @@ import {useDisclosure} from "@mantine/hooks";
 import {InviteUserModal} from "../../../../../modals/InviteUserModal";
 import {EditUserModal} from "../../../../../modals/EditUserModal";
 import {User} from "../../../../../../types.ts";
-import {useState} from "react";
+import {useRef, useState} from "react";
+import {useStackedTableLabels} from "../../../../../../hooks/useStackedTableLabels.ts";
 import {useResendUserInvitation} from "../../../../../../mutations/useResendUserInvitation.ts";
 import {showError, showSuccess} from "../../../../../../utilites/notifications.tsx";
 import {useDeleteUserInvitation} from "../../../../../../mutations/useDeleteUserInvitation.ts";
@@ -25,6 +26,8 @@ const Users = () => {
     const [createModalOpen, {open: openCreateModal, close: closeCreateModal}] = useDisclosure(false);
     const [editModalOpen, {open: openEditModal, close: closeEditModal}] = useDisclosure(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const tableRef = useRef<HTMLTableElement>(null);
+    useStackedTableLabels(tableRef);
 
     const handleEdit = (user: User) => {
         setSelectedUser(user);
@@ -148,7 +151,7 @@ const Users = () => {
             <Card style={{padding: 0, position: 'relative'}}>
                 <LoadingMask/>
                 <Table.ScrollContainer className={classes.table} minWidth={800}>
-                    <Table verticalSpacing="sm">
+                    <Table verticalSpacing="sm" ref={tableRef}>
                         <Table.Thead>
                             <Table.Tr>
                                 <Table.Th>{t`User`}</Table.Th>

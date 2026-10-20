@@ -57,7 +57,7 @@ const PlatformRevenue = () => {
     ];
 
     return (
-        <Container size="xl" p="xl">
+        <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
             <Stack gap="xl">
                 <div>
                     <Group justify="space-between" align="flex-end" mb="xs" wrap="wrap">
@@ -151,36 +151,38 @@ const PlatformRevenue = () => {
                         <Skeleton height={160} radius="md"/>
                     ) : revenue?.by_currency && revenue.by_currency.length > 0 ? (
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Currency`}</Table.Th>
-                                        <Table.Th ta="right">{t`Contributions`}</Table.Th>
-                                        <Table.Th ta="right">{t`Orders`}</Table.Th>
-                                        <Table.Th ta="right">{t`Commissions`}</Table.Th>
-                                        <Table.Th ta="right">{t`Total`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {revenue.by_currency.map((row) => (
-                                        <Table.Tr key={row.currency}>
-                                            <Table.Td>
-                                                <Badge variant="light">{row.currency}</Badge>
-                                            </Table.Td>
-                                            <Table.Td ta="right">
-                                                {formatCurrency(row.contributions, row.currency)}
-                                            </Table.Td>
-                                            <Table.Td ta="right">{formatNumber(row.contributions_orders)}</Table.Td>
-                                            <Table.Td ta="right">
-                                                {formatCurrency(row.commissions, row.currency)}
-                                            </Table.Td>
-                                            <Table.Td ta="right">
-                                                <Text fw={600}>{formatCurrency(row.total, row.currency)}</Text>
-                                            </Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Currency`}</Table.Th>
+                                            <Table.Th ta="right">{t`Contributions`}</Table.Th>
+                                            <Table.Th ta="right">{t`Orders`}</Table.Th>
+                                            <Table.Th ta="right">{t`Commissions`}</Table.Th>
+                                            <Table.Th ta="right">{t`Total`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {revenue.by_currency.map((row) => (
+                                            <Table.Tr key={row.currency}>
+                                                <Table.Td>
+                                                    <Badge variant="light">{row.currency}</Badge>
+                                                </Table.Td>
+                                                <Table.Td ta="right">
+                                                    {formatCurrency(row.contributions, row.currency)}
+                                                </Table.Td>
+                                                <Table.Td ta="right">{formatNumber(row.contributions_orders)}</Table.Td>
+                                                <Table.Td ta="right">
+                                                    {formatCurrency(row.commissions, row.currency)}
+                                                </Table.Td>
+                                                <Table.Td ta="right">
+                                                    <Text fw={600}>{formatCurrency(row.total, row.currency)}</Text>
+                                                </Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     ) : (
                         <Paper shadow="sm" p="xl" radius="md" withBorder>
@@ -200,42 +202,44 @@ const PlatformRevenue = () => {
                             <Trans>Top contributors</Trans>
                         </Title>
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Name`}</Table.Th>
-                                        <Table.Th>{t`Email`}</Table.Th>
-                                        <Table.Th ta="right">{t`Orders`}</Table.Th>
-                                        <Table.Th ta="right">{t`Last contribution`}</Table.Th>
-                                        <Table.Th ta="right">{t`Total`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {revenue.top_contributors.map((contributor) => (
-                                        <Table.Tr key={`${contributor.email}-${contributor.currency}`}>
-                                            <Table.Td>
-                                                <Text fw={500}>
-                                                    {[contributor.first_name, contributor.last_name]
-                                                        .filter(Boolean)
-                                                        .join(' ') || '-'}
-                                                </Text>
-                                            </Table.Td>
-                                            <Table.Td>
-                                                <Text size="sm" c="dimmed">{contributor.email}</Text>
-                                            </Table.Td>
-                                            <Table.Td ta="right">{formatNumber(contributor.orders_count)}</Table.Td>
-                                            <Table.Td ta="right">
-                                                {dayjs(contributor.last_contribution_at).format('MMM D, YYYY')}
-                                            </Table.Td>
-                                            <Table.Td ta="right">
-                                                <Text fw={600}>
-                                                    {formatCurrency(contributor.amount, contributor.currency)}
-                                                </Text>
-                                            </Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Name`}</Table.Th>
+                                            <Table.Th>{t`Email`}</Table.Th>
+                                            <Table.Th ta="right">{t`Orders`}</Table.Th>
+                                            <Table.Th ta="right">{t`Last contribution`}</Table.Th>
+                                            <Table.Th ta="right">{t`Total`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {revenue.top_contributors.map((contributor) => (
+                                            <Table.Tr key={`${contributor.email}-${contributor.currency}`}>
+                                                <Table.Td>
+                                                    <Text fw={500}>
+                                                        {[contributor.first_name, contributor.last_name]
+                                                            .filter(Boolean)
+                                                            .join(' ') || '-'}
+                                                    </Text>
+                                                </Table.Td>
+                                                <Table.Td>
+                                                    <Text size="sm" c="dimmed">{contributor.email}</Text>
+                                                </Table.Td>
+                                                <Table.Td ta="right">{formatNumber(contributor.orders_count)}</Table.Td>
+                                                <Table.Td ta="right">
+                                                    {dayjs(contributor.last_contribution_at).format('MMM D, YYYY')}
+                                                </Table.Td>
+                                                <Table.Td ta="right">
+                                                    <Text fw={600}>
+                                                        {formatCurrency(contributor.amount, contributor.currency)}
+                                                    </Text>
+                                                </Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     </div>
                 )}
@@ -246,28 +250,30 @@ const PlatformRevenue = () => {
                             <Trans>By month</Trans>
                         </Title>
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Month`}</Table.Th>
-                                        <Table.Th ta="right">{t`Contributions`}</Table.Th>
-                                        <Table.Th ta="right">{t`Commissions`}</Table.Th>
-                                        <Table.Th ta="right">{t`Total`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {revenue.monthly.map((row) => (
-                                        <Table.Tr key={row.month}>
-                                            <Table.Td>{dayjs(`${row.month}-01`).format('MMM YYYY')}</Table.Td>
-                                            <Table.Td ta="right">{formatCurrency(row.contributions)}</Table.Td>
-                                            <Table.Td ta="right">{formatCurrency(row.commissions)}</Table.Td>
-                                            <Table.Td ta="right">
-                                                <Text fw={600}>{formatCurrency(row.total)}</Text>
-                                            </Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Month`}</Table.Th>
+                                            <Table.Th ta="right">{t`Contributions`}</Table.Th>
+                                            <Table.Th ta="right">{t`Commissions`}</Table.Th>
+                                            <Table.Th ta="right">{t`Total`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {revenue.monthly.map((row) => (
+                                            <Table.Tr key={row.month}>
+                                                <Table.Td>{dayjs(`${row.month}-01`).format('MMM YYYY')}</Table.Td>
+                                                <Table.Td ta="right">{formatCurrency(row.contributions)}</Table.Td>
+                                                <Table.Td ta="right">{formatCurrency(row.commissions)}</Table.Td>
+                                                <Table.Td ta="right">
+                                                    <Text fw={600}>{formatCurrency(row.total)}</Text>
+                                                </Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     </div>
                 )}

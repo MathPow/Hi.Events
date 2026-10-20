@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {ActionIcon, Alert, Button, Code, CopyButton, Group, Table, TextInput, Tooltip} from "@mantine/core";
 import {IconCheck, IconCopy, IconKey, IconTrash} from "@tabler/icons-react";
@@ -6,10 +6,12 @@ import {t, Trans} from "@lingui/macro";
 import {Card} from "../../../../../common/Card";
 import {HeadingCard} from "../../../../../common/HeadingCard";
 import accountClasses from "../../ManageAccount.module.scss";
+import classes from "./ApiTokens.module.scss";
 import {apiTokenClient, ApiToken, CreatedApiToken} from "../../../../../../api/api-token.client.ts";
 import {showError, showSuccess} from "../../../../../../utilites/notifications.tsx";
 import {confirmationDialog} from "../../../../../../utilites/confirmationDialog.tsx";
 import {prettyDate} from "../../../../../../utilites/dates.ts";
+import {useStackedTableLabels} from "../../../../../../hooks/useStackedTableLabels.ts";
 
 const API_TOKENS_QUERY_KEY = 'apiTokens';
 
@@ -18,6 +20,8 @@ export const ApiTokens = () => {
     const [name, setName] = useState('');
     // Conserve en memoire uniquement, le temps que l'utilisateur le copie.
     const [freshToken, setFreshToken] = useState<CreatedApiToken | null>(null);
+    const tableRef = useRef<HTMLTableElement>(null);
+    useStackedTableLabels(tableRef);
 
     const tokensQuery = useQuery({
         queryKey: [API_TOKENS_QUERY_KEY],
@@ -96,7 +100,7 @@ export const ApiTokens = () => {
                     </Button>
                 </Group>
 
-                <Table>
+                <Table className={classes.table} ref={tableRef}>
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>{t`Name`}</Table.Th>

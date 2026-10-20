@@ -1,3 +1,5 @@
+@use "../../../../../../styles/mixins";
+
 .heading {
   padding: 10px 20px;
   margin-top: 20px;
@@ -23,6 +25,16 @@
 
   div:first-child {
     padding-bottom: 0 !important;
+  }
+
+  @include mixins.respond-below(md) {
+    :global(.mantine-TableScrollContainer-scrollContainerInner) {
+      min-width: 0 !important;
+    }
+
+    table {
+      @include mixins.stacked-table;
+    }
   }
 }
 

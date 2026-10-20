@@ -469,7 +469,7 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
                             },
                         ]}
                     />
-                    <Group gap="xs" wrap="nowrap">
+                    <Group gap="xs" wrap="wrap" className={classes.actionButtons}>
                         <ExportButton/>
                         <Button
                             leftSection={<IconPlus size={16}/>}

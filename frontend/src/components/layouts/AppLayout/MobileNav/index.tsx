@@ -163,7 +163,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 opened={sheetOpen}
                 onClose={closeSheet}
                 position="bottom"
-                size="auto"
                 title={t`Menu`}
                 classNames={{
                     content: classes.sheet,

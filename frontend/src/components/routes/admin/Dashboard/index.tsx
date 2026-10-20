@@ -83,7 +83,7 @@ const AdminDashboard = () => {
     };
 
     return (
-        <Container size="xl" p="xl">
+        <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
             <Stack gap="xl">
                 <div>
                     <Title order={1} mb="xs">
@@ -361,29 +361,31 @@ const AdminDashboard = () => {
                         <Skeleton height={200} radius="md" />
                     ) : dashboardData?.popular_events && dashboardData.popular_events.length > 0 ? (
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Event`}</Table.Th>
-                                        <Table.Th>{t`Organizer`}</Table.Th>
-                                        <Table.Th ta="right">{t`Products Sold`}</Table.Th>
-                                        <Table.Th ta="right">{t`Gross Sales`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {dashboardData.popular_events.map((event) => (
-                                        <Table.Tr key={event.id}>
-                                            <Table.Td>
-                                                <Text fw={500}>{event.title}</Text>
-                                                <Text size="xs" c="dimmed">{event.account_name || '-'}</Text>
-                                            </Table.Td>
-                                            <Table.Td>{event.organizer_name || '-'}</Table.Td>
-                                            <Table.Td ta="right">{formatNumber(event.products_sold)}</Table.Td>
-                                            <Table.Td ta="right">{formatCurrency(event.sales_total_gross, event.currency)}</Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Event`}</Table.Th>
+                                            <Table.Th>{t`Organizer`}</Table.Th>
+                                            <Table.Th ta="right">{t`Products Sold`}</Table.Th>
+                                            <Table.Th ta="right">{t`Gross Sales`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {dashboardData.popular_events.map((event) => (
+                                            <Table.Tr key={event.id}>
+                                                <Table.Td>
+                                                    <Text fw={500}>{event.title}</Text>
+                                                    <Text size="xs" c="dimmed">{event.account_name || '-'}</Text>
+                                                </Table.Td>
+                                                <Table.Td>{event.organizer_name || '-'}</Table.Td>
+                                                <Table.Td ta="right">{formatNumber(event.products_sold)}</Table.Td>
+                                                <Table.Td ta="right">{formatCurrency(event.sales_total_gross, event.currency)}</Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     ) : (
                         <Paper shadow="sm" p="xl" radius="md" withBorder>
@@ -410,27 +412,29 @@ const AdminDashboard = () => {
                         <Skeleton height={200} radius="md" />
                     ) : dashboardData?.most_viewed_events && dashboardData.most_viewed_events.length > 0 ? (
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Event`}</Table.Th>
-                                        <Table.Th>{t`Organizer`}</Table.Th>
-                                        <Table.Th ta="right">{t`Total Views`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {dashboardData.most_viewed_events.map((event) => (
-                                        <Table.Tr key={event.id}>
-                                            <Table.Td>
-                                                <Text fw={500}>{event.title}</Text>
-                                                <Text size="xs" c="dimmed">{event.account_name || '-'}</Text>
-                                            </Table.Td>
-                                            <Table.Td>{event.organizer_name || '-'}</Table.Td>
-                                            <Table.Td ta="right">{formatNumber(event.total_views)}</Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Event`}</Table.Th>
+                                            <Table.Th>{t`Organizer`}</Table.Th>
+                                            <Table.Th ta="right">{t`Total Views`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {dashboardData.most_viewed_events.map((event) => (
+                                            <Table.Tr key={event.id}>
+                                                <Table.Td>
+                                                    <Text fw={500}>{event.title}</Text>
+                                                    <Text size="xs" c="dimmed">{event.account_name || '-'}</Text>
+                                                </Table.Td>
+                                                <Table.Td>{event.organizer_name || '-'}</Table.Td>
+                                                <Table.Td ta="right">{formatNumber(event.total_views)}</Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     ) : (
                         <Paper shadow="sm" p="xl" radius="md" withBorder>
@@ -457,28 +461,30 @@ const AdminDashboard = () => {
                         <Skeleton height={200} radius="md" />
                     ) : dashboardData?.top_organizers && dashboardData.top_organizers.length > 0 ? (
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Organizer`}</Table.Th>
-                                        <Table.Th>{t`Account`}</Table.Th>
-                                        <Table.Th ta="right">{t`Active Events`}</Table.Th>
-                                        <Table.Th ta="right">{t`Products Sold`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {dashboardData.top_organizers.map((organizer) => (
-                                        <Table.Tr key={organizer.id}>
-                                            <Table.Td>
-                                                <Text fw={500}>{organizer.name}</Text>
-                                            </Table.Td>
-                                            <Table.Td>{organizer.account_name || '-'}</Table.Td>
-                                            <Table.Td ta="right">{formatNumber(organizer.events_count)}</Table.Td>
-                                            <Table.Td ta="right">{formatNumber(organizer.total_products_sold)}</Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Organizer`}</Table.Th>
+                                            <Table.Th>{t`Account`}</Table.Th>
+                                            <Table.Th ta="right">{t`Active Events`}</Table.Th>
+                                            <Table.Th ta="right">{t`Products Sold`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {dashboardData.top_organizers.map((organizer) => (
+                                            <Table.Tr key={organizer.id}>
+                                                <Table.Td>
+                                                    <Text fw={500}>{organizer.name}</Text>
+                                                </Table.Td>
+                                                <Table.Td>{organizer.account_name || '-'}</Table.Td>
+                                                <Table.Td ta="right">{formatNumber(organizer.events_count)}</Table.Td>
+                                                <Table.Td ta="right">{formatNumber(organizer.total_products_sold)}</Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     ) : (
                         <Paper shadow="sm" p="xl" radius="md" withBorder>
@@ -505,41 +511,43 @@ const AdminDashboard = () => {
                         <Skeleton height={200} radius="md" />
                     ) : dashboardData?.recent_accounts && dashboardData.recent_accounts.length > 0 ? (
                         <Paper shadow="sm" radius="md" withBorder>
-                            <Table striped highlightOnHover>
-                                <Table.Thead>
-                                    <Table.Tr>
-                                        <Table.Th>{t`Account`}</Table.Th>
-                                        <Table.Th>{t`Email`}</Table.Th>
-                                        <Table.Th>{t`Signed Up`}</Table.Th>
-                                        <Table.Th ta="right">{t`Events`}</Table.Th>
-                                        <Table.Th ta="right">{t`Users`}</Table.Th>
-                                        <Table.Th>{t`Status`}</Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <Table.Tbody>
-                                    {dashboardData.recent_accounts.map((account) => (
-                                        <Table.Tr key={account.id}>
-                                            <Table.Td>
-                                                <Text fw={500}>{account.name}</Text>
-                                            </Table.Td>
-                                            <Table.Td>{account.email}</Table.Td>
-                                            <Table.Td>{dayjs(account.created_at).fromNow()}</Table.Td>
-                                            <Table.Td ta="right">{formatNumber(account.events_count)}</Table.Td>
-                                            <Table.Td ta="right">{formatNumber(account.users_count)}</Table.Td>
-                                            <Table.Td>
-                                                <Group gap="xs">
-                                                    {account.account_verified_at && (
-                                                        <Badge size="xs" color="green" variant="light">{t`Verified`}</Badge>
-                                                    )}
-                                                    {account.stripe_connect_setup_complete && (
-                                                        <Badge size="xs" color="blue" variant="light">{t`Stripe`}</Badge>
-                                                    )}
-                                                </Group>
-                                            </Table.Td>
+                            <Table.ScrollContainer minWidth={560}>
+                                <Table striped highlightOnHover>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th>{t`Account`}</Table.Th>
+                                            <Table.Th>{t`Email`}</Table.Th>
+                                            <Table.Th>{t`Signed Up`}</Table.Th>
+                                            <Table.Th ta="right">{t`Events`}</Table.Th>
+                                            <Table.Th ta="right">{t`Users`}</Table.Th>
+                                            <Table.Th>{t`Status`}</Table.Th>
                                         </Table.Tr>
-                                    ))}
-                                </Table.Tbody>
-                            </Table>
+                                    </Table.Thead>
+                                    <Table.Tbody>
+                                        {dashboardData.recent_accounts.map((account) => (
+                                            <Table.Tr key={account.id}>
+                                                <Table.Td>
+                                                    <Text fw={500}>{account.name}</Text>
+                                                </Table.Td>
+                                                <Table.Td>{account.email}</Table.Td>
+                                                <Table.Td>{dayjs(account.created_at).fromNow()}</Table.Td>
+                                                <Table.Td ta="right">{formatNumber(account.events_count)}</Table.Td>
+                                                <Table.Td ta="right">{formatNumber(account.users_count)}</Table.Td>
+                                                <Table.Td>
+                                                    <Group gap="xs">
+                                                        {account.account_verified_at && (
+                                                            <Badge size="xs" color="green" variant="light">{t`Verified`}</Badge>
+                                                        )}
+                                                        {account.stripe_connect_setup_complete && (
+                                                            <Badge size="xs" color="blue" variant="light">{t`Stripe`}</Badge>
+                                                        )}
+                                                    </Group>
+                                                </Table.Td>
+                                            </Table.Tr>
+                                        ))}
+                                    </Table.Tbody>
+                                </Table>
+                            </Table.ScrollContainer>
                         </Paper>
                     ) : (
                         <Paper shadow="sm" p="xl" radius="md" withBorder>

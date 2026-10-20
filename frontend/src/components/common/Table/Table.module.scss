@@ -26,4 +26,12 @@
     padding: 15px !important;
     white-space: nowrap;
   }
+
+  @include mixins.respond-below(md) {
+    @include mixins.stacked-table;
+
+    tbody tr {
+      padding: 0.875rem 1rem !important;
+    }
+  }
 }

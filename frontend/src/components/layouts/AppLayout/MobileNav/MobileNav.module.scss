@@ -132,7 +132,10 @@ $tab-bar-gap: 0.75rem;
   }
 }
 
+// Mantine has no "auto" drawer size: the sheet sizes itself to its content here.
 .sheet {
+  flex: 0 0 auto !important;
+  height: auto !important;
   max-height: 88dvh;
   border-radius: 1.75rem 1.75rem 0 0 !important;
   background: var(--dehors-creme) !important;

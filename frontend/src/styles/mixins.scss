@@ -124,3 +124,88 @@ $breakpoints: (
   -webkit-mask: $layers;
   mask: $layers;
 }
+
+// Phones: each table row becomes a block of "label: value" lines, its first cell as the title and a
+// trailing header-less cell (the row's actions) pinned to the corner. Labels come from useStackedTableLabels.
+@mixin stacked-table {
+  display: block;
+  min-width: 0 !important;
+
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: block;
+  }
+
+  tbody tr {
+    display: block;
+    position: relative;
+    padding: 0.875rem 1rem;
+
+    // A value too wide to sit beside its label drops to its own line, still right-aligned.
+    td {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.25rem 0.75rem;
+      width: auto !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      padding: 0.25rem 0 !important;
+      border: 0 !important;
+      white-space: normal !important;
+      text-align: right;
+      overflow-wrap: break-word;
+
+      &::before {
+        content: attr(data-label);
+        margin-right: auto;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--hi-secondary-text);
+        text-align: left;
+      }
+
+      > * {
+        max-width: 100%;
+      }
+
+      &:first-child {
+        display: block;
+        overflow-wrap: anywhere;
+        padding: 0 2.5rem 0.375rem 0 !important;
+        text-align: left;
+        font-weight: 700;
+
+        &::before {
+          content: none;
+        }
+      }
+
+      &:last-child:not([data-label]):not(:first-child) {
+        position: absolute;
+        top: 0.625rem;
+        right: 0.5rem;
+        padding: 0 !important;
+
+        &::before {
+          content: none;
+        }
+      }
+
+      &[colspan] {
+        display: block;
+        padding: 0.5rem 0 !important;
+        text-align: center;
+        font-weight: normal;
+
+        &::before {
+          content: none;
+        }
+      }
+    }
+  }
+}
