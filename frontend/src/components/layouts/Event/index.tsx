@@ -115,7 +115,7 @@ const EventLayout = () => {
             badge: remainingSetupSteps > 0 ? remainingSetupSteps : undefined,
             attention: remainingSetupSteps > 0,
         },
-        {link: 'dashboard', label: t`Dashboard`, icon: IconDashboard},
+        {link: 'dashboard', label: t`Dashboard`, icon: IconDashboard, mobileTab: true, mobileTabLabel: t`Overview`},
         {
             link: 'reports',
             label: t`Reports`,
@@ -133,15 +133,15 @@ const EventLayout = () => {
         // 3. Ticketing & Sales
         {label: t`Ticketing & Sales`},
         {link: 'products', label: t`Tickets & Products`, icon: IconTicket, attention: needsProducts},
-        {link: 'orders', label: t`Orders`, icon: IconReceipt, badge: eventStats?.total_orders},
+        {link: 'orders', label: t`Orders`, icon: IconReceipt, badge: eventStats?.total_orders, mobileTab: true},
         ...(hasDeposits ? [{link: 'deposits', label: t`Deposits`, icon: IconShieldLock}] : []),
         {link: 'promo-codes', label: t`Promo Codes`, icon: IconDiscount2},
         {link: 'affiliates', label: t`Affiliates`, icon: IconTrendingUp},
 
         // 4. GUESTS
         {label: t`Guest Management`},
-        {link: 'attendees', label: t`Attendees`, icon: IconUsers, badge: eventStats?.total_attendees_registered},
-        {link: 'check-in', label: t`Check-In Lists`, icon: IconQrcode},
+        {link: 'attendees', label: t`Attendees`, icon: IconUsers, badge: eventStats?.total_attendees_registered, mobileTab: true},
+        {link: 'check-in', label: t`Check-In Lists`, icon: IconQrcode, mobileTab: true, mobileTabLabel: t`Check-in`},
         {link: 'messages', label: t`Messages`, icon: IconSend},
         {link: 'sold-out-waitlist', label: t`Waitlist`, icon: IconListCheck},
         {link: 'capacity-assignments', label: t`Capacity Management`, icon: IconUsersGroup},
@@ -221,6 +221,27 @@ const EventLayout = () => {
                         </TopBarButton>
                     )}
                 </div>
+            )}
+            mobileContext={{
+                title: isEventFetched ? event?.title : '…',
+                subtitle: event?.organizer?.name,
+                backLink: event?.organizer?.id ? `/manage/organizer/${event.organizer.id}` : undefined,
+            }}
+            mobileSheetActions={event && (
+                <>
+                    <Button variant="light" leftSection={<IconShare size={16}/>} onClick={open}>
+                        {t`Share`}
+                    </Button>
+                    <Button
+                        component={NavLink}
+                        to={`/event/${eventId}/${event.slug}`}
+                        target={'_blank'}
+                        variant="light"
+                        leftSection={<IconExternalLink size={16}/>}
+                    >
+                        {t`Event Page`}
+                    </Button>
+                </>
             )}
             breadcrumbContentRight={(
                 <div className={classes.shareButton}>

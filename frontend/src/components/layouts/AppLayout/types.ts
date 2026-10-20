@@ -13,6 +13,21 @@ export interface NavItem {
     onClick?: () => void;
     showWhen?: () => boolean | undefined;
     loading?: boolean;
+    // Shown in the bottom tab bar on phones; everything else goes in the "More" sheet.
+    mobileTab?: boolean;
+    mobileTabLabel?: string;
+}
+
+export interface MobileContext {
+    title: ReactNode;
+    subtitle?: ReactNode;
+    backLink?: string;
+}
+
+export interface MobilePrimaryAction {
+    label: string;
+    icon: React.ComponentType<TablerIconsProps>;
+    onClick: () => void;
 }
 
 export interface BreadcrumbItem {

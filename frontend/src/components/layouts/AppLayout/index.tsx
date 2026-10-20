@@ -3,7 +3,8 @@ import {Outlet, useLocation} from "react-router";
 import classes from './AppLayout.module.scss';
 import {Topbar} from "./Topbar";
 import {Sidebar} from "./Sidebar";
-import {BreadcrumbItem, NavItem} from "./types.ts";
+import {BreadcrumbItem, MobileContext, MobilePrimaryAction, NavItem} from "./types.ts";
+import {MobileNav} from "./MobileNav";
 import {IconLayoutSidebar} from "@tabler/icons-react";
 import {UnstyledButton, VisuallyHidden} from "@mantine/core";
 import {t} from "@lingui/macro";
@@ -18,6 +19,9 @@ interface AppLayoutProps {
     breadcrumbContentRight?: React.ReactNode;
     actionGroupContent?: React.ReactNode;
     sidebarFooter?: React.ReactNode;
+    mobileContext?: MobileContext;
+    mobilePrimaryAction?: MobilePrimaryAction;
+    mobileSheetActions?: React.ReactNode;
 }
 
 interface SidebarToggleButtonProps {
@@ -61,6 +65,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                                                  breadcrumbContentRight = null,
                                                  actionGroupContent = null,
                                                  sidebarFooter = null,
+                                                 mobileContext,
+                                                 mobilePrimaryAction,
+                                                 mobileSheetActions,
                                              }) => {
     useDehorsAppTheme();
     const location = useLocation();
@@ -102,15 +109,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         <>
             <ImpersonationBanner />
             <div id={`${entityType}-manage-container`}
-                 className={`${classes.container} ${sidebarOpen ? classes.open : classes.closed}`}>
+                 className={`${classes.container} ${sidebarOpen ? classes.open : classes.closed} ${mobilePrimaryAction ? classes.withPrimaryAction : ''}`}>
                 <Topbar
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
                     topBarShadow={topBarShadow}
                     breadcrumbItems={breadcrumbsWithCurrentPage}
                     topBarContent={topBarContent}
                     breadcrumbContentRight={breadcrumbContentRight}
                     actionGroupContent={actionGroupContent}
+                    mobileContext={mobileContext}
                 />
 
             <div className={classes.main} id={'app-manage-main'}>
@@ -124,12 +130,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                 sidebarFooter={sidebarFooter}
             />
 
-            {sidebarOpen && (
-                <div
-                    className={`${classes.overlay} ${sidebarOpen ? classes.open : ''}`}
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
+            <MobileNav
+                navItems={navItems}
+                currentNavItem={currentNavItem}
+                sheetHeader={mobileSheetActions}
+                sheetFooter={sidebarFooter}
+                primaryAction={mobilePrimaryAction}
+            />
 
             {!sidebarOpen && (
                 <SidebarToggleButton

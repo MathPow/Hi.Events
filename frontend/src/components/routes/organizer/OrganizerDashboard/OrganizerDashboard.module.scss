@@ -144,11 +144,11 @@
     min-width: 0;
   }
 
-  @include mixins.respond-below(sm) {
-    gap: 1rem;
+  @include mixins.respond-below(md) {
+    gap: 0.625rem;
 
     > * {
-      flex: 1 1 100%;
+      flex: 1 1 calc(50% - 0.3125rem);
     }
   }
 }

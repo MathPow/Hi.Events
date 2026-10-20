@@ -48,7 +48,7 @@
     min-height: 44px;
 
     @include mixins.respond-below(md) {
-      padding: 0.625rem 0.5rem 0.125rem;
+      display: none;
     }
   }
 
@@ -175,12 +175,57 @@
     box-shadow: 0 1px 0 var(--dehors-trait);
   }
 
-  .burger {
-    --burger-color: var(--dehors-brun);
-    display: flex;
-    @include mixins.respond-above(md) {
-      display: none;
+  // On phones the event or organizer name replaces the breadcrumbs.
+  .mobileContext {
+    display: none;
+
+    @include mixins.respond-below(md) {
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+      flex: 1 1 auto;
+      min-width: 0;
     }
+  }
+
+  .backLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    margin-left: -0.25rem;
+    border-radius: 50%;
+    color: var(--dehors-brun);
+    -webkit-tap-highlight-color: transparent;
+
+    &:active {
+      background: rgb(53 41 36 / 0.1);
+    }
+  }
+
+  .mobileTitles {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.15;
+  }
+
+  .mobileSubtitle {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgb(53 41 36 / 0.65);
+    @include mixins.ellipsis();
+  }
+
+  .mobileTitle {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: var(--dehors-brun);
+    @include mixins.ellipsis();
   }
 
   .logo {

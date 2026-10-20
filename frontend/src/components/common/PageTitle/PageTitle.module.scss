@@ -11,7 +11,8 @@
   line-height: 1.05;
 
   @include mixins.respond-below(md) {
-    font-size: 1.875rem !important;
+    font-size: 1.75rem !important;
+    margin-bottom: 0.25rem !important;
   }
 }
 
@@ -21,4 +22,9 @@
   font-weight: normal;
   line-height: 1.4;
   margin-bottom: 20px;
+
+  @include mixins.respond-below(md) {
+    font-size: 0.9375rem;
+    margin-bottom: 0.75rem;
+  }
 }

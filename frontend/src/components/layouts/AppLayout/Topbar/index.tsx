@@ -1,46 +1,55 @@
 import React from "react";
 import {NavLink} from "react-router";
-import {Breadcrumbs, Burger} from '@mantine/core';
+import {Breadcrumbs} from '@mantine/core';
+import {IconChevronLeft} from "@tabler/icons-react";
 import classes from './Topbar.module.scss';
-import {BreadcrumbItem} from "../types";
+import {BreadcrumbItem, MobileContext} from "../types";
 import {GlobalMenu} from "../../../common/GlobalMenu";
 import { getConfig } from "../../../../utilites/config";
 
 interface TopbarProps {
-    sidebarOpen: boolean;
-    setSidebarOpen: (open: boolean) => void;
     topBarShadow: boolean;
     breadcrumbItems: BreadcrumbItem[];
     topBarContent?: React.ReactNode;
     breadcrumbContentRight?: React.ReactNode;
     actionGroupContent?: React.ReactNode;
+    mobileContext?: MobileContext;
 }
 
 export const Topbar: React.FC<TopbarProps> = ({
-                                                  sidebarOpen,
-                                                  setSidebarOpen,
                                                   topBarShadow,
                                                   breadcrumbItems,
                                                   topBarContent = null,
                                                   breadcrumbContentRight = null,
                                                   actionGroupContent = null,
+                                                  mobileContext,
                                               }) => {
     return (
         <div className={`${classes.topBar} ${topBarShadow ? classes.withShadow : ''}`}>
             <div className={classes.topBarShell}>
                 <div className={classes.topBarMain}>
-                    <div className={classes.burger}>
-                        <Burger
-                            opened={sidebarOpen}
-                            onClick={() => setSidebarOpen(!sidebarOpen)}
-                            size={'sm'}
-                        />
-                    </div>
-                    <div className={classes.logo}>
-                        <NavLink to={ `/manage/events` }>
-                            <img src={getConfig("VITE_APP_LOGO_DARK", "/logos/hi-events-text-light.svg")} alt={`${getConfig("VITE_APP_NAME", "Hi.Events")} logo`} className={classes.logo}/>
-                        </NavLink>
-                    </div>
+                    {mobileContext ? (
+                        <div className={classes.mobileContext}>
+                            {mobileContext.backLink && (
+                                <NavLink to={mobileContext.backLink} className={classes.backLink}
+                                         aria-label={typeof mobileContext.subtitle === 'string' ? mobileContext.subtitle : undefined}>
+                                    <IconChevronLeft size={20} stroke={2.25}/>
+                                </NavLink>
+                            )}
+                            <div className={classes.mobileTitles}>
+                                {mobileContext.subtitle && (
+                                    <span className={classes.mobileSubtitle}>{mobileContext.subtitle}</span>
+                                )}
+                                <span className={classes.mobileTitle}>{mobileContext.title}</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={classes.logo}>
+                            <NavLink to={ `/manage/events` }>
+                                <img src={getConfig("VITE_APP_LOGO_DARK", "/logos/hi-events-text-light.svg")} alt={`${getConfig("VITE_APP_NAME", "Hi.Events")} logo`} className={classes.logo}/>
+                            </NavLink>
+                        </div>
+                    )}
 
                     {topBarContent}
                     <div className={classes.actionGroup}>

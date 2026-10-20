@@ -14,6 +14,8 @@ import { t } from "@lingui/macro";
 import { Box, Group, NavLink as MantineNavLink, Stack } from "@mantine/core";
 import { IconAlertTriangle, IconBrandGoogleAnalytics, IconInfoCircle, IconMapPin, IconShare, IconMail, IconCalendarEvent, IconPercentage, IconChartBar, IconReceipt2, IconCreditCard, IconHeartHandshake } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
+import { SettingsSectionChips } from "../../../common/SettingsSectionChips";
+import { useScrollSpy } from "../../../../hooks/useScrollSpy.ts";
 import { useMemo, useState } from "react";
 import { Card } from "../../../common/Card";
 import { useParams } from "react-router";
@@ -127,6 +129,8 @@ const Settings = () => {
         document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    useScrollSpy(SECTIONS.map((section) => section.id), setActiveSection, !isLargeScreen);
+
     const sideMenu = (
         <Card style={{ padding: '15px', marginBottom: 0 }}>
             <Stack gap="xs">
@@ -145,7 +149,7 @@ const Settings = () => {
     );
 
     const content = SECTIONS.map(({ id, component: Component }) => (
-        <div key={id} id={id} style={{ scrollMarginTop: '20px' }}>
+        <div key={id} id={id} style={{ scrollMarginTop: isLargeScreen ? '20px' : '72px' }}>
             <Component />
         </div>
     ));
@@ -163,7 +167,7 @@ const Settings = () => {
                 </Group>
             ) : (
                 <Stack>
-                    {sideMenu}
+                    <SettingsSectionChips sections={SECTIONS} activeSection={activeSection} onSelect={handleClick} />
                     {content}
                 </Stack>
             )}

@@ -69,6 +69,7 @@ const OrganizerLayout = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
 
     const statusToggleMutation = useUpdateOrganizerStatus();
+    const isDashboard = /^\/manage\/organizer\/[^/]+(\/dashboard)?\/?$/.test(location.pathname);
 
     const navItems: NavItem[] = [
         {
@@ -79,17 +80,18 @@ const OrganizerLayout = () => {
             showWhen: () => organizers && organizers.length > 1,
         },
         { label: 'Overview' },
-        { link: 'dashboard', label: t`Organizer Dashboard`, icon: IconDashboard },
+        { link: 'dashboard', label: t`Organizer Dashboard`, icon: IconDashboard, mobileTab: true, mobileTabLabel: t`Overview` },
         {
             link: 'reports',
             label: t`Reports`,
             icon: IconChartPie,
-            isActive: (isActive) => isActive || location.pathname.includes('/report/')
+            isActive: (isActive) => isActive || location.pathname.includes('/report/'),
+            mobileTab: true,
         },
 
         { label: t`Manage` },
-        { link: 'events', label: t`Events`, icon: IconCalendar },
-        { link: 'settings', label: t`Settings`, icon: IconSettings },
+        { link: 'events', label: t`Events`, icon: IconCalendar, mobileTab: true },
+        { link: 'settings', label: t`Settings`, icon: IconSettings, mobileTab: true },
 
         { label: t`Tools` },
         { link: 'organizer-homepage-designer', label: t`Homepage Designer`, icon: IconPaint },
@@ -223,6 +225,31 @@ const OrganizerLayout = () => {
                             </TopBarButton>
                         )}
                     </div>
+                )}
+                mobileContext={{
+                    title: organizer?.name ?? '…',
+                    subtitle: t`Organizer`,
+                }}
+                mobilePrimaryAction={isDashboard ? {
+                    label: t`Create Event`,
+                    icon: IconCalendarPlus,
+                    onClick: () => setShowCreateEventModal(true),
+                } : undefined}
+                mobileSheetActions={organizer && (
+                    <>
+                        <Button variant="light" leftSection={<IconShare size={16} />} onClick={openShareModal}>
+                            {t`Share`}
+                        </Button>
+                        <Button
+                            component={NavLink}
+                            to={`/events/${organizerId}/${organizer.slug || ''}`}
+                            target={'_blank'}
+                            variant="light"
+                            leftSection={<IconExternalLink size={16} />}
+                        >
+                            {t`Public page`}
+                        </Button>
+                    </>
                 )}
                 breadcrumbContentRight={(
                     <div className={classes.breadcrumbActions}>

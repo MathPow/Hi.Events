@@ -16,12 +16,14 @@ const AdminLayout = () => {
             label: t`Dashboard`,
             icon: IconLayoutDashboard,
             isActive: () => location.pathname.replace(/\/$/, '') === '/admin',
+            mobileTab: true,
+            mobileTabLabel: t`Overview`,
         },
-        {link: 'accounts', label: t`Accounts`, icon: IconBuildingBank},
+        {link: 'accounts', label: t`Accounts`, icon: IconBuildingBank, mobileTab: true},
         {link: 'users', label: t`Users`, icon: IconUsers},
         {link: 'registration-invites', label: t`Invitations`, icon: IconUserPlus},
-        {link: 'events', label: t`Events`, icon: IconCalendar},
-        {link: 'orders', label: t`Orders`, icon: IconReceipt},
+        {link: 'events', label: t`Events`, icon: IconCalendar, mobileTab: true},
+        {link: 'orders', label: t`Orders`, icon: IconReceipt, mobileTab: true},
         {link: 'platform-revenue', label: t`Revenue`, icon: IconCoins},
         {link: 'messages', label: t`Messages`, icon: IconMail},
         {link: 'attribution', label: t`UTM Analytics`, icon: IconChartBar},
@@ -46,6 +48,7 @@ const AdminLayout = () => {
             navItems={navItems}
             breadcrumbItems={breadcrumbItems}
             entityType="organizer"
+            mobileContext={{title: t`Admin Dashboard`}}
         />
     );
 };

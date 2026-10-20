@@ -2,6 +2,12 @@
 
 .viewHomepageButton {
   color: var(--dehors-brun) !important;
+
+  // Moved to the menu sheet on phones, to leave room for the organizer name.
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+
   font-weight: 600;
   transition: opacity 0.2s ease;
 

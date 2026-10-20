@@ -180,21 +180,9 @@
     z-index: 2;
   }
 
+  // Phones get the tab bar and the menu sheet instead (see MobileNav).
   @media (max-width: 767px) {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    margin: 0;
-    border-radius: 0;
-    z-index: 200;
-    transform: translateX(-100%);
-    top: 0;
-    left: 0;
-
-    &.open {
-      transform: translateX(0);
-    }
+    display: none;
   }
 
   .sidebarClose {
@@ -215,16 +203,6 @@
     &:hover {
       transform: translateY(-50%) scale(1.4);
       color: var(--dehors-creme);
-    }
-
-    @media (max-width: 767px) {
-      right: 16px;
-      top: 28px;
-      transform: none;
-      
-      &:hover {
-        transform: scale(1.1);
-      }
     }
   }
 }
