@@ -75,7 +75,7 @@ const RegistrationInvites = () => {
 
     if (isLoading) {
         return (
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Stack gap="lg">
                     <Skeleton height={40} width={260}/>
                     <Skeleton height={120} radius="md"/>
@@ -87,7 +87,7 @@ const RegistrationInvites = () => {
 
     return (
         <>
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Stack gap="lg">
                     <Group justify="space-between">
                         <Title order={1}>{t`Registration Invitations`}</Title>

@@ -84,7 +84,7 @@ const AccountDetail = () => {
 
     if (isLoading) {
         return (
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Stack gap="lg">
                     <Skeleton height={40} width={200} />
                     <Skeleton height={200} radius="md" />
@@ -97,7 +97,7 @@ const AccountDetail = () => {
 
     if (!account) {
         return (
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Text c="dimmed">{t`Account not found`}</Text>
             </Container>
         );
@@ -117,7 +117,7 @@ const AccountDetail = () => {
 
     return (
         <>
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Stack gap="lg">
                     <Group>
                         <Button

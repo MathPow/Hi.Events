@@ -101,7 +101,7 @@ const Messages = () => {
     const totalMessages = messagesData?.meta?.total || 0;
 
     return (
-        <Container size="xl" p="xl">
+        <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
             <Stack gap="lg">
                 <div>
                     <Title order={1}>{t`Outgoing Messages`}</Title>

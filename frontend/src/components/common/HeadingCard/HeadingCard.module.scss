@@ -24,7 +24,8 @@
 :global(body.dehors-app) .card {
   flex-wrap: wrap;
   gap: 0.75rem 1.5rem;
-  padding: 0;
+  // Beats the phone card padding in styles/dehors-app.scss: this heading has no box to pad.
+  padding: 0 !important;
   margin-bottom: 1.25rem;
   background: transparent;
   border: none;

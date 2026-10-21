@@ -52,7 +52,7 @@ const Accounts = () => {
     };
 
     return (
-        <Container size="xl" p="xl">
+        <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
             <Stack gap="lg">
                 <Title order={1}>{t`Accounts`}</Title>
 

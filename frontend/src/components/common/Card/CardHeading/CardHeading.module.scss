@@ -6,6 +6,12 @@
   border-radius: var(--hi-radius-lg) var(--hi-radius-lg) 0 0;
   margin-bottom: var(--hi-spacing-lg);
 
+  // Cards are padded 1rem on phones (styles/dehors-app.scss): the heading stays flush with their edges.
+  @media (max-width: 767px) {
+    margin: -1rem -1rem 1rem;
+    padding: 0.75rem 1rem;
+  }
+
   .heading {
     margin: 0;
     font-weight: 100;

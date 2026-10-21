@@ -22,7 +22,7 @@ const Attribution = () => {
     const totalPages = paginatedData?.last_page || 1;
 
     return (
-        <Container size="xl" p="xl">
+        <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
             <Stack gap="xl">
                 <div>
                     <Title order={1} mb="xs">

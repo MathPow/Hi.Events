@@ -46,7 +46,7 @@ const Configurations = () => {
 
     if (isLoading) {
         return (
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Stack gap="lg">
                     <Skeleton height={40} width={200} />
                     <Skeleton height={150} radius="md" />
@@ -58,7 +58,7 @@ const Configurations = () => {
 
     return (
         <>
-            <Container size="xl" p="xl">
+            <Container size="xl" px={{base: 0, sm: 'xl'}} py="xl">
                 <Stack gap="lg">
                     <Group justify="space-between">
                         <Title order={1}>{t`Configurations`}</Title>
