@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Mail\Attendee;
 
+use Carbon\Carbon;
 use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
@@ -86,6 +87,39 @@ class AttendeeTicketMailTest extends TestCase
         $this->assertStringStartsWith('%PDF-', $pdf->getBody());
     }
 
+    public function test_the_calendar_invite_starts_and_ends_when_the_event_does(): void
+    {
+        $email = $this->send($this->buildMail());
+
+        $invite = collect($email->getAttachments())
+            ->first(static fn($part) => str_contains($part->asDebugString(), 'event.ics'));
+
+        $this->assertNotNull($invite);
+
+        // Event dates are stored in UTC: 18:00 UTC is 14:00 in Toronto.
+        $this->assertSame('2026-09-01 18:00', $this->calendarTimeInUtc($invite->getBody(), 'DTSTART'));
+        $this->assertSame('2026-09-01 23:00', $this->calendarTimeInUtc($invite->getBody(), 'DTEND'));
+    }
+
+    public function test_the_printable_ticket_shows_the_event_time_in_its_timezone(): void
+    {
+        $html = view('attendee-tickets', [
+            'tickets' => collect([[
+                'attendee' => $this->attendee('A-AAAAAAA', 'Alex'),
+                'productName' => 'General Admission',
+                'qrCode' => 'data:image/svg+xml;base64,',
+            ]]),
+            'order' => $this->order(),
+            'event' => $this->event(),
+            'eventSettings' => $this->eventSettings(),
+            'organizer' => $this->organizer(),
+        ])->render();
+
+        $this->assertStringContainsString('14:00', $html);
+        $this->assertStringContainsString('19:00', $html);
+        $this->assertStringNotContainsString('18:00', $html);
+    }
+
     public function test_the_subject_names_the_event(): void
     {
         $this->assertStringContainsString('Summer Fest', $this->buildMail()->envelope()->subject);
@@ -105,6 +139,20 @@ class AttendeeTicketMailTest extends TestCase
         $transport->flush();
 
         return $email;
+    }
+
+    private function calendarTimeInUtc(string $calendar, string $property): string
+    {
+        // The VTIMEZONE block has DTSTART lines of its own (daylight saving changes): read the VEVENT's.
+        $event = substr($calendar, (int) strpos($calendar, 'BEGIN:VEVENT'));
+
+        preg_match('/^' . $property . '(;TZID=([^:]+))?:(\d{8}T\d{6})(Z?)\r?$/m', $event, $match);
+
+        $this->assertNotEmpty($match, "$property missing from the calendar invite");
+
+        $timezone = $match[4] === 'Z' ? 'UTC' : ($match[2] ?: 'UTC');
+
+        return Carbon::createFromFormat('Ymd\THis', $match[3], $timezone)->utc()->format('Y-m-d H:i');
     }
 
     private function inlineImageCount(Email $email): int

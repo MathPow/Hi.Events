@@ -6,8 +6,8 @@
 @php /** @var \HiEvents\DomainObjects\OrganizerDomainObject $organizer */ @endphp
 @php /** @see \HiEvents\Services\Domain\Attendee\GenerateAttendeeTicketPDFService */ @endphp
 @php
-    $startDate = Carbon::parse($event->getStartDate(), $event->getTimezone());
-    $endDate = $event->getEndDate() ? Carbon::parse($event->getEndDate(), $event->getTimezone()) : null;
+    $startDate = Carbon::parse($event->getStartDate(), 'UTC')->setTimezone($event->getTimezone());
+    $endDate = $event->getEndDate() ? Carbon::parse($event->getEndDate(), 'UTC')->setTimezone($event->getTimezone()) : null;
     $venue = $eventSettings->getLocationDetails() ? $eventSettings->getAddressString() : null;
 @endphp
 

@@ -121,8 +121,8 @@ class AttendeeTicketMail extends BaseMail
 
     public function attachments(): array
     {
-        $startDateTime = Carbon::parse($this->event->getStartDate(), $this->event->getTimezone());
-        $endDateTime = $this->event->getEndDate() ? Carbon::parse($this->event->getEndDate(), $this->event->getTimezone()) : null;
+        $startDateTime = Carbon::parse($this->event->getStartDate(), 'UTC')->setTimezone($this->event->getTimezone());
+        $endDateTime = $this->event->getEndDate() ? Carbon::parse($this->event->getEndDate(), 'UTC')->setTimezone($this->event->getTimezone()) : null;
 
         $event = Event::create()
             ->name($this->event->getTitle())
