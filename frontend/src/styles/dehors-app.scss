@@ -15,6 +15,14 @@
   --dehors-creme-voile: rgb(255 247 233 / 0.09);
 }
 
+// Dev deployments (VITE_APP_ENVIRONMENT=dev, set on <html> by server.js) are a little redder,
+// so they are never mistaken for prod.
+:root[data-environment='dev'] {
+  --dehors-orange: #f4623e;
+  --dehors-orange-survol: #e8502a;
+  --dehors-orange-clair: #ff977d;
+}
+
 // Organizer app styled after the DEHORS website (dehorsqc.com). Scoped to body.dehors-app,
 // set by the back-office layouts (see useDehorsAppTheme), so menus and modals rendered in
 // portals pick it up while public event and checkout pages keep their own theme.

@@ -53,6 +53,8 @@ async function main() {
         app.use(base, sirv(path.join(__dirname, "./dist/client"), { extensions: [] }));
     }
 
+    const environment = (process.env.VITE_APP_ENVIRONMENT || '').replace(/[^a-z-]/g, '');
+
     const getViteEnvironmentVariables = () => {
         const envVars = {};
         for (const key in process.env) {
@@ -115,6 +117,7 @@ Sitemap: ${frontendUrl}/sitemap.xml
             }
 
             const html = template
+                .replace("<html", () => environment ? `<html data-environment="${environment}"` : "<html")
                 .replace("<!--head-snippets-->", () => headSnippets.join("\n"))
                 .replace("<!--app-html-->", () => appHtml)
                 .replace("<!--dehydrated-state-->", () => `<script>window.__REHYDRATED_STATE__ = ${stringifiedState}</script>`)
