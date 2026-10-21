@@ -623,6 +623,34 @@ const FeatureFrame = ({pictures, shown, className}: {
 );
 
 /**
+ * The feature list's height with every answer closed, on the picture beside it
+ * (--closed-height): the picture matches the closed list and keeps its size
+ * while an answer opens.
+ */
+const useClosedListHeight = (list: RefObject<HTMLUListElement>, aside: RefObject<HTMLElement>) => {
+    useEffect(() => {
+        const element = list.current;
+        const target = aside.current;
+        if (!element || !target) {
+            return;
+        }
+        const measure = () => {
+            const items = [...element.children];
+            const gap = parseFloat(getComputedStyle(element).rowGap) || 0;
+            const height = items.reduce((total, item) => {
+                const answer = item.querySelector(`.${classes.featureAnswer}`);
+                return total + item.getBoundingClientRect().height - (answer?.getBoundingClientRect().height ?? 0);
+            }, gap * Math.max(items.length - 1, 0));
+            target.style.setProperty('--closed-height', `${height.toFixed(2)}px`);
+        };
+        const observer = new ResizeObserver(measure);
+        observer.observe(element);
+
+        return () => observer.disconnect();
+    }, [list, aside]);
+};
+
+/**
  * A feature as a question of the DEHORS shop's FAQ: the whole line is a button
  * that opens the answer below it, one at a time (the section keeps which one
  * is open). Closed, the answer is `visibility: hidden`,
@@ -808,6 +836,9 @@ const Landing = () => {
     const featurePictures = [FEATURES_PICTURE, ...features.map((feature) => feature.picture), missingPicture];
     // One feature open at a time; the picture beside the list is its own, the section's when none is.
     const [openFeature, setOpenFeature] = useState(0);
+    const featureList = useRef<HTMLUListElement>(null);
+    const featuresAside = useRef<HTMLDivElement>(null);
+    useClosedListHeight(featureList, featuresAside);
     const featureProps = (index: number) => ({
         open: openFeature === index,
         onToggle: () => setOpenFeature((open) => open === index ? 0 : index),
@@ -942,7 +973,7 @@ const Landing = () => {
                         <div className={classes.features} data-rise>
                             <h2>{t`Everything you need`}</h2>
                             <div className={classes.featuresLayout}>
-                                <ul>
+                                <ul ref={featureList}>
                                     {features.map((feature, index) => (
                                         <Feature key={feature.title} title={feature.title} badge={t`Included`}
                                                  picture={feature.picture} {...featureProps(index + 1)}>
@@ -957,7 +988,7 @@ const Landing = () => {
                                             move fast and we listen.</Trans>
                                     </Feature>
                                 </ul>
-                                <div className={classes.featuresAside}>
+                                <div ref={featuresAside} className={classes.featuresAside}>
                                     <FeatureFrame pictures={featurePictures} shown={openFeature}/>
                                 </div>
                             </div>
