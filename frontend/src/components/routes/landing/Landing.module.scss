@@ -2095,7 +2095,7 @@ $ridge-mobile: 10vw;
 // the scrolled nav while the list goes by.
 .featuresLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: clamp(2rem, 4vw, 3.5rem);
 
@@ -2104,10 +2104,22 @@ $ridge-mobile: 10vw;
   }
 }
 
+// A 4:5 frame as tall as the closed list (useClosedListHeight). On a narrow
+// screen it stops at 48vw, so the list keeps room for its titles on one line.
 .featuresAside {
   position: sticky;
   top: 7.5rem;
-  padding: 0.5rem;
+  padding: 0 0.5rem;
+
+  .featureFrame {
+    height: min(var(--closed-height, 32rem), 48vw);
+    aspect-ratio: 4 / 5;
+  }
+
+  .featureFrameInner {
+    height: 100%;
+    aspect-ratio: auto;
+  }
 
   @media (max-width: 960px) {
     display: none;
