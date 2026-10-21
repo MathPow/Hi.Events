@@ -2446,8 +2446,8 @@ $ridge-mobile: 10vw;
 }
 
 // The ridge's height over the card's width (footer-crete.svg, footer-crete-mobile.svg).
-$footer-ridge: 6.944444%;
-$footer-ridge-mobile: 9.432183%;
+$footer-ridge: 9.166667%;
+$footer-ridge-mobile: 13.205056%;
 
 .footerCard {
   position: relative;
@@ -2462,12 +2462,12 @@ $footer-ridge-mobile: 9.432183%;
   border-radius: 1.5rem;
   background: $brun content-box;
 
-  // The ridge's own SVG ends by curving down into the sides.
+  // The ridge's own SVG rounds its ends down into the sides, like the card's corners.
   &::before {
     content: '';
     position: absolute;
     inset: 0 0 auto;
-    aspect-ratio: 1440 / 100;
+    aspect-ratio: 1440 / 132;
     background: $brun;
     mask: url('/landing/footer-crete.svg') 0 0 / 100% 100% no-repeat;
   }
@@ -2476,7 +2476,7 @@ $footer-ridge-mobile: 9.432183%;
     padding-top: calc(#{$footer-ridge-mobile} - 2px);
 
     &::before {
-      aspect-ratio: 1060.2 / 100;
+      aspect-ratio: 1060.2 / 140;
       mask-image: url('/landing/footer-crete-mobile.svg');
     }
   }
@@ -2488,10 +2488,10 @@ $footer-ridge-mobile: 9.432183%;
   gap: 2.5rem 4rem;
   width: $content;
   margin: 0 auto;
-  padding-top: clamp(3.5rem, 7vw, 6rem);
+  padding-top: clamp(2rem, 5.5vw, 4.5rem);
 
   @media (max-width: $mobile) {
-    padding-top: 3rem;
+    padding-top: 2.25rem;
   }
 }
 
