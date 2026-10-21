@@ -2433,34 +2433,39 @@ $ridge-mobile: 10vw;
   }
 }
 
+// The ridge's height over the card's width (footer-crete.svg, footer-crete-mobile.svg).
+$footer-ridge: 6.944444%;
+$footer-ridge-mobile: 9.432183%;
+
 .footerCard {
   position: relative;
   // The wordmark's negative margin stays inside, so the card cuts its bottom.
   display: flow-root;
   overflow: clip;
-  padding-top: calc(#{$ridge} + clamp(3.5rem, 7vw, 6rem));
+  // A padding percentage follows the width, like the ridge: the brown starts
+  // under it (2px of overlap hide the seam), and ::before draws the ridge.
+  // Nothing is painted above it, since a mask inside the hand-cut clip leaves
+  // a dark hairline in Chrome.
+  padding-top: calc(#{$footer-ridge} - 2px);
   border-radius: 1.5rem;
-  // Brown only below the ridge, which ::before draws: nothing is painted above
-  // it, since a mask inside the hand-cut clip leaves a dark hairline in Chrome.
-  // The 2px overlap hides the seam.
-  background: linear-gradient($brun, $brun) left calc(#{$ridge} - 2px) / 100% 100% no-repeat;
+  background: $brun content-box;
 
+  // The ridge's own SVG ends by curving down into the sides.
   &::before {
     content: '';
     position: absolute;
     inset: 0 0 auto;
-    height: $ridge;
+    aspect-ratio: 1440 / 100;
     background: $brun;
-    mask: url('/landing/section-creme-tuile.svg') left top / min(116.666667%, 105rem) auto repeat-x;
+    mask: url('/landing/footer-crete.svg') 0 0 / 100% 100% no-repeat;
   }
 
   @media (max-width: $mobile) {
-    padding-top: calc(#{$ridge-mobile} + 3rem);
-    background-position: left calc(#{$ridge-mobile} - 2px);
+    padding-top: calc(#{$footer-ridge-mobile} - 2px);
 
     &::before {
-      height: $ridge-mobile;
-      mask: url('/landing/section-creme.svg') 75% 0 / 135.820896% auto no-repeat;
+      aspect-ratio: 1060.2 / 100;
+      mask-image: url('/landing/footer-crete-mobile.svg');
     }
   }
 }
@@ -2471,6 +2476,11 @@ $ridge-mobile: 10vw;
   gap: 2.5rem 4rem;
   width: $content;
   margin: 0 auto;
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+
+  @media (max-width: $mobile) {
+    padding-top: 3rem;
+  }
 }
 
 // The call to action opens the footer, the links beside it.
