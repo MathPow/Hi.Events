@@ -2390,14 +2390,31 @@ $ridge-mobile: 10vw;
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: 1rem;
   max-width: 54rem;
   margin: 4rem auto 0;
 }
 
+// In the cream frame of the features' picture (.featureFrame): a mat, cut by hand.
 .communityPhoto1, .communityPhoto2, .communityPhoto3 {
   aspect-ratio: 350 / 405;
+  padding: 0.75rem;
+  border-radius: 1.5rem;
+  background: $creme;
   transition: rotate 0.4s $ease;
+
+  img {
+    border-radius: 0.75rem;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 0.5rem;
+    border-radius: 1.1rem;
+
+    img {
+      border-radius: 0.6rem;
+    }
+  }
 }
 
 .communityPhoto1 {
@@ -2431,8 +2448,8 @@ $ridge-mobile: 10vw;
 
 // --- Footer ---
 
-// A card framed like the hero, on the orange of the last sections. Its top is
-// the mountain ridge of .mountain, cut with the same masks.
+// A card framed like the hero, on the orange of the last sections, under its
+// own mountain ridge (footer-crete.svg).
 .footer {
   // Tucked 1px under the page: at a fractional seam the brown behind both would show as a hairline.
   margin-top: -1px;
