@@ -85,25 +85,11 @@ $ridge-mobile: 10vw;
   scroll-behavior: auto !important;
 }
 
-// The page slides over the footer, which waits behind it. Its bottom edge is
-// cut along the brown mountain ridge (same band as the DEHORS shop).
 .page {
   position: relative;
   z-index: 1;
   overflow: clip;
   background: $creme;
-  mask-image: linear-gradient(#000, #000), url('/landing/section-brune-bande.svg');
-  mask-size: 100% 100%, min(116.666667%, 105rem) auto;
-  mask-position: 0 0, left 0 bottom -2px;
-  mask-repeat: repeat, repeat-x;
-  mask-composite: subtract, add;
-
-  @media (max-width: $mobile) {
-    mask-image: linear-gradient(#000, #000), url('/landing/section-brune-bande-mobile.svg');
-    mask-size: 100% 100%, 135.820896% auto;
-    mask-position: 0 0, left 75% bottom -2px;
-    mask-repeat: repeat, no-repeat;
-  }
 }
 
 .eyebrow {
@@ -2033,13 +2019,13 @@ $ridge-mobile: 10vw;
 // The last sections under one mountain ridge, like the sections of the DEHORS
 // shop: the ridge (its section-creme-tuile.svg, as a mask) takes 7.5% of the
 // width, keeps its 1440px size beyond and repeats. Positioned, it slides over
-// the stopped section before it (data-stack). Its orange runs to the bottom
-// of the page, where the footer's ridge cuts into it.
+// the stopped section before it (data-stack). Its orange runs on around the
+// footer's card.
 .mountain {
   position: relative;
   margin-top: clamp(6rem, 11vw, 10rem);
   padding-top: $ridge;
-  padding-bottom: clamp(9rem, 15vw, 13rem);
+  padding-bottom: clamp(5rem, 9vw, 8rem);
   background: $orange;
   mask:
     url('/landing/section-creme-tuile.svg') left top / min(116.666667%, 105rem) auto repeat-x,
@@ -2432,34 +2418,49 @@ $ridge-mobile: 10vw;
 
 // --- Footer ---
 
-// Stuck to the bottom of the screen behind the page, it is already in place
-// when the page scrolls away. It slides up under the page by the height of the
-// mountain ridge, so its brown fills the cut-out.
+// A card framed like the hero, on the orange of the last sections. Its top is
+// the mountain ridge of .mountain, cut with the same masks.
 .footer {
-  position: relative;
-  z-index: 0;
-  overflow: clip;
-  margin-top: calc(-1 * min(7.5vw, 6.75rem));
-  padding-top: clamp(7rem, 12vw, 10rem);
+  // Tucked 1px under the page: at a fractional seam the brown behind both would show as a hairline.
+  margin-top: -1px;
+  padding: 0 $gutter 1.25rem;
   color: $creme;
-  background: $brun;
-
-  @media (min-width: #{$mobile + 1}) {
-    position: sticky;
-    bottom: 0;
-  }
-
-  // Taller than the screen (useFooterFits): it follows the page instead.
-  &[data-tall] {
-    position: relative;
-  }
-
-  @media (max-width: $mobile) {
-    margin-top: -10vw;
-  }
+  background: $orange;
 
   .eyebrow {
     color: $orange;
+  }
+}
+
+.footerCard {
+  position: relative;
+  // The wordmark's negative margin stays inside, so the card cuts its bottom.
+  display: flow-root;
+  overflow: clip;
+  padding-top: calc(#{$ridge} + clamp(3.5rem, 7vw, 6rem));
+  border-radius: 1.5rem;
+  // Brown only below the ridge, which ::before draws: nothing is painted above
+  // it, since a mask inside the hand-cut clip leaves a dark hairline in Chrome.
+  // The 2px overlap hides the seam.
+  background: linear-gradient($brun, $brun) left calc(#{$ridge} - 2px) / 100% 100% no-repeat;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: $ridge;
+    background: $brun;
+    mask: url('/landing/section-creme-tuile.svg') left top / min(116.666667%, 105rem) auto repeat-x;
+  }
+
+  @media (max-width: $mobile) {
+    padding-top: calc(#{$ridge-mobile} + 3rem);
+    background-position: left calc(#{$ridge-mobile} - 2px);
+
+    &::before {
+      height: $ridge-mobile;
+      mask: url('/landing/section-creme.svg') 75% 0 / 135.820896% auto no-repeat;
+    }
   }
 }
 
