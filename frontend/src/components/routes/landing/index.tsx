@@ -468,10 +468,6 @@ const HeroVideo = () => {
     );
 };
 
-/**
- * The footer waits stuck behind the page only while it fits on the screen:
- * taller, its top would never show. It then simply follows the page.
- */
 // How far the backdrop slides each way: the 2rem it overflows by (.feesRock).
 const BACKDROP_DRIFT = 32;
 
@@ -545,24 +541,6 @@ const WindowBackdrop = ({className}: { className: string }) => {
             <span ref={backdrop}/>
         </span>
     );
-};
-
-const useFooterFits = (footer: RefObject<HTMLElement>) => {
-    useEffect(() => {
-        const element = footer.current;
-        if (!element) {
-            return;
-        }
-        const check = () => element.toggleAttribute('data-tall', element.offsetHeight > window.innerHeight);
-        const observer = new ResizeObserver(check);
-        observer.observe(element);
-        window.addEventListener('resize', check, {passive: true});
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('resize', check);
-        };
-    }, [footer]);
 };
 
 /** The DEHORS wordmark at the bottom of the footer: its letters rise one by one once uncovered. */
@@ -806,8 +784,6 @@ const Landing = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
     const closeMenu = useCallback(() => setMenuOpen(false), []);
-    const footer = useRef<HTMLElement>(null);
-    useFooterFits(footer);
 
     const steps = [
         {title: t`Create your free account`, text: t`A few minutes and your ticketing is ready.`, to: '/auth/register'},
@@ -1002,37 +978,39 @@ const Landing = () => {
                 </div>
             </main>
 
-            <footer ref={footer} className={classes.footer}>
-                <div className={classes.footerInner}>
-                    <div className={classes.footerCta}>
-                        <h2>{t`Ready to gather your people?`}</h2>
-                        <p>{t`A small Quebec team, ready to help you launch your first event.`}</p>
-                        <div className={classes.footerCtaActions}>
-                            <RegisterButton/>
-                            <LandingButton as="a" href={`mailto:${CONTACT_EMAIL}`} variant="ghost"
-                                           label={t`Write to us`}/>
+            <footer className={classes.footer}>
+                <Rough className={classes.footerCard} amplitude={2} step={56}>
+                    <div className={classes.footerInner}>
+                        <div className={classes.footerCta}>
+                            <h2>{t`Ready to gather your people?`}</h2>
+                            <p>{t`A small Quebec team, ready to help you launch your first event.`}</p>
+                            <div className={classes.footerCtaActions}>
+                                <RegisterButton/>
+                                <LandingButton as="a" href={`mailto:${CONTACT_EMAIL}`} variant="ghost"
+                                               label={t`Write to us`}/>
+                            </div>
                         </div>
+                        <nav className={classes.footerLinks} aria-label={t`Footer`}>
+                            <div>
+                                <span className={classes.eyebrow}>{t`Ticketing`}</span>
+                                <a href="#steps" onClick={smoothScrollTo}><ShakyText text={t`How it works`}/></a>
+                                <a href="#fees" onClick={smoothScrollTo}><ShakyText text={t`Fees`}/></a>
+                                <NavLink to="/auth/login"><ShakyText text={t`Log in`}/></NavLink>
+                            </div>
+                            <div>
+                                <span className={classes.eyebrow}>Dehors</span>
+                                <a href={DEHORS_SITE}><ShakyText text={t`The club`}/></a>
+                                <a href={`${DEHORS_SITE}/calendrier`}><ShakyText text={t`Outings calendar`}/></a>
+                                <a href={DEHORS_INSTAGRAM} target="_blank" rel="noopener"><ShakyText text="Instagram"/></a>
+                            </div>
+                        </nav>
                     </div>
-                    <nav className={classes.footerLinks} aria-label={t`Footer`}>
-                        <div>
-                            <span className={classes.eyebrow}>{t`Ticketing`}</span>
-                            <a href="#steps" onClick={smoothScrollTo}><ShakyText text={t`How it works`}/></a>
-                            <a href="#fees" onClick={smoothScrollTo}><ShakyText text={t`Fees`}/></a>
-                            <NavLink to="/auth/login"><ShakyText text={t`Log in`}/></NavLink>
-                        </div>
-                        <div>
-                            <span className={classes.eyebrow}>Dehors</span>
-                            <a href={DEHORS_SITE}><ShakyText text={t`The club`}/></a>
-                            <a href={`${DEHORS_SITE}/calendrier`}><ShakyText text={t`Outings calendar`}/></a>
-                            <a href={DEHORS_INSTAGRAM} target="_blank" rel="noopener"><ShakyText text="Instagram"/></a>
-                        </div>
-                    </nav>
-                </div>
-                <div className={classes.footerLegal}>
-                    <span>© {new Date().getFullYear()} Billetterie Dehors</span>
-                    <span>{t`Made in Québec, for people on the move.`}</span>
-                </div>
-                <FooterWordmark/>
+                    <div className={classes.footerLegal}>
+                        <span>© {new Date().getFullYear()} Billetterie Dehors</span>
+                        <span>{t`Made in Québec, for people on the move.`}</span>
+                    </div>
+                    <FooterWordmark/>
+                </Rough>
             </footer>
         </div>
     );
