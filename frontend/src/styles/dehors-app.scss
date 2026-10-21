@@ -15,12 +15,16 @@
   --dehors-creme-voile: rgb(255 247 233 / 0.09);
 }
 
-// Dev deployments (VITE_APP_ENVIRONMENT=dev, set on <html> by server.js) are a little redder,
-// so they are never mistaken for prod.
+// Dev deployments (VITE_APP_ENVIRONMENT=dev, set on <html> by server.js) are red instead of
+// orange, back office and landing page alike, so they are never mistaken for prod.
 :root[data-environment='dev'] {
-  --dehors-orange: #f44d3e;
-  --dehors-orange-survol: #e83a2a;
-  --dehors-orange-clair: #ff887d;
+  --dehors-orange: #ef393f;
+  --dehors-orange-survol: #d61f25;
+  --dehors-orange-clair: #ff8589;
+  --landing-orange: #f94349;
+  --landing-abricot: #ff8084;
+  --landing-orange-pale: #f57579;
+  --landing-orange-hover: #ff575c;
 }
 
 // Organizer app styled after the DEHORS website (dehorsqc.com). Scoped to body.dehors-app,

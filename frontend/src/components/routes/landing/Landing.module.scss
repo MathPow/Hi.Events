@@ -1,13 +1,14 @@
 $creme: #fff7e9;
 $sommet: #faf3df;
 $brun: #352924;
-$orange: #f98043;
-$abricot: #ffad7d;
+// The oranges are variables so the dev environment can turn them red (styles/dehors-app.scss).
+$orange: var(--landing-orange, #f98043);
+$abricot: var(--landing-abricot, #ffad7d);
 $peche: #fae6da;
 $terracotta: #c47762;
 $sable: #e3ad92;
 // The empty mountain of the shop's opening, before the cream fills it.
-$orange-pale: #f6a972;
+$orange-pale: var(--landing-orange-pale, #f6a972);
 $display: FatFrank, 'Arial Black', sans-serif;
 $sans: Allotrope, Arial, sans-serif;
 $gutter: clamp(1rem, 2.8vw, 2.5rem);
@@ -177,7 +178,7 @@ $ridge-mobile: 10vw;
 
 .button-orange {
   color: $creme;
-  --button-fill: #f47d3c;
+  --button-fill: var(--dehors-orange, #f47d3c);
 }
 
 .button-dark {
@@ -839,7 +840,7 @@ $ridge-mobile: 10vw;
       animation: button-hop 0.4s steps(1) infinite;
 
       &::before {
-        background: #ff9258;
+        background: var(--landing-orange-hover, #ff9258);
       }
 
       &::before, &::after {
