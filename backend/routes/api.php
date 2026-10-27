@@ -23,6 +23,8 @@ use HiEvents\Http\Actions\Attendees\GetAttendeeActionPublic;
 use HiEvents\Http\Actions\Attendees\GetAttendeesAction;
 use HiEvents\Http\Actions\Attendees\PartialEditAttendeeAction;
 use HiEvents\Http\Actions\Attendees\ResendAttendeeTicketAction;
+use HiEvents\Http\Actions\Assistant\AssistantTurnAction;
+use HiEvents\Http\Actions\Assistant\GetAssistantAction;
 use HiEvents\Http\Actions\Auth\AcceptInvitationAction;
 use HiEvents\Http\Actions\Auth\ForgotPasswordAction;
 use HiEvents\Http\Actions\Auth\GetRegistrationInviteAction;
@@ -494,6 +496,10 @@ $router->middleware(['auth:api'])->group(
         // Images
         $router->post('/images', CreateImageAction::class);
         $router->delete('/images/{image_id}', DeleteImageAction::class);
+
+        // L'assistant des organisateurs (Claude) : voir AssistantTurnAction.
+        $router->get('/assistant', GetAssistantAction::class);
+        $router->post('/assistant', AssistantTurnAction::class)->middleware('throttle:30,1');
     }
 );
 

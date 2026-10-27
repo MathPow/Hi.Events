@@ -1,0 +1,448 @@
+@use "../../../styles/mixins";
+
+$launcher-size: 3.25rem;
+$launcher-gap: 1.25rem;
+// Event and organizer pages on phones: tab bar (0.75rem gap + 4rem) and its primary action (3.25rem) on the right.
+$above-tab-bar: 5.5rem;
+
+.launcher {
+  position: fixed;
+  right: $launcher-gap;
+  bottom: calc(#{$launcher-gap} + env(safe-area-inset-bottom));
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  width: $launcher-size;
+  height: $launcher-size;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--dehors-brun);
+  color: var(--dehors-creme);
+  box-shadow: 0 0.5rem 1.5rem rgb(53 41 36 / 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    background: #4a3a33;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-orange);
+    outline-offset: 2px;
+  }
+
+  &[data-busy='true'] .launcherIcon {
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  @include mixins.respond-below(md) {
+    &[data-tab-bar='true'] {
+      right: auto;
+      left: 1rem;
+      bottom: calc(#{$above-tab-bar} + env(safe-area-inset-bottom));
+    }
+
+    &[data-open='true'] {
+      display: none;
+    }
+  }
+}
+
+// The DEHORS peak, from the favicon, in the button's colour.
+.launcherIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+  background: currentColor;
+  mask: url('/favicon.svg') center / contain no-repeat;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.panel {
+  position: fixed;
+  right: $launcher-gap;
+  bottom: calc(#{$launcher-gap} + #{$launcher-size} + 0.75rem + env(safe-area-inset-bottom));
+  z-index: 190;
+  display: flex;
+  flex-direction: column;
+  width: min(25rem, calc(100vw - 2 * #{$launcher-gap}));
+  height: min(40rem, calc(100dvh - 7rem));
+  overflow: hidden;
+  border: 1px solid var(--dehors-trait);
+  border-radius: 1.25rem;
+  background: var(--dehors-creme);
+  color: var(--dehors-brun);
+  box-shadow: 0 1rem 3rem rgb(53 41 36 / 0.25);
+
+  &[data-full='true'] {
+    inset: 0;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+  }
+
+  @include mixins.respond-below(md) {
+    inset: 0;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.625rem 0.625rem 0.625rem 1rem;
+  border-bottom: 1px solid var(--dehors-trait);
+}
+
+.title {
+  flex: 1;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+
+.remaining {
+  margin-right: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--dehors-texte-doux);
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dehors-brun);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dehors-champ);
+  }
+}
+
+.fullToggle {
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.thread {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+// In full screen, the conversation stays a readable width.
+.column {
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.thread .column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1rem;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  p {
+    margin: 0 0 0.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+}
+
+.suggestion {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--dehors-trait);
+  border-radius: 0.875rem;
+  background: var(--dehors-surface);
+  color: var(--dehors-brun);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--dehors-orange);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.question {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 0.625rem 0.875rem;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  background: var(--dehors-brun);
+  color: var(--dehors-creme);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.work {
+  font-size: 0.8125rem;
+  color: var(--dehors-texte-doux);
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  ul {
+    margin: 0.375rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  li[data-state='error'] {
+    color: var(--dehors-terracotta);
+  }
+}
+
+.thinking {
+  margin: 0.375rem 0 0;
+  padding-left: 0.625rem;
+  border-left: 2px solid var(--dehors-trait);
+  white-space: pre-wrap;
+}
+
+.pending {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  color: var(--dehors-texte-doux);
+}
+
+.markdown {
+  overflow-wrap: anywhere;
+
+  p, ul, ol {
+    margin: 0 0 0.5rem;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  ul, ol {
+    padding-left: 1.25rem;
+  }
+
+  a {
+    color: var(--dehors-brun);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--dehors-orange);
+    text-underline-offset: 2px;
+  }
+
+  code {
+    padding: 0.0625rem 0.25rem;
+    border-radius: 0.25rem;
+    background: var(--dehors-champ);
+    font-size: 0.8125rem;
+  }
+
+  [data-table] {
+    margin: 0 0 0.5rem;
+    overflow-x: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+
+  th, td {
+    padding: 0.3125rem 0.5rem;
+    border-bottom: 1px solid var(--dehors-trait);
+    text-align: left;
+    vertical-align: top;
+  }
+}
+
+.approval {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--dehors-orange);
+  border-radius: 0.875rem;
+  background: var(--dehors-surface);
+
+  &[data-method='DELETE'] {
+    border-color: var(--dehors-terracotta);
+  }
+
+  &:not([data-state='waiting']):not([data-state='sending']) {
+    border-color: var(--dehors-trait);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  details {
+    font-size: 0.8125rem;
+    color: var(--dehors-texte-doux);
+
+    summary {
+      cursor: pointer;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  pre {
+    max-height: 16rem;
+    margin: 0.375rem 0 0;
+    padding: 0.5rem;
+    overflow: auto;
+    border-radius: 0.5rem;
+    background: var(--dehors-champ);
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+.approvalTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--dehors-orange);
+
+  [data-method='DELETE'] & {
+    color: var(--dehors-terracotta);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.note, .error {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.note {
+  color: var(--dehors-texte-doux);
+}
+
+.error {
+  display: block;
+  color: var(--dehors-terracotta);
+  overflow-wrap: anywhere;
+}
+
+.composer {
+  padding: 0.75rem 1rem 0.625rem;
+  border-top: 1px solid var(--dehors-trait);
+}
+
+.field {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+  border: 1px solid var(--dehors-trait);
+  border-radius: 1.25rem;
+  background: var(--dehors-surface);
+
+  &:focus-within {
+    border-color: var(--dehors-orange);
+  }
+
+  textarea {
+    flex: 1;
+    min-height: 1.75rem;
+    max-height: 10rem;
+    padding: 0.25rem 0;
+    border: 0;
+    outline: 0;
+    resize: none;
+    background: transparent;
+    color: var(--dehors-brun);
+    font: inherit;
+    // 16px: no zoom on focus in Safari on iPhone.
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+}
+
+.send {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--dehors-orange);
+  color: var(--dehors-creme);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.disclaimer {
+  margin: 0.375rem 0 0;
+  font-size: 0.6875rem;
+  text-align: center;
+  color: var(--dehors-texte-doux);
+}

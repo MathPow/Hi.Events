@@ -37,6 +37,15 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
+    // L'assistant des organisateurs (Claude). Sans cle, il reste ferme. La
+    // limite compte les appels au modele par compte et par jour.
+    'anthropic' => [
+        'api_key' => env('ANTHROPIC_API_KEY'),
+        'assistant_model' => env('ASSISTANT_MODEL', 'claude-sonnet-5-5'),
+        'assistant_effort' => env('ASSISTANT_EFFORT', 'medium'),
+        'assistant_daily_limit' => env('ASSISTANT_DAILY_LIMIT', 200),
+    ],
+
     'stripe' => [
         'secret_key' => env('STRIPE_SECRET_KEY'),
         'public_key' => env('STRIPE_PUBLIC_KEY'),

@@ -1,0 +1,725 @@
+GET /accounts/{account_id?}
+PUT /accounts/{account_id?}
+  name: required|string
+  timezone: required|timezone:all
+  currency_code: in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+POST /accounts/{account_id}/stripe/connect
+GET /accounts/{account_id}/stripe/connect_accounts
+GET /accounts/{account_id}/taxes-and-fees
+POST /accounts/{account_id}/taxes-and-fees
+  name: required|string|max:255
+  calculation_type: required|in:"PERCENTAGE","FIXED"
+  type: required|in:"TAX","FEE"
+  rate: required|numeric:gt:0
+  is_active: required|boolean
+  is_default: required|boolean
+  description: nullable|string
+DELETE /accounts/{account_id}/taxes-and-fees/{tax_or_fee_id}
+PUT /accounts/{account_id}/taxes-and-fees/{tax_or_fee_id}
+  name: required|string|max:255
+  calculation_type: required|in:"PERCENTAGE","FIXED"
+  type: required|in:"TAX","FEE"
+  rate: required|numeric:gt:0
+  is_active: required|boolean
+  is_default: required|boolean
+  description: nullable|string
+GET /accounts/{account_id}/vat-settings
+POST /accounts/{account_id}/vat-settings
+GET /email-templates/defaults
+GET /email-templates/tokens/{templateType}
+GET /events
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events
+  title: string|required|max:150|min:1
+  description: string|min:1|max:50000|nullable
+  start_date: date|required|ConditionalRules
+  end_date: date|nullable
+  timezone: timezone:all
+  organizer_id: required|integer
+  currency: in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+  category: nullable|in:"SOCIAL","FOOD_DRINK","CHARITY","MUSIC","ART","COMEDY","THEATER","BUSINESS","TECH","EDUCATION","WORKSHOP","SPORTS","FESTIVAL","NIGHTLIFE","OTHER"
+  attributes.*.name: string|min:1|max:50|required
+  attributes.*.value: min:1|max:1000|required
+  attributes.*.is_public: boolean|required
+  location_details: array
+  location_details.venue_name: string|max:100
+  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.address_line_2: string|max:255|nullable
+  location_details.city: required_with:location_details|string|max:85
+  location_details.state_or_region: string|max:85
+  location_details.zip_or_postal_code: required_with:location_details|string|max:85
+  location_details.country: required_with:location_details|string|max:2
+GET /events/{eventId}/email-templates
+POST /events/{eventId}/email-templates
+POST /events/{eventId}/email-templates/preview
+DELETE /events/{eventId}/email-templates/{templateId}
+PUT /events/{eventId}/email-templates/{templateId}
+DELETE /events/{event_id}
+GET /events/{event_id}
+PUT /events/{event_id}
+  title: string|required|max:150|min:1
+  description: string|min:1|max:50000|nullable
+  start_date: date|required|ConditionalRules
+  end_date: date|nullable
+  timezone: timezone:all
+  currency: in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+  category: nullable|in:"SOCIAL","FOOD_DRINK","CHARITY","MUSIC","ART","COMEDY","THEATER","BUSINESS","TECH","EDUCATION","WORKSHOP","SPORTS","FESTIVAL","NIGHTLIFE","OTHER"
+  attributes.*.name: string|min:1|max:50|required
+  attributes.*.value: min:1|max:1000|required
+  attributes.*.is_public: boolean|required
+  location_details: array
+  location_details.venue_name: string|max:100
+  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.address_line_2: string|max:255|nullable
+  location_details.city: required_with:location_details|string|max:85
+  location_details.state_or_region: string|max:85
+  location_details.zip_or_postal_code: required_with:location_details|string|max:85
+  location_details.country: required_with:location_details|string|max:2
+GET /events/{event_id}/affiliates
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/affiliates
+  name: required|string|max:255
+  code: required|string|max:50|regex:/^[a-zA-Z0-9_-]+$/
+  email: nullable|email|max:255
+  status: nullable|in:"ACTIVE","INACTIVE"
+  promo_code_id: nullable|integer
+POST /events/{event_id}/affiliates/export
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+DELETE /events/{event_id}/affiliates/{affiliate_id}
+GET /events/{event_id}/affiliates/{affiliate_id}
+PUT /events/{event_id}/affiliates/{affiliate_id}
+  name: sometimes|required|string|max:255
+  email: nullable|email|max:255
+  status: nullable|in:"ACTIVE","INACTIVE"
+  promo_code_id: nullable|integer
+GET /events/{event_id}/attendees
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/attendees
+  product_id: int|required
+  product_price_id: int|nullable|required
+  email: required|email
+  first_name: string|required|max:40
+  last_name: string|max:40
+  amount_paid: required|gte:0|numeric|decimal:0,2|max:999999999999
+  send_confirmation_email: required|boolean
+  taxes_and_fees: array
+  taxes_and_fees.*.tax_or_fee_id: required|int
+  taxes_and_fees.*.amount: required|gte:0|numeric|decimal:0,2|max:999999999999
+  locale: required|in:"en","de","fr","it","nl","hu",… (17 valeurs)
+POST /events/{event_id}/attendees/export
+GET /events/{event_id}/attendees/{attendee_id}
+PATCH /events/{event_id}/attendees/{attendee_id}
+  status: sometimes|InsensitiveIn
+  first_name: sometimes|string|max:100|min:1
+  last_name: sometimes|string|max:100|min:1
+  email: sometimes|email|max:100
+PUT /events/{event_id}/attendees/{attendee_id}
+  email: email|required|max:100
+  first_name: string|required|max:100|min:1
+  last_name: string|required|max:100|min:1
+  product_id: numeric|required
+  product_price_id: numeric|required
+  notes: string|max:2000|nullable
+POST /events/{event_id}/attendees/{attendee_public_id}/check_in
+  action: required|string|in:check_in,check_out
+POST /events/{event_id}/attendees/{attendee_public_id}/resend-ticket
+PUT /events/{event_id}/bib-numbers
+  starts: present|array
+  starts.*.product_price_id: required|integer
+  starts.*.bib_number_start: nullable|integer|min:1|max:999999
+POST /events/{event_id}/bib-numbers/assign
+GET /events/{event_id}/capacity-assignments
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/capacity-assignments
+  name: string|required|max:100|min:1
+  capacity: nullable|numeric|min:1
+  status: required|in:"ACTIVE","INACTIVE"
+  product_ids: required|array
+DELETE /events/{event_id}/capacity-assignments/{capacity_assignment_id}
+GET /events/{event_id}/capacity-assignments/{capacity_assignment_id}
+PUT /events/{event_id}/capacity-assignments/{capacity_assignment_id}
+  name: string|required|max:100|min:1
+  capacity: nullable|numeric|min:1
+  status: required|in:"ACTIVE","INACTIVE"
+  product_ids: required|array
+GET /events/{event_id}/check-in-lists
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/check-in-lists
+  name: string|required|max:100|min:1
+  description: nullable|string|max:255
+  expires_at: nullable|date
+  activates_at: nullable|date
+  product_ids: required|array|min:1
+  pin: nullable|string|min:4|max:12|regex:/^[0-9]+$/
+  allow_door_sales: boolean
+DELETE /events/{event_id}/check-in-lists/{check_in_list_id}
+GET /events/{event_id}/check-in-lists/{check_in_list_id}
+PUT /events/{event_id}/check-in-lists/{check_in_list_id}
+  name: string|required|max:100|min:1
+  description: nullable|string|max:255
+  expires_at: nullable|date
+  activates_at: nullable|date
+  product_ids: required|array|min:1
+  pin: nullable|string|min:4|max:12|regex:/^[0-9]+$/
+  allow_door_sales: boolean
+GET /events/{event_id}/deletion-status
+GET /events/{event_id}/deposits
+POST /events/{event_id}/deposits/split
+  amount: required|gt:0|gte:0|numeric|decimal:0,2|max:999999999999
+  note: required|string|max:1000
+  order_ids: required|array|min:1
+  order_ids.*: integer
+  notify: boolean
+POST /events/{event_id}/duplicate
+  title: string|required|max:150|min:1
+  description: string|min:1|max:50000|nullable
+  start_date: date|required|ConditionalRules
+  end_date: date|nullable
+  duplicate_products: boolean|required
+  duplicate_questions: boolean|required
+  duplicate_settings: boolean|required
+  duplicate_promo_codes: boolean|required
+  duplicate_capacity_assignments: boolean|required
+  duplicate_check_in_lists: boolean|required
+  duplicate_event_cover_image: boolean|required
+  duplicate_webhooks: boolean|required
+  duplicate_affiliates: boolean|required
+  duplicate_ticket_logo: boolean|required
+GET /events/{event_id}/images
+POST /events/{event_id}/images
+  image: required|image|max:30720|dimensions:min_width=600,min_height=50,max_width=10000,max_height=10000|mimes:jpeg,png,jpg,webp
+  type: in:"EVENT_COVER","TICKET_LOGO"
+DELETE /events/{event_id}/images/{image_id}
+GET /events/{event_id}/messages
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/messages
+  subject: required|string|max:100
+  message: required|string|max:8000
+  message_type: in:"ORDER_OWNER","TICKET_HOLDERS","INDIVIDUAL_ATTENDEES","ALL_ATTENDEES","ORDER_OWNERS_WITH_PRODUCT"|required
+  is_test: boolean
+  attendee_ids: max:50,array|required_if:message_type,INDIVIDUAL_ATTENDEES
+  attendee_ids.*: integer
+  product_ids: array|required_if:message_type,TICKET_HOLDERS
+  order_id: integer|required_if:message_type,ORDER_OWNER
+  product_ids.*: integer
+  order_statuses.*: required_if:message_type,ORDER_OWNERS_WITH_PRODUCT|in:"COMPLETED","AWAITING_OFFLINE_PAYMENT"
+  scheduled_at: nullable|date
+  attachments: nullable|array|max:5
+  attachments.*: file|mimes:pdf|mimetypes:application/pdf|max:10240
+POST /events/{event_id}/messages/{message_id}/cancel
+GET /events/{event_id}/messages/{message_id}/recipients
+GET /events/{event_id}/orders
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/orders/export
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+GET /events/{event_id}/orders/{order_id}
+PUT /events/{event_id}/orders/{order_id}
+  email: email|required|max:100
+  first_name: string|required|max:100|min:1
+  last_name: string|required|max:100|min:1
+  notes: string|max:2000|nullable
+POST /events/{event_id}/orders/{order_id}/cancel
+PUT /events/{event_id}/orders/{order_id}/deposit
+  status: required|in:"PENDING","RECEIVED","RETURNED","RETAINED"
+  retained_amount: nullable|gte:0|numeric|decimal:0,2|max:999999999999
+  note: nullable|string|max:1000
+  notify: boolean
+GET /events/{event_id}/orders/{order_id}/donation-receipt
+GET /events/{event_id}/orders/{order_id}/invoice
+POST /events/{event_id}/orders/{order_id}/mark-as-paid
+POST /events/{event_id}/orders/{order_id}/message
+  subject: required|string|max:100
+  message: required|string|max:8000
+  message_type: in:"ORDER_OWNER","TICKET_HOLDERS","INDIVIDUAL_ATTENDEES","ALL_ATTENDEES","ORDER_OWNERS_WITH_PRODUCT"|required
+  is_test: boolean
+  attendee_ids: max:50,array|required_if:message_type,INDIVIDUAL_ATTENDEES
+  attendee_ids.*: integer
+  product_ids: array|required_if:message_type,TICKET_HOLDERS
+  order_id: integer|required_if:message_type,ORDER_OWNER
+  product_ids.*: integer
+  order_statuses.*: required_if:message_type,ORDER_OWNERS_WITH_PRODUCT|in:"COMPLETED","AWAITING_OFFLINE_PAYMENT"
+  scheduled_at: nullable|date
+  attachments: nullable|array|max:5
+  attachments.*: file|mimes:pdf|mimetypes:application/pdf|max:10240
+POST /events/{event_id}/orders/{order_id}/refund
+  amount: required|numeric|gt:0
+  notify_buyer: required|boolean
+  cancel_order: required|boolean
+POST /events/{event_id}/orders/{order_id}/resend_confirmation
+GET /events/{event_id}/product-categories
+POST /events/{event_id}/product-categories
+  name: string|required|max:50
+  description: string|max:10000|nullable
+  is_hidden: boolean|required
+  no_products_message: string|max:255|nullable
+DELETE /events/{event_id}/product-categories/{category_id}
+GET /events/{event_id}/product-categories/{category_id}
+PUT /events/{event_id}/product-categories/{category_id}
+  name: string|required|max:50
+  description: string|max:10000|nullable
+  is_hidden: boolean|required
+  no_products_message: string|max:255|nullable
+GET /events/{event_id}/products
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/products
+  title: required|max:255
+  initial_quantity_available: integer|nullable
+  quantity_sold: integer|default:0
+  sale_start_date: date|nullable
+  sale_end_date: date|nullable|after:sale_start_date
+  max_per_order: integer|nullable
+  prices: required|array
+  prices.*.price: gte:0|numeric|decimal:0,2|max:999999999999|required
+  prices.*.label: nullable|string|max:100|min:1|nullable|required_if:type,TIERED,SIZED
+  prices.*.sale_start_date: date|nullable|after:sale_start_date
+  prices.*.sale_end_date: date|nullable|after:prices.*.sale_start_date
+  prices.*.initial_quantity_available: integer|nullable|min:0
+  prices.*.is_hidden: boolean
+  description: string|nullable
+  min_per_order: integer|nullable
+  is_hidden: boolean
+  hide_before_sale_start_date: boolean
+  hide_after_sale_end_date: boolean
+  hide_when_sold_out: boolean
+  start_collapsed: boolean
+  show_quantity_remaining: boolean
+  is_hidden_without_promo_code: boolean
+  type: required|in:"PAID","FREE","DONATION","TIERED","REGISTRATION","SIZED"
+  product_type: required|in:"TICKET","GENERAL"
+  tax_and_fee_ids: array
+  product_category_id: required|integer
+  is_highlighted: boolean
+  highlight_message: string|nullable|max:255
+  waitlist_enabled: boolean|nullable
+  charity_amount: nullable|gte:0|numeric|decimal:0,2|max:999999999999|lte:prices.0.price
+  deposit_amount: nullable|gte:0|numeric|decimal:0,2|max:999999999999
+  option_heading: nullable|string|max:100
+POST /events/{event_id}/products/sort
+  sorted_categories: array|required
+  sorted_categories.*.product_category_id: integer|required
+  sorted_categories.*.sorted_products: array
+  sorted_categories.*.sorted_products.*.id: integer|required
+  sorted_categories.*.sorted_products.*.order: integer
+DELETE /events/{event_id}/products/{ticket_id}
+GET /events/{event_id}/products/{ticket_id}
+PUT /events/{event_id}/products/{ticket_id}
+  title: required|max:255
+  initial_quantity_available: integer|nullable
+  quantity_sold: integer|default:0
+  sale_start_date: date|nullable
+  sale_end_date: date|nullable|after:sale_start_date
+  max_per_order: integer|nullable
+  prices: required|array
+  prices.*.price: gte:0|numeric|decimal:0,2|max:999999999999|required
+  prices.*.label: nullable|string|max:100|min:1|nullable|required_if:type,TIERED,SIZED
+  prices.*.sale_start_date: date|nullable|after:sale_start_date
+  prices.*.sale_end_date: date|nullable|after:prices.*.sale_start_date
+  prices.*.initial_quantity_available: integer|nullable|min:0
+  prices.*.is_hidden: boolean
+  description: string|nullable
+  min_per_order: integer|nullable
+  is_hidden: boolean
+  hide_before_sale_start_date: boolean
+  hide_after_sale_end_date: boolean
+  hide_when_sold_out: boolean
+  start_collapsed: boolean
+  show_quantity_remaining: boolean
+  is_hidden_without_promo_code: boolean
+  type: required|in:"PAID","FREE","DONATION","TIERED","REGISTRATION","SIZED"
+  product_type: required|in:"TICKET","GENERAL"
+  tax_and_fee_ids: array
+  product_category_id: required|integer
+  is_highlighted: boolean
+  highlight_message: string|nullable|max:255
+  waitlist_enabled: boolean|nullable
+  charity_amount: nullable|gte:0|numeric|decimal:0,2|max:999999999999|lte:prices.0.price
+  deposit_amount: nullable|gte:0|numeric|decimal:0,2|max:999999999999
+  option_heading: nullable|string|max:100
+GET /events/{event_id}/promo-codes
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/promo-codes
+  code: min:2|string|required|max:50
+  applicable_product_ids: array
+  discount: required_if:discount_type,PERCENTAGE,FIXED|numeric|min:0|custom
+  expiry_date: date|nullable
+  max_allowed_usages: nullable|gte:1|max:9999999
+  discount_type: required|in:"NONE","FIXED","PERCENTAGE"
+DELETE /events/{event_id}/promo-codes/{promo_code_id}
+GET /events/{event_id}/promo-codes/{promo_code_id}
+PUT /events/{event_id}/promo-codes/{promo_code_id}
+  code: min:2|string|required|max:50
+  applicable_product_ids: array
+  discount: required_if:discount_type,PERCENTAGE,FIXED|numeric|min:0|custom
+  expiry_date: date|nullable
+  max_allowed_usages: nullable|gte:1|max:9999999
+  discount_type: required|in:"NONE","FIXED","PERCENTAGE"
+GET /events/{event_id}/questions
+POST /events/{event_id}/questions
+  title: string|required
+  description: string|nullable|max:10000
+  type: required|in:"ADDRESS","PHONE","SINGLE_LINE_TEXT","MULTI_LINE_TEXT","CHECKBOX","RADIO","DROPDOWN","MULTI_SELECT_DROPDOWN","DATE"
+  product_ids: array|required_if:belongs_to,PRODUCT
+  belongs_to: required|in:"PRODUCT","ORDER"
+  options: max:2000|required_if:type,CHECKBOX,RADIO
+  required: required|boolean
+  is_hidden: required|boolean
+  is_sensitive: boolean
+GET|POST /events/{event_id}/questions/answers/export
+POST /events/{event_id}/questions/export
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/questions/participant-form
+POST /events/{event_id}/questions/sort
+  *.id: integer|required
+  *.order: integer|required
+DELETE /events/{event_id}/questions/{question_id}
+GET /events/{event_id}/questions/{question_id}
+PUT /events/{event_id}/questions/{question_id}
+  title: string|required
+  description: string|nullable|max:10000
+  type: required|in:"ADDRESS","PHONE","SINGLE_LINE_TEXT","MULTI_LINE_TEXT","CHECKBOX","RADIO","DROPDOWN","MULTI_SELECT_DROPDOWN","DATE"
+  product_ids: array|required_if:belongs_to,PRODUCT
+  belongs_to: required|in:"PRODUCT","ORDER"
+  options: max:2000|required_if:type,CHECKBOX,RADIO
+  required: required|boolean
+  is_hidden: required|boolean
+  is_sensitive: boolean
+PUT /events/{event_id}/questions/{question_id}/answers/{answer_id}
+  answer: nullable|custom
+GET /events/{event_id}/reports/{report_type}
+  start_date: date|before:end_date|required_with:end_date|nullable
+  end_date: date|after:start_date|required_with:start_date|nullable
+GET /events/{event_id}/settings
+PATCH /events/{event_id}/settings
+  post_checkout_message: string|nullable
+  pre_checkout_message: string|nullable
+  email_footer_message: string|nullable
+  continue_button_text: string|nullable|max:100
+  product_info_message: string|nullable|max:10000
+  product_info_button_text: string|nullable|max:100|required_with:product_info_button_url
+  product_info_button_url: nullable|url:http,https|max:2048|required_with:product_info_button_text
+  product_info_icon: nullable|string|in:"info","heart","heart-handshake","gift","leaf","mountain","speakerphone","star"
+  support_email: email|nullable
+  require_attendee_details: boolean
+  attendee_details_collection_method: in:"PER_TICKET","PER_ORDER"
+  order_timeout_in_minutes: numeric|min:1|max:120
+  homepage_background_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_primary_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_primary_text_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_secondary_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_secondary_text_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_body_background_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_background_type: nullable|in:"MIRROR_COVER_IMAGE","COLOR"
+  website_url: url|nullable
+  maps_url: url|nullable
+  location_details: array
+  location_details.venue_name: string|max:255|nullable
+  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.address_line_2: string|max:255|nullable
+  location_details.city: required_with:location_details|string|max:85
+  location_details.state_or_region: string|max:85|nullable
+  location_details.zip_or_postal_code: required_with:location_details|string|max:85
+  location_details.country: required_with:location_details|string|max:2
+  is_online_event: boolean
+  online_event_connection_details: string|nullable
+  seo_title: string|max:255|nullable
+  seo_description: string|max:255|nullable
+  seo_keywords: string|max:255|nullable
+  allow_search_engine_indexing: boolean
+  notify_organizer_of_new_orders: boolean
+  price_display_mode: in:"INCLUSIVE","EXCLUSIVE"
+  hide_getting_started_page: boolean
+  payment_providers: array
+  payment_providers.*: string|in:"STRIPE","OFFLINE"
+  offline_payment_instructions: string|nullable|
+  allow_orders_awaiting_offline_payment_to_check_in: boolean
+  deposit_instructions: string|nullable|max:5000
+  waiver_text: string|nullable|max:20000
+  enable_invoicing: boolean
+  invoice_label: nullable|string|max:50
+  invoice_prefix: nullable|string|max:10|regex:/^[A-Za-z0-9\-]*$/
+  invoice_start_number: nullable|integer|min:1
+  require_billing_address: boolean
+  organization_name: required_if:enable_invoicing,true|string|max:255|nullable
+  organization_address: required_if:enable_invoicing,true|string|max:255|nullable
+  invoice_tax_details: nullable|string
+  invoice_notes: nullable|string
+  invoice_payment_terms_days: nullable|integer|gte:0|lte:1000
+  ticket_design_settings: nullable|array
+  ticket_design_settings.accent_color: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  ticket_design_settings.logo_image_id: nullable|integer
+  ticket_design_settings.footer_text: nullable|string|max:500
+  ticket_design_settings.layout_type: nullable|string|in:"default","modern"
+  ticket_design_settings.date_display_mode: nullable|string|in:"START_DATE_TIME","DATE_RANGE","HIDDEN"
+  ticket_design_settings.enabled: boolean
+  show_marketing_opt_in: boolean
+  allow_copy_details_to_all_attendees: boolean
+  pass_platform_fee_to_buyer: boolean
+  pass_processing_fee_to_buyer: boolean
+  homepage_theme_settings: nullable|array
+  homepage_theme_settings.accent: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_theme_settings.background: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_theme_settings.mode: nullable|string|in:"light","dark"
+  homepage_theme_settings.background_type: nullable|string|in:"MIRROR_COVER_IMAGE","COLOR"
+  homepage_theme_settings.font_family: nullable|string|in:"Archivo","Outfit","Inter","Roboto","Open Sans","Poppins",… (20 valeurs)
+  allow_attendee_self_edit: boolean
+  waitlist_auto_process: boolean
+  waitlist_offer_timeout_minutes: nullable|integer|min:1|max:10080
+PUT /events/{event_id}/settings
+  post_checkout_message: string|nullable
+  pre_checkout_message: string|nullable
+  email_footer_message: string|nullable
+  continue_button_text: string|nullable|max:100
+  product_info_message: string|nullable|max:10000
+  product_info_button_text: string|nullable|max:100|required_with:product_info_button_url
+  product_info_button_url: nullable|url:http,https|max:2048|required_with:product_info_button_text
+  product_info_icon: nullable|string|in:"info","heart","heart-handshake","gift","leaf","mountain","speakerphone","star"
+  support_email: email|nullable
+  require_attendee_details: boolean
+  attendee_details_collection_method: in:"PER_TICKET","PER_ORDER"
+  order_timeout_in_minutes: numeric|min:1|max:120
+  homepage_background_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_primary_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_primary_text_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_secondary_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_secondary_text_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_body_background_color: nullable|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_background_type: nullable|in:"MIRROR_COVER_IMAGE","COLOR"
+  website_url: url|nullable
+  maps_url: url|nullable
+  location_details: array
+  location_details.venue_name: string|max:255|nullable
+  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.address_line_2: string|max:255|nullable
+  location_details.city: required_with:location_details|string|max:85
+  location_details.state_or_region: string|max:85|nullable
+  location_details.zip_or_postal_code: required_with:location_details|string|max:85
+  location_details.country: required_with:location_details|string|max:2
+  is_online_event: boolean
+  online_event_connection_details: string|nullable
+  seo_title: string|max:255|nullable
+  seo_description: string|max:255|nullable
+  seo_keywords: string|max:255|nullable
+  allow_search_engine_indexing: boolean
+  notify_organizer_of_new_orders: boolean
+  price_display_mode: in:"INCLUSIVE","EXCLUSIVE"
+  hide_getting_started_page: boolean
+  payment_providers: array
+  payment_providers.*: string|in:"STRIPE","OFFLINE"
+  offline_payment_instructions: string|nullable|
+  allow_orders_awaiting_offline_payment_to_check_in: boolean
+  deposit_instructions: string|nullable|max:5000
+  waiver_text: string|nullable|max:20000
+  enable_invoicing: boolean
+  invoice_label: nullable|string|max:50
+  invoice_prefix: nullable|string|max:10|regex:/^[A-Za-z0-9\-]*$/
+  invoice_start_number: nullable|integer|min:1
+  require_billing_address: boolean
+  organization_name: required_if:enable_invoicing,true|string|max:255|nullable
+  organization_address: required_if:enable_invoicing,true|string|max:255|nullable
+  invoice_tax_details: nullable|string
+  invoice_notes: nullable|string
+  invoice_payment_terms_days: nullable|integer|gte:0|lte:1000
+  ticket_design_settings: nullable|array
+  ticket_design_settings.accent_color: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  ticket_design_settings.logo_image_id: nullable|integer
+  ticket_design_settings.footer_text: nullable|string|max:500
+  ticket_design_settings.layout_type: nullable|string|in:"default","modern"
+  ticket_design_settings.date_display_mode: nullable|string|in:"START_DATE_TIME","DATE_RANGE","HIDDEN"
+  ticket_design_settings.enabled: boolean
+  show_marketing_opt_in: boolean
+  allow_copy_details_to_all_attendees: boolean
+  pass_platform_fee_to_buyer: boolean
+  pass_processing_fee_to_buyer: boolean
+  homepage_theme_settings: nullable|array
+  homepage_theme_settings.accent: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_theme_settings.background: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_theme_settings.mode: nullable|string|in:"light","dark"
+  homepage_theme_settings.background_type: nullable|string|in:"MIRROR_COVER_IMAGE","COLOR"
+  homepage_theme_settings.font_family: nullable|string|in:"Archivo","Outfit","Inter","Roboto","Open Sans","Poppins",… (20 valeurs)
+  allow_attendee_self_edit: boolean
+  waitlist_auto_process: boolean
+  waitlist_offer_timeout_minutes: nullable|integer|min:1|max:10080
+GET /events/{event_id}/settings/platform-fee-preview
+GET /events/{event_id}/stats
+PUT /events/{event_id}/status
+  status: required|in:"DRAFT","LIVE","ARCHIVED"
+GET /events/{event_id}/waitlist
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /events/{event_id}/waitlist/offer-next
+  product_price_id: required_without:entry_id|integer|exists:product_prices,id
+  entry_id: required_without:product_price_id|integer|exists:waitlist_entries,id
+  quantity: sometimes|integer|min:1|max:50
+GET /events/{event_id}/waitlist/stats
+DELETE /events/{event_id}/waitlist/{entry_id}
+GET /events/{event_id}/webhooks
+POST /events/{event_id}/webhooks
+  url: required|url|NoInternalUrlRule
+  event_types.*: required|in:"product.created","product.updated","product.deleted","event.created","event.updated","event.archived",… (16 valeurs)
+  status: nullable|in:"ENABLED","PAUSED"
+DELETE /events/{event_id}/webhooks/{webhook_id}
+GET /events/{event_id}/webhooks/{webhook_id}
+PUT /events/{event_id}/webhooks/{webhook_id}
+  url: required|url|NoInternalUrlRule
+  event_types.*: required|in:"product.created","product.updated","product.deleted","event.created","event.updated","event.archived",… (16 valeurs)
+  status: nullable|in:"ENABLED","PAUSED"
+GET /events/{event_id}/webhooks/{webhook_id}/logs
+POST /images
+  image: required|image|max:30720|dimensions:min_width=50,min_height=50,max_width=10000,max_height=10000|mimes:jpeg,png,jpg,webp,gif|extensions:jpeg,png,jpg,webp,gif
+  image_type: in:"GENERIC","EVENT_COVER","TICKET_LOGO","ORGANIZER_LOGO","ORGANIZER_COVER"|required_with:entity_id
+  entity_id: integer|required_with:image_type
+DELETE /images/{image_id}
+GET /organizers
+POST /organizers
+  name: required|string|max:100
+  email: email|required
+  phone: string|nullable|max:25
+  website: url|nullable|max:255
+  donation_url: url|nullable|max:255
+  description: string|nullable|max:1200
+  timezone: timezone|required
+  currency: required|in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+GET /organizers/{organizerId}/email-templates
+POST /organizers/{organizerId}/email-templates
+POST /organizers/{organizerId}/email-templates/preview
+DELETE /organizers/{organizerId}/email-templates/{templateId}
+PUT /organizers/{organizerId}/email-templates/{templateId}
+DELETE /organizers/{organizer_id}
+GET /organizers/{organizer_id}
+POST /organizers/{organizer_id}
+  name: required|string|max:100
+  email: email|required
+  phone: string|nullable|max:25
+  website: url|nullable|max:255
+  donation_url: url|nullable|max:255
+  description: string|nullable|max:1200
+  timezone: timezone|required
+  currency: required|in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+GET /organizers/{organizer_id}/deletion-status
+GET /organizers/{organizer_id}/events
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+GET /organizers/{organizer_id}/orders
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+GET /organizers/{organizer_id}/reports/{report_type}
+  start_date: date|before:end_date|required_with:end_date|nullable
+  end_date: date|after:start_date|required_with:start_date|nullable
+  currency: string|size:3|nullable
+  event_id: integer|nullable
+  page: integer|min:1|nullable
+  per_page: integer|min:1|max:1000|nullable
+GET /organizers/{organizer_id}/reports/{report_type}/export
+  start_date: date|before:end_date|required_with:end_date|nullable
+  end_date: date|after:start_date|required_with:start_date|nullable
+  currency: string|size:3|nullable
+  event_id: integer|nullable
+  page: integer|min:1|nullable
+  per_page: integer|min:1|max:1000|nullable
+GET /organizers/{organizer_id}/settings
+PATCH /organizers/{organizer_id}/settings
+  default_attendee_details_collection_method: sometimes|nullable|in:"PER_TICKET","PER_ORDER"
+  default_show_marketing_opt_in: sometimes|nullable|boolean
+  default_pass_platform_fee_to_buyer: sometimes|nullable|boolean
+  default_pass_processing_fee_to_buyer: sometimes|nullable|boolean
+  default_allow_attendee_self_edit: sometimes|nullable|boolean
+  platform_support_enabled: sometimes|boolean
+  facebook_handle: sometimes|nullable|string|max:255
+  instagram_handle: sometimes|nullable|string|max:255
+  twitter_handle: sometimes|nullable|string|max:255
+  linkedin_handle: sometimes|nullable|string|max:255
+  discord_handle: sometimes|nullable|string|max:255
+  tiktok_handle: sometimes|nullable|string|max:255
+  youtube_handle: sometimes|nullable|string|max:255
+  snapchat_handle: sometimes|nullable|string|max:255
+  twitch_handle: sometimes|nullable|string|max:255
+  reddit_handle: sometimes|nullable|string|max:255
+  pinterest_handle: sometimes|nullable|string|max:255
+  whatsapp_handle: sometimes|nullable|string|max:255
+  telegram_handle: sometimes|nullable|string|max:255
+  vk_handle: sometimes|nullable|string|max:255
+  weibo_handle: sometimes|nullable|string|max:255
+  wechat_handle: sometimes|nullable|string|max:255
+  flickr_handle: sometimes|nullable|string|max:255
+  tumblr_handle: sometimes|nullable|string|max:255
+  quora_handle: sometimes|nullable|string|max:255
+  vimeo_handle: sometimes|nullable|string|max:255
+  github_handle: sometimes|nullable|string|max:255
+  website_url: sometimes|nullable|url
+  location_details: sometimes|array
+  location_details.venue_name: sometimes|nullable|string|max:255
+  location_details.address_line_1: sometimes|nullable|string|max:255
+  location_details.address_line_2: sometimes|nullable|string|max:255
+  location_details.city: sometimes|nullable|string|max:85
+  location_details.state_or_region: sometimes|nullable|string|max:85
+  location_details.zip_or_postal_code: sometimes|nullable|string|max:85
+  location_details.country: sometimes|nullable|string|max:2
+  homepage_visibility: nullable|in:"PUBLIC","PASSWORD_PROTECTED"
+  homepage_theme_settings: nullable|array
+  homepage_theme_settings.accent: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_theme_settings.background: nullable|string|string|max:9|min:4|regex:/\#(?:[0-9a-fA-F]{3}){1,2}$|^\#(?:[0-9a-fA-F]{4}){1,2}$/
+  homepage_theme_settings.mode: nullable|string|in:"light","dark"
+  homepage_theme_settings.background_type: nullable|string|in:"MIRROR_COVER_IMAGE","COLOR"
+  homepage_theme_settings.font_family: nullable|string|in:"Archivo","Outfit","Inter","Roboto","Open Sans","Poppins",… (20 valeurs)
+  seo_keywords: sometimes|nullable|string|max:255
+  seo_title: sometimes|nullable|string|max:255
+  seo_description: sometimes|nullable|string|max:1000
+  allow_search_engine_indexing: sometimes|nullable|boolean
+  homepage_password: sometimes|nullable|string|max:100
+  tracking_pixels: sometimes|nullable|array|max:10
+  tracking_pixels.*.provider: required|string|in:"facebook_pixel","google_analytics_4","google_tag_manager","tiktok_pixel"
+  tracking_pixels.*.pixel_id: required|string|max:50|regex:/^[a-zA-Z0-9\-_]+$/
+  tracking_pixels.*.enabled: required|boolean
+  tracking_consent_acknowledged: sometimes|nullable|boolean
+  faqs: sometimes|nullable|array|max:50
+  faqs.*.question: required|string|max:255
+  faqs.*.answer: required|string|max:5000
+  charity_registration_number: sometimes|nullable|string|max:255
+  charity_legal_name: sometimes|nullable|string|max:255
+  charity_address: sometimes|nullable|string|max:2000
+  charity_signatory_name: sometimes|nullable|string|max:255
+  charity_receipt_prefix: sometimes|nullable|string|max:20
+GET /organizers/{organizer_id}/stats
+PUT /organizers/{organizer_id}/status
+  status: required|in:"DRAFT","LIVE","ARCHIVED"
+DELETE /organizers/{organizer_id}/stripe
+GET /organizers/{organizer_id}/stripe
+POST /organizers/{organizer_id}/stripe/connect
+GET /organizers/{organizer_id}/webhooks
+POST /organizers/{organizer_id}/webhooks
+  url: required|url|NoInternalUrlRule
+  event_types.*: required|in:"product.created","product.updated","product.deleted","event.created","event.updated","event.archived",… (16 valeurs)
+  status: nullable|in:"ENABLED","PAUSED"
+DELETE /organizers/{organizer_id}/webhooks/{webhook_id}
+GET /organizers/{organizer_id}/webhooks/{webhook_id}
+PUT /organizers/{organizer_id}/webhooks/{webhook_id}
+  url: required|url|NoInternalUrlRule
+  event_types.*: required|in:"product.created","product.updated","product.deleted","event.created","event.updated","event.archived",… (16 valeurs)
+  status: nullable|in:"ENABLED","PAUSED"
+GET /organizers/{organizer_id}/webhooks/{webhook_id}/logs
+GET /users
+POST /users
+  first_name: required|min:1
+  last_name: min:1|nullable
+  role: required|in:"ADMIN","ORGANIZER"
+  email: required|email
+GET /users/me
+PUT /users/me
+  first_name: required_without_all:current_password,password,password_confirmation|min:1
+  last_name: required_without_all:current_password,password,password_confirmation|min:1
+  email: required_without_all:current_password,password,password_confirmation|email
+  timezone: required_without_all:current_password,password,password_confirmation|timezone
+  locale: required_without_all:current_password,password,password_confirmation|in:en,de,fr,it,nl,hu,es,pt,pt-br,zh-cn,se,zh-hk,vi,tr,pl,sk,el
+  current_password: required_with:password,password_confirmation|min:8
+  password: required_with:current_password|confirmed|Password
+  marketing_opt_in: boolean|nullable
+GET /users/{user_id}
+PUT /users/{user_id}
+  first_name: string|max:100|min:1|nullable
+  last_name: string|max:100|min:1|nullable
+  status: in:"INACTIVE","ACTIVE"
+  role: in:"ADMIN","ORGANIZER"
+POST /users/{user_id}/confirm-email-with-code
+POST /users/{user_id}/confirm-email/{resetToken}
+DELETE /users/{user_id}/email-change
+POST /users/{user_id}/email-change/{changeToken}
+DELETE /users/{user_id}/invitation
+POST /users/{user_id}/invitation
+POST /users/{user_id}/resend-email-confirmation

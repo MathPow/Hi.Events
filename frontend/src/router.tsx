@@ -1,4 +1,5 @@
-import { Navigate, RouteObject } from "react-router";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Navigate, Outlet, RouteObject, useLocation } from "react-router";
 import ErrorPage from "./error-page.tsx";
 import { useGetMe } from "./queries/useGetMe.ts";
 import { publicEventRouteLoader } from "./routeLoaders/publicEventRouteLoader.ts";
@@ -21,7 +22,7 @@ const Root = () => {
     return <Landing />;
 };
 
-export const router: RouteObject[] = [
+const routes: RouteObject[] = [
     {
         path: "",
         element: <Root />,
@@ -666,3 +667,33 @@ export const router: RouteObject[] = [
     }
 ];
 
+const Assistant = lazy(() => import("./components/common/Assistant"));
+
+const BACK_OFFICE = /^\/(manage|account|admin|welcome)(\/|$)/;
+
+// Every page shares this root so the organizer assistant stays mounted, and keeps its
+// answer running, when a page moves from one back-office layout to another. It loads
+// in the browser only, on back-office pages.
+const Shell = () => {
+    const { pathname } = useLocation();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    return (
+        <>
+            <Outlet />
+            {mounted && BACK_OFFICE.test(pathname) && (
+                <Suspense fallback={null}>
+                    <Assistant />
+                </Suspense>
+            )}
+        </>
+    );
+};
+
+export const router: RouteObject[] = [
+    {
+        element: <Shell />,
+        children: routes,
+    },
+];
