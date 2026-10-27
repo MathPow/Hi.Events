@@ -107,6 +107,9 @@ class PartialUpdateEventSettingsHandler
                 'deposit_instructions' => array_key_exists('deposit_instructions', $eventSettingsDTO->settings)
                     ? $eventSettingsDTO->settings['deposit_instructions']
                     : $existingSettings->getDepositInstructions(),
+                'waiver_text' => array_key_exists('waiver_text', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['waiver_text']
+                    : $existingSettings->getWaiverText(),
 
                 // Invoice settings
                 'enable_invoicing' => $eventSettingsDTO->settings['enable_invoicing'] ?? $existingSettings->getEnableInvoicing(),

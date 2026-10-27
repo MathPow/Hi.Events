@@ -74,6 +74,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const PRODUCT_INFO_BUTTON_TEXT = 'product_info_button_text';
     final public const PRODUCT_INFO_BUTTON_URL = 'product_info_button_url';
     final public const PRODUCT_INFO_ICON = 'product_info_icon';
+    final public const WAIVER_TEXT = 'waiver_text';
 
     protected int $id;
     protected int $event_id;
@@ -139,6 +140,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?string $product_info_button_text = null;
     protected ?string $product_info_button_url = null;
     protected ?string $product_info_icon = null;
+    protected ?string $waiver_text = null;
 
     public function toArray(): array
     {
@@ -207,6 +209,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'product_info_button_text' => $this->product_info_button_text ?? null,
                     'product_info_button_url' => $this->product_info_button_url ?? null,
                     'product_info_icon' => $this->product_info_icon ?? null,
+                    'waiver_text' => $this->waiver_text ?? null,
                 ];
     }
 
@@ -913,5 +916,16 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getProductInfoIcon(): ?string
     {
         return $this->product_info_icon;
+    }
+
+    public function setWaiverText(?string $waiver_text): self
+    {
+        $this->waiver_text = $waiver_text;
+        return $this;
+    }
+
+    public function getWaiverText(): ?string
+    {
+        return $this->waiver_text;
     }
 }

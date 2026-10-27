@@ -41,6 +41,19 @@ export const AttendeeDetails = ({attendee}: { attendee: Attendee }) => {
                     {getLocaleName(attendee.locale as SupportedLocales)}
                 </div>
             </div>
+            {attendee.waiver_signed_at && (
+                <div className={classes.block}>
+                    <div className={classes.title}>
+                        {t`Waiver`}
+                    </div>
+                    <div className={classes.value}>
+                        {t`Signed by ${attendee.waiver_signed_name}`} - {relativeDate(attendee.waiver_signed_at)}
+                        {attendee.waiver_guardian_name && (
+                            <div>{t`Parent or guardian: ${attendee.waiver_guardian_name}`}</div>
+                        )}
+                    </div>
+                </div>
+            )}
             {attendee.check_ins && attendee.check_ins.length > 0 && (
                 <div className={classes.block}>
                     <div className={classes.title}>

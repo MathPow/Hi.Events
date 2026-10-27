@@ -233,6 +233,8 @@ export interface EventSettings {
     price_display_mode?: 'INCLUSIVE' | 'EXCLUSIVE';
     hide_getting_started_page: boolean;
     attendee_details_collection_method?: AttendeeDetailsCollectionMethod;
+    /** With a text, every ticket's attendee signs it at checkout (WaiverSignature). */
+    waiver_text?: string | null;
 
     // Payment settings
     offline_payment_instructions: string;
@@ -633,6 +635,11 @@ export interface Attendee {
     locale?: SupportedLocales;
     check_in?: AttendeeCheckIn; // Use in contexts where a single check is expected, like dealing with a check-in list
     check_ins?: AttendeeCheckIn[];
+    /** The event's waiver as this attendee signed it at checkout (admin only). */
+    waiver_id?: number | null;
+    waiver_signed_name?: string | null;
+    waiver_guardian_name?: string | null;
+    waiver_signed_at?: string | null;
 }
 
 export type PublicCheckIn = Pick<AttendeeCheckIn, 'id' | 'order_id' | 'attendee_id' | 'check_in_list_id' | 'product_id' | 'event_id'>;

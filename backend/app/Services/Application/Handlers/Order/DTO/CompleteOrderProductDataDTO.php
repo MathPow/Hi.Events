@@ -17,6 +17,8 @@ class CompleteOrderProductDataDTO extends BaseDTO
         public readonly ?string     $first_name = null,
         public readonly ?string     $last_name = null,
         public readonly ?string     $email = null,
+        // The event's waiver as this attendee signed it: accepted, signed_name, guardian_name.
+        public readonly ?array      $waiver = null,
     )
     {
     }

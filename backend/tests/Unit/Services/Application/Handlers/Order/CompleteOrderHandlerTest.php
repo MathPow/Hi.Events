@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Mockery\MockInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use HiEvents\DomainObjects\WaiverDomainObject;
+use HiEvents\Services\Domain\Waiver\WaiverService;
 use Tests\TestCase;
 
 class CompleteOrderHandlerTest extends TestCase
@@ -52,6 +54,7 @@ class CompleteOrderHandlerTest extends TestCase
     private AffiliateRepositoryInterface|MockInterface $affiliateRepository;
     private EventSettingsRepositoryInterface $eventSettingsRepository;
     private CheckoutSessionManagementService|MockInterface $sessionManagementService;
+    private WaiverService|MockInterface $waiverService;
 
     protected function setUp(): void
     {
@@ -76,6 +79,7 @@ class CompleteOrderHandlerTest extends TestCase
         $this->eventSettingsRepository = Mockery::mock(EventSettingsRepositoryInterface::class);
         $this->sessionManagementService = Mockery::mock(CheckoutSessionManagementService::class);
         $this->sessionManagementService->shouldReceive('verifySession')->andReturn(true)->byDefault();
+        $this->waiverService = Mockery::mock(WaiverService::class);
 
         $this->completeOrderHandler = new CompleteOrderHandler(
             $this->orderRepository,
@@ -87,6 +91,7 @@ class CompleteOrderHandlerTest extends TestCase
             $this->domainEventDispatcherService,
             $this->eventSettingsRepository,
             $this->sessionManagementService,
+            $this->waiverService,
         );
     }
 
@@ -120,6 +125,53 @@ class CompleteOrderHandlerTest extends TestCase
         $this->completeOrderHandler->handle($orderShortId, $orderData);
 
         $this->assertTrue(true);
+    }
+
+    public function testHandleRecordsEachAttendeesWaiverSignature(): void
+    {
+        $orderShortId = 'ABC123';
+        $orderData = new CompleteOrderDTO(
+            order: new CompleteOrderOrderDTO(first_name: 'John', last_name: 'Doe', email: 'john@example.com', questions: null),
+            products: new Collection([new CompleteOrderProductDataDTO(
+                product_price_id: 1,
+                first_name: 'Léa',
+                last_name: 'Doe',
+                email: 'lea@example.com',
+                waiver: ['accepted' => true, 'signed_name' => ' Léa Doe ', 'guardian_name' => 'John Doe'],
+            )]),
+            event_id: 1,
+            ip_address: '203.0.113.7',
+        );
+
+        $this->orderRepository->shouldReceive('findByShortId')->with($orderShortId)->andReturn($this->createMockOrder());
+        $this->orderRepository->shouldReceive('loadRelation')->andReturnSelf();
+        $this->orderRepository->shouldReceive('updateFromArray')->andReturn($this->createMockOrder());
+        $this->productPriceRepository->shouldReceive('findWhereIn')->andReturn(new Collection([$this->createMockProductPrice()]));
+        $this->attendeeRepository->shouldReceive('findWhereIn')->andReturn(new Collection([$this->createMockAttendee()]));
+        $this->productQuantityUpdateService->shouldReceive('updateQuantitiesFromOrder');
+        $this->eventSettingsRepository->shouldReceive('findFirstWhere')
+            ->andReturn($this->createMockEventSetting()->setWaiverText('<p>Je participe à mes risques.</p>'));
+
+        $this->waiverService->shouldReceive('currentVersion')
+            ->once()
+            ->with(1, '<p>Je participe à mes risques.</p>')
+            ->andReturn((new WaiverDomainObject())->setId(9));
+
+        $inserted = [];
+        $this->attendeeRepository->shouldReceive('insert')
+            ->once()
+            ->andReturnUsing(function (array $inserts) use (&$inserted) {
+                $inserted = $inserts;
+                return true;
+            });
+
+        $this->completeOrderHandler->handle($orderShortId, $orderData);
+
+        $this->assertSame(9, $inserted[0]['waiver_id']);
+        $this->assertSame('Léa Doe', $inserted[0]['waiver_signed_name']);
+        $this->assertSame('John Doe', $inserted[0]['waiver_guardian_name']);
+        $this->assertSame('203.0.113.7', $inserted[0]['waiver_ip_address']);
+        $this->assertNotNull($inserted[0]['waiver_signed_at']);
     }
 
     public function testHandleTakesAnAdvisoryLockKeyedOnTheOrderBeforeReadingIt(): void

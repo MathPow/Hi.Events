@@ -18,6 +18,7 @@ use HiEvents\DomainObjects\OrderItemDomainObject;
 use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\Status\AttendeeStatus;
+use HiEvents\DomainObjects\WaiverDomainObject;
 use HiEvents\DomainObjects\Status\OrderPaymentStatus;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Events\OrderStatusChangedEvent;
@@ -38,6 +39,7 @@ use HiEvents\Services\Application\Handlers\Order\DTO\CreatedProductDataDTO;
 use HiEvents\Services\Application\Handlers\Order\DTO\OrderQuestionsDTO;
 use HiEvents\Services\Domain\Payment\Stripe\EventHandlers\PaymentIntentSucceededHandler;
 use HiEvents\Services\Domain\Product\ProductQuantityUpdateService;
+use HiEvents\Services\Domain\Waiver\WaiverService;
 use HiEvents\Services\Infrastructure\DomainEvents\DomainEventDispatcherService;
 use HiEvents\Services\Infrastructure\Session\CheckoutSessionManagementService;
 use HiEvents\Services\Infrastructure\DomainEvents\Enums\DomainEventType;
@@ -62,6 +64,7 @@ class CompleteOrderHandler
         private readonly DomainEventDispatcherService      $domainEventDispatcherService,
         private readonly EventSettingsRepositoryInterface  $eventSettingsRepository,
         private readonly CheckoutSessionManagementService  $sessionManagementService,
+        private readonly WaiverService                     $waiverService,
     )
     {
     }
@@ -85,7 +88,12 @@ class CompleteOrderHandler
 
             $updatedOrder = $this->updateOrder($order, $orderDTO);
 
-            $this->createAttendees($orderData->products, $order, $orderDTO, $eventSettings);
+            $waiverText = $eventSettings->getWaiverText();
+            $waiver = trim(strip_tags((string)$waiverText)) !== ''
+                ? $this->waiverService->currentVersion($order->getEventId(), $waiverText)
+                : null;
+
+            $this->createAttendees($orderData->products, $order, $orderDTO, $eventSettings, $waiver, $orderData->ip_address);
 
             if ($orderData->order->questions) {
                 $this->createOrderQuestions($orderDTO->questions, $order);
@@ -131,6 +139,8 @@ class CompleteOrderHandler
         OrderDomainObject         $order,
         CompleteOrderOrderDTO     $orderDTO,
         EventSettingDomainObject  $eventSettings,
+        ?WaiverDomainObject       $waiver = null,
+        ?string                   $ipAddress = null,
     ): void
     {
         $inserts = [];
@@ -178,6 +188,7 @@ class CompleteOrderHandler
                 AttendeeDomainObjectAbstract::PUBLIC_ID => IdHelper::publicId(IdHelper::ATTENDEE_PREFIX),
                 AttendeeDomainObjectAbstract::SHORT_ID => $shortId,
                 AttendeeDomainObjectAbstract::LOCALE => $order->getLocale(),
+                ...$this->waiverSignature($attendee, $waiver, $ipAddress),
             ];
 
             $createdProductData->push(new CreatedProductDataDTO(
@@ -195,6 +206,24 @@ class CompleteOrderHandler
             order: $order,
             productPrices: $productsPrices,
         );
+    }
+
+    /**
+     * The attendee's signature of the event's waiver: every row carries the
+     * same columns, empty without a waiver, for the bulk insert.
+     */
+    private function waiverSignature(CompleteOrderProductDataDTO $attendee, ?WaiverDomainObject $waiver, ?string $ipAddress): array
+    {
+        $signed = $waiver !== null && filter_var($attendee->waiver['accepted'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $guardianName = trim((string)($attendee->waiver['guardian_name'] ?? ''));
+
+        return [
+            AttendeeDomainObjectAbstract::WAIVER_ID => $signed ? $waiver->getId() : null,
+            AttendeeDomainObjectAbstract::WAIVER_SIGNED_NAME => $signed ? trim((string)($attendee->waiver['signed_name'] ?? '')) : null,
+            AttendeeDomainObjectAbstract::WAIVER_GUARDIAN_NAME => $signed && $guardianName !== '' ? $guardianName : null,
+            AttendeeDomainObjectAbstract::WAIVER_SIGNED_AT => $signed ? now()->toDateTimeString() : null,
+            AttendeeDomainObjectAbstract::WAIVER_IP_ADDRESS => $signed ? $ipAddress : null,
+        ];
     }
 
     private function createOrderQuestions(Collection $questions, OrderDomainObject $order): void

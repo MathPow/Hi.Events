@@ -18,6 +18,8 @@ class CompleteOrderDTO extends BaseDTO
         #[CollectionOf(CompleteOrderProductDataDTO::class)]
         public Collection            $products,
         public int                   $event_id,
+        // Kept with each waiver signature.
+        public ?string               $ip_address = null,
     )
     {
     }

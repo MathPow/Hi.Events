@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HiEvents\Validators;
 
 use HiEvents\DomainObjects\Enums\QuestionBelongsTo;
+use HiEvents\DomainObjects\Enums\QuestionPresetKey;
 use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\DomainObjects\Generated\ProductDomainObjectAbstract;
 use HiEvents\DomainObjects\Generated\QuestionDomainObjectAbstract;
@@ -12,12 +13,16 @@ use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\QuestionDomainObject;
 use HiEvents\Repository\Eloquent\Value\Relationship;
+use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
 use HiEvents\Repository\Interfaces\QuestionRepositoryInterface;
 use HiEvents\Validators\Rules\OrderQuestionRule;
+use HiEvents\Services\Domain\Waiver\WaiverService;
 use HiEvents\Validators\Rules\ProductQuestionRule;
+use HiEvents\Validators\Rules\ProductWaiverRule;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Collection;
 
 class CompleteOrderValidator extends BaseValidator
 {
@@ -25,7 +30,9 @@ class CompleteOrderValidator extends BaseValidator
         private readonly QuestionRepositoryInterface      $questionRepository,
         private readonly ProductRepositoryInterface       $productRepository,
         private readonly EventSettingsRepositoryInterface $eventSettingsRepository,
-        private readonly Route                            $route
+        private readonly Route                            $route,
+        private readonly EventRepositoryInterface         $eventRepository,
+        private readonly WaiverService                    $waiverService,
     )
     {
     }
@@ -77,13 +84,37 @@ class CompleteOrderValidator extends BaseValidator
             'order.questions' => new OrderQuestionRule($orderQuestions, $products),
             'order.email' => 'required|email',
             'order.email_confirmation' => 'required|email|same:order.email',
-            'products' => new ProductQuestionRule(
-                $productQuestions,
-                $products,
-                $eventSettings->getAttendeeDetailsCollectionMethod(),
-            ),
+            'products' => [
+                new ProductQuestionRule(
+                    $productQuestions,
+                    $products,
+                    $eventSettings->getAttendeeDetailsCollectionMethod(),
+                ),
+                ...$this->waiverRules($eventSettings, $productQuestions, $products),
+            ],
             ...$addressRules
         ];
+    }
+
+    /**
+     * The waiver, when the event has one: every ticket's attendee signs it.
+     */
+    private function waiverRules(EventSettingDomainObject $eventSettings, Collection $productQuestions, Collection $products): array
+    {
+        if (trim(strip_tags((string)$eventSettings->getWaiverText())) === '') {
+            return [];
+        }
+
+        $dateOfBirthQuestion = $productQuestions->first(
+            fn(QuestionDomainObject $question) => $question->getPresetKey() === QuestionPresetKey::DATE_OF_BIRTH->value
+        );
+
+        return [new ProductWaiverRule(
+            products: $products,
+            event: $this->eventRepository->findById((int)$this->route->parameter('event_id')),
+            dateOfBirthQuestionId: $dateOfBirthQuestion?->getId(),
+            waiverService: $this->waiverService,
+        )];
     }
 
     public function messages(): array

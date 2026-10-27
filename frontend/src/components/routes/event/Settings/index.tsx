@@ -19,6 +19,7 @@ import {
     IconListCheck,
     IconMapPin,
     IconPercentage,
+    IconSignature,
 } from "@tabler/icons-react";
 import {useMediaQuery} from "@mantine/hooks";
 import {SettingsSectionChips} from "../../../common/SettingsSectionChips";
@@ -28,6 +29,7 @@ import {Card} from "../../../common/Card";
 import {PaymentAndInvoicingSettings} from "./Sections/PaymentSettings";
 import {PlatformFeesSettings} from "./Sections/PlatformFeesSettings";
 import {WaitlistSettings} from "./Sections/WaitlistSettings";
+import {WaiverSettings} from "./Sections/WaiverSettings";
 import {DangerZoneSettings} from "./Sections/DangerZoneSettings";
 import {useGetAccount} from "../../../../queries/useGetAccount.ts";
 
@@ -72,6 +74,12 @@ export const Settings = () => {
                 label: t`Miscellaneous`,
                 icon: IconAdjustments,
                 component: MiscSettings
+            },
+            {
+                id: 'waiver-settings',
+                label: t`Waiver`,
+                icon: IconSignature,
+                component: WaiverSettings,
             },
             {
                 id: 'waitlist-settings',

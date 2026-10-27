@@ -59,6 +59,7 @@ class EventSettingsResource extends JsonResource
             'payment_providers' => $this->getPaymentProviders(),
             'offline_payment_instructions' => $this->getOfflinePaymentInstructions(),
             'deposit_instructions' => $this->getDepositInstructions(),
+            'waiver_text' => $this->getWaiverText(),
             'allow_orders_awaiting_offline_payment_to_check_in' => $this->getAllowOrdersAwaitingOfflinePaymentToCheckIn(),
 
             // Invoice settings

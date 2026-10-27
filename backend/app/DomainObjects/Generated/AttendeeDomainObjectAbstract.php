@@ -17,6 +17,7 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     final public const CHECKED_IN_BY = 'checked_in_by';
     final public const CHECKED_OUT_BY = 'checked_out_by';
     final public const PRODUCT_PRICE_ID = 'product_price_id';
+    final public const WAIVER_ID = 'waiver_id';
     final public const SHORT_ID = 'short_id';
     final public const FIRST_NAME = 'first_name';
     final public const LAST_NAME = 'last_name';
@@ -29,6 +30,10 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     final public const DELETED_AT = 'deleted_at';
     final public const LOCALE = 'locale';
     final public const NOTES = 'notes';
+    final public const WAIVER_SIGNED_NAME = 'waiver_signed_name';
+    final public const WAIVER_GUARDIAN_NAME = 'waiver_guardian_name';
+    final public const WAIVER_SIGNED_AT = 'waiver_signed_at';
+    final public const WAIVER_IP_ADDRESS = 'waiver_ip_address';
 
     protected int $id;
     protected int $order_id;
@@ -37,6 +42,7 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     protected ?int $checked_in_by = null;
     protected ?int $checked_out_by = null;
     protected int $product_price_id;
+    protected ?int $waiver_id = null;
     protected string $short_id;
     protected string $first_name = '';
     protected string $last_name = '';
@@ -49,6 +55,10 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     protected ?string $deleted_at = null;
     protected string $locale = 'en';
     protected ?string $notes = null;
+    protected ?string $waiver_signed_name = null;
+    protected ?string $waiver_guardian_name = null;
+    protected ?string $waiver_signed_at = null;
+    protected ?string $waiver_ip_address = null;
 
     public function toArray(): array
     {
@@ -60,6 +70,7 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
                     'checked_in_by' => $this->checked_in_by ?? null,
                     'checked_out_by' => $this->checked_out_by ?? null,
                     'product_price_id' => $this->product_price_id ?? null,
+                    'waiver_id' => $this->waiver_id ?? null,
                     'short_id' => $this->short_id ?? null,
                     'first_name' => $this->first_name ?? null,
                     'last_name' => $this->last_name ?? null,
@@ -72,6 +83,10 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
                     'deleted_at' => $this->deleted_at ?? null,
                     'locale' => $this->locale ?? null,
                     'notes' => $this->notes ?? null,
+                    'waiver_signed_name' => $this->waiver_signed_name ?? null,
+                    'waiver_guardian_name' => $this->waiver_guardian_name ?? null,
+                    'waiver_signed_at' => $this->waiver_signed_at ?? null,
+                    'waiver_ip_address' => $this->waiver_ip_address ?? null,
                 ];
     }
 
@@ -150,6 +165,17 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     public function getProductPriceId(): int
     {
         return $this->product_price_id;
+    }
+
+    public function setWaiverId(?int $waiver_id): self
+    {
+        $this->waiver_id = $waiver_id;
+        return $this;
+    }
+
+    public function getWaiverId(): ?int
+    {
+        return $this->waiver_id;
     }
 
     public function setShortId(string $short_id): self
@@ -282,5 +308,49 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     public function getNotes(): ?string
     {
         return $this->notes;
+    }
+
+    public function setWaiverSignedName(?string $waiver_signed_name): self
+    {
+        $this->waiver_signed_name = $waiver_signed_name;
+        return $this;
+    }
+
+    public function getWaiverSignedName(): ?string
+    {
+        return $this->waiver_signed_name;
+    }
+
+    public function setWaiverGuardianName(?string $waiver_guardian_name): self
+    {
+        $this->waiver_guardian_name = $waiver_guardian_name;
+        return $this;
+    }
+
+    public function getWaiverGuardianName(): ?string
+    {
+        return $this->waiver_guardian_name;
+    }
+
+    public function setWaiverSignedAt(?string $waiver_signed_at): self
+    {
+        $this->waiver_signed_at = $waiver_signed_at;
+        return $this;
+    }
+
+    public function getWaiverSignedAt(): ?string
+    {
+        return $this->waiver_signed_at;
+    }
+
+    public function setWaiverIpAddress(?string $waiver_ip_address): self
+    {
+        $this->waiver_ip_address = $waiver_ip_address;
+        return $this;
+    }
+
+    public function getWaiverIpAddress(): ?string
+    {
+        return $this->waiver_ip_address;
     }
 }

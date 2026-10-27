@@ -36,6 +36,8 @@ class CompleteOrderActionPublic extends BaseAction
                 ]),
                 'products' => $request->input('products'),
                 'event_id' => $eventId,
+                // Behind Cloudflare, the only way in, the proxies hide the visitor's address from ip().
+                'ip_address' => $request->header('CF-Connecting-IP') ?: $request->ip(),
             ]));
         } catch (ResourceConflictException $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_CONFLICT);

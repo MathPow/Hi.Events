@@ -36,6 +36,9 @@ import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
 import {useCheckoutPrefill, CheckoutPrefill} from "../../../../hooks/useCheckoutPrefill.ts";
 import {useApplyPromoCodeToOrder} from "../../../../mutations/useApplyPromoCodeToOrder.ts";
+import {WaiverSignature} from "../../../common/WaiverSignature";
+import {isMinorOnEventDay} from "../../../../utilites/dates.ts";
+import {isEmptyHtml} from "../../../../utilites/helpers.ts";
 
 const LoadingSkeleton = () =>
     (
@@ -150,6 +153,26 @@ export const CollectInformation = () => {
     };
 
     const totalTicketAttendees = getTicketAttendeeIndices().length;
+
+    // The event's waiver: each ticket's attendee signs it (once for the order when details are per order).
+    const waiverText = event?.settings?.waiver_text && !isEmptyHtml(event.settings.waiver_text)
+        ? event.settings.waiver_text
+        : null;
+    const dateOfBirthQuestion = productQuestions?.find(question => question.preset_key === 'date_of_birth');
+
+    /** From the participant form's date of birth, when the attendee answered it. */
+    const isAttendeeMinor = (productIndex: number): boolean => {
+        if (!event || !dateOfBirthQuestion) {
+            return false;
+        }
+        // An empty object until the form is filled from the order (createProductsAndQuestions).
+        const questions = form.values.products[productIndex]?.questions;
+        const answer = (Array.isArray(questions) ? questions as { question_id: IdParam, response?: { answer?: string } }[] : [])
+            .find(question => question.question_id === dateOfBirthQuestion.id)
+            ?.response?.answer;
+
+        return isMinorOnEventDay(answer, event.start_date, event.timezone);
+    };
 
     const copyDetailsToAttendees = (option: 'none' | 'first' | 'all') => {
         if (!products) return;
@@ -333,6 +356,7 @@ export const CollectInformation = () => {
                     last_name: "",
                     email: "",
                     email_confirmation: "",
+                    waiver: {accepted: false, signed_name: "", guardian_name: ""},
                     questions: productIdToQuestionMap.get(orderItem?.product_id)?.map((question: Question) => {
                         return {
                             question_id: question.id,
@@ -368,6 +392,19 @@ export const CollectInformation = () => {
                 // poursuit sans elle plutot que de renvoyer l'acheteur a un echec.
                 showError(t`Your contribution could not be applied, continuing without it.`);
             }
+        }
+
+        // Per order, the buyer's one signature stands for every ticket's attendee.
+        const firstTicketIndex = getFirstTicketAttendeeIndex();
+        if (waiverText && isPerOrderCollection && firstTicketIndex !== -1) {
+            const signature = values.products[firstTicketIndex].waiver;
+            const ticketIndices = getTicketAttendeeIndices();
+            values = {
+                ...values,
+                products: values.products.map((product: any, index: number) =>
+                    ticketIndices.includes(index) ? {...product, waiver: signature} : product
+                ),
+            };
         }
 
         mutation.mutate(values);
@@ -665,6 +702,17 @@ export const CollectInformation = () => {
                     )}
                 </Card>
 
+                {waiverText && isPerOrderCollection && totalTicketAttendees > 0 && (
+                    <Card>
+                        <WaiverSignature
+                            waiverText={waiverText}
+                            form={form}
+                            path={`products.${getFirstTicketAttendeeIndex()}.waiver`}
+                            isMinor={false}
+                        />
+                    </Card>
+                )}
+
                 {orderItems?.map(orderItem => {
                     const product = products?.find(product => product!.id === orderItem.product_id);
                     const productRequiresDetails = product?.product_type === 'TICKET' && !isPerOrderCollection;
@@ -783,6 +831,15 @@ export const CollectInformation = () => {
                                                 product={product}
                                                 form={form}
                                                 questions={productQuestions}/>}
+
+                                        {waiverText && productRequiresDetails && (
+                                            <WaiverSignature
+                                                waiverText={waiverText}
+                                                form={form}
+                                                path={`products.${currentProductIndex}.waiver`}
+                                                isMinor={isAttendeeMinor(currentProductIndex)}
+                                            />
+                                        )}
                                     </Card>
                                 );
 

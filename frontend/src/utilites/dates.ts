@@ -127,3 +127,19 @@ export const isDateInFuture = (date: string): boolean => {
 export const isDateInPast = (date: string): boolean => {
     return dayjs.utc(date).diff(dayjs()) < 0;
 }
+
+// The age of majority in Quebec: younger, a parent or guardian signs the waiver (WaiverService::ADULT_AGE).
+export const WAIVER_ADULT_AGE = 18;
+
+/**
+ * Whether someone born on dateOfBirth (YYYY-MM-DD) is under WAIVER_ADULT_AGE
+ * on the event's day, in its time zone, like the server checks it.
+ */
+export const isMinorOnEventDay = (dateOfBirth: string | undefined | null, eventStartDate: string, eventTimezone: string): boolean => {
+    if (!dateOfBirth || !/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
+        return false;
+    }
+    const eventDay = dayjs.utc(eventStartDate).tz(eventTimezone || 'UTC').format('YYYY-MM-DD');
+
+    return dayjs(dateOfBirth).add(WAIVER_ADULT_AGE, 'year').format('YYYY-MM-DD') > eventDay;
+};
