@@ -25,6 +25,7 @@ import {
     IconInfoCircle,
     IconPaperclip,
     IconSend,
+    IconTemplate,
     IconTestPipe
 } from "@tabler/icons-react";
 import {useGetMe} from "../../../queries/useGetMe.ts";
@@ -42,6 +43,8 @@ import {getConfig} from "../../../utilites/config";
 import {utcToTz} from "../../../utilites/dates.ts";
 import dayjs from "dayjs";
 import classes from "./SendMessageModal.module.scss";
+import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
+import {buildReminder, ReminderTemplate} from "./reminderTemplates.ts";
 
 interface EventMessageModalProps extends GenericModalProps {
     orderId?: IdParam,
@@ -132,6 +135,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
     const {onClose, orderId, productId, messageType, attendeeId} = props;
     const {eventId} = useParams();
     const {data: event, data: {product_categories} = {}} = useGetEvent(eventId);
+    const {data: eventSettings} = useGetEventSettings(eventId);
     const {data: me} = useGetMe();
     const errorHandler = useFormErrorResponseHandler();
     const isPreselectedRecipient = !!(orderId || attendeeId || productId);
@@ -227,6 +231,29 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
     useEffect(() => {
         form.setFieldValue('product_ids', []);
     }, [form.values.message_type]);
+
+    /** Fills a reminder for every attendee, sent a week or a day before when that's still ahead. */
+    const applyTemplate = (template: ReminderTemplate) => {
+        if (!event) {
+            return;
+        }
+        if ((form.values.subject || form.values.message)
+            && !window.confirm(t`Replace the subject and the message with this template?`)) {
+            return;
+        }
+        const {subject, message} = buildReminder(template, event, eventSettings);
+        form.setFieldValue('subject', subject);
+        form.setFieldValue('message', message);
+        if (!isPreselectedRecipient) {
+            form.setFieldValue('message_type', MessageType.AllAttendees);
+        }
+        const preset = template === 'week_before' ? '1_week_before' : '1_day_before';
+        if (presets.some(p => p.value === preset)) {
+            setIsScheduled(true);
+            setSelectedPreset(preset);
+            form.setFieldValue('scheduled_at', '');
+        }
+    };
 
     if (!event || !me || !product_categories) {
         return <LoadingOverlay visible/>;
@@ -359,6 +386,18 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                             {(form.values.message_type === MessageType.OrderOwner && orderId) && (
                                 <OrderField orderId={orderId} eventId={eventId}/>
                             )}
+
+                            <div className={classes.templates}>
+                                <span className={classes.templatesLabel}>{t`Templates`}</span>
+                                <Button size={'compact-sm'} variant={'light'} leftSection={<IconTemplate size={14}/>}
+                                        onClick={() => applyTemplate('week_before')}>
+                                    {t`Reminder a week before`}
+                                </Button>
+                                <Button size={'compact-sm'} variant={'light'} leftSection={<IconTemplate size={14}/>}
+                                        onClick={() => applyTemplate('day_before')}>
+                                    {t`Reminder the day before`}
+                                </Button>
+                            </div>
 
                             <TextInput
                                 required
