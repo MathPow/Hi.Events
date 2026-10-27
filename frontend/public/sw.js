@@ -21,7 +21,7 @@ body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:c
 main{padding:2rem 1.5rem;max-width:22rem}
 h1{margin:0 0 .5rem;font-size:1.5rem}
 p{margin:0 0 1.5rem;line-height:1.5;color:rgb(53 41 36 / .7)}
-button{border:0;border-radius:999px;padding:.875rem 1.75rem;background:#f47d3c;color:#fff;font:inherit;font-weight:700}
+button{border:0;border-radius:999px;padding:.875rem 1.75rem;background:#fa7853;color:#fff;font:inherit;font-weight:700}
 </style>
 </head>
 <body>

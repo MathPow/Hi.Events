@@ -2,13 +2,13 @@ $creme: #fff7e9;
 $sommet: #faf3df;
 $brun: #352924;
 // The oranges are variables so the dev environment can turn them red (styles/dehors-app.scss).
-$orange: var(--landing-orange, #f98043);
-$abricot: var(--landing-abricot, #ffad7d);
+$orange: var(--landing-orange, #fa7853);
+$abricot: var(--landing-abricot, #ffaa8d);
 $peche: #fae6da;
 $terracotta: #c47762;
 $sable: #e3ad92;
 // The empty mountain of the shop's opening, before the cream fills it.
-$orange-pale: var(--landing-orange-pale, #f6a972);
+$orange-pale: var(--landing-orange-pale, #f7a182);
 $display: FatFrank, 'Arial Black', sans-serif;
 $sans: Allotrope, Arial, sans-serif;
 $gutter: clamp(1rem, 2.8vw, 2.5rem);
@@ -178,7 +178,7 @@ $ridge-mobile: 10vw;
 
 .button-orange {
   color: $creme;
-  --button-fill: var(--dehors-orange, #f47d3c);
+  --button-fill: var(--dehors-orange, #fa7853);
 }
 
 .button-dark {
@@ -658,12 +658,12 @@ $ridge-mobile: 10vw;
 }
 
 .stickerWordFewer {
-  color: #ef6b66;
+  color: #fa755a;
   rotate: -4deg;
 }
 
 .stickerWordMore {
-  color: #5aab7b;
+  color: #90b26d;
   rotate: 3deg;
   --tilt-delay: -1.2s;
 }
@@ -840,7 +840,7 @@ $ridge-mobile: 10vw;
       animation: button-hop 0.4s steps(1) infinite;
 
       &::before {
-        background: var(--landing-orange-hover, #ff9258);
+        background: var(--landing-orange-hover, #ff8a68);
       }
 
       &::before, &::after {
@@ -1272,8 +1272,9 @@ $ridge-mobile: 10vw;
 
 // --- Intro ---
 
-// The photos climb in steps to the right edge of the screen; the title and the
-// text fill the corner the steps leave free, the text resting on the first.
+// The photos climb in steps to the right, centred and as wide as the scrolled
+// nav (.scrolledNav); the title and the text fill the corner the steps leave
+// free, the text resting on the first.
 .intro {
   display: grid;
   grid-template-columns: 2.4fr 3.2fr 3.4fr;
@@ -1283,7 +1284,8 @@ $ridge-mobile: 10vw;
     "small medium large";
   align-items: end;
   gap: 1.75rem 1rem;
-  margin: clamp(6rem, 11vw, 9rem) $gutter 0 calc((100% - #{$content}) / 2);
+  width: min(calc(100% - 5rem), 85rem);
+  margin: clamp(6rem, 11vw, 9rem) auto 0;
 }
 
 .introText {
@@ -2232,15 +2234,15 @@ $ridge-mobile: 10vw;
   line-height: 1.15;
 }
 
-// The FAQ's 40px round button, cut by hand like the tiles: cream with the
-// plus, brown with the minus once open. It hops like the site's buttons.
+// The FAQ's 40px round button, cut by hand like the tiles: brown with the
+// plus, cream with the minus once open. It hops like the site's buttons.
 .featurePastille {
   display: grid;
   place-items: center;
   width: 2.5rem;
   height: 2.5rem;
-  color: $brun;
-  background: $creme;
+  color: $creme;
+  background: $brun;
   mask: url('/landing/rond-dessine.svg') center / 100% 100% no-repeat;
   transition: background-color 0.2s ease, color 0.2s ease;
 
@@ -2263,8 +2265,8 @@ $ridge-mobile: 10vw;
 
 .featureOpen {
   .featurePastille {
-    color: $creme;
-    background: $brun;
+    color: $brun;
+    background: $creme;
   }
 
   .featurePlus {
@@ -2706,6 +2708,7 @@ $footer-ridge-mobile: 13.205056%;
       "title title"
       "text text"
       "medium large";
+    width: calc(100% - 2rem);
   }
 
   .introPhotoSmall {

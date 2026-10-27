@@ -41,7 +41,7 @@ style="display: block; margin: 0 auto; width: 180px; height: 180px;">
 <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #9c8478;">{{ __('Ticket ID') }}</div>
 <div style="font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #352924;">{{ $ticketAttendee->getPublicId() }}</div>
 <div style="margin-top: 14px;">
-<a href="{{ $ticket['ticketUrl'] }}" style="font-size: 13px; color: #e86c2a;">{{ __('View this ticket online') }}</a>
+<a href="{{ $ticket['ticketUrl'] }}" style="font-size: 13px; color: #ee6741;">{{ __('View this ticket online') }}</a>
 </div>
 </td>
 </tr>
