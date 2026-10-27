@@ -767,6 +767,10 @@ export interface Question {
     product_ids?: number[];
     belongs_to: string;
     is_hidden: boolean;
+    /** Erased after the event (SensitiveAnswerPurgeService): health, emergency contact. */
+    is_sensitive?: boolean;
+    /** Set on the questions of the participant form (date_of_birth, emergency_contact_name…). */
+    preset_key?: string | null;
 }
 
 export interface CapacityAssignment {
@@ -843,6 +847,7 @@ export interface QuestionRequestData {
     description?: string;
     required: boolean;
     is_hidden: boolean;
+    is_sensitive?: boolean;
     type: string;
     options: string[];
     product_ids?: string[];

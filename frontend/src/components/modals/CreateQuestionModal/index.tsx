@@ -35,6 +35,7 @@ export const CreateQuestionModal = ({onClose, onCompleted, defaultBelongsTo = 'O
             apply_to_all_products: true,
             belongs_to: defaultBelongsTo,
             is_hidden: false,
+            is_sensitive: false,
         },
     });
 

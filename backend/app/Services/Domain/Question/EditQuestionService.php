@@ -57,6 +57,7 @@ class EditQuestionService
                     QuestionDomainObjectAbstract::REQUIRED => $question->getRequired(),
                     QuestionDomainObjectAbstract::OPTIONS => $question->getOptions(),
                     QuestionDomainObjectAbstract::IS_HIDDEN => $question->getIsHidden(),
+                    QuestionDomainObjectAbstract::IS_SENSITIVE => $question->getIsSensitive(),
                     QuestionDomainObjectAbstract::DESCRIPTION => $this->purifier->purify($question->getDescription()),
                 ],
                 productIds: $productIds

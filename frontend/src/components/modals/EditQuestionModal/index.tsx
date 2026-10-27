@@ -35,6 +35,7 @@ export const EditQuestionModal = ({onClose, questionId}: EditQuestionModalProps)
             product_ids: [],
             belongs_to: "ORDER",
             is_hidden: false,
+            is_sensitive: false,
         },
     });
 
@@ -54,6 +55,7 @@ export const EditQuestionModal = ({onClose, questionId}: EditQuestionModalProps)
                 product_ids: data.product_ids?.map(id => String(id)),
                 belongs_to: data.belongs_to,
                 is_hidden: data.is_hidden,
+                is_sensitive: !!data.is_sensitive,
             });
         }
         , [questionQuery.isFetched]);

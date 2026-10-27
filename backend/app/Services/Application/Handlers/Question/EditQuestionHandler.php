@@ -31,6 +31,7 @@ class EditQuestionHandler
             ->setRequired($createQuestionDTO->required)
             ->setOptions($createQuestionDTO->options)
             ->setIsHidden($createQuestionDTO->is_hidden)
+            ->setIsSensitive($createQuestionDTO->is_sensitive)
             ->setDescription($this->purifier->purify($createQuestionDTO->description));
 
         return $this->editQuestionService->editQuestion(

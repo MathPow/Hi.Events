@@ -218,6 +218,13 @@ export const QuestionForm = ({form, productCategories}: QuestionFormProps) => {
                 description={t`Hidden questions are only visible to the event organizer and not to the customer.`}
                 label={t`Hide this question`}
             />
+
+            <Switch
+                mt={20}
+                {...form.getInputProps('is_sensitive', {type: 'checkbox'})}
+                description={t`For health or emergency information: the answers are erased 30 days after the event.`}
+                label={t`Sensitive information`}
+            />
         </>
     )
 }

@@ -42,6 +42,7 @@ class EditQuestionAction extends BaseAction
                     'event_id' => $eventId,
                     'product_ids' => $request->input('product_ids'),
                     'is_hidden' => $request->boolean('is_hidden'),
+                    'is_sensitive' => $request->boolean('is_sensitive'),
                     'belongs_to' => QuestionBelongsTo::fromName($request->input('belongs_to')),
                     'description' => $request->input('description'),
                 ]));

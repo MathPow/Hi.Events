@@ -159,6 +159,7 @@ use HiEvents\Http\Actions\PromoCodes\GetPromoCodeAction;
 use HiEvents\Http\Actions\PromoCodes\GetPromoCodePublic;
 use HiEvents\Http\Actions\PromoCodes\GetPromoCodesAction;
 use HiEvents\Http\Actions\PromoCodes\UpdatePromoCodeAction;
+use HiEvents\Http\Actions\Questions\AddParticipantFormAction;
 use HiEvents\Http\Actions\Questions\CreateQuestionAction;
 use HiEvents\Http\Actions\Questions\DeleteQuestionAction;
 use HiEvents\Http\Actions\Questions\EditQuestionAction;
@@ -411,6 +412,7 @@ $router->middleware(['auth:api'])->group(
 
         // Questions
         $router->post('/events/{event_id}/questions', CreateQuestionAction::class);
+        $router->post('/events/{event_id}/questions/participant-form', AddParticipantFormAction::class);
         $router->put('/events/{event_id}/questions/{question_id}', EditQuestionAction::class);
         $router->get('/events/{event_id}/questions/{question_id}', GetQuestionAction::class);
         $router->delete('/events/{event_id}/questions/{question_id}', DeleteQuestionAction::class);

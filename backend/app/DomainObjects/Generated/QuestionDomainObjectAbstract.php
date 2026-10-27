@@ -23,6 +23,8 @@ abstract class QuestionDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     final public const ORDER = 'order';
     final public const IS_HIDDEN = 'is_hidden';
     final public const DESCRIPTION = 'description';
+    final public const PRESET_KEY = 'preset_key';
+    final public const IS_SENSITIVE = 'is_sensitive';
 
     protected int $id;
     protected int $event_id;
@@ -37,6 +39,8 @@ abstract class QuestionDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     protected int $order = 1;
     protected bool $is_hidden = false;
     protected ?string $description = null;
+    protected ?string $preset_key = null;
+    protected bool $is_sensitive = false;
 
     public function toArray(): array
     {
@@ -54,6 +58,8 @@ abstract class QuestionDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
                     'order' => $this->order ?? null,
                     'is_hidden' => $this->is_hidden ?? null,
                     'description' => $this->description ?? null,
+                    'preset_key' => $this->preset_key ?? null,
+                    'is_sensitive' => $this->is_sensitive ?? null,
                 ];
     }
 
@@ -198,5 +204,27 @@ abstract class QuestionDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function setPresetKey(?string $preset_key): self
+    {
+        $this->preset_key = $preset_key;
+        return $this;
+    }
+
+    public function getPresetKey(): ?string
+    {
+        return $this->preset_key;
+    }
+
+    public function setIsSensitive(bool $is_sensitive): self
+    {
+        $this->is_sensitive = $is_sensitive;
+        return $this;
+    }
+
+    public function getIsSensitive(): bool
+    {
+        return $this->is_sensitive;
     }
 }

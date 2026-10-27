@@ -36,6 +36,7 @@ class CreateQuestionAction extends BaseAction
                 'product_ids' => $request->input('product_ids'),
                 'belongs_to' => $request->input('belongs_to'),
                 'is_hidden' => $request->boolean('is_hidden'),
+                'is_sensitive' => $request->boolean('is_sensitive'),
                 'description' => $request->input('description'),
             ]));
         } catch (UnrecognizedProductIdException $exception) {

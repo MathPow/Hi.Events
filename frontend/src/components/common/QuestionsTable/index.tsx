@@ -17,12 +17,14 @@ import {
     IconDotsVertical,
     IconEye,
     IconEyeOff,
+    IconFirstAidKit,
     IconGripVertical,
     IconPencil,
     IconPlus,
     IconShoppingCart,
     IconTableExport,
     IconTrash,
+    IconShieldLock,
     IconUser,
     IconUsers,
 } from "@tabler/icons-react";
@@ -58,6 +60,7 @@ import classNames from "classnames";
 import {useExportAnswers} from "../../../mutations/useExportAnswers.ts";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
 import {useUpdateEventSettings} from "../../../mutations/useUpdateEventSettings.ts";
+import {useAddParticipantForm} from "../../../mutations/useAddParticipantForm.ts";
 import {CustomSelect, ItemProps} from "../CustomSelect";
 import {HeadingWithDescription} from "../Card/CardHeading";
 
@@ -117,6 +120,13 @@ const SortableQuestion = ({
                         <Badge size="xs" variant="light" color="red">
                             {t`Required`}
                         </Badge>
+                    )}
+                    {question.is_sensitive && (
+                        <Tooltip label={t`Only the organizers see the answers. They are erased 30 days after the event.`}>
+                            <Badge size="xs" variant="light" color="orange" leftSection={<IconShieldLock size={10}/>}>
+                                {t`Sensitive`}
+                            </Badge>
+                        </Tooltip>
                     )}
                 </div>
                 <Text size="xs" c="dimmed" className={classes.questionMeta}>
@@ -347,6 +357,7 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
 
     const eventSettingsQuery = useGetEventSettings(eventId);
     const updateSettingsMutation = useUpdateEventSettings();
+    const addParticipantFormMutation = useAddParticipantForm();
     const collectionMethod = eventSettingsQuery.data?.attendee_details_collection_method || 'PER_TICKET';
     const isPerOrderCollection = collectionMethod === 'PER_ORDER';
 
@@ -361,6 +372,19 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
 
     const onCompleted = () => {
         // Question created successfully
+    };
+
+    /** Date of birth, emergency contact and health, asked of every attendee: shown on the attendee tab. */
+    const addParticipantForm = () => {
+        addParticipantFormMutation.mutate({eventId}, {
+            onSuccess: ({data}) => {
+                setActiveTab('PRODUCT');
+                showSuccess(data.length > 0
+                    ? t`Participant form added`
+                    : t`The participant form is already there`);
+            },
+            onError: (error: any) => showError(error?.response?.data?.message || t`Failed to add the participant form`),
+        });
     };
 
     const handleCollectionMethodChange = (value: string | string[]) => {
@@ -471,6 +495,20 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
                     />
                     <Group gap="xs" wrap="wrap" className={classes.actionButtons}>
                         <ExportButton/>
+                        <Tooltip
+                            multiline
+                            w={260}
+                            label={t`Date of birth, emergency contact and health, asked of each attendee. The answers are erased 30 days after the event.`}
+                        >
+                            <Button
+                                variant="light"
+                                leftSection={<IconFirstAidKit size={16}/>}
+                                loading={addParticipantFormMutation.isPending}
+                                onClick={addParticipantForm}
+                            >
+                                {t`Participant form`}
+                            </Button>
+                        </Tooltip>
                         <Button
                             leftSection={<IconPlus size={16}/>}
                             onClick={openCreateModal}

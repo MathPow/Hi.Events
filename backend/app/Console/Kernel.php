@@ -4,6 +4,7 @@ namespace HiEvents\Console;
 
 use HiEvents\Jobs\Message\SendScheduledMessagesJob;
 use HiEvents\Jobs\Order\AnonymizeAbandonedOrdersJob;
+use HiEvents\Jobs\Question\PurgeSensitiveAnswersJob;
 use HiEvents\Jobs\Waitlist\ProcessExpiredWaitlistOffersJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new SendScheduledMessagesJob)->everyMinute()->withoutOverlapping();
         $schedule->job(new ProcessExpiredWaitlistOffersJob)->everyMinute()->withoutOverlapping();
         $schedule->job(new AnonymizeAbandonedOrdersJob)->dailyAt('04:00')->withoutOverlapping();
+        $schedule->job(new PurgeSensitiveAnswersJob)->dailyAt('04:30')->withoutOverlapping();
     }
 
     protected function commands(): void

@@ -21,6 +21,10 @@ export const questionClient = {
         const response = await api.post<GenericDataResponse<Question>>(`events/${eventId}/questions`, question);
         return response.data;
     },
+    addParticipantForm: async (eventId: IdParam) => {
+        const response = await api.post<GenericDataResponse<Question[]>>(`events/${eventId}/questions/participant-form`);
+        return response.data;
+    },
     update: async (eventId: IdParam, questionId: IdParam, question: QuestionRequestData) => {
         const response = await api.put<GenericDataResponse<Question>>(`events/${eventId}/questions/${questionId}`, question);
         return response.data;
