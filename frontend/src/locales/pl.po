@@ -100,6 +100,10 @@ msgstr "{0} biletów"
 msgid "{0} updated successfully"
 msgstr "{0} zaktualizowany pomyślnie"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:44
+msgid "{0}: one week to go"
+msgstr "{0}: został tydzień"
+
 #: src/components/common/CheckIn/CheckInInfoModal.tsx:40
 msgid "{0}/{1} checked in"
 msgstr "{0}/{1} zameldowanych"
@@ -129,9 +133,13 @@ msgstr "{minutes} minut i {seconds} sekund"
 msgid "{organizerName}'s first event"
 msgstr "Pierwsze wydarzenie {organizerName}"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:126
+#: src/components/forms/ProductForm/SizedProductForm.tsx:151
 msgid "{sold} sold"
 msgstr "Sprzedano {sold}"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:47
+msgid "{title} is in one week. Here's what you need to know to get ready."
+msgstr "{title} już za tydzień. Oto, co musisz wiedzieć, żeby się przygotować."
 
 #: src/components/common/EventCard/index.tsx:115
 msgid "{totalCount} ticket types"
@@ -211,19 +219,19 @@ msgstr "0 minut i 0 sekund"
 msgid "1 Active Webhook"
 msgstr "1 Aktywny webhook"
 
-#: src/components/modals/SendMessageModal/index.tsx:123
+#: src/components/modals/SendMessageModal/index.tsx:126
 msgid "1 day after end date"
 msgstr "1 dzień po dacie zakończenia"
 
-#: src/components/modals/SendMessageModal/index.tsx:117
+#: src/components/modals/SendMessageModal/index.tsx:120
 msgid "1 day after start date"
 msgstr "1 dzień po dacie rozpoczęcia"
 
-#: src/components/modals/SendMessageModal/index.tsx:115
+#: src/components/modals/SendMessageModal/index.tsx:118
 msgid "1 day before event"
 msgstr "1 dzień przed wydarzeniem"
 
-#: src/components/modals/SendMessageModal/index.tsx:116
+#: src/components/modals/SendMessageModal/index.tsx:119
 msgid "1 hour before event"
 msgstr "1 godzinę przed wydarzeniem"
 
@@ -235,7 +243,7 @@ msgstr "1 bilet"
 msgid "1 ticket type"
 msgstr "1 typ biletu"
 
-#: src/components/modals/SendMessageModal/index.tsx:114
+#: src/components/modals/SendMessageModal/index.tsx:117
 msgid "1 week before event"
 msgstr "1 tydzień przed wydarzeniem"
 
@@ -254,16 +262,16 @@ msgstr "123 Główna Ulica"
 msgid "123 Sample Street"
 msgstr "123 Przykładowa Ulica"
 
-#: src/components/routes/landing/index.tsx:764
-#: src/components/routes/landing/index.tsx:878
+#: src/components/routes/landing/index.tsx:770
+#: src/components/routes/landing/index.tsx:885
 msgid "2,200+ athletes"
 msgstr "Ponad 2200 sportowców"
 
-#: src/components/routes/landing/index.tsx:879
+#: src/components/routes/landing/index.tsx:886
 msgid "2.5% + Stripe fees"
 msgstr "2,5% + opłaty Stripe"
 
-#: src/components/routes/landing/index.tsx:923
+#: src/components/routes/landing/index.tsx:930
 msgid "2.5% per ticket, plus Stripe's payment fees. No subscription, no hidden fees, and no fees at all if your event is free."
 msgstr "2,5% od biletu plus opłaty płatnicze Stripe. Bez abonamentu, bez ukrytych opłat i bez żadnych opłat, jeśli twoje wydarzenie jest darmowe."
 
@@ -294,7 +302,7 @@ msgstr "94103"
 msgid "A cancellation notice has been sent to"
 msgstr "Wiadomość o anulowaniu została wysłana do"
 
-#: src/components/routes/landing/index.tsx:821
+#: src/components/routes/landing/index.tsx:825
 msgid "A dashboard that's easy to pick up, and ticketing that looks like your brand."
 msgstr "Panel, który od razu ogarniesz, i sprzedaż biletów w stylu twojej marki."
 
@@ -314,7 +322,7 @@ msgstr "Pole rozwijane pozwala tylko na jedną selekcję"
 msgid "A fee, like a booking fee or a service fee"
 msgstr "Opłata, jak opłata rezerwacyjna lub opłata serwisowa"
 
-#: src/components/routes/landing/index.tsx:813
+#: src/components/routes/landing/index.tsx:817
 msgid "A few minutes and your ticketing is ready."
 msgstr "Kilka minut i twoja sprzedaż biletów jest gotowa."
 
@@ -371,7 +379,7 @@ msgstr "Jedno pytanie na zamówienie. Np. Jaki jest Twój adres wysyłki?"
 msgid "A single question per product. E.g, What is your t-shirt size?"
 msgstr "Jedno pytanie na produkt. Np. Jaki jest rozmiar Twojej koszulki?"
 
-#: src/components/routes/landing/index.tsx:1009
+#: src/components/routes/landing/index.tsx:1017
 msgid "A small Quebec team, ready to help you launch your first event."
 msgstr "Mały zespół z Quebecu, gotowy pomóc ci w starcie pierwszego wydarzenia."
 
@@ -583,11 +591,15 @@ msgstr "Dodaj więcej biletów"
 msgid "Add New"
 msgstr "Dodaj nowy"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:183
+msgid "Add option"
+msgstr "Dodaj opcję"
+
 #: src/components/forms/QuestionForm/index.tsx:68
 msgid "Add Option"
 msgstr "Dodaj opcję"
 
-#: src/components/modals/SendMessageModal/index.tsx:383
+#: src/components/modals/SendMessageModal/index.tsx:422
 msgid "Add PDF files"
 msgstr "Dodaj pliki PDF"
 
@@ -603,10 +615,6 @@ msgstr "Dodaj produkt do kategorii"
 #: src/components/common/QuestionsTable/index.tsx:478
 msgid "Add Question"
 msgstr "Dodaj pytanie"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:158
-msgid "Add size"
-msgstr "Dodaj rozmiar"
 
 #: src/components/routes/account/ManageAccount/sections/TaxSettings/index.tsx:18
 msgid "Add Tax or Fee"
@@ -641,7 +649,7 @@ msgstr "Dodaj piksele śledzące do swoich publicznych stron wydarzeń i strony 
 msgid "Add Webhook"
 msgstr "Dodaj webhook"
 
-#: src/components/routes/landing/index.tsx:814
+#: src/components/routes/landing/index.tsx:818
 msgid "Add your colours"
 msgstr "Dodaj swoje kolory"
 
@@ -717,7 +725,7 @@ msgstr "Panel administratora"
 msgid "Admin users have full access to events and account settings."
 msgstr "Użytkownicy administratorzy mają pełny dostęp do wydarzeń i ustawień konta."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:90
+#: src/components/forms/ProductForm/SizedProductForm.tsx:110
 msgid "Adult XS–XXL"
 msgstr "Dorośli XS–XXL"
 
@@ -776,7 +784,7 @@ msgstr "Wszystkie zarchiwizowane wydarzenia"
 msgid "All attendees"
 msgstr "Wszyscy uczestnicy"
 
-#: src/components/modals/SendMessageModal/index.tsx:308
+#: src/components/modals/SendMessageModal/index.tsx:335
 msgid "All attendees of this event"
 msgstr "Wszyscy uczestnicy tego wydarzenia"
 
@@ -815,6 +823,10 @@ msgstr "Wszystkie produkty"
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:64
 msgid "All Statuses"
 msgstr "Wszystkie statusy"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:40
+msgid "All the event's details"
+msgstr "Wszystkie szczegóły wydarzenia"
 
 #: src/components/routes/admin/PlatformRevenue/index.tsx:125
 msgid "All time"
@@ -938,7 +950,7 @@ msgstr "Wystąpił nieoczekiwany błąd."
 msgid "An unexpected error occurred. Please try again."
 msgstr "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
 
-#: src/components/routes/landing/index.tsx:822
+#: src/components/routes/landing/index.tsx:826
 msgid "An up-to-date list, emails to keep them posted, and ticket scanning on the day."
 msgstr "Aktualna lista, e-maile z informacjami i skanowanie biletów w dniu wydarzenia."
 
@@ -1241,15 +1253,15 @@ msgstr "Musi być wybrany co najmniej jeden typ wydarzenia"
 msgid "At most {0}."
 msgstr "Najwyżej {0}."
 
-#: src/components/modals/SendMessageModal/index.tsx:381
+#: src/components/modals/SendMessageModal/index.tsx:420
 msgid "Attachments"
 msgstr "Załączniki"
 
-#: src/components/modals/SendMessageModal/index.tsx:178
+#: src/components/modals/SendMessageModal/index.tsx:182
 msgid "Attachments must be PDF files"
 msgstr "Załączniki muszą być plikami PDF"
 
-#: src/components/modals/SendMessageModal/index.tsx:182
+#: src/components/modals/SendMessageModal/index.tsx:186
 msgid "Attachments must not exceed {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Łączny rozmiar załączników nie może przekraczać {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -1350,7 +1362,7 @@ msgstr "Uczestnicy zarejestrowani"
 msgid "Attendees Registered"
 msgstr "Uczestnicy zarejestrowani"
 
-#: src/components/modals/SendMessageModal/index.tsx:304
+#: src/components/modals/SendMessageModal/index.tsx:331
 msgid "Attendees with a specific ticket"
 msgstr "Uczestnicy z konkretnym biletem"
 
@@ -1420,7 +1432,7 @@ msgid "Awaiting"
 msgstr "Oczekuje"
 
 #: src/components/common/OrderStatusBadge/index.tsx:11
-#: src/components/modals/SendMessageModal/index.tsx:352
+#: src/components/modals/SendMessageModal/index.tsx:379
 msgid "Awaiting offline payment"
 msgstr "Oczekuje na płatność offline"
 
@@ -1516,15 +1528,15 @@ msgstr "Piękna obsługa płatności na każdym urządzeniu"
 msgid "Before your event can go live, there are a few things you need to do. Complete all the steps below to get started."
 msgstr "Zanim Twoje wydarzenie będzie mogło zostać uruchomione, musisz zrobić kilka rzeczy. Wykonaj wszystkie poniższe kroki, aby rozpocząć."
 
-#: src/components/routes/landing/index.tsx:843
+#: src/components/routes/landing/index.tsx:850
 msgid "Billetterie Dehors · Fewer fees, more people"
 msgstr "Billetterie Dehors · Mniej opłat, więcej ludzi"
 
-#: src/components/routes/landing/index.tsx:888
+#: src/components/routes/landing/index.tsx:895
 msgid "Billetterie Dehors is the online ticketing platform for local races, outings and competitions. Small fees, the money straight into your account, and your event shown to our whole community."
 msgstr "Billetterie Dehors to internetowa sprzedaż biletów na lokalne biegi, wyjścia i zawody. Niskie opłaty, pieniądze prosto na twoje konto i twoje wydarzenie pokazane całej naszej społeczności."
 
-#: src/components/routes/landing/index.tsx:931
+#: src/components/routes/landing/index.tsx:938
 msgid "Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price."
 msgstr "Billetterie Dehors: 2,5% + Stripe 2,9% + 0,30 $. Eventbrite w Kanadzie według centrum pomocy (październik 2026): 3,5% + 1,29 $ od biletu + 2,9% za przetwarzanie. Jeden bilet na zamówienie, opłaty wliczone w cenę."
 
@@ -1963,6 +1975,10 @@ msgstr "Wybierz krój pisma pasujący do Twojej marki. Czcionki są hostowane pr
 msgid "Choose an account"
 msgstr "Wybierz konto"
 
+#: src/components/routes/product-widget/SelectProducts/Prices/Sized/index.tsx:43
+msgid "Choose an option"
+msgstr "Wybierz opcję"
+
 #: src/components/routes/events/Dashboard/index.tsx:233
 msgid "Choose an Organizer"
 msgstr "Wybierz organizatora"
@@ -1983,7 +1999,13 @@ msgstr "Wybierz domyślne ustawienie dla nowych wydarzeń. Można to nadpisać d
 msgid "Choose who pays the platform fee. This does not affect additional fees you've configured in your account settings."
 msgstr "Wybierz, kto płaci opłatę platformy. Nie wpływa to na dodatkowe opłaty skonfigurowane w ustawieniach konta."
 
-#: src/components/routes/product-widget/SelectProducts/Prices/Sized/index.tsx:43
+#: src/components/forms/ProductForm/SizedProductForm.tsx:102
+#: src/components/forms/ProductForm/SizedProductForm.tsx:117
+msgid "Choose your distance"
+msgstr "Wybierz dystans"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:109
+#: src/components/forms/ProductForm/SizedProductForm.tsx:113
 msgid "Choose your size"
 msgstr "Wybierz rozmiar"
 
@@ -2157,7 +2179,7 @@ msgstr "Uzupełnij swój profil, aby dołączyć do drużyny."
 
 #: src/components/common/OrdersTable/index.tsx:469
 #: src/components/common/OrderStatusBadge/index.tsx:8
-#: src/components/modals/SendMessageModal/index.tsx:351
+#: src/components/modals/SendMessageModal/index.tsx:378
 #: src/components/routes/event/GettingStarted/index.tsx:75
 #: src/components/routes/event/orders.tsx:23
 #: src/components/routes/my-tickets/index.tsx:34
@@ -2308,7 +2330,7 @@ msgstr "Połącz Stripe"
 msgid "Connect Stripe to enable email template editing"
 msgstr "Połącz Stripe, aby włączyć edycję szablonów e-mail"
 
-#: src/components/modals/SendMessageModal/index.tsx:258
+#: src/components/modals/SendMessageModal/index.tsx:285
 msgid "Connect Stripe to enable messaging"
 msgstr "Połącz Stripe, aby włączyć wiadomości"
 
@@ -2324,7 +2346,7 @@ msgstr "Połącz z Stripe"
 msgid "Connect with Stripe"
 msgstr "Połącz z Stripe"
 
-#: src/components/routes/landing/index.tsx:815
+#: src/components/routes/landing/index.tsx:819
 msgid "Connect your Stripe"
 msgstr "Podłącz swoje konto Stripe"
 
@@ -2714,7 +2736,7 @@ msgstr "Utwórz nowe hasło"
 msgid "Create Organizer"
 msgstr "Utwórz organizatora"
 
-#: src/components/modals/CreateProductModal/index.tsx:89
+#: src/components/modals/CreateProductModal/index.tsx:90
 msgid "Create Product"
 msgstr "Utwórz produkt"
 
@@ -2733,7 +2755,7 @@ msgstr "Utwórz pytanie"
 msgid "Create Tax or Fee"
 msgstr "Utwórz podatek lub opłatę"
 
-#: src/components/modals/CreateProductModal/index.tsx:81
+#: src/components/modals/CreateProductModal/index.tsx:82
 msgid "Create Ticket or Product"
 msgstr "Utwórz bilet lub produkt"
 
@@ -2768,7 +2790,7 @@ msgstr "Utwórz swoje pierwsze wydarzenie"
 msgid "Create your first event to start selling tickets and managing attendees."
 msgstr "Utwórz swoje pierwsze wydarzenie, aby rozpocząć sprzedaż biletów i zarządzanie uczestnikami."
 
-#: src/components/routes/landing/index.tsx:813
+#: src/components/routes/landing/index.tsx:817
 msgid "Create your free account"
 msgstr "Załóż darmowe konto"
 
@@ -2842,7 +2864,7 @@ msgstr "Obecnie dostępne do zakupu"
 msgid "Custom Branding"
 msgstr "Niestandardowe branding"
 
-#: src/components/modals/SendMessageModal/index.tsx:436
+#: src/components/modals/SendMessageModal/index.tsx:475
 msgid "Custom date and time"
 msgstr "Niestandardowa data i godzina"
 
@@ -3017,7 +3039,7 @@ msgstr "Zostanie użyty domyślny szablon"
 msgid "Defaults to the year, e.g. 2026-1"
 msgstr "Domyślnie rok, na przykład 2026-1"
 
-#: src/components/routes/landing/index.tsx:827
+#: src/components/routes/landing/index.tsx:831
 msgid "DEHORS calendar"
 msgstr "kalendarzu DEHORS"
 
@@ -3196,6 +3218,10 @@ msgstr "Odrzuć tę wiadomość"
 msgid "Display a checkbox allowing customers to opt-in to receive marketing communications from this event organizer."
 msgstr "Wyświetl pole wyboru pozwalające klientom wyrazić zgodę na otrzymywanie komunikacji marketingowej od organizatora wydarzenia."
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:118
+msgid "Distances 5–42 km"
+msgstr "Dystanse 5–42 km"
+
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:235
 msgid "Document Label"
 msgstr "Etykieta dokumentu"
@@ -3293,7 +3319,7 @@ msgstr "Wybór z listy rozwijanej"
 msgid "Due to the high risk of spam, you must connect a Stripe account before you can modify email templates. This is to ensure that all event organizers are verified and accountable."
 msgstr "Ze względu na wysokie ryzyko spamu, musisz połączyć konto Stripe przed modyfikacją szablonów e-mail. To zapewnia, że wszyscy organizatorzy wydarzeń są zweryfikowani i odpowiedzialni."
 
-#: src/components/modals/SendMessageModal/index.tsx:259
+#: src/components/modals/SendMessageModal/index.tsx:286
 msgid ""
 "Due to the high risk of spam, you must connect a Stripe account before you can send messages to attendees.\n"
 "This is to ensure that all event organizers are verified and accountable."
@@ -3343,7 +3369,7 @@ msgstr "np. Przekaż darowiznę"
 msgid "e.g., Get Tickets, Register Now"
 msgstr "np. Kup bilety, Zarejestruj się teraz"
 
-#: src/components/modals/SendMessageModal/index.tsx:366
+#: src/components/modals/SendMessageModal/index.tsx:405
 msgid "e.g., Important update about your tickets"
 msgstr "np. Ważna aktualizacja dotycząca Twoich biletów"
 
@@ -3351,7 +3377,7 @@ msgstr "np. Ważna aktualizacja dotycząca Twoich biletów"
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "np. Standard, Premium, Enterprise"
 
-#: src/components/routes/landing/index.tsx:820
+#: src/components/routes/landing/index.tsx:824
 msgid "Each event gets a page to share anywhere: free or paid tickets, bought in a few clicks."
 msgstr "Każde wydarzenie ma stronę do udostępniania: bilety darmowe lub płatne, kupione w kilka kliknięć."
 
@@ -3443,8 +3469,8 @@ msgstr "Edytuj szczegóły zamówienia"
 msgid "Edit Organizer"
 msgstr "Edytuj organizatora"
 
-#: src/components/modals/EditProductModal/index.tsx:108
-#: src/components/modals/EditProductModal/index.tsx:116
+#: src/components/modals/EditProductModal/index.tsx:109
+#: src/components/modals/EditProductModal/index.tsx:117
 msgid "Edit Product"
 msgstr "Edytuj produkt"
 
@@ -4014,7 +4040,7 @@ msgstr "Wydarzenia rozpoczynające się w ciągu następnych 24 godzin"
 msgid "Every email template must include a call-to-action button that links to the appropriate page"
 msgstr "Każdy szablon e-mail musi zawierać przycisk wezwania do działania, który prowadzi do odpowiedniej strony"
 
-#: src/components/routes/landing/index.tsx:967
+#: src/components/routes/landing/index.tsx:974
 msgid "Everything you need"
 msgstr "Wszystko, czego potrzebujesz"
 
@@ -4030,6 +4056,10 @@ msgstr "Przykłady: \"Rozmiar koszulki\", \"Preferencje posiłków\", \"Stanowis
 #: src/components/routes/admin/FailedJobs/index.tsx:265
 msgid "Exception"
 msgstr "Wyjątek"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:63
+msgid "Expected weather and what to wear"
+msgstr "Przewidywana pogoda i zalecany strój"
 
 #: src/components/forms/CheckInListForm/index.tsx:68
 msgid "Expiration date"
@@ -4394,7 +4424,7 @@ msgstr "Obsługa opłat"
 #: src/components/common/OrdersTable/index.tsx:408
 #: src/components/forms/ProductForm/index.tsx:466
 #: src/components/routes/landing/index.tsx:103
-#: src/components/routes/landing/index.tsx:1020
+#: src/components/routes/landing/index.tsx:1028
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:54
 msgid "Fees"
 msgstr "Opłaty"
@@ -4407,7 +4437,7 @@ msgstr "Opłaty mogą ulec zmianie. Zostaniesz powiadomiony o wszelkich zmianach
 msgid "Fees Bypassed"
 msgstr "Opłaty ominięte"
 
-#: src/components/routes/landing/index.tsx:922
+#: src/components/routes/landing/index.tsx:929
 msgid "Fees that stay small."
 msgstr "Opłaty, które pozostają niskie."
 
@@ -4566,7 +4596,7 @@ msgstr "Rodzina czcionek"
 msgid "Food & Drink"
 msgstr "Jedzenie i napoje"
 
-#: src/components/routes/landing/index.tsx:1016
+#: src/components/routes/landing/index.tsx:1024
 msgid "Footer"
 msgstr "Stopka"
 
@@ -4591,7 +4621,7 @@ msgstr "Zapomniałeś hasła?"
 msgid "Free"
 msgstr "Darmowy"
 
-#: src/components/routes/landing/index.tsx:820
+#: src/components/routes/landing/index.tsx:824
 msgid "Free or paid, one link"
 msgstr "Darmowe lub płatne, jeden link"
 
@@ -4603,7 +4633,7 @@ msgstr "Darmowy produkt"
 msgid "Free product, no payment information required"
 msgstr "Darmowy produkt, nie wymaga informacji o płatności"
 
-#: src/components/routes/landing/index.tsx:955
+#: src/components/routes/landing/index.tsx:962
 msgid "Free to open, no subscription"
 msgstr "Darmowe założenie, bez abonamentu"
 
@@ -4628,7 +4658,7 @@ msgstr "Pełny czas trwania wydarzenia"
 msgid "Full refund"
 msgstr "Pełny zwrot"
 
-#: src/components/routes/landing/index.tsx:816
+#: src/components/routes/landing/index.tsx:820
 msgid "Gather your people"
 msgstr "Zbierz swoich ludzi"
 
@@ -4661,11 +4691,15 @@ msgstr "Generuj kod"
 msgid "German"
 msgstr "Niemiecki"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:28
+msgid "Get directions"
+msgstr "Pokaż trasę dojazdu"
+
 #: src/components/layouts/EventHomepage/index.tsx:453
 msgid "Get Directions"
 msgstr "Uzyskaj wskazówki"
 
-#: src/components/routes/landing/index.tsx:947
+#: src/components/routes/landing/index.tsx:954
 msgid "Get paid from the presale."
 msgstr "Zarabiaj już w przedsprzedaży."
 
@@ -4758,6 +4792,10 @@ msgstr "Goście"
 msgid "Have a promo code?"
 msgstr "Masz kod promocyjny?"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:99
+msgid "Heading shown to buyers"
+msgstr "Tytuł widoczny dla kupujących"
+
 #: src/constants/productInfoIcons.ts:38
 msgid "Heart"
 msgstr "Serce"
@@ -4802,6 +4840,11 @@ msgstr "Oto czego możesz się spodziewać:"
 #: src/components/routes/event/EventDashboard/index.tsx:121
 msgid "Hi {0} 👋"
 msgstr "Cześć {0} 👋"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:46
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:60
+msgid "Hi!"
+msgstr "Cześć!"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:75
 msgid "Hi.Events Fee"
@@ -4874,6 +4917,10 @@ msgstr "Ukryj stronę pierwszych kroków z paska bocznego"
 msgid "Hide this category?"
 msgstr "Ukryć tę kategorię?"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:156
+msgid "Hide this option from buyers"
+msgstr "Ukryj tę opcję przed kupującymi"
+
 #: src/components/forms/ProductForm/index.tsx:545
 msgid "Hide this product from customers"
 msgstr "Ukryj ten produkt przed klientami"
@@ -4881,10 +4928,6 @@ msgstr "Ukryj ten produkt przed klientami"
 #: src/components/forms/QuestionForm/index.tsx:219
 msgid "Hide this question"
 msgstr "Ukryj to pytanie"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:131
-msgid "Hide this size from buyers"
-msgstr "Ukryj ten rozmiar przed kupującymi"
 
 #: src/components/forms/ProductForm/index.tsx:116
 msgid "Hide this tier from users"
@@ -4936,8 +4979,8 @@ msgid "Homer"
 msgstr "Jan"
 
 #: src/components/routes/landing/index.tsx:102
-#: src/components/routes/landing/index.tsx:890
-#: src/components/routes/landing/index.tsx:1019
+#: src/components/routes/landing/index.tsx:897
+#: src/components/routes/landing/index.tsx:1027
 msgid "How it works"
 msgstr "Jak to działa"
 
@@ -4993,7 +5036,7 @@ msgstr "Zgadzam się na otrzymywanie powiadomień e-mail związanych z tym wydar
 msgid "I agree to the <0>terms and conditions</0>"
 msgstr "Zgadzam się z <0>regulaminem</0>"
 
-#: src/components/modals/SendMessageModal/index.tsx:470
+#: src/components/modals/SendMessageModal/index.tsx:509
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Potwierdzam, że jest to wiadomość transakcyjna związana z tym wydarzeniem"
 
@@ -5116,7 +5159,7 @@ msgstr "Dołącz szczegóły połączenia dla swojego wydarzenia online. Te szcz
 msgid "Include tax and fees in the price"
 msgstr "Uwzględnij podatek i opłaty w cenie"
 
-#: src/components/routes/landing/index.tsx:971
+#: src/components/routes/landing/index.tsx:978
 msgid "Included"
 msgstr "W cenie"
 
@@ -5313,6 +5356,11 @@ msgstr "Włoski"
 msgid "Item"
 msgstr "Przedmiot"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:50
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:64
+msgid "Item to bring"
+msgstr "Do zabrania"
+
 #: src/components/common/OrdersTable/index.tsx:389
 msgid "item(s)"
 msgstr "przedmiot(y)"
@@ -5495,7 +5543,7 @@ msgstr "Ostatnio używany"
 msgid "Leaf"
 msgstr "Liść"
 
-#: src/components/routes/landing/index.tsx:941
+#: src/components/routes/landing/index.tsx:948
 msgid "Learn more about Stripe"
 msgstr "Dowiedz się więcej o Stripe"
 
@@ -5507,7 +5555,7 @@ msgstr "Pozostaw puste, aby użyć domyślnego słowa \"Faktura\""
 msgid "Leave empty for a link that never expires."
 msgstr "Zostaw puste, aby link nigdy nie wygasał."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:162
+#: src/components/forms/ProductForm/SizedProductForm.tsx:187
 msgid "Leave quantity empty for unlimited stock"
 msgstr "Pozostaw ilość pustą, aby zapas był nieograniczony"
 
@@ -5599,7 +5647,7 @@ msgstr "Ładowanie webhooków"
 msgid "Loading..."
 msgstr "Ładowanie..."
 
-#: src/components/routes/landing/index.tsx:906
+#: src/components/routes/landing/index.tsx:913
 msgid "Local organizers already trust us"
 msgstr "Lokalni organizatorzy już nam ufają"
 
@@ -5616,8 +5664,8 @@ msgstr "Lokalizacja"
 #: src/components/routes/auth/Register/index.tsx:122
 #: src/components/routes/landing/index.tsx:192
 #: src/components/routes/landing/index.tsx:310
-#: src/components/routes/landing/index.tsx:869
-#: src/components/routes/landing/index.tsx:1021
+#: src/components/routes/landing/index.tsx:876
+#: src/components/routes/landing/index.tsx:1029
 msgid "Log in"
 msgstr "Zaloguj się"
 
@@ -5659,11 +5707,11 @@ msgstr "Znajdź moje bilety"
 msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 
-#: src/components/routes/landing/index.tsx:886
+#: src/components/routes/landing/index.tsx:893
 msgid "Made by organizers,<0/>for organizers."
 msgstr "Stworzona przez organizatorów,<0/>dla organizatorów."
 
-#: src/components/routes/landing/index.tsx:1033
+#: src/components/routes/landing/index.tsx:1041
 msgid "Made in Québec, for people on the move."
 msgstr "Zrobione w Quebecu, dla tych, którzy są w ruchu."
 
@@ -5774,6 +5822,10 @@ msgstr "Maksimum na zamówienie"
 msgid "Medium"
 msgstr "Średni"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:21
+msgid "Meeting place"
+msgstr "Miejsce zbiórki"
+
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:128
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:158
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:166
@@ -5784,7 +5836,7 @@ msgstr "Menu"
 #: src/components/common/AttendeeTable/index.tsx:188
 #: src/components/common/ContactOrganizerModal/index.tsx:88
 #: src/components/common/OrdersTable/index.tsx:303
-#: src/components/modals/SendMessageModal/index.tsx:371
+#: src/components/modals/SendMessageModal/index.tsx:410
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:151
 msgid "Message"
 msgstr "Wiadomość"
@@ -5801,7 +5853,7 @@ msgstr "Wyślij wiadomość do uczestnika"
 msgid "Message Attendees"
 msgstr "Wyślij wiadomość do uczestników"
 
-#: src/components/modals/SendMessageModal/index.tsx:328
+#: src/components/modals/SendMessageModal/index.tsx:355
 msgid "Message attendees with specific tickets"
 msgstr "Wyślij wiadomość do uczestników z konkretnymi biletami"
 
@@ -5825,7 +5877,7 @@ msgstr "Treść wiadomości"
 msgid "Message Details"
 msgstr "Szczegóły wiadomości"
 
-#: src/components/modals/SendMessageModal/index.tsx:96
+#: src/components/modals/SendMessageModal/index.tsx:99
 msgid "Message individual attendees"
 msgstr "Wyślij wiadomość do indywidualnych uczestników"
 
@@ -5833,15 +5885,15 @@ msgstr "Wyślij wiadomość do indywidualnych uczestników"
 msgid "Message is required"
 msgstr "Wiadomość jest wymagana"
 
-#: src/components/modals/SendMessageModal/index.tsx:340
+#: src/components/modals/SendMessageModal/index.tsx:367
 msgid "Message order owners with specific products"
 msgstr "Wyślij wiadomość do właścicieli zamówień z konkretnymi produktami"
 
-#: src/components/modals/SendMessageModal/index.tsx:212
+#: src/components/modals/SendMessageModal/index.tsx:216
 msgid "Message Scheduled"
 msgstr "Wiadomość zaplanowana"
 
-#: src/components/modals/SendMessageModal/index.tsx:212
+#: src/components/modals/SendMessageModal/index.tsx:216
 msgid "Message Sent"
 msgstr "Wiadomość wysłana"
 
@@ -5880,7 +5932,7 @@ msgstr "Różne"
 msgid "Miscellaneous Settings"
 msgstr "Ustawienia różne"
 
-#: src/components/routes/landing/index.tsx:976
+#: src/components/routes/landing/index.tsx:983
 msgid "Missing something?"
 msgstr "Czegoś brakuje?"
 
@@ -6497,7 +6549,7 @@ msgstr "Ustawienia płatności offline"
 msgid "Offline payments, like Interac e-Transfer, are free: no Billetterie Dehors fees. In return, if you make any content for your event (posts, stories, posters), give Billetterie Dehors a shout-out."
 msgstr "Płatności offline, takie jak Interac e-Transfer, są bezpłatne: bez opłat Billetterie Dehors. W zamian, jeśli tworzysz treści o swoim wydarzeniu (posty, relacje, plakaty), wspomnij o Billetterie Dehors."
 
-#: src/components/routes/landing/index.tsx:976
+#: src/components/routes/landing/index.tsx:983
 msgid "On request"
 msgstr "Na życzenie"
 
@@ -6511,7 +6563,7 @@ msgstr "W sprzedaży"
 msgid "On sale {0}"
 msgstr "W sprzedaży {0}"
 
-#: src/components/routes/landing/index.tsx:825
+#: src/components/routes/landing/index.tsx:829
 msgid "On the DEHORS calendar"
 msgstr "W kalendarzu DEHORS"
 
@@ -6532,8 +6584,8 @@ msgid "Once you're ready, set your event live and start selling products."
 msgstr "Gdy będziesz gotowy, ustaw swoje wydarzenie na żywo i zacznij sprzedawać produkty."
 
 #: src/components/forms/ProductForm/index.tsx:184
-msgid "One price, a choice of sizes with their own stock. Perfect for t-shirts and apparel."
-msgstr "Jedna cena, wybór rozmiarów z własnym zapasem. Idealne dla koszulek i odzieży."
+msgid "One price, a choice of options with their own stock: sizes, distances, categories."
+msgstr "Jedna cena, wybór opcji z własnym stanem: rozmiary, dystanse, kategorie."
 
 #: src/components/common/EventStatusBadge/index.tsx:18
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:31
@@ -6570,7 +6622,7 @@ msgstr "Tylko administratorzy konta mogą usuwać lub archiwizować wydarzenia. 
 msgid "Only account administrators can delete or archive organizers. Contact your account admin for assistance."
 msgstr "Tylko administratorzy konta mogą usuwać lub archiwizować organizatorów. Skontaktuj się z administratorem swojego konta w celu uzyskania pomocy."
 
-#: src/components/modals/SendMessageModal/index.tsx:348
+#: src/components/modals/SendMessageModal/index.tsx:375
 msgid "Only send to orders with these statuses"
 msgstr "Wysyłaj tylko do zamówień z tymi statusami"
 
@@ -6604,6 +6656,11 @@ msgstr "Otwórz menu"
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:172
 msgid "Opens in a new tab."
 msgstr "Otwiera się w nowej karcie."
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:139
+#: src/components/forms/ProductForm/SizedProductForm.tsx:140
+msgid "Option"
+msgstr "Opcja"
 
 #: src/components/forms/QuestionForm/index.tsx:45
 msgid "Option {i}"
@@ -6648,6 +6705,11 @@ msgstr "Opcjonalnie. Jeśli podasz adres, tylko on będzie mógł użyć linku."
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
 msgstr "opcje"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:106
+msgctxt "list of a product with options"
+msgid "Options"
+msgstr "Opcje"
 
 #: src/components/forms/QuestionForm/index.tsx:28
 msgid "Options"
@@ -6756,7 +6818,7 @@ msgstr "Notatki zamówienia"
 msgid "Order owner"
 msgstr "Właściciel zamówienia"
 
-#: src/components/modals/SendMessageModal/index.tsx:312
+#: src/components/modals/SendMessageModal/index.tsx:339
 msgid "Order owners with a specific product"
 msgstr "Właściciele zamówień z konkretnym produktem"
 
@@ -6780,7 +6842,7 @@ msgstr "Zamówienie zwrócone"
 msgid "Order Status"
 msgstr "Status zamówienia"
 
-#: src/components/modals/SendMessageModal/index.tsx:349
+#: src/components/modals/SendMessageModal/index.tsx:376
 msgid "Order statuses"
 msgstr "Statusy zamówień"
 
@@ -6948,7 +7010,7 @@ msgstr "Inne listy (bilet nie włączony)"
 msgid "Outgoing Messages"
 msgstr "Wiadomości wychodzące"
 
-#: src/components/routes/landing/index.tsx:1026
+#: src/components/routes/landing/index.tsx:1034
 msgid "Outings calendar"
 msgstr "Kalendarz wyjść"
 
@@ -7010,6 +7072,10 @@ msgstr "Opłacony produkt"
 #: src/components/layouts/AuthLayout/index.tsx:30
 msgid "Paid, free, tiered pricing, and donation-based tickets"
 msgstr "Bilety opłacone, bezpłatne, wielopoziomowe i oparte na darowiznach"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:51
+msgid "Parking, carpooling, bib pick-up"
+msgstr "Parking, wspólne dojazdy, odbiór numerów startowych"
 
 #: src/components/modals/RefundOrderModal/index.tsx:109
 msgid "Partial refund"
@@ -7209,7 +7275,7 @@ msgstr "Warunki płatności"
 msgid "Payments"
 msgstr "Płatności"
 
-#: src/components/routes/landing/index.tsx:815
+#: src/components/routes/landing/index.tsx:819
 msgid "Payments go straight to your account."
 msgstr "Płatności trafiają prosto na twoje konto."
 
@@ -7221,7 +7287,7 @@ msgstr "Płatności niedostępne"
 msgid "Payments will continue to flow without interruption"
 msgstr "Płatności będą płynąć bez przerwy"
 
-#: src/components/modals/SendMessageModal/index.tsx:382
+#: src/components/modals/SendMessageModal/index.tsx:421
 msgid "PDF only, up to {MAX_ATTACHMENTS} files and {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Tylko PDF, do {MAX_ATTACHMENTS} plików i łącznie {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -7522,7 +7588,7 @@ msgstr "Podgląd strony wydarzenia"
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:360
 #: src/components/forms/ProductForm/index.tsx:85
 #: src/components/forms/ProductForm/index.tsx:345
-#: src/components/forms/ProductForm/SizedProductForm.tsx:80
+#: src/components/forms/ProductForm/SizedProductForm.tsx:88
 msgid "Price"
 msgstr "Cena"
 
@@ -7657,8 +7723,8 @@ msgid "Product Updated"
 msgstr "Produkt zaktualizowany"
 
 #: src/components/forms/ProductForm/index.tsx:182
-msgid "Product with sizes"
-msgstr "Produkt z rozmiarami"
+msgid "Product with options"
+msgstr "Produkt z opcjami"
 
 #: src/components/common/PromoCodeTable/index.tsx:148
 msgid "Product(s)"
@@ -7741,7 +7807,7 @@ msgstr "Raport kodów promocyjnych"
 msgid "Promo Only"
 msgstr "Tylko promocyjne"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:553
 msgid "Promotional emails may result in account suspension"
 msgstr "E-maile promocyjne mogą skutkować zawieszeniem konta"
 
@@ -7772,7 +7838,7 @@ msgstr "Opublikuj wydarzenie"
 msgid "Purchased"
 msgstr "Zakupiony"
 
-#: src/components/routes/landing/index.tsx:816
+#: src/components/routes/landing/index.tsx:820
 msgid "Put your tickets on sale, share the link and scan at the door."
 msgstr "Wystaw bilety na sprzedaż, udostępnij link i skanuj przy wejściu."
 
@@ -7790,7 +7856,7 @@ msgstr "Ilość"
 
 #: src/components/forms/ProductForm/index.tsx:97
 #: src/components/forms/ProductForm/index.tsx:362
-#: src/components/forms/ProductForm/SizedProductForm.tsx:123
+#: src/components/forms/ProductForm/SizedProductForm.tsx:148
 msgid "Quantity Available"
 msgstr "Dostępna ilość"
 
@@ -7859,7 +7925,7 @@ msgstr "Przekroczono limit stawki. Spróbuj ponownie później."
 msgid "Re-offer Spot"
 msgstr "Ponownie zaoferuj miejsce"
 
-#: src/components/routes/landing/index.tsx:1008
+#: src/components/routes/landing/index.tsx:1016
 msgid "Ready to gather your people?"
 msgstr "Gotowy, by zebrać swoich ludzi?"
 
@@ -7914,7 +7980,7 @@ msgstr "Ostatnie zamówienia"
 msgid "recipient"
 msgstr "odbiorca"
 
-#: src/components/modals/SendMessageModal/index.tsx:62
+#: src/components/modals/SendMessageModal/index.tsx:65
 msgid "Recipient"
 msgstr "Odbiorca"
 
@@ -7923,7 +7989,7 @@ msgid "recipients"
 msgstr "odbiorców"
 
 #: src/components/modals/MessageRecipientsModal/index.tsx:38
-#: src/components/modals/SendMessageModal/index.tsx:315
+#: src/components/modals/SendMessageModal/index.tsx:342
 #: src/components/routes/admin/Messages/index.tsx:166
 #: src/components/routes/admin/Messages/index.tsx:299
 msgid "Recipients"
@@ -8030,6 +8096,14 @@ msgstr "Pytania rejestracyjne"
 msgid "Remaining Uses"
 msgstr "Pozostałe użycia"
 
+#: src/components/modals/SendMessageModal/index.tsx:394
+msgid "Reminder a week before"
+msgstr "Przypomnienie tydzień wcześniej"
+
+#: src/components/modals/SendMessageModal/index.tsx:398
+msgid "Reminder the day before"
+msgstr "Przypomnienie dzień wcześniej"
+
 #: src/components/routes/product-widget/SelectProducts/index.tsx:587
 msgid "remove"
 msgstr "usuń"
@@ -8041,14 +8115,18 @@ msgstr "usuń"
 msgid "Remove"
 msgstr "Usuń"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:166
+msgid "Remove option"
+msgstr "Usuń opcję"
+
 #: src/components/common/InlineOrderSummary/index.tsx:156
 #: src/components/common/InlineOrderSummary/index.tsx:157
 msgid "Remove promo code"
 msgstr "Usuń kod promocyjny"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:141
-msgid "Remove size"
-msgstr "Usuń rozmiar"
+#: src/components/modals/SendMessageModal/index.tsx:241
+msgid "Replace the subject and the message with this template?"
+msgstr "Zastąpić temat i wiadomość tym szablonem?"
 
 #: src/components/routes/organizer/Reports/ReportLayout/index.tsx:26
 msgid "Report not found"
@@ -8072,6 +8150,11 @@ msgstr "Wymagaj adresu rozliczeniowego"
 #: src/components/common/QuestionsTable/index.tsx:118
 msgid "Required"
 msgstr "Wymagane"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:50
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:64
+msgid "Required gear"
+msgstr "Obowiązkowy sprzęt"
 
 #: src/components/forms/ProductForm/index.tsx:214
 msgid "Requires a charity registration number in Settings, Tax receipts."
@@ -8413,11 +8496,11 @@ msgstr "Zapisz ustawienia VAT"
 msgid "Scan"
 msgstr "Skanuj"
 
-#: src/components/modals/SendMessageModal/index.tsx:412
+#: src/components/modals/SendMessageModal/index.tsx:451
 msgid "Schedule for later"
 msgstr "Zaplanuj na później"
 
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Schedule Message"
 msgstr "Zaplanuj wiadomość"
 
@@ -8427,7 +8510,7 @@ msgstr "Zaplanuj wiadomość"
 msgid "Scheduled"
 msgstr "Zaplanowane"
 
-#: src/components/modals/SendMessageModal/index.tsx:442
+#: src/components/modals/SendMessageModal/index.tsx:481
 msgid "Scheduled time"
 msgstr "Zaplanowany czas"
 
@@ -8546,6 +8629,10 @@ msgstr "Zobacz wszystkie bilety"
 msgid "See the full breakdown"
 msgstr "Zobacz pełne zestawienie"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:61
+msgid "See you tomorrow at {time} for {title}."
+msgstr "Do zobaczenia jutro o {time} na {title}."
+
 #: src/components/routes/event/Deposits/index.tsx:312
 msgid "Select"
 msgstr "Wybierz"
@@ -8588,7 +8675,7 @@ msgstr "Zaznacz wszystko"
 msgid "Select an event"
 msgstr "Wybierz wydarzenie"
 
-#: src/components/modals/SendMessageModal/index.tsx:317
+#: src/components/modals/SendMessageModal/index.tsx:344
 msgid "Select attendee group"
 msgstr "Wybierz grupę uczestników"
 
@@ -8637,7 +8724,7 @@ msgid "Select Product Tier"
 msgstr "Wybierz poziom produktu"
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:49
-#: src/components/modals/SendMessageModal/index.tsx:341
+#: src/components/modals/SendMessageModal/index.tsx:368
 msgid "Select products"
 msgstr "Wybierz produkty"
 
@@ -8670,7 +8757,7 @@ msgid "Select Ticket"
 msgstr "Wybierz bilet"
 
 #: src/components/forms/CheckInListForm/index.tsx:43
-#: src/components/modals/SendMessageModal/index.tsx:329
+#: src/components/modals/SendMessageModal/index.tsx:356
 msgid "Select tickets"
 msgstr "Wybierz bilety"
 
@@ -8684,7 +8771,7 @@ msgstr "Wybierz okres czasu"
 msgid "Select timezone"
 msgstr "Wybierz strefę czasową"
 
-#: src/components/modals/SendMessageModal/index.tsx:316
+#: src/components/modals/SendMessageModal/index.tsx:343
 msgid "Select which attendees should receive this message"
 msgstr "Wybierz, którzy uczestnicy powinni otrzymać tę wiadomość"
 
@@ -8717,11 +8804,11 @@ msgstr "Sprzedaj bilet"
 msgid "Sell a ticket at the door"
 msgstr "Sprzedaj bilet przy wejściu"
 
-#: src/components/routes/landing/index.tsx:823
+#: src/components/routes/landing/index.tsx:827
 msgid "Sell your merch"
 msgstr "Sprzedawaj swój merch"
 
-#: src/components/routes/landing/index.tsx:823
+#: src/components/routes/landing/index.tsx:827
 msgid "Sell your merch with the tickets, handed over at the event."
 msgstr "Sprzedawaj merch razem z biletami, odbiór na wydarzeniu."
 
@@ -8734,11 +8821,11 @@ msgstr "Szybko się sprzedaje 🔥"
 msgid "Send"
 msgstr "Wyślij"
 
-#: src/components/modals/SendMessageModal/index.tsx:240
+#: src/components/modals/SendMessageModal/index.tsx:267
 msgid "Send a message"
 msgstr "Wyślij wiadomość"
 
-#: src/components/modals/SendMessageModal/index.tsx:499
+#: src/components/modals/SendMessageModal/index.tsx:538
 msgid "Send as test"
 msgstr "Wyślij jako test"
 
@@ -8746,16 +8833,16 @@ msgstr "Wyślij jako test"
 msgid "Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later."
 msgstr "Wysyłaj e-maile do uczestników, posiadaczy biletów lub właścicieli zamówień. Wiadomości mogą być wysłane natychmiast lub zaplanowane na później."
 
-#: src/components/modals/SendMessageModal/index.tsx:507
+#: src/components/modals/SendMessageModal/index.tsx:546
 msgid "Send me a copy"
 msgstr "Wyślij mi kopię"
 
 #: src/components/common/ContactOrganizerModal/index.tsx:112
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Send Message"
 msgstr "Wyślij wiadomość"
 
-#: src/components/modals/SendMessageModal/index.tsx:404
+#: src/components/modals/SendMessageModal/index.tsx:443
 msgid "Send now"
 msgstr "Wyślij teraz"
 
@@ -8775,7 +8862,7 @@ msgstr "Wyślij email powiadomienia o zwrocie"
 msgid "Send reset link"
 msgstr "Wyślij link resetowania"
 
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Send Test"
 msgstr "Wyślij test"
 
@@ -8977,13 +9064,17 @@ msgstr "Pokaż więcej platform"
 msgid "Show tax and fees separately"
 msgstr "Pokaż podatki i opłaty oddzielnie"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:131
-msgid "Show this size to buyers"
-msgstr "Pokaż ten rozmiar kupującym"
+#: src/components/forms/ProductForm/SizedProductForm.tsx:156
+msgid "Show this option to buyers"
+msgstr "Pokaż tę opcję kupującym"
 
 #: src/components/common/OrganizerReportTable/index.tsx:355
 msgid "Showing {0} of {totalRows} records"
 msgstr "Wyświetlanie {0} z {totalRows} rekordów"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:100
+msgid "Shown above the options. Leave empty for « Choose an option »."
+msgstr "Wyświetlane nad opcjami. Zostaw puste, aby pokazać „Wybierz opcję”."
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:147
 msgid "Shown below the promo code field on the ticket selection, and in a compact version on the details step, just above the secure checkout notice. Use it to share important information or invite buyers to make an extra donation on another platform."
@@ -9025,7 +9116,7 @@ msgstr "Pokazuje typowe pola adresu, w tym kraj"
 msgid "Signed Up"
 msgstr "Zarejestrowany"
 
-#: src/components/routes/landing/index.tsx:821
+#: src/components/routes/landing/index.tsx:825
 msgid "Simple, in your colours"
 msgstr "Prosto i w twoich kolorach"
 
@@ -9038,15 +9129,6 @@ msgstr "Simpson"
 msgid "Single line text box"
 msgstr "Pole tekstowe jednoliniowe"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:114
-#: src/components/forms/ProductForm/SizedProductForm.tsx:115
-msgid "Size"
-msgstr "Rozmiar"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:87
-msgid "Sizes"
-msgstr "Rozmiary"
-
 #: src/components/routes/welcome/index.tsx:498
 msgid "Skip this step"
 msgstr "Pomin to krok"
@@ -9055,7 +9137,7 @@ msgstr "Pomin to krok"
 msgid "Slovak"
 msgstr "Słowacki"
 
-#: src/components/routes/landing/index.tsx:978
+#: src/components/routes/landing/index.tsx:985
 msgid "Small local team: write to us on <0><1/></0> or at <2><3/></2>, we move fast and we listen."
 msgstr "Mały lokalny zespół: napisz do nas na <0><1/></0> lub na <2><3/></2>, działamy szybko i słuchamy."
 
@@ -9253,7 +9335,7 @@ msgstr "Stripe połączony"
 msgid "Stripe fees"
 msgstr "Opłaty Stripe"
 
-#: src/components/routes/landing/index.tsx:939
+#: src/components/routes/landing/index.tsx:946
 msgid "Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do."
 msgstr "Stripe to firma, która przyjmuje płatności kartą za twoje bilety. To to samo narzędzie, którego możesz użyć w swoich kolejnych projektach cyfrowych: miliony firm już to robią."
 
@@ -9277,12 +9359,12 @@ msgstr "Konfiguracja Stripe jest już zakończona."
 msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
 msgstr "Konfiguracja Stripe nie została ukończona. Do tego czasu sprzedaże trafiają na konto platformy."
 
-#: src/components/routes/landing/index.tsx:938
+#: src/components/routes/landing/index.tsx:945
 msgid "Stripe, what's that?"
 msgstr "Stripe, co to jest?"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
-#: src/components/modals/SendMessageModal/index.tsx:365
+#: src/components/modals/SendMessageModal/index.tsx:404
 #: src/components/routes/admin/Messages/index.tsx:162
 #: src/components/routes/admin/Messages/index.tsx:272
 msgid "Subject"
@@ -9333,7 +9415,7 @@ msgstr "Pomyślnie potwierdzona zmiana e-maila"
 msgid "Successfully created attendee"
 msgstr "Pomyślnie utworzony uczestnik"
 
-#: src/components/modals/CreateProductModal/index.tsx:55
+#: src/components/modals/CreateProductModal/index.tsx:56
 msgid "Successfully Created Product"
 msgstr "Pomyślnie utworzony produkt"
 
@@ -9431,7 +9513,7 @@ msgstr "Pomyślnie zaktualizowane domyślne ustawienia opłat platformy"
 msgid "Successfully Updated Platform Fee Settings"
 msgstr "Pomyślnie zaktualizowane ustawienia opłat platformy"
 
-#: src/components/modals/EditProductModal/index.tsx:97
+#: src/components/modals/EditProductModal/index.tsx:98
 msgid "Successfully updated product"
 msgstr "Produkt zaktualizowany pomyślnie"
 
@@ -9648,6 +9730,10 @@ msgstr "Szablon usunięty pomyślnie"
 msgid "Template saved successfully"
 msgstr "Szablon zapisany pomyślnie"
 
+#: src/components/modals/SendMessageModal/index.tsx:391
+msgid "Templates"
+msgstr "Szablony"
+
 #: src/components/layouts/EventHomepage/index.tsx:649
 #: src/components/layouts/OrganizerHomepage/index.tsx:393
 msgid "Terms of Service"
@@ -9691,7 +9777,7 @@ msgstr "Kolor tła strony. W przypadku używania obrazu okładki jest on stosowa
 msgid "The check-in list you are looking for does not exist."
 msgstr "Lista kontrolna, której szukasz, nie istnieje."
 
-#: src/components/routes/landing/index.tsx:1025
+#: src/components/routes/landing/index.tsx:1033
 msgid "The club"
 msgstr "Klub"
 
@@ -9776,7 +9862,7 @@ msgid "The primary brand color used for buttons and highlights"
 msgstr "Podstawowy kolor marki używany na przyciskach i podświetleniach"
 
 #: src/components/routes/landing/HeroTitle.tsx:104
-#: src/components/routes/landing/index.tsx:845
+#: src/components/routes/landing/index.tsx:852
 msgid "The Quebec ticketing platform built for the sports community."
 msgstr "Platforma biletowa z Quebecu stworzona dla społeczności sportowej."
 
@@ -9784,15 +9870,15 @@ msgstr "Platforma biletowa z Quebecu stworzona dla społeczności sportowej."
 msgid "The quick brown fox jumps over the lazy dog."
 msgstr "Szybki brązowy lis przeskakuje nad leniwym psem."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:81
-msgid "The same price applies to every size. Please enter the price excluding taxes and fees."
-msgstr "Ta sama cena obowiązuje dla wszystkich rozmiarów. Podaj cenę bez podatków i opłat."
+#: src/components/forms/ProductForm/SizedProductForm.tsx:89
+msgid "The same price applies to every option. Please enter the price excluding taxes and fees."
+msgstr "Ta sama cena dotyczy każdej opcji. Podaj cenę bez podatków i opłat."
 
-#: src/components/modals/SendMessageModal/index.tsx:190
+#: src/components/modals/SendMessageModal/index.tsx:194
 msgid "The scheduled time is required"
 msgstr "Zaplanowany czas jest wymagany"
 
-#: src/components/modals/SendMessageModal/index.tsx:191
+#: src/components/modals/SendMessageModal/index.tsx:195
 msgid "The scheduled time must be in the future"
 msgstr "Zaplanowany czas musi być w przyszłości"
 
@@ -9964,6 +10050,11 @@ msgstr "Ta wiadomość będzie wyświetlana tylko wtedy, gdy zamówienie zostani
 msgid "This name is visible to end users"
 msgstr "Ta nazwa jest widoczna dla użytkowników końcowych"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:66
+#: src/components/forms/ProductForm/SizedProductForm.tsx:166
+msgid "This option has already been sold. You can hide it instead."
+msgstr "Ta opcja została już sprzedana. Możesz ją zamiast tego ukryć."
+
 #: src/components/forms/StripeCheckoutForm/index.tsx:95
 msgid "This order has already been paid."
 msgstr "To zamówienie zostało już opłacone."
@@ -10043,11 +10134,6 @@ msgstr "Ten raport jest tylko do celów informacyjnych. Zawsze konsultuj się z 
 #: src/components/routes/auth/ResetPassword/index.tsx:28
 msgid "This reset password link is invalid or expired."
 msgstr "Ten link resetowania hasła jest nieprawidłowy lub wygasł."
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:58
-#: src/components/forms/ProductForm/SizedProductForm.tsx:141
-msgid "This size has already been sold. You can hide it instead."
-msgstr "Ten rozmiar został już sprzedany. Możesz go zamiast tego ukryć."
 
 #: src/components/layouts/CheckIn/index.tsx:232
 msgid "This ticket was just scanned. Please wait before scanning again."
@@ -10161,7 +10247,7 @@ msgstr "Bilet sprzedany i odprawiony"
 msgid "Ticket Type"
 msgstr "Typ biletu"
 
-#: src/components/routes/landing/index.tsx:1018
+#: src/components/routes/landing/index.tsx:1026
 msgid "Ticketing"
 msgstr "Sprzedaż biletów"
 
@@ -10258,9 +10344,13 @@ msgstr "Do"
 msgid "To edit configurations, go to the Configurations section in the admin menu."
 msgstr "Aby edytować konfiguracje, przejdź do sekcji Konfiguracje w menu administratora."
 
-#: src/components/modals/SendMessageModal/index.tsx:277
+#: src/components/modals/SendMessageModal/index.tsx:304
 msgid "To increase your limits, contact us at"
 msgstr "Aby zwiększyć swoje limity, skontaktuj się z nami pod adresem"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:51
+msgid "To plan ahead"
+msgstr "Do zaplanowania"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:662
 msgid "To receive credit card payments, you need to connect your Stripe account. Stripe is our payment processing partner that ensures secure transactions and timely payouts."
@@ -10277,6 +10367,10 @@ msgstr "Nazwa tokenu"
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:44
 msgid "Token revoked"
 msgstr "Token unieważniony"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:58
+msgid "Tomorrow: {0}"
+msgstr "Jutro: {0}"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:96
 msgid "Tools"
@@ -10360,7 +10454,7 @@ msgstr "Razem zwrócono"
 msgid "Total Refunded"
 msgstr "Razem zwrócono"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:163
+#: src/components/forms/ProductForm/SizedProductForm.tsx:188
 msgid "Total stock: {totalStock}"
 msgstr "Łączny zapas: {totalStock}"
 
@@ -10455,7 +10549,7 @@ msgstr "Nie można sprawdzić w uczestnika"
 msgid "Unable to check out attendee"
 msgstr "Nie można wylogować uczestnika"
 
-#: src/components/modals/CreateProductModal/index.tsx:64
+#: src/components/modals/CreateProductModal/index.tsx:65
 msgid "Unable to create product. Please check the your details"
 msgstr "Nie można stworzyć produktu. Proszę sprawdzić swoje dane"
 
@@ -10517,7 +10611,7 @@ msgstr "Nieznany uczestnik"
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:43
 #: src/components/forms/ProductForm/index.tsx:95
 #: src/components/forms/ProductForm/index.tsx:359
-#: src/components/forms/ProductForm/SizedProductForm.tsx:122
+#: src/components/forms/ProductForm/SizedProductForm.tsx:147
 #: src/components/forms/PromoCodeForm/index.tsx:112
 #: src/components/modals/OfferWaitlistModal/index.tsx:189
 #: src/components/routes/event/Reports/PromoCodesReport/index.tsx:78
@@ -11047,7 +11141,7 @@ msgstr "Zalecamy wymiary 1950px na 650px, współczynnik 3:1 i maksymalny rozmia
 msgid "We recommend dimensions of 400px by 400px, and a maximum file size of 30MB"
 msgstr "Zalecamy wymiary 400px na 400px i maksymalny rozmiar pliku 30MB"
 
-#: src/components/routes/landing/index.tsx:783
+#: src/components/routes/landing/index.tsx:789
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "Udostępniamy wydarzenia z platformy w mediach społecznościowych Dehors. Twoje wydarzenie trafia prosto do społeczności ludzi w ruchu."
 
@@ -11090,6 +11184,10 @@ msgstr "Przenieśliśmy naszą siedzibę do Irlandii. W rezultacie musimy popros
 #: src/components/routes/welcome/index.tsx:146
 msgid "We've sent a 5-digit verification code to:"
 msgstr "Wysłaliśmy 5-cyfrowy kod weryfikacyjny na:"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:63
+msgid "Weather"
+msgstr "Pogoda"
 
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:49
 #: src/components/modals/CreateWebhookModal/index.tsx:49
@@ -11208,6 +11306,10 @@ msgstr "Co musisz zrobić:"
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:48
+msgid "When"
+msgstr "Kiedy"
+
 #: src/components/forms/WebhookForm/index.tsx:129
 msgid "When a check-in is deleted"
 msgstr "Gdy odprawa zostanie usunięta"
@@ -11316,6 +11418,11 @@ msgstr "Gdy włączone, nie będą pobierane opłaty aplikacyjne za transakcje S
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Gdy płatności offline są włączone, użytkownicy będą mogli ukończyć zamówienia i otrzymać bilety. Ich bilety będą wyraźnie wskazywać, że zamówienie nie jest opłacone, a narzędzie odprawy powiadomi personel odprawy, jeśli zamówienie wymaga płatności."
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:49
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:62
+msgid "Where"
+msgstr "Gdzie"
+
 #: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
 msgid "Where the money from this organizer's ticket sales is paid."
 msgstr "Dokąd trafiają pieniądze ze sprzedaży biletów tego organizatora."
@@ -11348,7 +11455,7 @@ msgstr "Podgląd widgetu"
 msgid "Widget Settings"
 msgstr "Ustawienia widgetu"
 
-#: src/components/routes/landing/index.tsx:780
+#: src/components/routes/landing/index.tsx:786
 msgid "will see your event"
 msgstr "zobaczy twoje wydarzenie"
 
@@ -11361,13 +11468,13 @@ msgid "Working"
 msgstr "W toku"
 
 #: src/components/modals/CreateProductCategoryModal/index.tsx:60
-#: src/components/modals/CreateProductModal/index.tsx:89
+#: src/components/modals/CreateProductModal/index.tsx:90
 #: src/components/modals/CreatePromoCodeModal/index.tsx:56
 #: src/components/modals/CreateQuestionModal/index.tsx:75
 #: src/components/modals/DuplicateEventModal/index.tsx:177
 #: src/components/modals/DuplicateProductModal/index.tsx:117
 #: src/components/modals/EditProductCategoryModal/index.tsx:70
-#: src/components/modals/EditProductModal/index.tsx:116
+#: src/components/modals/EditProductModal/index.tsx:117
 #: src/components/modals/EditPromoCodeModal/index.tsx:84
 #: src/components/modals/EditQuestionModal/index.tsx:101
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
@@ -11381,7 +11488,7 @@ msgstr "W toku..."
 msgid "Workshop"
 msgstr "Warsztaty"
 
-#: src/components/routes/landing/index.tsx:1013
+#: src/components/routes/landing/index.tsx:1021
 msgid "Write to us"
 msgstr "Napisz do nas"
 
@@ -11440,7 +11547,7 @@ msgstr "Wystawiasz częściowy zwrot. Klient otrzyma zwrot {0} {1}."
 msgid "You are offline"
 msgstr "Jesteś offline"
 
-#: src/components/modals/SendMessageModal/index.tsx:175
+#: src/components/modals/SendMessageModal/index.tsx:179
 msgid "You can attach a maximum of {MAX_ATTACHMENTS} files"
 msgstr "Możesz dołączyć maksymalnie {MAX_ATTACHMENTS} plików"
 
@@ -11497,7 +11604,7 @@ msgstr "Już zaakceptowałeś to zaproszenie. Proszę zalogować się, aby konty
 msgid "You have no pending email change."
 msgstr "Nie masz oczekującej zmiany e-mail."
 
-#: src/components/modals/SendMessageModal/index.tsx:218
+#: src/components/modals/SendMessageModal/index.tsx:222
 msgid "You have reached your messaging limit."
 msgstr "Osiągnąłeś limit wiadomości."
 
@@ -11513,7 +11620,7 @@ msgstr "Masz podatki i opłaty dodane do darmowego produktu. Czy chcesz je usun�
 msgid "You keep {saved} more."
 msgstr "Zostaje ci {saved} więcej."
 
-#: src/components/modals/SendMessageModal/index.tsx:186
+#: src/components/modals/SendMessageModal/index.tsx:190
 msgid "You must acknowledge that this email is not promotional"
 msgstr "Musisz potwierdzić, że ten e-mail nie jest promocyjny"
 
@@ -11533,13 +11640,13 @@ msgstr "Musisz zgodzić się na warunki"
 msgid "You must create a ticket before you can manually add an attendee."
 msgstr "Musisz utworzyć bilet, zanim będziesz mógł ręcznie dodać uczestnika."
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:62
+msgid "You must have at least one option"
+msgstr "Musisz mieć co najmniej jedną opcję"
+
 #: src/components/forms/ProductForm/index.tsx:71
 msgid "You must have at least one price tier"
 msgstr "Musisz mieć co najmniej jedną warstwę cenową"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:54
-msgid "You must have at least one size"
-msgstr "Musisz mieć co najmniej jeden rozmiar"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:332
 msgid "You must verify your email address before you can update the organizer status."
@@ -11549,7 +11656,7 @@ msgstr "Musisz zweryfikować swój adres e-mail, zanim będziesz mógł zaktuali
 msgid "You need to verify your account email before you can modify email templates."
 msgstr "Musisz zweryfikować e-mail konta, zanim będziesz mógł modyfikować szablony e-mail."
 
-#: src/components/modals/SendMessageModal/index.tsx:252
+#: src/components/modals/SendMessageModal/index.tsx:279
 msgid "You need to verify your account email before you can send messages."
 msgstr "Musisz zweryfikować e-mail konta, zanim będziesz mógł wysyłać wiadomości."
 
@@ -11593,7 +11700,7 @@ msgstr "Jesteś na liście oczekujących!"
 msgid "You've been offered a spot!"
 msgstr "Zaproponowano Ci miejsce!"
 
-#: src/components/modals/SendMessageModal/index.tsx:291
+#: src/components/modals/SendMessageModal/index.tsx:318
 msgid "Your account has messaging limits. To increase your limits, contact us at"
 msgstr "Twoje konto ma limity wiadomości. Aby zwiększyć swoje limity, skontaktuj się z nami pod adresem"
 
@@ -11601,7 +11708,7 @@ msgstr "Twoje konto ma limity wiadomości. Aby zwiększyć swoje limity, skontak
 msgid "Your account name is used on event pages and in emails."
 msgstr "Nazwa Twojego konta jest używana na stronach wydarzeń i w e-mailach."
 
-#: src/components/routes/landing/index.tsx:952
+#: src/components/routes/landing/index.tsx:959
 msgid "Your account, your money."
 msgstr "Twoje konto, twoje pieniądze."
 
@@ -11653,7 +11760,7 @@ msgstr "Twoje wydarzenie jest aktywne!"
 msgid "Your event must be live before you can sell tickets to attendees."
 msgstr "Twoje wydarzenie musi być aktywne, zanim będziesz mógł sprzedawać bilety uczestnikom."
 
-#: src/components/routes/landing/index.tsx:826
+#: src/components/routes/landing/index.tsx:830
 msgid "Your event shows up in the <0><1/></0>, the one the community checks to plan its outings."
 msgstr "Twoje wydarzenie pojawia się w <0><1/></0>, z którego społeczność planuje swoje wyjścia."
 
@@ -11673,7 +11780,7 @@ msgstr "Twoje logowanie, twój język, płatność i ten wybór. Zawsze aktywne.
 msgid "Your logo, colors, and style on every page"
 msgstr "Twoje logo, kolory i styl na każdej stronie"
 
-#: src/components/routes/landing/index.tsx:814
+#: src/components/routes/landing/index.tsx:818
 msgid "Your logo, your colours: ticketing that looks like your brand."
 msgstr "Twoje logo, twoje kolory: sprzedaż biletów na wzór twojej marki."
 
@@ -11729,7 +11836,7 @@ msgstr "Twoje zamówienia pojawią się tutaj, gdy zaczną napływać."
 msgid "Your organizer address"
 msgstr "Adres Twojego organizatora"
 
-#: src/components/routes/landing/index.tsx:822
+#: src/components/routes/landing/index.tsx:826
 msgid "Your participants, from ticket to door"
 msgstr "Twoi uczestnicy, od biletu do wejścia"
 
@@ -11787,7 +11894,7 @@ msgstr "Twoje konto Stripe jest połączone i gotowe do przetwarzania płatnośc
 msgid "Your ticket for"
 msgstr "Twój bilet na"
 
-#: src/components/routes/landing/index.tsx:913
+#: src/components/routes/landing/index.tsx:920
 msgid "Your ticketing in 4 steps"
 msgstr "Twoja sprzedaż biletów w 4 krokach"
 
@@ -11807,7 +11914,7 @@ msgstr "Numer VAT zostanie zweryfikowany po zapisaniu"
 msgid "Your waitlist offer has expired and we were unable to complete your order. Please rejoin the waitlist to be notified when more spots become available."
 msgstr "Twoja oferta z listy oczekujących wygasła i nie mogliśmy zrealizować Twojego zamówienia. Dołącz ponownie do listy oczekujących, aby otrzymać powiadomienie, gdy więcej miejsc stanie się dostępnych."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:93
+#: src/components/forms/ProductForm/SizedProductForm.tsx:114
 msgid "Youth 2–14"
 msgstr "Dzieci 2–14"
 

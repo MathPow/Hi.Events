@@ -100,6 +100,10 @@ msgstr "{0} lístkov"
 msgid "{0} updated successfully"
 msgstr "{0} úspešne aktualizované"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:44
+msgid "{0}: one week to go"
+msgstr "{0}: už o týždeň"
+
 #: src/components/common/CheckIn/CheckInInfoModal.tsx:40
 msgid "{0}/{1} checked in"
 msgstr "{0}/{1} odbavených"
@@ -129,9 +133,13 @@ msgstr "{minutes} minút a {seconds} sekúnd"
 msgid "{organizerName}'s first event"
 msgstr "Prvá udalosť organizátora {organizerName}"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:126
+#: src/components/forms/ProductForm/SizedProductForm.tsx:151
 msgid "{sold} sold"
 msgstr "Predané: {sold}"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:47
+msgid "{title} is in one week. Here's what you need to know to get ready."
+msgstr "{title} je o týždeň. Tu je všetko, čo potrebujete vedieť na prípravu."
 
 #: src/components/common/EventCard/index.tsx:115
 msgid "{totalCount} ticket types"
@@ -211,19 +219,19 @@ msgstr "0 minút a 0 sekúnd"
 msgid "1 Active Webhook"
 msgstr "1 aktívny webhook"
 
-#: src/components/modals/SendMessageModal/index.tsx:123
+#: src/components/modals/SendMessageModal/index.tsx:126
 msgid "1 day after end date"
 msgstr "1 deň po dátume konca"
 
-#: src/components/modals/SendMessageModal/index.tsx:117
+#: src/components/modals/SendMessageModal/index.tsx:120
 msgid "1 day after start date"
 msgstr "1 deň po dátume začiatku"
 
-#: src/components/modals/SendMessageModal/index.tsx:115
+#: src/components/modals/SendMessageModal/index.tsx:118
 msgid "1 day before event"
 msgstr "1 deň pred udalosťou"
 
-#: src/components/modals/SendMessageModal/index.tsx:116
+#: src/components/modals/SendMessageModal/index.tsx:119
 msgid "1 hour before event"
 msgstr "1 hodinu pred udalosťou"
 
@@ -235,7 +243,7 @@ msgstr "1 lístok"
 msgid "1 ticket type"
 msgstr "1 typ lístka"
 
-#: src/components/modals/SendMessageModal/index.tsx:114
+#: src/components/modals/SendMessageModal/index.tsx:117
 msgid "1 week before event"
 msgstr "1 týždeň pred udalosťou"
 
@@ -254,16 +262,16 @@ msgstr "123 Hlavná ulica"
 msgid "123 Sample Street"
 msgstr "123 Vzorová ulica"
 
-#: src/components/routes/landing/index.tsx:764
-#: src/components/routes/landing/index.tsx:878
+#: src/components/routes/landing/index.tsx:770
+#: src/components/routes/landing/index.tsx:885
 msgid "2,200+ athletes"
 msgstr "Viac ako 2 200 športovcov"
 
-#: src/components/routes/landing/index.tsx:879
+#: src/components/routes/landing/index.tsx:886
 msgid "2.5% + Stripe fees"
 msgstr "2,5 % + poplatky Stripe"
 
-#: src/components/routes/landing/index.tsx:923
+#: src/components/routes/landing/index.tsx:930
 msgid "2.5% per ticket, plus Stripe's payment fees. No subscription, no hidden fees, and no fees at all if your event is free."
 msgstr "2,5 % za lístok plus platobné poplatky Stripe. Žiadne predplatné, žiadne skryté poplatky a žiadne poplatky vôbec, ak je tvoje podujatie zadarmo."
 
@@ -294,7 +302,7 @@ msgstr "94103"
 msgid "A cancellation notice has been sent to"
 msgstr "Oznámenie o zrušení bolo odoslané na"
 
-#: src/components/routes/landing/index.tsx:821
+#: src/components/routes/landing/index.tsx:825
 msgid "A dashboard that's easy to pick up, and ticketing that looks like your brand."
 msgstr "Panel, ktorý hneď pochopíš, a predaj vstupeniek v štýle tvojej značky."
 
@@ -314,7 +322,7 @@ msgstr "Rozbaľovací zoznam umožňuje iba jeden výber"
 msgid "A fee, like a booking fee or a service fee"
 msgstr "Poplatok, napríklad rezervačný alebo servisný"
 
-#: src/components/routes/landing/index.tsx:813
+#: src/components/routes/landing/index.tsx:817
 msgid "A few minutes and your ticketing is ready."
 msgstr "Pár minút a tvoj predaj vstupeniek je pripravený."
 
@@ -371,7 +379,7 @@ msgstr "Jedna otázka na objednávku. Napr. Aká je vaša doručovacia adresa?"
 msgid "A single question per product. E.g, What is your t-shirt size?"
 msgstr "Jedna otázka na produkt. Napr. Aká je vaša veľkosť trička?"
 
-#: src/components/routes/landing/index.tsx:1009
+#: src/components/routes/landing/index.tsx:1017
 msgid "A small Quebec team, ready to help you launch your first event."
 msgstr "Malý tím z Quebecu, pripravený pomôcť ti spustiť tvoje prvé podujatie."
 
@@ -583,11 +591,15 @@ msgstr "Pridať ďalšie lístky"
 msgid "Add New"
 msgstr "Pridať nové"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:183
+msgid "Add option"
+msgstr "Pridať možnosť"
+
 #: src/components/forms/QuestionForm/index.tsx:68
 msgid "Add Option"
 msgstr "Pridať možnosť"
 
-#: src/components/modals/SendMessageModal/index.tsx:383
+#: src/components/modals/SendMessageModal/index.tsx:422
 msgid "Add PDF files"
 msgstr "Pridať súbory PDF"
 
@@ -603,10 +615,6 @@ msgstr "Pridať produkt do kategórie"
 #: src/components/common/QuestionsTable/index.tsx:478
 msgid "Add Question"
 msgstr "Pridať otázku"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:158
-msgid "Add size"
-msgstr "Pridať veľkosť"
 
 #: src/components/routes/account/ManageAccount/sections/TaxSettings/index.tsx:18
 msgid "Add Tax or Fee"
@@ -641,7 +649,7 @@ msgstr "Pridajte sledovacie pixely na verejné stránky udalostí a domovskú st
 msgid "Add Webhook"
 msgstr "Pridať webhook"
 
-#: src/components/routes/landing/index.tsx:814
+#: src/components/routes/landing/index.tsx:818
 msgid "Add your colours"
 msgstr "Pridaj svoje farby"
 
@@ -717,7 +725,7 @@ msgstr "Panel správcu"
 msgid "Admin users have full access to events and account settings."
 msgstr "Správcovia majú plný prístup k udalostiam a nastaveniam účtu."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:90
+#: src/components/forms/ProductForm/SizedProductForm.tsx:110
 msgid "Adult XS–XXL"
 msgstr "Dospelí XS–XXL"
 
@@ -776,7 +784,7 @@ msgstr "Všetky archivované udalosti"
 msgid "All attendees"
 msgstr "Všetci účastníci"
 
-#: src/components/modals/SendMessageModal/index.tsx:308
+#: src/components/modals/SendMessageModal/index.tsx:335
 msgid "All attendees of this event"
 msgstr "Všetci účastníci tejto udalosti"
 
@@ -815,6 +823,10 @@ msgstr "Všetky produkty"
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:64
 msgid "All Statuses"
 msgstr "Všetky stavy"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:40
+msgid "All the event's details"
+msgstr "Všetky podrobnosti o podujatí"
 
 #: src/components/routes/admin/PlatformRevenue/index.tsx:125
 msgid "All time"
@@ -938,7 +950,7 @@ msgstr "Nastala neočakávaná chyba."
 msgid "An unexpected error occurred. Please try again."
 msgstr "Nastala neočakávaná chyba. Skúste to znova."
 
-#: src/components/routes/landing/index.tsx:822
+#: src/components/routes/landing/index.tsx:826
 msgid "An up-to-date list, emails to keep them posted, and ticket scanning on the day."
 msgstr "Aktuálny zoznam, e-maily na informovanie a skenovanie vstupeniek v deň podujatia."
 
@@ -1241,15 +1253,15 @@ msgstr "Musí byť vybraný aspoň jeden typ udalosti"
 msgid "At most {0}."
 msgstr "Najviac {0}."
 
-#: src/components/modals/SendMessageModal/index.tsx:381
+#: src/components/modals/SendMessageModal/index.tsx:420
 msgid "Attachments"
 msgstr "Prílohy"
 
-#: src/components/modals/SendMessageModal/index.tsx:178
+#: src/components/modals/SendMessageModal/index.tsx:182
 msgid "Attachments must be PDF files"
 msgstr "Prílohy musia byť súbory PDF"
 
-#: src/components/modals/SendMessageModal/index.tsx:182
+#: src/components/modals/SendMessageModal/index.tsx:186
 msgid "Attachments must not exceed {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Prílohy nesmú spolu presiahnuť {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -1350,7 +1362,7 @@ msgstr "Registrovaní účastníci"
 msgid "Attendees Registered"
 msgstr "Registrovaní účastníci"
 
-#: src/components/modals/SendMessageModal/index.tsx:304
+#: src/components/modals/SendMessageModal/index.tsx:331
 msgid "Attendees with a specific ticket"
 msgstr "Účastníci s konkrétnym lístkom"
 
@@ -1420,7 +1432,7 @@ msgid "Awaiting"
 msgstr "Čaká sa"
 
 #: src/components/common/OrderStatusBadge/index.tsx:11
-#: src/components/modals/SendMessageModal/index.tsx:352
+#: src/components/modals/SendMessageModal/index.tsx:379
 msgid "Awaiting offline payment"
 msgstr "Čaká na platbu offline"
 
@@ -1516,15 +1528,15 @@ msgstr "Krásny zážitok z pokladne na akomkoľvek zariadení"
 msgid "Before your event can go live, there are a few things you need to do. Complete all the steps below to get started."
 msgstr "Pred zverejnením udalosti je potrebné dokončiť niekoľko krokov. Dokončite všetky kroky nižšie."
 
-#: src/components/routes/landing/index.tsx:843
+#: src/components/routes/landing/index.tsx:850
 msgid "Billetterie Dehors · Fewer fees, more people"
 msgstr "Billetterie Dehors · Menej poplatkov, viac ľudí"
 
-#: src/components/routes/landing/index.tsx:888
+#: src/components/routes/landing/index.tsx:895
 msgid "Billetterie Dehors is the online ticketing platform for local races, outings and competitions. Small fees, the money straight into your account, and your event shown to our whole community."
 msgstr "Billetterie Dehors je online predaj vstupeniek na miestne behy, výlety a súťaže. Nízke poplatky, peniaze priamo na tvoj účet a tvoje podujatie predstavené celej našej komunite."
 
-#: src/components/routes/landing/index.tsx:931
+#: src/components/routes/landing/index.tsx:938
 msgid "Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price."
 msgstr "Billetterie Dehors: 2,5 % + Stripe 2,9 % + 0,30 $. Eventbrite v Kanade podľa svojho centra pomoci (október 2026): 3,5 % + 1,29 $ za lístok + 2,9 % za spracovanie. Jeden lístok na objednávku, poplatky zahrnuté v cene."
 
@@ -1963,6 +1975,10 @@ msgstr "Vyberte písmo, ktoré zodpovedá vašej značke. Písma sú hosťované
 msgid "Choose an account"
 msgstr "Vyberte účet"
 
+#: src/components/routes/product-widget/SelectProducts/Prices/Sized/index.tsx:43
+msgid "Choose an option"
+msgstr "Vyberte možnosť"
+
 #: src/components/routes/events/Dashboard/index.tsx:233
 msgid "Choose an Organizer"
 msgstr "Vyberte organizátora"
@@ -1983,7 +1999,13 @@ msgstr "Vyberte predvolené nastavenie pre nové udalosti. Toto môže byť prep
 msgid "Choose who pays the platform fee. This does not affect additional fees you've configured in your account settings."
 msgstr "Vyberte, kto platí poplatok platformy. Toto neovplyvňuje ďalšie poplatky nakonfigurované v nastaveniach vášho účtu."
 
-#: src/components/routes/product-widget/SelectProducts/Prices/Sized/index.tsx:43
+#: src/components/forms/ProductForm/SizedProductForm.tsx:102
+#: src/components/forms/ProductForm/SizedProductForm.tsx:117
+msgid "Choose your distance"
+msgstr "Vyberte si vzdialenosť"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:109
+#: src/components/forms/ProductForm/SizedProductForm.tsx:113
 msgid "Choose your size"
 msgstr "Vyberte si veľkosť"
 
@@ -2157,7 +2179,7 @@ msgstr "Dokončite svoj profil a pridajte sa k tímu."
 
 #: src/components/common/OrdersTable/index.tsx:469
 #: src/components/common/OrderStatusBadge/index.tsx:8
-#: src/components/modals/SendMessageModal/index.tsx:351
+#: src/components/modals/SendMessageModal/index.tsx:378
 #: src/components/routes/event/GettingStarted/index.tsx:75
 #: src/components/routes/event/orders.tsx:23
 #: src/components/routes/my-tickets/index.tsx:34
@@ -2308,7 +2330,7 @@ msgstr "Pripojiť Stripe"
 msgid "Connect Stripe to enable email template editing"
 msgstr "Pripojte Stripe pre úpravu e-mailových šablón"
 
-#: src/components/modals/SendMessageModal/index.tsx:258
+#: src/components/modals/SendMessageModal/index.tsx:285
 msgid "Connect Stripe to enable messaging"
 msgstr "Pripojte Stripe pre zasielanie správ"
 
@@ -2324,7 +2346,7 @@ msgstr "Pripojiť sa k Stripe"
 msgid "Connect with Stripe"
 msgstr "Pripojiť sa cez Stripe"
 
-#: src/components/routes/landing/index.tsx:815
+#: src/components/routes/landing/index.tsx:819
 msgid "Connect your Stripe"
 msgstr "Prepoj svoj Stripe"
 
@@ -2714,7 +2736,7 @@ msgstr "Vytvoriť nové heslo"
 msgid "Create Organizer"
 msgstr "Vytvoriť organizátora"
 
-#: src/components/modals/CreateProductModal/index.tsx:89
+#: src/components/modals/CreateProductModal/index.tsx:90
 msgid "Create Product"
 msgstr "Vytvoriť produkt"
 
@@ -2733,7 +2755,7 @@ msgstr "Vytvoriť otázku"
 msgid "Create Tax or Fee"
 msgstr "Vytvoriť daň alebo poplatok"
 
-#: src/components/modals/CreateProductModal/index.tsx:81
+#: src/components/modals/CreateProductModal/index.tsx:82
 msgid "Create Ticket or Product"
 msgstr "Vytvoriť lístok alebo produkt"
 
@@ -2768,7 +2790,7 @@ msgstr "Vytvorte svoju prvú udalosť"
 msgid "Create your first event to start selling tickets and managing attendees."
 msgstr "Vytvorte svoju prvú udalosť a začnite predávať lístky a spravovať účastníkov."
 
-#: src/components/routes/landing/index.tsx:813
+#: src/components/routes/landing/index.tsx:817
 msgid "Create your free account"
 msgstr "Vytvor si účet zadarmo"
 
@@ -2842,7 +2864,7 @@ msgstr "Momentálne dostupné na nákup"
 msgid "Custom Branding"
 msgstr "Vlastná značka"
 
-#: src/components/modals/SendMessageModal/index.tsx:436
+#: src/components/modals/SendMessageModal/index.tsx:475
 msgid "Custom date and time"
 msgstr "Vlastný dátum a čas"
 
@@ -3017,7 +3039,7 @@ msgstr "Bude použitá predvolená šablóna"
 msgid "Defaults to the year, e.g. 2026-1"
 msgstr "Predvolene rok, napríklad 2026-1"
 
-#: src/components/routes/landing/index.tsx:827
+#: src/components/routes/landing/index.tsx:831
 msgid "DEHORS calendar"
 msgstr "kalendári DEHORS"
 
@@ -3196,6 +3218,10 @@ msgstr "Zamietnuť túto správu"
 msgid "Display a checkbox allowing customers to opt-in to receive marketing communications from this event organizer."
 msgstr "Zobraziť zaškrtávacie políčko umožňujúce zákazníkom prihlásiť sa na marketingové komunikácie od tohto organizátora udalosti."
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:118
+msgid "Distances 5–42 km"
+msgstr "Vzdialenosti 5–42 km"
+
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:235
 msgid "Document Label"
 msgstr "Popis dokumentu"
@@ -3293,7 +3319,7 @@ msgstr "Rozbaľovací zoznam"
 msgid "Due to the high risk of spam, you must connect a Stripe account before you can modify email templates. This is to ensure that all event organizers are verified and accountable."
 msgstr "Kvôli vysokému riziku spamu musíte pripojiť účet Stripe pred úpravou e-mailových šablón. Je to na zabezpečenie, že všetci organizátori udalostí sú overení a zodpovední."
 
-#: src/components/modals/SendMessageModal/index.tsx:259
+#: src/components/modals/SendMessageModal/index.tsx:286
 msgid ""
 "Due to the high risk of spam, you must connect a Stripe account before you can send messages to attendees.\n"
 "This is to ensure that all event organizers are verified and accountable."
@@ -3343,7 +3369,7 @@ msgstr "napr. Prispieť"
 msgid "e.g., Get Tickets, Register Now"
 msgstr "napr. Získať lístky, Zaregistrovať sa"
 
-#: src/components/modals/SendMessageModal/index.tsx:366
+#: src/components/modals/SendMessageModal/index.tsx:405
 msgid "e.g., Important update about your tickets"
 msgstr "napr. Dôležitá aktualizácia o vašich lístkoch"
 
@@ -3351,7 +3377,7 @@ msgstr "napr. Dôležitá aktualizácia o vašich lístkoch"
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "napr. Štandard, Prémiový, Enterprise"
 
-#: src/components/routes/landing/index.tsx:820
+#: src/components/routes/landing/index.tsx:824
 msgid "Each event gets a page to share anywhere: free or paid tickets, bought in a few clicks."
 msgstr "Každé podujatie má stránku na zdieľanie: vstupenky zadarmo alebo platené, kúpené na pár kliknutí."
 
@@ -3443,8 +3469,8 @@ msgstr "Upraviť podrobnosti objednávky"
 msgid "Edit Organizer"
 msgstr "Upraviť organizátora"
 
-#: src/components/modals/EditProductModal/index.tsx:108
-#: src/components/modals/EditProductModal/index.tsx:116
+#: src/components/modals/EditProductModal/index.tsx:109
+#: src/components/modals/EditProductModal/index.tsx:117
 msgid "Edit Product"
 msgstr "Upraviť produkt"
 
@@ -4014,7 +4040,7 @@ msgstr "Udalosti začínajúce v nasledujúcich 24 hodinách"
 msgid "Every email template must include a call-to-action button that links to the appropriate page"
 msgstr "Každá e-mailová šablóna musí obsahovať tlačidlo výzvy na akciu odkazujúce na príslušnú stránku"
 
-#: src/components/routes/landing/index.tsx:967
+#: src/components/routes/landing/index.tsx:974
 msgid "Everything you need"
 msgstr "Všetko, čo potrebuješ"
 
@@ -4030,6 +4056,10 @@ msgstr "Príklady: \"Veľkosť trička\", \"Preferencia jedla\", \"Pracovná poz
 #: src/components/routes/admin/FailedJobs/index.tsx:265
 msgid "Exception"
 msgstr "Výnimka"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:63
+msgid "Expected weather and what to wear"
+msgstr "Očakávané počasie a odporúčané oblečenie"
 
 #: src/components/forms/CheckInListForm/index.tsx:68
 msgid "Expiration date"
@@ -4394,7 +4424,7 @@ msgstr "Spracovanie poplatkov"
 #: src/components/common/OrdersTable/index.tsx:408
 #: src/components/forms/ProductForm/index.tsx:466
 #: src/components/routes/landing/index.tsx:103
-#: src/components/routes/landing/index.tsx:1020
+#: src/components/routes/landing/index.tsx:1028
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:54
 msgid "Fees"
 msgstr "Poplatky"
@@ -4407,7 +4437,7 @@ msgstr "Poplatky sa môžu zmeniť. Budete informovaní o akýchkoľvek zmenách
 msgid "Fees Bypassed"
 msgstr "Poplatky obídené"
 
-#: src/components/routes/landing/index.tsx:922
+#: src/components/routes/landing/index.tsx:929
 msgid "Fees that stay small."
 msgstr "Poplatky, ktoré zostávajú nízke."
 
@@ -4566,7 +4596,7 @@ msgstr "Rodina písma"
 msgid "Food & Drink"
 msgstr "Jedlo a nápoje"
 
-#: src/components/routes/landing/index.tsx:1016
+#: src/components/routes/landing/index.tsx:1024
 msgid "Footer"
 msgstr "Päta stránky"
 
@@ -4591,7 +4621,7 @@ msgstr "Zabudli ste heslo?"
 msgid "Free"
 msgstr "Zadarmo"
 
-#: src/components/routes/landing/index.tsx:820
+#: src/components/routes/landing/index.tsx:824
 msgid "Free or paid, one link"
 msgstr "Zadarmo alebo platené, jeden odkaz"
 
@@ -4603,7 +4633,7 @@ msgstr "Bezplatný produkt"
 msgid "Free product, no payment information required"
 msgstr "Bezplatný produkt, nevyžadujú sa platobné informácie"
 
-#: src/components/routes/landing/index.tsx:955
+#: src/components/routes/landing/index.tsx:962
 msgid "Free to open, no subscription"
 msgstr "Založenie zadarmo, bez predplatného"
 
@@ -4628,7 +4658,7 @@ msgstr "Celá dĺžka udalosti"
 msgid "Full refund"
 msgstr "Plné vrátenie"
 
-#: src/components/routes/landing/index.tsx:816
+#: src/components/routes/landing/index.tsx:820
 msgid "Gather your people"
 msgstr "Zhromaždi svojich ľudí"
 
@@ -4661,11 +4691,15 @@ msgstr "Generovať kód"
 msgid "German"
 msgstr "Nemčina"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:28
+msgid "Get directions"
+msgstr "Zobraziť trasu"
+
 #: src/components/layouts/EventHomepage/index.tsx:453
 msgid "Get Directions"
 msgstr "Získať trasu"
 
-#: src/components/routes/landing/index.tsx:947
+#: src/components/routes/landing/index.tsx:954
 msgid "Get paid from the presale."
 msgstr "Inkasuj už počas predpredaja."
 
@@ -4758,6 +4792,10 @@ msgstr "Hostia"
 msgid "Have a promo code?"
 msgstr "Máte promo kód?"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:99
+msgid "Heading shown to buyers"
+msgstr "Nadpis pre kupujúcich"
+
 #: src/constants/productInfoIcons.ts:38
 msgid "Heart"
 msgstr "Srdce"
@@ -4802,6 +4840,11 @@ msgstr "Čo môžete očakávať:"
 #: src/components/routes/event/EventDashboard/index.tsx:121
 msgid "Hi {0} 👋"
 msgstr "Ahoj {0} 👋"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:46
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:60
+msgid "Hi!"
+msgstr "Dobrý deň!"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:75
 msgid "Hi.Events Fee"
@@ -4874,6 +4917,10 @@ msgstr "Skryť stránku Začíname z bočného panela"
 msgid "Hide this category?"
 msgstr "Skryť túto kategóriu?"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:156
+msgid "Hide this option from buyers"
+msgstr "Skryť túto možnosť pred kupujúcimi"
+
 #: src/components/forms/ProductForm/index.tsx:545
 msgid "Hide this product from customers"
 msgstr "Skryť tento produkt pred zákazníkmi"
@@ -4881,10 +4928,6 @@ msgstr "Skryť tento produkt pred zákazníkmi"
 #: src/components/forms/QuestionForm/index.tsx:219
 msgid "Hide this question"
 msgstr "Skryť túto otázku"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:131
-msgid "Hide this size from buyers"
-msgstr "Skryť túto veľkosť pred kupujúcimi"
 
 #: src/components/forms/ProductForm/index.tsx:116
 msgid "Hide this tier from users"
@@ -4936,8 +4979,8 @@ msgid "Homer"
 msgstr "Homer"
 
 #: src/components/routes/landing/index.tsx:102
-#: src/components/routes/landing/index.tsx:890
-#: src/components/routes/landing/index.tsx:1019
+#: src/components/routes/landing/index.tsx:897
+#: src/components/routes/landing/index.tsx:1027
 msgid "How it works"
 msgstr "Ako to funguje"
 
@@ -4993,7 +5036,7 @@ msgstr "Súhlasím s prijímaním e-mailových notifikácií súvisiacich s tout
 msgid "I agree to the <0>terms and conditions</0>"
 msgstr "Súhlasím s <0>podmienkami a ustanoveniami</0>"
 
-#: src/components/modals/SendMessageModal/index.tsx:470
+#: src/components/modals/SendMessageModal/index.tsx:509
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Potvrdzujem, že toto je transakčná správa súvisiaca s touto udalosťou"
 
@@ -5116,7 +5159,7 @@ msgstr "Zahrňte podrobnosti o pripojení pre vašu online udalosť. Tieto podro
 msgid "Include tax and fees in the price"
 msgstr "Zahrnúť dane a poplatky do ceny"
 
-#: src/components/routes/landing/index.tsx:971
+#: src/components/routes/landing/index.tsx:978
 msgid "Included"
 msgstr "V cene"
 
@@ -5313,6 +5356,11 @@ msgstr "Taliančina"
 msgid "Item"
 msgstr "Položka"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:50
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:64
+msgid "Item to bring"
+msgstr "Čo si priniesť"
+
 #: src/components/common/OrdersTable/index.tsx:389
 msgid "item(s)"
 msgstr "položka/položky"
@@ -5495,7 +5543,7 @@ msgstr "Naposledy použité"
 msgid "Leaf"
 msgstr "List"
 
-#: src/components/routes/landing/index.tsx:941
+#: src/components/routes/landing/index.tsx:948
 msgid "Learn more about Stripe"
 msgstr "Viac o Stripe"
 
@@ -5507,7 +5555,7 @@ msgstr "Nechajte prázdne pre použitie predvoleného slova \"Faktúra\""
 msgid "Leave empty for a link that never expires."
 msgstr "Nechajte prázdne pre odkaz bez expirácie."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:162
+#: src/components/forms/ProductForm/SizedProductForm.tsx:187
 msgid "Leave quantity empty for unlimited stock"
 msgstr "Nechajte množstvo prázdne pre neobmedzené zásoby"
 
@@ -5599,7 +5647,7 @@ msgstr "Načítavanie webhookov"
 msgid "Loading..."
 msgstr "Načítavanie..."
 
-#: src/components/routes/landing/index.tsx:906
+#: src/components/routes/landing/index.tsx:913
 msgid "Local organizers already trust us"
 msgstr "Miestni organizátori nám už dôverujú"
 
@@ -5616,8 +5664,8 @@ msgstr "Miesto"
 #: src/components/routes/auth/Register/index.tsx:122
 #: src/components/routes/landing/index.tsx:192
 #: src/components/routes/landing/index.tsx:310
-#: src/components/routes/landing/index.tsx:869
-#: src/components/routes/landing/index.tsx:1021
+#: src/components/routes/landing/index.tsx:876
+#: src/components/routes/landing/index.tsx:1029
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
@@ -5659,11 +5707,11 @@ msgstr "Vyhľadať moje lístky"
 msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 
-#: src/components/routes/landing/index.tsx:886
+#: src/components/routes/landing/index.tsx:893
 msgid "Made by organizers,<0/>for organizers."
 msgstr "Vytvorené organizátormi,<0/>pre organizátorov."
 
-#: src/components/routes/landing/index.tsx:1033
+#: src/components/routes/landing/index.tsx:1041
 msgid "Made in Québec, for people on the move."
 msgstr "Vyrobené v Québecu, pre tých, čo sú v pohybe."
 
@@ -5774,6 +5822,10 @@ msgstr "Maximum na objednávku"
 msgid "Medium"
 msgstr "Stredné"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:21
+msgid "Meeting place"
+msgstr "Miesto stretnutia"
+
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:128
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:158
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:166
@@ -5784,7 +5836,7 @@ msgstr "Menu"
 #: src/components/common/AttendeeTable/index.tsx:188
 #: src/components/common/ContactOrganizerModal/index.tsx:88
 #: src/components/common/OrdersTable/index.tsx:303
-#: src/components/modals/SendMessageModal/index.tsx:371
+#: src/components/modals/SendMessageModal/index.tsx:410
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:151
 msgid "Message"
 msgstr "Správa"
@@ -5801,7 +5853,7 @@ msgstr "Správa účastníkovi"
 msgid "Message Attendees"
 msgstr "Správa účastníkom"
 
-#: src/components/modals/SendMessageModal/index.tsx:328
+#: src/components/modals/SendMessageModal/index.tsx:355
 msgid "Message attendees with specific tickets"
 msgstr "Správa účastníkom s konkrétnymi lístkami"
 
@@ -5825,7 +5877,7 @@ msgstr "Obsah správy"
 msgid "Message Details"
 msgstr "Podrobnosti správy"
 
-#: src/components/modals/SendMessageModal/index.tsx:96
+#: src/components/modals/SendMessageModal/index.tsx:99
 msgid "Message individual attendees"
 msgstr "Správa jednotlivým účastníkom"
 
@@ -5833,15 +5885,15 @@ msgstr "Správa jednotlivým účastníkom"
 msgid "Message is required"
 msgstr "Správa je povinná"
 
-#: src/components/modals/SendMessageModal/index.tsx:340
+#: src/components/modals/SendMessageModal/index.tsx:367
 msgid "Message order owners with specific products"
 msgstr "Správa vlastníkom objednávok s konkrétnymi produktmi"
 
-#: src/components/modals/SendMessageModal/index.tsx:212
+#: src/components/modals/SendMessageModal/index.tsx:216
 msgid "Message Scheduled"
 msgstr "Správa naplánovaná"
 
-#: src/components/modals/SendMessageModal/index.tsx:212
+#: src/components/modals/SendMessageModal/index.tsx:216
 msgid "Message Sent"
 msgstr "Správa odoslaná"
 
@@ -5880,7 +5932,7 @@ msgstr "Rôzne"
 msgid "Miscellaneous Settings"
 msgstr "Rôzne nastavenia"
 
-#: src/components/routes/landing/index.tsx:976
+#: src/components/routes/landing/index.tsx:983
 msgid "Missing something?"
 msgstr "Chýba ti niečo?"
 
@@ -6497,7 +6549,7 @@ msgstr "Nastavenia offline platieb"
 msgid "Offline payments, like Interac e-Transfer, are free: no Billetterie Dehors fees. In return, if you make any content for your event (posts, stories, posters), give Billetterie Dehors a shout-out."
 msgstr "Offline platby, napríklad Interac e-Transfer, sú zadarmo: žiadne poplatky Billetterie Dehors. Na oplátku, ak tvoríš obsah k svojmu podujatiu (príspevky, stories, plagáty), spomeň Billetterie Dehors."
 
-#: src/components/routes/landing/index.tsx:976
+#: src/components/routes/landing/index.tsx:983
 msgid "On request"
 msgstr "Na požiadanie"
 
@@ -6511,7 +6563,7 @@ msgstr "V predaji"
 msgid "On sale {0}"
 msgstr "V predaji {0}"
 
-#: src/components/routes/landing/index.tsx:825
+#: src/components/routes/landing/index.tsx:829
 msgid "On the DEHORS calendar"
 msgstr "V kalendári DEHORS"
 
@@ -6532,8 +6584,8 @@ msgid "Once you're ready, set your event live and start selling products."
 msgstr "Keď budete pripravení, zverejnite svoju udalosť a začnite predávať produkty."
 
 #: src/components/forms/ProductForm/index.tsx:184
-msgid "One price, a choice of sizes with their own stock. Perfect for t-shirts and apparel."
-msgstr "Jedna cena, výber veľkostí s vlastnými zásobami. Ideálne pre tričká a oblečenie."
+msgid "One price, a choice of options with their own stock: sizes, distances, categories."
+msgstr "Jedna cena, výber možností s vlastnými zásobami: veľkosti, vzdialenosti, kategórie."
 
 #: src/components/common/EventStatusBadge/index.tsx:18
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:31
@@ -6570,7 +6622,7 @@ msgstr "Iba správcovia účtu môžu odstrániť alebo archivovať udalosti. Ko
 msgid "Only account administrators can delete or archive organizers. Contact your account admin for assistance."
 msgstr "Iba správcovia účtu môžu odstrániť alebo archivovať organizátorov. Kontaktujte správcu účtu."
 
-#: src/components/modals/SendMessageModal/index.tsx:348
+#: src/components/modals/SendMessageModal/index.tsx:375
 msgid "Only send to orders with these statuses"
 msgstr "Odoslať iba objednávkam s týmito stavmi"
 
@@ -6604,6 +6656,11 @@ msgstr "Otvoriť menu"
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:172
 msgid "Opens in a new tab."
 msgstr "Otvorí sa na novej karte."
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:139
+#: src/components/forms/ProductForm/SizedProductForm.tsx:140
+msgid "Option"
+msgstr "Možnosť"
 
 #: src/components/forms/QuestionForm/index.tsx:45
 msgid "Option {i}"
@@ -6648,6 +6705,11 @@ msgstr "Voliteľné. Ak je vyplnené, odkaz môže použiť len táto adresa."
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
 msgstr "možnosti"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:106
+msgctxt "list of a product with options"
+msgid "Options"
+msgstr "Možnosti"
 
 #: src/components/forms/QuestionForm/index.tsx:28
 msgid "Options"
@@ -6756,7 +6818,7 @@ msgstr "Poznámky k objednávke"
 msgid "Order owner"
 msgstr "Vlastník objednávky"
 
-#: src/components/modals/SendMessageModal/index.tsx:312
+#: src/components/modals/SendMessageModal/index.tsx:339
 msgid "Order owners with a specific product"
 msgstr "Vlastníci objednávok s konkrétnym produktom"
 
@@ -6780,7 +6842,7 @@ msgstr "Objednávka vrátená"
 msgid "Order Status"
 msgstr "Stav objednávky"
 
-#: src/components/modals/SendMessageModal/index.tsx:349
+#: src/components/modals/SendMessageModal/index.tsx:376
 msgid "Order statuses"
 msgstr "Stavy objednávok"
 
@@ -6948,7 +7010,7 @@ msgstr "Iné zoznamy (lístok nie je zahrnutý)"
 msgid "Outgoing Messages"
 msgstr "Odchádzajúce správy"
 
-#: src/components/routes/landing/index.tsx:1026
+#: src/components/routes/landing/index.tsx:1034
 msgid "Outings calendar"
 msgstr "Kalendár výletov"
 
@@ -7010,6 +7072,10 @@ msgstr "Platený produkt"
 #: src/components/layouts/AuthLayout/index.tsx:30
 msgid "Paid, free, tiered pricing, and donation-based tickets"
 msgstr "Platené, bezplatné, stupňované a darovné lístky"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:51
+msgid "Parking, carpooling, bib pick-up"
+msgstr "Parkovanie, spolujazda, výdaj štartových čísel"
 
 #: src/components/modals/RefundOrderModal/index.tsx:109
 msgid "Partial refund"
@@ -7209,7 +7275,7 @@ msgstr "Platobné podmienky"
 msgid "Payments"
 msgstr "Platby"
 
-#: src/components/routes/landing/index.tsx:815
+#: src/components/routes/landing/index.tsx:819
 msgid "Payments go straight to your account."
 msgstr "Platby idú priamo na tvoj účet."
 
@@ -7221,7 +7287,7 @@ msgstr "Platby nie sú dostupné"
 msgid "Payments will continue to flow without interruption"
 msgstr "Platby budú naďalej plynúť bez prerušenia"
 
-#: src/components/modals/SendMessageModal/index.tsx:382
+#: src/components/modals/SendMessageModal/index.tsx:421
 msgid "PDF only, up to {MAX_ATTACHMENTS} files and {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Iba PDF, najviac {MAX_ATTACHMENTS} súborov a spolu {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -7522,7 +7588,7 @@ msgstr "Náhľad stránky udalosti"
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:360
 #: src/components/forms/ProductForm/index.tsx:85
 #: src/components/forms/ProductForm/index.tsx:345
-#: src/components/forms/ProductForm/SizedProductForm.tsx:80
+#: src/components/forms/ProductForm/SizedProductForm.tsx:88
 msgid "Price"
 msgstr "Cena"
 
@@ -7657,8 +7723,8 @@ msgid "Product Updated"
 msgstr "Produkt aktualizovaný"
 
 #: src/components/forms/ProductForm/index.tsx:182
-msgid "Product with sizes"
-msgstr "Produkt s veľkosťami"
+msgid "Product with options"
+msgstr "Produkt s možnosťami"
 
 #: src/components/common/PromoCodeTable/index.tsx:148
 msgid "Product(s)"
@@ -7741,7 +7807,7 @@ msgstr "Správa o promo kódoch"
 msgid "Promo Only"
 msgstr "Iba promo"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:553
 msgid "Promotional emails may result in account suspension"
 msgstr "Propagačné e-maily môžu viesť k pozastaveniu účtu"
 
@@ -7772,7 +7838,7 @@ msgstr "Zverejniť udalosť"
 msgid "Purchased"
 msgstr "Zakúpené"
 
-#: src/components/routes/landing/index.tsx:816
+#: src/components/routes/landing/index.tsx:820
 msgid "Put your tickets on sale, share the link and scan at the door."
 msgstr "Daj vstupenky do predaja, zdieľaj odkaz a skenuj pri vstupe."
 
@@ -7790,7 +7856,7 @@ msgstr "Množstvo"
 
 #: src/components/forms/ProductForm/index.tsx:97
 #: src/components/forms/ProductForm/index.tsx:362
-#: src/components/forms/ProductForm/SizedProductForm.tsx:123
+#: src/components/forms/ProductForm/SizedProductForm.tsx:148
 msgid "Quantity Available"
 msgstr "Dostupné množstvo"
 
@@ -7859,7 +7925,7 @@ msgstr "Prekročený limit požiadaviek. Skúste to neskôr."
 msgid "Re-offer Spot"
 msgstr "Znovu ponúknuť miesto"
 
-#: src/components/routes/landing/index.tsx:1008
+#: src/components/routes/landing/index.tsx:1016
 msgid "Ready to gather your people?"
 msgstr "Pripravený zhromaždiť svojich ľudí?"
 
@@ -7914,7 +7980,7 @@ msgstr "Nedávne objednávky"
 msgid "recipient"
 msgstr "príjemca"
 
-#: src/components/modals/SendMessageModal/index.tsx:62
+#: src/components/modals/SendMessageModal/index.tsx:65
 msgid "Recipient"
 msgstr "Príjemca"
 
@@ -7923,7 +7989,7 @@ msgid "recipients"
 msgstr "príjemcovia"
 
 #: src/components/modals/MessageRecipientsModal/index.tsx:38
-#: src/components/modals/SendMessageModal/index.tsx:315
+#: src/components/modals/SendMessageModal/index.tsx:342
 #: src/components/routes/admin/Messages/index.tsx:166
 #: src/components/routes/admin/Messages/index.tsx:299
 msgid "Recipients"
@@ -8030,6 +8096,14 @@ msgstr "Registračné otázky"
 msgid "Remaining Uses"
 msgstr "Zostatok použití"
 
+#: src/components/modals/SendMessageModal/index.tsx:394
+msgid "Reminder a week before"
+msgstr "Pripomienka týždeň vopred"
+
+#: src/components/modals/SendMessageModal/index.tsx:398
+msgid "Reminder the day before"
+msgstr "Pripomienka deň vopred"
+
 #: src/components/routes/product-widget/SelectProducts/index.tsx:587
 msgid "remove"
 msgstr "odstrániť"
@@ -8041,14 +8115,18 @@ msgstr "odstrániť"
 msgid "Remove"
 msgstr "Odstrániť"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:166
+msgid "Remove option"
+msgstr "Odstrániť možnosť"
+
 #: src/components/common/InlineOrderSummary/index.tsx:156
 #: src/components/common/InlineOrderSummary/index.tsx:157
 msgid "Remove promo code"
 msgstr "Odstrániť promo kód"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:141
-msgid "Remove size"
-msgstr "Odstrániť veľkosť"
+#: src/components/modals/SendMessageModal/index.tsx:241
+msgid "Replace the subject and the message with this template?"
+msgstr "Nahradiť predmet a správu touto šablónou?"
 
 #: src/components/routes/organizer/Reports/ReportLayout/index.tsx:26
 msgid "Report not found"
@@ -8072,6 +8150,11 @@ msgstr "Vyžadovať fakturačnú adresu"
 #: src/components/common/QuestionsTable/index.tsx:118
 msgid "Required"
 msgstr "Povinné"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:50
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:64
+msgid "Required gear"
+msgstr "Povinná výbava"
 
 #: src/components/forms/ProductForm/index.tsx:214
 msgid "Requires a charity registration number in Settings, Tax receipts."
@@ -8413,11 +8496,11 @@ msgstr "Uložiť nastavenia DPH"
 msgid "Scan"
 msgstr "Skenovať"
 
-#: src/components/modals/SendMessageModal/index.tsx:412
+#: src/components/modals/SendMessageModal/index.tsx:451
 msgid "Schedule for later"
 msgstr "Naplánovať na neskôr"
 
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Schedule Message"
 msgstr "Naplánovať správu"
 
@@ -8427,7 +8510,7 @@ msgstr "Naplánovať správu"
 msgid "Scheduled"
 msgstr "Naplánované"
 
-#: src/components/modals/SendMessageModal/index.tsx:442
+#: src/components/modals/SendMessageModal/index.tsx:481
 msgid "Scheduled time"
 msgstr "Naplánovaný čas"
 
@@ -8546,6 +8629,10 @@ msgstr "Zobraziť všetky vstupenky"
 msgid "See the full breakdown"
 msgstr "Zobraziť úplný prehľad"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:61
+msgid "See you tomorrow at {time} for {title}."
+msgstr "Tešíme sa na vás zajtra o {time} na {title}."
+
 #: src/components/routes/event/Deposits/index.tsx:312
 msgid "Select"
 msgstr "Vybrať"
@@ -8588,7 +8675,7 @@ msgstr "Vybrať všetko"
 msgid "Select an event"
 msgstr "Vybrať udalosť"
 
-#: src/components/modals/SendMessageModal/index.tsx:317
+#: src/components/modals/SendMessageModal/index.tsx:344
 msgid "Select attendee group"
 msgstr "Vybrať skupinu účastníkov"
 
@@ -8637,7 +8724,7 @@ msgid "Select Product Tier"
 msgstr "Vybrať cenovú úroveň produktu"
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:49
-#: src/components/modals/SendMessageModal/index.tsx:341
+#: src/components/modals/SendMessageModal/index.tsx:368
 msgid "Select products"
 msgstr "Vybrať produkty"
 
@@ -8670,7 +8757,7 @@ msgid "Select Ticket"
 msgstr "Vybrať lístok"
 
 #: src/components/forms/CheckInListForm/index.tsx:43
-#: src/components/modals/SendMessageModal/index.tsx:329
+#: src/components/modals/SendMessageModal/index.tsx:356
 msgid "Select tickets"
 msgstr "Vybrať lístky"
 
@@ -8684,7 +8771,7 @@ msgstr "Vybrať časové obdobie"
 msgid "Select timezone"
 msgstr "Vybrať časové pásmo"
 
-#: src/components/modals/SendMessageModal/index.tsx:316
+#: src/components/modals/SendMessageModal/index.tsx:343
 msgid "Select which attendees should receive this message"
 msgstr "Vybrať, ktorí účastníci majú dostať túto správu"
 
@@ -8717,11 +8804,11 @@ msgstr "Predať lístok"
 msgid "Sell a ticket at the door"
 msgstr "Predať lístok pri vstupe"
 
-#: src/components/routes/landing/index.tsx:823
+#: src/components/routes/landing/index.tsx:827
 msgid "Sell your merch"
 msgstr "Predávaj svoj merch"
 
-#: src/components/routes/landing/index.tsx:823
+#: src/components/routes/landing/index.tsx:827
 msgid "Sell your merch with the tickets, handed over at the event."
 msgstr "Predávaj merch spolu so vstupenkami, odovzdaný na podujatí."
 
@@ -8734,11 +8821,11 @@ msgstr "Rýchlo sa predáva 🔥"
 msgid "Send"
 msgstr "Odoslať"
 
-#: src/components/modals/SendMessageModal/index.tsx:240
+#: src/components/modals/SendMessageModal/index.tsx:267
 msgid "Send a message"
 msgstr "Odoslať správu"
 
-#: src/components/modals/SendMessageModal/index.tsx:499
+#: src/components/modals/SendMessageModal/index.tsx:538
 msgid "Send as test"
 msgstr "Odoslať ako test"
 
@@ -8746,16 +8833,16 @@ msgstr "Odoslať ako test"
 msgid "Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later."
 msgstr "Odosielať e-maily účastníkom, držiteľom lístkov alebo vlastníkom objednávok. Správy môžu byť odoslané okamžite alebo naplánované na neskôr."
 
-#: src/components/modals/SendMessageModal/index.tsx:507
+#: src/components/modals/SendMessageModal/index.tsx:546
 msgid "Send me a copy"
 msgstr "Poslať mi kópiu"
 
 #: src/components/common/ContactOrganizerModal/index.tsx:112
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Send Message"
 msgstr "Odoslať správu"
 
-#: src/components/modals/SendMessageModal/index.tsx:404
+#: src/components/modals/SendMessageModal/index.tsx:443
 msgid "Send now"
 msgstr "Odoslať teraz"
 
@@ -8775,7 +8862,7 @@ msgstr "Odoslať notifikačný e-mail o vrátení"
 msgid "Send reset link"
 msgstr "Odoslať odkaz na obnovenie"
 
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Send Test"
 msgstr "Odoslať test"
 
@@ -8977,13 +9064,17 @@ msgstr "Zobraziť viac platforiem"
 msgid "Show tax and fees separately"
 msgstr "Zobraziť dane a poplatky samostatne"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:131
-msgid "Show this size to buyers"
-msgstr "Zobraziť túto veľkosť kupujúcim"
+#: src/components/forms/ProductForm/SizedProductForm.tsx:156
+msgid "Show this option to buyers"
+msgstr "Zobraziť túto možnosť kupujúcim"
 
 #: src/components/common/OrganizerReportTable/index.tsx:355
 msgid "Showing {0} of {totalRows} records"
 msgstr "Zobrazuje sa {0} z {totalRows} záznamov"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:100
+msgid "Shown above the options. Leave empty for « Choose an option »."
+msgstr "Zobrazuje sa nad možnosťami. Nechajte prázdne pre „Vyberte možnosť“."
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:147
 msgid "Shown below the promo code field on the ticket selection, and in a compact version on the details step, just above the secure checkout notice. Use it to share important information or invite buyers to make an extra donation on another platform."
@@ -9025,7 +9116,7 @@ msgstr "Zobrazuje bežné polia adresy vrátane krajiny"
 msgid "Signed Up"
 msgstr "Zaregistrovaný"
 
-#: src/components/routes/landing/index.tsx:821
+#: src/components/routes/landing/index.tsx:825
 msgid "Simple, in your colours"
 msgstr "Jednoducho a v tvojich farbách"
 
@@ -9038,15 +9129,6 @@ msgstr "Novák"
 msgid "Single line text box"
 msgstr "Jednoriadkové textové pole"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:114
-#: src/components/forms/ProductForm/SizedProductForm.tsx:115
-msgid "Size"
-msgstr "Veľkosť"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:87
-msgid "Sizes"
-msgstr "Veľkosti"
-
 #: src/components/routes/welcome/index.tsx:498
 msgid "Skip this step"
 msgstr "Preskočiť tento krok"
@@ -9055,7 +9137,7 @@ msgstr "Preskočiť tento krok"
 msgid "Slovak"
 msgstr "Slovenčina"
 
-#: src/components/routes/landing/index.tsx:978
+#: src/components/routes/landing/index.tsx:985
 msgid "Small local team: write to us on <0><1/></0> or at <2><3/></2>, we move fast and we listen."
 msgstr "Malý miestny tím: napíš nám na <0><1/></0> alebo na <2><3/></2>, sme rýchli a počúvame."
 
@@ -9253,7 +9335,7 @@ msgstr "Stripe pripojený"
 msgid "Stripe fees"
 msgstr "Poplatky Stripe"
 
-#: src/components/routes/landing/index.tsx:939
+#: src/components/routes/landing/index.tsx:946
 msgid "Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do."
 msgstr "Stripe je spoločnosť, ktorá prijíma platby kartou za tvoje vstupenky. Je to ten istý nástroj, ktorý môžeš použiť aj pri svojich ďalších digitálnych projektoch: milióny firiem to už robia."
 
@@ -9277,12 +9359,12 @@ msgstr "Nastavenie Stripe je už dokončené."
 msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
 msgstr "Nastavenie Stripe ešte nie je hotové. Dovtedy sa predaje vyplácajú na účet platformy."
 
-#: src/components/routes/landing/index.tsx:938
+#: src/components/routes/landing/index.tsx:945
 msgid "Stripe, what's that?"
 msgstr "Stripe, čo to je?"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
-#: src/components/modals/SendMessageModal/index.tsx:365
+#: src/components/modals/SendMessageModal/index.tsx:404
 #: src/components/routes/admin/Messages/index.tsx:162
 #: src/components/routes/admin/Messages/index.tsx:272
 msgid "Subject"
@@ -9333,7 +9415,7 @@ msgstr "Zmena e-mailu bola úspešne potvrdená"
 msgid "Successfully created attendee"
 msgstr "Účastník bol úspešne vytvorený"
 
-#: src/components/modals/CreateProductModal/index.tsx:55
+#: src/components/modals/CreateProductModal/index.tsx:56
 msgid "Successfully Created Product"
 msgstr "Produkt bol úspešne vytvorený"
 
@@ -9431,7 +9513,7 @@ msgstr "Predvolené nastavenia poplatkov platformy boli úspešne aktualizované
 msgid "Successfully Updated Platform Fee Settings"
 msgstr "Nastavenia poplatkov platformy boli úspešne aktualizované"
 
-#: src/components/modals/EditProductModal/index.tsx:97
+#: src/components/modals/EditProductModal/index.tsx:98
 msgid "Successfully updated product"
 msgstr "Produkt bol úspešne aktualizovaný"
 
@@ -9648,6 +9730,10 @@ msgstr "Šablóna bola úspešne odstránená"
 msgid "Template saved successfully"
 msgstr "Šablóna bola úspešne uložená"
 
+#: src/components/modals/SendMessageModal/index.tsx:391
+msgid "Templates"
+msgstr "Šablóny"
+
 #: src/components/layouts/EventHomepage/index.tsx:649
 #: src/components/layouts/OrganizerHomepage/index.tsx:393
 msgid "Terms of Service"
@@ -9691,7 +9777,7 @@ msgstr "Farba pozadia stránky. Pri použití obrázka obalu sa aplikuje ako pre
 msgid "The check-in list you are looking for does not exist."
 msgstr "Zoznam odbavení, ktorý hľadáte, neexistuje."
 
-#: src/components/routes/landing/index.tsx:1025
+#: src/components/routes/landing/index.tsx:1033
 msgid "The club"
 msgstr "Klub"
 
@@ -9776,7 +9862,7 @@ msgid "The primary brand color used for buttons and highlights"
 msgstr "Primárna farba značky používaná pre tlačidlá a zvýraznenia"
 
 #: src/components/routes/landing/HeroTitle.tsx:104
-#: src/components/routes/landing/index.tsx:845
+#: src/components/routes/landing/index.tsx:852
 msgid "The Quebec ticketing platform built for the sports community."
 msgstr "Platforma na predaj vstupeniek z Québecu, vytvorená pre športovú komunitu."
 
@@ -9784,15 +9870,15 @@ msgstr "Platforma na predaj vstupeniek z Québecu, vytvorená pre športovú kom
 msgid "The quick brown fox jumps over the lazy dog."
 msgstr "Príliš žlutý kůň úpěl ďábelské ódy."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:81
-msgid "The same price applies to every size. Please enter the price excluding taxes and fees."
-msgstr "Pre všetky veľkosti platí rovnaká cena. Zadajte cenu bez daní a poplatkov."
+#: src/components/forms/ProductForm/SizedProductForm.tsx:89
+msgid "The same price applies to every option. Please enter the price excluding taxes and fees."
+msgstr "Pre každú možnosť platí rovnaká cena. Zadajte cenu bez daní a poplatkov."
 
-#: src/components/modals/SendMessageModal/index.tsx:190
+#: src/components/modals/SendMessageModal/index.tsx:194
 msgid "The scheduled time is required"
 msgstr "Naplánovaný čas je povinný"
 
-#: src/components/modals/SendMessageModal/index.tsx:191
+#: src/components/modals/SendMessageModal/index.tsx:195
 msgid "The scheduled time must be in the future"
 msgstr "Naplánovaný čas musí byť v budúcnosti"
 
@@ -9964,6 +10050,11 @@ msgstr "Táto správa sa zobrazí iba ak je objednávka úspešne dokončená. O
 msgid "This name is visible to end users"
 msgstr "Tento názov je viditeľný pre koncových používateľov"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:66
+#: src/components/forms/ProductForm/SizedProductForm.tsx:166
+msgid "This option has already been sold. You can hide it instead."
+msgstr "Táto možnosť už bola predaná. Namiesto toho ju môžete skryť."
+
 #: src/components/forms/StripeCheckoutForm/index.tsx:95
 msgid "This order has already been paid."
 msgstr "Táto objednávka už bola zaplatená."
@@ -10043,11 +10134,6 @@ msgstr "Táto správa slúži iba na informačné účely. Pred použitím tých
 #: src/components/routes/auth/ResetPassword/index.tsx:28
 msgid "This reset password link is invalid or expired."
 msgstr "Tento odkaz na obnovenie hesla je neplatný alebo vypršal."
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:58
-#: src/components/forms/ProductForm/SizedProductForm.tsx:141
-msgid "This size has already been sold. You can hide it instead."
-msgstr "Táto veľkosť už bola predaná. Namiesto toho ju môžete skryť."
 
 #: src/components/layouts/CheckIn/index.tsx:232
 msgid "This ticket was just scanned. Please wait before scanning again."
@@ -10161,7 +10247,7 @@ msgstr "Lístok predaný a odbavený"
 msgid "Ticket Type"
 msgstr "Typ lístka"
 
-#: src/components/routes/landing/index.tsx:1018
+#: src/components/routes/landing/index.tsx:1026
 msgid "Ticketing"
 msgstr "Predaj vstupeniek"
 
@@ -10258,9 +10344,13 @@ msgstr "Do"
 msgid "To edit configurations, go to the Configurations section in the admin menu."
 msgstr "Na úpravu konfigurácií prejdite do sekcie Konfigurácie v menu správcu."
 
-#: src/components/modals/SendMessageModal/index.tsx:277
+#: src/components/modals/SendMessageModal/index.tsx:304
 msgid "To increase your limits, contact us at"
 msgstr "Na zvýšenie limitov nás kontaktujte na"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:51
+msgid "To plan ahead"
+msgstr "Na naplánovanie"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:662
 msgid "To receive credit card payments, you need to connect your Stripe account. Stripe is our payment processing partner that ensures secure transactions and timely payouts."
@@ -10277,6 +10367,10 @@ msgstr "Názov tokenu"
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:44
 msgid "Token revoked"
 msgstr "Token zrušený"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:58
+msgid "Tomorrow: {0}"
+msgstr "Zajtra: {0}"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:96
 msgid "Tools"
@@ -10360,7 +10454,7 @@ msgstr "Celkovo vrátené"
 msgid "Total Refunded"
 msgstr "Celkovo vrátené"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:163
+#: src/components/forms/ProductForm/SizedProductForm.tsx:188
 msgid "Total stock: {totalStock}"
 msgstr "Celkové zásoby: {totalStock}"
 
@@ -10455,7 +10549,7 @@ msgstr "Nie je možné odbavenie účastníka"
 msgid "Unable to check out attendee"
 msgstr "Nie je možné odhlásenie účastníka"
 
-#: src/components/modals/CreateProductModal/index.tsx:64
+#: src/components/modals/CreateProductModal/index.tsx:65
 msgid "Unable to create product. Please check the your details"
 msgstr "Nie je možné vytvoriť produkt. Skontrolujte svoje údaje"
 
@@ -10517,7 +10611,7 @@ msgstr "Neznámy účastník"
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:43
 #: src/components/forms/ProductForm/index.tsx:95
 #: src/components/forms/ProductForm/index.tsx:359
-#: src/components/forms/ProductForm/SizedProductForm.tsx:122
+#: src/components/forms/ProductForm/SizedProductForm.tsx:147
 #: src/components/forms/PromoCodeForm/index.tsx:112
 #: src/components/modals/OfferWaitlistModal/index.tsx:189
 #: src/components/routes/event/Reports/PromoCodesReport/index.tsx:78
@@ -11047,7 +11141,7 @@ msgstr "Odporúčame rozmery 1950px x 650px, pomer 3:1 a maximálnu veľkosť s�
 msgid "We recommend dimensions of 400px by 400px, and a maximum file size of 30MB"
 msgstr "Odporúčame rozmery 400px x 400px a maximálnu veľkosť súboru 30 MB"
 
-#: src/components/routes/landing/index.tsx:783
+#: src/components/routes/landing/index.tsx:789
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "Podujatia z platformy zdieľame na sociálnych sieťach Dehors. Tvoje podujatie sa dostane priamo pred komunitu ľudí v pohybe."
 
@@ -11090,6 +11184,10 @@ msgstr "Presunuli sme sídlo do Írska. V dôsledku toho potrebujeme, aby ste zn
 #: src/components/routes/welcome/index.tsx:146
 msgid "We've sent a 5-digit verification code to:"
 msgstr "Poslali sme 5-ciferný overovací kód na:"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:63
+msgid "Weather"
+msgstr "Počasie"
 
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:49
 #: src/components/modals/CreateWebhookModal/index.tsx:49
@@ -11208,6 +11306,10 @@ msgstr "Čo musíte urobiť:"
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:48
+msgid "When"
+msgstr "Kedy"
+
 #: src/components/forms/WebhookForm/index.tsx:129
 msgid "When a check-in is deleted"
 msgstr "Keď je odbavenie odstránené"
@@ -11316,6 +11418,11 @@ msgstr "Ak je povolené, na transakcie Stripe Connect nebudú účtované žiadn
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Ak sú povolené offline platby, používatelia budú môcť dokončiť objednávky a dostať lístky. Ich lístky budú jasne uvádzať, že objednávka nie je zaplatená, a nástroj odbavenia upozorní personál odbavenia, ak objednávka vyžaduje platbu."
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:49
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:62
+msgid "Where"
+msgstr "Kde"
+
 #: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
 msgid "Where the money from this organizer's ticket sales is paid."
 msgstr "Kam idú peniaze z predaja vstupeniek tohto organizátora."
@@ -11348,7 +11455,7 @@ msgstr "Náhľad widgetu"
 msgid "Widget Settings"
 msgstr "Nastavenia widgetu"
 
-#: src/components/routes/landing/index.tsx:780
+#: src/components/routes/landing/index.tsx:786
 msgid "will see your event"
 msgstr "uvidí tvoje podujatie"
 
@@ -11361,13 +11468,13 @@ msgid "Working"
 msgstr "Pracuje"
 
 #: src/components/modals/CreateProductCategoryModal/index.tsx:60
-#: src/components/modals/CreateProductModal/index.tsx:89
+#: src/components/modals/CreateProductModal/index.tsx:90
 #: src/components/modals/CreatePromoCodeModal/index.tsx:56
 #: src/components/modals/CreateQuestionModal/index.tsx:75
 #: src/components/modals/DuplicateEventModal/index.tsx:177
 #: src/components/modals/DuplicateProductModal/index.tsx:117
 #: src/components/modals/EditProductCategoryModal/index.tsx:70
-#: src/components/modals/EditProductModal/index.tsx:116
+#: src/components/modals/EditProductModal/index.tsx:117
 #: src/components/modals/EditPromoCodeModal/index.tsx:84
 #: src/components/modals/EditQuestionModal/index.tsx:101
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
@@ -11381,7 +11488,7 @@ msgstr "Pracuje..."
 msgid "Workshop"
 msgstr "Workshop"
 
-#: src/components/routes/landing/index.tsx:1013
+#: src/components/routes/landing/index.tsx:1021
 msgid "Write to us"
 msgstr "Napíš nám"
 
@@ -11440,7 +11547,7 @@ msgstr "Vydávate čiastočné vrátenie. Zákazníkovi bude vrátené {0} {1}."
 msgid "You are offline"
 msgstr "Ste offline"
 
-#: src/components/modals/SendMessageModal/index.tsx:175
+#: src/components/modals/SendMessageModal/index.tsx:179
 msgid "You can attach a maximum of {MAX_ATTACHMENTS} files"
 msgstr "Môžete priložiť najviac {MAX_ATTACHMENTS} súborov"
 
@@ -11497,7 +11604,7 @@ msgstr "Túto pozvánku ste už prijali. Prihláste sa pre pokračovanie."
 msgid "You have no pending email change."
 msgstr "Nemáte žiadnu čakajúcu zmenu e-mailu."
 
-#: src/components/modals/SendMessageModal/index.tsx:218
+#: src/components/modals/SendMessageModal/index.tsx:222
 msgid "You have reached your messaging limit."
 msgstr "Dosiahli ste limit správ."
 
@@ -11513,7 +11620,7 @@ msgstr "K bezplatnému produktu máte pridané dane a poplatky. Chcete ich odstr
 msgid "You keep {saved} more."
 msgstr "Zostane ti o {saved} viac."
 
-#: src/components/modals/SendMessageModal/index.tsx:186
+#: src/components/modals/SendMessageModal/index.tsx:190
 msgid "You must acknowledge that this email is not promotional"
 msgstr "Musíte potvrdiť, že tento e-mail nie je propagačný"
 
@@ -11533,13 +11640,13 @@ msgstr "Musíte súhlasiť s podmienkami a ustanoveniami"
 msgid "You must create a ticket before you can manually add an attendee."
 msgstr "Pred manuálnym pridaním účastníka musíte vytvoriť lístok."
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:62
+msgid "You must have at least one option"
+msgstr "Musíte mať aspoň jednu možnosť"
+
 #: src/components/forms/ProductForm/index.tsx:71
 msgid "You must have at least one price tier"
 msgstr "Musíte mať aspoň jednu cenovú úroveň"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:54
-msgid "You must have at least one size"
-msgstr "Musíte mať aspoň jednu veľkosť"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:332
 msgid "You must verify your email address before you can update the organizer status."
@@ -11549,7 +11656,7 @@ msgstr "Pred aktualizáciou stavu organizátora musíte overiť e-mailovú adres
 msgid "You need to verify your account email before you can modify email templates."
 msgstr "Pred úpravou e-mailových šablón musíte overiť e-mail účtu."
 
-#: src/components/modals/SendMessageModal/index.tsx:252
+#: src/components/modals/SendMessageModal/index.tsx:279
 msgid "You need to verify your account email before you can send messages."
 msgstr "Pred odosielaním správ musíte overiť e-mail účtu."
 
@@ -11593,7 +11700,7 @@ msgstr "Ste v zozname čakateľov!"
 msgid "You've been offered a spot!"
 msgstr "Bolo vám ponúknuté miesto!"
 
-#: src/components/modals/SendMessageModal/index.tsx:291
+#: src/components/modals/SendMessageModal/index.tsx:318
 msgid "Your account has messaging limits. To increase your limits, contact us at"
 msgstr "Váš účet má limity správ. Na zvýšenie limitov nás kontaktujte na"
 
@@ -11601,7 +11708,7 @@ msgstr "Váš účet má limity správ. Na zvýšenie limitov nás kontaktujte n
 msgid "Your account name is used on event pages and in emails."
 msgstr "Názov vášho účtu sa používa na stránkach udalostí a v e-mailoch."
 
-#: src/components/routes/landing/index.tsx:952
+#: src/components/routes/landing/index.tsx:959
 msgid "Your account, your money."
 msgstr "Tvoj účet, tvoje peniaze."
 
@@ -11653,7 +11760,7 @@ msgstr "Vaša udalosť je živá!"
 msgid "Your event must be live before you can sell tickets to attendees."
 msgstr "Vaša udalosť musí byť živá pred predajom lístkov účastníkom."
 
-#: src/components/routes/landing/index.tsx:826
+#: src/components/routes/landing/index.tsx:830
 msgid "Your event shows up in the <0><1/></0>, the one the community checks to plan its outings."
 msgstr "Tvoje podujatie sa objaví v <0><1/></0>, podľa ktorého si komunita plánuje výlety."
 
@@ -11673,7 +11780,7 @@ msgstr "Tvoje prihlásenie, tvoj jazyk, platba a táto voľba. Vždy aktívne."
 msgid "Your logo, colors, and style on every page"
 msgstr "Vaše logo, farby a štýl na každej stránke"
 
-#: src/components/routes/landing/index.tsx:814
+#: src/components/routes/landing/index.tsx:818
 msgid "Your logo, your colours: ticketing that looks like your brand."
 msgstr "Tvoje logo, tvoje farby: predaj vstupeniek v štýle tvojej značky."
 
@@ -11729,7 +11836,7 @@ msgstr "Vaše objednávky sa zobrazia tu, keď začnú prichádzať."
 msgid "Your organizer address"
 msgstr "Adresa vášho organizátora"
 
-#: src/components/routes/landing/index.tsx:822
+#: src/components/routes/landing/index.tsx:826
 msgid "Your participants, from ticket to door"
 msgstr "Tvoji účastníci, od vstupenky po vstup"
 
@@ -11787,7 +11894,7 @@ msgstr "Váš účet Stripe je pripojený a pripravený na spracovanie platieb."
 msgid "Your ticket for"
 msgstr "Váš lístok pre"
 
-#: src/components/routes/landing/index.tsx:913
+#: src/components/routes/landing/index.tsx:920
 msgid "Your ticketing in 4 steps"
 msgstr "Tvoj predaj vstupeniek v 4 krokoch"
 
@@ -11807,7 +11914,7 @@ msgstr "Vaše číslo DPH bude overené pri uložení"
 msgid "Your waitlist offer has expired and we were unable to complete your order. Please rejoin the waitlist to be notified when more spots become available."
 msgstr "Vaša ponuka zo zoznamu čakateľov vypršala a nepodarilo sa dokončiť objednávku. Pridajte sa znovu do zoznamu čakateľov, aby ste boli upozornení, keď sa uvoľnia ďalšie miesta."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:93
+#: src/components/forms/ProductForm/SizedProductForm.tsx:114
 msgid "Youth 2–14"
 msgstr "Deti 2–14"
 

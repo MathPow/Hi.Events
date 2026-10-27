@@ -100,6 +100,10 @@ msgstr "{0} jegy"
 msgid "{0} updated successfully"
 msgstr "{0} sikeresen frissítve"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:44
+msgid "{0}: one week to go"
+msgstr "{0}: még egy hét"
+
 #: src/components/common/CheckIn/CheckInInfoModal.tsx:40
 msgid "{0}/{1} checked in"
 msgstr "{0}/{1} bejelentkezett"
@@ -129,9 +133,13 @@ msgstr "{minutes} perc és {seconds} másodperc"
 msgid "{organizerName}'s first event"
 msgstr "{organizerName} első eseménye"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:126
+#: src/components/forms/ProductForm/SizedProductForm.tsx:151
 msgid "{sold} sold"
 msgstr "{sold} eladva"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:47
+msgid "{title} is in one week. Here's what you need to know to get ready."
+msgstr "{title} egy hét múlva lesz. Ezt kell tudnod a felkészüléshez."
 
 #: src/components/common/EventCard/index.tsx:115
 msgid "{totalCount} ticket types"
@@ -211,19 +219,19 @@ msgstr "0 perc és 0 másodperc"
 msgid "1 Active Webhook"
 msgstr "1 aktív webhook"
 
-#: src/components/modals/SendMessageModal/index.tsx:123
+#: src/components/modals/SendMessageModal/index.tsx:126
 msgid "1 day after end date"
 msgstr "1 nappal a befejezési dátum után"
 
-#: src/components/modals/SendMessageModal/index.tsx:117
+#: src/components/modals/SendMessageModal/index.tsx:120
 msgid "1 day after start date"
 msgstr "1 nappal a kezdési dátum után"
 
-#: src/components/modals/SendMessageModal/index.tsx:115
+#: src/components/modals/SendMessageModal/index.tsx:118
 msgid "1 day before event"
 msgstr "1 nappal az esemény előtt"
 
-#: src/components/modals/SendMessageModal/index.tsx:116
+#: src/components/modals/SendMessageModal/index.tsx:119
 msgid "1 hour before event"
 msgstr "1 órával az esemény előtt"
 
@@ -235,7 +243,7 @@ msgstr "1 jegy"
 msgid "1 ticket type"
 msgstr "1 jegytípus"
 
-#: src/components/modals/SendMessageModal/index.tsx:114
+#: src/components/modals/SendMessageModal/index.tsx:117
 msgid "1 week before event"
 msgstr "1 héttel az esemény előtt"
 
@@ -254,16 +262,16 @@ msgstr "123 Fő utca"
 msgid "123 Sample Street"
 msgstr "Minta utca 123"
 
-#: src/components/routes/landing/index.tsx:764
-#: src/components/routes/landing/index.tsx:878
+#: src/components/routes/landing/index.tsx:770
+#: src/components/routes/landing/index.tsx:885
 msgid "2,200+ athletes"
 msgstr "Több mint 2200 sportoló"
 
-#: src/components/routes/landing/index.tsx:879
+#: src/components/routes/landing/index.tsx:886
 msgid "2.5% + Stripe fees"
 msgstr "2,5% + Stripe-díjak"
 
-#: src/components/routes/landing/index.tsx:923
+#: src/components/routes/landing/index.tsx:930
 msgid "2.5% per ticket, plus Stripe's payment fees. No subscription, no hidden fees, and no fees at all if your event is free."
 msgstr "Jegyenként 2,5%, plusz a Stripe fizetési díjai. Nincs előfizetés, nincsenek rejtett díjak, és ha ingyenes az eseményed, semmilyen díj sincs."
 
@@ -294,7 +302,7 @@ msgstr "94103"
 msgid "A cancellation notice has been sent to"
 msgstr "Lemondási értesítés elküldve ide:"
 
-#: src/components/routes/landing/index.tsx:821
+#: src/components/routes/landing/index.tsx:825
 msgid "A dashboard that's easy to pick up, and ticketing that looks like your brand."
 msgstr "Egy könnyen kezelhető vezérlőpult és a márkádhoz illő jegyértékesítés."
 
@@ -314,7 +322,7 @@ msgstr "A legördülő menü csak egy kiválasztást tesz lehetővé"
 msgid "A fee, like a booking fee or a service fee"
 msgstr "Díj, például foglalási díj vagy szolgáltatási díj"
 
-#: src/components/routes/landing/index.tsx:813
+#: src/components/routes/landing/index.tsx:817
 msgid "A few minutes and your ticketing is ready."
 msgstr "Pár perc, és kész a jegyértékesítésed."
 
@@ -371,7 +379,7 @@ msgstr "Egyetlen kérdés megrendelésenként. Pl. Mi a szállítási címe?"
 msgid "A single question per product. E.g, What is your t-shirt size?"
 msgstr "Egyetlen kérdés termékenként. Pl. Mi a póló mérete?"
 
-#: src/components/routes/landing/index.tsx:1009
+#: src/components/routes/landing/index.tsx:1017
 msgid "A small Quebec team, ready to help you launch your first event."
 msgstr "Egy kis québeci csapat, amely segít elindítani az első eseményedet."
 
@@ -583,11 +591,15 @@ msgstr "További jegyek hozzáadása"
 msgid "Add New"
 msgstr "Új hozzáadása"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:183
+msgid "Add option"
+msgstr "Opció hozzáadása"
+
 #: src/components/forms/QuestionForm/index.tsx:68
 msgid "Add Option"
 msgstr "Opció hozzáadása"
 
-#: src/components/modals/SendMessageModal/index.tsx:383
+#: src/components/modals/SendMessageModal/index.tsx:422
 msgid "Add PDF files"
 msgstr "PDF-fájlok hozzáadása"
 
@@ -603,10 +615,6 @@ msgstr "Termék hozzáadása kategóriához"
 #: src/components/common/QuestionsTable/index.tsx:478
 msgid "Add Question"
 msgstr "Kérdés hozzáadása"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:158
-msgid "Add size"
-msgstr "Méret hozzáadása"
 
 #: src/components/routes/account/ManageAccount/sections/TaxSettings/index.tsx:18
 msgid "Add Tax or Fee"
@@ -641,7 +649,7 @@ msgstr "Adjon hozzá követőpixeleket a nyilvános eseményoldalaihoz és a sze
 msgid "Add Webhook"
 msgstr "Webhook hozzáadása"
 
-#: src/components/routes/landing/index.tsx:814
+#: src/components/routes/landing/index.tsx:818
 msgid "Add your colours"
 msgstr "Add hozzá a színeidet"
 
@@ -717,7 +725,7 @@ msgstr "Admin vezérlőpult"
 msgid "Admin users have full access to events and account settings."
 msgstr "Az adminisztrátor felhasználók teljes hozzáféréssel rendelkeznek az eseményekhez és a fiókbeállításokhoz."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:90
+#: src/components/forms/ProductForm/SizedProductForm.tsx:110
 msgid "Adult XS–XXL"
 msgstr "Felnőtt XS–XXL"
 
@@ -776,7 +784,7 @@ msgstr "Összes archivált esemény"
 msgid "All attendees"
 msgstr "Minden résztvevő"
 
-#: src/components/modals/SendMessageModal/index.tsx:308
+#: src/components/modals/SendMessageModal/index.tsx:335
 msgid "All attendees of this event"
 msgstr "Az esemény összes résztvevője"
 
@@ -815,6 +823,10 @@ msgstr "Minden termék"
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:64
 msgid "All Statuses"
 msgstr "Minden állapot"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:40
+msgid "All the event's details"
+msgstr "Az esemény minden részlete"
 
 #: src/components/routes/admin/PlatformRevenue/index.tsx:125
 msgid "All time"
@@ -938,7 +950,7 @@ msgstr "Váratlan hiba történt."
 msgid "An unexpected error occurred. Please try again."
 msgstr "Váratlan hiba történt. Kérjük, próbálja újra."
 
-#: src/components/routes/landing/index.tsx:822
+#: src/components/routes/landing/index.tsx:826
 msgid "An up-to-date list, emails to keep them posted, and ticket scanning on the day."
 msgstr "Naprakész lista, e-mailek a tájékoztatáshoz és jegyolvasás az esemény napján."
 
@@ -1241,15 +1253,15 @@ msgstr "Legalább egy eseménytípust ki kell választani."
 msgid "At most {0}."
 msgstr "Legfeljebb {0}."
 
-#: src/components/modals/SendMessageModal/index.tsx:381
+#: src/components/modals/SendMessageModal/index.tsx:420
 msgid "Attachments"
 msgstr "Mellékletek"
 
-#: src/components/modals/SendMessageModal/index.tsx:178
+#: src/components/modals/SendMessageModal/index.tsx:182
 msgid "Attachments must be PDF files"
 msgstr "A mellékleteknek PDF-fájloknak kell lenniük"
 
-#: src/components/modals/SendMessageModal/index.tsx:182
+#: src/components/modals/SendMessageModal/index.tsx:186
 msgid "Attachments must not exceed {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "A mellékletek összesen nem haladhatják meg a {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB-ot"
 
@@ -1350,7 +1362,7 @@ msgstr "Regisztrált résztvevők"
 msgid "Attendees Registered"
 msgstr "Regisztrált résztvevők"
 
-#: src/components/modals/SendMessageModal/index.tsx:304
+#: src/components/modals/SendMessageModal/index.tsx:331
 msgid "Attendees with a specific ticket"
 msgstr "Résztvevők meghatározott jeggyel"
 
@@ -1420,7 +1432,7 @@ msgid "Awaiting"
 msgstr "Függőben"
 
 #: src/components/common/OrderStatusBadge/index.tsx:11
-#: src/components/modals/SendMessageModal/index.tsx:352
+#: src/components/modals/SendMessageModal/index.tsx:379
 msgid "Awaiting offline payment"
 msgstr "Offline fizetésre vár"
 
@@ -1516,15 +1528,15 @@ msgstr "Gyönyörű pénztári élmény bármilyen eszközön"
 msgid "Before your event can go live, there are a few things you need to do. Complete all the steps below to get started."
 msgstr "Mielőtt az esemény élővé válna, néhány dolgot meg kell tennie. Fejezze be az összes alábbi lépést a kezdéshez."
 
-#: src/components/routes/landing/index.tsx:843
+#: src/components/routes/landing/index.tsx:850
 msgid "Billetterie Dehors · Fewer fees, more people"
 msgstr "Billetterie Dehors · Kevesebb díj, több ember"
 
-#: src/components/routes/landing/index.tsx:888
+#: src/components/routes/landing/index.tsx:895
 msgid "Billetterie Dehors is the online ticketing platform for local races, outings and competitions. Small fees, the money straight into your account, and your event shown to our whole community."
 msgstr "A Billetterie Dehors a helyi futóversenyek, kirándulások és versenyek online jegyértékesítője. Alacsony díjak, a pénz egyenesen a számládra, és az eseményedet az egész közösségünk látja."
 
-#: src/components/routes/landing/index.tsx:931
+#: src/components/routes/landing/index.tsx:938
 msgid "Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price."
 msgstr "Billetterie Dehors: 2,5% + Stripe 2,9% + 0,30 $. Eventbrite Kanadában, a súgóközpontja szerint (2026. október): jegyenként 3,5% + 1,29 $ + 2,9% feldolgozási díj. Rendelésenként egy jegy, a díjak az árban."
 
@@ -1963,6 +1975,10 @@ msgstr "Válasszon olyan betűtípust, amely illik a márkájához. A betűtípu
 msgid "Choose an account"
 msgstr "Válasszon fiókot"
 
+#: src/components/routes/product-widget/SelectProducts/Prices/Sized/index.tsx:43
+msgid "Choose an option"
+msgstr "Válassz egy opciót"
+
 #: src/components/routes/events/Dashboard/index.tsx:233
 msgid "Choose an Organizer"
 msgstr "Válasszon szervezőt"
@@ -1983,7 +1999,13 @@ msgstr "Válassza ki az alapértelmezett beállítást az új eseményekhez. Ez 
 msgid "Choose who pays the platform fee. This does not affect additional fees you've configured in your account settings."
 msgstr "Válassza ki, ki fizeti a platformdíjat. Ez nem érinti a fiókbeállításokban konfigurált további díjakat."
 
-#: src/components/routes/product-widget/SelectProducts/Prices/Sized/index.tsx:43
+#: src/components/forms/ProductForm/SizedProductForm.tsx:102
+#: src/components/forms/ProductForm/SizedProductForm.tsx:117
+msgid "Choose your distance"
+msgstr "Válaszd ki a távot"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:109
+#: src/components/forms/ProductForm/SizedProductForm.tsx:113
 msgid "Choose your size"
 msgstr "Válaszd ki a méreted"
 
@@ -2157,7 +2179,7 @@ msgstr "Töltse ki a profilját a csapathoz való csatlakozáshoz."
 
 #: src/components/common/OrdersTable/index.tsx:469
 #: src/components/common/OrderStatusBadge/index.tsx:8
-#: src/components/modals/SendMessageModal/index.tsx:351
+#: src/components/modals/SendMessageModal/index.tsx:378
 #: src/components/routes/event/GettingStarted/index.tsx:75
 #: src/components/routes/event/orders.tsx:23
 #: src/components/routes/my-tickets/index.tsx:34
@@ -2308,7 +2330,7 @@ msgstr "Stripe csatlakoztatása"
 msgid "Connect Stripe to enable email template editing"
 msgstr "Kapcsolja be a Stripe-ot az e-mail sablon szerkesztéséhez"
 
-#: src/components/modals/SendMessageModal/index.tsx:258
+#: src/components/modals/SendMessageModal/index.tsx:285
 msgid "Connect Stripe to enable messaging"
 msgstr "Kapcsolja be a Stripe-ot az üzenetküldéshez"
 
@@ -2324,7 +2346,7 @@ msgstr "Csatlakozás a Stripe-hoz"
 msgid "Connect with Stripe"
 msgstr "Csatlakozás a Stripe-hoz"
 
-#: src/components/routes/landing/index.tsx:815
+#: src/components/routes/landing/index.tsx:819
 msgid "Connect your Stripe"
 msgstr "Kösd be a Stripe-fiókodat"
 
@@ -2714,7 +2736,7 @@ msgstr "Új jelszó létrehozása"
 msgid "Create Organizer"
 msgstr "Szervező létrehozása"
 
-#: src/components/modals/CreateProductModal/index.tsx:89
+#: src/components/modals/CreateProductModal/index.tsx:90
 msgid "Create Product"
 msgstr "Termék létrehozása"
 
@@ -2733,7 +2755,7 @@ msgstr "Kérdés létrehozása"
 msgid "Create Tax or Fee"
 msgstr "Adó vagy díj létrehozása"
 
-#: src/components/modals/CreateProductModal/index.tsx:81
+#: src/components/modals/CreateProductModal/index.tsx:82
 msgid "Create Ticket or Product"
 msgstr "Jegy vagy termék létrehozása"
 
@@ -2768,7 +2790,7 @@ msgstr "Hozza létre első eseményét"
 msgid "Create your first event to start selling tickets and managing attendees."
 msgstr "Hozza létre első eseményét, hogy elkezdhesse a jegyek értékesítését és a résztvevők kezelését."
 
-#: src/components/routes/landing/index.tsx:813
+#: src/components/routes/landing/index.tsx:817
 msgid "Create your free account"
 msgstr "Hozd létre ingyenes fiókodat"
 
@@ -2842,7 +2864,7 @@ msgstr "Jelenleg megvásárolható"
 msgid "Custom Branding"
 msgstr "Egyedi márkajelzés"
 
-#: src/components/modals/SendMessageModal/index.tsx:436
+#: src/components/modals/SendMessageModal/index.tsx:475
 msgid "Custom date and time"
 msgstr "Egyéni dátum és idő"
 
@@ -3017,7 +3039,7 @@ msgstr "Alapértelmezett sablon lesz használva"
 msgid "Defaults to the year, e.g. 2026-1"
 msgstr "Alapértelmezés szerint az év, például 2026-1"
 
-#: src/components/routes/landing/index.tsx:827
+#: src/components/routes/landing/index.tsx:831
 msgid "DEHORS calendar"
 msgstr "DEHORS-naptárban"
 
@@ -3196,6 +3218,10 @@ msgstr "Üzenet elvetése"
 msgid "Display a checkbox allowing customers to opt-in to receive marketing communications from this event organizer."
 msgstr "Jelölőnégyzet megjelenítése, amely lehetővé teszi az ügyfelek számára, hogy feliratkozzanak a rendezvényszervező marketing kommunikációira."
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:118
+msgid "Distances 5–42 km"
+msgstr "Távok 5–42 km"
+
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:235
 msgid "Document Label"
 msgstr "Dokumentum címke"
@@ -3293,7 +3319,7 @@ msgstr "Legördülő menü kiválasztása"
 msgid "Due to the high risk of spam, you must connect a Stripe account before you can modify email templates. This is to ensure that all event organizers are verified and accountable."
 msgstr "A spam magas kockázata miatt csatlakoztatnia kell egy Stripe fiókot, mielőtt módosíthatná az e-mail sablonokat. Ez biztosítja, hogy minden eseményszervező ellenőrzött és felelősségre vonható legyen."
 
-#: src/components/modals/SendMessageModal/index.tsx:259
+#: src/components/modals/SendMessageModal/index.tsx:286
 msgid ""
 "Due to the high risk of spam, you must connect a Stripe account before you can send messages to attendees.\n"
 "This is to ensure that all event organizers are verified and accountable."
@@ -3343,7 +3369,7 @@ msgstr "pl. Adományozok"
 msgid "e.g., Get Tickets, Register Now"
 msgstr "pl. Jegyek beszerzése, Regisztráció most"
 
-#: src/components/modals/SendMessageModal/index.tsx:366
+#: src/components/modals/SendMessageModal/index.tsx:405
 msgid "e.g., Important update about your tickets"
 msgstr "pl. Fontos frissítés a jegyeiről"
 
@@ -3351,7 +3377,7 @@ msgstr "pl. Fontos frissítés a jegyeiről"
 msgid "e.g., Standard, Premium, Enterprise"
 msgstr "pl. Alap, Prémium, Vállalati"
 
-#: src/components/routes/landing/index.tsx:820
+#: src/components/routes/landing/index.tsx:824
 msgid "Each event gets a page to share anywhere: free or paid tickets, bought in a few clicks."
 msgstr "Minden esemény kap egy megosztható oldalt: ingyenes vagy fizetős jegyek, néhány kattintással."
 
@@ -3443,8 +3469,8 @@ msgstr "Rendelés részleteinek szerkesztése"
 msgid "Edit Organizer"
 msgstr "Szervező szerkesztése"
 
-#: src/components/modals/EditProductModal/index.tsx:108
-#: src/components/modals/EditProductModal/index.tsx:116
+#: src/components/modals/EditProductModal/index.tsx:109
+#: src/components/modals/EditProductModal/index.tsx:117
 msgid "Edit Product"
 msgstr "Termék szerkesztése"
 
@@ -4014,7 +4040,7 @@ msgstr "Következő 24 órában kezdődő események"
 msgid "Every email template must include a call-to-action button that links to the appropriate page"
 msgstr "Minden e-mail sablonnak tartalmaznia kell egy cselekvésre ösztönző gombot, amely a megfelelő oldalra vezet"
 
-#: src/components/routes/landing/index.tsx:967
+#: src/components/routes/landing/index.tsx:974
 msgid "Everything you need"
 msgstr "Minden, amire szükséged van"
 
@@ -4030,6 +4056,10 @@ msgstr "Példák: \"Póló méret\", \"Étkezési preferencia\", \"Munkakör\""
 #: src/components/routes/admin/FailedJobs/index.tsx:265
 msgid "Exception"
 msgstr "Kivétel"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:63
+msgid "Expected weather and what to wear"
+msgstr "Várható időjárás és ajánlott öltözet"
 
 #: src/components/forms/CheckInListForm/index.tsx:68
 msgid "Expiration date"
@@ -4394,7 +4424,7 @@ msgstr "Díjkezelés"
 #: src/components/common/OrdersTable/index.tsx:408
 #: src/components/forms/ProductForm/index.tsx:466
 #: src/components/routes/landing/index.tsx:103
-#: src/components/routes/landing/index.tsx:1020
+#: src/components/routes/landing/index.tsx:1028
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:54
 msgid "Fees"
 msgstr "Díjak"
@@ -4407,7 +4437,7 @@ msgstr "A díjak változhatnak. Értesítést kap minden díjstruktúrájában b
 msgid "Fees Bypassed"
 msgstr "Díjak megkerülve"
 
-#: src/components/routes/landing/index.tsx:922
+#: src/components/routes/landing/index.tsx:929
 msgid "Fees that stay small."
 msgstr "Alacsonyan tartott díjak."
 
@@ -4566,7 +4596,7 @@ msgstr "Betűcsalád"
 msgid "Food & Drink"
 msgstr "Étel és ital"
 
-#: src/components/routes/landing/index.tsx:1016
+#: src/components/routes/landing/index.tsx:1024
 msgid "Footer"
 msgstr "Lábléc"
 
@@ -4591,7 +4621,7 @@ msgstr "Elfelejtette jelszavát?"
 msgid "Free"
 msgstr "Ingyenes"
 
-#: src/components/routes/landing/index.tsx:820
+#: src/components/routes/landing/index.tsx:824
 msgid "Free or paid, one link"
 msgstr "Ingyenes vagy fizetős, egy link"
 
@@ -4603,7 +4633,7 @@ msgstr "Ingyenes termék"
 msgid "Free product, no payment information required"
 msgstr "Ingyenes termék, fizetési információ nem szükséges"
 
-#: src/components/routes/landing/index.tsx:955
+#: src/components/routes/landing/index.tsx:962
 msgid "Free to open, no subscription"
 msgstr "Ingyenes nyitás, előfizetés nélkül"
 
@@ -4628,7 +4658,7 @@ msgstr "Teljes esemény időtartama"
 msgid "Full refund"
 msgstr "Teljes visszatérítés"
 
-#: src/components/routes/landing/index.tsx:816
+#: src/components/routes/landing/index.tsx:820
 msgid "Gather your people"
 msgstr "Gyűjtsd össze az embereidet"
 
@@ -4661,11 +4691,15 @@ msgstr "Kód generálása"
 msgid "German"
 msgstr "Német"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:28
+msgid "Get directions"
+msgstr "Útvonal megtekintése"
+
 #: src/components/layouts/EventHomepage/index.tsx:453
 msgid "Get Directions"
 msgstr "Útvonal"
 
-#: src/components/routes/landing/index.tsx:947
+#: src/components/routes/landing/index.tsx:954
 msgid "Get paid from the presale."
 msgstr "Már az elővételben kasszírozol."
 
@@ -4758,6 +4792,10 @@ msgstr "Résztvevők"
 msgid "Have a promo code?"
 msgstr "Van promóciós kódja?"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:99
+msgid "Heading shown to buyers"
+msgstr "A vásárlóknak megjelenő cím"
+
 #: src/constants/productInfoIcons.ts:38
 msgid "Heart"
 msgstr "Szív"
@@ -4802,6 +4840,11 @@ msgstr "Mire számíthat:"
 #: src/components/routes/event/EventDashboard/index.tsx:121
 msgid "Hi {0} 👋"
 msgstr "Szia {0} 👋"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:46
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:60
+msgid "Hi!"
+msgstr "Szia!"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:75
 msgid "Hi.Events Fee"
@@ -4874,6 +4917,10 @@ msgstr "Elrejti az első lépések oldalt az oldalsávról"
 msgid "Hide this category?"
 msgstr "Elrejti ezt a kategóriát?"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:156
+msgid "Hide this option from buyers"
+msgstr "Opció elrejtése a vásárlók elől"
+
 #: src/components/forms/ProductForm/index.tsx:545
 msgid "Hide this product from customers"
 msgstr "Termék elrejtése az ügyfelek elől"
@@ -4881,10 +4928,6 @@ msgstr "Termék elrejtése az ügyfelek elől"
 #: src/components/forms/QuestionForm/index.tsx:219
 msgid "Hide this question"
 msgstr "Kérdés elrejtése"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:131
-msgid "Hide this size from buyers"
-msgstr "Méret elrejtése a vásárlók elől"
 
 #: src/components/forms/ProductForm/index.tsx:116
 msgid "Hide this tier from users"
@@ -4936,8 +4979,8 @@ msgid "Homer"
 msgstr "Homer"
 
 #: src/components/routes/landing/index.tsx:102
-#: src/components/routes/landing/index.tsx:890
-#: src/components/routes/landing/index.tsx:1019
+#: src/components/routes/landing/index.tsx:897
+#: src/components/routes/landing/index.tsx:1027
 msgid "How it works"
 msgstr "Így működik"
 
@@ -4993,7 +5036,7 @@ msgstr "Elfogadom az eseménnyel kapcsolatos e-mail értesítések fogadását"
 msgid "I agree to the <0>terms and conditions</0>"
 msgstr "Elfogadom az <0>általános szerződési feltételeket</0>"
 
-#: src/components/modals/SendMessageModal/index.tsx:470
+#: src/components/modals/SendMessageModal/index.tsx:509
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Megerősítem, hogy ez egy tranzakciós üzenet az eseményhez kapcsolódóan"
 
@@ -5116,7 +5159,7 @@ msgstr "Adja meg az online esemény csatlakozási adatait. Ezek az adatok megjel
 msgid "Include tax and fees in the price"
 msgstr "Adó és díjak belefoglalása az árba"
 
-#: src/components/routes/landing/index.tsx:971
+#: src/components/routes/landing/index.tsx:978
 msgid "Included"
 msgstr "Benne van"
 
@@ -5313,6 +5356,11 @@ msgstr "Olasz"
 msgid "Item"
 msgstr "Tétel"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:50
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:64
+msgid "Item to bring"
+msgstr "Hozandó tárgy"
+
 #: src/components/common/OrdersTable/index.tsx:389
 msgid "item(s)"
 msgstr "tétel(ek)"
@@ -5495,7 +5543,7 @@ msgstr "Utoljára használva"
 msgid "Leaf"
 msgstr "Levél"
 
-#: src/components/routes/landing/index.tsx:941
+#: src/components/routes/landing/index.tsx:948
 msgid "Learn more about Stripe"
 msgstr "Tudj meg többet a Stripe-ról"
 
@@ -5507,7 +5555,7 @@ msgstr "Hagyja üresen az alapértelmezett „Számla” szó használatához"
 msgid "Leave empty for a link that never expires."
 msgstr "Hagyd üresen, ha a link soha ne járjon le."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:162
+#: src/components/forms/ProductForm/SizedProductForm.tsx:187
 msgid "Leave quantity empty for unlimited stock"
 msgstr "Hagyd üresen a mennyiséget a korlátlan készlethez"
 
@@ -5599,7 +5647,7 @@ msgstr "Webhookok betöltése"
 msgid "Loading..."
 msgstr "Betöltés..."
 
-#: src/components/routes/landing/index.tsx:906
+#: src/components/routes/landing/index.tsx:913
 msgid "Local organizers already trust us"
 msgstr "Helyi szervezők már megbíznak bennünk"
 
@@ -5616,8 +5664,8 @@ msgstr "Helyszín"
 #: src/components/routes/auth/Register/index.tsx:122
 #: src/components/routes/landing/index.tsx:192
 #: src/components/routes/landing/index.tsx:310
-#: src/components/routes/landing/index.tsx:869
-#: src/components/routes/landing/index.tsx:1021
+#: src/components/routes/landing/index.tsx:876
+#: src/components/routes/landing/index.tsx:1029
 msgid "Log in"
 msgstr "Bejelentkezés"
 
@@ -5659,11 +5707,11 @@ msgstr "Jegyeim keresése"
 msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum..."
 
-#: src/components/routes/landing/index.tsx:886
+#: src/components/routes/landing/index.tsx:893
 msgid "Made by organizers,<0/>for organizers."
 msgstr "Szervezők készítették,<0/>szervezőknek."
 
-#: src/components/routes/landing/index.tsx:1033
+#: src/components/routes/landing/index.tsx:1041
 msgid "Made in Québec, for people on the move."
 msgstr "Québecben készült, azoknak, akik mozognak."
 
@@ -5774,6 +5822,10 @@ msgstr "Maximum megrendelésenként"
 msgid "Medium"
 msgstr "Médium"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:21
+msgid "Meeting place"
+msgstr "Találkozási pont"
+
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:128
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:158
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:166
@@ -5784,7 +5836,7 @@ msgstr "Menü"
 #: src/components/common/AttendeeTable/index.tsx:188
 #: src/components/common/ContactOrganizerModal/index.tsx:88
 #: src/components/common/OrdersTable/index.tsx:303
-#: src/components/modals/SendMessageModal/index.tsx:371
+#: src/components/modals/SendMessageModal/index.tsx:410
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:151
 msgid "Message"
 msgstr "Üzenet"
@@ -5801,7 +5853,7 @@ msgstr "Üzenet a résztvevőnek"
 msgid "Message Attendees"
 msgstr "Üzenet a résztvevőknek"
 
-#: src/components/modals/SendMessageModal/index.tsx:328
+#: src/components/modals/SendMessageModal/index.tsx:355
 msgid "Message attendees with specific tickets"
 msgstr "Üzenet a résztvevőknek meghatározott jegyekkel"
 
@@ -5825,7 +5877,7 @@ msgstr "Üzenet tartalma"
 msgid "Message Details"
 msgstr "Üzenet részletei"
 
-#: src/components/modals/SendMessageModal/index.tsx:96
+#: src/components/modals/SendMessageModal/index.tsx:99
 msgid "Message individual attendees"
 msgstr "Egyéni résztvevők üzenete"
 
@@ -5833,15 +5885,15 @@ msgstr "Egyéni résztvevők üzenete"
 msgid "Message is required"
 msgstr "Üzenet kötelező"
 
-#: src/components/modals/SendMessageModal/index.tsx:340
+#: src/components/modals/SendMessageModal/index.tsx:367
 msgid "Message order owners with specific products"
 msgstr "Üzenet a megrendelőknek meghatározott termékekkel"
 
-#: src/components/modals/SendMessageModal/index.tsx:212
+#: src/components/modals/SendMessageModal/index.tsx:216
 msgid "Message Scheduled"
 msgstr "Üzenet ütemezve"
 
-#: src/components/modals/SendMessageModal/index.tsx:212
+#: src/components/modals/SendMessageModal/index.tsx:216
 msgid "Message Sent"
 msgstr "Üzenet elküldve"
 
@@ -5880,7 +5932,7 @@ msgstr "Egyéb"
 msgid "Miscellaneous Settings"
 msgstr "Egyéb beállítások"
 
-#: src/components/routes/landing/index.tsx:976
+#: src/components/routes/landing/index.tsx:983
 msgid "Missing something?"
 msgstr "Hiányzik valami?"
 
@@ -6497,7 +6549,7 @@ msgstr "Offline fizetési beállítások"
 msgid "Offline payments, like Interac e-Transfer, are free: no Billetterie Dehors fees. In return, if you make any content for your event (posts, stories, posters), give Billetterie Dehors a shout-out."
 msgstr "Az offline fizetések, például az Interac e-Transfer, ingyenesek: nincs Billetterie Dehors díj. Cserébe, ha tartalmat készítesz az eseményedhez (posztok, sztorik, plakátok), említsd meg a Billetterie Dehors-t."
 
-#: src/components/routes/landing/index.tsx:976
+#: src/components/routes/landing/index.tsx:983
 msgid "On request"
 msgstr "Kérésre"
 
@@ -6511,7 +6563,7 @@ msgstr "Eladó"
 msgid "On sale {0}"
 msgstr "Értékesítésben {0}"
 
-#: src/components/routes/landing/index.tsx:825
+#: src/components/routes/landing/index.tsx:829
 msgid "On the DEHORS calendar"
 msgstr "A DEHORS-naptárban"
 
@@ -6532,8 +6584,8 @@ msgid "Once you're ready, set your event live and start selling products."
 msgstr "Amikor elkészült, tegye élővé eseményét, és kezdjen el termékeket értékesíteni."
 
 #: src/components/forms/ProductForm/index.tsx:184
-msgid "One price, a choice of sizes with their own stock. Perfect for t-shirts and apparel."
-msgstr "Egy ár, többféle méret saját készlettel. Tökéletes pólókhoz és ruházathoz."
+msgid "One price, a choice of options with their own stock: sizes, distances, categories."
+msgstr "Egy ár, választható opciók saját készlettel: méretek, távok, kategóriák."
 
 #: src/components/common/EventStatusBadge/index.tsx:18
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:31
@@ -6570,7 +6622,7 @@ msgstr "Csak a fiókadminisztrátorok törölhetnek vagy archiválhatnak esemén
 msgid "Only account administrators can delete or archive organizers. Contact your account admin for assistance."
 msgstr "Csak a fiókadminisztrátorok törölhetnek vagy archiválhatnak szervezőket. Segítségért forduljon a fiókadminisztrátorhoz."
 
-#: src/components/modals/SendMessageModal/index.tsx:348
+#: src/components/modals/SendMessageModal/index.tsx:375
 msgid "Only send to orders with these statuses"
 msgstr "Csak az ilyen státuszú megrendelésekre küldje el"
 
@@ -6604,6 +6656,11 @@ msgstr "Menü megnyitása"
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:172
 msgid "Opens in a new tab."
 msgstr "Új lapon nyílik meg."
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:139
+#: src/components/forms/ProductForm/SizedProductForm.tsx:140
+msgid "Option"
+msgstr "Opció"
 
 #: src/components/forms/QuestionForm/index.tsx:45
 msgid "Option {i}"
@@ -6648,6 +6705,11 @@ msgstr "Nem kötelező. Ha megadod, csak ez a cím használhatja a linket."
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "options"
 msgstr "opciók"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:106
+msgctxt "list of a product with options"
+msgid "Options"
+msgstr "Opciók"
 
 #: src/components/forms/QuestionForm/index.tsx:28
 msgid "Options"
@@ -6756,7 +6818,7 @@ msgstr "Megrendelés jegyzetek"
 msgid "Order owner"
 msgstr "Megrendelő"
 
-#: src/components/modals/SendMessageModal/index.tsx:312
+#: src/components/modals/SendMessageModal/index.tsx:339
 msgid "Order owners with a specific product"
 msgstr "Megrendelők meghatározott termékkel"
 
@@ -6780,7 +6842,7 @@ msgstr "Megrendelés visszatérítve"
 msgid "Order Status"
 msgstr "Megrendelés állapota"
 
-#: src/components/modals/SendMessageModal/index.tsx:349
+#: src/components/modals/SendMessageModal/index.tsx:376
 msgid "Order statuses"
 msgstr "Megrendelés állapotok"
 
@@ -6948,7 +7010,7 @@ msgstr "Egyéb listák (Jegy nem szerepel)"
 msgid "Outgoing Messages"
 msgstr "Kimenő üzenetek"
 
-#: src/components/routes/landing/index.tsx:1026
+#: src/components/routes/landing/index.tsx:1034
 msgid "Outings calendar"
 msgstr "Túranaptár"
 
@@ -7010,6 +7072,10 @@ msgstr "Fizetős termék"
 #: src/components/layouts/AuthLayout/index.tsx:30
 msgid "Paid, free, tiered pricing, and donation-based tickets"
 msgstr "Fizetős, ingyenes, szintezett árazású és adományalapú jegyek"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:51
+msgid "Parking, carpooling, bib pick-up"
+msgstr "Parkolás, telekocsi, rajtszámátvétel"
 
 #: src/components/modals/RefundOrderModal/index.tsx:109
 msgid "Partial refund"
@@ -7209,7 +7275,7 @@ msgstr "Fizetési feltételek"
 msgid "Payments"
 msgstr "Fizetések"
 
-#: src/components/routes/landing/index.tsx:815
+#: src/components/routes/landing/index.tsx:819
 msgid "Payments go straight to your account."
 msgstr "A befizetések közvetlenül a számládra érkeznek."
 
@@ -7221,7 +7287,7 @@ msgstr "Fizetések nem elérhetők"
 msgid "Payments will continue to flow without interruption"
 msgstr "A fizetések megszakítás nélkül folytatódnak"
 
-#: src/components/modals/SendMessageModal/index.tsx:382
+#: src/components/modals/SendMessageModal/index.tsx:421
 msgid "PDF only, up to {MAX_ATTACHMENTS} files and {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Csak PDF, legfeljebb {MAX_ATTACHMENTS} fájl és összesen {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -7522,7 +7588,7 @@ msgstr "Eseményoldal előnézete"
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:360
 #: src/components/forms/ProductForm/index.tsx:85
 #: src/components/forms/ProductForm/index.tsx:345
-#: src/components/forms/ProductForm/SizedProductForm.tsx:80
+#: src/components/forms/ProductForm/SizedProductForm.tsx:88
 msgid "Price"
 msgstr "Ár"
 
@@ -7657,8 +7723,8 @@ msgid "Product Updated"
 msgstr "Termék frissítve"
 
 #: src/components/forms/ProductForm/index.tsx:182
-msgid "Product with sizes"
-msgstr "Termék méretekkel"
+msgid "Product with options"
+msgstr "Termék opciókkal"
 
 #: src/components/common/PromoCodeTable/index.tsx:148
 msgid "Product(s)"
@@ -7741,7 +7807,7 @@ msgstr "Promóciós kódok jelentés"
 msgid "Promo Only"
 msgstr "Csak promócióval"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:553
 msgid "Promotional emails may result in account suspension"
 msgstr "A promóciós e-mailek fiók felfüggesztéshez vezethetnek"
 
@@ -7772,7 +7838,7 @@ msgstr "Esemény közzététele"
 msgid "Purchased"
 msgstr "Megvásárolt"
 
-#: src/components/routes/landing/index.tsx:816
+#: src/components/routes/landing/index.tsx:820
 msgid "Put your tickets on sale, share the link and scan at the door."
 msgstr "Tedd árusításra a jegyeket, oszd meg a linket, és olvasd be őket a bejáratnál."
 
@@ -7790,7 +7856,7 @@ msgstr "Menny."
 
 #: src/components/forms/ProductForm/index.tsx:97
 #: src/components/forms/ProductForm/index.tsx:362
-#: src/components/forms/ProductForm/SizedProductForm.tsx:123
+#: src/components/forms/ProductForm/SizedProductForm.tsx:148
 msgid "Quantity Available"
 msgstr "Elérhető mennyiség"
 
@@ -7859,7 +7925,7 @@ msgstr "Túllépte a korlátot. Kérjük, próbálja újra később."
 msgid "Re-offer Spot"
 msgstr "Hely újbóli felajánlása"
 
-#: src/components/routes/landing/index.tsx:1008
+#: src/components/routes/landing/index.tsx:1016
 msgid "Ready to gather your people?"
 msgstr "Készen állsz összegyűjteni az embereidet?"
 
@@ -7914,7 +7980,7 @@ msgstr "Legutóbbi megrendelések"
 msgid "recipient"
 msgstr "címzett"
 
-#: src/components/modals/SendMessageModal/index.tsx:62
+#: src/components/modals/SendMessageModal/index.tsx:65
 msgid "Recipient"
 msgstr "Címzett"
 
@@ -7923,7 +7989,7 @@ msgid "recipients"
 msgstr "címzett"
 
 #: src/components/modals/MessageRecipientsModal/index.tsx:38
-#: src/components/modals/SendMessageModal/index.tsx:315
+#: src/components/modals/SendMessageModal/index.tsx:342
 #: src/components/routes/admin/Messages/index.tsx:166
 #: src/components/routes/admin/Messages/index.tsx:299
 msgid "Recipients"
@@ -8030,6 +8096,14 @@ msgstr "Regisztrációs kérdések"
 msgid "Remaining Uses"
 msgstr "Fennmaradó felhasználások"
 
+#: src/components/modals/SendMessageModal/index.tsx:394
+msgid "Reminder a week before"
+msgstr "Emlékeztető egy héttel előtte"
+
+#: src/components/modals/SendMessageModal/index.tsx:398
+msgid "Reminder the day before"
+msgstr "Emlékeztető előző nap"
+
 #: src/components/routes/product-widget/SelectProducts/index.tsx:587
 msgid "remove"
 msgstr "eltávolítás"
@@ -8041,14 +8115,18 @@ msgstr "eltávolítás"
 msgid "Remove"
 msgstr "Eltávolítás"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:166
+msgid "Remove option"
+msgstr "Opció eltávolítása"
+
 #: src/components/common/InlineOrderSummary/index.tsx:156
 #: src/components/common/InlineOrderSummary/index.tsx:157
 msgid "Remove promo code"
 msgstr "Promóciós kód eltávolítása"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:141
-msgid "Remove size"
-msgstr "Méret eltávolítása"
+#: src/components/modals/SendMessageModal/index.tsx:241
+msgid "Replace the subject and the message with this template?"
+msgstr "Lecseréled a tárgyat és az üzenetet erre a sablonra?"
 
 #: src/components/routes/organizer/Reports/ReportLayout/index.tsx:26
 msgid "Report not found"
@@ -8072,6 +8150,11 @@ msgstr "Számlázási cím kötelező"
 #: src/components/common/QuestionsTable/index.tsx:118
 msgid "Required"
 msgstr "Kötelező"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:50
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:64
+msgid "Required gear"
+msgstr "Kötelező felszerelés"
 
 #: src/components/forms/ProductForm/index.tsx:214
 msgid "Requires a charity registration number in Settings, Tax receipts."
@@ -8413,11 +8496,11 @@ msgstr "ÁFA beállítások mentése"
 msgid "Scan"
 msgstr "Beolvasás"
 
-#: src/components/modals/SendMessageModal/index.tsx:412
+#: src/components/modals/SendMessageModal/index.tsx:451
 msgid "Schedule for later"
 msgstr "Ütemezés későbbre"
 
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Schedule Message"
 msgstr "Üzenet ütemezése"
 
@@ -8427,7 +8510,7 @@ msgstr "Üzenet ütemezése"
 msgid "Scheduled"
 msgstr "Ütemezett"
 
-#: src/components/modals/SendMessageModal/index.tsx:442
+#: src/components/modals/SendMessageModal/index.tsx:481
 msgid "Scheduled time"
 msgstr "Ütemezett időpont"
 
@@ -8546,6 +8629,10 @@ msgstr "Összes jegy megtekintése"
 msgid "See the full breakdown"
 msgstr "Teljes bontás megtekintése"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:61
+msgid "See you tomorrow at {time} for {title}."
+msgstr "Holnap {time}-kor várunk a(z) {title} eseményen."
+
 #: src/components/routes/event/Deposits/index.tsx:312
 msgid "Select"
 msgstr "Kiválasztás"
@@ -8588,7 +8675,7 @@ msgstr "Összes kiválasztása"
 msgid "Select an event"
 msgstr "Válasszon eseményt"
 
-#: src/components/modals/SendMessageModal/index.tsx:317
+#: src/components/modals/SendMessageModal/index.tsx:344
 msgid "Select attendee group"
 msgstr "Résztvevő csoport kiválasztása"
 
@@ -8637,7 +8724,7 @@ msgid "Select Product Tier"
 msgstr "Terméksor kiválasztása"
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:49
-#: src/components/modals/SendMessageModal/index.tsx:341
+#: src/components/modals/SendMessageModal/index.tsx:368
 msgid "Select products"
 msgstr "Termékek kiválasztása"
 
@@ -8670,7 +8757,7 @@ msgid "Select Ticket"
 msgstr "Jegy kiválasztása"
 
 #: src/components/forms/CheckInListForm/index.tsx:43
-#: src/components/modals/SendMessageModal/index.tsx:329
+#: src/components/modals/SendMessageModal/index.tsx:356
 msgid "Select tickets"
 msgstr "Jegyek kiválasztása"
 
@@ -8684,7 +8771,7 @@ msgstr "Időszak kiválasztása"
 msgid "Select timezone"
 msgstr "Időzóna kiválasztása"
 
-#: src/components/modals/SendMessageModal/index.tsx:316
+#: src/components/modals/SendMessageModal/index.tsx:343
 msgid "Select which attendees should receive this message"
 msgstr "Válassza ki, mely résztvevők kapják meg ezt az üzenetet"
 
@@ -8717,11 +8804,11 @@ msgstr "Jegy eladása"
 msgid "Sell a ticket at the door"
 msgstr "Jegy eladása a helyszínen"
 
-#: src/components/routes/landing/index.tsx:823
+#: src/components/routes/landing/index.tsx:827
 msgid "Sell your merch"
 msgstr "Árusítsd a merchet"
 
-#: src/components/routes/landing/index.tsx:823
+#: src/components/routes/landing/index.tsx:827
 msgid "Sell your merch with the tickets, handed over at the event."
 msgstr "Árusítsd a merchet a jegyekkel együtt, átvétel az eseményen."
 
@@ -8734,11 +8821,11 @@ msgstr "Gyorsan fogy 🔥"
 msgid "Send"
 msgstr "Küldés"
 
-#: src/components/modals/SendMessageModal/index.tsx:240
+#: src/components/modals/SendMessageModal/index.tsx:267
 msgid "Send a message"
 msgstr "Üzenet küldése"
 
-#: src/components/modals/SendMessageModal/index.tsx:499
+#: src/components/modals/SendMessageModal/index.tsx:538
 msgid "Send as test"
 msgstr "Küldés tesztként"
 
@@ -8746,16 +8833,16 @@ msgstr "Küldés tesztként"
 msgid "Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later."
 msgstr "E-mailek küldése résztvevőknek, jegytulajdonosoknak vagy rendelés tulajdonosoknak. Az üzenetek azonnal elküldhetők vagy későbbre ütemezhetők."
 
-#: src/components/modals/SendMessageModal/index.tsx:507
+#: src/components/modals/SendMessageModal/index.tsx:546
 msgid "Send me a copy"
 msgstr "Küldjön nekem egy másolatot"
 
 #: src/components/common/ContactOrganizerModal/index.tsx:112
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Send Message"
 msgstr "Üzenet küldése"
 
-#: src/components/modals/SendMessageModal/index.tsx:404
+#: src/components/modals/SendMessageModal/index.tsx:443
 msgid "Send now"
 msgstr "Küldés most"
 
@@ -8775,7 +8862,7 @@ msgstr "Visszatérítési értesítő e-mail küldése"
 msgid "Send reset link"
 msgstr "Visszaállítási link küldése"
 
-#: src/components/modals/SendMessageModal/index.tsx:481
+#: src/components/modals/SendMessageModal/index.tsx:520
 msgid "Send Test"
 msgstr "Teszt küldése"
 
@@ -8977,13 +9064,17 @@ msgstr "Több platform megjelenítése"
 msgid "Show tax and fees separately"
 msgstr "Adó és díjak külön megjelenítése"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:131
-msgid "Show this size to buyers"
-msgstr "Méret megjelenítése a vásárlóknak"
+#: src/components/forms/ProductForm/SizedProductForm.tsx:156
+msgid "Show this option to buyers"
+msgstr "Opció megjelenítése a vásárlóknak"
 
 #: src/components/common/OrganizerReportTable/index.tsx:355
 msgid "Showing {0} of {totalRows} records"
 msgstr "{0} / {totalRows} rekord megjelenítése"
+
+#: src/components/forms/ProductForm/SizedProductForm.tsx:100
+msgid "Shown above the options. Leave empty for « Choose an option »."
+msgstr "Az opciók fölött jelenik meg. Hagyd üresen a „Válassz egy opciót” szöveghez."
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:147
 msgid "Shown below the promo code field on the ticket selection, and in a compact version on the details step, just above the secure checkout notice. Use it to share important information or invite buyers to make an extra donation on another platform."
@@ -9025,7 +9116,7 @@ msgstr "Gyakori címmezőket mutat, beleértve az országot is."
 msgid "Signed Up"
 msgstr "Regisztrált"
 
-#: src/components/routes/landing/index.tsx:821
+#: src/components/routes/landing/index.tsx:825
 msgid "Simple, in your colours"
 msgstr "Egyszerű, a te színeidben"
 
@@ -9038,15 +9129,6 @@ msgstr "Simpson"
 msgid "Single line text box"
 msgstr "Egysoros szövegmező"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:114
-#: src/components/forms/ProductForm/SizedProductForm.tsx:115
-msgid "Size"
-msgstr "Méret"
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:87
-msgid "Sizes"
-msgstr "Méretek"
-
 #: src/components/routes/welcome/index.tsx:498
 msgid "Skip this step"
 msgstr "Lépés kihagyása"
@@ -9055,7 +9137,7 @@ msgstr "Lépés kihagyása"
 msgid "Slovak"
 msgstr "Szlovák"
 
-#: src/components/routes/landing/index.tsx:978
+#: src/components/routes/landing/index.tsx:985
 msgid "Small local team: write to us on <0><1/></0> or at <2><3/></2>, we move fast and we listen."
 msgstr "Kis helyi csapat: írj nekünk <0><1/></0>-on vagy a(z) <2><3/></2> címre, gyorsak vagyunk és meghallgatunk."
 
@@ -9253,7 +9335,7 @@ msgstr "Stripe csatlakoztatva"
 msgid "Stripe fees"
 msgstr "Stripe díjak"
 
-#: src/components/routes/landing/index.tsx:939
+#: src/components/routes/landing/index.tsx:946
 msgid "Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do."
 msgstr "A Stripe az a cég, amely a jegyeladásaid kártyás fizetéseit kezeli. Ugyanezt az eszközt használhatod a következő digitális projektjeidhez is: vállalkozások milliói már így tesznek."
 
@@ -9277,12 +9359,12 @@ msgstr "A Stripe beállítás már kész."
 msgid "Stripe setup is not finished yet. Until it is, sales are paid to the platform account."
 msgstr "A Stripe-beállítás még nincs kész. Addig az eladások a platform fiókjára érkeznek."
 
-#: src/components/routes/landing/index.tsx:938
+#: src/components/routes/landing/index.tsx:945
 msgid "Stripe, what's that?"
 msgstr "Stripe, mi az?"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
-#: src/components/modals/SendMessageModal/index.tsx:365
+#: src/components/modals/SendMessageModal/index.tsx:404
 #: src/components/routes/admin/Messages/index.tsx:162
 #: src/components/routes/admin/Messages/index.tsx:272
 msgid "Subject"
@@ -9333,7 +9415,7 @@ msgstr "E-mail cím módosítás sikeresen megerősítve"
 msgid "Successfully created attendee"
 msgstr "Résztvevő sikeresen létrehozva"
 
-#: src/components/modals/CreateProductModal/index.tsx:55
+#: src/components/modals/CreateProductModal/index.tsx:56
 msgid "Successfully Created Product"
 msgstr "Termék sikeresen létrehozva"
 
@@ -9431,7 +9513,7 @@ msgstr "Platformdíj alapértékek sikeresen frissítve"
 msgid "Successfully Updated Platform Fee Settings"
 msgstr "Platformdíj beállítások sikeresen frissítve"
 
-#: src/components/modals/EditProductModal/index.tsx:97
+#: src/components/modals/EditProductModal/index.tsx:98
 msgid "Successfully updated product"
 msgstr "Termék sikeresen frissítve"
 
@@ -9648,6 +9730,10 @@ msgstr "Sablon sikeresen törölve"
 msgid "Template saved successfully"
 msgstr "Sablon sikeresen mentve"
 
+#: src/components/modals/SendMessageModal/index.tsx:391
+msgid "Templates"
+msgstr "Sablonok"
+
 #: src/components/layouts/EventHomepage/index.tsx:649
 #: src/components/layouts/OrganizerHomepage/index.tsx:393
 msgid "Terms of Service"
@@ -9691,7 +9777,7 @@ msgstr "Az oldal háttérszíne. Borítókép használatakor ez átfedésként k
 msgid "The check-in list you are looking for does not exist."
 msgstr "A keresett bejelentkezési lista nem létezik."
 
-#: src/components/routes/landing/index.tsx:1025
+#: src/components/routes/landing/index.tsx:1033
 msgid "The club"
 msgstr "A klub"
 
@@ -9776,7 +9862,7 @@ msgid "The primary brand color used for buttons and highlights"
 msgstr "Az elsődleges márka szín a gombokhoz és kiemelésekhez"
 
 #: src/components/routes/landing/HeroTitle.tsx:104
-#: src/components/routes/landing/index.tsx:845
+#: src/components/routes/landing/index.tsx:852
 msgid "The Quebec ticketing platform built for the sports community."
 msgstr "A sportközösségnek tervezett québeci jegyértékesítés."
 
@@ -9784,15 +9870,15 @@ msgstr "A sportközösségnek tervezett québeci jegyértékesítés."
 msgid "The quick brown fox jumps over the lazy dog."
 msgstr "A gyors barna róka átugrik a lusta kutyán."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:81
-msgid "The same price applies to every size. Please enter the price excluding taxes and fees."
-msgstr "Minden méretre ugyanaz az ár vonatkozik. Add meg az árat adók és díjak nélkül."
+#: src/components/forms/ProductForm/SizedProductForm.tsx:89
+msgid "The same price applies to every option. Please enter the price excluding taxes and fees."
+msgstr "Minden opcióra ugyanaz az ár vonatkozik. Add meg az árat adók és díjak nélkül."
 
-#: src/components/modals/SendMessageModal/index.tsx:190
+#: src/components/modals/SendMessageModal/index.tsx:194
 msgid "The scheduled time is required"
 msgstr "Az ütemezett időpont megadása kötelező"
 
-#: src/components/modals/SendMessageModal/index.tsx:191
+#: src/components/modals/SendMessageModal/index.tsx:195
 msgid "The scheduled time must be in the future"
 msgstr "Az ütemezett időpontnak a jövőben kell lennie"
 
@@ -9964,6 +10050,11 @@ msgstr "Ez az üzenet csak akkor jelenik meg, ha a megrendelés sikeresen befeje
 msgid "This name is visible to end users"
 msgstr "Ez a név látható a végfelhasználók számára"
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:66
+#: src/components/forms/ProductForm/SizedProductForm.tsx:166
+msgid "This option has already been sold. You can hide it instead."
+msgstr "Ebből az opcióból már adtak el. Elrejtheted helyette."
+
 #: src/components/forms/StripeCheckoutForm/index.tsx:95
 msgid "This order has already been paid."
 msgstr "Ez a megrendelés már ki lett fizetve."
@@ -10043,11 +10134,6 @@ msgstr "Ez a jelentés csak tájékoztató jellegű. Mindig konzultáljon adósz
 #: src/components/routes/auth/ResetPassword/index.tsx:28
 msgid "This reset password link is invalid or expired."
 msgstr "Ez a jelszó-visszaállító link érvénytelen vagy lejárt."
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:58
-#: src/components/forms/ProductForm/SizedProductForm.tsx:141
-msgid "This size has already been sold. You can hide it instead."
-msgstr "Ebből a méretből már adtak el. Elrejtheted helyette."
 
 #: src/components/layouts/CheckIn/index.tsx:232
 msgid "This ticket was just scanned. Please wait before scanning again."
@@ -10161,7 +10247,7 @@ msgstr "Jegy eladva és bejelentkeztetve"
 msgid "Ticket Type"
 msgstr "Jegy típusa"
 
-#: src/components/routes/landing/index.tsx:1018
+#: src/components/routes/landing/index.tsx:1026
 msgid "Ticketing"
 msgstr "Jegyértékesítés"
 
@@ -10258,9 +10344,13 @@ msgstr "Címzett"
 msgid "To edit configurations, go to the Configurations section in the admin menu."
 msgstr "A konfigurációk szerkesztéséhez lépjen a Konfigurációk részhez az admin menüben."
 
-#: src/components/modals/SendMessageModal/index.tsx:277
+#: src/components/modals/SendMessageModal/index.tsx:304
 msgid "To increase your limits, contact us at"
 msgstr "A korlátozások emeléséhez lépjen kapcsolatba velünk"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:51
+msgid "To plan ahead"
+msgstr "Előre tervezendő"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:662
 msgid "To receive credit card payments, you need to connect your Stripe account. Stripe is our payment processing partner that ensures secure transactions and timely payouts."
@@ -10277,6 +10367,10 @@ msgstr "Token neve"
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:44
 msgid "Token revoked"
 msgstr "Token visszavonva"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:58
+msgid "Tomorrow: {0}"
+msgstr "Holnap: {0}"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:96
 msgid "Tools"
@@ -10360,7 +10454,7 @@ msgstr "Összes visszatérített"
 msgid "Total Refunded"
 msgstr "Összes visszatérített"
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:163
+#: src/components/forms/ProductForm/SizedProductForm.tsx:188
 msgid "Total stock: {totalStock}"
 msgstr "Teljes készlet: {totalStock}"
 
@@ -10455,7 +10549,7 @@ msgstr "Nem sikerült bejelentkezni a résztvevőnek."
 msgid "Unable to check out attendee"
 msgstr "Nem sikerült kijelentkezni a résztvevőnek."
 
-#: src/components/modals/CreateProductModal/index.tsx:64
+#: src/components/modals/CreateProductModal/index.tsx:65
 msgid "Unable to create product. Please check the your details"
 msgstr "Nem sikerült létrehozni a terméket. Kérjük, ellenőrizze adatait."
 
@@ -10517,7 +10611,7 @@ msgstr "Ismeretlen résztvevő"
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:43
 #: src/components/forms/ProductForm/index.tsx:95
 #: src/components/forms/ProductForm/index.tsx:359
-#: src/components/forms/ProductForm/SizedProductForm.tsx:122
+#: src/components/forms/ProductForm/SizedProductForm.tsx:147
 #: src/components/forms/PromoCodeForm/index.tsx:112
 #: src/components/modals/OfferWaitlistModal/index.tsx:189
 #: src/components/routes/event/Reports/PromoCodesReport/index.tsx:78
@@ -11047,7 +11141,7 @@ msgstr "Javasolt méretek: 1950px x 650px, 3:1 arány, maximális fájlméret: 3
 msgid "We recommend dimensions of 400px by 400px, and a maximum file size of 30MB"
 msgstr "Javasolt méretek: 400px x 400px, maximális fájlméret: 30MB."
 
-#: src/components/routes/landing/index.tsx:783
+#: src/components/routes/landing/index.tsx:789
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "A jegyértékesítés eseményeit megosztjuk a Dehors közösségi oldalain. Az eseményed így közvetlenül egy mozgó emberekből álló közösség elé kerül."
 
@@ -11090,6 +11184,10 @@ msgstr "Átköltöztettük a székhelyünket Írországba. Ennek eredményeként
 #: src/components/routes/welcome/index.tsx:146
 msgid "We've sent a 5-digit verification code to:"
 msgstr "Öt számjegyű ellenőrző kódot küldtünk ide:"
+
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:63
+msgid "Weather"
+msgstr "Időjárás"
 
 #: src/components/modals/CreateOrganizerWebhookModal/index.tsx:49
 #: src/components/modals/CreateWebhookModal/index.tsx:49
@@ -11208,6 +11306,10 @@ msgstr "Mit kell tennie:"
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:48
+msgid "When"
+msgstr "Mikor"
+
 #: src/components/forms/WebhookForm/index.tsx:129
 msgid "When a check-in is deleted"
 msgstr "Amikor egy bejelentkezés törölve lett"
@@ -11316,6 +11418,11 @@ msgstr "Ha engedélyezve van, a Stripe Connect tranzakciókra nem számítanak f
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Ha az offline fizetések engedélyezve vannak, a felhasználók befejezhetik megrendeléseiket és megkaphatják jegyeiket. Jegyükön egyértelműen fel lesz tüntetve, hogy a megrendelés nincs kifizetve, és a bejelentkezési eszköz értesíti a bejelentkezési személyzetet, ha egy megrendelés fizetést igényel."
 
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:49
+#: src/components/modals/SendMessageModal/reminderTemplates.ts:62
+msgid "Where"
+msgstr "Hol"
+
 #: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:79
 msgid "Where the money from this organizer's ticket sales is paid."
 msgstr "Hová kerül a szervező jegyeladásaiból származó pénz."
@@ -11348,7 +11455,7 @@ msgstr "Widget előnézet"
 msgid "Widget Settings"
 msgstr "Widget beállítások"
 
-#: src/components/routes/landing/index.tsx:780
+#: src/components/routes/landing/index.tsx:786
 msgid "will see your event"
 msgstr "látja majd az eseményedet"
 
@@ -11361,13 +11468,13 @@ msgid "Working"
 msgstr "Dolgozik"
 
 #: src/components/modals/CreateProductCategoryModal/index.tsx:60
-#: src/components/modals/CreateProductModal/index.tsx:89
+#: src/components/modals/CreateProductModal/index.tsx:90
 #: src/components/modals/CreatePromoCodeModal/index.tsx:56
 #: src/components/modals/CreateQuestionModal/index.tsx:75
 #: src/components/modals/DuplicateEventModal/index.tsx:177
 #: src/components/modals/DuplicateProductModal/index.tsx:117
 #: src/components/modals/EditProductCategoryModal/index.tsx:70
-#: src/components/modals/EditProductModal/index.tsx:116
+#: src/components/modals/EditProductModal/index.tsx:117
 #: src/components/modals/EditPromoCodeModal/index.tsx:84
 #: src/components/modals/EditQuestionModal/index.tsx:101
 #: src/components/modals/JoinWaitlistModal/index.tsx:188
@@ -11381,7 +11488,7 @@ msgstr "Dolgozik..."
 msgid "Workshop"
 msgstr "Műhely"
 
-#: src/components/routes/landing/index.tsx:1013
+#: src/components/routes/landing/index.tsx:1021
 msgid "Write to us"
 msgstr "Írj nekünk"
 
@@ -11440,7 +11547,7 @@ msgstr "Részleges visszatérítést bocsát ki. A vásárló {0} {1} összeget 
 msgid "You are offline"
 msgstr "Offline állapotban van."
 
-#: src/components/modals/SendMessageModal/index.tsx:175
+#: src/components/modals/SendMessageModal/index.tsx:179
 msgid "You can attach a maximum of {MAX_ATTACHMENTS} files"
 msgstr "Legfeljebb {MAX_ATTACHMENTS} fájlt csatolhat"
 
@@ -11497,7 +11604,7 @@ msgstr "Ezt a meghívót már elfogadta. Kérjük, jelentkezzen be a folytatásh
 msgid "You have no pending email change."
 msgstr "Nincs függőben lévő e-mail cím módosítás."
 
-#: src/components/modals/SendMessageModal/index.tsx:218
+#: src/components/modals/SendMessageModal/index.tsx:222
 msgid "You have reached your messaging limit."
 msgstr "Elérte az üzenetküldési korlátot."
 
@@ -11513,7 +11620,7 @@ msgstr "Adók és díjak vannak hozzáadva egy ingyenes termékhez. Szeretné el
 msgid "You keep {saved} more."
 msgstr "{saved} összeggel több marad nálad."
 
-#: src/components/modals/SendMessageModal/index.tsx:186
+#: src/components/modals/SendMessageModal/index.tsx:190
 msgid "You must acknowledge that this email is not promotional"
 msgstr "El kell ismernie, hogy ez az e-mail nem promóciós."
 
@@ -11533,13 +11640,13 @@ msgstr "El kell fogadnia a feltételeket."
 msgid "You must create a ticket before you can manually add an attendee."
 msgstr "Jegy létrehozása kötelező, mielőtt manuálisan hozzáadhatna egy résztvevőt."
 
+#: src/components/forms/ProductForm/SizedProductForm.tsx:62
+msgid "You must have at least one option"
+msgstr "Legalább egy opciónak lennie kell"
+
 #: src/components/forms/ProductForm/index.tsx:71
 msgid "You must have at least one price tier"
 msgstr "Legalább egy árszintre szüksége van."
-
-#: src/components/forms/ProductForm/SizedProductForm.tsx:54
-msgid "You must have at least one size"
-msgstr "Legalább egy méretnek lennie kell"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:332
 msgid "You must verify your email address before you can update the organizer status."
@@ -11549,7 +11656,7 @@ msgstr "Megerősítenie kell e-mail címét, mielőtt frissítheti a szervezői 
 msgid "You need to verify your account email before you can modify email templates."
 msgstr "Ellenőriznie kell a fiók e-mail címét, mielőtt módosíthatná az e-mail sablonokat."
 
-#: src/components/modals/SendMessageModal/index.tsx:252
+#: src/components/modals/SendMessageModal/index.tsx:279
 msgid "You need to verify your account email before you can send messages."
 msgstr "Ellenőriznie kell fiókja e-mail címét, mielőtt üzeneteket küldhet."
 
@@ -11593,7 +11700,7 @@ msgstr "Felkerült a várólistára!"
 msgid "You've been offered a spot!"
 msgstr "Helyet ajánlottak neked!"
 
-#: src/components/modals/SendMessageModal/index.tsx:291
+#: src/components/modals/SendMessageModal/index.tsx:318
 msgid "Your account has messaging limits. To increase your limits, contact us at"
 msgstr "Fiókjának üzenetküldési korlátai vannak. A korlátozások emeléséhez lépjen kapcsolatba velünk"
 
@@ -11601,7 +11708,7 @@ msgstr "Fiókjának üzenetküldési korlátai vannak. A korlátozások emelés�
 msgid "Your account name is used on event pages and in emails."
 msgstr "Fióknevét az eseményoldalakon és az e-mailekben használják."
 
-#: src/components/routes/landing/index.tsx:952
+#: src/components/routes/landing/index.tsx:959
 msgid "Your account, your money."
 msgstr "A te fiókod, a te pénzed."
 
@@ -11653,7 +11760,7 @@ msgstr "Az eseményed élőben van!"
 msgid "Your event must be live before you can sell tickets to attendees."
 msgstr "Eseménye élőnek kell lennie, mielőtt jegyeket értékesíthetne a résztvevőknek."
 
-#: src/components/routes/landing/index.tsx:826
+#: src/components/routes/landing/index.tsx:830
 msgid "Your event shows up in the <0><1/></0>, the one the community checks to plan its outings."
 msgstr "Az eseményed megjelenik a <0><1/></0>, amelyből a közösség a programjait tervezi."
 
@@ -11673,7 +11780,7 @@ msgstr "A bejelentkezésed, a nyelved, a fizetés és ez a választás. Mindig a
 msgid "Your logo, colors, and style on every page"
 msgstr "Az Ön logója, színei és stílusa minden oldalon"
 
-#: src/components/routes/landing/index.tsx:814
+#: src/components/routes/landing/index.tsx:818
 msgid "Your logo, your colours: ticketing that looks like your brand."
 msgstr "A te logód, a te színeid: a márkádhoz illő jegyértékesítés."
 
@@ -11729,7 +11836,7 @@ msgstr "Megrendelései itt fognak megjelenni, amint beérkeznek."
 msgid "Your organizer address"
 msgstr "Szervezői címe"
 
-#: src/components/routes/landing/index.tsx:822
+#: src/components/routes/landing/index.tsx:826
 msgid "Your participants, from ticket to door"
 msgstr "Résztvevőid, a jegytől a bejáratig"
 
@@ -11787,7 +11894,7 @@ msgstr "Stripe fiókja csatlakoztatva van, és készen áll a fizetések feldolg
 msgid "Your ticket for"
 msgstr "Jegyéhez:"
 
-#: src/components/routes/landing/index.tsx:913
+#: src/components/routes/landing/index.tsx:920
 msgid "Your ticketing in 4 steps"
 msgstr "Jegyértékesítésed 4 lépésben"
 
@@ -11807,7 +11914,7 @@ msgstr "Az ÁFA száma mentéskor lesz érvényesítve"
 msgid "Your waitlist offer has expired and we were unable to complete your order. Please rejoin the waitlist to be notified when more spots become available."
 msgstr "Várólista ajánlata lejárt és nem tudtuk teljesíteni rendelését. Kérjük, csatlakozzon újra a várólistához, hogy értesítést kapjon, amikor több hely szabadul fel."
 
-#: src/components/forms/ProductForm/SizedProductForm.tsx:93
+#: src/components/forms/ProductForm/SizedProductForm.tsx:114
 msgid "Youth 2–14"
 msgstr "Gyerek 2–14"
 
