@@ -17,6 +17,16 @@ export const AttendeeDetails = ({attendee}: { attendee: Attendee }) => {
                     {attendee.first_name} {attendee.last_name}
                 </div>
             </div>
+            {attendee.bib_number && (
+                <div className={classes.block}>
+                    <div className={classes.title}>
+                        {t`Bib number`}
+                    </div>
+                    <div className={classes.amount}>
+                        {attendee.bib_number}
+                    </div>
+                </div>
+            )}
             <div className={classes.block}>
                 <div className={classes.title}>
                     {t`Email`}

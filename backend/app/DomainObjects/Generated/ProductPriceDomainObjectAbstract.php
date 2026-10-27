@@ -24,6 +24,7 @@ abstract class ProductPriceDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const IS_HIDDEN = 'is_hidden';
     final public const ORDER = 'order';
     final public const QUANTITY_AVAILABLE = 'quantity_available';
+    final public const BIB_NUMBER_START = 'bib_number_start';
 
     protected int $id;
     protected int $product_id;
@@ -39,6 +40,7 @@ abstract class ProductPriceDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?bool $is_hidden = false;
     protected int $order = 1;
     protected ?int $quantity_available = null;
+    protected ?int $bib_number_start = null;
 
     public function toArray(): array
     {
@@ -57,6 +59,7 @@ abstract class ProductPriceDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'is_hidden' => $this->is_hidden ?? null,
                     'order' => $this->order ?? null,
                     'quantity_available' => $this->quantity_available ?? null,
+                    'bib_number_start' => $this->bib_number_start ?? null,
                 ];
     }
 
@@ -212,5 +215,16 @@ abstract class ProductPriceDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getQuantityAvailable(): ?int
     {
         return $this->quantity_available;
+    }
+
+    public function setBibNumberStart(?int $bib_number_start): self
+    {
+        $this->bib_number_start = $bib_number_start;
+        return $this;
+    }
+
+    public function getBibNumberStart(): ?int
+    {
+        return $this->bib_number_start;
     }
 }

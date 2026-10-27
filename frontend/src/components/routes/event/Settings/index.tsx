@@ -18,6 +18,7 @@ import {
     IconHome,
     IconListCheck,
     IconMapPin,
+    IconNumber,
     IconPercentage,
     IconSignature,
 } from "@tabler/icons-react";
@@ -30,6 +31,7 @@ import {PaymentAndInvoicingSettings} from "./Sections/PaymentSettings";
 import {PlatformFeesSettings} from "./Sections/PlatformFeesSettings";
 import {WaitlistSettings} from "./Sections/WaitlistSettings";
 import {WaiverSettings} from "./Sections/WaiverSettings";
+import {BibNumberSettings} from "./Sections/BibNumberSettings";
 import {DangerZoneSettings} from "./Sections/DangerZoneSettings";
 import {useGetAccount} from "../../../../queries/useGetAccount.ts";
 
@@ -80,6 +82,12 @@ export const Settings = () => {
                 label: t`Waiver`,
                 icon: IconSignature,
                 component: WaiverSettings,
+            },
+            {
+                id: 'bib-number-settings',
+                label: t`Bib numbers`,
+                icon: IconNumber,
+                component: BibNumberSettings,
             },
             {
                 id: 'waitlist-settings',

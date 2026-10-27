@@ -16,6 +16,7 @@ class ProductPriceResource extends BaseResource
         return [
             'id' => $this->getId(),
             'label' => $this->getLabel(),
+            'bib_number_start' => $this->getBibNumberStart(),
             'price' => $this->getPrice(),
             'sale_start_date' => $this->getSaleStartDate(),
             'sale_end_date' => $this->getSaleEndDate(),

@@ -34,6 +34,7 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     final public const WAIVER_GUARDIAN_NAME = 'waiver_guardian_name';
     final public const WAIVER_SIGNED_AT = 'waiver_signed_at';
     final public const WAIVER_IP_ADDRESS = 'waiver_ip_address';
+    final public const BIB_NUMBER = 'bib_number';
 
     protected int $id;
     protected int $order_id;
@@ -59,6 +60,7 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     protected ?string $waiver_guardian_name = null;
     protected ?string $waiver_signed_at = null;
     protected ?string $waiver_ip_address = null;
+    protected ?int $bib_number = null;
 
     public function toArray(): array
     {
@@ -87,6 +89,7 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
                     'waiver_guardian_name' => $this->waiver_guardian_name ?? null,
                     'waiver_signed_at' => $this->waiver_signed_at ?? null,
                     'waiver_ip_address' => $this->waiver_ip_address ?? null,
+                    'bib_number' => $this->bib_number ?? null,
                 ];
     }
 
@@ -352,5 +355,16 @@ abstract class AttendeeDomainObjectAbstract extends \HiEvents\DomainObjects\Abst
     public function getWaiverIpAddress(): ?string
     {
         return $this->waiver_ip_address;
+    }
+
+    public function setBibNumber(?int $bib_number): self
+    {
+        $this->bib_number = $bib_number;
+        return $this;
+    }
+
+    public function getBibNumber(): ?int
+    {
+        return $this->bib_number;
     }
 }

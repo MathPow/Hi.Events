@@ -11,6 +11,7 @@ import {Avatar, Box, Group, Stack, Tabs, Text, Textarea, TextInput} from "@manti
 import {IconEdit, IconNotebook, IconQuestionMark, IconReceipt, IconTicket, IconUser} from "@tabler/icons-react";
 import {LoadingMask} from "../../common/LoadingMask";
 import {AttendeeDetails} from "../../common/AttendeeDetails";
+import {BibNumber} from "../../common/BibNumber";
 import {OrderDetails} from "../../common/OrderDetails";
 import {QuestionList} from "../../common/QuestionAndAnswerList";
 import {AttendeeTicket} from "../../common/AttendeeTicket";
@@ -210,7 +211,10 @@ export const ManageAttendeeModal = ({onClose, attendeeId}: ManageAttendeeModalPr
                             </Avatar>
                             <div className={classes.attendeeInfo}>
                                 <Text fz="md" fw={500}>{fullName}</Text>
-                                <AttendeeStatusBadge attendee={attendee}/>
+                                <Group gap="xs">
+                                    <AttendeeStatusBadge attendee={attendee}/>
+                                    <BibNumber bibNumber={attendee.bib_number}/>
+                                </Group>
                             </div>
                         </Group>
                     </Group>

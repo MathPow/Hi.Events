@@ -159,6 +159,8 @@ use HiEvents\Http\Actions\PromoCodes\GetPromoCodeAction;
 use HiEvents\Http\Actions\PromoCodes\GetPromoCodePublic;
 use HiEvents\Http\Actions\PromoCodes\GetPromoCodesAction;
 use HiEvents\Http\Actions\PromoCodes\UpdatePromoCodeAction;
+use HiEvents\Http\Actions\BibNumbers\AssignBibNumbersAction;
+use HiEvents\Http\Actions\BibNumbers\UpdateBibNumberStartsAction;
 use HiEvents\Http\Actions\Questions\AddParticipantFormAction;
 use HiEvents\Http\Actions\Questions\CreateQuestionAction;
 use HiEvents\Http\Actions\Questions\DeleteQuestionAction;
@@ -421,6 +423,10 @@ $router->middleware(['auth:api'])->group(
         $router->post('/events/{event_id}/questions/sort', SortQuestionsAction::class);
         $router->put('/events/{event_id}/questions/{question_id}/answers/{answer_id}', EditQuestionAnswerAction::class);
         $router->match(['get', 'post'], '/events/{event_id}/questions/answers/export', ExportQuestionAnswersAction::class);
+
+        // Bib numbers
+        $router->put('/events/{event_id}/bib-numbers', UpdateBibNumberStartsAction::class);
+        $router->post('/events/{event_id}/bib-numbers/assign', AssignBibNumbersAction::class);
 
         // Images
         $router->post('/events/{event_id}/images', CreateEventImageAction::class);

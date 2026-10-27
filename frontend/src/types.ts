@@ -551,6 +551,8 @@ export interface ProductPrice {
     quantity_sold?: number;
     is_hidden?: boolean;
     quantity_remaining?: number;
+    /** The first bib number of this ticket option; none gives no bibs. */
+    bib_number_start?: number | null;
 }
 
 export interface Product {
@@ -635,6 +637,7 @@ export interface Attendee {
     locale?: SupportedLocales;
     check_in?: AttendeeCheckIn; // Use in contexts where a single check is expected, like dealing with a check-in list
     check_ins?: AttendeeCheckIn[];
+    bib_number?: number | null;
     /** The event's waiver as this attendee signed it at checkout (admin only). */
     waiver_id?: number | null;
     waiver_signed_name?: string | null;

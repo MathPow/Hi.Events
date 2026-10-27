@@ -30,6 +30,7 @@ class AttendeeResource extends JsonResource
             'last_name' => $this->getLastName(),
             'public_id' => $this->getPublicId(),
             'short_id' => $this->getShortId(),
+            'bib_number' => $this->getBibNumber(),
             'locale' => $this->getLocale(),
             'notes' => $this->getNotes(),
             'waiver_id' => $this->getWaiverId(),

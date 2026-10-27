@@ -19,6 +19,7 @@ class AttendeeWithCheckInPublicResource extends JsonResource
             'first_name' => $this->getFirstName(),
             'last_name' => $this->getLastName(),
             'public_id' => $this->getPublicId(),
+            'bib_number' => $this->getBibNumber(),
             'product_id' => $this->getProductId(),
             'product_price_id' => $this->getProductPriceId(),
             'status' => $this->getStatus(),

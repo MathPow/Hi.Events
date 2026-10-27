@@ -29,6 +29,7 @@ import {t, Trans} from "@lingui/macro";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {useResendAttendeeTicket} from "../../../mutations/useResendAttendeeTicket.ts";
 import {ManageAttendeeModal} from "../../modals/ManageAttendeeModal";
+import {BibNumber} from "../BibNumber";
 import {ManageOrderModal} from "../../modals/ManageOrderModal";
 import {ActionMenu} from '../ActionMenu';
 import {CheckInStatusModal} from "../CheckInStatusModal";
@@ -153,6 +154,7 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
                                             text={info.row.original.first_name + ' ' + info.row.original.last_name}
                                         />
                                     </Anchor>
+                                    <BibNumber bibNumber={info.row.original.bib_number} size="xs"/>
                                     <div className={classes.attendeeId}>
                                         {info.row.original.public_id}
                                     </div>

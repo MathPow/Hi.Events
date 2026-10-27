@@ -3,6 +3,7 @@ import {IconTicket} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {Attendee} from "../../../types.ts";
 import classes from "../../layouts/CheckIn/CheckIn.module.scss";
+import {BibNumber} from "../BibNumber";
 
 interface AttendeeListProps {
     attendees: Attendee[] | undefined;
@@ -77,6 +78,7 @@ export const AttendeeList = ({
                         <div className={classes.details}>
                             <div>
                                 <b>{attendee.first_name} {attendee.last_name}</b>
+                                {' '}<BibNumber bibNumber={attendee.bib_number} size="xs"/>
                             </div>
                             {attendee.status === 'CANCELLED' ? (
                                 <div style={{fontSize: '0.8em', color: 'red'}}>

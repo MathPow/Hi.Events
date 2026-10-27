@@ -6,6 +6,7 @@ import {prettyDate} from '../../../utilites/dates';
 import {useGetEventCheckInLists} from '../../../queries/useGetCheckInLists';
 import {LoadingMask} from '../LoadingMask';
 import classes from './CheckInStatusModal.module.scss';
+import {BibNumber} from '../BibNumber';
 
 interface CheckInStatusModalProps {
     attendee: Attendee;
@@ -144,9 +145,12 @@ export const CheckInStatusModal = ({
                                     {attendee.first_name} {attendee.last_name}
                                 </Trans>
                             </Text>
-                            <Text size="xs" c="dimmed">
-                                {attendee.public_id}
-                            </Text>
+                            <Group gap="xs">
+                                <BibNumber bibNumber={attendee.bib_number} size="xs"/>
+                                <Text size="xs" c="dimmed">
+                                    {attendee.public_id}
+                                </Text>
+                            </Group>
                         </Box>
 
                         {checkInLists.length === 0 ? (
