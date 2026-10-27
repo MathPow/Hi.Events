@@ -15,8 +15,8 @@ export interface Organizer {
 const COPIES = 4;
 const MIN_NAMES_PER_COPY = 7;
 const SECONDS_PER_NAME = 6.4;
-const ORANGE = 'var(--landing-orange, #f98043)';
-const TINTS = ['#352924', '#e3ad92', 'var(--landing-abricot, #ffad7d)', ORANGE];
+const ORANGE = 'var(--landing-orange, #fa7853)';
+const TINTS = ['#352924', '#e3ad92', 'var(--landing-abricot, #ffaa8d)', ORANGE];
 const DARK_TINTS = new Set(['#352924', ORANGE]);
 
 // The rows' pace, like the shop's (RelaisBenevoles.vue): the CSS animation's,

@@ -25,6 +25,13 @@ const HERO_VIDEO = `${ASSETS}/hero.mp4`;
 const CONTACT_EMAIL = 'support@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
+// The followers of DEHORS_INSTAGRAM, rounded down to the hundred.
+const ATHLETES = 2300;
+
+const athletesLabel = () => {
+    const athletes = i18n.number(ATHLETES);
+    return t`${athletes}+ athletes`;
+};
 // Stripe's Canadian site, in French for the French page.
 const stripeSite = (locale: string) => `https://stripe.com/${locale.startsWith('fr') ? 'fr-ca' : 'en-ca'}`;
 const TRUSTED_ORGANIZERS: Organizer[] = [
@@ -725,7 +732,7 @@ const StepCards = ({steps}: { steps: { title: string, text: string, to?: string 
     </ol>
 );
 
-// Between the words, but never inside the number ("2 200+").
+// Between the words, but never inside the number ("2 300+").
 const WORD_BREAK = / (?=\D)/;
 
 /**
@@ -767,7 +774,7 @@ const CommunityHeading = () => {
     const tagline = useRef<HTMLSpanElement>(null);
     useMatchWidth(title, tagline);
     useRevealOnShow(root);
-    const words = t`2,200+ athletes`.split(WORD_BREAK);
+    const words = athletesLabel().split(WORD_BREAK);
     const order = (index: number) => ({'--order': index} as CSSProperties);
 
     return (
@@ -882,7 +889,7 @@ const Landing = () => {
                             <HeroTitle/>
                         </div>
                         <div className={classes.heroFooter}>
-                            <span>{t`2,200+ athletes`}</span>
+                            <span>{athletesLabel()}</span>
                             <span>{t`2.5% + Stripe fees`}</span>
                         </div>
                     </Rough>
@@ -942,7 +949,7 @@ const Landing = () => {
 
                 <section id="payments" className={classes.stripe} data-stack>
                     <div className={classes.stripeText} data-rise>
-                        <h2>{t`Stripe, what's that?`}</h2>
+                        <h2><Trans>Stripe,<br/>what's that?</Trans></h2>
                         <p>{t`Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do.`}</p>
                         <LandingButton as="a" href={stripeSite(i18n.locale)} target="_blank" rel="noopener" variant="dark"
                                        label={t`Learn more about Stripe`}/>
