@@ -24,9 +24,9 @@ import {
     IconFlame,
     IconHeartDollar,
     IconInfoCircle,
+    IconListDetails,
     IconPlus,
     IconReceipt,
-    IconRuler2,
     IconShirt,
     IconShoppingCart,
     IconTicket,
@@ -178,10 +178,10 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
             description: t`Multiple price options. Perfect for early bird products etc.`,
         },
         {
-            icon: <IconRuler2/>,
-            label: t`Product with sizes`,
+            icon: <IconListDetails/>,
+            label: t`Product with options`,
             value: 'SIZED',
-            description: t`One price, a choice of sizes with their own stock. Perfect for t-shirts and apparel.`,
+            description: t`One price, a choice of options with their own stock: sizes, distances, categories.`,
         },
     ];
 

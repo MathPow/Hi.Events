@@ -73,6 +73,7 @@ export const EditProductModal = ({onClose, productId}: GenericModalProps & { pro
             waitlist_enabled: product.waitlist_enabled ?? null,
             charity_amount: product.charity_amount ?? null,
             deposit_amount: product.deposit_amount ?? null,
+            option_heading: product.option_heading ?? null,
             product_type: product.product_type,
             product_category_id: String(product.product_category_id),
             prices: product.prices?.map(p => ({

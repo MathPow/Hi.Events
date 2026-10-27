@@ -35,7 +35,7 @@ class UpsertProductRequest extends BaseRequest
                     ->filter(fn($label) => $label !== '');
 
                 if ($labels->count() !== $labels->unique()->count()) {
-                    $validator->errors()->add('prices', __('Each size must have a unique name.'));
+                    $validator->errors()->add('prices', __('Each option must have a unique name.'));
                 }
             },
             function ($validator) {
@@ -131,6 +131,8 @@ class UpsertProductRequest extends BaseRequest
             // lui-meme: au-dela, le recu depasserait la somme reellement recue.
             'charity_amount' => ['nullable', ...RulesHelper::MONEY, 'lte:prices.0.price'],
             'deposit_amount' => ['nullable', ...RulesHelper::MONEY],
+            // Le titre au-dessus des options d'un produit avec options (« Choisis ta distance »).
+            'option_heading' => ['nullable', 'string', 'max:100'],
         ];
     }
 

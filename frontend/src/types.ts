@@ -596,6 +596,8 @@ export interface Product {
     /** Part du prix qui constitue un don, par unite. Alimente le recu officiel. */
     charity_amount?: number | null;
     deposit_amount?: number | null;
+    /** Le titre au-dessus des options d'un produit avec options (« Choisis ta distance »). */
+    option_heading?: string | null;
     has_waiting_entries?: boolean;
     waitlist_entry_count?: number;
 }

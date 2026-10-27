@@ -43,8 +43,24 @@ class UpsertProductDTO extends BaseDTO
         public readonly ?bool            $waitlist_enabled = null,
         public readonly ?float           $charity_amount = null,
         public readonly ?float           $deposit_amount = null,
+        public readonly ?string          $option_heading = null,
     )
     {
+    }
+
+    /**
+     * Le titre au-dessus des options, en texte brut : seul un produit avec
+     * options en a un, et un titre vide laisse le texte par defaut.
+     */
+    public function optionHeading(): ?string
+    {
+        if ($this->type !== ProductPriceType::SIZED) {
+            return null;
+        }
+
+        $heading = trim(strip_tags((string)$this->option_heading));
+
+        return $heading === '' ? null : $heading;
     }
 }
 

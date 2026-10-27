@@ -39,6 +39,7 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     final public const WAITLIST_ENABLED = 'waitlist_enabled';
     final public const CHARITY_AMOUNT = 'charity_amount';
     final public const DEPOSIT_AMOUNT = 'deposit_amount';
+    final public const OPTION_HEADING = 'option_heading';
 
     protected int $id;
     protected int $event_id;
@@ -69,6 +70,7 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     protected ?bool $waitlist_enabled = null;
     protected ?float $charity_amount = null;
     protected ?float $deposit_amount = null;
+    protected ?string $option_heading = null;
 
     public function toArray(): array
     {
@@ -102,6 +104,7 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
                     'waitlist_enabled' => $this->waitlist_enabled ?? null,
                     'charity_amount' => $this->charity_amount ?? null,
                     'deposit_amount' => $this->deposit_amount ?? null,
+                    'option_heading' => $this->option_heading ?? null,
                 ];
     }
 
@@ -422,5 +425,16 @@ abstract class ProductDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     public function getDepositAmount(): ?float
     {
         return $this->deposit_amount;
+    }
+
+    public function setOptionHeading(?string $option_heading): self
+    {
+        $this->option_heading = $option_heading;
+        return $this;
+    }
+
+    public function getOptionHeading(): ?string
+    {
+        return $this->option_heading;
     }
 }

@@ -40,7 +40,7 @@ export const SizedPricing = ({product, event, form, productIndex}: SizedPricingP
                 </div>
             )}
 
-            <div className={'hi-sized-heading'}>{t`Choose your size`}</div>
+            <div className={'hi-sized-heading'}>{product.option_heading || t`Choose an option`}</div>
 
             {product?.prices?.map((price, index) => (
                 <div key={price.id ?? index} className={'hi-price-tier-row hi-size-row'}>

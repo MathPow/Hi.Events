@@ -128,6 +128,7 @@ class EditProductHandler
                 'waitlist_enabled' => $productsData->waitlist_enabled,
                 'charity_amount' => $productsData->charity_amount,
                 'deposit_amount' => $productsData->deposit_amount ?: null,
+                'option_heading' => $productsData->optionHeading(),
             ],
             where: $where
         );

@@ -66,6 +66,7 @@ class ProductResource extends JsonResource
             'waitlist_enabled' => $this->getWaitlistEnabled(),
             'charity_amount' => $this->getCharityAmount(),
             'deposit_amount' => $this->getDepositAmount(),
+            'option_heading' => $this->getOptionHeading(),
         ];
     }
 }

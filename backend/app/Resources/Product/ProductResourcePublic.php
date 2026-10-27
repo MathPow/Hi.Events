@@ -55,6 +55,7 @@ class ProductResourcePublic extends JsonResource
             'highlight_message' => $this->getHighlightMessage(),
             'waitlist_enabled' => $this->getWaitlistEnabled(),
             'deposit_amount' => $this->getDepositAmount(),
+            'option_heading' => $this->getOptionHeading(),
         ];
     }
 }
