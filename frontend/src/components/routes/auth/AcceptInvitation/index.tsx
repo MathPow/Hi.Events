@@ -95,12 +95,12 @@ const AcceptInvitation = () => {
                                 required
                                 {...form.getInputProps('first_name')}
                                 label={t`First Name`}
-                                placeholder={t`John`}
+                                placeholder={'Mathys'}
                             />
                             <TextInput
                                 {...form.getInputProps('last_name')}
                                 label={t`Last Name`}
-                                placeholder={t`Smith`}
+                                placeholder={'Deshaies'}
                             />
                         </div>
 

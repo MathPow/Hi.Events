@@ -26,7 +26,7 @@ export const OrganizerForm = ({form}: { form: UseFormReturnType<Partial<Organize
                 {...form.getInputProps('name')}
                 required
                 label={t`Organization Name`}
-                placeholder={t`Awesome Events Ltd.`}
+                placeholder={'DehorsQC'}
                 size="lg"
             />
             <TextInput
@@ -73,7 +73,7 @@ export const OrganizerCreateForm = ({onSuccess, onCancel}: OrganizerFormProps) =
         initialValues: {
             name: '',
             email: '',
-            currency: '',
+            currency: 'CAD',
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }
     });
@@ -95,9 +95,6 @@ export const OrganizerCreateForm = ({onSuccess, onCancel}: OrganizerFormProps) =
     }
 
     useEffect(() => {
-        if (meFetched) {
-            form.setFieldValue('currency', String(account?.currency_code));
-        }
         if (accountFetched) {
             form.setFieldValue('name', String(account?.name));
             form.setFieldValue('email', String(me?.email));

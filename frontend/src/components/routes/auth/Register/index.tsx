@@ -8,7 +8,6 @@ import {t, Trans} from "@lingui/macro";
 import classes from "./Register.module.scss";
 import {getClientLocale} from "../../../../locales.ts";
 import {useEffect, useState} from "react";
-import {getUserCurrency} from "../../../../utilites/currency.ts";
 import {getConfig} from "../../../../utilites/config.ts";
 import {captureUtmData, getStoredUtmData, clearStoredUtmData} from "../../../../utilites/utm.ts";
 import {useGetRegistrationInvite} from "../../../../queries/useGetRegistrationInvite.ts";
@@ -43,7 +42,7 @@ export const Register = () => {
             locale: getClientLocale(),
             invite_token: '',
             registration_token: registrationToken ?? '',
-            currency_code: getUserCurrency(),
+            currency_code: 'CAD',
             marketing_opt_in: false,
             turnstile_token: '',
         },
@@ -132,7 +131,7 @@ export const Register = () => {
                         {...form.getInputProps('organization_name')}
                         label={t`Organization Name`}
                         description={t`The name your buyers will see. You can change it later.`}
-                        placeholder={t`Awesome Events Ltd.`}
+                        placeholder={'DehorsQC'}
                         required
                     />
 
@@ -140,13 +139,13 @@ export const Register = () => {
                         <TextInput
                             {...form.getInputProps('first_name')}
                             label={t`First Name`}
-                            placeholder={t`John`}
+                            placeholder={'Mathys'}
                             required
                         />
                         <TextInput
                             {...form.getInputProps('last_name')}
                             label={t`Last Name`}
-                            placeholder={t`Smith`}
+                            placeholder={'Deshaies'}
                         />
                     </SimpleGrid>
 
