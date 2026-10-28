@@ -47,6 +47,12 @@ class EmailConfirmationService
 
     public function sendConfirmation(UserDomainObject $user, int $accountId): void
     {
+        if (config('app.skip_email_verification')) {
+            $this->verifyUserEmailService->markEmailAsVerified($user, $accountId);
+
+            return;
+        }
+
         // If there are no events, we assume the user is registering for the first time
         $events = $this->eventRepository->findWhere([
             'account_id' => $accountId,

@@ -1,5 +1,5 @@
 import {Button, PasswordInput, TextInput, Collapse, UnstyledButton} from "@mantine/core";
-import {NavLink, useLocation} from "react-router";
+import {NavLink, useLocation, useNavigate} from "react-router";
 import {useMutation} from "@tanstack/react-query";
 import {notifications} from '@mantine/notifications';
 import {authClient} from "../../../../api/auth.client.ts";
@@ -15,6 +15,7 @@ import {showError} from "../../../../utilites/notifications.tsx";
 
 const Login = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const form = useForm({
         initialValues: {
             email: '',
@@ -64,7 +65,12 @@ const Login = () => {
 
     const handleTicketLookup = (values: { email: string }) => {
         ticketLookupMutation.mutate(values.email, {
-            onSuccess: () => {
+            onSuccess: ({token}) => {
+                // Sur dev, sans courriel, l'API rend le lien: on y va directement.
+                if (token) {
+                    navigate(`/my-tickets/${token}`);
+                    return;
+                }
                 setTicketLookupSuccess(true);
             },
             onError: () => {

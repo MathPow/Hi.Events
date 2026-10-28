@@ -45,8 +45,12 @@ readonly class UpdateMeHandler
             ];
 
             if ($this->isChangingEmail($updateUserData, $existingUser)) {
-                $updateArray['pending_email'] = $updateUserData->email;
-                $this->sendEmailChangeConfirmation($existingUser);
+                if (config('app.skip_email_verification')) {
+                    $updateArray['email'] = $updateUserData->email;
+                } else {
+                    $updateArray['pending_email'] = $updateUserData->email;
+                    $this->sendEmailChangeConfirmation($existingUser);
+                }
             }
         }
 

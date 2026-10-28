@@ -30,6 +30,8 @@ return [
     'stripe_connect_account_type' => env('APP_STRIPE_CONNECT_ACCOUNT_TYPE', 'express'),
     'platform_support_email' => env('APP_PLATFORM_SUPPORT_EMAIL', 'support@example.com'),
     'enforce_email_confirmation_during_registration' => env('APP_ENFORCE_EMAIL_CONFIRMATION_DURING_REGISTRATION', false),
+    // Dev only, where mail is not delivered: confirmations apply at once and the ticket lookup link is returned.
+    'skip_email_verification' => env('APP_SKIP_EMAIL_VERIFICATION', false),
     'allowed_internal_webhook_hosts' => env('APP_ALLOWED_INTERNAL_WEBHOOK_HOSTS', ''),
 
     /**

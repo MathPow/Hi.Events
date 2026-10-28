@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {Link, useParams, useSearchParams} from "react-router";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router";
 import {Button, TextInput, UnstyledButton} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useState} from "react";
@@ -230,12 +230,14 @@ const DashboardSkeleton = ({loading}: { loading: boolean }) => (
 // l'achat, par-dessus le tableau de bord, et le lien part par courriel.
 const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }) => {
     const [sent, setSent] = useState(false);
+    const navigate = useNavigate();
     const lookup = useSendTicketLookupEmail();
     const form = useForm({initialValues: {email: ''}});
 
+    // Sur dev, sans courriel, l'API rend le lien: on y va directement.
     const requestLink = ({email}: { email: string }) => {
         lookup.mutate(email, {
-            onSuccess: () => setSent(true),
+            onSuccess: ({token}) => token ? navigate(`/my-tickets/${token}`) : setSent(true),
             onError: () => showError(t`Something went wrong. Please try again.`),
         });
     };

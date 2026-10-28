@@ -100,9 +100,7 @@ class SendTicketLookupEmailHandlerTest extends TestCase
             ->once()
             ->with(m::type(TicketLookupEmail::class));
 
-        $this->handler->handle($dto);
-
-        $this->assertTrue(true);
+        $this->assertSame($token, $this->handler->handle($dto));
     }
 
     public function testHandleDoesNotSendEmailWhenNoOrdersExist(): void
@@ -129,9 +127,7 @@ class SendTicketLookupEmailHandlerTest extends TestCase
         $this->mailer
             ->shouldNotReceive('to');
 
-        $this->handler->handle($dto);
-
-        $this->assertTrue(true);
+        $this->assertNull($this->handler->handle($dto));
     }
 
     public function testHandleConvertsEmailToLowercase(): void

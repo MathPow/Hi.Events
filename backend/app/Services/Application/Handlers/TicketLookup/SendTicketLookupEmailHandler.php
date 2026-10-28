@@ -31,9 +31,11 @@ class SendTicketLookupEmailHandler
     }
 
     /**
+     * Returns the lookup token, or null when the email has no completed orders.
+     *
      * @throws Throwable
      */
-    public function handle(SendTicketLookupEmailDTO $dto): void
+    public function handle(SendTicketLookupEmailDTO $dto): ?string
     {
         $email = strtolower($dto->email);
 
@@ -43,14 +45,16 @@ class SendTicketLookupEmailHandler
             $this->logger->info('Ticket lookup requested for email with no orders', [
                 'email' => $email,
             ]);
-            return;
+            return null;
         }
 
         $orderCount = $orders->count();
 
-        $this->databaseManager->transaction(function () use ($email, $orderCount) {
+        return $this->databaseManager->transaction(function () use ($email, $orderCount) {
             $token = $this->generateAndSaveToken($email);
             $this->sendTicketLookupEmail($email, $token, $orderCount);
+
+            return $token;
         });
     }
 

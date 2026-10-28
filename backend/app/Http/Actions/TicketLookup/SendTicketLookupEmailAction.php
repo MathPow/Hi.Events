@@ -17,16 +17,20 @@ class SendTicketLookupEmailAction extends BaseAction
 
     public function __invoke(SendTicketLookupEmailRequest $request): JsonResponse
     {
-        $this->sendTicketLookupEmailHandler->handle(
+        $token = $this->sendTicketLookupEmailHandler->handle(
             new SendTicketLookupEmailDTO(
                 email: $request->validated('email'),
             )
         );
 
-        return $this->jsonResponse(
-            data: [
-                'message' => __('If you have tickets associated with this email, we will send you an email with the details.'),
-            ]
-        );
+        $data = [
+            'message' => __('If you have tickets associated with this email, we will send you an email with the details.'),
+        ];
+
+        if ($token !== null && config('app.skip_email_verification')) {
+            $data['token'] = $token;
+        }
+
+        return $this->jsonResponse(data: $data);
     }
 }
