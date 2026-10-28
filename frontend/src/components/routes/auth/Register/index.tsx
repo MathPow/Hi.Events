@@ -1,4 +1,4 @@
-import {Alert, Button, Checkbox, LoadingOverlay, PasswordInput, SimpleGrid, Text, TextInput} from "@mantine/core";
+import {Alert, Button, Checkbox, LoadingOverlay, PasswordInput, Text, TextInput} from "@mantine/core";
 import {hasLength, isEmail, matchesField, useForm} from "@mantine/form";
 import {RegisterAccountRequest} from "../../../../types.ts";
 import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorResponseHandler.tsx";
@@ -31,8 +31,7 @@ export const Register = () => {
         validateInputOnBlur: true,
         initialValues: {
             organization_name: '',
-            first_name: '',
-            last_name: '',
+            full_name: '',
             email: '',
             password: '',
             password_confirmation: '',
@@ -51,12 +50,20 @@ export const Register = () => {
             password_confirmation: matchesField('password', t`Passwords are not the same`),
             email: isEmail(t`Please check your email is valid`),
             organization_name: (value) => value.trim() === '' ? t`Organization name is required` : null,
+            full_name: (value) => value.trim() === '' ? t`Full name is required` : null,
         },
     });
     const errorHandler = useFormErrorResponseHandler();
     const mutate = useRegisterAccount();
 
-    const registerUser = (data: RegisterAccountRequest) => {
+    const registerUser = ({full_name, ...values}: typeof form.values) => {
+        // Un seul champ « Nom complet »: le prenom avant le premier espace, le nom apres.
+        const [firstName, ...lastNames] = full_name.trim().split(/\s+/);
+        const data = {
+            ...values,
+            first_name: firstName,
+            last_name: lastNames.join(' '),
+        } as RegisterAccountRequest;
         const utmData = getStoredUtmData();
         const registrationData = utmData ? {...data, ...utmData} : data;
 
@@ -111,9 +118,9 @@ export const Register = () => {
     }
 
     return (
-        <>
+        <div className={classes.stack}>
             <header className={classes.header}>
-                <h2>{t`Get started`}</h2>
+                <h2>{t`Create an account`}</h2>
                 <p>
                     <Trans>
                         Already have an account?{' '}
@@ -124,91 +131,93 @@ export const Register = () => {
                 </p>
             </header>
 
-            <div className={classes.registerCard}>
-                <form onSubmit={form.onSubmit((values) => registerUser(values as RegisterAccountRequest))}>
-                    <TextInput
-                        mb="md"
-                        {...form.getInputProps('organization_name')}
-                        label={t`Organization Name`}
-                        description={t`The name your buyers will see. You can change it later.`}
-                        placeholder={'DehorsQC'}
+            <form className={classes.registerForm} onSubmit={form.onSubmit(registerUser)}>
+                <TextInput
+                    {...form.getInputProps('organization_name')}
+                    label={t`Organization Name`}
+                    description={t`The name your buyers will see. You can change it later.`}
+                    inputWrapperOrder={['label', 'input', 'description', 'error']}
+                    placeholder={'DehorsQC'}
+                    required
+                />
+
+                <TextInput
+                    {...form.getInputProps('full_name')}
+                    label={t`Full name`}
+                    placeholder={'Mathys Deshaies'}
+                    autoComplete="name"
+                    required
+                />
+
+                <TextInput
+                    {...form.getInputProps('email')}
+                    label={t`Email`}
+                    placeholder={t`name@example.com`}
+                    description={invitedEmail ? t`This invitation is tied to this address.` : undefined}
+                    inputWrapperOrder={['label', 'input', 'description', 'error']}
+                    readOnly={!!invitedEmail}
+                    type="email"
+                    required
+                />
+
+                {/* Cote a cote sur ordi, l'un sous l'autre sur mobile, l'indice entre les deux. */}
+                <div className={classes.passwords}>
+                    <PasswordInput
+                        {...form.getInputProps('password')}
+                        className={classes.password}
+                        label={t`Password`}
+                        placeholder={'••••••••'}
+                        visibilityToggleIcon={() => <img src={'/interface/oeil.svg'} alt={''}/>}
                         required
                     />
-
-                    <SimpleGrid verticalSpacing={{base: "md", sm: 0}} cols={{base: 1, sm: 2}} mb="md">
-                        <TextInput
-                            {...form.getInputProps('first_name')}
-                            label={t`First Name`}
-                            placeholder={'Mathys'}
-                            required
-                        />
-                        <TextInput
-                            {...form.getInputProps('last_name')}
-                            label={t`Last Name`}
-                            placeholder={'Deshaies'}
-                        />
-                    </SimpleGrid>
-
-                    <TextInput
-                        mb={0}
-                        {...form.getInputProps('email')}
-                        label={t`Email`}
-                        placeholder={'your@email.com'}
-                        description={invitedEmail ? t`This invitation is tied to this address.` : undefined}
-                        readOnly={!!invitedEmail}
+                    <PasswordInput
+                        {...form.getInputProps('password_confirmation')}
+                        className={classes.confirmation}
+                        label={<>
+                            <span className={classes.labelShort}>{t`Confirmation`}</span>
+                            <span className={classes.labelLong}>{t`Confirm Password`}</span>
+                        </>}
+                        placeholder={'••••••••'}
+                        visibilityToggleIcon={() => <img src={'/interface/oeil.svg'} alt={''}/>}
                         required
                     />
+                    <p className={classes.hint}>{t`Minimum 8 characters.`}</p>
+                </div>
 
-                    <SimpleGrid verticalSpacing={{base: "md", sm: 0}} cols={{base: 1, sm: 2}} mt="md" mb="md">
-                        <PasswordInput
-                            {...form.getInputProps('password')}
-                            label={t`Password`}
-                            placeholder={t`Your password`}
-                            required
+                <TextInput
+                    style={{display: 'none'}}
+                    {...form.getInputProps('timezone')}
+                    type="hidden"
+                />
+
+                <Checkbox
+                    {...form.getInputProps('marketing_opt_in', {type: 'checkbox'})}
+                    className={classes.checkbox}
+                    label={t`Receive news from the ticketing platform`}
+                />
+
+                {turnstileSiteKey && (
+                    <div className={classes.turnstile}>
+                        <Turnstile
+                            siteKey={turnstileSiteKey}
+                            resetKey={turnstileResetKey}
+                            onToken={(token) => form.setFieldValue('turnstile_token', token)}
                         />
-                        <PasswordInput
-                            {...form.getInputProps('password_confirmation')}
-                            label={t`Confirm Password`}
-                            placeholder={t`Confirm password`}
-                            required
-                        />
-                    </SimpleGrid>
+                        {form.errors.turnstile_token && (
+                            <Text c="red" size="xs" mt={4}>{form.errors.turnstile_token}</Text>
+                        )}
+                    </div>
+                )}
 
-                    <TextInput
-                        style={{display: 'none'}}
-                        {...form.getInputProps('timezone')}
-                        type="hidden"
-                    />
+                <Button
+                    type="submit"
+                    fullWidth
+                    disabled={mutate.isPending || (!!turnstileSiteKey && !form.values.turnstile_token)}
+                >
+                    {mutate.isPending ? t`Working...` : t`Create my account`}
+                </Button>
 
-                    <Checkbox
-                        mb="md"
-                        {...form.getInputProps('marketing_opt_in', {type: 'checkbox'})}
-                        label={<Trans>Receive product updates from {getConfig("VITE_APP_NAME", "Hi.Events")}.</Trans>}
-                    />
-
-                    {turnstileSiteKey && (
-                        <div className={classes.turnstile}>
-                            <Turnstile
-                                siteKey={turnstileSiteKey}
-                                resetKey={turnstileResetKey}
-                                onToken={(token) => form.setFieldValue('turnstile_token', token)}
-                            />
-                            {form.errors.turnstile_token && (
-                                <Text c="red" size="xs" mt={4}>{form.errors.turnstile_token}</Text>
-                            )}
-                        </div>
-                    )}
-
-                    <Button
-                        color="secondary.5"
-                        type="submit"
-                        fullWidth
-                        disabled={mutate.isPending || (!!turnstileSiteKey && !form.values.turnstile_token)}
-                    >
-                        {mutate.isPending ? t`Working...` : t`Register`}
-                    </Button>
-                </form>
-                <footer>
+                <footer className={classes.terms}>
                     <Trans>
                         By registering you agree to our <NavLink target={'_blank'}
                                                                  to={getConfig("VITE_TOS_URL", "https://hi.events/terms-of-service?utm_source=app-register-footer") as string}>Terms
@@ -217,8 +226,8 @@ export const Register = () => {
                         to={getConfig("VITE_PRIVACY_URL", 'https://hi.events/privacy-policy?utm_source=app-register-footer') as string}>Privacy Policy</NavLink>.
                     </Trans>
                 </footer>
-            </div>
-        </>
+            </form>
+        </div>
     )
 }
 

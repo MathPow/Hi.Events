@@ -1,49 +1,131 @@
 @use "../auth-common" as auth;
 @use "../../../../styles/mixins.scss";
 
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 .header {
   @include auth.auth-header;
+
+  h2 {
+    font-size: 40px;
+
+    @include mixins.respond-below(lg) {
+      font-size: 32px;
+    }
+  }
+}
+
+.registerForm {
+  @include auth.auth-inputs;
+  @include auth.auth-button;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+// Cote a cote sur ordi, l'indice dessous; l'un sous l'autre sur mobile, l'indice entre les deux.
+.passwords {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    "password confirmation"
+    "hint hint";
+  gap: 18px 16px;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "password"
+      "hint"
+      "confirmation";
+  }
+}
+
+.password {
+  grid-area: password;
+}
+
+.confirmation {
+  grid-area: confirmation;
+}
+
+.hint {
+  grid-area: hint;
+  margin: 0;
+  font-size: 13px;
+  color: var(--dehors-brun);
+}
+
+.labelLong {
+  display: none;
+}
+
+@include mixins.respond-below(lg) {
+  .labelShort {
+    display: none;
+  }
+
+  .labelLong {
+    display: inline;
+  }
+}
+
+// La case de 26px aux coins de 8px, et son libelle en texte courant.
+:global(body.dehors-app) .checkbox :global(.mantine-Checkbox-body) {
+  align-items: center;
+
+  :global(.mantine-Checkbox-inner),
+  :global(.mantine-Checkbox-input) {
+    width: 26px;
+    height: 26px;
+  }
+
+  :global(.mantine-Checkbox-input) {
+    border: 2px solid rgb(53 41 36 / 0.35);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+
+    &:checked {
+      border-color: var(--dehors-brun);
+      background: var(--dehors-brun);
+    }
+  }
+
+  :global(.mantine-Checkbox-icon) {
+    color: var(--dehors-creme);
+  }
+
+  :global(.mantine-Checkbox-labelWrapper) {
+    padding-left: 12px;
+  }
+
+  :global(.mantine-Checkbox-label) {
+    padding: 0;
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--dehors-brun);
+    font-weight: 400;
+    cursor: pointer;
+
+    @include mixins.respond-below(lg) {
+      font-size: 16px;
+    }
+  }
+}
+
+.turnstile {
+  min-height: 65px;
+}
+
+.terms {
+  @include auth.auth-footer-terms;
 }
 
 .registerCard {
   @include auth.auth-card;
-  width: 100%;
-
-  .turnstile {
-    margin-bottom: 1rem;
-    min-height: 65px;
-  }
-
-  form {
-    @include auth.auth-inputs;
-    @include auth.auth-button(0.5rem);
-
-    :global(.mantine-InputWrapper-root) {
-      margin-bottom: 0.875rem;
-    }
-
-    :global(.mantine-SimpleGrid-root) {
-      gap: 0.875rem;
-
-      @include mixins.respond-below(sm) {
-        gap: 0;
-      }
-
-      :global(.mantine-InputWrapper-root) {
-        margin-bottom: 0;
-
-        @include mixins.respond-below(sm) {
-          margin-bottom: 0.875rem;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-  }
-
-  footer {
-    @include auth.auth-footer-terms;
-  }
 }

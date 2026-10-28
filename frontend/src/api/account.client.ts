@@ -1,5 +1,5 @@
 import {api} from "./client.ts";
-import {Account, GenericDataResponse, IdParam, User, StripeConnectAccountsResponse} from "../types.ts";
+import {Account, AccountEventType, GenericDataResponse, IdParam, User, StripeConnectAccountsResponse} from "../types.ts";
 
 interface CreateAccountRequest {
     first_name: string;
@@ -19,6 +19,12 @@ export const accountClient = {
     },
     updateAccount: async (account: Account) => {
         const response = await api.put<GenericDataResponse<Account>>('accounts', account);
+        return response.data;
+    },
+    updateEventTypes: async (accountId: IdParam, eventTypes: AccountEventType[]) => {
+        const response = await api.put<GenericDataResponse<Account>>(`accounts/${accountId}/event-types`, {
+            event_types: eventTypes,
+        });
         return response.data;
     },
     getStripeConnectDetails: async (accountId: IdParam, platform?: string) => {

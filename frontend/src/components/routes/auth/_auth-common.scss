@@ -1,45 +1,52 @@
 @use "../../../styles/mixins.scss";
 
-// Shared Auth Header Styles
+// Le titre en capitales FatFrank, et dessous une ligne en gras avec son lien orange souligne.
 @mixin auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   text-align: center;
-  margin-bottom: 1.5rem;
 
-  @include mixins.respond-below(sm) {
-    margin-bottom: 1.25rem;
+  @include mixins.respond-below(lg) {
+    gap: 8px;
   }
 
   h2 {
-    margin: 0 0 0.5rem;
+    margin: 0;
     font-family: FatFrank, 'Arial Black', sans-serif;
-    font-size: 2.75rem;
+    font-size: 46px;
     font-weight: 400;
-    line-height: 1.1;
+    line-height: 1;
+    text-transform: uppercase;
     color: var(--dehors-brun);
-    letter-spacing: 0;
 
-    @include mixins.respond-below(sm) {
-      font-size: 2.125rem;
+    @include mixins.respond-below(lg) {
+      font-size: 32px;
     }
   }
 
   p {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
     margin: 0;
-    font-size: 0.9375rem;
-    color: var(--dehors-texte-doux);
-    line-height: 1.6;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dehors-brun);
 
-    @include mixins.respond-below(sm) {
-      font-size: 0.875rem;
+    @include mixins.respond-below(lg) {
+      font-size: 14px;
     }
 
     a {
-      color: var(--mantine-color-secondary-5);
-      font-weight: 600;
-      transition: color 0.2s ease;
+      color: var(--dehors-orange);
+      text-decoration: underline;
+      text-underline-position: from-font;
 
       &:hover {
-        color: var(--mantine-color-secondary-7);
+        color: var(--dehors-orange-survol);
       }
     }
   }
@@ -50,65 +57,118 @@
   background: transparent;
 }
 
-// Shared Input Styles
+// Les champs: 56px de haut, sable translucide, coins de 16px, texte de 20px (17px sur mobile).
 @mixin auth-inputs {
-  :global(.mantine-TextInput-input),
-  :global(.mantine-PasswordInput-input),
-  :global(.mantine-Select-input) {
-    border-radius: 1rem;
-    border: 2px solid transparent;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-    background: var(--dehors-champ);
+  // Sous body.dehors-app et la racine du champ, pour passer devant les styles globaux de l'app (dehors-app.scss).
+  :global(body.dehors-app) & {
+    :global(.mantine-InputWrapper-root) {
+      margin-bottom: 0;
 
-    @include mixins.respond-below(sm) {
-      padding: 0.625rem 0.875rem;
+      :global(.mantine-InputWrapper-label) {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--dehors-brun);
+      }
+
+      :global(.mantine-InputWrapper-required) {
+        color: inherit;
+      }
+
+      :global(.mantine-InputWrapper-description) {
+        margin: 10px 0 0;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--dehors-brun);
+      }
+
+      :global(.mantine-Input-input) {
+        height: 56px;
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 0 18px;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: var(--dehors-brun);
+        background: var(--dehors-champ);
+        transition: background-color 0.15s ease, border-color 0.15s ease;
+
+        @include mixins.respond-below(lg) {
+          font-size: 17px;
+        }
+
+        &:hover {
+          background: var(--dehors-champ-survol);
+        }
+
+        &:focus,
+        &:focus-within {
+          border-color: var(--dehors-brun);
+        }
+
+        &::placeholder {
+          color: rgb(53 41 36 / 0.45);
+        }
+
+        &[readonly] {
+          color: rgb(53 41 36 / 0.6);
+        }
+      }
+
+      :global(.mantine-PasswordInput-innerInput) {
+        height: 100%;
+        padding: 0 48px 0 18px;
+        font-size: inherit;
+        font-weight: 400;
+        color: inherit;
+
+        &::placeholder {
+          color: rgb(53 41 36 / 0.45);
+        }
+      }
+
+      :global(.mantine-PasswordInput-section) {
+        width: 48px;
+      }
+
+      :global(.mantine-PasswordInput-visibilityToggle) {
+        background: transparent;
+      }
     }
-
-    &:hover {
-      background: var(--dehors-champ-survol);
-    }
-
-    &:focus {
-      border-color: var(--dehors-brun);
-    }
-
-    &::placeholder {
-      color: rgb(53 41 36 / 0.5);
-    }
-
-    &:disabled {
-      background: rgb(227 173 146 / 0.22);
-      color: rgb(53 41 36 / 0.45);
-    }
-  }
-
-  :global(.mantine-InputWrapper-label) {
-    font-weight: 700;
-    font-size: 0.9375rem;
-    color: var(--dehors-brun);
-    margin-bottom: 0.375rem;
   }
 }
 
-// Shared Button Styles
+// Le bouton principal, brun plein sur toute la largeur.
 @mixin auth-button($margin-top: 0) {
-  :global(.mantine-Button-root) {
-    height: 48px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 1rem;
+  :global(.mantine-Button-root[type="submit"]) {
+    height: auto;
+    padding: 18px 32px;
     border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: normal;
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
 
     @if $margin-top != 0 {
       margin-top: $margin-top;
     }
 
-    @include mixins.respond-below(sm) {
-      height: 48px;
+    @include mixins.respond-below(lg) {
+      font-size: 17px;
     }
 
+    &:hover:not(:disabled) {
+      background: rgb(53 41 36 / 0.88);
+    }
+
+    &:disabled {
+      color: rgb(255 247 233 / 0.7);
+      background: rgb(53 41 36 / 0.45);
+    }
   }
 }
 
@@ -119,39 +179,31 @@
 
   a {
     font-size: 0.875rem;
-    color: var(--hi-color-gray-dark);
-    font-weight: 500;
+    color: var(--dehors-texte-doux);
+    font-weight: 700;
     transition: color 0.2s ease;
 
     &:hover {
-      color: var(--mantine-color-secondary-5);
+      color: var(--dehors-brun);
     }
   }
 }
 
-// Shared Footer with Terms (Register style)
+// Les conditions sous le bouton: petit texte centre, liens soulignes.
 @mixin auth-footer-terms {
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--hi-color-gray-2);
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: var(--hi-color-gray-dark);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--dehors-brun);
   text-align: center;
 
-  @include mixins.respond-below(sm) {
-    font-size: 0.75rem;
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-  }
-
   a {
-    color: var(--mantine-color-secondary-5);
-    font-weight: 500;
-    transition: color 0.2s ease;
+    color: inherit;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-position: from-font;
 
     &:hover {
-      color: var(--mantine-color-secondary-7);
+      color: var(--dehors-orange-survol);
     }
   }
 }

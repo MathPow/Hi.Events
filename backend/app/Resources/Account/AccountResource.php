@@ -21,6 +21,7 @@ class AccountResource extends JsonResource
             'name' => $this->getName(),
             'currency_code' => $this->getCurrencyCode(),
             'timezone' => $this->getTimezone(),
+            'event_types' => $this->getEventTypes(),
             'updated_at' => $this->getUpdatedAt(),
 
             'is_account_email_confirmed' => $this->getAccountVerifiedAt() !== null,

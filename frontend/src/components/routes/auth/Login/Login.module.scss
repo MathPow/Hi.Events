@@ -1,96 +1,120 @@
 @use "../auth-common" as auth;
 @use "../../../../styles/mixins.scss";
 
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  @include mixins.respond-below(lg) {
+    gap: 18px;
+  }
+}
+
 .header {
   @include auth.auth-header;
 }
 
-.loginCard {
-  @include auth.auth-card;
+.loginForm {
+  @include auth.auth-inputs;
+  @include auth.auth-button;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 
-  form {
-    @include auth.auth-inputs;
-    @include auth.auth-button;
+  @include mixins.respond-below(lg) {
+    gap: 18px;
   }
+}
 
-  // Forgot password link
-  p {
-    margin: 1rem 0 0;
-    text-align: center;
+// Le lien du mot de passe oublie, a droite.
+.options {
+  display: flex;
+  justify-content: flex-end;
 
-    a {
-      font-size: 0.8125rem;
-      color: var(--hi-color-gray-dark);
-      font-weight: 500;
-      transition: color 0.2s ease;
+  a {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dehors-orange);
+    text-decoration: underline;
+    text-underline-position: from-font;
 
-      &:hover {
-        color: var(--mantine-color-secondary-5);
-      }
+    &:hover {
+      color: var(--dehors-orange-survol);
+    }
+
+    @include mixins.respond-below(lg) {
+      font-size: 14px;
     }
   }
 }
 
-// Ticket Lookup Section
+// « Vous cherchez vos billets? »: une tuile sable avec une fleche, qui s'ouvre sur le champ courriel.
 .ticketLookup {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--hi-color-gray-2);
-
-  @include mixins.respond-below(sm) {
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-  }
+  border-radius: 16px;
+  background: var(--dehors-champ);
 }
 
 .ticketLookupTrigger {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
-  padding: 0.5rem 0;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--hi-color-gray-dark);
-  transition: color 0.2s ease;
-  background: none;
-  border: none;
-  cursor: pointer;
+  padding: 18px 20px;
+  color: var(--dehors-brun);
 
-  @include mixins.respond-below(sm) {
-    font-size: 0.75rem;
-  }
-
-  &:hover {
-    color: var(--mantine-color-secondary-5);
-  }
-
-  &[data-expanded="true"] {
-    color: var(--hi-text);
-  }
-
-  svg:first-child {
-    opacity: 0.7;
+  @include mixins.respond-below(lg) {
+    padding: 16px 18px;
   }
 }
 
-.chevron {
-  transition: transform 0.25s ease;
-  opacity: 0.5;
+.ticketLookupText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 
-  &[data-expanded="true"] {
-    transform: rotate(180deg);
+  strong {
+    font-size: 16px;
+    font-weight: 700;
+
+    @include mixins.respond-below(lg) {
+      font-size: 15px;
+    }
+  }
+
+  span {
+    font-size: 14px;
+    line-height: normal;
+
+    @include mixins.respond-below(lg) {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+  }
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: rotate 0.25s ease;
+
+  [data-expanded="true"] & {
+    rotate: 90deg;
   }
 }
 
 .ticketLookupContent {
-  padding-top: 1rem;
+  padding: 0 20px 18px;
+
+  @include mixins.respond-below(lg) {
+    padding: 0 18px 16px;
+  }
 }
 
 .ticketLookupForm {
   display: flex;
-  gap: 0.625rem;
+  gap: 10px;
   align-items: flex-start;
 
   @include mixins.respond-below(sm) {
@@ -98,20 +122,14 @@
     align-items: stretch;
   }
 
-  :global(.mantine-TextInput-root) {
-    margin-bottom: 0;
-  }
-
   :global(.mantine-TextInput-input) {
-    border-radius: 1rem;
+    height: 44px;
     border: 2px solid transparent;
-    padding: 0.625rem 0.875rem;
-    font-size: 0.9375rem;
-    background: var(--dehors-champ);
-
-    @include mixins.respond-below(sm) {
-      font-size: 1rem;
-    }
+    border-radius: 14px;
+    padding: 0 14px;
+    font-size: 16px;
+    color: var(--dehors-brun);
+    background: var(--dehors-creme);
 
     &:focus {
       border-color: var(--dehors-brun);
@@ -119,17 +137,13 @@
   }
 
   :global(.mantine-Button-root) {
-    height: 38px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.8125rem;
-    padding: 0 1.25rem;
-    white-space: nowrap;
-
-    @include mixins.respond-below(sm) {
-      height: 44px;
-      width: 100%;
-    }
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
   }
 }
 
@@ -138,40 +152,18 @@
 }
 
 .successMessage {
-  text-align: center;
-  padding: 1.25rem;
-  background: var(--hi-color-gray);
-  border-radius: var(--hi-radius-lg);
-  border: 1px solid var(--hi-color-gray-2);
-
-  @include mixins.respond-below(sm) {
-    padding: 1rem;
-  }
-
   p {
-    margin: 0 0 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: var(--hi-text);
-    text-align: center;
-
-    @include mixins.respond-below(sm) {
-      font-size: 0.8125rem;
-    }
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--dehors-brun);
   }
 }
 
 .resetLink {
-  font-size: 0.8125rem;
-  color: var(--hi-color-gray-dark);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dehors-orange);
   text-decoration: underline;
-  text-underline-offset: 2px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-
-  &:hover {
-    color: var(--mantine-color-secondary-5);
-  }
+  text-underline-position: from-font;
 }

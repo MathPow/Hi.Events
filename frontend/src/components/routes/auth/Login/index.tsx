@@ -12,7 +12,6 @@ import {useEffect, useState} from "react";
 import {ChooseAccountModal} from "../../../modals/ChooseAccountModal";
 import {useSendTicketLookupEmail} from "../../../../mutations/useSendTicketLookupEmail.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
-import {IconTicket, IconChevronDown} from "@tabler/icons-react";
 
 const Login = () => {
     const location = useLocation();
@@ -75,55 +74,54 @@ const Login = () => {
     };
 
     return (
-        <>
+        <div className={classes.stack}>
             <header className={classes.header}>
-                <h2>{t`Welcome back`}</h2>
+                <h2>{t`Sign in`}</h2>
                 <p>
                     <Trans>
-                        Don't have an account?{' '}
+                        No account yet?
                         <NavLink to={`/auth/register${location.search}`}>
-                            Sign up
+                            Create an account
                         </NavLink>
                     </Trans>
                 </p>
             </header>
-            <div className={classes.loginCard}>
-                <form onSubmit={form.onSubmit((values) => loginUser(values))}>
-                    <TextInput {...form.getInputProps('email')}
-                               label={t`Email`}
-                               placeholder="hello@example.com"
-                               required
-                    />
-                    <PasswordInput {...form.getInputProps('password')}
-                                   label={t`Password`}
-                                   placeholder={t`Your password`}
-                                   required
-                                   mt="md"
-                    />
-                    <Button color="secondary.5" type="submit" fullWidth loading={isPending} disabled={isPending} mt="lg">
-                        {isPending ? t`Logging in` : t`Log in`}
-                    </Button>
-                    <p>
-                        <NavLink to={`/auth/forgot-password`}>
-                            {t`Forgot password?`}
-                        </NavLink>
-                    </p>
-                </form>
-            </div>
 
-            <div className={classes.ticketLookup}>
+            <form className={classes.loginForm} onSubmit={form.onSubmit((values) => loginUser(values))}>
+                <TextInput {...form.getInputProps('email')}
+                           label={t`Email`}
+                           placeholder={t`name@example.com`}
+                           type="email"
+                           required
+                />
+                <PasswordInput {...form.getInputProps('password')}
+                               label={t`Password`}
+                               placeholder={'••••••••'}
+                               visibilityToggleIcon={() => <img src={'/interface/oeil.svg'} alt={''}/>}
+                               required
+                />
+                <div className={classes.options}>
+                    <NavLink to={`/auth/forgot-password`}>
+                        {t`Forgot password?`}
+                    </NavLink>
+                </div>
+                <Button type="submit" fullWidth loading={isPending} disabled={isPending}>
+                    {isPending ? t`Logging in` : t`Log in`}
+                </Button>
+            </form>
+
+            {/* Les acheteurs n'ont pas de compte: on leur envoie le lien de leurs billets par courriel. */}
+            <div className={classes.ticketLookup} data-expanded={ticketLookupOpen}>
                 <UnstyledButton
                     className={classes.ticketLookupTrigger}
                     onClick={() => setTicketLookupOpen(!ticketLookupOpen)}
-                    data-expanded={ticketLookupOpen}
+                    aria-expanded={ticketLookupOpen}
                 >
-                    <IconTicket size={18} />
-                    <span>{t`Just looking for your tickets?`}</span>
-                    <IconChevronDown
-                        size={16}
-                        className={classes.chevron}
-                        data-expanded={ticketLookupOpen}
-                    />
+                    <span className={classes.ticketLookupText}>
+                        <strong>{t`Looking for your tickets?`}</strong>
+                        <span>{t`No account needed: just the email you used at checkout.`}</span>
+                    </span>
+                    <img src={'/interface/fleche-suite.svg'} alt={''} className={classes.arrow}/>
                 </UnstyledButton>
 
                 <Collapse in={ticketLookupOpen}>
@@ -148,12 +146,12 @@ const Login = () => {
                                         {...ticketLookupForm.getInputProps('email')}
                                         type="email"
                                         placeholder={t`Enter your email`}
+                                        aria-label={t`Email`}
                                         required
                                         className={classes.ticketEmailInput}
                                     />
                                     <Button
                                         type="submit"
-                                        color="secondary.5"
                                         loading={ticketLookupMutation.isPending}
                                         disabled={ticketLookupMutation.isPending}
                                     >
@@ -170,7 +168,7 @@ const Login = () => {
                 form.setFieldValue('account_id', accountId as string);
             }
             } accounts={data.accounts}/>}
-        </>
+        </div>
     )
 }
 

@@ -17,6 +17,13 @@ class Account extends BaseModel
     use SoftDeletes;
     use HasFactory;
 
+    public function getCastMap(): array
+    {
+        return [
+            'event_types' => 'array',
+        ];
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'account_users')

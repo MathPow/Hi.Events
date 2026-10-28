@@ -31,6 +31,7 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     final public const DONATION_RECEIPTS_ALLOWED = 'donation_receipts_allowed';
     final public const SUSPENDED_AT = 'suspended_at';
     final public const IS_PUBLIC_SIGNUP = 'is_public_signup';
+    final public const EVENT_TYPES = 'event_types';
 
     protected int $id;
     protected ?int $account_configuration_id = null;
@@ -53,6 +54,7 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     protected bool $donation_receipts_allowed = false;
     protected ?string $suspended_at = null;
     protected bool $is_public_signup = false;
+    protected array|string|null $event_types = null;
 
     public function toArray(): array
     {
@@ -78,6 +80,7 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
                     'donation_receipts_allowed' => $this->donation_receipts_allowed ?? null,
                     'suspended_at' => $this->suspended_at ?? null,
                     'is_public_signup' => $this->is_public_signup ?? null,
+                    'event_types' => $this->event_types ?? null,
                 ];
     }
 
@@ -310,5 +313,16 @@ abstract class AccountDomainObjectAbstract extends \HiEvents\DomainObjects\Abstr
     public function getIsPublicSignup(): bool
     {
         return $this->is_public_signup;
+    }
+
+    public function setEventTypes(array|string|null $event_types): self
+    {
+        $this->event_types = $event_types;
+        return $this;
+    }
+
+    public function getEventTypes(): array|string|null
+    {
+        return $this->event_types;
     }
 }

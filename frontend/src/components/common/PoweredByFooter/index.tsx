@@ -65,7 +65,6 @@ export const PoweredByFooter = (
             >
                 Hi.Events
             </a>{" "}
-            🚀{" "}
             {/*
               * Mention DEHORS ajoutee a cote de l'attribution, jamais a sa place.
               * La clause 7(b) de l'AGPL autorise a REFORMULER le "Powered by"

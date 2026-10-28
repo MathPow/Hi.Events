@@ -22,10 +22,10 @@ import {
 import { t } from "@lingui/macro";
 import { BreadcrumbItem, NavItem } from "../AppLayout/types.ts";
 import AppLayout from "../AppLayout";
-import { NavLink, useLocation, useParams } from "react-router";
+import { NavLink, useLocation, useParams, useSearchParams } from "react-router";
 import { Button, Modal, Stack, Text } from "@mantine/core";
 import { useGetOrganizer } from "../../../queries/useGetOrganizer.ts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateEventModal } from "../../modals/CreateEventModal";
 import { TopBarButton } from "../../common/TopBarButton";
 import classes from "./OrganizerLayout.module.scss";
@@ -53,6 +53,7 @@ const OrganizerLayout = () => {
     const location = useLocation();
     const { data: organizer } = useGetOrganizer(organizerId);
     const [showCreateEventModal, setShowCreateEventModal] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
     const [showCreateOrganizerModal, setShowCreateOrganizerModal] = useState(false);
     const [createModalOpen, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false);
     const [switchOrganizerModalOpen, { open: openSwitchModal, close: closeSwitchModal }] = useDisclosure(false);
@@ -76,6 +77,15 @@ const OrganizerLayout = () => {
     const earnedAchievements = achievements?.filter((achievement) => achievement.earned_at).length;
     const statusToggleMutation = useUpdateOrganizerStatus();
     const isDashboard = /^\/manage\/organizer\/[^/]+(\/dashboard)?\/?$/.test(location.pathname);
+
+    // « Creer un evenement » a l'accueil mene ici avec ?create_event: on ouvre la fenetre de creation.
+    useEffect(() => {
+        if (searchParams.has('create_event')) {
+            setShowCreateEventModal(true);
+            searchParams.delete('create_event');
+            setSearchParams(searchParams, {replace: true});
+        }
+    }, [searchParams]);
 
     const navItems: NavItem[] = [
         {

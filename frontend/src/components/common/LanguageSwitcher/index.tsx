@@ -3,6 +3,7 @@ import {dynamicActivateLocale, getClientLocale, localeToNameMap, SupportedLocale
 import {t} from "@lingui/macro";
 import {IconWorld} from "@tabler/icons-react";
 import {useLingui} from "@lingui/react";
+import {ReactNode} from "react";
 
 export const LanguageSwitcher = ({
     classNames,
@@ -11,6 +12,8 @@ export const LanguageSwitcher = ({
     onDropdownOpen,
     iconColor = '#ccc',
     locales,
+    leftSection,
+    rightSection,
 }: {
     classNames?: SelectProps['classNames'];
     comboboxProps?: SelectProps['comboboxProps'];
@@ -18,6 +21,9 @@ export const LanguageSwitcher = ({
     onDropdownOpen?: SelectProps['onDropdownOpen'];
     iconColor?: string;
     locales?: SupportedLocales[];
+    // null retire l'icone du globe; absent, on la garde
+    leftSection?: ReactNode | null;
+    rightSection?: ReactNode;
 }) => {
     useLingui();
 
@@ -71,7 +77,8 @@ export const LanguageSwitcher = ({
     return (
         <>
             <Select
-                leftSection={<IconWorld size={15} color={iconColor}/>}
+                leftSection={leftSection === undefined ? <IconWorld size={15} color={iconColor}/> : leftSection}
+                rightSection={rightSection}
                 classNames={classNames}
                 comboboxProps={comboboxProps}
                 checkIconPosition={checkIconPosition}

@@ -119,12 +119,15 @@ export interface User {
     marketing_opted_in_at?: string | null;
 }
 
+export type AccountEventType = 'SPORT' | 'ENTREPRENEURSHIP' | 'SOCIAL' | 'OTHER';
+
 export interface Account {
     id?: IdParam;
     name: string;
     email: string;
     timezone?: string;
     currency_code?: string;
+    event_types?: AccountEventType[] | null;
     password?: string;
     stripe_connect_setup_complete?: boolean;
     stripe_account_id?: string;

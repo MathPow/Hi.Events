@@ -5,6 +5,7 @@ use HiEvents\Http\Actions\Accounts\GetAccountAction;
 use HiEvents\Http\Actions\Accounts\Stripe\CreateStripeConnectAccountAction;
 use HiEvents\Http\Actions\Accounts\Stripe\GetStripeConnectAccountsAction;
 use HiEvents\Http\Actions\Accounts\UpdateAccountAction;
+use HiEvents\Http\Actions\Accounts\UpdateAccountEventTypesAction;
 use HiEvents\Http\Actions\Accounts\Vat\GetAccountVatSettingAction;
 use HiEvents\Http\Actions\Accounts\Vat\UpsertAccountVatSettingAction;
 use HiEvents\Http\Actions\Affiliates\CreateAffiliateAction;
@@ -304,6 +305,7 @@ $router->middleware(['auth:api'])->group(
         // Accounts
         $router->get('/accounts/{account_id?}', GetAccountAction::class);
         $router->put('/accounts/{account_id?}', UpdateAccountAction::class);
+        $router->put('/accounts/{account_id}/event-types', UpdateAccountEventTypesAction::class);
         $router->get('/accounts/{account_id}/stripe/connect_accounts', GetStripeConnectAccountsAction::class);
         $router->post('/accounts/{account_id}/stripe/connect', CreateStripeConnectAccountAction::class);
 
