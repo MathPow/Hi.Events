@@ -3,7 +3,7 @@ import classes from "./ManageAccount.module.scss";
 import {IconAdjustmentsCog, IconCreditCard, IconKey, IconReceiptTax, IconUsers} from "@tabler/icons-react";
 import {Outlet, useLocation, useNavigate} from "react-router";
 import {t} from "@lingui/macro";
-import {useIsCurrentUserAdmin} from "../../../../hooks/useIsCurrentUserAdmin.ts";
+import {useCanSeeDeveloperPages, useIsCurrentUserAdmin} from "../../../../hooks/useIsCurrentUserAdmin.ts";
 import { useGetAccount } from "../../../../queries/useGetAccount.ts";
 import {useEffect, useRef} from "react";
 
@@ -12,6 +12,7 @@ export const ManageAccount = () => {
     const location = useLocation();
     const tabValue = location.pathname.split('/').pop() || 'settings';
     const isUserAdmin = useIsCurrentUserAdmin();
+    const canSeeDeveloperPages = useCanSeeDeveloperPages();
     const {data: account} = useGetAccount();
     const tabsListRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +49,7 @@ export const ManageAccount = () => {
                         </Tabs.Tab>
                     )}
 
-                    {isUserAdmin && (
+                    {(isUserAdmin && canSeeDeveloperPages) && (
                         <Tabs.Tab value="api-tokens" leftSection={<IconKey/>}>
                             {t`API tokens`}
                         </Tabs.Tab>

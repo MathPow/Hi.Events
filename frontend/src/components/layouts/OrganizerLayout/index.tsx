@@ -44,7 +44,7 @@ import { confirmationDialog } from "../../../utilites/confirmationDialog.tsx";
 import { showError, showSuccess } from "../../../utilites/notifications.tsx";
 import { useResendEmailConfirmation } from "../../../mutations/useResendEmailConfirmation.ts";
 import { useGetMe } from "../../../queries/useGetMe.ts";
-import { useIsCurrentUserSuperAdmin } from "../../../hooks/useIsCurrentUserAdmin.ts";
+import { useCanSeeDeveloperPages, useIsCurrentUserSuperAdmin } from "../../../hooks/useIsCurrentUserAdmin.ts";
 import { useGetOrganizerAchievements } from "../../../queries/useGetOrganizerAchievements.ts";
 import { AchievementCelebration } from "../../common/OrganizerAchievements";
 
@@ -68,6 +68,7 @@ const OrganizerLayout = () => {
     const [emailConfirmationResent, setEmailConfirmationResent] = useState(false);
     const { data: me } = useGetMe();
     const isSuperAdmin = useIsCurrentUserSuperAdmin();
+    const canSeeDeveloperPages = useCanSeeDeveloperPages();
     const isUserEmailVerfied = me?.is_email_verified;
     const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -108,8 +109,12 @@ const OrganizerLayout = () => {
         { link: 'organizer-homepage-designer', label: t`Homepage Designer`, icon: IconPaint },
         { link: 'faq', label: t`FAQ`, icon: IconHelpCircle },
 
-        { label: t`Integrations` },
-        { link: 'webhooks', label: t`Webhooks`, icon: IconWebhook },
+        ...(canSeeDeveloperPages
+            ? [
+                { label: t`Integrations` },
+                { link: 'webhooks', label: t`Webhooks`, icon: IconWebhook },
+            ]
+            : []),
 
         // Le tableau de bord admin n'existait que dans le menu de l'avatar, en
         // haut a droite: introuvable quand on cherche dans la barre laterale.

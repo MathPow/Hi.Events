@@ -33,6 +33,7 @@ import {useGetEventSettings} from "../../../queries/useGetEventSettings";
 import {useGetEventStats} from "../../../queries/useGetEventStats";
 import {useGetEventImages} from "../../../queries/useGetEventImages.ts";
 import {useGetAccount} from "../../../queries/useGetAccount.ts";
+import {useCanSeeDeveloperPages} from "../../../hooks/useIsCurrentUserAdmin.ts";
 import Truncate from "../../common/Truncate";
 import {BreadcrumbItem, NavItem} from "../AppLayout/types.ts";
 import AppLayout from "../AppLayout";
@@ -67,6 +68,7 @@ const EventLayout = () => {
     const {data: eventStats} = useGetEventStats(eventId);
     const {data: eventImages, isFetched: isEventImagesFetched} = useGetEventImages(eventId);
     const {data: account, isFetched: isAccountFetched} = useGetAccount();
+    const canSeeDeveloperPages = useCanSeeDeveloperPages();
     const {data: me} = useGetMe();
 
     const resendEmailConfirmationMutation = useResendEmailConfirmation();
@@ -149,7 +151,7 @@ const EventLayout = () => {
         // 5. INTEGRATIONS
         {label: t`Integrations`},
         {link: 'widget', label: t`Widget Embed`, icon: IconDeviceTabletCode},
-        {link: 'webhooks', label: t`Webhooks`, icon: IconWebhook},
+        ...(canSeeDeveloperPages ? [{link: 'webhooks', label: t`Webhooks`, icon: IconWebhook}] : []),
 
 
     ];
