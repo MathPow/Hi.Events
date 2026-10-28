@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 
 import {useGetOrdersByLookupToken} from "../../../queries/useGetOrdersByLookupToken.ts";
 import {useSendTicketLookupEmail} from "../../../mutations/useSendTicketLookupEmail.ts";
+import {useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
 import {showError} from "../../../utilites/notifications.tsx";
 import {eventCoverImageUrl, eventHomepagePath, organizerHomepagePath} from "../../../utilites/urlHelper.ts";
 import {getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
@@ -17,6 +18,7 @@ import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
 import {InstallAppButton} from "../../common/InstallAppButton";
+import {EventCard} from "../../layouts/OrganizerHomepage/EventCard";
 import {ConfirmationTicket} from "../product-widget/OrderSummaryAndProducts/ConfirmationTicket";
 import {eventRangeLabel, shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 
@@ -291,6 +293,28 @@ const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }
     );
 };
 
+// Les prochains evenements de la billetterie, pour en decouvrir d'autres depuis ses billets: les
+// cartes des pages organisateur, sans ceux dont on a deja des billets.
+const DiscoverEvents = ({owned}: { owned: Set<string> }) => {
+    const {data: events = []} = useGetUpcomingEventsPublic();
+    const shown = events.filter((event) => !owned.has(String(event.id)));
+
+    if (!shown.length) {
+        return null;
+    }
+
+    return (
+        <section className={`${shell.card} ${shell.section}`} data-rough aria-labelledby="discover-events-title">
+            <div className={shell.sectionHeader}>
+                <h2 id="discover-events-title" className={shell.sectionTitle}>{t`Discover events`}</h2>
+            </div>
+            <div className={shell.grid}>
+                {shown.map((event) => <EventCard key={event.id} event={event}/>)}
+            </div>
+        </section>
+    );
+};
+
 /**
  * Le tableau de bord du participant, ouvert par le lien du courriel « Vos billets »:
  * comme les pages publiques des organisateurs, aux couleurs de la Billetterie Dehors.
@@ -298,6 +322,7 @@ const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }
  * sous une carte qui demande le courriel de l'achat.
  * Les evenements a venir montrent leurs billets a code QR; les passes, une rangee avec
  * les codes. Les onglets passent par ?vue=, comme les evenements passes de l'organisateur.
+ * En bas, les prochains evenements de la billetterie, pour naviguer vers d'autres.
  */
 export const MyTickets = () => {
     const {token} = useParams();
@@ -413,6 +438,8 @@ export const MyTickets = () => {
                         </section>
                     </>
                 )}
+
+                {!isLoading && <DiscoverEvents owned={new Set(groups.map((group) => String(group.event.id)))}/>}
 
                 <PublicPageFooter/>
             </div>

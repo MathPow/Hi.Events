@@ -17,7 +17,7 @@ class GetUpcomingPublicEventsHandlerTest extends TestCase
         $repository = m::mock(EventRepositoryInterface::class);
         $events = new LengthAwarePaginator([], 0, GetUpcomingPublicEventsHandler::LIMIT);
 
-        $repository->shouldReceive('loadRelation')->times(3)->andReturnSelf();
+        $repository->shouldReceive('loadRelation')->times(4)->andReturnSelf();
         $repository->shouldReceive('findEvents')
             ->once()
             ->withArgs(function (array $where, QueryParamsDTO $params) {
