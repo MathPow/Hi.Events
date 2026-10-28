@@ -1,6 +1,7 @@
 import {t} from "@lingui/macro";
-import {Button, Card as MantineCard, Checkbox, NumberInput, Paper, Stack, Switch, Text, TextInput} from "@mantine/core";
+import {Alert, Button, Card as MantineCard, Checkbox, NumberInput, Paper, Stack, Switch, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
+import {IconSpeakerphone} from "@tabler/icons-react";
 import {useParams} from "react-router";
 import {useEffect} from "react";
 import {EventSettings, PaymentProvider} from "../../../../../../types.ts";
@@ -138,6 +139,10 @@ export const PaymentAndInvoicingSettings = () => {
                                         marginTop: '5px',
                                         marginBottom: '10px'
                                     }}>{t`Offline Payments Settings`}</h4>
+                                    <Alert icon={<IconSpeakerphone size={16}/>} variant="light" color="orange" mb="md"
+                                           title={t`Free with Billetterie Dehors`}>
+                                        {t`Offline payments, like Interac e-Transfer, are free: no Billetterie Dehors fees. In return, if you make any content for your event (posts, stories, posters), give Billetterie Dehors a shout-out.`}
+                                    </Alert>
                                     <MantineCard shadow="sm" padding="lg" radius="md" withBorder mb="md">
                                         <h4 style={{
                                             margin: 0,
