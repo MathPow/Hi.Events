@@ -1,5 +1,5 @@
 import {useCallback, useRef} from "react";
-import {roughClipPath, roughEdgeClipPath} from "../utilites/roughEdge.ts";
+import {roughClipPath, roughEdgeClipPath, roughEdgePath} from "../utilites/roughEdge.ts";
 import {ROUGH_BUTTON_BUMP, roughButtonPath} from "./useRoughButton.ts";
 
 // Ce qui se coupe sous la racine: les blocs marques data-rough, et tous les champs et
@@ -21,10 +21,20 @@ const ROUND_FULL_SIZE = 64;
 
 const outlineName = (i: number) => `--rough-clip${i ? `-${i + 1}` : ''}`;
 
+// Le trait de decoupe.ts (option trait): le meme trace en contour, en masque. Centre sur le
+// bord, il perd sa moitie exterieure a la decoupe: on le trace deux fois plus epais.
+const strokeMask = (width: number, height: number, path: string, thickness: number) => {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width.toFixed(1)} ${height.toFixed(1)}" preserveAspectRatio="none">`
+        + `<path d="${path}" fill="none" stroke="#000" stroke-width="${thickness * 2}"/></svg>`;
+    return `url("data:image/svg+xml;base64,${btoa(svg)}")`;
+};
+
 const clear = (element: HTMLElement) => {
     element.style.clipPath = '';
     delete element.dataset.roughCut;
     delete element.dataset.roughBoil;
+    element.style.removeProperty('--rough-stroke');
+    element.style.removeProperty('--rough-border');
     for (let i = 0; i < OUTLINES; i++) {
         element.style.removeProperty(outlineName(i));
     }
@@ -96,7 +106,11 @@ export const useRoughEdges = <T extends HTMLElement>() => {
                 return;
             }
 
-            const border = visibleBorder(style);
+            // Un bloc a trait (data-rough="stroke") peint sa bordure le long du bord decoupe:
+            // la coupe n'a pas a l'epargner. Sa bordure CSS, devenue transparente, en donne
+            // l'epaisseur.
+            const stroke = element.dataset.rough === 'stroke' ? parseFloat(style.borderTopWidth) || 0 : 0;
+            const border = stroke ? 0 : visibleBorder(style);
             const isButton = element.matches(BUTTON);
             const round = isButton && Math.abs(width - height) <= 2 && radius >= Math.min(width, height) / 2 - 1;
             const pill = isButton && !round && height <= PILL_MAX_HEIGHT && width >= height * 0.9;
@@ -127,6 +141,11 @@ export const useRoughEdges = <T extends HTMLElement>() => {
                 }
                 element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
                 element.style.clipPath = 'var(--rough-clip)';
+            } else if (stroke) {
+                const options = {radius, step: STEP, amplitude: AMPLITUDE, seed: cut.seed};
+                element.style.clipPath = roughEdgeClipPath(width, height, options);
+                element.style.setProperty('--rough-stroke', strokeMask(width, height, roughEdgePath(width, height, options), stroke));
+                element.style.setProperty('--rough-border', `${stroke}px`);
             } else {
                 element.style.clipPath = outline(cut.seed);
             }

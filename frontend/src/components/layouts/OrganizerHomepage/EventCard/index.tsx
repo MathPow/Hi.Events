@@ -7,6 +7,7 @@ import {Event, EventLifecycleStatus, Product, ProductType} from "../../../../typ
 import {eventHomepagePath} from "../../../../utilites/urlHelper.ts";
 import {getProductsFromEvent} from "../../../../utilites/helpers.ts";
 import {PublicIcon} from "../../../common/PublicIcon";
+import {useCardHover} from "../../../../hooks/useCardHover.ts";
 
 interface EventCardProps {
     event: Event;
@@ -105,12 +106,14 @@ export const EventCard = ({event}: EventCardProps) => {
     const endDate = event.end_date ? dayjs(event.end_date) : startDate.add(8, 'hour');
     const isLive = dayjs().isAfter(startDate) && dayjs().isBefore(endDate);
     const badge = isLive ? t`LIVE` : scarcityLabel(event, products);
+    // Comme les cartes du site: la carte suit un peu le curseur, sa photo zoome et se decale.
+    const {card, photo, handlers} = useCardHover<HTMLAnchorElement, HTMLImageElement>();
 
     return (
-        <Link to={eventHomepagePath(event)} className={classes.card} data-rough>
+        <Link ref={card} to={eventHomepagePath(event)} className={classes.card} data-rough {...handlers}>
             <div className={classes.image} data-rough>
                 {coverImage ? (
-                    <img src={coverImage.url} alt="" loading="lazy"/>
+                    <img ref={photo} src={coverImage.url} alt="" loading="lazy"/>
                 ) : (
                     <div className={classes.placeholder}>
                         <PublicIcon name={'calendrier'} size={44}/>

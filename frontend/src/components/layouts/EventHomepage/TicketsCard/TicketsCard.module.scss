@@ -156,9 +156,13 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
     }
 
     .hi-product-row {
+      --trait-couleur: var(--dehors-brun);
+      --trait-epaisseur: 1.5px;
+
+      position: relative;
       gap: 12px;
       padding: 18px;
-      border: 1.5px solid var(--dehors-brun);
+      border: var(--trait-epaisseur) solid var(--trait-couleur);
       border-radius: 20px;
       background: var(--dehors-creme);
 
@@ -169,16 +173,31 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       }
 
       &.hi-product-highlighted {
-        border-color: var(--public-accent);
+        --trait-couleur: var(--public-accent);
         background: var(--dehors-creme);
       }
 
+      // Choisie, la rangee passe a l'accent, sans changer d'epaisseur: le trait peint le long
+      // du bord decoupe garde la sienne.
       &.hi-product-selected {
-        border: 2px solid var(--public-accent);
-        padding: 17.5px;
+        --trait-couleur: var(--public-accent);
+      }
 
-        @include mixins.respond-below(md) {
-          padding: 13.5px 13.5px 13.5px 15.5px;
+      // Decoupee (useRoughEdges, data-rough="stroke"), la bordure garde sa place mais devient
+      // transparente: ::after peint le trait le long du bord decoupe, comme le trait de
+      // decoupe.ts sur le site. Rongee par la decoupe, elle paraissait pointillee.
+      &[data-rough-cut] {
+        border-color: transparent;
+
+        // Pose sur la boite de la bordure, a l'epaisseur que le navigateur lui donne vraiment
+        // (--rough-border, arrondie au pixel): avec 1,5px pour 1px, le trait glissait.
+        &::after {
+          content: '';
+          position: absolute;
+          inset: calc(-1 * var(--rough-border, var(--trait-epaisseur)));
+          background: var(--trait-couleur);
+          mask: var(--rough-stroke) 0 0 / 100% 100% no-repeat;
+          pointer-events: none;
         }
       }
 
@@ -352,7 +371,9 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
                 min-height: 34px;
               }
 
-              svg {
+              // L'icone de Mantine (son span compris, qui gardait sa place et poussait le dessin
+              // a gauche) cede la place a celle de la maquette.
+              .mantine-ActionIcon-icon {
                 display: none;
               }
 
