@@ -1,207 +1,429 @@
 @use "../../../styles/mixins.scss";
 
-.container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 40px 20px;
+$police-titre: FatFrank, 'Arial Black', sans-serif;
 
-  @include mixins.respond-below(md) {
-    padding: 20px 16px;
-  }
-}
+// Le cadre (page, barre, cartes, onglets) vient de la page organisateur
+// (OrganizerHomepage.module.scss); ici, ce qui est propre aux billets du participant.
 
-.header {
+// L'en-tete, centre comme celui de la confirmation.
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px;
   text-align: center;
-  margin-bottom: 40px;
-
-  h1 {
-    margin: 20px 0 12px;
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, var(--mantine-color-secondary-5) 0%, var(--mantine-color-primary-6) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-
-    @include mixins.respond-below(md) {
-      font-size: 1.5rem;
-      margin: 16px 0 10px;
-    }
-  }
-}
-
-.headerIcon {
-  color: var(--mantine-color-secondary-5);
-  padding: 16px;
-  background: var(--mantine-color-primary-0);
-  border-radius: 50%;
+  color: var(--dehors-brun);
 
   @include mixins.respond-below(md) {
-    padding: 12px;
-    width: 40px !important;
-    height: 40px !important;
+    gap: 8px;
+    padding: 22px 18px;
+    border-radius: 28px;
   }
 }
 
-.subtitle {
-  color: var(--mantine-color-dimmed);
-  font-size: 1rem;
+.kicker {
   margin: 0;
-  line-height: 1.6;
+  font-family: 'Felt Tip', 'Comic Sans MS', cursive;
+  font-size: 32px;
+  line-height: normal;
+  color: var(--public-accent);
 
   @include mixins.respond-below(md) {
-    font-size: 0.875rem;
+    font-size: 26px;
   }
 }
 
-.ordersList {
+.title {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  @include mixins.respond-below(md) {
+    font-size: 38px;
+    line-height: 1;
+  }
+}
+
+.line {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 14px;
+  }
+}
+
+.list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 
   @include mixins.respond-below(md) {
-    gap: 16px;
+    gap: 14px;
   }
 }
 
-.orderCard {
-  position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid var(--mantine-color-gray-2);
+.accentIcon {
+  flex-shrink: 0;
+  color: var(--public-accent);
+}
 
-  @media (prefers-color-scheme: dark) {
-    border-color: var(--mantine-color-dark-4);
-  }
+.coverPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--public-accent);
+}
+
+.organizer {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dehors-brun);
+  text-decoration: none;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    text-decoration: underline;
+  }
+}
 
-    @media (prefers-color-scheme: dark) {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+.eventTitle {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--mantine-color-secondary-5) 0%, var(--mantine-color-primary-6) 100%);
-    border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+  @include mixins.respond-below(md) {
+    font-size: 24px;
   }
 }
 
-.orderHeader {
+// Les boutons de la page organisateur, en plus petit.
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: 2px solid var(--dehors-brun);
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+}
+
+.buttonOutline {
+  color: var(--dehors-brun);
+  background: transparent;
+
+  &:hover {
+    background: var(--dehors-carte);
+  }
+}
+
+.buttonFilled {
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+
+  &:hover {
+    background: #4a3830;
+  }
+}
+
+// A venir: une tuile creme, l'evenement en haut et ses billets dessous.
+.event {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  border-radius: 28px;
+  background: var(--dehors-creme);
 
   @include mixins.respond-below(md) {
-    flex-direction: column;
+    gap: 14px;
+    padding: 10px;
+    border-radius: 24px;
+  }
+}
+
+.eventHead {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+.cover {
+  display: block;
+  height: 210px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--public-accent-doux);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 170px;
+    border-radius: 18px;
   }
 }
 
 .eventInfo {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.eventTitle {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--mantine-color-text);
-
-  @include mixins.respond-below(md) {
-    font-size: 1.125rem;
-  }
-}
-
-.orderDetails {
-  padding-top: 16px;
-  border-top: 1px solid var(--mantine-color-gray-2);
-
-  @media (prefers-color-scheme: dark) {
-    border-color: var(--mantine-color-dark-4);
-  }
-}
-
-.detailItem {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
   min-width: 0;
 
   @include mixins.respond-below(md) {
-    margin-bottom: 4px;
+    padding: 0 6px;
   }
 }
 
-.headerIconError {
-  color: var(--mantine-color-red-6);
-  padding: 16px;
-  background: rgba(239, 68, 68, 0.08);
-  border-radius: 50%;
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+
+    @include mixins.respond-below(md) {
+      font-size: 14px;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
 
   @include mixins.respond-below(md) {
-    padding: 12px;
-    width: 40px !important;
-    height: 40px !important;
+    width: 100%;
+
+    .button {
+      flex: 1 1 auto;
+    }
   }
 }
 
-.requestCard {
-  margin-top: 24px;
+// Un billet a code QR par participant (le billet de la confirmation).
+.tickets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
 }
 
-.requestHeader {
+// Passe: une rangee, la vignette, l'evenement et les codes, la commande a droite.
+.past {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 20px 12px 12px;
+  border-radius: 24px;
+  background: var(--dehors-creme);
+
+  .eventTitle {
+    font-size: 22px;
+  }
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px;
+    border-radius: 20px;
+
+    .eventTitle {
+      font-size: 18px;
+    }
+  }
+}
+
+.pastCover {
+  display: block;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--public-accent-doux);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include mixins.respond-below(md) {
+    align-self: start;
+    height: 72px;
+    border-radius: 14px;
+  }
+}
+
+.pastInfo {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pastWhen {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.code {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
-  color: var(--mantine-color-text);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--dehors-carte);
 
-  svg {
-    color: var(--mantine-color-secondary-5);
+  a {
+    color: var(--dehors-brun);
+    text-decoration: underline;
+    text-underline-position: from-font;
   }
 }
 
+.pastActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @include mixins.respond-below(md) {
+    grid-column: 1 / -1;
+
+    .button {
+      width: 100%;
+    }
+  }
+}
+
+// Lien expire: le courriel, puis un nouveau lien, comme la tuile de la connexion.
 .requestForm {
   display: flex;
-  gap: 8px;
-  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 10px;
 
   @include mixins.respond-below(sm) {
     flex-direction: column;
-    align-items: stretch;
   }
 }
 
-.emailInput {
+.requestInput {
   flex: 1;
+
+  :global(.mantine-Input-input) {
+    height: 48px;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 0 16px;
+    font-size: 16px;
+    color: var(--dehors-brun);
+    background: var(--dehors-champ);
+
+    &:focus {
+      border-color: var(--dehors-brun);
+    }
+  }
 }
 
-.successMessage {
-  text-align: center;
-  padding: 16px;
-  background: var(--mantine-color-primary-0);
-  border-radius: var(--mantine-radius-md);
-  border: 1px solid var(--mantine-color-primary-1);
+.requestButton.requestButton {
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+}
 
-  @media (prefers-color-scheme: dark) {
-    background: var(--mantine-color-primary-1);
-    border-color: var(--mantine-color-primary-2);
-  }
+.sent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 520px;
 
   p {
-    margin: 0 0 8px;
-    font-size: 0.875rem;
+    margin: 0;
+    font-size: 15px;
     line-height: 1.5;
-    color: var(--mantine-color-text);
   }
+}
+
+.resetLink {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dehors-orange-survol, var(--dehors-orange));
+  text-decoration: underline;
+  text-underline-position: from-font;
 }

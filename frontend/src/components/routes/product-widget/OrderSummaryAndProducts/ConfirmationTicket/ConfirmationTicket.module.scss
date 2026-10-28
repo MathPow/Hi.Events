@@ -220,10 +220,13 @@
   }
 }
 
+// Etroit (une grille de billets), le nom prend toute la ligne et les numeros passent dessous,
+// plutot que d'ecrire le nom une lettre par ligne.
 .attendee {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
-  gap: 16px;
+  gap: 8px 16px;
   width: 100%;
   padding: 10px 14px;
   border-radius: 14px;
@@ -232,7 +235,7 @@
 
 .attendeeName {
   display: flex;
-  flex: 1;
+  flex: 1 1 150px;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
@@ -261,7 +264,7 @@
   line-height: normal;
   color: inherit;
   text-decoration: none;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 
   @include mixins.respond-below(md) {
     font-size: 18px;
