@@ -32,23 +32,55 @@
   --public-sur-accent: var(--theme-accent-contrast, var(--dehors-brun));
 }
 
-// Les boutons coupes a la main (useRoughEdges) bouillonnent au survol et au focus entre
-// leurs trois coupes, comme ceux du site d'accueil. Enfonces, ils se tiennent tranquilles.
+// Les blocs coupes par useRoughEdges, comme [data-decoupe] sur le site: Chrome ne peint un
+// enfant coupe que dans le debord de l'element lui-meme. Sans ce contour transparent, le
+// contour de focus d'un bouton colle au bord serait coupe. Sans specificite: un vrai
+// contour, comme celui du focus, le remplace.
+:where([data-rough-cut]:not(:focus-visible)) {
+  outline: 10px solid transparent;
+  outline-offset: 0;
+}
+
+// Le survol des boutons du site (bouton-sautillant, bouton-rugueux): sans transition, le
+// bouton saute d'un pixel cinq fois par seconde et son contour bouillonne entre ses trois
+// traces, sur un autre rythme. Une pilule grossit aussi un peu, avec un soupcon de rebond.
+// Enfonce, il se pose en bas et ne bouge plus.
 @media (prefers-reduced-motion: no-preference) {
+  [data-rough-boil='pill'] {
+    transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
   @media (hover: hover) {
-    [style*='--rough-clip']:hover {
-      animation: rough-clip-boil 0.6s steps(1) infinite;
+    [data-rough-boil]:hover {
+      animation: rough-clip-boil 0.6s steps(1) infinite, rough-hop 0.4s steps(1) infinite;
+    }
+
+    [data-rough-boil='pill']:hover {
+      scale: 1.04;
     }
   }
 
-  [style*='--rough-clip']:focus-visible {
-    animation: rough-clip-boil 0.6s steps(1) infinite;
+  [data-rough-boil]:focus-visible {
+    animation: rough-clip-boil 0.6s steps(1) infinite, rough-hop 0.4s steps(1) infinite;
   }
 
-  [style*='--rough-clip']:active,
-  [style*='--rough-clip']:disabled,
-  [style*='--rough-clip'][data-disabled] {
+  [data-rough-boil='pill']:focus-visible {
+    scale: 1.04;
+  }
+
+  [data-rough-boil]:active {
     animation: none;
+    translate: 0 1px;
+  }
+
+  [data-rough-boil='pill']:active {
+    scale: 1.01;
+  }
+
+  [data-rough-boil]:disabled,
+  [data-rough-boil][data-disabled] {
+    animation: none;
+    scale: none;
   }
 }
 
@@ -63,6 +95,16 @@
 
   66.667% {
     clip-path: var(--rough-clip-3);
+  }
+}
+
+@keyframes rough-hop {
+  0% {
+    translate: 0 -1px;
+  }
+
+  50% {
+    translate: 0 0;
   }
 }
 

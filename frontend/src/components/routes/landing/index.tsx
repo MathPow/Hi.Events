@@ -13,7 +13,7 @@ import {Organizer, TrustedOrganizers} from "./TrustedOrganizers.tsx";
 import {FeesComparator} from "./FeesComparator.tsx";
 import {HeroTitle} from "./HeroTitle.tsx";
 import {LandingButton, ShakyText} from "./LandingButton.tsx";
-import {useRoughButton} from "./roughButton.ts";
+import {useRoughButton} from "../../../hooks/useRoughButton.ts";
 import {Opening} from "./Opening.tsx";
 import {glideTo, installSmoothScroll, onSmoothScroll} from "./smoothScroll.ts";
 import {useMatchWidth} from "./useMatchWidth.ts";

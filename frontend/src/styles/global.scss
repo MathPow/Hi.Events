@@ -1,9 +1,11 @@
 @use "mixins";
 @use "dehors-app";
 
+// Les polices du site DEHORS (dehors-shop-new, style.css), declarees comme la-bas.
 @font-face {
   font-family: FatFrank;
   src: url('/fonts/fatfrank.otf') format('opentype');
+  font-style: normal;
   font-weight: 400 900;
   font-display: swap;
 }
@@ -11,21 +13,24 @@
 @font-face {
   font-family: Allotrope;
   src: url('/fonts/allotrope-bold.otf') format('opentype');
-  font-weight: 600 900;
+  font-style: normal;
+  font-weight: 700;
   font-display: swap;
 }
 
 @font-face {
   font-family: Allotrope;
   src: url('/fonts/allotrope-medium.otf') format('opentype');
-  font-weight: 100 500;
+  font-style: normal;
+  font-weight: 400 500;
   font-display: swap;
 }
 
-// L'ecriture a la main des petits mots orange (« Bienvenue », « Compte cree! »)
+// Felt Tip Woman, l'ecriture a la main des petits mots orange (« On se voit dehors! »).
 @font-face {
-  font-family: 'Gochi Hand';
-  src: url('/fonts/gochi-hand.woff2') format('woff2');
+  font-family: 'Felt Tip';
+  src: url('/fonts/felt-tip-woman.ttf') format('truetype');
+  font-style: normal;
   font-weight: 400;
   font-display: swap;
 }

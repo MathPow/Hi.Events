@@ -54,9 +54,11 @@ export const roughEdgePath = (width: number, height: number, options: RoughEdgeO
     let first: number[] = [];
     let last: number[] = [];
     sides.forEach((side, k) => {
-        const steps = Math.max(1, Math.round(side.length / step));
+        // A side of no length (the ends of a pill, at half the height) is a single point: two points
+        // in the same place, inset differently, made a step halfway up the end (bordDecoupe.ts).
+        const steps = side.length < 1 ? 0 : Math.max(1, Math.round(side.length / step));
         const points = Array.from({length: steps + 1}, (_, j) => {
-            const s = (j / steps) * side.length;
+            const s = steps ? (j / steps) * side.length : 0;
             const r = inset();
             return [side.o[0] + side.d[0] * s + side.n[0] * r, side.o[1] + side.d[1] * s + side.n[1] * r];
         });
@@ -85,13 +87,20 @@ const FRINGE = 1.5;
  * edge and the cut edge: everything outside the box (focus ring, shadows,
  * overflowing stickers) stays visible.
  */
-export const roughEdgeClipPath = (width: number, height: number, options: RoughEdgeOptions, margin = 64): string => {
-    const r = Math.min(options.radius, width / 2, height / 2) + FRINGE;
+export const roughEdgeClipPath = (width: number, height: number, options: RoughEdgeOptions, margin = 64): string =>
+    roughClipPath(width, height, Math.min(options.radius, width / 2, height / 2), roughEdgePath(width, height, options), margin);
+
+/**
+ * The same even-odd clip around any shape drawn inside the box (a rough button):
+ * the box, rounded by `radius`, is removed with its fringe, and the shape put back.
+ */
+export const roughClipPath = (width: number, height: number, radius: number, shape: string, margin = 64): string => {
+    const r = radius + FRINGE;
     const [x0, y0, x1, y1] = [-FRINGE, -FRINGE, width + FRINGE, height + FRINGE];
     const arc = `A${f(r)} ${f(r)} 0 0 1`;
     const outside = `M${f(-margin)} ${f(-margin)}H${f(width + margin)}V${f(height + margin)}H${f(-margin)}Z `
         + `M${f(x0 + r)} ${f(y0)}H${f(x1 - r)}${arc} ${f(x1)} ${f(y0 + r)}V${f(y1 - r)}${arc} ${f(x1 - r)} ${f(y1)}`
         + `H${f(x0 + r)}${arc} ${f(x0)} ${f(y1 - r)}V${f(y0 + r)}${arc} ${f(x0 + r)} ${f(y0)}Z `;
 
-    return `path(evenodd, "${outside}${roughEdgePath(width, height, options)}")`;
+    return `path(evenodd, "${outside}${shape}")`;
 };

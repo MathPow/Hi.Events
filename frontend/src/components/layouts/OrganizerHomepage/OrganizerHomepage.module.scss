@@ -500,47 +500,138 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 // Questions frequentes (pas dans la maquette): des blocs cremes comme les cartes d'evenement.
+// La FAQ du site DEHORS (dehors-shop-new, QuestionFaq.vue): des tuiles sable aux bords
+// decoupes (data-rough), la question en gras, et a droite une pastille ronde dessinee a
+// la main, creme avec un plus, brune avec un moins une fois ouverte.
 .faq {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
+
+  @include mixins.respond-below(md) {
+    gap: 14px;
+  }
 }
 
 .faqItem {
-  overflow: hidden;
   border: 0;
-  border-radius: 20px;
-  background: var(--dehors-creme);
+  border-radius: 24px;
+  background: rgb(227 173 146 / 0.35);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(227 173 146 / 0.5);
+  }
+
+  @include mixins.respond-below(md) {
+    border-radius: 20px;
+  }
 }
 
+// Tuile de 72px fermee: 16px autour de la pastille de 40px, 24px a gauche.
 .faqControl {
-  padding: 4px 20px;
+  gap: 16px;
+  min-height: 72px;
+  padding: 16px 16px 16px 24px;
+  border-radius: 24px;
   color: var(--dehors-brun);
   background: transparent;
 
   &:hover {
     background: transparent;
   }
+
+  &:focus-visible {
+    outline-offset: 3px;
+  }
+
+  @include mixins.respond-below(md) {
+    min-height: 68px;
+    padding: 14px 12px 14px 18px;
+    border-radius: 20px;
+  }
 }
 
 .faqQuestion {
-  font-size: 17px;
+  padding: 0;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.25;
 
   @include mixins.respond-below(md) {
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.3;
   }
 }
 
 .faqChevron {
-  color: var(--public-accent);
+  margin: 0;
 }
 
+.faqPastille {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: var(--dehors-creme);
+  mask: url('/landing/rond-dessine.svg') center / 100% 100% no-repeat;
+  transition: background-color 0.2s ease;
+
+  img {
+    grid-area: 1 / 1;
+    transition: opacity 0.2s ease, rotate 0.25s ease;
+  }
+
+  .faqItem[data-active] & {
+    background: var(--dehors-brun);
+  }
+}
+
+.faqMoins {
+  opacity: 0;
+  rotate: -90deg;
+
+  .faqItem[data-active] & {
+    opacity: 1;
+    rotate: 0deg;
+  }
+}
+
+.faqPlus {
+  .faqItem[data-active] & {
+    opacity: 0;
+    rotate: 90deg;
+  }
+}
+
+// Au survol, la pastille sautille comme les boutons du site.
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .faqControl:hover .faqPastille {
+    animation: faq-sautille 0.4s steps(1) infinite;
+  }
+}
+
+@keyframes faq-sautille {
+  0% {
+    translate: 0 -1px;
+  }
+
+  50% {
+    translate: 0 0;
+  }
+}
+
+// La reponse suit la marge basse de la question (16px): la ligne de la question ne bouge pas.
 .faqAnswer {
-  padding: 0 20px 18px;
-  font-size: 15px;
-  line-height: 1.5;
+  padding: 0 16px 16px 24px;
+  font-size: 20px;
+  line-height: 1.4;
   white-space: pre-line;
   color: var(--dehors-brun);
+
+  @include mixins.respond-below(md) {
+    padding: 0 12px 14px 18px;
+    font-size: 16px;
+    line-height: 1.45;
+  }
 }

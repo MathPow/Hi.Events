@@ -29,6 +29,14 @@ interface OrganizerHomepageProps {
     isPreview?: boolean;
 }
 
+// La pastille de la FAQ du site DEHORS: le plus et le moins se croisent a l'ouverture.
+const FaqPastille = () => (
+    <span className={classes.faqPastille} aria-hidden="true">
+        <img className={classes.faqPlus} src={'/interface/faq/plus.svg'} width={16} height={16} alt={''}/>
+        <img className={classes.faqMoins} src={'/interface/faq/moins.svg'} width={16} height={16} alt={''}/>
+    </span>
+);
+
 const ScrollToTop = () => {
     const {pathname} = useLocation();
 
@@ -298,6 +306,10 @@ export const OrganizerHomepage = ({
                             <Accordion
                                 multiple
                                 chevronPosition="right"
+                                chevron={<FaqPastille/>}
+                                chevronSize={40}
+                                disableChevronRotation
+                                transitionDuration={300}
                                 classNames={{
                                     root: classes.faq,
                                     item: classes.faqItem,

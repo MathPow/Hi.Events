@@ -1,37 +1,60 @@
 import {useCallback, useRef} from "react";
-import {roughEdgeClipPath} from "../utilites/roughEdge.ts";
+import {roughClipPath, roughEdgeClipPath} from "../utilites/roughEdge.ts";
+import {ROUGH_BUTTON_BUMP, roughButtonPath} from "./useRoughButton.ts";
 
 // Ce qui se coupe sous la racine: les blocs marques data-rough, et tous les champs et
 // boutons Mantine (ceux des questions de la caisse arrivent apres coup).
 const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root';
-// Les boutons bouillonnent au survol entre trois coupes, comme ceux du site d'accueil.
+// Les boutons prennent le contour des boutons du site (rugueux.ts: des bosses lisses, les
+// bouts nets) sur leur propre rayon, et bouillonnent au survol entre trois traces.
 const BUTTON = '[data-rough="button"], .mantine-Button-root, .mantine-ActionIcon-root';
 const OUTLINES = 3;
+// Les reglages par defaut de v-decoupe (decoupe.ts): le bord rentre d'un pixel et demi tous
+// les 40px environ, on le sent plus qu'on ne le voit. Une petite pastille, d'un pixel.
+const AMPLITUDE = 1.5;
+const SMALL_AMPLITUDE = 1;
+const STEP = 40;
+// Plus haut que ca, un « bouton » est une tuile (choix de l'accueil): il garde ses coins.
+const PILL_MAX_HEIGHT = 80;
+// La taille du bouton rond du site d'accueil (4rem), ou ses bosses sont pleines.
+const ROUND_FULL_SIZE = 64;
 
-// Les reglages du site d'accueil selon le plus petit cote: une pastille a de petites
-// marches serrees, une grande carte de plus grandes, plus espacees.
-const cutFor = (size: number) => {
-    if (size < 48) {
-        return {amplitude: 1, step: 14};
-    }
-    if (size < 160) {
-        return {amplitude: 1.2, step: 36};
-    }
-    return size < 480 ? {amplitude: 1.8, step: 36} : {amplitude: 2, step: 54};
-};
+const outlineName = (i: number) => `--rough-clip${i ? `-${i + 1}` : ''}`;
 
 const clear = (element: HTMLElement) => {
     element.style.clipPath = '';
+    delete element.dataset.roughCut;
+    delete element.dataset.roughBoil;
     for (let i = 0; i < OUTLINES; i++) {
-        element.style.removeProperty(`--rough-clip${i ? `-${i + 1}` : ''}`);
+        element.style.removeProperty(outlineName(i));
     }
 };
 
+// Un rayon en pourcentage se mesure sur le plus petit cote, comme dans decoupe.ts.
+const radiusOf = (style: CSSStyleDeclaration, width: number, height: number) => {
+    const value = style.borderTopLeftRadius.split(' ')[0];
+    const number = parseFloat(value) || 0;
+    return value.endsWith('%') ? (number / 100) * Math.min(width, height) : number;
+};
+
+// L'epaisseur d'une bordure visible: la coupe n'en mord jamais plus que les trois quarts,
+// pour que le trait reste continu.
+const visibleBorder = (style: CSSStyleDeclaration) => {
+    const width = parseFloat(style.borderTopWidth) || 0;
+    const color = style.borderTopColor;
+    return width > 0 && color !== 'transparent' && !color.endsWith(', 0)') ? width : 0;
+};
+
 /**
- * Les bords decoupes a la main du site d'accueil (useRoughEdge), pour toute une page:
- * la racine recoit ce callback ref, et chaque element vise en dessous est coupe a sa
- * taille, redecoupe quand il change de taille, y compris ceux ajoutes plus tard.
- * Un element aux coins inegaux (24px 24px 0 0) ou sans coins reste lisse.
+ * Les bords decoupes a la main du site DEHORS (dehors-shop-new: decoupe.ts pour les blocs,
+ * rugueux.ts pour les boutons), pour toute une page: la racine recoit ce callback ref, et
+ * chaque element vise en dessous est coupe a sa taille, redecoupe quand il change de
+ * taille, y compris ceux ajoutes plus tard. Un element aux coins inegaux (24px 24px 0 0)
+ * ou sans coins reste lisse.
+ *
+ * Les boutons gardent leur propre fond: leur contour rugueux est tire vers l'interieur et
+ * pose en clip-path, au lieu des masques de la boutique, pour que les couleurs de survol,
+ * de chargement ou d'etat desactive restent celles du CSS.
  */
 export const useRoughEdges = <T extends HTMLElement>() => {
     const cleanup = useRef<() => void>();
@@ -60,7 +83,7 @@ export const useRoughEdges = <T extends HTMLElement>() => {
             const style = getComputedStyle(element);
             const corners = [style.borderTopLeftRadius, style.borderTopRightRadius,
                 style.borderBottomRightRadius, style.borderBottomLeftRadius];
-            const radius = parseFloat(corners[0]) || 0;
+            const radius = radiusOf(style, width, height);
             const key = `${Math.round(width * 2)}x${Math.round(height * 2)}x${corners.join(' ')}`;
 
             if (width <= 0 || height <= 0 || key === cut.drawn) {
@@ -73,20 +96,39 @@ export const useRoughEdges = <T extends HTMLElement>() => {
                 return;
             }
 
-            // Une bordure garde son trait: la coupe n'en mord jamais plus que les trois quarts.
-            const options = {radius, ...cutFor(Math.min(width, height))};
-            const border = parseFloat(style.borderTopWidth) || 0;
-            if (border > 0 && !style.borderTopColor.endsWith(', 0)') && style.borderTopColor !== 'transparent') {
-                options.amplitude = Math.min(options.amplitude, border * 0.75);
-            }
-            if (element.matches(BUTTON)) {
-                for (let i = 0; i < OUTLINES; i++) {
-                    element.style.setProperty(`--rough-clip${i ? `-${i + 1}` : ''}`,
-                        roughEdgeClipPath(width, height, {...options, seed: cut.seed + i * 104729}));
+            const border = visibleBorder(style);
+            const isButton = element.matches(BUTTON);
+            const round = isButton && Math.abs(width - height) <= 2 && radius >= Math.min(width, height) / 2 - 1;
+            const pill = isButton && !round && height <= PILL_MAX_HEIGHT && width >= height * 0.9;
+            const boxRadius = Math.min(radius, width / 2, height / 2);
+
+            const outline = (seed: number) => {
+                if (round || pill) {
+                    // Les bosses vont de 0 a deux fois la plus grande vers l'interieur. Un petit
+                    // rond (le + des billets) les prend plus fines: pleines, il devenait carre.
+                    let scale = border ? Math.min(1, (border * 0.75) / (2 * ROUGH_BUTTON_BUMP)) : 1;
+                    if (round) {
+                        scale *= Math.min(1, Math.min(width, height) / ROUND_FULL_SIZE) ** 2;
+                    }
+                    const path = roughButtonPath(width, height, seed, {radius: boxRadius, round, scale});
+                    return roughClipPath(width, height, boxRadius, path);
                 }
+                let amplitude = Math.min(width, height) < 40 ? SMALL_AMPLITUDE : AMPLITUDE;
+                if (border) {
+                    amplitude = Math.min(amplitude, border * 0.75);
+                }
+                return roughEdgeClipPath(width, height, {radius, step: STEP, amplitude, seed});
+            };
+
+            element.dataset.roughCut = '';
+            if (isButton) {
+                for (let i = 0; i < OUTLINES; i++) {
+                    element.style.setProperty(outlineName(i), outline(cut.seed + i * 104729));
+                }
+                element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
                 element.style.clipPath = 'var(--rough-clip)';
             } else {
-                element.style.clipPath = roughEdgeClipPath(width, height, {...options, seed: cut.seed});
+                element.style.clipPath = outline(cut.seed);
             }
         };
 

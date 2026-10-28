@@ -1,5 +1,5 @@
 import {ComponentPropsWithoutRef, ElementType} from "react";
-import {useRoughButton} from "./roughButton.ts";
+import {useRoughButton} from "../../../hooks/useRoughButton.ts";
 import classes from "./Landing.module.scss";
 
 /** On hover, the letters wiggle one after the other; the wave loops every six letters. */
