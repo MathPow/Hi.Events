@@ -308,8 +308,8 @@ const DiscoverEvents = ({owned}: { owned: Set<string> }) => {
             <div className={shell.sectionHeader}>
                 <h2 id="discover-events-title" className={shell.sectionTitle}>{t`Discover events`}</h2>
             </div>
-            <div className={shell.grid}>
-                {shown.map((event) => <EventCard key={event.id} event={event}/>)}
+            <div className={classes.discover}>
+                {shown.map((event) => <EventCard key={event.id} event={event} compact/>)}
             </div>
         </section>
     );

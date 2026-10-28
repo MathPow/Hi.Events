@@ -11,6 +11,8 @@ import {useCardHover} from "../../../../hooks/useCardHover.ts";
 
 interface EventCardProps {
     event: Event;
+    // Plus petite, et seule la photo bouge au survol (« Decouvrir des evenements » de Mes billets).
+    compact?: boolean;
 }
 
 // En dessous de ce nombre, on annonce les places restantes (quand l'organisateur les affiche).
@@ -95,7 +97,7 @@ const scarcityLabel = (event: Event, products: Product[]) => {
     return null;
 };
 
-export const EventCard = ({event}: EventCardProps) => {
+export const EventCard = ({event, compact = false}: EventCardProps) => {
     const coverImage = event.images?.find(img => img.type === 'EVENT_COVER');
     const location = event.settings?.location_details?.city || event.settings?.location_details?.venue_name;
     const isOnlineEvent = event.settings?.is_online_event;
@@ -107,10 +109,11 @@ export const EventCard = ({event}: EventCardProps) => {
     const isLive = dayjs().isAfter(startDate) && dayjs().isBefore(endDate);
     const badge = isLive ? t`LIVE` : scarcityLabel(event, products);
     // Comme les cartes du site: la carte suit un peu le curseur, sa photo zoome et se decale.
-    const {card, photo, handlers} = useCardHover<HTMLAnchorElement, HTMLImageElement>();
+    const {card, photo, handlers} = useCardHover<HTMLAnchorElement, HTMLImageElement>({moveCard: !compact});
 
     return (
-        <Link ref={card} to={eventHomepagePath(event)} className={classes.card} data-rough {...handlers}>
+        <Link ref={card} to={eventHomepagePath(event)} className={compact ? `${classes.card} ${classes.compact}` : classes.card}
+              data-rough {...handlers}>
             <div className={classes.image} data-rough>
                 {coverImage ? (
                     <img ref={photo} src={coverImage.url} alt="" loading="lazy"/>

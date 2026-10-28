@@ -365,6 +365,18 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// Les prochains evenements de la billetterie, en petites cartes (EventCard compact).
+.discover {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+}
+
 // Sans lien: le squelette du tableau de bord, et par-dessus la carte du courriel.
 .locked {
   display: grid;

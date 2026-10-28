@@ -20,9 +20,10 @@ type Pose = typeof REST;
  * Au survol de la souris, la carte glisse un peu vers le curseur et grossit, et sa photo
  * zoome et se decale a l'oppose, pour montrer le cote vers lequel pointe le curseur. Tout
  * revient en douceur quand la souris sort. Souris seulement, et coupe sous « mouvement
- * reduit ». La photo doit etre dans un cadre qui la coupe (overflow: hidden).
+ * reduit ». La photo doit etre dans un cadre qui la coupe (overflow: hidden). Avec
+ * moveCard a false, la carte reste en place: seule la photo bouge.
  */
-export const useCardHover = <C extends HTMLElement, P extends HTMLElement>() => {
+export const useCardHover = <C extends HTMLElement, P extends HTMLElement>({moveCard = true}: { moveCard?: boolean } = {}) => {
     const card = useRef<C>(null);
     const photo = useRef<P>(null);
     const current = useRef<Pose>({...REST});
@@ -77,15 +78,15 @@ export const useCardHover = <C extends HTMLElement, P extends HTMLElement>() => 
         const nx = Math.min(Math.max((event.clientX - centerX) / box.width, -0.5), 0.5);
         const ny = Math.min(Math.max((event.clientY - centerY) / box.height, -0.5), 0.5);
         target.current = {
-            x: clamp((event.clientX - centerX) * STRENGTH),
-            y: clamp((event.clientY - centerY) * STRENGTH),
-            scale: LIFT,
+            x: moveCard ? clamp((event.clientX - centerX) * STRENGTH) : 0,
+            y: moveCard ? clamp((event.clientY - centerY) * STRENGTH) : 0,
+            scale: moveCard ? LIFT : 1,
             px: -nx * 2 * PAN,
             py: -ny * 2 * PAN,
             zoom: PHOTO_ZOOM,
         };
         restart();
-    }, [restart]);
+    }, [restart, moveCard]);
 
     const onPointerLeave = useCallback(() => {
         target.current = {...REST};
