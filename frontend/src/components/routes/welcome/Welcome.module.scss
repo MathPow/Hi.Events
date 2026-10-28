@@ -436,29 +436,32 @@
 
   @media (max-width: 768px) {
     height: 44px !important;
+    // Moins de marge et de taille pour que le libelle tienne sur un telephone
+    --button-padding-x: 12px !important;
+    font-size: 0.9rem !important;
   }
 }
 
-// Clean Skip Section
-.skipSection {
-  margin-top: 1.5rem;
+// Bouton secondaire sous le principal: creer son evenement plus tard
+.laterButton {
+  color: var(--dehors-brun) !important;
+  background: transparent !important;
+  border: 2px solid var(--dehors-trait) !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  height: 48px !important;
+  margin-top: 0.75rem;
+  transition: background-color 0.15s ease !important;
 
-  :global(.mantine-Button-root) {
-    color: var(--dehors-brun) !important;
-    font-size: 0.9rem !important;
-    background: transparent !important;
-    border: 2px solid var(--dehors-trait) !important;
-    border-radius: 999px !important;
-    padding: 8px 16px !important;
-    transition: background-color 0.15s ease !important;
-
-    &:hover {
-      background: var(--dehors-champ) !important;
-    }
+  &:hover {
+    background: var(--dehors-champ) !important;
   }
 
   @media (max-width: 768px) {
-    margin-top: 1rem;
+    height: 44px !important;
+    --button-padding-x: 12px !important;
+    font-size: 0.9rem !important;
   }
 }
 

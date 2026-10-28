@@ -302,6 +302,9 @@ export const CreateEvent = ({progressInfo}: {
                     <h2 className={classes.stepTitle}>
                         {t`Create your first event`}
                     </h2>
+                    <p className={classes.stepDescription}>
+                        {t`No rush: you can also create it later from your dashboard.`}
+                    </p>
                 </div>
 
                 <div className={classes.stepContent}>
@@ -410,6 +413,18 @@ export const CreateEvent = ({progressInfo}: {
                         >
                             {eventMutation.isPending ? t`Creating Event...` : t`Continue Setup`}
                         </Button>
+                        {/* Pas oblige de creer l'evenement tout de suite: juste sous le
+                            bouton principal, pour qu'on le voie meme sur mobile. */}
+                        <Button
+                            component={NavLink}
+                            to={'/manage/events'}
+                            fullWidth
+                            size="lg"
+                            className={classes.laterButton}
+                            disabled={eventMutation.isPending}
+                        >
+                            {t`Create my event later`}
+                        </Button>
                     </form>
                 </div>
             </div>
@@ -485,20 +500,6 @@ const Welcome = () => {
                     {(!requiresVerification && !organizerExists) && <CreateOrganizer
                         progressInfo={getProgressInfo(requiresVerification, organizerExists, 'organizer')}/>}
                 </Card>
-
-                {(!requiresVerification && organizerExists) && (
-                    <Center className={classes.skipSection}>
-                        <Button
-                            component={NavLink}
-                            to={'/manage/events'}
-                            variant="subtle"
-                            size="sm"
-                            c="dimmed"
-                        >
-                            {t`Skip this step`}
-                        </Button>
-                    </Center>
-                )}
             </Container>
         </div>
     )
