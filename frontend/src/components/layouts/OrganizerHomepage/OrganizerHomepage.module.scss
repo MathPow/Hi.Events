@@ -8,6 +8,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   --halo-pale: color-mix(in srgb, var(--public-accent) 25%, #fff);
 
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   overflow-x: clip;
   color: var(--dehors-brun);
@@ -57,6 +59,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 .content {
   position: relative;
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: 40px;
   width: 100%;

@@ -12,6 +12,8 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   --public-accent-clair: color-mix(in srgb, var(--public-accent) 62%, #fff);
 
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   overflow: clip;
   background: var(--dehors-creme);
@@ -57,6 +59,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   // Le z-index de la mention Hi.Events (PoweredByFooter) reste sous la barre collante du bas.
   isolation: isolate;
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: 28px;
   width: min(1200px, calc(100% - 48px));
