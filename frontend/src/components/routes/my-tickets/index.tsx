@@ -2,7 +2,8 @@ import {t} from "@lingui/macro";
 import {Link, useNavigate, useParams, useSearchParams} from "react-router";
 import {Button, TextInput, UnstyledButton} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {Helmet} from "react-helmet-async";
 import dayjs from "dayjs";
 
 import {useGetOrdersByLookupToken} from "../../../queries/useGetOrdersByLookupToken.ts";
@@ -15,12 +16,19 @@ import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
+import {InstallAppButton} from "../../common/InstallAppButton";
 import {ConfirmationTicket} from "../product-widget/OrderSummaryAndProducts/ConfirmationTicket";
 import {eventRangeLabel, shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 
 import {Attendee, Event, EventLifecycleStatus, Order} from "../../../types.ts";
 import shell from "../../layouts/OrganizerHomepage/OrganizerHomepage.module.scss";
 import classes from './MyTickets.module.scss';
+
+// Le dernier lien valide de l'appareil, pour que l'app installee rouvre le tableau de bord.
+const SAVED_LINK_KEY = 'dehors-mes-billets-lien';
+
+const isInstalledApp = () => window.matchMedia('(display-mode: standalone)').matches
+    || (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
 // Les billets d'un evenement, toutes commandes confondues.
 interface EventTickets {
@@ -296,6 +304,34 @@ export const MyTickets = () => {
     const [searchParams] = useSearchParams();
     const roughEdges = useRoughEdges<HTMLElement>();
     const {data: orders, isLoading, isError, error} = useGetOrdersByLookupToken(token);
+    const navigate = useNavigate();
+
+    // L'app installee s'ouvre sur /my-tickets (le manifeste): elle reprend le dernier lien.
+    useEffect(() => {
+        if (token || !isInstalledApp()) {
+            return;
+        }
+        try {
+            const saved = localStorage.getItem(SAVED_LINK_KEY);
+            if (saved) {
+                navigate(`/my-tickets/${saved}`, {replace: true});
+            }
+        } catch {
+            // localStorage indisponible: le courriel, comme dans le navigateur.
+        }
+    }, [token]);
+
+    useEffect(() => {
+        try {
+            if (token && orders) {
+                localStorage.setItem(SAVED_LINK_KEY, token);
+            } else if (token && isError && localStorage.getItem(SAVED_LINK_KEY) === token) {
+                localStorage.removeItem(SAVED_LINK_KEY);
+            }
+        } catch {
+            // localStorage indisponible
+        }
+    }, [token, orders, isError]);
 
     const locked = !token || isError;
 
@@ -310,6 +346,9 @@ export const MyTickets = () => {
 
     return (
         <main ref={roughEdges} className={shell.page}>
+            <Helmet>
+                <link rel="manifest" href="/my-tickets.webmanifest"/>
+            </Helmet>
             <style>
                 {`
                     body, .ssr-loader {
@@ -321,7 +360,9 @@ export const MyTickets = () => {
             <div className={shell.content}>
                 <div className={shell.bar}>
                     {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                    <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
+                    <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}
+                                   action={<InstallAppButton scope={'/my-tickets'}
+                                                             subtitle={t`Your tickets and their QR codes in one tap, even at the door.`}/>}/>
                 </div>
 
                 {locked || isLoading ? (

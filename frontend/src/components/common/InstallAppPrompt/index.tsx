@@ -3,10 +3,14 @@ import {Button, Drawer} from "@mantine/core";
 import {useMediaQuery} from "@mantine/hooks";
 import {IconCirclePlus, IconShare2, IconSquarePlus} from "@tabler/icons-react";
 import {t, Trans} from "@lingui/macro";
-import {clearInstallPrompt, getInstallPrompt, subscribeToInstallPrompt} from "../../../utilites/installPrompt.ts";
+import {
+    clearInstallPrompt,
+    detectInstallPlatform,
+    getInstallPrompt,
+    InstallPlatform,
+    subscribeToInstallPrompt
+} from "../../../utilites/installPrompt.ts";
 import classes from './InstallAppPrompt.module.scss';
-
-type Platform = 'ios' | 'android';
 
 const SNOOZED_AT_KEY = 'dehors-install-prompt-snoozed-at';
 const SNOOZE_MS = 30 * 24 * 60 * 60 * 1000;
@@ -28,29 +32,35 @@ const snooze = () => {
     }
 };
 
-// null once installed, or in browsers that can't add to the home screen (Instagram, Facebook...).
-const detectPlatform = (): Platform | null => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-        || (navigator as Navigator & { standalone?: boolean }).standalone === true;
-    const userAgent = navigator.userAgent;
-    const isInAppBrowser = /FBAN|FBAV|Instagram|Messenger|Line\/|TikTok|; wv\)/.test(userAgent);
-
-    if (isStandalone || isInAppBrowser) {
-        return null;
-    }
-
-    return /iPhone|iPad|iPod/.test(userAgent) ? 'ios' : 'android';
-};
+// iOS has no install event: the Share menu's steps, also shown by InstallAppButton.
+export const IosInstallSteps = () => (
+    <ol className={classes.steps}>
+        <li>
+            <span className={classes.stepIcon}><IconShare2 size={20}/></span>
+            <span>
+                <Trans>Tap <strong>Share</strong>. In Safari on recent iPhones, it is under the <strong>•••</strong> button.</Trans>
+            </span>
+        </li>
+        <li>
+            <span className={classes.stepIcon}><IconSquarePlus size={20}/></span>
+            <span><Trans>Choose <strong>Add to Home Screen</strong>.</Trans></span>
+        </li>
+        <li>
+            <span className={classes.stepIcon}><IconCirclePlus size={20}/></span>
+            <span><Trans>Tap <strong>Add</strong>.</Trans></span>
+        </li>
+    </ol>
+);
 
 export const InstallAppPrompt = () => {
     const isPhone = useMediaQuery('(max-width: 767px)');
     const installPrompt = useSyncExternalStore(subscribeToInstallPrompt, getInstallPrompt, () => null);
-    const [platform, setPlatform] = useState<Platform | null>(null);
+    const [platform, setPlatform] = useState<InstallPlatform | null>(null);
     const [opened, setOpened] = useState(false);
 
     useEffect(() => {
         navigator.serviceWorker?.register('/sw.js', {scope: '/manage/'}).catch(() => undefined);
-        setPlatform(isSnoozed() ? null : detectPlatform());
+        setPlatform(isSnoozed() ? null : detectInstallPlatform());
     }, []);
 
     // Android needs Chrome's install event; iOS has none, so it gets the Share-menu steps instead.
@@ -111,22 +121,7 @@ export const InstallAppPrompt = () => {
 
             {platform === 'ios' ? (
                 <>
-                    <ol className={classes.steps}>
-                        <li>
-                            <span className={classes.stepIcon}><IconShare2 size={20}/></span>
-                            <span>
-                                <Trans>Tap <strong>Share</strong>. In Safari on recent iPhones, it is under the <strong>•••</strong> button.</Trans>
-                            </span>
-                        </li>
-                        <li>
-                            <span className={classes.stepIcon}><IconSquarePlus size={20}/></span>
-                            <span><Trans>Choose <strong>Add to Home Screen</strong>.</Trans></span>
-                        </li>
-                        <li>
-                            <span className={classes.stepIcon}><IconCirclePlus size={20}/></span>
-                            <span><Trans>Tap <strong>Add</strong>.</Trans></span>
-                        </li>
-                    </ol>
+                    <IosInstallSteps/>
                     <Button fullWidth size="md" onClick={dismiss}>{t`Got it`}</Button>
                 </>
             ) : (

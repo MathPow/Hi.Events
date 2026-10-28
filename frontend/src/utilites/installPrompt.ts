@@ -25,6 +25,23 @@ export const captureInstallPrompt = () => {
 
 export const getInstallPrompt = () => deferredPrompt;
 
+export type InstallPlatform = 'ios' | 'android';
+
+// null once installed, or in browsers that can't add to the home screen (Instagram, Facebook...).
+// 'android' stands for every browser with Chrome's install event, desktop included.
+export const detectInstallPlatform = (): InstallPlatform | null => {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+        || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+    const userAgent = navigator.userAgent;
+    const isInAppBrowser = /FBAN|FBAV|Instagram|Messenger|Line\/|TikTok|; wv\)/.test(userAgent);
+
+    if (isStandalone || isInAppBrowser) {
+        return null;
+    }
+
+    return /iPhone|iPad|iPod/.test(userAgent) ? 'ios' : 'android';
+};
+
 export const clearInstallPrompt = () => {
     deferredPrompt = null;
     notify();

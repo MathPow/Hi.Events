@@ -1,5 +1,6 @@
-// Back-office service worker, registered with the /manage/ scope. It makes the app installable and
-// shows a page when the network drops; it caches nothing, so every deploy is live on the next load.
+// Service worker of the installable apps: the back office (/manage/ scope) and the participants'
+// « Mes billets » (/my-tickets scope). It makes them installable and shows a page when the network
+// drops; it caches nothing, so every deploy is live on the next load.
 
 const offlinePage = () => {
     const french = (self.navigator.language || '').toLowerCase().startsWith('fr');

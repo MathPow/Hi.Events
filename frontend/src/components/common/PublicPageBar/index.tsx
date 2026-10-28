@@ -13,6 +13,10 @@ export const PublicBarLink = ({to, children}: { to: string, children: ReactNode 
     <Link to={to} className={classes.button} data-rough="button">{children}</Link>
 );
 
+export const PublicBarButton = ({onClick, children}: { onClick: () => void, children: ReactNode }) => (
+    <UnstyledButton className={classes.button} data-rough="button" onClick={onClick}>{children}</UnstyledButton>
+);
+
 const LanguageMenu = () => {
     // La langue active de Lingui, la meme au serveur et au client (le cookie n'existe que dans le navigateur).
     const {i18n} = useLingui();
@@ -41,15 +45,17 @@ const LanguageMenu = () => {
 };
 
 // La barre du haut des pages publiques: a gauche ce que la page y met (retour, nom de la
-// billetterie), a droite « Mes billets » et la langue.
-export const PublicPageBar = ({left}: { left: ReactNode }) => (
+// billetterie), a droite « Mes billets », ou l'action de la page (action), et la langue.
+export const PublicPageBar = ({left, action}: { left: ReactNode, action?: ReactNode }) => (
     <nav className={classes.bar}>
         <div className={classes.left}>{left}</div>
         <div className={classes.right}>
-            <PublicBarLink to={'/my-tickets'}>
-                <PublicIcon name={'billet'} className={classes.accentIcon}/>
-                <span className={classes.myTickets}>{t`My tickets`}</span>
-            </PublicBarLink>
+            {action ?? (
+                <PublicBarLink to={'/my-tickets'}>
+                    <PublicIcon name={'billet'} className={classes.accentIcon}/>
+                    <span>{t`My tickets`}</span>
+                </PublicBarLink>
+            )}
             <LanguageMenu/>
         </div>
     </nav>
