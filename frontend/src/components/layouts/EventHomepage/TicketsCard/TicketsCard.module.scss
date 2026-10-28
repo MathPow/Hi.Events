@@ -1,0 +1,660 @@
+@use "../../../../styles/mixins.scss";
+
+$affichage: FatFrank, 'Arial Black', sans-serif;
+
+// Icone de la maquette peinte en currentColor, posee en pseudo-element sur un element du widget
+// (dont on ne touche pas le balisage).
+@mixin icone($nom, $taille) {
+  content: '';
+  flex-shrink: 0;
+  width: $taille;
+  height: $taille;
+  background-color: currentColor;
+  mask: url('/interface/public/#{$nom}.svg') center / contain no-repeat;
+  -webkit-mask: url('/interface/public/#{$nom}.svg') center / contain no-repeat;
+}
+
+@mixin pastille {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  border-radius: 28px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+  color: var(--dehors-brun);
+
+  // Colonne de droite collante au defilement (--billets-haut: voir index.tsx).
+  @include mixins.respond-above(lg) {
+    position: sticky;
+    top: var(--billets-haut, 24px);
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    padding: 18px;
+    border-radius: 24px;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  font-family: $affichage;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 22px;
+  }
+}
+
+.pill {
+  @include pastille;
+  background: var(--public-accent-doux);
+}
+
+.secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+
+  // Sous lg, Continuer est dans la barre collante du bas.
+  @include mixins.respond-below(lg) {
+    display: none;
+  }
+}
+
+// Le widget de selection (SelectProducts), restyle seulement ici: la route /widget et l'apercu
+// du back-office gardent styles/widget/default.scss. Les selecteurs reprennent ceux de
+// default.scss, plus .widget, pour passer devant.
+.widget :global {
+  .hi-product-widget-container {
+    padding: 0;
+    background: transparent;
+    color: var(--dehors-brun);
+
+    a, button {
+      color: inherit;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .hi-product-category-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  // Une seule categorie: le titre de la carte (« Billets ») suffit.
+  .hi-product-category-row:only-child > .hi-product-category-title {
+    display: none;
+  }
+
+  .hi-product-category-title {
+    margin: 0 0 12px;
+    font-family: $affichage;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .hi-product-category-description {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .hi-product-widget-container .mantine-Spoiler-control {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--public-accent-fonce);
+  }
+
+  .hi-no-products {
+    padding: 8px 0;
+    font-size: 15px;
+  }
+
+  .hi-product-widget-container .hi-product-rows {
+    gap: 16px;
+    margin-bottom: 0;
+
+    @include mixins.respond-below(md) {
+      gap: 12px;
+    }
+
+    .hi-product-row {
+      gap: 12px;
+      padding: 18px;
+      border: 1.5px solid var(--dehors-brun);
+      border-radius: 20px;
+      background: var(--dehors-creme);
+
+      @include mixins.respond-below(md) {
+        gap: 10px;
+        padding: 14px 14px 14px 16px;
+        border-radius: 18px;
+      }
+
+      &.hi-product-highlighted {
+        border-color: var(--public-accent);
+        background: var(--dehors-creme);
+      }
+
+      &.hi-product-selected {
+        border: 2px solid var(--public-accent);
+        padding: 17.5px;
+
+        @include mixins.respond-below(md) {
+          padding: 13.5px 13.5px 13.5px 15.5px;
+        }
+      }
+
+      // Plus rien a choisir (epuise, ventes terminees...): carte pale, texte estompe.
+      &:not(:has(.button-input)) {
+        background: var(--dehors-carte);
+
+        h3, .hi-price-tier-label, .hi-price-tier-price, .hi-sized-price, .hi-product-description-row {
+          opacity: 0.4;
+        }
+      }
+
+      .hi-product-highlight-message {
+        margin: -18px -18px 0;
+        padding: 8px 18px;
+        background: var(--public-accent);
+        color: var(--public-sur-accent);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-align: left;
+
+        @include mixins.respond-below(md) {
+          margin: -14px -14px 0 -16px;
+          padding: 7px 16px;
+        }
+      }
+
+      .hi-title-row {
+        display: block;
+
+        .hi-product-title {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          width: 100%;
+          padding: 0;
+
+          h3 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            line-height: normal;
+
+            @include mixins.respond-below(md) {
+              font-size: 15px;
+            }
+          }
+
+          .hi-product-title-metadata {
+            align-items: center;
+            gap: 8px;
+            margin-left: 0;
+            font-size: 13px;
+          }
+
+          .hi-product-collapse-arrow {
+            margin-left: 0;
+            color: var(--dehors-brun);
+
+            svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+
+      // La fleche ne sert qu'a rouvrir un billet replie (la maquette n'en montre pas).
+      &:not(:has(> .hi-product-content[hidden])) .hi-product-collapse-arrow {
+        display: none;
+      }
+
+      .hi-product-availability {
+        @include pastille;
+        background: var(--public-accent-doux);
+        color: var(--public-accent-fonce);
+      }
+
+      // Le contenu repliable: la description remonte sous le titre, puis les prix.
+      .hi-product-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 0;
+      }
+
+      .hi-product-description-row {
+        order: -1;
+        font-size: 14px;
+        line-height: 1.4;
+
+        p:not(:last-child) {
+          margin-bottom: 0.5em;
+        }
+      }
+
+      .hi-price-tiers-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hi-price-tier-row {
+        margin-bottom: 0;
+
+        > .mantine-Group-root {
+          gap: 10px;
+          align-items: center;
+        }
+
+        .hi-price-tier {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .hi-price-tier-label {
+            font-size: 15px;
+            font-weight: 700;
+
+            &:empty {
+              display: none;
+            }
+          }
+
+          .hi-price-tier-price {
+            font-family: $affichage;
+            font-size: 20px;
+            line-height: normal;
+            text-transform: uppercase;
+
+            @include mixins.respond-below(md) {
+              font-size: 17px;
+            }
+
+            .hi-price-tier-price-amount {
+              align-items: center;
+              gap: 4px;
+
+              svg {
+                width: 16px;
+                height: 16px;
+                margin-top: 0;
+              }
+            }
+          }
+        }
+
+        .hi-product-quantity-selector {
+          flex-shrink: 0;
+
+          .button-input {
+            gap: 4px;
+            width: auto;
+
+            button {
+              width: 36px;
+              min-width: 36px;
+              height: 36px;
+              min-height: 36px;
+              padding: 0;
+              border: 1.5px solid var(--dehors-brun);
+              border-radius: 50%;
+              background: transparent;
+              color: var(--dehors-brun);
+
+              @include mixins.respond-below(md) {
+                width: 34px;
+                min-width: 34px;
+                height: 34px;
+                min-height: 34px;
+              }
+
+              svg {
+                display: none;
+              }
+
+              &::before {
+                @include icone('moins', 18px);
+              }
+
+              &:last-child {
+                border: none;
+                background: var(--public-accent);
+                color: var(--public-sur-accent);
+
+                &::before {
+                  @include icone('plus', 18px);
+                }
+              }
+
+              &:disabled {
+                opacity: 0.4;
+                cursor: default;
+              }
+            }
+
+            .mantine-NumberInput-root {
+              width: 28px;
+            }
+
+            input {
+              height: 28px !important;
+              padding: 0 !important;
+              background: transparent;
+              color: var(--dehors-brun);
+              font-family: $affichage;
+              font-size: 18px;
+
+              @include mixins.respond-below(md) {
+                font-size: 17px;
+              }
+            }
+          }
+
+          // Epuise, ventes terminees, pas encore en vente: pastille foncee.
+          &:not(:has(.button-input, .hi-waitlist-button)) {
+            @include pastille;
+            background: var(--dehors-brun);
+            color: var(--dehors-creme);
+          }
+        }
+      }
+
+      .hi-sized-price {
+        margin-bottom: 0;
+        font-family: $affichage;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      .hi-sized-heading {
+        margin-bottom: 0;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0;
+        opacity: 1;
+      }
+
+      .hi-donation-input-wrapper .hi-donation-input {
+        border: 2px solid transparent;
+        border-radius: 14px;
+        background: var(--dehors-champ);
+        color: var(--dehors-brun);
+        font-family: inherit;
+
+        &:focus {
+          border-color: var(--dehors-brun);
+        }
+      }
+
+      .hi-product-deposit-row {
+        margin: 0;
+        font-size: 13px;
+      }
+
+      .hi-product-quantity-error {
+        margin: 0;
+        padding: 10px 14px;
+        border: none;
+        border-radius: 14px;
+        background: rgb(220 38 38 / 0.1);
+        color: #b42318;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .hi-product-widget-container .hi-waitlist-button {
+    @include pastille;
+    border: none;
+    background: var(--public-accent);
+    color: var(--public-sur-accent);
+    cursor: pointer;
+
+    &:disabled {
+      background: var(--public-accent-doux);
+      color: var(--public-accent-fonce);
+      cursor: default;
+    }
+  }
+
+  // « Vous avez un code promo? » ouvre le champ.
+  .hi-product-widget-container .hi-promo-code-row {
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+
+    .hi-promo-code-label {
+      display: inline-flex;
+      align-self: flex-start;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--public-accent-fonce);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+
+      @include mixins.respond-below(md) {
+        font-size: 14px;
+      }
+
+      svg {
+        display: none;
+      }
+
+      &::before {
+        @include icone('etiquette', 18px);
+      }
+    }
+
+    // Le bouton passe sous le champ quand son libelle est long.
+    .hi-promo-code-input-wrapper {
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+
+    .hi-promo-code-input-field {
+      flex: 1 1 180px;
+    }
+
+    .hi-promo-code-input {
+      height: 44px;
+      border: 2px solid transparent;
+      border-radius: 14px;
+      background: var(--dehors-champ);
+      color: var(--dehors-brun);
+      font-size: 15px;
+
+      &:focus {
+        border-color: var(--dehors-brun);
+      }
+    }
+
+    .hi-apply-promo-code-button {
+      flex: 1 0 auto;
+      width: auto;
+      height: 44px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 14px;
+      background: var(--dehors-brun);
+      color: var(--dehors-creme);
+      font-weight: 700;
+    }
+
+    .hi-promo-code-applied {
+      gap: 6px;
+      font-size: 15px;
+
+      b {
+        color: var(--public-accent-fonce);
+      }
+    }
+
+    .hi-promo-code-applied-remove-icon-button {
+      margin-left: 0;
+      color: var(--dehors-brun);
+    }
+  }
+
+  .hi-product-widget-container .hi-product-info-block {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 16px;
+    background: var(--public-accent-doux);
+    font-size: 14px;
+    line-height: 1.5;
+
+    .hi-product-info-icon {
+      color: var(--public-accent-fonce);
+    }
+
+    .hi-product-info-message a {
+      color: var(--public-accent-fonce);
+      font-weight: 700;
+    }
+
+    .hi-product-info-button {
+      background: var(--dehors-brun);
+      color: var(--dehors-creme);
+      font-weight: 700;
+    }
+  }
+
+  // Trait, sous-total puis Continuer (sous lg, la barre collante du bas les remplace).
+  .hi-product-widget-container .hi-footer-row {
+    gap: 16px;
+    margin-top: 16px;
+
+    .hi-product-page-message {
+      margin: 0;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--dehors-creme);
+      font-size: 14px;
+    }
+
+    .hi-subtotal-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1.5px solid var(--dehors-brun);
+    }
+
+    .hi-subtotal-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hi-subtotal-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .hi-subtotal-note {
+      font-size: 13px;
+    }
+
+    .hi-subtotal-amount {
+      font-family: $affichage;
+      font-size: 24px;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .hi-continue-button {
+      height: 56px;
+      padding: 0 24px;
+      border: none;
+      border-radius: 16px;
+      background: var(--public-accent);
+      color: var(--public-sur-accent);
+      font-size: 18px;
+      font-weight: 700;
+
+      &:hover:not(:disabled, [data-disabled]) {
+        filter: brightness(0.95);
+      }
+
+      &:disabled, &[data-disabled] {
+        opacity: 0.5;
+      }
+
+      .mantine-Button-label {
+        gap: 10px;
+        color: inherit;
+
+        &::after {
+          @include icone('fleche', 20px);
+        }
+      }
+    }
+
+    @include mixins.respond-below(lg) {
+      margin-top: 12px;
+
+      .hi-subtotal-row, .hi-continue-button {
+        display: none;
+      }
+
+      &:not(:has(.hi-product-page-message)) {
+        display: none;
+      }
+    }
+  }
+}

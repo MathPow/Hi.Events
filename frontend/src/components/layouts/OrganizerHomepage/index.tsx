@@ -1,26 +1,25 @@
-import {useLocation, useNavigate} from "react-router";
-import {Accordion, ActionIcon, Anchor} from '@mantine/core';
+import {Link, useLocation, useNavigate} from "react-router";
+import {Accordion} from '@mantine/core';
 import {EventCard} from './EventCard';
-import {AccentBlobs} from '../../common/AccentBlobs';
 import classes from './OrganizerHomepage.module.scss';
 import React, {useEffect, useState} from 'react';
 import {Event, GenericPaginatedResponse, Organizer} from "../../../types.ts";
 import {OrganizerDocumentHead} from "../../common/OrganizerDocumentHead";
-import {IconExternalLink, IconHeart, IconMail, IconMapPin, IconWorld} from '@tabler/icons-react';
+import {IconHeart} from '@tabler/icons-react';
 import {t} from "@lingui/macro";
-import {PoweredByFooter} from "../../common/PoweredByFooter";
 import {socialMediaConfig} from "../../../constants/socialMediaConfig";
 import {ContactOrganizerModal} from "../../common/ContactOrganizerModal";
-import {formatAddress, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
-import {organizerHomepagePath} from "../../../utilites/urlHelper.ts";
-import {removeTransparency} from "../../../utilites/colorHelper.ts";
+import {getGoogleMapsUrl, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
+import {organizerHomepagePath, organizerHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {StatusToggle} from "../../common/StatusToggle";
-import {getConfig} from "../../../utilites/config.ts";
 import {Pagination} from "../../common/Pagination";
 import {computeThemeVariables, validateThemeSettings} from "../../../utilites/themeUtils.ts";
-import {ensureHomepageFontLoaded} from "../../../utilites/fontLoader.ts";
 import {useOrganizerTrackingPixels} from "../../../hooks/useOrganizerTrackingPixels";
 import {CookieConsentBanner} from "../../common/CookieConsentBanner";
+import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
+import {PublicPageFooter} from "../../common/PublicPageFooter";
+import {PublicIcon} from "../../common/PublicIcon";
+import {ShareComponent} from "../../common/ShareIcon";
 
 interface OrganizerHomepageProps {
     organizer?: Organizer;
@@ -41,6 +40,14 @@ const ScrollToTop = () => {
     return null;
 }
 
+const websiteLabel = (url: string) => {
+    try {
+        return new URL(url).hostname.replace(/^www\./, '');
+    } catch {
+        return url;
+    }
+};
+
 export const OrganizerHomepage = ({
                                       organizer,
                                       eventsData,
@@ -57,63 +64,39 @@ export const OrganizerHomepage = ({
         return null;
     }
 
-    const handleFilterChange = (showPastEvents: boolean) => {
-        if (showPastEvents) {
-            navigate(`${organizerHomepagePath(organizer)}/past-events`);
-        } else {
-            navigate(organizerHomepagePath(organizer));
-        }
-    };
+    const homepagePath = organizerHomepagePath(organizer);
+    const pastEventsPath = `${homepagePath}/past-events`;
 
-    // Social links
-    const socialLinks = organizer.settings?.social_media_handles ? Object.entries(organizer.settings.social_media_handles)
-        .filter(([platform, handle]) => handle && socialMediaConfig[platform as keyof typeof socialMediaConfig])
+    const socialHandles = organizer.settings?.social_media_handles ?? {};
+    const instagramHandle = socialHandles.instagram?.trim().replace(/^@/, '');
+    const otherSocialLinks = Object.entries(socialHandles)
+        .filter(([platform, handle]) => platform !== 'instagram' && handle
+            && socialMediaConfig[platform as keyof typeof socialMediaConfig])
         .map(([platform, handle]) => ({
             platform,
-            handle: handle as string,
-            config: socialMediaConfig[platform as keyof typeof socialMediaConfig]
-        })) : [];
+            url: socialMediaConfig[platform as keyof typeof socialMediaConfig].baseUrl + handle,
+            Icon: socialMediaConfig[platform as keyof typeof socialMediaConfig].icon,
+        }));
 
     const websiteUrl = organizer.website;
     const donationUrl = organizer.donation_url;
+    const locationDetails = organizer.settings?.location_details;
+    const shortLocation = getShortLocationDisplay(locationDetails);
 
-    const getGoogleMapsUrl = (locationDetails: any) => {
-        if (!locationDetails) return '';
-        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formatAddress(locationDetails))}`;
-    };
-
-    // Images
     const organizerLogo = organizer.images?.find(img => img.type === 'ORGANIZER_LOGO');
     const organizerCover = organizer.images?.find(img => img.type === 'ORGANIZER_COVER');
 
     const events = eventsData?.data || [];
     const faqs = organizer.settings?.faqs ?? [];
+    const upcomingCount = !isPastEvents && eventsData ? eventsData.meta.total : null;
 
-    // Theme settings
-    const rawThemeSettings = organizer?.settings?.homepage_theme_settings;
-    const themeSettings = validateThemeSettings(rawThemeSettings);
-    const cssVars = computeThemeVariables(themeSettings);
-    const backgroundType = themeSettings.background_type;
-
-    useEffect(() => {
-        ensureHomepageFontLoaded(themeSettings.font_family);
-    }, [themeSettings.font_family]);
-
-    const themeStyles = {
-        '--organizer-bg-color': themeSettings.background,
-        '--organizer-content-bg-color': cssVars['--theme-surface'],
-        '--organizer-primary-color': themeSettings.accent,
-        '--organizer-primary-text-color': cssVars['--theme-text-primary'],
-        '--organizer-secondary-color': cssVars['--theme-text-secondary'],
-        '--organizer-secondary-text-color': cssVars['--theme-text-tertiary'],
-        '--organizer-accent-contrast': cssVars['--theme-accent-contrast'],
-        '--organizer-accent-text': cssVars['--theme-accent-text'],
-        '--organizer-accent-soft': cssVars['--theme-accent-soft'],
-        '--organizer-accent-muted': cssVars['--theme-accent-muted'],
-        '--organizer-border-color': cssVars['--theme-border'],
-        '--theme-font-family': cssVars['--theme-font-family'],
-        fontFamily: cssVars['--theme-font-family'],
-    } as React.CSSProperties;
+    // Seule la couleur principale de l'organisateur suit son theme (le creme, le texte fonce, la
+    // police et le fond restent ceux de Dehors). Sans theme enregistre, on garde l'orange Dehors.
+    const rawThemeSettings = organizer.settings?.homepage_theme_settings;
+    const themeStyles = (rawThemeSettings?.accent
+        ? Object.fromEntries(Object.entries(computeThemeVariables(validateThemeSettings(rawThemeSettings)))
+            .filter(([name]) => name.startsWith('--theme-accent')))
+        : {}) as React.CSSProperties;
 
     return (
         <>
@@ -132,278 +115,214 @@ export const OrganizerHomepage = ({
             )}
 
             {organizer && <OrganizerDocumentHead organizer={organizer}/>}
-            <main className={classes.pageWrapper} style={themeStyles} data-mode={themeSettings.mode}>
+            <main className={classes.page} style={themeStyles}>
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: ${removeTransparency(themeSettings.background)} !important;
+                            background-color: var(--dehors-creme) !important;
                         }
                     `}
                 </style>
 
-                {/* Background */}
-                {(organizerCover && backgroundType === 'MIRROR_COVER_IMAGE') ? (
-                    <div
-                        className={classes.background}
-                        style={{backgroundImage: `url(${organizerCover.url})`}}
-                    />
-                ) : (
-                    <div
-                        className={classes.background}
-                        style={{backgroundColor: 'var(--organizer-bg-color)'}}
-                    />
-                )}
-                <div
-                    className={classes.backgroundOverlay}
-                    style={backgroundType === 'MIRROR_COVER_IMAGE' ? {
-                        '--overlay-color': themeSettings.background
-                    } as React.CSSProperties : undefined}
-                />
-                <AccentBlobs accentColor={themeSettings.accent} mode={themeSettings.mode}/>
+                <div className={classes.content}>
+                    <div className={classes.bar}>
+                        <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
+                    </div>
 
-                <div className={classes.container}>
-                    <div className={classes.wrapper}>
-                        {/* Hero Section */}
-                        <div className={classes.heroSection}>
-                            {organizerCover && (
-                                <div
-                                    className={classes.coverWrapper}
-                                    style={organizerCover?.width && organizerCover?.height ? {
-                                        '--cover-aspect-ratio': `${organizerCover.width} / ${organizerCover.height}`,
-                                    } as React.CSSProperties : undefined}
-                                >
-                                    {organizerCover?.lqip_base64 && (
-                                        <img
-                                            src={organizerCover.lqip_base64}
-                                            alt=""
-                                            aria-hidden="true"
-                                            className={classes.coverLqip}
-                                        />
+                    <header className={`${classes.card} ${classes.headerCard}`}>
+                        <div className={classes.banner}>
+                            {organizerCover ? (
+                                <>
+                                    {organizerCover.lqip_base64 && (
+                                        <img src={organizerCover.lqip_base64} alt="" aria-hidden="true"
+                                             className={classes.bannerImage}/>
                                     )}
-                                    <img
-                                        src={organizerCover.url}
-                                        alt="Cover"
-                                        className={classes.coverImage}
-                                    />
-                                </div>
+                                    <img src={organizerCover.url} alt="" className={classes.bannerImage}/>
+                                </>
+                            ) : (
+                                <span className={classes.bannerName} aria-hidden="true">{organizer.name}</span>
                             )}
-                            <div className={classes.organizerContentWrapper}>
-                                <div className={classes.organizerContent}>
-                                    <div className={classes.organizerProfile}>
-                                        <div className={classes.profileMain}>
-                                            {organizerLogo && (
-                                                <div className={classes.logoWrapper}>
-                                                    <img
-                                                        src={organizerLogo.url}
-                                                        alt="Logo"
-                                                        className={classes.logo}
-                                                    />
-                                                </div>
-                                            )}
-                                            <div className={classes.organizerInfo}>
-                                                <div className={classes.nameSection}>
-                                                    <h1>{organizer?.name}</h1>
-                                                    <div className={classes.organizerMeta}>
-                                                        {getShortLocationDisplay(organizer?.settings?.location_details) && (
-                                                            <div className={classes.metaItem}>
-                                                                <IconMapPin size={15} className={classes.metaIcon}/>
-                                                                <a
-                                                                    href={getGoogleMapsUrl(organizer.settings!.location_details)}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className={classes.mapLink}
-                                                                >
-                                                                    <span>{getShortLocationDisplay(organizer.settings!.location_details)}</span>
-                                                                    <IconExternalLink size={12}/>
-                                                                </a>
-                                                            </div>
-                                                        )}
-                                                        {websiteUrl && (
-                                                            <div className={classes.metaItem}>
-                                                                <IconWorld size={15} className={classes.metaIcon}/>
-                                                                <a
-                                                                    href={websiteUrl}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                >
-                                                                    {new URL(websiteUrl).hostname}
-                                                                </a>
-                                                            </div>
-                                                        )}
-                                                        {donationUrl && (
-                                                            <div className={classes.metaItem}>
-                                                                <IconHeart size={15} className={classes.metaIcon}/>
-                                                                <a
-                                                                    href={donationUrl}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                >
-                                                                    {t`Donate`}
-                                                                </a>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className={classes.profileActions}>
-                                                    {(socialLinks.length > 0) && (
-                                                        <div className={classes.socialLinks}>
-                                                            {socialLinks.map(({platform, handle, config}) => {
-                                                                const IconComponent = config.icon;
-                                                                const url = config.baseUrl + handle;
-                                                                return (
-                                                                    <ActionIcon
-                                                                        key={platform}
-                                                                        component="a"
-                                                                        href={url}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className={classes.socialIcon}
-                                                                        variant="subtle"
-                                                                        size="md"
-                                                                    >
-                                                                        <IconComponent size={16}/>
-                                                                    </ActionIcon>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    )}
-                                                    <button
-                                                        onClick={() => setContactModalOpen(true)}
-                                                        className={classes.contactButton}
-                                                    >
-                                                        <IconMail size={14} style={{marginRight: 6}}/>
-                                                        {t`Contact`}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {organizer?.description && (
-                                        <div
-                                            className={classes.description}
-                                            dangerouslySetInnerHTML={{__html: organizer.description}}
-                                        />
-                                    )}
-                                </div>
-                            </div>
                         </div>
 
-                        {/* Events Section */}
-                        <div className={classes.eventsSection}>
-                            <div className={classes.eventsHeader}>
-                                <h2 className={classes.eventsTitle}>
-                                    {isPastEvents ? t`Past Events` : t`Upcoming Events`}
-                                </h2>
-                                <div className={classes.filterToggle}>
-                                    <button
-                                        className={`${classes.filterButton} ${!isPastEvents ? classes.filterButtonActive : ''}`}
-                                        onClick={() => handleFilterChange(false)}
-                                    >
-                                        {t`Upcoming`}
-                                    </button>
-                                    <button
-                                        className={`${classes.filterButton} ${isPastEvents ? classes.filterButtonActive : ''}`}
-                                        onClick={() => handleFilterChange(true)}
-                                    >
-                                        {t`Past`}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className={classes.eventsList}>
-                                {events.length === 0 ? (
-                                    <div className={classes.noEvents}>
-                                        <p>{isPastEvents ? t`No past events` : t`No upcoming events`}</p>
-                                    </div>
+                        <div className={classes.profile}>
+                            <div className={classes.logo}>
+                                {organizerLogo ? (
+                                    <img src={organizerLogo.url} alt={organizer.name}/>
                                 ) : (
-                                    <div className={classes.eventsContainer}>
-                                        {events.map((event) => (
-                                            <EventCard
-                                                key={event.id}
-                                                event={event as Event}
-                                                primaryColor={themeSettings.accent}
-                                            />
-                                        ))}
-                                    </div>
+                                    <span aria-hidden="true">{organizer.name.trim().charAt(0).toUpperCase()}</span>
                                 )}
                             </div>
 
-                            {eventsData && eventsData.meta.total > eventsData.meta.per_page && (
-                                <div className={classes.paginationWrapper}>
-                                    <Pagination
-                                        size="sm"
-                                        siblings={1}
-                                        marginTop={0}
-                                        total={eventsData.meta.last_page}
-                                        value={eventsData.meta.current_page}
-                                        onChange={(page) => {
-                                            const newPath = isPastEvents
-                                                ? `${organizerHomepagePath(organizer)}/past-events?page=${page}`
-                                                : `${organizerHomepagePath(organizer)}?page=${page}`;
-                                            navigate(newPath);
-                                        }}
-                                        className={classes.paginationComponent}
+                            <div className={classes.infos}>
+                                <h1 className={classes.name}>{organizer.name}</h1>
+
+                                {organizer.description && (
+                                    <div
+                                        className={classes.description}
+                                        dangerouslySetInnerHTML={{__html: organizer.description}}
                                     />
+                                )}
+
+                                {(shortLocation || websiteUrl || instagramHandle || otherSocialLinks.length > 0 || donationUrl) && (
+                                    <ul className={classes.meta}>
+                                        {shortLocation && locationDetails && (
+                                            <li>
+                                                <a href={getGoogleMapsUrl(locationDetails)} target="_blank"
+                                                   rel="noopener noreferrer" className={classes.pill}>
+                                                    <PublicIcon name={'lieu-petit'} className={classes.pillIcon}/>
+                                                    {shortLocation}
+                                                </a>
+                                            </li>
+                                        )}
+                                        {websiteUrl && (
+                                            <li>
+                                                <a href={websiteUrl} target="_blank" rel="noopener noreferrer"
+                                                   className={classes.pill}>
+                                                    <PublicIcon name={'globe'} className={classes.pillIcon}/>
+                                                    {websiteLabel(websiteUrl)}
+                                                </a>
+                                            </li>
+                                        )}
+                                        {instagramHandle && (
+                                            <li>
+                                                <a href={socialMediaConfig.instagram.baseUrl + instagramHandle}
+                                                   target="_blank" rel="noopener noreferrer" className={classes.pill}>
+                                                    <PublicIcon name={'instagram'} className={classes.pillIcon}/>
+                                                    @{instagramHandle}
+                                                </a>
+                                            </li>
+                                        )}
+                                        {otherSocialLinks.map(({platform, url, Icon}) => (
+                                            <li key={platform}>
+                                                <a href={url} target="_blank" rel="noopener noreferrer"
+                                                   className={`${classes.pill} ${classes.iconPill}`} aria-label={platform}>
+                                                    <Icon size={16} stroke={1.8} className={classes.pillIcon}/>
+                                                </a>
+                                            </li>
+                                        ))}
+                                        {donationUrl && (
+                                            <li>
+                                                <a href={donationUrl} target="_blank" rel="noopener noreferrer"
+                                                   className={classes.pill}>
+                                                    <IconHeart size={16} stroke={1.8} className={classes.pillIcon}/>
+                                                    {t`Donate`}
+                                                </a>
+                                            </li>
+                                        )}
+                                    </ul>
+                                )}
+                            </div>
+
+                            <div className={classes.actions}>
+                                <div className={classes.shareSlot}>
+                                    <ShareComponent
+                                        title={organizer.name}
+                                        text={organizer.name}
+                                        url={organizerHomepageUrl(organizer)}
+                                    >
+                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`}>
+                                            <PublicIcon name={'partager'} size={20}/>
+                                            {t`Share`}
+                                        </button>
+                                    </ShareComponent>
                                 </div>
-                            )}
+                                <button type="button" onClick={() => setContactModalOpen(true)}
+                                        className={`${classes.button} ${classes.buttonFilled}`}>
+                                    <PublicIcon name={'courriel'} size={20}/>
+                                    {t`Contact organizer`}
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <section className={`${classes.card} ${classes.section}`} aria-labelledby="organizer-events-title">
+                        <div className={classes.sectionHeader}>
+                            <h2 id="organizer-events-title" className={classes.sectionTitle}>
+                                <span className={classes.longLabel}>
+                                    {isPastEvents ? t`Past Events` : t`Upcoming Events`}
+                                </span>
+                                <span className={classes.shortLabel}>
+                                    {isPastEvents ? t`Past` : t`Upcoming`}
+                                </span>
+                            </h2>
+                            <nav className={classes.tabs}>
+                                <Link to={homepagePath} className={classes.tab}
+                                      aria-current={!isPastEvents ? 'page' : undefined}>
+                                    {upcomingCount !== null ? (
+                                        <>
+                                            <span className={classes.longLabel}>{t`Upcoming (${upcomingCount})`}</span>
+                                            <span className={classes.shortLabel}>{t`Upcoming`}</span>
+                                        </>
+                                    ) : t`Upcoming`}
+                                </Link>
+                                <Link to={pastEventsPath} className={classes.tab}
+                                      aria-current={isPastEvents ? 'page' : undefined}>
+                                    {t`Past`}
+                                </Link>
+                            </nav>
                         </div>
 
-                        {faqs.length > 0 && (
-                            <section className={classes.faqSection} aria-labelledby="organizer-faq-title">
-                                <div className={classes.eventsHeader}>
-                                    <h2 id="organizer-faq-title" className={classes.eventsTitle}>
-                                        {t`Frequently asked questions`}
-                                    </h2>
-                                </div>
-                                <Accordion
-                                    multiple
-                                    chevronPosition="right"
-                                    classNames={{
-                                        item: classes.faqItem,
-                                        control: classes.faqControl,
-                                        label: classes.faqQuestion,
-                                        chevron: classes.faqChevron,
-                                        content: classes.faqAnswer,
-                                    }}
-                                >
-                                    {faqs.map((faq, index) => (
-                                        <Accordion.Item key={index} value={String(index)}>
-                                            <Accordion.Control>{faq.question}</Accordion.Control>
-                                            <Accordion.Panel>{faq.answer}</Accordion.Panel>
-                                        </Accordion.Item>
-                                    ))}
-                                </Accordion>
-                            </section>
+                        {events.length === 0 ? (
+                            <div className={classes.empty}>
+                                <PublicIcon name={'calendrier'} size={28} className={classes.pillIcon}/>
+                                <p>{isPastEvents ? t`No past events` : t`No upcoming events`}</p>
+                            </div>
+                        ) : (
+                            <div className={classes.grid}>
+                                {events.map((event) => (
+                                    <EventCard key={event.id} event={event as Event}/>
+                                ))}
+                            </div>
                         )}
 
-                        {/* Footer */}
-                        <div className={classes.footerSection}>
-                            <div className={classes.footerLinks}>
-                                <Anchor
-                                    href={getConfig('VITE_PRIVACY_URL', 'https://hi.events/privacy-policy?utm_source=app-organizer-footer')}
-                                    className={classes.footerLink}
-                                >
-                                    {t`Privacy Policy`}
-                                </Anchor>
-                                <span className={classes.footerSeparator}>•</span>
-                                <Anchor
-                                    href={getConfig('VITE_TOS_URL', 'https://hi.events/terms-of-service?utm_source=app-organizer-footer')}
-                                    className={classes.footerLink}
-                                >
-                                    {t`Terms of Service`}
-                                </Anchor>
-                            </div>
-                            <PoweredByFooter className={classes.poweredByFooter}/>
-                        </div>
-                    </div>
+                        {eventsData && eventsData.meta.total > eventsData.meta.per_page && (
+                            <Pagination
+                                size="sm"
+                                siblings={1}
+                                marginTop={0}
+                                total={eventsData.meta.last_page}
+                                value={eventsData.meta.current_page}
+                                onChange={(page) => navigate(`${isPastEvents ? pastEventsPath : homepagePath}?page=${page}`)}
+                                className={classes.pagination}
+                            />
+                        )}
+                    </section>
 
-                    {/* Contact Modal */}
-                    <ContactOrganizerModal
-                        opened={contactModalOpen}
-                        onClose={() => setContactModalOpen(false)}
-                        organizer={organizer}
-                    />
+                    {faqs.length > 0 && (
+                        <section className={`${classes.card} ${classes.section}`} aria-labelledby="organizer-faq-title">
+                            <h2 id="organizer-faq-title" className={classes.sectionTitle}>
+                                {t`Frequently asked questions`}
+                            </h2>
+                            <Accordion
+                                multiple
+                                chevronPosition="right"
+                                classNames={{
+                                    root: classes.faq,
+                                    item: classes.faqItem,
+                                    control: classes.faqControl,
+                                    label: classes.faqQuestion,
+                                    chevron: classes.faqChevron,
+                                    content: classes.faqAnswer,
+                                }}
+                            >
+                                {faqs.map((faq, index) => (
+                                    <Accordion.Item key={index} value={String(index)}>
+                                        <Accordion.Control>{faq.question}</Accordion.Control>
+                                        <Accordion.Panel>{faq.answer}</Accordion.Panel>
+                                    </Accordion.Item>
+                                ))}
+                            </Accordion>
+                        </section>
+                    )}
+
+                    <PublicPageFooter/>
                 </div>
+
+                <ContactOrganizerModal
+                    opened={contactModalOpen}
+                    onClose={() => setContactModalOpen(false)}
+                    organizer={organizer}
+                />
                 {consentPending && (
                     <CookieConsentBanner onConsent={onConsent}/>
                 )}

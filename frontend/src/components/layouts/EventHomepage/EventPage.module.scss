@@ -1,0 +1,708 @@
+@use "../../../styles/mixins.scss";
+
+// Page publique d'un evenement (maquette Figma « Public · Evenement »).
+// EventHomepage.module.scss reste pour la page partenaire, qui en reprend les classes.
+
+$affichage: FatFrank, 'Arial Black', sans-serif;
+
+.page {
+  // --public-accent (et doux, sur-accent) viennent de dehors-app.scss, d'apres les --theme-* en
+  // style inline. La maquette a aussi un accent fonce (liens) et clair (routes du plan).
+  --public-accent-fonce: color-mix(in srgb, var(--public-accent) 72%, var(--dehors-brun));
+  --public-accent-clair: color-mix(in srgb, var(--public-accent) 62%, #fff);
+
+  position: relative;
+  min-height: 100vh;
+  overflow: clip;
+  background: var(--dehors-creme);
+  color: var(--dehors-brun);
+}
+
+// Le degrade aux couleurs de l'organisateur: trois halos flous en haut et au milieu de la page.
+.halo {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2100px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 770px 570px at calc(50% - 420px) 100px,
+      color-mix(in srgb, var(--public-accent-clair) 22%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent-clair) 22%, transparent) 45%,
+      transparent 100%),
+    radial-gradient(ellipse 670px 520px at calc(50% + 530px) 100px,
+      color-mix(in srgb, var(--public-accent) 11%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent) 11%, transparent) 45%,
+      transparent 100%),
+    radial-gradient(ellipse 720px 520px at calc(50% - 20px) 1000px,
+      color-mix(in srgb, var(--public-accent-doux) 32%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent-doux) 32%, transparent) 45%,
+      transparent 100%);
+
+  @include mixins.respond-below(md) {
+    height: 900px;
+    background:
+      radial-gradient(ellipse 390px 340px at 100px 80px,
+        color-mix(in srgb, var(--public-accent-clair) 24%, transparent) 0%,
+        color-mix(in srgb, var(--public-accent-clair) 24%, transparent) 40%,
+        transparent 100%),
+      radial-gradient(ellipse 340px 290px at calc(100% - 22px) 50px,
+        color-mix(in srgb, var(--public-accent) 12%, transparent) 0%,
+        color-mix(in srgb, var(--public-accent) 12%, transparent) 40%,
+        transparent 100%);
+  }
+}
+
+.content {
+  position: relative;
+  // Le z-index de la mention Hi.Events (PoweredByFooter) reste sous la barre collante du bas.
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+
+  // Place pour la barre collante du bas.
+  @include mixins.respond-below(lg) {
+    gap: 20px;
+    padding-bottom: 120px;
+  }
+
+  @include mixins.respond-below(md) {
+    width: calc(100% - 24px);
+    padding-top: 16px;
+  }
+}
+
+// Sur mobile, le retour et le partage sont sur l'image (maquette).
+.bar {
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.accentIcon {
+  color: var(--public-accent);
+}
+
+.columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+
+  @include mixins.respond-below(xl) {
+    gap: 28px;
+  }
+
+  // Une colonne: les billets passent apres la date et le lieu.
+  @include mixins.respond-below(lg) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+}
+
+.eventColumn {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+
+  @include mixins.respond-below(lg) {
+    display: contents;
+  }
+}
+
+.tickets {
+  flex-shrink: 0;
+  width: 400px;
+
+  @include mixins.respond-below(lg) {
+    order: 3;
+    width: auto;
+  }
+}
+
+.card {
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+}
+
+// Presentation: image, organisateur, partage, titre, etiquettes
+.presentation {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 14px;
+  border-radius: 32px;
+
+  @include mixins.respond-below(lg) {
+    order: 1;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 18px;
+    padding: 12px;
+    border-radius: 28px;
+  }
+}
+
+.cover {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: var(--cover-ratio, 732 / 420);
+  max-height: 420px;
+  border-radius: 22px;
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    aspect-ratio: var(--cover-ratio, 378 / 260);
+    max-height: 260px;
+    border-radius: 20px;
+  }
+}
+
+.coverLqip, .coverImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coverLqip {
+  filter: blur(20px);
+  transform: scale(1.1);
+}
+
+.coverActions {
+  display: none;
+
+  @include mixins.respond-below(md) {
+    position: absolute;
+    inset: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 12px 0;
+  }
+}
+
+.coverBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 16px;
+  background: var(--dehors-creme);
+  color: var(--dehors-brun);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+
+  span:last-child {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.coverShare {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--dehors-creme);
+  color: var(--dehors-brun);
+  cursor: pointer;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 14px 14px;
+
+  &:first-child {
+    padding-top: 14px;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    padding: 0 8px 10px;
+
+    &:first-child {
+      padding-top: 8px;
+    }
+  }
+}
+
+.organizerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.organizerRowWithCover {
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.organizerPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: var(--dehors-brun);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  filter: drop-shadow(0 10px 16px rgb(55 39 33 / 0.08));
+}
+
+.organizerPillLogo, .organizerLogo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  background: var(--public-accent);
+  color: var(--dehors-creme);
+  font-family: $affichage;
+  line-height: 1;
+}
+
+.organizerPillLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 17px;
+}
+
+.outlineButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 24px;
+  border: 2px solid var(--dehors-brun);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--dehors-brun);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  @include mixins.respond-below(md) {
+    height: 44px;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: $affichage;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.02;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 32px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--dehors-carte);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+
+  @include mixins.respond-below(md) {
+    padding: 6px 11px;
+    font-size: 13px;
+  }
+}
+
+// Date et lieu
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 28px;
+
+  @include mixins.respond-below(lg) {
+    order: 2;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 16px;
+    padding: 18px;
+    border-radius: 24px;
+  }
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 16px;
+
+  // Sur mobile, le lien passe sous le texte.
+  @include mixins.respond-below(md) {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: 12px;
+    row-gap: 3px;
+  }
+}
+
+.detailIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--public-accent-doux);
+  color: var(--public-accent);
+
+  @include mixins.respond-below(md) {
+    grid-row: span 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+
+    > span {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+}
+
+.detailText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.detailPrimary {
+  font-size: 17px;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    font-size: 15px;
+  }
+}
+
+.detailSecondary {
+  font-size: 15px;
+
+  @include mixins.respond-below(md) {
+    font-size: 13px;
+  }
+}
+
+.detailLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--public-accent-fonce);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @include mixins.respond-below(md) {
+    grid-column: 2;
+    justify-self: start;
+    gap: 4px;
+    font-size: 14px;
+
+    > span {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
+}
+
+// A propos, Emplacement
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px;
+  border-radius: 32px;
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: $affichage;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 22px;
+  }
+}
+
+.about {
+  @include mixins.respond-below(lg) {
+    order: 4;
+  }
+}
+
+.location {
+  @include mixins.respond-below(lg) {
+    order: 5;
+  }
+
+  @include mixins.respond-below(md) {
+    padding: 14px;
+  }
+}
+
+// Plan stylise (rendu existant, aux couleurs de la maquette), lien vers Google Maps
+.map {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 240px;
+  border-radius: 24px;
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    height: 170px;
+    border-radius: 22px;
+  }
+}
+
+.mapRoads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  path {
+    fill: none;
+    stroke: var(--public-accent-clair);
+    stroke-width: 10px;
+
+    @include mixins.respond-below(md) {
+      stroke-width: 8px;
+    }
+  }
+}
+
+.mapPin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--public-accent);
+  color: var(--public-sur-accent);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+
+  .map:hover & {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  @include mixins.respond-below(md) {
+    width: 48px;
+    height: 48px;
+
+    > span {
+      width: 22px !important;
+      height: 22px !important;
+    }
+  }
+}
+
+.mapAddress {
+  display: none;
+
+  @include mixins.respond-below(md) {
+    display: block;
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+// Organise par
+.organizer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 28px;
+  box-shadow: none;
+
+  @include mixins.respond-below(lg) {
+    order: 6;
+  }
+
+  @include mixins.respond-below(md) {
+    padding: 18px;
+    border-radius: 24px;
+  }
+}
+
+.organizerMain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @include mixins.respond-below(md) {
+    flex-wrap: wrap;
+    gap: 14px;
+
+    .outlineButton {
+      width: 100%;
+    }
+  }
+}
+
+.organizerLogo {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  font-size: 32px;
+
+  @include mixins.respond-below(md) {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+}
+
+.organizerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.organizerLabel {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.organizerName {
+  color: var(--dehors-brun);
+  font-family: $affichage;
+  font-size: 22px;
+  line-height: normal;
+  text-transform: uppercase;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.organizerLocation {
+  font-size: 15px;
+}
+
+.organizerBio {
+  font-size: 15px;
+  line-height: 1.5;
+
+  p {
+    margin: 0 0 0.6em !important;
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  a {
+    color: var(--public-accent-fonce);
+    font-weight: 700;
+  }
+}
+
+.organizerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.organizerLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--public-accent-doux);
+  color: var(--public-accent-fonce);
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: var(--public-accent);
+    color: var(--public-sur-accent);
+  }
+}

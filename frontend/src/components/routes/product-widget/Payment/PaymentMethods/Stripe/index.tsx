@@ -1,22 +1,81 @@
 import {useParams} from "react-router";
 import {useCreateStripePaymentIntent} from "../../../../../../queries/useCreateStripePaymentIntent.ts";
 import {useEffect, useState} from "react";
-import {loadStripe, Stripe} from "@stripe/stripe-js";
+import {Appearance, loadStripe, Stripe} from "@stripe/stripe-js";
 import {useGetEventPublic} from "../../../../../../queries/useGetEventPublic.ts";
-import {CheckoutContent} from "../../../../../layouts/Checkout/CheckoutContent";
-import {HomepageInfoMessage} from "../../../../../common/HomepageInfoMessage";
 import {t} from "@lingui/macro";
 import {eventHomepagePath} from "../../../../../../utilites/urlHelper.ts";
 import {LoadingMask} from "../../../../../common/LoadingMask";
 import {Elements} from "@stripe/react-stripe-js";
 import StripeCheckoutForm from "../../../../../forms/StripeCheckoutForm";
 import {Event} from "../../../../../../types.ts";
-import {validateThemeSettings} from "../../../../../../utilites/themeUtils.ts";
+import classes from "../../Payment.module.scss";
 
 interface StripePaymentMethodProps {
     enabled: boolean;
     setSubmitHandler: (submitHandler: () => () => Promise<void>) => void;
 }
+
+/* eslint-disable lingui/no-unlocalized-strings */
+const ENCRE = '#372721';
+const CHAMP = 'rgba(227, 173, 146, 0.3)';
+
+// Le Payment Element aux couleurs de la maquette: champs sur fond sable, libelles gras, coins de 14px.
+// Stripe y montre lui-meme Apple Pay ou Google Pay selon l'appareil.
+const stripeAppearance = (accent: string): Appearance => ({
+    theme: 'stripe',
+    variables: {
+        colorPrimary: accent,
+        colorBackground: '#fffcf8',
+        colorText: ENCRE,
+        colorTextSecondary: 'rgba(55, 39, 33, 0.7)',
+        colorTextPlaceholder: 'rgba(55, 39, 33, 0.5)',
+        colorDanger: '#c0392b',
+        fontFamily: 'Allotrope, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontSizeBase: '16px',
+        borderRadius: '14px',
+        spacingUnit: '4px',
+    },
+    rules: {
+        '.Label': {
+            color: ENCRE,
+            fontSize: '15px',
+            fontWeight: '700',
+            marginBottom: '8px',
+        },
+        '.Input': {
+            padding: '16px 18px',
+            border: '1.5px solid transparent',
+            boxShadow: 'none',
+            backgroundColor: CHAMP,
+            fontSize: '17px',
+        },
+        '.Input:focus': {
+            borderColor: accent,
+            boxShadow: 'none',
+        },
+        '.Input--invalid': {
+            borderColor: '#c0392b',
+            boxShadow: 'none',
+        },
+        '.AccordionItem': {
+            border: 'none',
+            boxShadow: 'none',
+            backgroundColor: '#fff6ed',
+            padding: '18px 22px',
+        },
+        '.Tab': {
+            border: 'none',
+            boxShadow: 'none',
+            backgroundColor: CHAMP,
+        },
+        '.Tab--selected': {
+            color: '#fff6ed',
+            backgroundColor: ENCRE,
+        },
+    },
+});
+/* eslint-enable lingui/no-unlocalized-strings */
 
 export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMethodProps) => {
     const {eventId, orderShortId} = useParams();
@@ -43,30 +102,23 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMe
 
     if (!enabled) {
         return (
-            <CheckoutContent>
-                <HomepageInfoMessage
-                    status="warning"
-                    message={t`Payments not available`}
-                    subtitle={t`Stripe payments are not enabled for this event.`}
-                    link={eventHomepagePath(event as Event)}
-                    linkText={t`Return to Event`}
-                />
-            </CheckoutContent>
+            <div className={classes.stripeError}>
+                <p className={classes.stripeErrorTitle}>{t`Payments not available`}</p>
+                <p>{t`Stripe payments are not enabled for this event.`}</p>
+                {event && <a href={eventHomepagePath(event as Event)}>{t`Return to Event`}</a>}
+            </div>
         );
     }
 
     if (stripePaymentIntentError && event) {
         return (
-            <CheckoutContent>
-                <HomepageInfoMessage
-                    status="error"
-                    /* @ts-ignore */
-                    message={stripePaymentIntentError.response?.data?.message || t`Something went wrong`}
-                    subtitle={t`Please restart the checkout process.`}
-                    link={eventHomepagePath(event)}
-                    linkText={t`Return to Event`}
-                />
-            </CheckoutContent>
+            <div className={classes.stripeError} role="alert">
+                <p className={classes.stripeErrorTitle}>
+                    {(stripePaymentIntentError as any).response?.data?.message || t`Something went wrong`}
+                </p>
+                <p>{t`Please restart the checkout process.`}</p>
+                <a href={eventHomepagePath(event)}>{t`Return to Event`}</a>
+            </div>
         );
     }
 
@@ -74,8 +126,8 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMe
         return <LoadingMask/>;
     }
 
-    const themeSettings = validateThemeSettings(event?.settings?.homepage_theme_settings);
-    const stripeTheme = themeSettings.mode === 'dark' ? 'night' : 'stripe';
+    // Toujours le theme clair: la caisse suit la maquette Dehors, seule la couleur principale change.
+    const accent = event?.settings?.homepage_theme_settings?.accent || '#fa7853';
 
     return (
         <>
@@ -85,12 +137,7 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMe
                 <Elements options={{
                     clientSecret: stripeData?.client_secret,
                     loader: 'always',
-                    appearance: {
-                        theme: stripeTheme,
-                        variables: {
-                            colorPrimary: themeSettings.accent,
-                        },
-                    },
+                    appearance: stripeAppearance(accent),
                 }} stripe={stripePromise}>
                     <StripeCheckoutForm setSubmitHandler={setSubmitHandler} />
                 </Elements>

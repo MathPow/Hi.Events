@@ -1,0 +1,304 @@
+@use "../../../../styles/mixins.scss";
+
+$display: FatFrank, 'Arial Black', sans-serif;
+
+.panel {
+  border-radius: 32px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+  color: var(--dehors-brun);
+
+  @include mixins.respond-below(lg) {
+    border-radius: 22px;
+  }
+}
+
+// La carte repliee du telephone (et des tablettes): image, « Votre commande », total.
+.toggle {
+  display: none;
+
+  @include mixins.respond-below(lg) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: inherit;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+}
+
+.toggleText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: normal;
+}
+
+.toggleTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.toggleMeta {
+  font-size: 13px;
+}
+
+.toggleTotal {
+  flex-shrink: 0;
+  font-family: $display;
+  font-size: 20px;
+  line-height: normal;
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+
+  .panel[data-expanded] & {
+    transform: rotate(180deg);
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px;
+
+  @include mixins.respond-below(lg) {
+    display: none;
+    padding: 4px 16px 20px;
+
+    .panel[data-expanded] & {
+      display: flex;
+    }
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: $display;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(lg) {
+    display: none;
+  }
+}
+
+.image {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.eventImage {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+
+  // Deja dans la carte repliee, juste au-dessus.
+  @include mixins.respond-below(lg) {
+    display: none;
+  }
+}
+
+.toggleImage {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.event {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.eventText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  line-height: normal;
+}
+
+.eventTitle {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.eventMeta {
+  font-size: 14px;
+}
+
+.separator {
+  width: 100%;
+  height: 1.5px;
+  margin: 0;
+  border: none;
+  background: var(--dehors-brun);
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 16px;
+  line-height: normal;
+}
+
+.lineLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lineDetail {
+  font-size: 13px;
+}
+
+.lineValue {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.originalPrice {
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.promoApplied {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-weight: 700;
+  color: var(--public-accent);
+}
+
+.promoRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  color: var(--dehors-brun);
+  background: var(--dehors-champ);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--dehors-champ-survol);
+  }
+}
+
+.promoForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promoInput.promoInput {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+// Le champ arrondi de la maquette (46px, en pilule), plus petit que ceux du formulaire.
+.promoInput.promoInput :global(.mantine-Input-input) {
+  height: 46px;
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font-size: 15px;
+  color: var(--dehors-brun);
+  background: var(--dehors-champ);
+
+  &::placeholder {
+    color: rgb(55 39 33 / 0.5);
+  }
+
+  &:focus {
+    border-color: var(--public-accent);
+  }
+}
+
+.promoButton.promoButton {
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+
+  &:hover:not(:disabled, [data-loading]) {
+    background: #4a3830;
+  }
+
+  &:disabled {
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
+    opacity: 0.7;
+  }
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: $display;
+  line-height: normal;
+  text-transform: uppercase;
+}
+
+.totalLabel {
+  font-size: 26px;
+}
+
+.totalValue {
+  font-size: 30px;
+  white-space: nowrap;
+}
+
+.note {
+  margin: 0;
+  font-size: 13px;
+  line-height: normal;
+}

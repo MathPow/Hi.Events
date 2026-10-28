@@ -63,8 +63,21 @@ const sendHeightToIframeWidgets = () => {
     }, '*');
 };
 
+// Ce que la page evenement affiche hors du widget (barre collante mobile).
+export interface ProductSelectionSummary {
+    quantity: number;
+    subtotal: number;
+    canContinue: boolean;
+    isSubmitting: boolean;
+}
+
 interface SelectProductsProps {
     event: Event;
+    // Page evenement: un bouton hors du widget soumet le formulaire par son id (attribut form).
+    formId?: string;
+    onSelectionChange?: (summary: ProductSelectionSummary) => void;
+    showSubtotal?: boolean;
+    collapsiblePromoCode?: boolean;
     promoCodeValid?: boolean;
     promoCode?: string;
     backgroundType?: 'COLOR' | 'MIRROR_COVER_IMAGE';
@@ -93,6 +106,7 @@ const SelectProducts = (props: SelectProductsProps) => {
     const [resizeRef, resizeObserverRect] = useResizeObserver();
     const [collapsedProducts, setCollapsedProducts] = useState<{ [key: number]: boolean }>({});
     const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
+    const [promoCodeOpen, setPromoCodeOpen] = useState(!props.collapsiblePromoCode);
 
     useEffect(() => sendHeightToIframeWidgets(), [resizeObserverRect.height]);
 
@@ -235,6 +249,34 @@ const SelectProducts = (props: SelectProductsProps) => {
         return total;
     }, [form.values.products]);
 
+    // Meme prix que ProductPriceDisplay: taxes et frais inclus quand l'evenement les affiche inclus.
+    const selectedProductsSubtotal = useMemo(() => {
+        const taxesIncluded = event?.settings?.price_display_mode === 'INCLUSIVE';
+        let subtotal = 0;
+        form.values.products?.forEach(({product_id, quantities}) => {
+            const product = products.find(p => Number(p.id) === Number(product_id));
+            quantities?.forEach(({price_id, quantity, price: chosenPrice}) => {
+                const price = product?.prices?.find(p => Number(p.id) === Number(price_id));
+                if (!product || !price || !Number(quantity)) {
+                    return;
+                }
+                let unitPrice = product.type === ProductPriceType.Donation ? Number(chosenPrice) || 0 : Number(price.price) || 0;
+                if (taxesIncluded) {
+                    unitPrice += (price.tax_total || 0) + (price.fee_total || 0);
+                }
+                subtotal += unitPrice * Number(quantity);
+            });
+        });
+
+        return subtotal;
+    }, [form.values.products, event]);
+
+    useEffect(() => {
+        if (props.collapsiblePromoCode && promoCodeOpen) {
+            promoRef.current?.focus();
+        }
+    }, [promoCodeOpen]);
+
     useEffect(() => {
         if (form.values.promo_code) {
             const promo_code = form.values.promo_code;
@@ -315,6 +357,16 @@ const SelectProducts = (props: SelectProductsProps) => {
         || selectedProductQuantitySum === 0
         || props.widgetMode === 'preview'
         || products?.every(product => product.is_sold_out);
+
+    const {onSelectionChange} = props;
+    useEffect(() => {
+        onSelectionChange?.({
+            quantity: selectedProductQuantitySum,
+            subtotal: selectedProductsSubtotal,
+            canContinue: !isButtonDisabled,
+            isSubmitting: productMutation.isPending,
+        });
+    }, [selectedProductQuantitySum, selectedProductsSubtotal, isButtonDisabled, productMutation.isPending]);
 
     const productInfoMessage = event?.settings?.product_info_message;
     const productInfoButtonText = event?.settings?.product_info_button_text;
@@ -428,7 +480,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                 </Modal>
             )}
             {(event && productAreAvailable) && (
-                <form target={'__blank'} onSubmit={form.onSubmit(handleProductSelection as any)}>
+                <form id={props.formId} target={'__blank'} onSubmit={form.onSubmit(handleProductSelection as any)}>
                     <Input type={'hidden'} {...form.getInputProps('promo_code')} />
                     <Input type={'hidden'} {...form.getInputProps('affiliate_code')} />
                     <div className={'hi-product-category-rows'}>
@@ -470,8 +522,11 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                 }));
                                             };
 
+                                            const productSelectedQuantity = form.values.products?.[currentProductIndex]?.quantities
+                                                ?.reduce((acc, {quantity}) => acc + Number(quantity), 0) || 0;
+
                                             return (
-                                                <div key={product.id} className={`hi-product-row ${product.is_highlighted ? 'hi-product-highlighted' : ''}`}>
+                                                <div key={product.id} className={`hi-product-row ${product.is_highlighted ? 'hi-product-highlighted' : ''} ${productSelectedQuantity > 0 ? 'hi-product-selected' : ''}`}>
                                                     {product.is_highlighted && product.highlight_message && (
                                                         <div className={'hi-product-highlight-message'}>
                                                             {product.highlight_message}
@@ -487,7 +542,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                             </h3>
                                                             <div className={'hi-product-title-metadata'}>
                                                                 {(product.is_available && !!product.quantity_available) && (
-                                                                    <>
+                                                                    <span className={'hi-product-availability'}>
                                                                         {product.quantity_available === Constants.INFINITE_TICKETS && (
                                                                             <Trans>
                                                                                 Unlimited available
@@ -498,7 +553,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                                                 {product.quantity_available} available
                                                                             </Trans>
                                                                         )}
-                                                                    </>
+                                                                    </span>
                                                                 )}
 
                                                                 {(!product.is_available && hasMultiplePrices(product)) && (
@@ -595,11 +650,21 @@ const SelectProducts = (props: SelectProductsProps) => {
                             </div>
                         ) : (
                             <>
-                                <label className={'hi-promo-code-label'} htmlFor={'hi-promo-code-input'}>
-                                    <IconTag stroke={1.5} size={18}/>
-                                    {t`Have a promo code?`}
-                                </label>
-                                <Group className={'hi-promo-code-input-wrapper'} wrap={'nowrap'} gap={'20px'}>
+                                {promoCodeOpen ? (
+                                    <label className={'hi-promo-code-label'} htmlFor={'hi-promo-code-input'}>
+                                        <IconTag stroke={1.5} size={18}/>
+                                        {t`Have a promo code?`}
+                                    </label>
+                                ) : (
+                                    <button type={'button'}
+                                            className={'hi-promo-code-label hi-promo-code-toggle'}
+                                            aria-expanded={false}
+                                            onClick={() => setPromoCodeOpen(true)}>
+                                        <IconTag stroke={1.5} size={18}/>
+                                        {t`Have a promo code?`}
+                                    </button>
+                                )}
+                                {promoCodeOpen && <Group className={'hi-promo-code-input-wrapper'} wrap={'nowrap'} gap={'20px'}>
                                     {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                     {/*@ts-ignore*/}
                                     <TextInput id={'hi-promo-code-input'}
@@ -619,7 +684,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                             onClick={handleApplyPromoCode}>
                                         {t`Apply Promo Code`}
                                     </Button>
-                                </Group>
+                                </Group>}
                             </>
                         )}
                     </div>}
@@ -652,6 +717,23 @@ const SelectProducts = (props: SelectProductsProps) => {
                             <div dangerouslySetInnerHTML={{
                                 __html: event.settings.product_page_message.replace(/\n/g, '<br/>')
                             }} className={'hi-product-page-message'}/>
+                        )}
+                        {props.showSubtotal && (
+                            <div className={'hi-subtotal-row'}>
+                                <div className={'hi-subtotal-label'}>
+                                    <span className={'hi-subtotal-title'}>
+                                        {t`Subtotal`} · {selectedProductQuantitySum === 1
+                                            ? t`1 ticket`
+                                            : t`${Number(selectedProductQuantitySum)} tickets`}
+                                    </span>
+                                    {selectedProductsSubtotal > 0 && (
+                                        <span className={'hi-subtotal-note'}>{t`Fees calculated at the next step`}</span>
+                                    )}
+                                </div>
+                                <span className={'hi-subtotal-amount'}>
+                                    {formatCurrency(selectedProductsSubtotal, event.currency)}
+                                </span>
+                            </div>
                         )}
                         <Button disabled={isButtonDisabled} fullWidth className={'hi-continue-button'}
                                 type={"submit"}

@@ -1,195 +1,615 @@
-@use "../../../../styles/mixins";
+@use "../../../../styles/mixins.scss";
 
-$font-display: Allotrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-titre: FatFrank, 'Arial Black', sans-serif;
 
-.welcomeHeader {
-  margin-bottom: 24px;
-  padding: 32px 20px 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
+// Les --public-* suivent les --theme-accent* poses en style inline (regle globale de dehors-app.scss).
+// L'accent fonce de la maquette (textes et liens) devient la variante lisible de l'accent.
+.page {
+  --confirmation-accent-texte: var(--theme-accent-text, #c36a5c);
 
-.confettiIcon {
-  font-size: 48px;
-  line-height: 1;
-  margin-bottom: 8px;
-  animation: bounceIn 0.6s ease-out, subtleBounce 2s ease-in-out 0.6s infinite;
-
-  span {
-    display: inline-block;
-  }
-}
-
-@keyframes bounceIn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes subtleBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-.welcomeMessage {
-  font-family: $font-display;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--checkout-text-primary, #111827);
-  margin-bottom: 4px;
-}
-
-.confirmationText {
-  font-size: 15px;
-  color: var(--checkout-text-secondary, #6B7280);
-
-  strong {
-    font-weight: 500;
-    color: var(--checkout-text-primary, #374151);
-  }
-}
-
-.selfServiceHint {
-  font-size: 13px;
-  color: var(--checkout-text-tertiary, #9CA3AF);
-  margin-top: 4px;
-}
-
-.heading {
-  font-family: $font-display;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 24px;
-  margin-bottom: 5px;
-  color: var(--checkout-text-primary, #111827);
-}
-
-.detailItem {
-  min-width: 0;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+}
 
-  .detailContent {
-    min-width: 0;
-    flex: 1;
-  }
+// Le halo de la maquette: trois ellipses floues aux couleurs de l'accent.
+.halo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1700px;
+  pointer-events: none;
+  background:
+    radial-gradient(770px 570px at 20.8% 100px, color-mix(in srgb, var(--public-accent) 16%, transparent) 0%, color-mix(in srgb, var(--public-accent) 9%, transparent) 50%, transparent 100%),
+    radial-gradient(670px 520px at 86.8% 100px, color-mix(in srgb, var(--public-accent) 11%, transparent) 0%, color-mix(in srgb, var(--public-accent) 6%, transparent) 50%, transparent 100%),
+    radial-gradient(720px 520px at 48.6% 1000px, color-mix(in srgb, var(--public-accent-doux) 34%, transparent) 0%, transparent 100%);
 
-  .label {
-    margin-bottom: 0.25rem;
-    color: var(--checkout-text-secondary, #6B7280);
-  }
-
-  .value {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    color: var(--checkout-text-primary, #111827);
+  @include mixins.respond-below(md) {
+    height: 900px;
+    background:
+      radial-gradient(400px 350px at 25% 80px, color-mix(in srgb, var(--public-accent) 18%, transparent) 0%, transparent 100%),
+      radial-gradient(330px 270px at 95% 50px, color-mix(in srgb, var(--public-accent) 12%, transparent) 0%, transparent 100%);
   }
 }
 
-.guestList {
+.content {
+  position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  width: min(1100px, 100% - 32px);
+  margin: 0 auto;
+  padding: 32px 0 56px;
+
+  @include mixins.respond-below(md) {
+    gap: 18px;
+    width: calc(100% - 24px);
+    padding: 16px 0 32px;
+  }
 }
 
-.guestItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--checkout-border, #e5e7eb);
-  gap: 12px;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
   }
+}
 
-  &:first-child {
+.mobileOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
+  }
+}
+
+// En-tete
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 36px;
+  border-radius: 32px;
+  text-align: center;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+
+  @include mixins.respond-below(md) {
+    gap: 8px;
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.kicker {
+  margin: 0;
+  font-family: 'Gochi Hand', cursive;
+  font-size: 32px;
+  line-height: normal;
+  color: var(--confirmation-accent-texte);
+
+  @include mixins.respond-below(md) {
+    font-size: 26px;
+  }
+}
+
+.heroTitle {
+  margin: 0;
+  font-family: $font-titre;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  @include mixins.respond-below(md) {
+    font-size: 38px;
+    line-height: 1;
+  }
+}
+
+.heroLine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 10px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 14px;
+  }
+}
+
+.dot {
+  margin-right: 10px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 12px;
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    width: 100%;
     padding-top: 0;
   }
 }
 
-.guestItemCancelled {
-  opacity: 0.6;
+.secondaryActions {
+  display: flex;
+  gap: 10px;
 
-  .guestName {
-    text-decoration: line-through;
+  @include mixins.respond-below(md) {
+    > * {
+      flex: 1;
+      min-width: 0;
+    }
   }
 }
 
-.guestInfo {
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 22px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, filter 0.15s ease;
+
+  @include mixins.respond-below(md) {
+    gap: 8px;
+    padding: 0 18px;
+
+    > span:first-child {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+}
+
+.buttonPrimary {
+  color: var(--public-sur-accent);
+  background: var(--public-accent);
+
+  &:hover {
+    filter: brightness(0.96);
+  }
+
+  @include mixins.respond-below(md) {
+    height: 56px;
+  }
+}
+
+.buttonOutline {
+  border-color: var(--dehors-brun);
+  color: var(--dehors-brun);
+  background: transparent;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.05);
+  }
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+}
+
+.noticeIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+}
+
+// Colonnes: le(s) billet(s) a gauche, les details a droite.
+.columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  width: 100%;
+
+  @include mixins.respond-below(lg) {
+    gap: 24px;
+  }
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+}
+
+.tickets {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 20px;
+  width: 440px;
+
+  @include mixins.respond-below(lg) {
+    width: 340px;
+  }
+
+  @include mixins.respond-below(md) {
+    width: 100%;
+    gap: 18px;
+  }
+}
+
+.details {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 18px;
+  }
+}
+
+// Cartes de droite
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  padding: 24px;
+  border-radius: 28px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+
+  @include mixins.respond-below(md) {
+    gap: 14px;
+    padding: 18px;
+    border-radius: 24px;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: $font-titre;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 18px;
+  }
+}
+
+.pill {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: normal;
+  background: var(--public-accent-doux);
+}
+
+.richText {
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+
+  > :first-child,
+  > :first-child > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child,
+  > :last-child > :last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--confirmation-accent-texte);
+    text-decoration: underline;
+  }
+}
+
+// L'evenement
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.detailIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+}
+
+.detailText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 
-.guestName {
-  font-weight: 500;
-  color: var(--checkout-text-primary, #111827);
-  margin-bottom: 4px;
+.detailTitle {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.detailSubtitle {
+  font-size: 14px;
+}
+
+.detailLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--confirmation-accent-texte);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Recapitulatif
+.recapBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  @include mixins.respond-below(md) {
+    display: none;
+
+    &[data-expanded] {
+      display: flex;
+    }
+  }
+}
+
+.recapLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 16px;
+
+  @include mixins.respond-below(md) {
+    font-size: 15px;
+  }
+}
+
+.recapLabel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.recapHint {
+  font-size: 13px;
+}
+
+.recapValue {
+  flex-shrink: 0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.recapOriginal {
+  margin-right: 6px;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.separator {
+  height: 1.5px;
+  background: var(--dehors-brun);
+}
+
+.recapTotal {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+  justify-content: space-between;
+  gap: 16px;
+  font-family: $font-titre;
+  font-size: 20px;
+  text-transform: uppercase;
 
-.cancelledBadge {
-  font-size: 11px;
-  font-weight: 500;
-  color: #dc2626;
-  background: rgba(220, 38, 38, 0.1);
-  padding: 2px 8px;
-  border-radius: 4px;
-  text-decoration: none;
-}
-
-.guestDetails {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--checkout-text-secondary, #6B7280);
-}
-
-.guestEmail {
-  word-break: break-all;
-}
-
-.guestProduct {
-  &::before {
-    content: '•';
-    margin-right: 8px;
-    color: var(--checkout-text-tertiary, #9CA3AF);
-  }
-
-  @include mixins.respond-below(sm) {
-    &::before {
-      display: none;
-    }
-    display: block;
-    width: 100%;
+  @include mixins.respond-below(md) {
+    font-size: 18px;
   }
 }
 
-.guestActions {
-  display: flex;
-  gap: 4px;
+.recapTotalValue {
+  font-size: 24px;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    font-size: 20px;
+  }
+}
+
+.recapToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   flex-shrink: 0;
+  font-family: $font-titre;
+  font-size: 18px;
+  line-height: normal;
+  color: var(--dehors-brun);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.recapMeta {
+  margin: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 13px;
+  }
+}
+
+.recapMetaLabel {
+  display: block;
+  font-weight: 700;
+}
+
+// Gerer ma commande
+.manageCard {
+  gap: 4px;
+
+  @include mixins.respond-below(md) {
+    gap: 2px;
+  }
+}
+
+.actionList {
+  display: flex;
+  flex-direction: column;
+}
+
+.action {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  width: calc(100% + 16px);
+  margin: 0 -8px;
+  padding: 12px 8px;
+  border-radius: 18px;
+  color: var(--dehors-brun);
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.04);
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    padding: 10px 8px;
+  }
+}
+
+.actionIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+
+    > span {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+}
+
+.actionLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    font-size: 15px;
+  }
+}
+
+.actionChevron {
+  @include mixins.respond-below(md) {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// Le partage ajoute sa propre enveloppe autour du bouton.
+.shareAction > div {
+  width: 100%;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding-top: 8px;
+  font-size: 14px;
+
+  > span {
+    color: var(--confirmation-accent-texte);
+  }
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
 }

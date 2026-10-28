@@ -23,7 +23,8 @@ const Login = () => {
         }
     });
     const [showChooseAccount, setShowChooseAccount] = useState(false);
-    const [ticketLookupOpen, setTicketLookupOpen] = useState(false);
+    // « Mes billets » des pages publiques mene ici avec ?billets: la recherche de billets s'ouvre deja.
+    const [ticketLookupOpen, setTicketLookupOpen] = useState(() => new URLSearchParams(location.search).has('billets'));
 
     const ticketLookupForm = useForm({
         initialValues: {

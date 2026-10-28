@@ -1,6 +1,8 @@
+import {intlLocale} from "./intlLocale.ts";
+
+// Dans la langue de la page, pas celle du navigateur: le serveur et le client formatent pareil.
 export const formatCurrency = (value: number | string, currency = 'USD') => {
-    const locale = typeof window !== 'undefined' ? navigator.language : 'en-US';
-    const formatter = new Intl.NumberFormat(locale, {
+    const formatter = new Intl.NumberFormat(intlLocale(), {
         style: 'currency',
         currency: currency,
         minimumFractionDigits: 2,

@@ -1,18 +1,22 @@
 @use "../../../../styles/mixins.scss";
 
-$font-display: var(--theme-font-family, 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-
+// Barre du bas de l'ecran (maquette mobile): seulement quand les billets ne sont pas dans la
+// colonne collante, donc sous lg.
 .bar {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 100;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  background: var(--content-bg-color);
-  border-top: 1px solid var(--border-color);
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px calc(22px + env(safe-area-inset-bottom)) 20px;
+  border-radius: 24px 24px 0 0;
+  background: var(--dehors-carte);
+  box-shadow: 0 -4px 20px rgb(51 36 31 / 0.12);
+  color: var(--dehors-brun);
   transform: translateY(110%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
@@ -21,88 +25,89 @@ $font-display: var(--theme-font-family, 'Outfit', -apple-system, BlinkMacSystemF
     transform: translateY(0);
     pointer-events: auto;
   }
-}
 
-.inner {
-  max-width: 872px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.info {
-  flex: 1;
-  min-width: 0;
-}
-
-.title {
-  font-family: $font-display;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  color: var(--primary-text-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  @include mixins.respond-below(sm) {
-    font-size: 0.875rem;
+  @include mixins.respond-above(lg) {
+    display: none;
   }
 }
 
-.priceRow {
+.info {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  margin-top: 2px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.price {
-  font-weight: 700;
-  font-size: 0.9375rem;
-  color: var(--accent-text);
+.label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: normal;
+}
+
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .seeAll {
-  background: none;
-  border: none;
+  flex-shrink: 0;
   padding: 0;
+  border: none;
+  background: none;
   font: inherit;
-  font-size: 0.8125rem;
-  color: var(--secondary-color);
+  font-weight: 700;
+  color: var(--public-accent-fonce, var(--dehors-brun));
   text-decoration: underline;
   cursor: pointer;
 }
 
-.buyButton {
-  flex-shrink: 0;
+.amount {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--primary-color);
-  color: var(--accent-contrast);
-  font-family: $font-display;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 12px 28px;
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 20px var(--accent-soft);
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s;
+  gap: 4px;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 20px;
+  line-height: normal;
+  text-transform: uppercase;
 
-  @include mixins.respond-below(sm) {
-    padding: 12px 20px;
-    font-size: 0.9375rem;
+  div {
+    display: flex;
+    align-items: center;
   }
+}
+
+.button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 16px;
+  background: var(--public-accent);
+  color: var(--public-sur-accent);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s ease;
 
   &:hover:not(:disabled) {
-    transform: translateY(-1px);
+    filter: brightness(0.95);
   }
 
   &:disabled {
-    opacity: 0.7;
-    cursor: wait;
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  &.wide {
+    flex: 1;
   }
 }

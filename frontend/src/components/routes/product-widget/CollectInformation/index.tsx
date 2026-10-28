@@ -1,16 +1,8 @@
 import {useMutation} from "@tanstack/react-query";
 import {FinaliseOrderPayload, orderClientPublic} from "../../../../api/order.client.ts";
 import {useNavigate, useParams, useSearchParams} from "react-router";
-import {
-    Button,
-    Checkbox,
-    NativeSelect,
-    SegmentedControl,
-    Skeleton,
-    Text,
-    TextInput,
-} from "@mantine/core";
-import {IconArrowRight, IconCheck, IconCircleCheck, IconClock} from "@tabler/icons-react";
+import {Button, Checkbox, NativeSelect, Skeleton, TextInput} from "@mantine/core";
+import {IconCircleCheck, IconClock} from "@tabler/icons-react";
 import {t, Trans} from "@lingui/macro";
 import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
@@ -20,16 +12,21 @@ import {useGetEventQuestionsPublic} from "../../../../queries/useGetEventQuestio
 import {CheckoutOrderQuestions, CheckoutProductQuestions} from "../../../common/CheckoutQuestion";
 import {Event, IdParam, Question} from "../../../../types.ts";
 import {useEffect, useRef, useState} from "react";
-import {InputGroup} from "../../../common/InputGroup";
-import {Card} from "../../../common/Card";
-import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
+import {
+    CheckoutActions,
+    checkoutClasses,
+    CheckoutColumns,
+    CheckoutSection,
+} from "../../../layouts/Checkout/CheckoutColumns";
+import {CheckoutOrderPanel} from "../../../layouts/Checkout/CheckoutOrderPanel";
 import {getConfig} from "../../../../utilites/config.ts";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
-import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
 import {ProductInfoNotice} from "../../../common/ProductInfoNotice";
 import {PlatformSupportInput, platformSupportDefaultAmount, platformSupportEnabled} from "../../../common/PlatformSupportInput";
+import {PublicIcon} from "../../../common/PublicIcon";
 import {eventCheckoutPath, eventHomepagePath} from "../../../../utilites/urlHelper.ts";
 import {showError, showInfo, showSuccess} from "../../../../utilites/notifications.tsx";
+import {formatCurrency} from "../../../../utilites/currency.ts";
 import countries from "../../../../../data/countries.json";
 import classes from "./CollectInformation.module.scss";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
@@ -42,12 +39,29 @@ import {isEmptyHtml} from "../../../../utilites/helpers.ts";
 
 const LoadingSkeleton = () =>
     (
-        <CheckoutContent>
-            <Skeleton mb={20} height={200}/>
-            <Skeleton mb={20} height={200}/>
-            <Skeleton mb={20} height={200}/>
-        </CheckoutContent>
+        <CheckoutColumns panel={<Skeleton height={360} radius={32}/>}>
+            <Skeleton height={180} radius={22}/>
+            <Skeleton height={260} radius={22}/>
+        </CheckoutColumns>
     );
+
+// Un seul champ « Nom complet »: le prenom avant le premier espace, le nom apres (comme a l'inscription).
+const splitFullName = (fullName?: string) => {
+    const [firstName = '', ...lastNames] = (fullName ?? '').trim().split(/\s+/);
+    return {first_name: firstName, last_name: lastNames.join(' ')};
+};
+
+// Le serveur exige un prenom et un nom: ses erreurs sur l'un ou l'autre vont au champ « Nom complet ».
+const toFullNameErrors = (errors: Record<string, unknown>) => {
+    const mapped: Record<string, unknown> = {};
+
+    Object.entries(errors).forEach(([key, message]) => {
+        const fullNameKey = key.replace(/\.(first_name|last_name)$/, '.full_name');
+        mapped[fullNameKey] = fullNameKey === key ? message : t`Please enter your first and last name.`;
+    });
+
+    return mapped;
+};
 
 export const CollectInformation = () => {
     const {eventId, orderShortId} = useParams();
@@ -56,6 +70,7 @@ export const CollectInformation = () => {
     const isFromWaitlist = searchParams.get('waitlist') === 'true';
     const {prefill, lock} = useCheckoutPrefill();
     const isLocked = (field: keyof CheckoutPrefill) => lock && prefill[field] !== undefined;
+    const isNameLocked = isLocked('first_name') || isLocked('last_name');
     const {
         isFetched: isOrderFetched,
         data: order,
@@ -80,7 +95,6 @@ export const CollectInformation = () => {
     const requireBillingAddress = event?.settings?.require_billing_address;
     const isPerOrderCollection = event?.settings?.attendee_details_collection_method === 'PER_ORDER';
     const allowCopyToAllAttendees = event?.settings?.allow_copy_details_to_all_attendees ?? true;
-    const [copyOption, setCopyOption] = useState<'none' | 'first' | 'all'>('first');
 
     const isEmailValid = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,7 +102,7 @@ export const CollectInformation = () => {
     };
 
     const EmailCheckIcon = () => (
-        <IconCircleCheck size={18} style={{color: 'var(--primary-color, #10B981)'}}/>
+        <IconCircleCheck size={18} style={{color: 'var(--public-accent)'}}/>
     );
 
     let productIndex = 0;
@@ -96,8 +110,7 @@ export const CollectInformation = () => {
     const form = useForm({
         initialValues: {
             order: {
-                first_name: "",
-                last_name: "",
+                full_name: "",
                 email: "",
                 email_confirmation: "",
                 address: {},
@@ -105,8 +118,7 @@ export const CollectInformation = () => {
                 opted_into_marketing: false,
             },
             products: [{
-                first_name: "",
-                last_name: "",
+                full_name: "",
                 email: "",
                 email_confirmation: "",
                 product_price_id: "",
@@ -139,7 +151,7 @@ export const CollectInformation = () => {
         const attendeeProductIds = new Set<IdParam>(
             products
                 .filter(product => product && product.product_type === 'TICKET')
-                .map(product => product.id)
+                .map(product => product!.id)
         );
 
         return form.values.products
@@ -174,53 +186,36 @@ export const CollectInformation = () => {
         return isMinorOnEventDay(answer, event.start_date, event.timezone);
     };
 
-    const copyDetailsToAttendees = (option: 'none' | 'first' | 'all') => {
-        if (!products) return;
+    // « Meme personne que l'acheteur », coche par participant. Au depart, le premier billet;
+    // les suivants seulement si l'evenement permet de copier vers tous les participants.
+    const [copiedIndices, setCopiedIndices] = useState<number[] | null>(null);
+    const firstTicketIndex = getFirstTicketAttendeeIndex();
+    const copiedTargets = copiedIndices ?? (firstTicketIndex === -1 ? [] : [firstTicketIndex]);
+    const canCopyToAttendee = (index: number) =>
+        !lock && !isPerOrderCollection && (index === firstTicketIndex || allowCopyToAllAttendees);
 
-        const ticketIndices = getTicketAttendeeIndices();
-        if (ticketIndices.length === 0) return;
+    const handleSameAsBuyerChange = (index: number, checked: boolean) => {
+        const others = copiedTargets.filter(target => target !== index);
+        setCopiedIndices(checked ? [...others, index] : others);
 
-        const updatedProducts = form.values.products.map((product, index) => {
-            const isTicketAttendee = ticketIndices.includes(index);
-            const isFirst = index === ticketIndices[0];
-            const shouldCopy = option === 'all' ? isTicketAttendee : (option === 'first' && isFirst);
+        const {full_name, email} = form.values.order;
+        const product = form.values.products[index];
 
-            if (!isTicketAttendee) {
-                return product;
-            }
-
-            const {first_name, last_name, email} = form.values.order;
-
-            if (shouldCopy) {
-                return {...product, first_name, last_name, email, email_confirmation: email};
-            }
-
-            return {
+        ['full_name', 'email', 'email_confirmation'].forEach(field => form.clearFieldError(`products.${index}.${field}`));
+        form.setFieldValue(`products.${index}`, checked
+            ? {...product, full_name, email, email_confirmation: email}
+            : {
                 ...product,
-                first_name: product.first_name === first_name ? "" : product.first_name,
-                last_name: product.last_name === last_name ? "" : product.last_name,
+                full_name: product.full_name === full_name ? "" : product.full_name,
                 email: product.email === email ? "" : product.email,
                 email_confirmation: product.email_confirmation === email ? "" : product.email_confirmation,
-            };
-        });
-
-        form.setValues({
-            ...form.values,
-            products: updatedProducts,
-        });
-    };
-
-    const handleCopyOptionChange = (value: string) => {
-        const option = value as 'none' | 'first' | 'all';
-
-        setCopyOption(option);
-        copyDetailsToAttendees(option);
+            });
     };
 
     // Les participants copies suivent l'acheteur pendant qu'il tape. Un champ du
     // participant modifie a la main ne vaut plus l'ancienne valeur copiee: on n'y
     // touche plus, pour qu'on puisse y mettre le nom ou le courriel de quelqu'un d'autre.
-    const previousOrderDetails = useRef({first_name: "", last_name: "", email: ""});
+    const previousOrderDetails = useRef({full_name: "", email: ""});
 
     // Le bouton est au bas d'un long formulaire: sans ca, une question obligatoire
     // laissee vide plus haut donne l'impression que le bouton ne fait rien.
@@ -240,15 +235,15 @@ export const CollectInformation = () => {
 
     useEffect(() => {
         const previous = previousOrderDetails.current;
-        const {first_name, last_name, email} = form.values.order;
-        previousOrderDetails.current = {first_name, last_name, email};
+        const {full_name, email} = form.values.order;
+        previousOrderDetails.current = {full_name, email};
 
-        if (copyOption === 'none' || isPerOrderCollection) {
+        if (isPerOrderCollection) {
             return;
         }
 
         const ticketIndices = getTicketAttendeeIndices();
-        const targets = copyOption === 'all' ? ticketIndices : ticketIndices.slice(0, 1);
+        const targets = copiedTargets.filter(index => ticketIndices.includes(index));
 
         if (targets.length === 0) {
             return;
@@ -259,13 +254,12 @@ export const CollectInformation = () => {
         form.setFieldValue('products', form.values.products.map((product, index) => targets.includes(index)
             ? {
                 ...product,
-                first_name: follow(product.first_name, previous.first_name, first_name),
-                last_name: follow(product.last_name, previous.last_name, last_name),
+                full_name: follow(product.full_name, previous.full_name, full_name),
                 email: follow(product.email, previous.email, email),
                 email_confirmation: follow(product.email_confirmation, previous.email, email),
             }
             : product));
-    }, [form.values.order.first_name, form.values.order.last_name, form.values.order.email]);
+    }, [form.values.order.full_name, form.values.order.email]);
 
     // Doit etre applique AVANT finaliseOrder: le PaymentIntent est cree a l'etape
     // suivante et n'est jamais recree ensuite, donc une contribution ajoutee plus
@@ -291,7 +285,7 @@ export const CollectInformation = () => {
         onError: (error: any) => {
             if (error?.response?.data?.errors && Object.keys(error?.response?.data?.errors).length > 0) {
                 shouldScrollToError.current = true;
-                form.setErrors(error.response.data.errors);
+                form.setErrors(toFullNameErrors(error.response.data.errors) as any);
             } else if (error?.response?.data?.message) {
                 notifications.show({
                     message: error?.response?.data?.message,
@@ -352,8 +346,7 @@ export const CollectInformation = () => {
                 products.push({
                     product_price_id: orderItem?.product_price_id,
                     product_id: orderItem?.product_id,
-                    first_name: "",
-                    last_name: "",
+                    full_name: "",
                     email: "",
                     email_confirmation: "",
                     waiver: {accepted: false, signed_name: "", guardian_name: ""},
@@ -407,7 +400,13 @@ export const CollectInformation = () => {
             };
         }
 
-        mutation.mutate(values);
+        const {full_name: orderFullName, ...orderValues} = values.order;
+
+        mutation.mutate({
+            ...values,
+            order: {...orderValues, ...splitFullName(orderFullName)},
+            products: values.products.map(({full_name, ...product}: any) => ({...product, ...splitFullName(full_name)})),
+        });
     };
 
     useEffect(() => {
@@ -415,10 +414,10 @@ export const CollectInformation = () => {
             const builtProducts = createProductsAndQuestions(createProductIdToQuestionMap());
             const formOrderQuestions = createFormOrderQuestions();
 
+            const prefillFullName = [prefill.first_name, prefill.last_name].filter(Boolean).join(' ');
             const orderPrefill = {
-                ...(prefill.first_name !== undefined && {first_name: prefill.first_name}),
-                ...(prefill.last_name !== undefined && {last_name: prefill.last_name}),
-                ...(prefill.email !== undefined && {email: prefill.email, email_confirmation: prefill.email}),
+                ...(prefillFullName ? {full_name: prefillFullName} : {}),
+                ...(prefill.email !== undefined ? {email: prefill.email, email_confirmation: prefill.email} : {}),
             };
 
             const ticketProductIds = new Set(
@@ -497,7 +496,7 @@ export const CollectInformation = () => {
         />;
     }
 
-    if (isOrderError && orderError?.response?.status === 404) {
+    if (isOrderError && (orderError as any)?.response?.status === 404) {
         if (isFromWaitlist && eventId) {
             clearWaitlistJoinedForEvent(eventId);
         }
@@ -532,12 +531,139 @@ export const CollectInformation = () => {
         return product?.product_type === 'TICKET';
     });
 
+    // Une fiche par billet (ou par article qui a des questions), dans l'ordre des produits du formulaire.
+    const ticketIndices = getTicketAttendeeIndices();
+    const attendeeCards = orderItems?.flatMap(orderItem => {
+        const product = products?.find(product => product!.id === orderItem.product_id);
+        const productRequiresDetails = product?.product_type === 'TICKET' && !isPerOrderCollection;
+        const productHasQuestions = !!productQuestions?.some(question => question.product_ids?.includes(orderItem.product_id));
+
+        if (!product) {
+            return [];
+        }
+
+        if (!productRequiresDetails && !productHasQuestions) {
+            // Still increment productIndex for each item in the quantity
+            // to maintain correct form field indices
+            productIndex += orderItem.quantity ?? 0;
+            return [];
+        }
+
+        return Array.from(Array(orderItem?.quantity)).map((_, index) => {
+            const currentProductIndex = productIndex;
+            const isTicketAttendee = ticketIndices.includes(currentProductIndex);
+            const canCopy = productRequiresDetails && isTicketAttendee && canCopyToAttendee(currentProductIndex);
+            const isCopied = canCopy && copiedTargets.includes(currentProductIndex);
+            const cardLabel = product.product_type === 'TICKET' ? t`Attendee` : t`Item`;
+
+            const card = (
+                <div key={`${orderItem.id} ${index}`} className={checkoutClasses.subCard}>
+                    <div className={classes.attendeeHeader}>
+                        <h3 className={checkoutClasses.subCardTitle}>
+                            {`${orderItem.item_name} · ${cardLabel} ${index + 1}`}
+                        </h3>
+                        <span className={classes.pricePill}>
+                            {formatCurrency(orderItem.price, order?.currency)}
+                        </span>
+                    </div>
+
+                    {canCopy && (
+                        <Checkbox
+                            label={t`Same person as the buyer`}
+                            checked={isCopied}
+                            onChange={(event) => handleSameAsBuyerChange(currentProductIndex, event.currentTarget.checked)}
+                        />
+                    )}
+
+                    {/* Copie de l'acheteur: ses champs suivent ceux du haut, inutile de les montrer. */}
+                    {productRequiresDetails && !isCopied && (
+                        <div className={checkoutClasses.fieldGrid}>
+                            <TextInput
+                                className={checkoutClasses.fieldFull}
+                                withAsterisk
+                                label={t`Full name`}
+                                placeholder={t`First and last name`}
+                                autoComplete="off"
+                                disabled={isNameLocked}
+                                {...form.getInputProps(`products.${currentProductIndex}.full_name`)}
+                            />
+                            <TextInput
+                                withAsterisk
+                                type={"email"}
+                                label={t`Email`}
+                                placeholder={t`name@example.com`}
+                                autoComplete="off"
+                                disabled={isLocked('email')}
+                                rightSection={isEmailValid(form.values.products[currentProductIndex]?.email || '') ?
+                                    <EmailCheckIcon/> : null}
+                                {...form.getInputProps(`products.${currentProductIndex}.email`)}
+                            />
+                            <TextInput
+                                withAsterisk
+                                type={"email"}
+                                label={t`Confirm email`}
+                                placeholder={t`name@example.com`}
+                                autoComplete="off"
+                                disabled={isLocked('email')}
+                                rightSection={isEmailValid(form.values.products[currentProductIndex]?.email_confirmation || '') ?
+                                    <EmailCheckIcon/> : null}
+                                {...form.getInputProps(`products.${currentProductIndex}.email_confirmation`)}
+                            />
+                        </div>
+                    )}
+
+                    {productHasQuestions && productQuestions && (
+                        <>
+                            <div className={checkoutClasses.questions}>
+                                <CheckoutProductQuestions
+                                    index={currentProductIndex}
+                                    product={product}
+                                    form={form}
+                                    questions={productQuestions}/>
+                            </div>
+                            <p className={classes.questionsNote}>
+                                <PublicIcon name={'info'} size={16} className={classes.questionsNoteIcon}/>
+                                {t`Questions added by the organizer.`}
+                            </p>
+                        </>
+                    )}
+
+                    {waiverText && productRequiresDetails && (
+                        <WaiverSignature
+                            waiverText={waiverText}
+                            form={form}
+                            path={`products.${currentProductIndex}.waiver`}
+                            isMinor={isAttendeeMinor(currentProductIndex)}
+                        />
+                    )}
+                </div>
+            );
+
+            productIndex++;
+
+            return card;
+        });
+    }) ?? [];
+
+    const totalAmount = order?.total_refunded
+        ? order.total_gross - order.total_refunded
+        : order?.total_gross ?? 0;
+
     return (
         <form onSubmit={form.onSubmit(handleSubmit, () => {
             shouldScrollToError.current = true;
         })}>
-
-            <CheckoutContent>
+            <CheckoutColumns
+                panel={(event && order) && (
+                    <CheckoutOrderPanel
+                        event={event}
+                        order={order}
+                        notice={<ProductInfoNotice settings={event.settings}/>}
+                        onPromoCodeChange={handlePromoCodeChange}
+                        isPromoCodePending={promoCodeMutation.isPending}
+                    />
+                )}
+            >
                 {isFromWaitlist && (
                     <div className={classes.waitlistBanner}>
                         <div className={classes.waitlistBannerIcon}>
@@ -554,48 +680,27 @@ export const CollectInformation = () => {
                     </div>
                 )}
 
-                {(event && order) && (
-                    <InlineOrderSummary
-                        event={event}
-                        order={order}
-                        defaultExpanded={true}
-                        notice={<ProductInfoNotice settings={event.settings}/>}
-                        onPromoCodeChange={handlePromoCodeChange}
-                        isPromoCodePending={promoCodeMutation.isPending}
-                    />
-                )}
-
-                <h2 className={classes.sectionHeading}>
-                    {t`Your Details`}
-                </h2>
-                <p className={classes.sectionHelper}>
-                    {t`We'll send your tickets to this email`}
-                </p>
-
-                <Card>
-                    <InputGroup>
+                <CheckoutSection
+                    number={1}
+                    title={t`Your contact details`}
+                    subtitle={t`We'll send your tickets to this email`}
+                >
+                    <div className={checkoutClasses.fieldGrid}>
                         <TextInput
+                            className={checkoutClasses.fieldFull}
                             withAsterisk
-                            label={t`First Name`}
-                            placeholder={t`First name`}
-                            disabled={isLocked('first_name')}
-                            {...form.getInputProps("order.first_name")}
+                            label={t`Full name`}
+                            placeholder={t`First and last name`}
+                            autoComplete="name"
+                            disabled={isNameLocked}
+                            {...form.getInputProps("order.full_name")}
                         />
-                        <TextInput
-                            withAsterisk
-                            label={t`Last Name`}
-                            placeholder={t`Last Name`}
-                            disabled={isLocked('last_name')}
-                            {...form.getInputProps("order.last_name")}
-                        />
-                    </InputGroup>
-
-                    <InputGroup>
                         <TextInput
                             withAsterisk
                             type={"email"}
-                            label={t`Email Address`}
-                            placeholder={t`Email Address`}
+                            label={t`Email`}
+                            placeholder={t`name@example.com`}
+                            autoComplete="email"
                             disabled={isLocked('email')}
                             rightSection={isEmailValid(form.values.order.email) ? <EmailCheckIcon/> : null}
                             {...form.getInputProps("order.email")}
@@ -603,49 +708,22 @@ export const CollectInformation = () => {
                         <TextInput
                             withAsterisk
                             type={"email"}
-                            label={t`Confirm Email Address`}
-                            placeholder={t`Confirm Email Address`}
+                            label={t`Confirm email`}
+                            placeholder={t`name@example.com`}
+                            autoComplete="email"
                             disabled={isLocked('email')}
                             rightSection={isEmailValid(form.values.order.email_confirmation) ? <EmailCheckIcon/> : null}
                             {...form.getInputProps("order.email_confirmation")}
                         />
-                    </InputGroup>
-
-                    {orderRequiresAttendeeDetails && !isPerOrderCollection && totalTicketAttendees > 0 && !lock && (
-                        <div className={classes.copyDetailsSection}>
-                            {totalTicketAttendees === 1 ? (
-                                <Checkbox
-                                    size="sm"
-                                    label={t`Copy details to first attendee`}
-                                    checked={copyOption === 'first'}
-                                    onChange={(e) => handleCopyOptionChange(e.currentTarget.checked ? 'first' : 'none')}
-                                />
-                            ) : (
-                                <div className={classes.copyDetailsMultiple}>
-                                    <Text size="sm" c="dimmed"
-                                          className={classes.copyLabel}>{t`Copy my details to:`}</Text>
-                                    <SegmentedControl
-                                        size="xs"
-                                        value={copyOption}
-                                        onChange={handleCopyOptionChange}
-                                        data={[
-                                            {label: t`None`, value: 'none'},
-                                            {label: t`First attendee`, value: 'first'},
-                                            ...(allowCopyToAllAttendees ? [{label: t`All attendees`, value: 'all'}] : []),
-                                        ]}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    )}
+                    </div>
 
                     {requireBillingAddress && (
-                        <>
-                            <h3 style={{marginBottom: 5}}>
+                        <div className={checkoutClasses.subCard}>
+                            <h3 className={checkoutClasses.subCardTitle}>
                                 {t`Billing Address`}
                             </h3>
 
-                            <InputGroup>
+                            <div className={checkoutClasses.fieldGrid}>
                                 <TextInput
                                     withAsterisk
                                     label={t`Address Line 1`}
@@ -657,9 +735,6 @@ export const CollectInformation = () => {
                                     placeholder={t`Address Line 2`}
                                     {...form.getInputProps("order.address.address_line_2")}
                                 />
-                            </InputGroup>
-
-                            <InputGroup>
                                 <TextInput
                                     withAsterisk
                                     label={t`City`}
@@ -672,10 +747,6 @@ export const CollectInformation = () => {
                                     placeholder={t`State or Region`}
                                     {...form.getInputProps("order.address.state_or_region")}
                                 />
-                            </InputGroup>
-
-                            <InputGroup>
-                                {/* Postal Code and Country */}
                                 <TextInput
                                     label={t`ZIP / Postal Code`}
                                     placeholder={t`ZIP or Postal Code`}
@@ -687,197 +758,78 @@ export const CollectInformation = () => {
                                     data={countries}
                                     {...form.getInputProps("order.address.country")}
                                 />
-                            </InputGroup>
-                        </>
+                            </div>
+                        </div>
                     )}
 
-                    {orderQuestions && <CheckoutOrderQuestions form={form} questions={orderQuestions}/>}
+                    {orderQuestions && orderQuestions.length > 0 && (
+                        <div className={checkoutClasses.questions}>
+                            <CheckoutOrderQuestions form={form} questions={orderQuestions}/>
+                        </div>
+                    )}
+
+                    {waiverText && isPerOrderCollection && totalTicketAttendees > 0 && (
+                        <div className={`${checkoutClasses.subCard} ${classes.orderWaiver}`}>
+                            <WaiverSignature
+                                waiverText={waiverText}
+                                form={form}
+                                path={`products.${getFirstTicketAttendeeIndex()}.waiver`}
+                                isMinor={false}
+                            />
+                        </div>
+                    )}
 
                     {event?.settings?.show_marketing_opt_in && (
                         <Checkbox
-                            mt="md"
                             label={t`Keep me updated on news and events from ${event?.organizer?.name || t`this organizer`}`}
                             {...form.getInputProps('order.opted_into_marketing', {type: 'checkbox'})}
                         />
                     )}
-                </Card>
+                </CheckoutSection>
 
-                {waiverText && isPerOrderCollection && totalTicketAttendees > 0 && (
-                    <Card>
-                        <WaiverSignature
-                            waiverText={waiverText}
-                            form={form}
-                            path={`products.${getFirstTicketAttendeeIndex()}.waiver`}
-                            isMinor={false}
-                        />
-                    </Card>
+                {attendeeCards.length > 0 && (
+                    <CheckoutSection
+                        number={2}
+                        title={t`Attendees`}
+                        subtitle={orderRequiresAttendeeDetails ? t`One form per ticket.` : undefined}
+                    >
+                        {attendeeCards}
+                    </CheckoutSection>
                 )}
-
-                {orderItems?.map(orderItem => {
-                    const product = products?.find(product => product!.id === orderItem.product_id);
-                    const productRequiresDetails = product?.product_type === 'TICKET' && !isPerOrderCollection;
-                    const productHasQuestions = productQuestions?.some(question => question.product_ids?.includes(orderItem.product_id));
-
-                    if (!product) {
-                        return null;
-                    }
-
-                    if (!productRequiresDetails && !productHasQuestions) {
-                        // Still increment productIndex for each item in the quantity
-                        // to maintain correct form field indices
-                        productIndex += orderItem.quantity ?? 0;
-                        return null;
-                    }
-
-                    return (
-                        <div key={orderItem.product_id + orderItem.id} className={classes.ticketSection}>
-                            <div className={classes.ticketTypeHeader}>
-                                <h3>{orderItem?.item_name}</h3>
-                                <span className={classes.ticketCountBadge}>
-                                    {orderItem.quantity === 1
-                                        ? t`1 ticket`
-                                        : t`${orderItem.quantity} tickets`}
-                                </span>
-                            </div>
-                            {Array.from(Array(orderItem?.quantity)).map((_, index) => {
-                                const currentProductIndex = productIndex;
-                                const ticketIndices = getTicketAttendeeIndices();
-                                const isTicketAttendee = ticketIndices.includes(currentProductIndex);
-                                const isFirstTicketAttendee = currentProductIndex === getFirstTicketAttendeeIndex();
-                                const isCopied = isTicketAttendee && (
-                                    copyOption === 'all' || (copyOption === 'first' && isFirstTicketAttendee)
-                                );
-
-                                // Check if current values still match the order details
-                                const currentProduct = form.values.products[currentProductIndex];
-                                const valuesMatchOrder = currentProduct &&
-                                    currentProduct.first_name === form.values.order.first_name &&
-                                    currentProduct.last_name === form.values.order.last_name &&
-                                    currentProduct.email === form.values.order.email;
-
-                                // Only show badge if copied AND values still match
-                                const showCopiedBadge = isCopied && productRequiresDetails && valuesMatchOrder;
-
-                                const productInputs = (
-                                    <Card key={`${orderItem.id} ${index}`} className={classes.attendeeCard}>
-                                        <div className={classes.attendeeCardHeader}>
-                                            <div className={classes.attendeeHeaderLeft}>
-                                                <div className={classes.attendeeNumber}>
-                                                    {index + 1}
-                                                </div>
-                                                <div className={classes.attendeeInfo}>
-                                                    <h4>
-                                                        {product.product_type === 'TICKET' ? t`Attendee` : t`Item`} {index + 1}
-                                                    </h4>
-                                                    <span className={classes.attendeeTicketType}>
-                                                        {orderItem?.item_name}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            {showCopiedBadge && (
-                                                <span className={classes.copiedBadge}>
-                                                    {t`Copied from above`}
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {productRequiresDetails && (
-                                            <>
-                                                <InputGroup>
-                                                    <TextInput
-                                                        withAsterisk
-                                                        label={t`First Name`}
-                                                        placeholder={t`First name`}
-                                                        disabled={isLocked('first_name')}
-                                                        {...form.getInputProps(`products.${currentProductIndex}.first_name`)}
-                                                    />
-                                                    <TextInput
-                                                        withAsterisk
-                                                        label={t`Last Name`}
-                                                        placeholder={t`Last Name`}
-                                                        disabled={isLocked('last_name')}
-                                                        {...form.getInputProps(`products.${currentProductIndex}.last_name`)}
-                                                    />
-                                                </InputGroup>
-
-                                                <InputGroup>
-                                                    <TextInput
-                                                        withAsterisk
-                                                        type={"email"}
-                                                        label={t`Email Address`}
-                                                        placeholder={t`Email Address`}
-                                                        disabled={isLocked('email')}
-                                                        rightSection={isEmailValid(form.values.products[currentProductIndex]?.email || '') ?
-                                                            <EmailCheckIcon/> : null}
-                                                        {...form.getInputProps(`products.${currentProductIndex}.email`)}
-                                                    />
-                                                    <TextInput
-                                                        withAsterisk
-                                                        type={"email"}
-                                                        label={t`Confirm Email Address`}
-                                                        placeholder={t`Confirm Email Address`}
-                                                        disabled={isLocked('email')}
-                                                        rightSection={isEmailValid(form.values.products[currentProductIndex]?.email_confirmation || '') ?
-                                                            <EmailCheckIcon/> : null}
-                                                        {...form.getInputProps(`products.${currentProductIndex}.email_confirmation`)}
-                                                    />
-                                                </InputGroup>
-                                            </>
-                                        )}
-
-                                        {productQuestions &&
-                                            <CheckoutProductQuestions
-                                                index={currentProductIndex}
-                                                product={product}
-                                                form={form}
-                                                questions={productQuestions}/>}
-
-                                        {waiverText && productRequiresDetails && (
-                                            <WaiverSignature
-                                                waiverText={waiverText}
-                                                form={form}
-                                                path={`products.${currentProductIndex}.waiver`}
-                                                isMinor={isAttendeeMinor(currentProductIndex)}
-                                            />
-                                        )}
-                                    </Card>
-                                );
-
-                                productIndex++;
-
-                                return productInputs;
-                            })}
-                        </div>
-                    );
-                })}
 
                 {!!event?.settings?.pre_checkout_message && (
-                    <Card>
+                    <div className={checkoutClasses.subCard}>
                         <div dangerouslySetInnerHTML={{__html: event?.settings?.pre_checkout_message}}/>
-                    </Card>
+                    </div>
                 )}
 
-                {canContribute && (
-                    <PlatformSupportInput
-                        value={platformContribution}
-                        onChange={setPlatformContribution}
-                        currency={event?.currency}
-                        disabled={mutation.isPending}
-                    />
+                {canContribute && platformSupportEnabled() && (
+                    <div className={checkoutClasses.embedded}>
+                        <PlatformSupportInput
+                            value={platformContribution}
+                            onChange={setPlatformContribution}
+                            currency={event?.currency}
+                            disabled={mutation.isPending}
+                        />
+                    </div>
                 )}
 
-                <div className={classes.checkoutActions}>
+                <CheckoutActions>
+                    <div className={checkoutClasses.stickyTotal}>
+                        <span>{t`Total`}</span>
+                        <span>{formatCurrency(totalAmount, order?.currency)}</span>
+                    </div>
                     <Button
-                        className={classes.continueButton}
+                        className={checkoutClasses.primaryButton}
                         loading={mutation.isPending}
                         type="submit"
-                        rightSection={order?.is_payment_required ? <IconArrowRight size={18}/> : undefined}
-                        leftSection={!order?.is_payment_required ? <IconCheck size={18}/> : undefined}
+                        rightSection={order?.is_payment_required ? <PublicIcon name={'fleche'} size={20}/> : undefined}
+                        leftSection={!order?.is_payment_required ? <PublicIcon name={'coche'} size={20}/> : undefined}
                     >
                         {order?.is_payment_required ? t`Continue to Payment` : t`Complete Order`}
                     </Button>
                     {!!getConfig('VITE_TOS_URL') && (
-                        <p className={classes.tosNotice}>
+                        <p className={checkoutClasses.actionsNote}>
                             <Trans>
                                 By continuing, you agree to the{' '}
                                 <a
@@ -890,9 +842,8 @@ export const CollectInformation = () => {
                             </Trans>
                         </p>
                     )}
-                </div>
-
-            </CheckoutContent>
+                </CheckoutActions>
+            </CheckoutColumns>
         </form>
     );
 }

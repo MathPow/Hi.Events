@@ -1,437 +1,212 @@
 @use "../../../../styles/mixins.scss";
 
-// Design tokens - matching OrganizerHomepage
-$font-display: var(--theme-font-family, 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-$font-body:  var(--theme-font-family, 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-
-$radius-lg: 20px;
-$radius-md: 14px;
-$radius-sm: 10px;
-$radius-xs: 6px;
-
-$transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-$transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-.eventCardLink {
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 28px;
+  color: var(--dehors-brun);
   text-decoration: none;
-  color: inherit;
-  display: block;
+  background: var(--dehors-creme);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    .eventCard {
-      background: var(--accent-soft);
+    transform: translateY(-2px);
+    box-shadow: var(--dehors-ombre-carte);
 
-      .imageWrapper {
-        img {
-          transform: scale(1.03);
-        }
+    .image img {
+      transform: scale(1.03);
+    }
+  }
 
-        .placeholderContent {
-          transform: scale(1.03);
-        }
-      }
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
 
-      .shareButton {
-        opacity: 1;
-        transform: scale(1);
-      }
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    padding: 10px;
+    border-radius: 24px;
+  }
+}
 
-      .dateBadge {
-        border-color: var(--primary-color);
-      }
+.icon {
+  color: var(--public-accent);
+}
+
+.image {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 20px;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 180px;
+    border-radius: 18px;
+  }
+}
+
+// Sans image de couverture: un aplat de la couleur douce de l'organisateur.
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+}
+
+.badges {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 12px 0;
+
+  @include mixins.respond-below(md) {
+    padding: 10px 10px 0;
+  }
+}
+
+%pastille {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    gap: 5px;
+    padding: 6px 11px;
+    font-size: 12px;
+
+    > span {
+      width: 15px !important;
+      height: 15px !important;
     }
   }
 }
 
-.eventCard {
-  // Inherit CSS variables from parent
-  --primary-color: inherit;
-  --primary-text-color: inherit;
-  --secondary-color: inherit;
-  --secondary-text-color: inherit;
-  --bg-color: inherit;
-  --content-bg-color: inherit;
-  --border-color: inherit;
-  --accent-soft: inherit;
-  --accent-muted: inherit;
-  --accent-contrast: inherit;
-
-  font-family: $font-body;
-  background: transparent;
-  border-radius: $radius-md;
-  overflow: visible;
-  transition: all $transition-fast;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 12px;
-  gap: 12px;
-
-  @include mixins.respond-above('sm') {
-    flex-direction: row;
-    height: auto;
-    min-height: 140px;
-    padding: 12px;
-    gap: 16px;
-  }
-}
-
-// Image Section
-.eventImage {
-  position: relative;
-  flex: 0 0 auto;
-
-  @include mixins.respond-below('sm') {
-    height: 160px;
-  }
-
-  @include mixins.respond-above('sm') {
-    width: 200px;
-    height: 120px;
-  }
-}
-
-// Image wrapper with its own border radius
-.imageWrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: $radius-sm;
-  overflow: hidden;
-  background: var(--bg-color);
-
-  @include mixins.respond-below('sm') {
-    max-height: 160px;
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform $transition-slow;
-  }
-}
-
-// Placeholder when no image
-.placeholderImage {
-  width: 100%;
-  height: 100%;
-  background: var(--bg-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.placeholderContent {
-  position: relative;
-  transition: transform $transition-slow;
-}
-
-.placeholderIcon {
-  font-size: 2.5rem;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
-  color: var(--badge-text, white);
-  animation: float 4s ease-in-out infinite;
-
-  @media (max-width: 640px) {
-    font-size: 2rem;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-6px) rotate(-2deg);
-  }
-  75% {
-    transform: translateY(3px) rotate(2deg);
-  }
-}
-
-// Sparkles
-.sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.sparkle {
-  position: absolute;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
-  animation: sparkle 3s ease-in-out infinite;
-
-  &:nth-child(1) {
-    top: 15%;
-    left: 20%;
-    animation-delay: 0s;
-  }
-
-  &:nth-child(2) {
-    top: 70%;
-    right: 25%;
-    animation-delay: 1s;
-  }
-
-  &:nth-child(3) {
-    bottom: 25%;
-    left: 30%;
-    animation-delay: 2s;
-  }
-}
-
-@keyframes sparkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0) rotate(0deg);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1) rotate(180deg);
-  }
-}
-
-// Image Overlay - contains floating elements
-.imageOverlay {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  z-index: 10;
-}
-
-// Share button
-.shareButton {
-  opacity: 0;
-  transform: scale(0.8);
-  transition: all $transition-fast;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: $radius-xs;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 4px;
-
-  @media (max-width: 640px) {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.shareIcon {
-  color: var(--secondary-color);
-  transition: all $transition-fast;
-
-  &:hover {
-    transform: scale(1.1);
-    color: var(--primary-text-color);
-  }
-}
-
-// Live indicator
-.liveIndicator {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  background: #ef4444;
-  backdrop-filter: blur(10px);
-  border-radius: $radius-xs;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-}
-
-.liveText {
-  color: white;
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.liveDot {
-  width: 5px;
-  height: 5px;
-  background: white;
-  border-radius: 50%;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.5;
-  }
-}
-
-// Date badge
 .dateBadge {
-  position: absolute;
-  background: var(--content-bg-color);
-  color: var(--primary-text-color);
-  border: 1px solid var(--border-color);
-  padding: 6px 10px;
-  border-radius: $radius-xs;
-  box-shadow: 0 2px 8px var(--border-color);
+  @extend %pastille;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+}
+
+.scarcityBadge {
+  @extend %pastille;
+  color: var(--public-sur-accent);
+  background: var(--public-accent);
+}
+
+.body {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: $font-display;
-  font-weight: 600;
-  font-size: 0.75rem;
-  z-index: 10;
-  bottom: 8px;
-  left: 8px;
-  backdrop-filter: blur(10px);
-  transition: border-color $transition-fast;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 8px 8px;
 
-  @include mixins.respond-below('sm') {
-    left: 8px;
-  }
-
-  svg {
-    color: var(--accent-text);
+  @include mixins.respond-below(md) {
+    gap: 8px;
+    padding: 0 8px 6px;
   }
 }
 
-// Content Section
-.eventContent {
-  flex: 1;
+.title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 20px;
+  }
+}
+
+.line {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
-  min-width: 0;
-  justify-content: center;
-
-  @include mixins.respond-below('sm') {
-    padding: 0 4px;
-  }
-
-  @include mixins.respond-above('sm') {
-    padding-right: 4px;
-  }
-}
-
-.eventHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.eventTitle {
-  font-family: $font-display;
-  font-size: 1.05rem;
-  font-weight: 700;
   margin: 0;
-  color: var(--primary-text-color);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+  font-size: 15px;
+  line-height: normal;
 
-  @include mixins.respond-below('sm') {
-    font-size: 0.95rem;
+  > span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @include mixins.respond-below(md) {
+    font-size: 14px;
+
+    > span:first-child {
+      width: 16px !important;
+      height: 16px !important;
+    }
   }
 }
 
-.eventDateTime {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--secondary-color);
-  font-size: 0.8125rem;
-  font-weight: 500;
-
-  svg {
-    color: var(--accent-muted);
-    flex-shrink: 0;
-  }
-}
-
-.timezone {
-  font-weight: 500;
-  opacity: 0.8;
-}
-
-.eventDescription {
-  font-size: 0.8125rem;
-  color: var(--secondary-color);
-  line-height: 1.5;
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-// Footer section
-.eventFooter {
-  margin-top: auto;
+.bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding-top: 4px;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
 
-  @include mixins.respond-below('sm') {
-    gap: 8px;
+  @include mixins.respond-below(md) {
+    padding-top: 4px;
   }
 }
 
-.eventMeta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
+.price {
+  @extend %pastille;
+  font-size: 15px;
+  color: var(--dehors-brun);
+  background: var(--public-accent-doux);
 
-.location {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--secondary-color);
-  font-size: 0.8125rem;
-  font-weight: 500;
-
-  svg {
-    color: var(--accent-muted);
-    flex-shrink: 0;
+  @include mixins.respond-below(md) {
+    font-size: 14px;
   }
 }
 
-// Price section
-.priceSection {
-  display: flex;
+.arrow {
+  display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
-  gap: 5px;
-  font-family: $font-display;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--primary-text-color);
-  padding: 6px 12px;
-  background: var(--accent-soft);
-  border-radius: $radius-xs;
-  white-space: nowrap;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-left: auto;
+  border-radius: 24px;
+  color: var(--public-sur-accent);
+  background: var(--public-accent);
 
-  svg {
-    color: var(--accent-text);
-    flex-shrink: 0;
-  }
-
-  .price {
-    color: var(--primary-text-color);
-  }
-
-  .free {
-    font-weight: 700;
-    color: var(--accent-text);
+  @include mixins.respond-below(md) {
+    > span {
+      width: 18px !important;
+      height: 18px !important;
+    }
   }
 }

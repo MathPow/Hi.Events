@@ -3,6 +3,46 @@
 $font-display: Allotrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 $font-body:  Allotrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
+// Les etapes de la caisse (details, paiement): la maquette Dehors, sur le fond creme.
+.checkoutPage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: $font-body;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+
+  // Les blocs existants poses dans la caisse (messages, avis, decharge) prennent la palette Dehors.
+  --checkout-surface: var(--dehors-carte);
+  --checkout-border: var(--dehors-trait);
+  --checkout-text-primary: var(--dehors-brun);
+  --checkout-text-secondary: rgb(55 39 33 / 0.7);
+  --checkout-accent: var(--public-accent);
+  --checkout-accent-soft: var(--dehors-champ);
+  --mantine-color-text: var(--dehors-brun);
+  --content-bg-color: var(--dehors-carte);
+  --border-color: transparent;
+  --accent-soft: var(--public-accent-doux);
+}
+
+.checkoutInner {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+
+  @include mixins.respond-below(lg) {
+    gap: 18px;
+  }
+
+  // La place de la barre collee au bas de l'ecran (bouton de l'etape).
+  @include mixins.respond-below(md) {
+    padding: 16px 12px 150px;
+  }
+}
+
 .container {
   display: flex;
   // Use dvh (dynamic viewport height) with fallback for older browsers

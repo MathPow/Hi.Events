@@ -1,0 +1,73 @@
+@use "../../../../styles/mixins.scss";
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+// Les boutons de 48px de la maquette: creme pour le retour, fonce pour le minuteur.
+.back,
+.timer {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    gap: 5px;
+  }
+}
+
+.back {
+  border: none;
+  font-family: inherit;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: #fff;
+  }
+}
+
+.backIcon {
+  color: var(--public-accent);
+}
+
+.timer {
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+}
+
+.countdown {
+  font-variant-numeric: tabular-nums;
+}
+
+// Les cinq dernieres minutes.
+.countdownCloseToExpiry {
+  color: var(--dehors-orange-clair);
+}
+
+.narrow {
+  display: none;
+}
+
+@include mixins.respond-below(md) {
+  .wide {
+    display: none;
+  }
+
+  .narrow {
+    display: inline;
+  }
+}

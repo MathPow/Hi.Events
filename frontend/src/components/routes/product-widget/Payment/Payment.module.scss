@@ -1,93 +1,123 @@
-// Design tokens
-$font-display: Allotrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-$radius-sm: 10px;
-$radius-xs: 6px;
-$transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+@use "../../../../styles/mixins";
 
-.container {
-  max-width: 500px;
-  margin: 0 auto;
-  position: relative;
+// « 1 Vos coordonnees » et « 2 Participants », deja remplis: plus serres que les etapes a faire.
+.completedSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  p {
+    overflow-wrap: anywhere;
+  }
 }
 
-.paymentMethodSelector {
-  margin-top: 20px;
-  margin-bottom: 4px;
-}
-
-.paymentMethodLabel {
-  margin-bottom: 8px;
-  color: var(--checkout-text-primary, #111827);
+.noMethods {
+  margin: 0;
+  font-size: 16px;
 }
 
 .paymentMethodTabs {
   display: flex;
-  gap: 8px;
+  gap: 12px;
+
+  @include mixins.respond-below(md) {
+    gap: 10px;
+  }
 }
 
 .paymentMethodTab {
-  display: flex;
+  display: inline-flex;
+  flex: 1;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 16px;
-  background: var(--checkout-surface, #FFFFFF);
-  border: 1px solid var(--checkout-border, #E5E7EB);
-  border-radius: $radius-xs;
+  height: 48px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--dehors-brun);
+  background: var(--dehors-champ);
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--checkout-text-secondary, #6B7280);
-  transition: all $transition-fast;
+  transition: background-color 0.15s ease;
 
   &:hover {
-    border-color: var(--checkout-accent-muted, #D1D5DB);
-    background: var(--checkout-accent-soft, #F9FAFB);
+    background: var(--dehors-champ-survol);
   }
 
-  &.active {
-    border-color: var(--checkout-accent, var(--mantine-primary-color-filled));
-    background: var(--checkout-accent-soft, var(--mantine-primary-color-light));
-    color: var(--checkout-accent, var(--mantine-primary-color-filled));
+  &[data-active] {
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
   }
 }
 
-.checkoutActions {
-  margin-top: 32px;
-  margin-bottom: 24px;
+// Les instructions de l'organisateur (paiement hors ligne, depot) dans une fiche creme.
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.continueButton {
-  width: 100%;
-  height: 48px;
-  border-radius: $radius-sm;
-  font-family: $font-display;
-  font-weight: 600;
-  font-size: 16px;
-  transition: transform $transition-fast, box-shadow $transition-fast;
+.instructionsTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
 
-  &:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px var(--checkout-accent-soft, rgba(0, 0, 0, 0.15));
-    filter: brightness(1.05);
+.instructionsBody {
+  padding: 18px 22px;
+  border-radius: 22px;
+  font-size: 15px;
+  line-height: 1.5;
+  background: var(--dehors-creme);
+  overflow-wrap: anywhere;
+
+  > :first-child {
+    margin-top: 0;
   }
 
-  &:active:not(:disabled) {
-    transform: translateY(0);
+  > :last-child {
+    margin-bottom: 0;
   }
 }
 
-.tosNotice {
-  text-align: center;
-  margin-top: 12px;
-  font-size: 12px;
-  color: var(--checkout-text-secondary, #6B7280);
+.deposit {
+  > div {
+    margin: 0 !important;
+  }
+
+  :global(.card) {
+    padding: 18px 22px;
+    border-radius: 22px;
+    background: var(--dehors-creme);
+  }
+}
+
+// Le formulaire Stripe et ses messages.
+.stripeError {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 22px;
+  border-radius: 22px;
+  background: var(--dehors-creme);
+
+  p {
+    margin: 0;
+  }
 
   a {
-    color: var(--checkout-accent, var(--mantine-primary-color-filled));
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    margin-top: 8px;
+    font-weight: 700;
+    color: var(--dehors-brun);
+    text-decoration: underline;
   }
+}
+
+.stripeErrorTitle {
+  font-size: 17px;
+  font-weight: 700;
 }

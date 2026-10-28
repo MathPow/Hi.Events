@@ -1,13 +1,15 @@
 import {t} from "@lingui/macro";
 import {useNavigate} from "react-router";
 import {useMutation} from "@tanstack/react-query";
-import {IconTicket} from "@tabler/icons-react";
 import {orderClientPublic, ProductFormPayload} from "../../../../api/order.client.ts";
 import {Event, Product, ProductPriceType, ProductType} from "../../../../types.ts";
 import {ProductPriceDisplay} from "../../../common/Currency";
+import {PublicIcon} from "../../../common/PublicIcon";
 import {getSessionIdentifier} from "../../../../utilites/sessionIdentifier.ts";
+import {formatCurrency} from "../../../../utilites/currency.ts";
 import {CHECKOUT_PREFILL_PARAM_KEYS} from "../../../../hooks/useCheckoutPrefill.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
+import {ProductSelectionSummary} from "../../../routes/product-widget/SelectProducts";
 import classes from "./StickyBuyBar.module.scss";
 
 const AFFILIATE_EXPIRY_DAYS = 30;
@@ -55,16 +57,32 @@ const getPrefillQuery = (): string => {
 
 interface StickyBuyBarProps {
     event: Event;
-    product: Product;
-    visible: boolean;
+    // Le formulaire du widget de billets, soumis par le bouton Continuer de la barre.
+    formId: string;
+    selection: ProductSelectionSummary | null;
+    defaultTicket?: Product;
+    ticketsOutOfView: boolean;
     promoCode?: string | null;
     onSeeAllTickets?: () => void;
+    onShowTickets: () => void;
 }
 
-export const StickyBuyBar = ({event, product, visible, promoCode, onSeeAllTickets}: StickyBuyBarProps) => {
+// La barre collante du bas de l'ecran (mobile et tablette): le total de la selection et Continuer.
+// Sans selection, quand les billets sont hors de vue, elle propose l'achat rapide du billet par
+// defaut ou ramene aux billets.
+export const StickyBuyBar = ({
+                                 event,
+                                 formId,
+                                 selection,
+                                 defaultTicket,
+                                 ticketsOutOfView,
+                                 promoCode,
+                                 onSeeAllTickets,
+                                 onShowTickets,
+                             }: StickyBuyBarProps) => {
     const navigate = useNavigate();
-    const price = product.prices![0];
-    const quantity = Math.max(1, product.min_per_order || 1);
+    const hasSelection = !!selection && selection.quantity > 0;
+    const visible = hasSelection || ticketsOutOfView;
 
     const orderMutation = useMutation({
         mutationFn: (payload: ProductFormPayload) => orderClientPublic.create(Number(event.id), payload),
@@ -78,10 +96,14 @@ export const StickyBuyBar = ({event, product, visible, promoCode, onSeeAllTicket
     });
 
     const handleBuy = () => {
+        if (!defaultTicket) {
+            return;
+        }
+        const price = defaultTicket.prices![0];
         orderMutation.mutate({
             products: [{
-                product_id: Number(product.id),
-                quantities: [{price_id: Number(price.id), quantity}],
+                product_id: Number(defaultTicket.id),
+                quantities: [{price_id: Number(price.id), quantity: Math.max(1, defaultTicket.min_per_order || 1)}],
             }],
             promo_code: promoCode || null,
             affiliate_code: getStoredAffiliateCode(Number(event.id)),
@@ -89,38 +111,81 @@ export const StickyBuyBar = ({event, product, visible, promoCode, onSeeAllTicket
         });
     };
 
-    return (
-        <div className={`${classes.bar} ${visible ? classes.visible : ''}`} aria-hidden={!visible}>
-            <div className={classes.inner}>
-                <div className={classes.info}>
-                    <div className={classes.title}>{product.title}</div>
-                    <div className={classes.priceRow}>
+    const tabIndex = visible ? 0 : -1;
+    const continueText = event.settings?.continue_button_text || t`Continue`;
+
+    const renderContent = () => {
+        if (selection && hasSelection) {
+            return (
+                <>
+                    <div className={classes.info}>
+                        <span className={classes.label}>
+                            {selection.quantity === 1 ? t`1 ticket` : t`${Number(selection.quantity)} tickets`}
+                        </span>
+                        <span className={classes.amount}>{formatCurrency(selection.subtotal, event.currency)}</span>
+                    </div>
+                    <button
+                        type="submit"
+                        form={formId}
+                        className={classes.button}
+                        disabled={!selection.canContinue || selection.isSubmitting}
+                        tabIndex={tabIndex}
+                    >
+                        {selection.isSubmitting ? t`Processing...` : continueText}
+                        <PublicIcon name={'fleche'} size={18}/>
+                    </button>
+                </>
+            );
+        }
+
+        if (defaultTicket) {
+            const isBuying = orderMutation.isPending || orderMutation.isSuccess;
+
+            return (
+                <>
+                    <div className={classes.info}>
+                        <span className={classes.label}>
+                            <span className={classes.title}>{defaultTicket.title}</span>
+                            {onSeeAllTickets && (
+                                <button type="button" className={classes.seeAll} onClick={onSeeAllTickets} tabIndex={tabIndex}>
+                                    {t`See all tickets`}
+                                </button>
+                            )}
+                        </span>
                         <ProductPriceDisplay
-                            price={price}
-                            product={product}
+                            price={defaultTicket.prices![0]}
+                            product={defaultTicket}
                             currency={event.currency}
-                            className={classes.price}
+                            className={classes.amount}
                             freeLabel={t`Free`}
                             taxAndServiceFeeDisplayType={event.settings?.price_display_mode}
                         />
-                        {onSeeAllTickets && (
-                            <button type="button" className={classes.seeAll} onClick={onSeeAllTickets} tabIndex={visible ? 0 : -1}>
-                                {t`See all tickets`}
-                            </button>
-                        )}
                     </div>
-                </div>
-                <button
-                    type="button"
-                    className={classes.buyButton}
-                    onClick={handleBuy}
-                    disabled={orderMutation.isPending || orderMutation.isSuccess}
-                    tabIndex={visible ? 0 : -1}
-                >
-                    <IconTicket size={18}/>
-                    {orderMutation.isPending || orderMutation.isSuccess ? t`Processing...` : t`Buy`}
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        className={classes.button}
+                        onClick={handleBuy}
+                        disabled={isBuying}
+                        tabIndex={tabIndex}
+                    >
+                        {isBuying ? t`Processing...` : t`Buy`}
+                        <PublicIcon name={'fleche'} size={18}/>
+                    </button>
+                </>
+            );
+        }
+
+        return (
+            <button type="button" className={`${classes.button} ${classes.wide}`} onClick={onShowTickets} tabIndex={tabIndex}>
+                <PublicIcon name={'billet'} size={18}/>
+                {t`Get Tickets`}
+            </button>
+        );
+    };
+
+    return (
+        <div className={`${classes.bar} ${visible ? classes.visible : ''}`} aria-hidden={!visible}>
+            {renderContent()}
         </div>
     );
 };

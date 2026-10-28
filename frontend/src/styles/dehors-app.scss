@@ -13,6 +13,23 @@
   --dehors-texte-doux: rgb(53 41 36 / 0.7);
   --dehors-creme-doux: rgb(255 247 233 / 0.78);
   --dehors-creme-voile: rgb(255 247 233 / 0.09);
+
+  // Pages publiques (maquette Figma): cartes presque blanches, ombre douce. Seule la couleur
+  // principale suit l'organisateur (--theme-accent); le creme et le texte fonce restent fixes.
+  --dehors-carte: #fffcf8;
+  --dehors-ombre-carte: 0 10px 32px rgb(55 39 33 / 0.08);
+  --public-accent: var(--dehors-orange);
+  --public-accent-doux: #f7dccd;
+  --public-sur-accent: var(--dehors-brun);
+}
+
+// Une variable est resolue la ou elle est declaree: on recalcule donc les couleurs publiques
+// sur l'element qui recoit les couleurs de l'organisateur en style inline (--theme-accent...).
+// L'accent doux est un melange de 20 % d'accent dans le creme, comme le #f7dccd de la maquette.
+[style*='--theme-accent'] {
+  --public-accent: var(--theme-accent);
+  --public-accent-doux: color-mix(in srgb, var(--theme-accent) 20%, var(--dehors-creme));
+  --public-sur-accent: var(--theme-accent-contrast, var(--dehors-brun));
 }
 
 // Dev deployments (VITE_APP_ENVIRONMENT=dev, set on <html> by server.js) turn the oranges

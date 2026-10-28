@@ -7,10 +7,6 @@ import {t} from "@lingui/macro";
 import classes from './StripeCheckoutForm.module.scss';
 import {LoadingMask} from "../../common/LoadingMask";
 import {useGetOrderPublic} from "../../../queries/useGetOrderPublic.ts";
-import {CheckoutContent} from "../../layouts/Checkout/CheckoutContent";
-import {HomepageInfoMessage} from "../../common/HomepageInfoMessage";
-import {eventCheckoutPath, eventHomepagePath} from "../../../utilites/urlHelper.ts";
-import {Event} from "../../../types.ts";
 
 export default function StripeCheckoutForm({setSubmitHandler}: {
     setSubmitHandler: (submitHandler: () => () => Promise<void>) => void
@@ -20,7 +16,6 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
     const elements = useElements();
     const [message, setMessage] = useState<string | undefined>('');
     const {data: order, isFetched: isOrderFetched} = useGetOrderPublic(eventId, orderShortId, ['event']);
-    const event = order?.event;
 
     const handleSubmit = async () => {
         if (!stripe || !elements) {
@@ -79,36 +74,9 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
 
     }, [setSubmitHandler, stripe, elements]);
 
+    // Une commande deja payee ou qui n'attend plus de paiement: la page Paiement l'annonce elle-meme.
     if (!isOrderFetched || !order?.payment_status) {
-        return (
-            <CheckoutContent>
-                <Skeleton height={300} mb={20}/>
-            </CheckoutContent>
-        );
-    }
-
-    if (order?.payment_status === 'PAYMENT_RECEIVED') {
-        return (
-            <HomepageInfoMessage
-                status="success"
-                message={t`Payment received`}
-                subtitle={t`This order has already been paid.`}
-                linkText={t`View Order Details`}
-                link={eventCheckoutPath(eventId, orderShortId, 'summary')}
-            />
-        );
-    }
-
-    if (order?.payment_status !== 'AWAITING_PAYMENT' && order?.payment_status !== 'PAYMENT_FAILED') {
-        return (
-            <HomepageInfoMessage
-                status="expired"
-                message={t`Page no longer available`}
-                subtitle={t`This order page is no longer available.`}
-                linkText={t`Back to Event`}
-                link={eventHomepagePath(event as Event)}
-            />
-        );
+        return <Skeleton height={300} radius={22}/>;
     }
 
     const paymentElementOptions: stripeJs.StripePaymentElementOptions = {
@@ -123,9 +91,6 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
     return (
         <form id="payment-form">
             <>
-                <h2>
-                    {t`Payment`}
-                </h2>
                 {(order?.payment_status === 'PAYMENT_FAILED' || window?.location.search.includes('payment_failed')) && (
                     <Alert mb={20} color={'red'}>{t`Your payment was unsuccessful. Please try again.`}</Alert>
                 )}

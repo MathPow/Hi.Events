@@ -18,8 +18,9 @@ import {withLoadingNotification} from "../../../utilites/withLoadingNotification
 import {useAbandonOrderPublic} from "../../../mutations/useAbandonOrderPublic.ts";
 import {showError, showInfo} from "../../../utilites/notifications.tsx";
 import {isDateInFuture} from "../../../utilites/dates.ts";
-import {detectMode} from "../../../utilites/themeUtils.ts";
+import {computeThemeVariables, detectMode, validateThemeSettings} from "../../../utilites/themeUtils.ts";
 import {CheckoutThemeProvider} from "./CheckoutThemeProvider.tsx";
+import {CheckoutTopBar} from "./CheckoutTopBar";
 import {useOrganizerTrackingPixels} from "../../../hooks/useOrganizerTrackingPixels";
 import {trackPixelEvent, hasActivePixels} from "../../../utilites/trackingPixels";
 import {capturePostHogEvent} from "../../../utilites/posthog.ts";
@@ -27,6 +28,7 @@ import {CookieConsentBanner} from "../../common/CookieConsentBanner";
 import {useGetEventPublic} from "../../../queries/useGetEventPublic.ts";
 
 const DEFAULT_ACCENT = '#8b5cf6';
+const DEHORS_ACCENT = '#fa7853';
 
 const Checkout = () => {
     const {eventId, orderShortId} = useParams();
@@ -206,12 +208,49 @@ const Checkout = () => {
 
     // Get accent color from event settings, derive mode from homepage background
     const homepageSettings = event?.settings?.homepage_theme_settings;
-    const accentColor = homepageSettings?.accent || DEFAULT_ACCENT;
+    // Les etapes de la caisse (details, paiement) suivent la maquette Dehors: toujours en mode clair,
+    // seule la couleur principale suit le theme de l'evenement (orange Dehors sans theme).
+    const isCheckoutStep = currentStep !== 'summary';
+    // La page de confirmation (commande terminee, annulee ou en attente d'un paiement hors ligne)
+    // suit aussi la maquette Dehors et affiche sa propre barre (PublicPageBar).
+    const isConfirmationPage = currentStep === 'summary'
+        && (!order || orderIsCompleted || orderIsAwaitingOfflinePayment || order.status === 'CANCELLED');
+    const followsDehorsDesign = isCheckoutStep || isConfirmationPage;
+    const accentColor = homepageSettings?.accent || (followsDehorsDesign ? DEHORS_ACCENT : DEFAULT_ACCENT);
     // Mode is derived from the homepage background color (light homepage = light checkout)
-    const checkoutMode = homepageSettings?.mode || detectMode(homepageSettings?.background || '#ffffff');
+    const checkoutMode = followsDehorsDesign
+        ? 'light'
+        : homepageSettings?.mode || detectMode(homepageSettings?.background || '#ffffff');
+    const accentStyles = (homepageSettings?.accent
+        ? Object.fromEntries(Object.entries(computeThemeVariables({...validateThemeSettings(homepageSettings), mode: 'light'}))
+            .filter(([name]) => name.startsWith('--theme-accent')))
+        : {}) as React.CSSProperties;
 
     return (
         <CheckoutThemeProvider accentColor={accentColor} mode={checkoutMode}>
+            {isCheckoutStep ? (
+                <div className={classes.checkoutPage} style={accentStyles}>
+                    <style>
+                        {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+                        {`
+                            body, .ssr-loader {
+                                background-color: var(--dehors-creme) !important;
+                            }
+                        `}
+                    </style>
+                    <div className={classes.checkoutInner}>
+                        <CheckoutTopBar
+                            onBack={handleEventHomepageClick}
+                            reservedUntil={orderIsReserved ? order?.reserved_until : undefined}
+                            onExpiry={handleExpiry}
+                            isMobile={!!isMobile}
+                        />
+                        <Outlet/>
+                    </div>
+                </div>
+            ) : isConfirmationPage ? (
+                <Outlet/>
+            ) : (
             <div className={classes.container} data-mode={checkoutMode}>
                 <div className={classes.mainContent}>
                     <header className={classes.header}>
@@ -298,6 +337,7 @@ const Checkout = () => {
                     <Outlet/>
                 </div>
             </div>
+            )}
 
             <Modal
                 opened={isExpired}

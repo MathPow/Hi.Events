@@ -1,58 +1,44 @@
-import {t} from "@lingui/macro";
-import {NavLink, useNavigate, useParams, useLocation} from "react-router";
-import {ActionIcon, Alert, Button, Group, SimpleGrid, Text, Tooltip} from "@mantine/core";
-import {
-    IconBuilding,
-    IconCalendar,
-    IconCalendarEvent,
-    IconCash,
-    IconCheck,
-    IconClock,
-    IconEdit,
-    IconExternalLink,
-    IconId,
-    IconMail,
-    IconMapPin,
-    IconMenuOrder,
-    IconPrinter,
-    IconSend,
-    IconTicket,
-    IconUser
-} from "@tabler/icons-react";
-import {useEffect, useState} from "react";
+import {t, Trans} from "@lingui/macro";
+import {useLocation, useNavigate, useParams} from "react-router";
+import {Menu, UnstyledButton} from "@mantine/core";
+import {IconCheck} from "@tabler/icons-react";
+import {CSSProperties, ReactNode, useEffect, useState} from "react";
 import {useQueryClient} from "@tanstack/react-query";
 
-import {useGetOrderPublic, GET_ORDER_PUBLIC_QUERY_KEY} from "../../../../queries/useGetOrderPublic.ts";
-import {eventCheckoutPath} from "../../../../utilites/urlHelper.ts";
-import {dateToBrowserTz} from "../../../../utilites/dates.ts";
-import {formatAddress} from "../../../../utilites/addressUtilities.ts";
-import {getAttendeeProductTitle} from "../../../../utilites/products.ts";
-import {showSuccess, showError} from "../../../../utilites/notifications.tsx";
+import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
+import {eventCheckoutPath, eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
+import {formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
+import {formatCurrency} from "../../../../utilites/currency.ts";
+import {computeThemeVariables, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
+import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
+import {orderClientPublic} from "../../../../api/order.client.ts";
+import {downloadBinary} from "../../../../utilites/download.ts";
+import {withLoadingNotification} from "../../../../utilites/withLoadingNotification.tsx";
 
-import {Card} from "../../../common/Card";
 import {LoadingMask} from "../../../common/LoadingMask";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
-import {PoweredByFooter} from "../../../common/PoweredByFooter";
-import {EventDateRange} from "../../../common/EventDateRange";
-import {OnlineEventDetails} from "../../../common/OnlineEventDetails";
-import {AddToCalendarCTA} from "../../../common/AddToCalendarCTA";
-import {InlineOrderSummary} from "../../../common/InlineOrderSummary";
-import {DepositInstructions} from "../../../common/DepositInstructions";
-import {CheckoutContent} from "../../../layouts/Checkout/CheckoutContent";
+import {CalendarOptionsPopover} from "../../../common/CalendarOptionsPopover";
+import {ShareComponent} from "../../../common/ShareIcon";
+import {PublicBarLink, PublicPageBar} from "../../../common/PublicPageBar";
+import {PublicPageFooter} from "../../../common/PublicPageFooter";
+import {PublicIcon, PublicIconName} from "../../../common/PublicIcon";
 import {EditAttendeeModal} from "./EditAttendeeModal";
 import {EditOrderModal} from "./EditOrderModal";
+import {ConfirmationTicket} from "./ConfirmationTicket";
+import {OtherEvents} from "./OtherEvents";
+import {eventRangeLabel, timezoneLabel} from "./confirmationDates.ts";
 
 import {useEditAttendeePublic} from "../../../../mutations/useEditAttendeePublic";
 import {useEditOrderPublic} from "../../../../mutations/useEditOrderPublic";
 import {useResendAttendeeTicketPublic} from "../../../../mutations/useResendAttendeeTicketPublic";
 import {useResendOrderConfirmationPublic} from "../../../../mutations/useResendOrderConfirmationPublic";
 
-import {Attendee, Event, Order, Product} from "../../../../types.ts";
+import {Attendee, Event, Invoice, Order} from "../../../../types.ts";
 import classes from './OrderSummaryAndProducts.module.scss';
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
 // Purchase tracking is handled by the parent Checkout layout
 
-const PaymentStatus = ({order}: { order: Order }) => {
+const paymentStatusLabel = (order: Order): string | null => {
     const paymentStatuses: Record<string, string> = {
         'NO_PAYMENT_REQUIRED': t`No Payment Required`,
         'AWAITING_PAYMENT': t`Awaiting Payment`,
@@ -61,10 +47,10 @@ const PaymentStatus = ({order}: { order: Order }) => {
         'AWAITING_OFFLINE_PAYMENT': t`Awaiting Offline Payment`,
     };
 
-    return order?.payment_status ? <span>{paymentStatuses[order.payment_status] || ''}</span> : null;
+    return order.payment_status ? paymentStatuses[order.payment_status] || null : null;
 };
 
-const RefundStatusType = ({order}: { order: Order }) => {
+const refundStatusLabel = (order: Order): string | null => {
     const refundStatuses: Record<string, string> = {
         'REFUND_PENDING': t`Refund Pending`,
         'REFUND_FAILED': t`Refund Failed`,
@@ -72,332 +58,291 @@ const RefundStatusType = ({order}: { order: Order }) => {
         'PARTIALLY_REFUNDED': t`Partially Refunded`,
     };
 
-    return order?.refund_status ? <span>{refundStatuses[order.refund_status] || ''}</span> : null;
+    return order.refund_status ? refundStatuses[order.refund_status] || null : null;
 };
 
-const GuestListItem = ({
-    attendee,
-    event,
-    allowSelfEdit,
-    onEditClick,
-    onResendClick,
-}: {
-    attendee: Attendee;
-    event: Event;
-    allowSelfEdit: boolean;
-    onEditClick: () => void;
-    onResendClick: () => void;
-}) => {
-    const productTitle = getAttendeeProductTitle(attendee, attendee.product as Product);
-    const isCancelled = attendee.status === 'CANCELLED';
-
-    return (
-        <div className={`${classes.guestItem} ${isCancelled ? classes.guestItemCancelled : ''}`}>
-            <div className={classes.guestInfo}>
-                <div className={classes.guestName}>
-                    {attendee.first_name} {attendee.last_name}
-                    {isCancelled && <span className={classes.cancelledBadge}>{t`Cancelled`}</span>}
-                </div>
-                <div className={classes.guestDetails}>
-                    <span className={classes.guestEmail}>{attendee.email}</span>
-                    <span className={classes.guestProduct}>{productTitle}</span>
-                </div>
-            </div>
-            <div className={classes.guestActions}>
-                <Tooltip label={t`View Ticket`}>
-                    <ActionIcon
-                        variant="subtle"
-                        onClick={() => window?.open(`/product/${event.id}/${attendee.short_id}`, '_blank')}
-                    >
-                        <IconExternalLink size={18}/>
-                    </ActionIcon>
-                </Tooltip>
-                <Tooltip label={t`Print Ticket`}>
-                    <ActionIcon
-                        variant="subtle"
-                        onClick={() => window?.open(`/product/${event.id}/${attendee.short_id}/print`, '_blank')}
-                    >
-                        <IconPrinter size={18}/>
-                    </ActionIcon>
-                </Tooltip>
-                {allowSelfEdit && !isCancelled && (
-                    <>
-                        <Tooltip label={t`Edit Attendee`}>
-                            <ActionIcon
-                                variant="subtle"
-                                onClick={onEditClick}
-                            >
-                                <IconEdit size={18}/>
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label={t`Resend Ticket`}>
-                            <ActionIcon
-                                variant="subtle"
-                                onClick={onResendClick}
-                            >
-                                <IconSend size={18}/>
-                            </ActionIcon>
-                        </Tooltip>
-                    </>
-                )}
-            </div>
-        </div>
-    );
+// La pastille du recapitulatif (« Paye » dans la maquette), selon l'etat de la commande.
+const orderStatusPill = (order: Order): string | null => {
+    if (order.status === 'CANCELLED') return t`Cancelled`;
+    if (order.refund_status === 'REFUNDED') return t`Refunded`;
+    if (order.refund_status === 'PARTIALLY_REFUNDED') return t`Partially Refunded`;
+    if (order.status === 'AWAITING_OFFLINE_PAYMENT' || order.payment_status === 'AWAITING_OFFLINE_PAYMENT') return t`Awaiting payment`;
+    if (order.payment_status === 'NO_PAYMENT_REQUIRED') return t`Free`;
+    if (order.payment_status === 'PAYMENT_RECEIVED') return t`Paid`;
+    return null;
 };
 
-const DetailItem = ({icon: Icon, label, value}: { icon: any, label: string, value: React.ReactNode }) => (
-    <div className={classes.detailItem}>
-        <Group gap="xs" wrap="nowrap">
-            <Icon size={20} style={{color: 'var(--checkout-accent, var(--mantine-color-gray-6))', flexShrink: 0}}/>
-            <div className={classes.detailContent}>
-                <Text size="sm" c="dimmed" className={classes.label}>{label}</Text>
-                <Text className={classes.value}>{value}</Text>
+const eventLocation = (event: Event) => {
+    const details = event.settings?.location_details;
+
+    if (event.settings?.is_online_event || !details || (!isAddressSet(details) && !details.venue_name)) {
+        return null;
+    }
+
+    const address = formatAddress(details);
+    const query = [details.venue_name, address].filter(Boolean).join(', ');
+
+    return {
+        title: details.venue_name || address,
+        subtitle: details.venue_name ? address : null,
+        mapsUrl: event.settings?.maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`,
+    };
+};
+
+const Card = ({title, aside, className, children}: {
+    title?: ReactNode,
+    aside?: ReactNode,
+    className?: string,
+    children: ReactNode
+}) => (
+    <section className={className ? `${classes.card} ${className}` : classes.card}>
+        {(title || aside) && (
+            <div className={classes.cardHeader}>
+                {title && <h2 className={classes.cardTitle}>{title}</h2>}
+                {aside}
             </div>
-        </Group>
-    </div>
+        )}
+        {children}
+    </section>
 );
 
-const WelcomeHeader = ({order, event, allowSelfEdit}: { order: Order; event: Event; allowSelfEdit: boolean }) => {
-    const isCompleted = order.status === 'COMPLETED';
-    const isAwaitingPayment = order.status === 'AWAITING_OFFLINE_PAYMENT';
-    const isCancelled = order.status === 'CANCELLED';
-
-    const message = {
-        'COMPLETED': t`You're going to ${event.title}!`,
-        'CANCELLED': t`Your order has been cancelled`,
-        'RESERVED': null,
-        'AWAITING_OFFLINE_PAYMENT': t`Your order is awaiting payment`,
-        'ABANDONED': null,
-    }[order.status];
-
-    if (!message) return null;
-
-    return (
-        <div className={classes.welcomeHeader}>
-            {isCompleted && (
-                <div className={classes.confettiIcon}>
-                    {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                    <span>🎉</span>
-                </div>
-            )}
-            {isAwaitingPayment && (
-                <div className={classes.confettiIcon}>
-                    {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                    <span>⏳</span>
-                </div>
-            )}
-            {isCancelled && (
-                <div className={classes.confettiIcon}>
-                    {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
-                    <span>😔</span>
-                </div>
-            )}
-            <div className={classes.welcomeMessage}>{message}</div>
-            {isCompleted && (
-                <div className={classes.confirmationText}>
-                    {t`Confirmation sent to`} <strong>{order.email}</strong>
-                </div>
-            )}
-            {isCompleted && allowSelfEdit && (
-                <div className={classes.selfServiceHint}>
-                    {t`Bookmark this page to manage your order anytime.`}
-                </div>
-            )}
-            {isCancelled && (
-                <div className={classes.confirmationText}>
-                    {t`A cancellation notice has been sent to`} <strong>{order.email}</strong>
-                </div>
-            )}
-        </div>
-    );
-};
-
-const OrderDetails = ({
-    order,
-    event,
-    allowSelfEdit,
-    onEditClick,
-    onResendClick,
-}: {
-    order: Order;
-    event: Event;
-    allowSelfEdit: boolean;
-    onEditClick: () => void;
-    onResendClick: () => void;
-}) => (
-    <Card style={{marginBottom: '40px'}}>
-        <SimpleGrid cols={{base: 1, sm: 2}} spacing="md">
-            <DetailItem
-                icon={IconUser}
-                label={t`Name`}
-                value={
-                    <Group gap="xs" wrap="nowrap">
-                        <span>{order.first_name} {order.last_name}</span>
-                        {allowSelfEdit && order.status !== 'CANCELLED' && (
-                            <Tooltip label={t`Edit`}>
-                                <ActionIcon size="xs" variant="subtle" onClick={onEditClick}>
-                                    <IconEdit size={14}/>
-                                </ActionIcon>
-                            </Tooltip>
-                        )}
-                    </Group>
-                }
-            />
-            <DetailItem
-                icon={IconId}
-                label={t`Order Reference`}
-                value={order.public_id}
-            />
-            <DetailItem
-                icon={IconMail}
-                label={t`Email`}
-                value={
-                    <Group gap="xs" wrap="nowrap">
-                        <span style={{wordBreak: 'break-all'}}>{order.email}</span>
-                        {allowSelfEdit && order.status !== 'CANCELLED' && (
-                            <Tooltip label={t`Resend Confirmation`}>
-                                <ActionIcon size="xs" variant="subtle" onClick={onResendClick}>
-                                    <IconSend size={14}/>
-                                </ActionIcon>
-                            </Tooltip>
-                        )}
-                    </Group>
-                }
-            />
-            <DetailItem
-                icon={IconCalendar}
-                label={t`Order Date`}
-                value={dateToBrowserTz(order.created_at, event.timezone)}
-            />
-            {!!order.refund_status && (
-                <DetailItem
-                    icon={IconMenuOrder}
-                    label={t`Refund Status`}
-                    value={<RefundStatusType order={order}/>}
-                />
-            )}
-            {(order.payment_status !== 'PAYMENT_RECEIVED' && order.payment_status !== 'NO_PAYMENT_REQUIRED') && (
-                <DetailItem
-                    icon={IconCash}
-                    label={t`Payment Status`}
-                    value={<PaymentStatus order={order}/>}
-                />
-            )}
-            {order.address && (
-                <DetailItem
-                    icon={IconMapPin}
-                    label={t`Billing Address`}
-                    value={formatAddress(order.address)}
-                />
-            )}
-        </SimpleGrid>
+const HtmlCard = ({title, html}: { title: string, html: string }) => (
+    <Card title={title}>
+        <div className={classes.richText} dangerouslySetInnerHTML={{__html: html}}/>
     </Card>
 );
 
-const EventDetails = ({event}: { event: Event }) => {
-    const location = event.settings?.location_details ? formatAddress(event.settings.location_details) : null;
-    const venueDetails = event.settings?.location_details?.venue_name
-        ? `${event.settings.location_details.venue_name}${location ? `, ${location}` : ''}`
-        : location;
+// Les trois boutons de la maquette: dans l'en-tete sur ordinateur, sous le billet sur mobile.
+const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
+    event: Event,
+    order: Order,
+    ticketsUrl: string | null,
+    mapsUrl: string | null,
+    className: string,
+}) => {
+    if (order.status === 'CANCELLED') {
+        return null;
+    }
 
     return (
-        <Card>
-            <SimpleGrid cols={{base: 1, sm: 2}} spacing="md">
-                <DetailItem
-                    icon={IconCalendarEvent}
-                    label={t`Event Date`}
-                    value={<EventDateRange event={event}/>}
-                />
-                {venueDetails && (
-                    <DetailItem
-                        icon={IconMapPin}
-                        label={t`Location`}
-                        value={(
-                            <NavLink
-                                to={event.settings?.maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event?.settings?.location_details ? formatAddress(event.settings.location_details) : '')}`}
-                                target="_blank"
-                            >
-                                {venueDetails}
-                            </NavLink>
+        <div className={`${classes.actions} ${className}`}>
+            <CalendarOptionsPopover event={event}>
+                <UnstyledButton className={`${classes.button} ${classes.buttonPrimary}`}>
+                    <PublicIcon name={'calendrier'} size={20}/>
+                    {t`Add to Calendar`}
+                </UnstyledButton>
+            </CalendarOptionsPopover>
+            {(ticketsUrl || mapsUrl) && (
+                <div className={classes.secondaryActions}>
+                    {ticketsUrl && (
+                        <a className={`${classes.button} ${classes.buttonOutline}`} href={ticketsUrl} target="_blank" rel="noreferrer">
+                            <PublicIcon name={'telecharger'} size={20}/>
+                            <span className={classes.desktopOnly}>{t`Download tickets`}</span>
+                            <span className={classes.mobileOnly}>{t`PDF tickets`}</span>
+                        </a>
+                    )}
+                    {mapsUrl && (
+                        <a className={`${classes.button} ${classes.buttonOutline}`} href={mapsUrl} target="_blank" rel="noreferrer">
+                            <PublicIcon name={'itineraire'} size={20}/>
+                            {t`Directions`}
+                        </a>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
 
-                        )}
+const ActionRow = ({icon, label}: { icon: PublicIconName, label: string }) => (
+    <>
+        <span className={classes.actionIcon}><PublicIcon name={icon} size={20}/></span>
+        <span className={classes.actionLabel}>{label}</span>
+        <PublicIcon name={'chevron-droite'} size={18} className={classes.actionChevron}/>
+    </>
+);
+
+const ManageAction = ({icon, label, onClick, href}: {
+    icon: PublicIconName,
+    label: string,
+    onClick?: () => void,
+    href?: string,
+}) => href ? (
+    <a className={classes.action} href={href} target="_blank" rel="noreferrer">
+        <ActionRow icon={icon} label={label}/>
+    </a>
+) : (
+    <UnstyledButton className={classes.action} onClick={onClick}>
+        <ActionRow icon={icon} label={label}/>
+    </UnstyledButton>
+);
+
+// Une action propre a un participant: directe s'il n'y en a qu'un, sinon on choisit lequel.
+const AttendeeAction = ({icon, label, attendees, onPick}: {
+    icon: PublicIconName,
+    label: string,
+    attendees: Attendee[],
+    onPick: (attendee: Attendee) => void,
+}) => {
+    if (attendees.length === 1) {
+        return <ManageAction icon={icon} label={label} onClick={() => onPick(attendees[0])}/>;
+    }
+
+    return (
+        <Menu position="bottom-end" shadow="md" withinPortal>
+            <Menu.Target>
+                <UnstyledButton className={classes.action}>
+                    <ActionRow icon={icon} label={label}/>
+                </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown>
+                {attendees.map((attendee) => (
+                    <Menu.Item key={attendee.id} onClick={() => onPick(attendee)}>
+                        {attendee.first_name} {attendee.last_name}
+                    </Menu.Item>
+                ))}
+            </Menu.Dropdown>
+        </Menu>
+    );
+};
+
+const RecapLine = ({label, value, original}: { label: string, value: string, original?: string }) => (
+    <div className={classes.recapLine}>
+        <span className={classes.recapLabel}>{label}</span>
+        <span className={classes.recapValue}>
+            {original && <s className={classes.recapOriginal}>{original}</s>}
+            {value}
+        </span>
+    </div>
+);
+
+const OrderRecap = ({order}: { order: Order }) => {
+    const [expanded, setExpanded] = useState(false);
+    const currency = order.currency;
+    const pill = orderStatusPill(order);
+    const paymentLabel = [paymentStatusLabel(order), refundStatusLabel(order)].filter(Boolean).join(' · ');
+    const total = formatCurrency(order.total_gross, currency);
+    const discount = order.order_items?.reduce((sum, item) => (
+        item.price_before_discount ? sum + (item.price_before_discount - item.price) * item.quantity : sum
+    ), 0) || 0;
+
+    return (
+        <Card
+            title={t`Order recap`}
+            aside={(
+                <>
+                    {pill && <span className={`${classes.pill} ${classes.desktopOnly}`}>{pill}</span>}
+                    <UnstyledButton
+                        className={`${classes.recapToggle} ${classes.mobileOnly}`}
+                        onClick={() => setExpanded(!expanded)}
+                        aria-expanded={expanded}
+                    >
+                        {total}
+                        <PublicIcon name={'chevron'} size={18} className={expanded ? classes.chevronOpen : undefined}/>
+                    </UnstyledButton>
+                </>
+            )}
+        >
+            <div className={classes.recapBody} data-expanded={expanded || undefined}>
+                {order.order_items?.map((item) => (
+                    <RecapLine
+                        key={item.id}
+                        label={`${item.item_name} × ${item.quantity}`}
+                        value={formatCurrency((item.price_before_discount || item.price) * item.quantity, currency)}
+                    />
+                ))}
+                {!!order.promo_code && (
+                    <RecapLine
+                        label={`${t`Promo code`} (${order.promo_code})`}
+                        value={discount > 0 ? `-${formatCurrency(discount, currency)}` : ''}
                     />
                 )}
-                <DetailItem
-                    icon={IconClock}
-                    label={t`Timezone`}
-                    value={event.timezone}
-                />
-                <DetailItem
-                    icon={IconBuilding}
-                    label={t`Organizer`}
-                    value={(
-                        <>
-                            {event.organizer?.email && (
-                                <NavLink to={event.organizer?.email ? `mailto:${event.organizer.email}` : '#'}>
-                                    {event.organizer?.name}
-                                </NavLink>
-                            )}
-                            {!event.organizer?.email && event.organizer?.name}
-                        </>
-                    )}
-                />
-            </SimpleGrid>
+                {!!order.platform_contribution && order.platform_contribution > 0 && (
+                    <RecapLine label={t`Support the platform`} value={formatCurrency(order.platform_contribution, currency)}/>
+                )}
+                {order.taxes_and_fees_rollup?.fees?.map((fee, index) => (
+                    <RecapLine key={`fee-${index}`} label={fee.name} value={formatCurrency(fee.value, currency)}/>
+                ))}
+                {order.taxes_and_fees_rollup?.taxes?.map((tax, index) => (
+                    <RecapLine key={`tax-${index}`} label={tax.name} value={formatCurrency(tax.value, currency)}/>
+                ))}
+                <div className={classes.separator}/>
+                <div className={classes.recapTotal}>
+                    <span>{t`Total`}</span>
+                    <span className={classes.recapTotalValue}>{total}</span>
+                </div>
+                {!!order.deposit_amount && order.deposit_amount > 0 && (
+                    <div className={classes.recapLine}>
+                        <span className={classes.recapLabel}>
+                            {t`Security deposit`}
+                            <span className={classes.recapHint}>{t`Sent separately, not included in the total`}</span>
+                        </span>
+                        <span className={classes.recapValue}>{formatCurrency(order.deposit_amount, currency)}</span>
+                    </div>
+                )}
+            </div>
+            <p className={classes.recapMeta}>
+                <span className={classes.mobileOnly}>
+                    {t`Order`} {order.public_id}{paymentLabel ? ' · ' : ''}
+                </span>
+                {paymentLabel}
+            </p>
+            {order.address && isAddressSet(order.address) && (
+                <p className={classes.recapMeta}>
+                    <span className={classes.recapMetaLabel}>{t`Billing Address`}</span>
+                    {formatAddress(order.address)}
+                </p>
+            )}
         </Card>
     );
 };
 
-const OrderStatus = ({order}: { order: Order }) => {
-    if (order?.status === 'CANCELLED') {
-        return (
-            <HomepageInfoMessage
-                status="cancelled"
-                message={t`Order cancelled`}
-                subtitle={t`This order has been cancelled.`}
-            />
-        );
-    }
-
-    if (order?.status === 'COMPLETED') {
-        return (
-            <HomepageInfoMessage
-                status="success"
-                message={t`Order complete`}
-                subtitle={t`This order is complete.`}
-            />
-        );
-    }
+const EventCard = ({event, order, className}: { event: Event, order: Order, className?: string }) => {
+    const location = eventLocation(event);
+    const isCancelled = order.status === 'CANCELLED';
 
     return (
-        <HomepageInfoMessage
-            status="processing"
-            message={t`Processing order`}
-            subtitle={t`This order is being processed.`}
-        />
+        <Card title={t`The event`} className={className}>
+            <div className={classes.detail}>
+                <span className={classes.detailIcon}><PublicIcon name={'calendrier'} size={20}/></span>
+                <span className={classes.detailText}>
+                    <span className={classes.detailTitle}>
+                        {eventRangeLabel(event.start_date, event.end_date, event.timezone)}
+                    </span>
+                    <span className={classes.detailSubtitle}>{timezoneLabel(event.start_date, event.timezone)}</span>
+                </span>
+                {!isCancelled && (
+                    <CalendarOptionsPopover event={event}>
+                        <UnstyledButton className={classes.detailLink}>
+                            {t`Calendar`}
+                            <PublicIcon name={'fleche'} size={14}/>
+                        </UnstyledButton>
+                    </CalendarOptionsPopover>
+                )}
+            </div>
+            {location && (
+                <div className={classes.detail}>
+                    <span className={classes.detailIcon}><PublicIcon name={'lieu'} size={20}/></span>
+                    <span className={classes.detailText}>
+                        <span className={classes.detailTitle}>{location.title}</span>
+                        {location.subtitle && <span className={classes.detailSubtitle}>{location.subtitle}</span>}
+                    </span>
+                    <a className={classes.detailLink} href={location.mapsUrl} target="_blank" rel="noreferrer">
+                        {t`Directions`}
+                        <PublicIcon name={'fleche'} size={14}/>
+                    </a>
+                </div>
+            )}
+            {event.settings?.is_online_event && (
+                <div className={classes.detail}>
+                    <span className={classes.detailIcon}><PublicIcon name={'globe'} size={20}/></span>
+                    <span className={classes.detailText}>
+                        <span className={classes.detailTitle}>{t`Online Event`}</span>
+                    </span>
+                </div>
+            )}
+        </Card>
     );
 };
-
-const PostCheckoutMessage = ({ message }: { message: string }) => (
-    <div style={{ marginTop: '20px', marginBottom: '40px' }}>
-        <h1 className={classes.heading}>{t`Additional Information`}</h1>
-        <Card>
-            <div dangerouslySetInnerHTML={{ __html: message }} />
-        </Card>
-    </div>
-);
-
-const OfflinePaymentInstructions = ({ event }: { event: Event }) => (
-    <div style={{ marginTop: '20px', marginBottom: '40px' }}>
-        <h2>{t`Payment Instructions`}</h2>
-        <Card>
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: event?.settings?.offline_payment_instructions || "",
-                }}
-            />
-        </Card>
-    </div>
-);
 
 export const OrderSummaryAndProducts = () => {
     const {eventId, orderShortId} = useParams();
@@ -536,6 +481,29 @@ export const OrderSummaryAndProducts = () => {
         );
     };
 
+    const handleInvoiceDownload = async (invoice: Invoice) => {
+        await withLoadingNotification(
+            async () => {
+                const blob = await orderClientPublic.downloadInvoice(eventId, orderShortId);
+                downloadBinary(blob, invoice.invoice_number + '.pdf');
+            },
+            {
+                loading: {
+                    title: t`Downloading Invoice`,
+                    message: t`Please wait while we prepare your invoice...`
+                },
+                success: {
+                    title: t`Success`,
+                    message: t`Invoice downloaded successfully`
+                },
+                error: {
+                    title: t`Error`,
+                    message: t`Failed to download invoice. Please try again.`
+                }
+            }
+        );
+    };
+
     if (isError) {
         return (
             <HomepageInfoMessage
@@ -556,98 +524,215 @@ export const OrderSummaryAndProducts = () => {
     }
 
     if (order?.status !== 'COMPLETED' && order?.status !== 'CANCELLED' && order?.status !== 'AWAITING_OFFLINE_PAYMENT') {
-        return <OrderStatus order={order}/>;
+        return (
+            <HomepageInfoMessage
+                status="processing"
+                message={t`Processing order`}
+                subtitle={t`This order is being processed.`}
+            />
+        );
     }
+
+    const isCompleted = order.status === 'COMPLETED';
+    const isCancelled = order.status === 'CANCELLED';
+    const isAwaitingPayment = order.status === 'AWAITING_OFFLINE_PAYMENT';
+    const attendees = order.attendees || [];
+    const hasTickets = attendees.length > 0;
+    const activeAttendees = attendees.filter((attendee) => attendee.status !== 'CANCELLED');
+    const venue = eventLocation(event);
+    const ticketsUrl = hasTickets ? `/order/${eventId}/${orderShortId}/print` : null;
+    const canSelfEdit = allowSelfEdit && !isCancelled;
+    // Avec un seul billet envoye a l'acheteur, renvoyer la confirmation suffit.
+    const showResendTicket = canSelfEdit && activeAttendees.length > 0
+        && (activeAttendees.length > 1 || activeAttendees[0].email !== order.email);
+
+    // Seule la couleur principale suit le theme de l'evenement (toujours calculee en mode clair):
+    // le creme, le texte fonce et la police restent ceux de Dehors.
+    const rawThemeSettings = event.settings?.homepage_theme_settings;
+    const themeStyles = (rawThemeSettings?.accent
+        ? Object.fromEntries(Object.entries(computeThemeVariables({...validateThemeSettings(rawThemeSettings), mode: 'light'}))
+            .filter(([name]) => name.startsWith('--theme-accent')))
+        : {}) as CSSProperties;
+
+    const title = isCompleted
+        ? t`It's confirmed!`
+        : isCancelled ? t`Your order has been cancelled` : t`Your order is awaiting payment`;
+
+    const manageActions = [
+        canSelfEdit && activeAttendees.length > 0 && (
+            <AttendeeAction
+                key="edit-attendee"
+                icon={'modifier'}
+                label={t`Edit an attendee`}
+                attendees={activeAttendees}
+                onPick={setEditingAttendee}
+            />
+        ),
+        canSelfEdit && (
+            <ManageAction
+                key="edit-order"
+                icon={'modifier'}
+                label={t`Edit Order Details`}
+                onClick={() => setEditOrderModalOpened(true)}
+            />
+        ),
+        canSelfEdit && (
+            <ManageAction
+                key="resend-confirmation"
+                icon={'courriel'}
+                label={t`Resend Confirmation`}
+                onClick={handleResendOrderConfirmation}
+            />
+        ),
+        showResendTicket && (
+            <AttendeeAction
+                key="resend-ticket"
+                icon={'billet'}
+                label={t`Resend Ticket`}
+                attendees={activeAttendees}
+                onPick={handleResendAttendeeTicket}
+            />
+        ),
+        ticketsUrl && (
+            <ManageAction key="print" icon={'imprimer'} label={t`Print Tickets`} href={ticketsUrl}/>
+        ),
+        !!order.latest_invoice && (
+            <ManageAction
+                key="invoice"
+                icon={'telecharger'}
+                label={t`Download Invoice`}
+                onClick={() => handleInvoiceDownload(order.latest_invoice as Invoice)}
+            />
+        ),
+        !isCancelled && (
+            <div key="share" className={classes.shareAction}>
+                <ShareComponent title={event.title} text={t`Check out this event!`} url={eventHomepageUrl(event)}>
+                    <UnstyledButton className={classes.action}>
+                        <ActionRow icon={'partager'} label={t`Share Event`}/>
+                    </UnstyledButton>
+                </ShareComponent>
+            </div>
+        ),
+    ].filter(Boolean);
 
     return (
         <>
-            <CheckoutContent>
-                <WelcomeHeader order={order} event={event} allowSelfEdit={allowSelfEdit}/>
+            <div className={classes.page} style={themeStyles}>
+                <style>
+                    {`
+                        body, .ssr-loader {
+                            background-color: var(--dehors-creme) !important;
+                        }
+                    `}
+                </style>
+                <div className={classes.halo} aria-hidden/>
 
-                {emailUpdated && (
-                    <Alert
-                        icon={<IconCheck size={16}/>}
-                        color="green"
-                        mb="lg"
-                        radius="lg"
-                        style={{
-                            backgroundColor: 'var(--checkout-surface, #ECFDF5)',
-                            borderColor: 'var(--checkout-border, #D1FAE5)',
-                        }}
-                    >
-                        <Text size="sm" style={{color: 'var(--checkout-text-primary, #065F46)'}}>
+                <div className={classes.content}>
+                    {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+                    <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
+
+                    <header className={classes.hero}>
+                        {isCompleted && <p className={classes.kicker}>{t`See you outside!`}</p>}
+                        <h1 className={classes.heroTitle}>{title}</h1>
+                        <p className={classes.heroLine}>
+                            {isCompleted && <span>{t`Confirmation sent to`} {order.email}</span>}
+                            {isCancelled && <span>{t`A cancellation notice has been sent to`} {order.email}</span>}
+                            <span className={(isCompleted || isCancelled) ? classes.desktopOnly : undefined}>
+                                {(isCompleted || isCancelled) && <span aria-hidden className={classes.dot}>·</span>}
+                                {t`Order`} {order.public_id}
+                            </span>
+                        </p>
+                        <ConfirmationActions
+                            event={event}
+                            order={order}
+                            ticketsUrl={ticketsUrl}
+                            mapsUrl={venue?.mapsUrl || null}
+                            className={classes.desktopOnly}
+                        />
+                    </header>
+
+                    {emailUpdated && (
+                        <div className={classes.notice} role="status">
+                            <span className={classes.noticeIcon}><IconCheck size={18}/></span>
                             {t`Your order details have been updated. A confirmation email has been sent to the new email address.`}
-                        </Text>
-                    </Alert>
-                )}
+                        </div>
+                    )}
 
-                <InlineOrderSummary
-                    event={event}
-                    order={order}
-                    showBuyerProtection={false}
-                    defaultExpanded={false}
-                />
-
-                {order?.status === 'AWAITING_OFFLINE_PAYMENT' && <OfflinePaymentInstructions event={event}/>}
-                {order?.deposit_status === 'PENDING' && <DepositInstructions event={event} order={order}/>}
-
-                <h1 className={classes.heading}>{t`Order Details`}</h1>
-
-                <OrderDetails
-                    order={order}
-                    event={event}
-                    allowSelfEdit={allowSelfEdit}
-                    onEditClick={() => setEditOrderModalOpened(true)}
-                    onResendClick={handleResendOrderConfirmation}
-                />
-
-                {event?.settings?.is_online_event && <OnlineEventDetails eventSettings={event.settings}/>}
-
-                {!!event?.settings?.post_checkout_message && <PostCheckoutMessage message={event.settings.post_checkout_message}/>}
-
-                <h1 className={classes.heading}>{t`Event Details`}</h1>
-                <EventDetails event={event}/>
-
-                {order.status === 'COMPLETED' && <AddToCalendarCTA event={event}/>}
-
-                {(order?.attendees && order.attendees.length > 0) && (
-                    <>
-                        <Group justify="space-between" align="center">
-                            <h1 className={classes.heading}>
-                                <Group gap="xs">
-                                    <IconTicket size={20}/>
-                                    {t`Guests`}
-                                </Group>
-                            </h1>
-                            <Button
-                                size="sm"
-                                variant="subtle"
-                                leftSection={<IconPrinter size={16}/>}
-                                onClick={() => window?.open(`/order/${eventId}/${orderShortId}/print`, '_blank')}
-                            >
-                                {t`Print All Tickets`}
-                            </Button>
-                        </Group>
-
-                        <Card>
-                            <div className={classes.guestList}>
-                                {order.attendees.map((attendee) => (
-                                    <GuestListItem
-                                        key={attendee.id}
-                                        attendee={attendee}
-                                        event={event}
-                                        allowSelfEdit={allowSelfEdit}
-                                        onEditClick={() => setEditingAttendee(attendee)}
-                                        onResendClick={() => handleResendAttendeeTicket(attendee)}
-                                    />
+                    <div className={classes.columns}>
+                        {hasTickets && (
+                            <div className={classes.tickets}>
+                                {attendees.map((attendee) => (
+                                    <ConfirmationTicket key={attendee.id} attendee={attendee} event={event}/>
                                 ))}
                             </div>
-                        </Card>
-                    </>
-                )}
+                        )}
 
-                <PoweredByFooter/>
-            </CheckoutContent>
+                        <ConfirmationActions
+                            event={event}
+                            order={order}
+                            ticketsUrl={ticketsUrl}
+                            mapsUrl={venue?.mapsUrl || null}
+                            className={classes.mobileOnly}
+                        />
+
+                        <div className={classes.details}>
+                            {isAwaitingPayment && !!event.settings?.offline_payment_instructions && (
+                                <HtmlCard title={t`Payment Instructions`} html={event.settings.offline_payment_instructions}/>
+                            )}
+
+                            {order.deposit_status === 'PENDING' && !!order.deposit_amount && order.deposit_amount > 0 && (
+                                <Card title={t`Security Deposit`}>
+                                    <div className={classes.richText}>
+                                        <p>
+                                            <Trans>
+                                                A security deposit of <b>{formatCurrency(order.deposit_amount, event.currency)}</b> must be
+                                                sent separately. It is not included in your order total.
+                                            </Trans>
+                                        </p>
+                                        {!!event.settings?.deposit_instructions && (
+                                            <div dangerouslySetInnerHTML={{__html: event.settings.deposit_instructions}}/>
+                                        )}
+                                    </div>
+                                </Card>
+                            )}
+
+                            <EventCard
+                                event={event}
+                                order={order}
+                                className={hasTickets ? classes.desktopOnly : undefined}
+                            />
+
+                            {event.settings?.is_online_event && !!event.settings.online_event_connection_details && (
+                                <HtmlCard title={t`Online Event Details`} html={event.settings.online_event_connection_details}/>
+                            )}
+
+                            {!!event.settings?.post_checkout_message && (
+                                <HtmlCard title={t`Additional Information`} html={event.settings.post_checkout_message}/>
+                            )}
+
+                            <OrderRecap order={order}/>
+
+                            {manageActions.length > 0 && (
+                                <Card title={t`Manage order`} className={classes.manageCard}>
+                                    <div className={classes.actionList}>
+                                        {manageActions}
+                                    </div>
+                                    {isCompleted && allowSelfEdit && (
+                                        <p className={classes.tip}>
+                                            <PublicIcon name={'etoile'} size={18}/>
+                                            {t`Bookmark this page to manage your order anytime.`}
+                                        </p>
+                                    )}
+                                </Card>
+                            )}
+                        </div>
+                    </div>
+
+                    {event.organizer?.id && <OtherEvents organizer={event.organizer} currentEventId={event.id}/>}
+
+                    <PublicPageFooter/>
+                </div>
+            </div>
 
             {editingAttendee && (
                 <EditAttendeeModal
