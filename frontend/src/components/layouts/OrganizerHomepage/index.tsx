@@ -20,6 +20,7 @@ import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
 import {ShareComponent} from "../../common/ShareIcon";
+import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 interface OrganizerHomepageProps {
     organizer?: Organizer;
@@ -54,6 +55,7 @@ export const OrganizerHomepage = ({
                                       isPastEvents = false,
                                   }: OrganizerHomepageProps) => {
     const navigate = useNavigate();
+    const roughEdges = useRoughEdges<HTMLElement>();
     const [contactModalOpen, setContactModalOpen] = useState(false);
 
     const {consentPending, onConsent} = useOrganizerTrackingPixels(
@@ -115,7 +117,7 @@ export const OrganizerHomepage = ({
             )}
 
             {organizer && <OrganizerDocumentHead organizer={organizer}/>}
-            <main className={classes.page} style={themeStyles}>
+            <main ref={roughEdges} className={classes.page} style={themeStyles}>
                 <style>
                     {`
                         body, .ssr-loader {
@@ -129,8 +131,8 @@ export const OrganizerHomepage = ({
                         <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
                     </div>
 
-                    <header className={`${classes.card} ${classes.headerCard}`}>
-                        <div className={classes.banner}>
+                    <header className={`${classes.card} ${classes.headerCard}`} data-rough>
+                        <div className={classes.banner} data-rough>
                             {organizerCover ? (
                                 <>
                                     {organizerCover.lqip_base64 && (
@@ -145,7 +147,7 @@ export const OrganizerHomepage = ({
                         </div>
 
                         <div className={classes.profile}>
-                            <div className={classes.logo}>
+                            <div className={classes.logo} data-rough>
                                 {organizerLogo ? (
                                     <img src={organizerLogo.url} alt={organizer.name}/>
                                 ) : (
@@ -168,7 +170,7 @@ export const OrganizerHomepage = ({
                                         {shortLocation && locationDetails && (
                                             <li>
                                                 <a href={getGoogleMapsUrl(locationDetails)} target="_blank"
-                                                   rel="noopener noreferrer" className={classes.pill}>
+                                                   rel="noopener noreferrer" className={classes.pill} data-rough>
                                                     <PublicIcon name={'lieu-petit'} className={classes.pillIcon}/>
                                                     {shortLocation}
                                                 </a>
@@ -177,7 +179,7 @@ export const OrganizerHomepage = ({
                                         {websiteUrl && (
                                             <li>
                                                 <a href={websiteUrl} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.pill}>
+                                                   className={classes.pill} data-rough>
                                                     <PublicIcon name={'globe'} className={classes.pillIcon}/>
                                                     {websiteLabel(websiteUrl)}
                                                 </a>
@@ -186,7 +188,7 @@ export const OrganizerHomepage = ({
                                         {instagramHandle && (
                                             <li>
                                                 <a href={socialMediaConfig.instagram.baseUrl + instagramHandle}
-                                                   target="_blank" rel="noopener noreferrer" className={classes.pill}>
+                                                   target="_blank" rel="noopener noreferrer" className={classes.pill} data-rough>
                                                     <PublicIcon name={'instagram'} className={classes.pillIcon}/>
                                                     @{instagramHandle}
                                                 </a>
@@ -195,7 +197,7 @@ export const OrganizerHomepage = ({
                                         {otherSocialLinks.map(({platform, url, Icon}) => (
                                             <li key={platform}>
                                                 <a href={url} target="_blank" rel="noopener noreferrer"
-                                                   className={`${classes.pill} ${classes.iconPill}`} aria-label={platform}>
+                                                   className={`${classes.pill} ${classes.iconPill}`} data-rough aria-label={platform}>
                                                     <Icon size={16} stroke={1.8} className={classes.pillIcon}/>
                                                 </a>
                                             </li>
@@ -203,7 +205,7 @@ export const OrganizerHomepage = ({
                                         {donationUrl && (
                                             <li>
                                                 <a href={donationUrl} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.pill}>
+                                                   className={classes.pill} data-rough>
                                                     <IconHeart size={16} stroke={1.8} className={classes.pillIcon}/>
                                                     {t`Donate`}
                                                 </a>
@@ -220,14 +222,14 @@ export const OrganizerHomepage = ({
                                         text={organizer.name}
                                         url={organizerHomepageUrl(organizer)}
                                     >
-                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`}>
+                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
                                             <PublicIcon name={'partager'} size={20}/>
                                             {t`Share`}
                                         </button>
                                     </ShareComponent>
                                 </div>
                                 <button type="button" onClick={() => setContactModalOpen(true)}
-                                        className={`${classes.button} ${classes.buttonFilled}`}>
+                                        className={`${classes.button} ${classes.buttonFilled}`} data-rough="button">
                                     <PublicIcon name={'courriel'} size={20}/>
                                     {t`Contact organizer`}
                                 </button>
@@ -235,7 +237,7 @@ export const OrganizerHomepage = ({
                         </div>
                     </header>
 
-                    <section className={`${classes.card} ${classes.section}`} aria-labelledby="organizer-events-title">
+                    <section className={`${classes.card} ${classes.section}`} data-rough aria-labelledby="organizer-events-title">
                         <div className={classes.sectionHeader}>
                             <h2 id="organizer-events-title" className={classes.sectionTitle}>
                                 <span className={classes.longLabel}>
@@ -246,7 +248,7 @@ export const OrganizerHomepage = ({
                                 </span>
                             </h2>
                             <nav className={classes.tabs}>
-                                <Link to={homepagePath} className={classes.tab}
+                                <Link to={homepagePath} className={classes.tab} data-rough
                                       aria-current={!isPastEvents ? 'page' : undefined}>
                                     {upcomingCount !== null ? (
                                         <>
@@ -255,7 +257,7 @@ export const OrganizerHomepage = ({
                                         </>
                                     ) : t`Upcoming`}
                                 </Link>
-                                <Link to={pastEventsPath} className={classes.tab}
+                                <Link to={pastEventsPath} className={classes.tab} data-rough
                                       aria-current={isPastEvents ? 'page' : undefined}>
                                     {t`Past`}
                                 </Link>
@@ -263,7 +265,7 @@ export const OrganizerHomepage = ({
                         </div>
 
                         {events.length === 0 ? (
-                            <div className={classes.empty}>
+                            <div className={classes.empty} data-rough>
                                 <PublicIcon name={'calendrier'} size={28} className={classes.pillIcon}/>
                                 <p>{isPastEvents ? t`No past events` : t`No upcoming events`}</p>
                             </div>
@@ -289,7 +291,7 @@ export const OrganizerHomepage = ({
                     </section>
 
                     {faqs.length > 0 && (
-                        <section className={`${classes.card} ${classes.section}`} aria-labelledby="organizer-faq-title">
+                        <section className={`${classes.card} ${classes.section}`} data-rough aria-labelledby="organizer-faq-title">
                             <h2 id="organizer-faq-title" className={classes.sectionTitle}>
                                 {t`Frequently asked questions`}
                             </h2>
@@ -306,7 +308,7 @@ export const OrganizerHomepage = ({
                                 }}
                             >
                                 {faqs.map((faq, index) => (
-                                    <Accordion.Item key={index} value={String(index)}>
+                                    <Accordion.Item key={index} value={String(index)} data-rough>
                                         <Accordion.Control>{faq.question}</Accordion.Control>
                                         <Accordion.Panel>{faq.answer}</Accordion.Panel>
                                     </Accordion.Item>

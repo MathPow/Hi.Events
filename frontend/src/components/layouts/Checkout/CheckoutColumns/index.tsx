@@ -10,7 +10,7 @@ export {classes as checkoutClasses};
 export const CheckoutColumns = ({panel, children}: { panel: ReactNode, children: ReactNode }) => (
     <div className={classes.columns}>
         <div className={classes.panel}>{panel}</div>
-        <div className={classes.formCard}>
+        <div className={classes.formCard} data-rough>
             <h1 className={classes.title}>{t({message: 'Checkout', context: 'checkout page title'})}</h1>
             {children}
         </div>

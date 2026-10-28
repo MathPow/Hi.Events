@@ -5,7 +5,7 @@ import {getConfig} from "../../../utilites/config.ts";
 
 // Le pied des pages publiques: les liens legaux a gauche, la mention en pastille a droite.
 export const PublicPageFooter = () => (
-    <footer className={classes.footer}>
+    <footer className={classes.footer} data-rough>
         <p className={classes.links}>
             <a href={getConfig("VITE_PRIVACY_URL", 'https://hi.events/privacy-policy') as string} target="_blank" rel="noreferrer">
                 {t`Privacy Policy`}

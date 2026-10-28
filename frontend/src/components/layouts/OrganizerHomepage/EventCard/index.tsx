@@ -107,8 +107,8 @@ export const EventCard = ({event}: EventCardProps) => {
     const badge = isLive ? t`LIVE` : scarcityLabel(event, products);
 
     return (
-        <Link to={eventHomepagePath(event)} className={classes.card}>
-            <div className={classes.image}>
+        <Link to={eventHomepagePath(event)} className={classes.card} data-rough>
+            <div className={classes.image} data-rough>
                 {coverImage ? (
                     <img src={coverImage.url} alt="" loading="lazy"/>
                 ) : (

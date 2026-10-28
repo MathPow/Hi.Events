@@ -42,10 +42,13 @@ $erreur: #c0392b;
   box-shadow: var(--dehors-ombre-carte);
   color: var(--dehors-brun);
 
+  // Sur mobile, la barre du bouton (CheckoutActions) est fixee en bas de l'ecran mais
+  // vit dans cette carte: sa decoupe (useRoughEdges) la couperait avec elle.
   @include mixins.respond-below(md) {
     gap: 32px;
     padding: 24px 18px;
     border-radius: 26px;
+    clip-path: none !important;
   }
 
   // Champs Mantine de la maquette: libelle gras, saisie sur fond sable, sans bordure.

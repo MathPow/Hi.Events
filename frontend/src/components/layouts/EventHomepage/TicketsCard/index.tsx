@@ -67,11 +67,12 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
             ref={mergedRef}
             id="tickets"
             className={className ? `${classes.card} ${className}` : classes.card}
+            data-rough
             style={{'--billets-haut': `${stickyTop}px`} as CSSProperties}
         >
             <div className={classes.header}>
                 <h2 className={classes.title}>{t`Tickets`}</h2>
-                {hasLimitedSpots && <span className={classes.pill}>{t`Limited spots`}</span>}
+                {hasLimitedSpots && <span className={classes.pill} data-rough>{t`Limited spots`}</span>}
             </div>
 
             <div className={classes.widget}>

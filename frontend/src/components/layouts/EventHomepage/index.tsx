@@ -33,6 +33,7 @@ import {ProductSelectionSummary} from "../../routes/product-widget/SelectProduct
 import {findDefaultTicket, StickyBuyBar} from "./StickyBuyBar";
 import {TicketsCard} from "./TicketsCard";
 import {CollapsibleDescription} from "./CollapsibleDescription";
+import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 const TICKETS_FORM_ID = 'event-tickets-form';
 
@@ -84,8 +85,8 @@ const OrganizerLogo = ({organizer, className}: { organizer?: Organizer, classNam
     const logo = organizer?.images?.find(image => image.type === 'ORGANIZER_LOGO')?.url;
 
     return logo
-        ? <img src={logo} alt="" className={className}/>
-        : <span className={className} aria-hidden>{organizer?.name?.charAt(0).toUpperCase() || '?'}</span>;
+        ? <img src={logo} alt="" className={className} data-rough/>
+        : <span className={className} aria-hidden data-rough>{organizer?.name?.charAt(0).toUpperCase() || '?'}</span>;
 };
 
 const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) => {
@@ -94,6 +95,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const [selection, setSelection] = useState<ProductSelectionSummary | null>(null);
     const ticketsRef = useRef<HTMLElement>(null);
     const {i18n} = useLingui();
+    const roughEdges = useRoughEdges<HTMLElement>();
 
     const {consentPending, consentGranted, onConsent} = useOrganizerTrackingPixels(
         event?.organizer?.settings?.tracking_pixels
@@ -198,7 +200,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
             url={eventHomepageUrl(event)}
             imageUrl={coverImage?.url}
         >
-            <button type="button" className={className} title={t`Share`} aria-label={t`Share`}>
+            <button type="button" className={className} title={t`Share`} aria-label={t`Share`} data-rough="button">
                 <PublicIcon name={'partager'} size={withLabel ? 20 : 18}/>
                 {withLabel && t`Share`}
             </button>
@@ -227,7 +229,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                 />
             )}
 
-            <main className={classes.page} style={pageStyle}>
+            <main ref={roughEdges} className={classes.page} style={pageStyle}>
                 <style>
                     {`
                         body, .ssr-loader {
@@ -247,10 +249,10 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                     <div className={classes.columns}>
                         <div className={classes.eventColumn}>
-                            <section className={`${classes.card} ${classes.presentation}`}>
+                            <section className={`${classes.card} ${classes.presentation}`} data-rough>
                                 {coverImage && (
                                     <div
-                                        className={classes.cover}
+                                        className={classes.cover} data-rough
                                         style={(coverImage.width && coverImage.height) ? {
                                             '--cover-ratio': `${coverImage.width} / ${coverImage.height}`,
                                         } as React.CSSProperties : undefined}
@@ -263,7 +265,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                         {/* Sur mobile, le retour et le partage passent sur l'image. */}
                                         <div className={classes.coverActions}>
                                             {organizerIsLive ? (
-                                                <Link to={organizerHomepagePath(organizer)} className={classes.coverBack}>
+                                                <Link to={organizerHomepagePath(organizer)} className={classes.coverBack} data-rough="button">
                                                     <PublicIcon name={'retour'} size={15} className={classes.accentIcon}/>
                                                     <span>{organizer.name}</span>
                                                 </Link>
@@ -276,12 +278,12 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                 <div className={classes.heading}>
                                     <div className={`${classes.organizerRow} ${coverImage ? classes.organizerRowWithCover : ''}`}>
                                         {organizerIsLive ? (
-                                            <Link to={organizerHomepagePath(organizer)} className={classes.organizerPill}>
+                                            <Link to={organizerHomepagePath(organizer)} className={classes.organizerPill} data-rough>
                                                 <OrganizerLogo organizer={organizer} className={classes.organizerPillLogo}/>
                                                 {organizer.name}
                                             </Link>
                                         ) : (
-                                            <span className={classes.organizerPill}>
+                                            <span className={classes.organizerPill} data-rough>
                                                 <OrganizerLogo organizer={organizer} className={classes.organizerPillLogo}/>
                                                 {organizer?.name}
                                             </span>
@@ -293,15 +295,15 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                                     {tags.length > 0 && (
                                         <ul className={classes.tags}>
-                                            {tags.map(tag => <li key={tag} className={classes.tag}>{tag}</li>)}
+                                            {tags.map(tag => <li key={tag} className={classes.tag} data-rough>{tag}</li>)}
                                         </ul>
                                     )}
                                 </div>
                             </section>
 
-                            <section className={`${classes.card} ${classes.details}`}>
+                            <section className={`${classes.card} ${classes.details}`} data-rough>
                                 <div className={classes.detail}>
-                                    <span className={classes.detailIcon}><PublicIcon name={'calendrier'} size={20}/></span>
+                                    <span className={classes.detailIcon} data-rough><PublicIcon name={'calendrier'} size={20}/></span>
                                     <div className={classes.detailText}>
                                         <span className={classes.detailPrimary}>{formatEventDates(event, i18n.locale)}</span>
                                         <span className={classes.detailSecondary} suppressHydrationWarning>
@@ -318,7 +320,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                                 {hasEnded && (
                                     <div className={classes.detail}>
-                                        <span className={classes.detailIcon}><PublicIcon name={'horloge'} size={20}/></span>
+                                        <span className={classes.detailIcon} data-rough><PublicIcon name={'horloge'} size={20}/></span>
                                         <div className={classes.detailText}>
                                             <span className={classes.detailPrimary}>{t`This event has ended`}</span>
                                         </div>
@@ -327,7 +329,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                                 {isOnlineEvent && (
                                     <div className={classes.detail}>
-                                        <span className={classes.detailIcon}><PublicIcon name={'globe'} size={20}/></span>
+                                        <span className={classes.detailIcon} data-rough><PublicIcon name={'globe'} size={20}/></span>
                                         <div className={classes.detailText}>
                                             <span className={classes.detailPrimary}>{t`Online Event`}</span>
                                             <span className={classes.detailSecondary}>{t`Join from anywhere`}</span>
@@ -337,7 +339,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                                 {hasLocation && locationDetails && (
                                     <div className={classes.detail}>
-                                        <span className={classes.detailIcon}><PublicIcon name={'lieu'} size={20}/></span>
+                                        <span className={classes.detailIcon} data-rough><PublicIcon name={'lieu'} size={20}/></span>
                                         <div className={classes.detailText}>
                                             <span className={classes.detailPrimary}>
                                                 {locationDetails.venue_name || locationDetails.address_line_1 || locationDetails.city}
@@ -355,20 +357,20 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                             </section>
 
                             {event.description && (
-                                <section className={`${classes.card} ${classes.section} ${classes.about}`}>
+                                <section className={`${classes.card} ${classes.section} ${classes.about}`} data-rough>
                                     <h2 className={classes.sectionTitle}>{t`About`}</h2>
                                     <CollapsibleDescription html={event.description}/>
                                 </section>
                             )}
 
                             {hasLocation && locationDetails && mapUrl && (
-                                <section className={`${classes.card} ${classes.section} ${classes.location}`}>
+                                <section className={`${classes.card} ${classes.section} ${classes.location}`} data-rough>
                                     <h2 className={classes.sectionTitle}>{t`Location`}</h2>
                                     <a
                                         href={mapUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className={classes.map}
+                                        className={classes.map} data-rough
                                         aria-label={t`View on Google Maps`}
                                     >
                                         {/* Plan stylise (pas une vraie carte): des routes et le repere, aux couleurs de l'organisateur. */}
@@ -384,7 +386,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                             )}
 
                             {organizerIsLive && (
-                                <section className={`${classes.card} ${classes.organizer}`} id="organizer">
+                                <section className={`${classes.card} ${classes.organizer}`} data-rough id="organizer">
                                     <div className={classes.organizerMain}>
                                         <OrganizerLogo organizer={organizer} className={classes.organizerLogo}/>
                                         <div className={classes.organizerText}>
@@ -396,7 +398,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                                 <span className={classes.organizerLocation}>{organizerLocation}</span>
                                             )}
                                         </div>
-                                        <button type="button" className={classes.outlineButton} onClick={() => setContactModalOpen(true)}>
+                                        <button type="button" className={classes.outlineButton} data-rough="button" onClick={() => setContactModalOpen(true)}>
                                             <PublicIcon name={'courriel'} size={20}/>
                                             {t`Contact organizer`}
                                         </button>
@@ -413,19 +415,19 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                         <div className={classes.organizerLinks}>
                                             {socialLinks.map(({platform, url, Icon}) => (
                                                 <a key={platform} href={url} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.organizerLink} title={platform} aria-label={platform}>
+                                                   className={classes.organizerLink} data-rough="button" title={platform} aria-label={platform}>
                                                     <Icon size={18}/>
                                                 </a>
                                             ))}
                                             {websiteHost && (
                                                 <a href={organizer.website} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.organizerLink} title={websiteHost} aria-label={websiteHost}>
+                                                   className={classes.organizerLink} data-rough="button" title={websiteHost} aria-label={websiteHost}>
                                                     <IconWorld size={18}/>
                                                 </a>
                                             )}
                                             {organizer.donation_url && (
                                                 <a href={organizer.donation_url} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.organizerLink} title={t`Donate`} aria-label={t`Donate`}>
+                                                   className={classes.organizerLink} data-rough="button" title={t`Donate`} aria-label={t`Donate`}>
                                                     <IconHeart size={18}/>
                                                 </a>
                                             )}

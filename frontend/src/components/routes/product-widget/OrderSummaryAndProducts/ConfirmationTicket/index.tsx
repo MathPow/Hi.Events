@@ -18,7 +18,7 @@ export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, even
             <div className={classes.top}>
                 <div className={classes.topRow}>
                     <span className={classes.organizer}>{event.organizer?.name}</span>
-                    {productTitle && <span className={classes.typePill} title={productTitle}>{productTitle}</span>}
+                    {productTitle && <span className={classes.typePill} data-rough title={productTitle}>{productTitle}</span>}
                 </div>
                 <h3 className={classes.title}>{event.title}</h3>
                 <div className={classes.infos}>
@@ -37,7 +37,7 @@ export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, even
 
             <div className={classes.bottom}>
                 {(isCancelled || isAwaitingPayment) ? (
-                    <div className={classes.qrPlaceholder}>
+                    <div className={classes.qrPlaceholder} data-rough>
                         <span className={classes.qrPlaceholderIcon}>
                             {isCancelled ? <IconX size={20} stroke={2}/> : <PublicIcon name={'cadenas'} size={20}/>}
                         </span>
@@ -45,7 +45,7 @@ export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, even
                     </div>
                 ) : (
                     <>
-                        <div className={classes.qr}>
+                        <div className={classes.qr} data-rough>
                             <QRCode
                                 value={String(attendee.public_id)}
                                 size={180}
@@ -58,7 +58,7 @@ export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, even
                     </>
                 )}
 
-                <div className={classes.attendee}>
+                <div className={classes.attendee} data-rough>
                     <div className={classes.attendeeName}>
                         <span className={classes.label}>{t`Participant`}</span>
                         <span className={classes.value}>{attendee.first_name} {attendee.last_name}</span>

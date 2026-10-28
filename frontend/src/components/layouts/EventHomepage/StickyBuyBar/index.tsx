@@ -127,7 +127,7 @@ export const StickyBuyBar = ({
                     <button
                         type="submit"
                         form={formId}
-                        className={classes.button}
+                        className={classes.button} data-rough="button"
                         disabled={!selection.canContinue || selection.isSubmitting}
                         tabIndex={tabIndex}
                     >
@@ -163,7 +163,7 @@ export const StickyBuyBar = ({
                     </div>
                     <button
                         type="button"
-                        className={classes.button}
+                        className={classes.button} data-rough="button"
                         onClick={handleBuy}
                         disabled={isBuying}
                         tabIndex={tabIndex}
@@ -176,7 +176,7 @@ export const StickyBuyBar = ({
         }
 
         return (
-            <button type="button" className={`${classes.button} ${classes.wide}`} onClick={onShowTickets} tabIndex={tabIndex}>
+            <button type="button" className={`${classes.button} ${classes.wide}`} data-rough="button" onClick={onShowTickets} tabIndex={tabIndex}>
                 <PublicIcon name={'billet'} size={18}/>
                 {t`Get Tickets`}
             </button>

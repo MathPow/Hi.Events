@@ -526,7 +526,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                 ?.reduce((acc, {quantity}) => acc + Number(quantity), 0) || 0;
 
                                             return (
-                                                <div key={product.id} className={`hi-product-row ${product.is_highlighted ? 'hi-product-highlighted' : ''} ${productSelectedQuantity > 0 ? 'hi-product-selected' : ''}`}>
+                                                <div key={product.id} className={`hi-product-row ${product.is_highlighted ? 'hi-product-highlighted' : ''} ${productSelectedQuantity > 0 ? 'hi-product-selected' : ''}`} data-rough>
                                                     {product.is_highlighted && product.highlight_message && (
                                                         <div className={'hi-product-highlight-message'}>
                                                             {product.highlight_message}

@@ -106,14 +106,14 @@ export const CheckoutOrderPanel = ({
     };
 
     return (
-        <aside className={classes.panel} data-expanded={expanded || undefined}>
+        <aside className={classes.panel} data-rough data-expanded={expanded || undefined}>
             <button
                 type="button"
                 className={classes.toggle}
                 aria-expanded={expanded}
                 onClick={() => setExpanded(!expanded)}
             >
-                <EventImage event={event} className={classes.toggleImage}/>
+                <EventImage event={event} className={classes.toggleImage} data-rough/>
                 <span className={classes.toggleText}>
                     <span className={classes.toggleTitle}>{t`Your Order`}</span>
                     <span className={classes.toggleMeta}>
@@ -128,7 +128,7 @@ export const CheckoutOrderPanel = ({
                 <h2 className={classes.title}>{t`Your Order`}</h2>
 
                 <div className={classes.event}>
-                    <EventImage event={event} className={classes.eventImage}/>
+                    <EventImage event={event} className={classes.eventImage} data-rough/>
                     <div className={classes.eventText}>
                         <span className={classes.eventTitle}>{event.title}</span>
                         {eventMeta && <span className={classes.eventMeta}>{eventMeta}</span>}
@@ -194,7 +194,7 @@ export const CheckoutOrderPanel = ({
                             {isPromoCodeEditable && (
                                 <button
                                     type="button"
-                                    className={classes.promoRemove}
+                                    className={classes.promoRemove} data-rough="button"
                                     disabled={isPromoCodePending}
                                     onClick={() => {
                                         setPromoCodeInput('');

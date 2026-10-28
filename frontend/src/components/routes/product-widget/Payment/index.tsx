@@ -162,7 +162,7 @@ const Payment = () => {
                     <div className={classes.paymentMethodTabs} role="group" aria-label={t`Payment method`}>
                         <button
                             type="button"
-                            className={classes.paymentMethodTab}
+                            className={classes.paymentMethodTab} data-rough="button"
                             data-active={activePaymentMethod === 'STRIPE' || undefined}
                             aria-pressed={activePaymentMethod === 'STRIPE'}
                             onClick={() => setActivePaymentMethod('STRIPE')}
@@ -172,7 +172,7 @@ const Payment = () => {
                         </button>
                         <button
                             type="button"
-                            className={classes.paymentMethodTab}
+                            className={classes.paymentMethodTab} data-rough="button"
                             data-active={activePaymentMethod === 'OFFLINE' || undefined}
                             aria-pressed={activePaymentMethod === 'OFFLINE'}
                             onClick={() => setActivePaymentMethod('OFFLINE')}

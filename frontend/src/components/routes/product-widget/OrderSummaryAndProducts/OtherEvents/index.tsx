@@ -38,11 +38,11 @@ const OtherEventCard = ({event}: { event: Event }) => {
     const when = `${shortDayLabel(event.start_date, event.timezone)} · ${shortTimeLabel(event.start_date, event.timezone)}`;
 
     return (
-        <Link to={eventHomepagePath(event)} className={classes.card}>
+        <Link to={eventHomepagePath(event)} className={classes.card} data-rough>
             {cover ? (
-                <img className={classes.cover} src={cover} alt="" loading="lazy"/>
+                <img className={classes.cover} data-rough src={cover} alt="" loading="lazy"/>
             ) : (
-                <span className={`${classes.cover} ${classes.coverPlaceholder}`} aria-hidden>
+                <span className={`${classes.cover} ${classes.coverPlaceholder}`} data-rough aria-hidden>
                     <PublicIcon name={'calendrier'} size={28}/>
                 </span>
             )}
@@ -53,13 +53,13 @@ const OtherEventCard = ({event}: { event: Event }) => {
                     {price && <span className={classes.priceInline}> · {price}</span>}
                 </span>
                 {price && (
-                    <span className={classes.pricePill}>
+                    <span className={classes.pricePill} data-rough>
                         <PublicIcon name={'billet'} size={16} className={classes.accentIcon}/>
                         {price}
                     </span>
                 )}
             </span>
-            <span className={classes.go} aria-hidden>
+            <span className={classes.go} data-rough aria-hidden>
                 <PublicIcon name={'fleche'} size={20}/>
             </span>
             <PublicIcon name={'chevron-droite'} size={18} className={classes.chevron}/>
@@ -89,7 +89,7 @@ export const OtherEvents = ({organizer, currentEventId}: { organizer: Organizer,
     const organizerName = organizer.name;
 
     return (
-        <section className={classes.section}>
+        <section className={classes.section} data-rough>
             <div className={classes.header}>
                 <h2 className={classes.heading}>{t`Other outings by ${organizerName}`}</h2>
                 {organizer.slug && (

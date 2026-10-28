@@ -17,31 +17,36 @@ import {IconClock} from "@tabler/icons-react";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {trackEvent, AnalyticsEvents} from "../../../utilites/analytics.ts";
 import {AccountEventType} from "../../../types.ts";
+import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 // La carte creme sur l'orange, son logo et la progression en haut.
-const OnboardingCard = ({step, children}: { step?: 1 | 2, children: ReactNode }) => (
-    <div className={classes.page}>
-        <div className={classes.card}>
-            <div className={classes.topBar}>
-                <Link to={'/'} className={classes.wordmark} aria-label={'Billetterie Dehors'}>
-                    <span>BILLETTERIE</span>
-                    <span>DEHORS</span>
-                </Link>
-                {step && (
-                    <div className={classes.progress}>
-                        <span className={classes.progressLong}>{t`Step ${step} of 2`}</span>
-                        <span className={classes.progressShort}>{step}/2</span>
-                        <span className={classes.segment} data-done/>
-                        <span className={classes.segment} data-done={step === 2 || undefined}/>
-                    </div>
-                )}
-            </div>
-            <div className={classes.content}>
-                {children}
+const OnboardingCard = ({step, children}: { step?: 1 | 2, children: ReactNode }) => {
+    const roughEdges = useRoughEdges<HTMLDivElement>();
+
+    return (
+        <div ref={roughEdges} className={classes.page}>
+            <div className={classes.card} data-rough>
+                <div className={classes.topBar}>
+                    <Link to={'/'} className={classes.wordmark} aria-label={'Billetterie Dehors'}>
+                        <span>BILLETTERIE</span>
+                        <span>DEHORS</span>
+                    </Link>
+                    {step && (
+                        <div className={classes.progress}>
+                            <span className={classes.progressLong}>{t`Step ${step} of 2`}</span>
+                            <span className={classes.progressShort}>{step}/2</span>
+                            <span className={classes.segment} data-done/>
+                            <span className={classes.segment} data-done={step === 2 || undefined}/>
+                        </div>
+                    )}
+                </div>
+                <div className={classes.content}>
+                    {children}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const ConfirmVerificationPin = () => {
     const {data: userData} = useGetMe();
@@ -246,7 +251,7 @@ const EventTypesStep = ({onDone}: { onDone: () => void }) => {
                         <button
                             key={choice.value}
                             type="button"
-                            className={classes.choice}
+                            className={classes.choice} data-rough="button"
                             data-selected={isSelected || undefined}
                             aria-pressed={isSelected}
                             onClick={() => toggle(choice.value)}
@@ -283,9 +288,9 @@ const StartStep = ({organizerId}: { organizerId: string | number }) => {
             <p className={classes.subtitle}>{t`Where to start? The rest can wait.`}</p>
 
             <div className={classes.options}>
-                <div className={classes.option} data-recommended>
+                <div className={classes.option} data-rough data-recommended>
                     <div className={classes.optionTop}>
-                        <span className={classes.badge}>{t`Recommended`}</span>
+                        <span className={classes.badge} data-rough>{t`Recommended`}</span>
                         <h2>{t`Create a first event`}</h2>
                         <p>{t`Put free or paid tickets on sale in a few minutes.`}</p>
                     </div>
@@ -294,9 +299,9 @@ const StartStep = ({organizerId}: { organizerId: string | number }) => {
                         {t`Create an event`}
                     </Button>
                 </div>
-                <div className={classes.option}>
+                <div className={classes.option} data-rough>
                     <div className={classes.optionTop}>
-                        <span className={classes.badge}>{t`Optional`}</span>
+                        <span className={classes.badge} data-rough>{t`Optional`}</span>
                         <h2>{t`Customize the ticketing`}</h2>
                         <p>{t`Add a logo and colors that match the organization.`}</p>
                     </div>
@@ -305,9 +310,9 @@ const StartStep = ({organizerId}: { organizerId: string | number }) => {
                         {t`Customize`}
                     </Button>
                 </div>
-                <div className={classes.option}>
+                <div className={classes.option} data-rough>
                     <div className={classes.optionTop}>
-                        <span className={classes.badge}>{t`Optional`}</span>
+                        <span className={classes.badge} data-rough>{t`Optional`}</span>
                         <h2>{t`Connect Stripe`}</h2>
                         <p>{t`Receive ticket payments directly in the Stripe account.`}</p>
                     </div>

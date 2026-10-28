@@ -557,12 +557,12 @@ export const CollectInformation = () => {
             const cardLabel = product.product_type === 'TICKET' ? t`Attendee` : t`Item`;
 
             const card = (
-                <div key={`${orderItem.id} ${index}`} className={checkoutClasses.subCard}>
+                <div key={`${orderItem.id} ${index}`} className={checkoutClasses.subCard} data-rough>
                     <div className={classes.attendeeHeader}>
                         <h3 className={checkoutClasses.subCardTitle}>
                             {`${orderItem.item_name} · ${cardLabel} ${index + 1}`}
                         </h3>
-                        <span className={classes.pricePill}>
+                        <span className={classes.pricePill} data-rough>
                             {formatCurrency(orderItem.price, order?.currency)}
                         </span>
                     </div>
@@ -665,7 +665,7 @@ export const CollectInformation = () => {
                 )}
             >
                 {isFromWaitlist && (
-                    <div className={classes.waitlistBanner}>
+                    <div className={classes.waitlistBanner} data-rough>
                         <div className={classes.waitlistBannerIcon}>
                             <IconClock size={22}/>
                         </div>
@@ -718,7 +718,7 @@ export const CollectInformation = () => {
                     </div>
 
                     {requireBillingAddress && (
-                        <div className={checkoutClasses.subCard}>
+                        <div className={checkoutClasses.subCard} data-rough>
                             <h3 className={checkoutClasses.subCardTitle}>
                                 {t`Billing Address`}
                             </h3>
@@ -769,7 +769,7 @@ export const CollectInformation = () => {
                     )}
 
                     {waiverText && isPerOrderCollection && totalTicketAttendees > 0 && (
-                        <div className={`${checkoutClasses.subCard} ${classes.orderWaiver}`}>
+                        <div className={`${checkoutClasses.subCard} ${classes.orderWaiver}`} data-rough>
                             <WaiverSignature
                                 waiverText={waiverText}
                                 form={form}
@@ -798,7 +798,7 @@ export const CollectInformation = () => {
                 )}
 
                 {!!event?.settings?.pre_checkout_message && (
-                    <div className={checkoutClasses.subCard}>
+                    <div className={checkoutClasses.subCard} data-rough>
                         <div dangerouslySetInnerHTML={{__html: event?.settings?.pre_checkout_message}}/>
                     </div>
                 )}

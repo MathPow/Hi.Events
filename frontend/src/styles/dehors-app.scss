@@ -32,6 +32,40 @@
   --public-sur-accent: var(--theme-accent-contrast, var(--dehors-brun));
 }
 
+// Les boutons coupes a la main (useRoughEdges) bouillonnent au survol et au focus entre
+// leurs trois coupes, comme ceux du site d'accueil. Enfonces, ils se tiennent tranquilles.
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) {
+    [style*='--rough-clip']:hover {
+      animation: rough-clip-boil 0.6s steps(1) infinite;
+    }
+  }
+
+  [style*='--rough-clip']:focus-visible {
+    animation: rough-clip-boil 0.6s steps(1) infinite;
+  }
+
+  [style*='--rough-clip']:active,
+  [style*='--rough-clip']:disabled,
+  [style*='--rough-clip'][data-disabled] {
+    animation: none;
+  }
+}
+
+@keyframes rough-clip-boil {
+  0% {
+    clip-path: var(--rough-clip);
+  }
+
+  33.333% {
+    clip-path: var(--rough-clip-2);
+  }
+
+  66.667% {
+    clip-path: var(--rough-clip-3);
+  }
+}
+
 // Dev deployments (VITE_APP_ENVIRONMENT=dev, set on <html> by server.js) turn the oranges
 // about 10 degrees toward red, back office and landing page alike, so they are never mistaken for prod.
 :root[data-environment='dev'] {

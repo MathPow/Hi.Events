@@ -112,7 +112,7 @@ const Login = () => {
             </form>
 
             {/* Les acheteurs n'ont pas de compte: on leur envoie le lien de leurs billets par courriel. */}
-            <div className={classes.ticketLookup} data-expanded={ticketLookupOpen}>
+            <div className={classes.ticketLookup} data-rough data-expanded={ticketLookupOpen}>
                 <UnstyledButton
                     className={classes.ticketLookupTrigger}
                     onClick={() => setTicketLookupOpen(!ticketLookupOpen)}

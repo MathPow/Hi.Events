@@ -33,7 +33,7 @@ export const CheckoutTopBar = ({onBack, reservedUntil, onExpiry, isMobile}: Chec
             </button>
 
             {countdown && (
-                <div className={classes.timer} role="timer">
+                <div className={classes.timer} data-rough role="timer">
                     <PublicIcon name={'horloge'} size={16}/>
                     <span>
                         {isMobile

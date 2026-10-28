@@ -36,6 +36,7 @@ import {useResendOrderConfirmationPublic} from "../../../../mutations/useResendO
 import {Attendee, Event, Invoice, Order} from "../../../../types.ts";
 import classes from './OrderSummaryAndProducts.module.scss';
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
+import {useRoughEdges} from "../../../../hooks/useRoughEdges.ts";
 // Purchase tracking is handled by the parent Checkout layout
 
 const paymentStatusLabel = (order: Order): string | null => {
@@ -95,7 +96,7 @@ const Card = ({title, aside, className, children}: {
     className?: string,
     children: ReactNode
 }) => (
-    <section className={className ? `${classes.card} ${className}` : classes.card}>
+    <section className={className ? `${classes.card} ${className}` : classes.card} data-rough>
         {(title || aside) && (
             <div className={classes.cardHeader}>
                 {title && <h2 className={classes.cardTitle}>{title}</h2>}
@@ -127,7 +128,7 @@ const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
     return (
         <div className={`${classes.actions} ${className}`}>
             <CalendarOptionsPopover event={event}>
-                <UnstyledButton className={`${classes.button} ${classes.buttonPrimary}`}>
+                <UnstyledButton className={`${classes.button} ${classes.buttonPrimary}`} data-rough="button">
                     <PublicIcon name={'calendrier'} size={20}/>
                     {t`Add to Calendar`}
                 </UnstyledButton>
@@ -135,14 +136,14 @@ const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
             {(ticketsUrl || mapsUrl) && (
                 <div className={classes.secondaryActions}>
                     {ticketsUrl && (
-                        <a className={`${classes.button} ${classes.buttonOutline}`} href={ticketsUrl} target="_blank" rel="noreferrer">
+                        <a className={`${classes.button} ${classes.buttonOutline}`} data-rough="button" href={ticketsUrl} target="_blank" rel="noreferrer">
                             <PublicIcon name={'telecharger'} size={20}/>
                             <span className={classes.desktopOnly}>{t`Download tickets`}</span>
                             <span className={classes.mobileOnly}>{t`PDF tickets`}</span>
                         </a>
                     )}
                     {mapsUrl && (
-                        <a className={`${classes.button} ${classes.buttonOutline}`} href={mapsUrl} target="_blank" rel="noreferrer">
+                        <a className={`${classes.button} ${classes.buttonOutline}`} data-rough="button" href={mapsUrl} target="_blank" rel="noreferrer">
                             <PublicIcon name={'itineraire'} size={20}/>
                             {t`Directions`}
                         </a>
@@ -155,7 +156,7 @@ const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
 
 const ActionRow = ({icon, label}: { icon: PublicIconName, label: string }) => (
     <>
-        <span className={classes.actionIcon}><PublicIcon name={icon} size={20}/></span>
+        <span className={classes.actionIcon} data-rough><PublicIcon name={icon} size={20}/></span>
         <span className={classes.actionLabel}>{label}</span>
         <PublicIcon name={'chevron-droite'} size={18} className={classes.actionChevron}/>
     </>
@@ -167,11 +168,11 @@ const ManageAction = ({icon, label, onClick, href}: {
     onClick?: () => void,
     href?: string,
 }) => href ? (
-    <a className={classes.action} href={href} target="_blank" rel="noreferrer">
+    <a className={classes.action} data-rough="button" href={href} target="_blank" rel="noreferrer">
         <ActionRow icon={icon} label={label}/>
     </a>
 ) : (
-    <UnstyledButton className={classes.action} onClick={onClick}>
+    <UnstyledButton className={classes.action} data-rough="button" onClick={onClick}>
         <ActionRow icon={icon} label={label}/>
     </UnstyledButton>
 );
@@ -190,7 +191,7 @@ const AttendeeAction = ({icon, label, attendees, onPick}: {
     return (
         <Menu position="bottom-end" shadow="md" withinPortal>
             <Menu.Target>
-                <UnstyledButton className={classes.action}>
+                <UnstyledButton className={classes.action} data-rough="button">
                     <ActionRow icon={icon} label={label}/>
                 </UnstyledButton>
             </Menu.Target>
@@ -230,7 +231,7 @@ const OrderRecap = ({order}: { order: Order }) => {
             title={t`Order recap`}
             aside={(
                 <>
-                    {pill && <span className={`${classes.pill} ${classes.desktopOnly}`}>{pill}</span>}
+                    {pill && <span className={`${classes.pill} ${classes.desktopOnly}`} data-rough>{pill}</span>}
                     <UnstyledButton
                         className={`${classes.recapToggle} ${classes.mobileOnly}`}
                         onClick={() => setExpanded(!expanded)}
@@ -303,7 +304,7 @@ const EventCard = ({event, order, className}: { event: Event, order: Order, clas
     return (
         <Card title={t`The event`} className={className}>
             <div className={classes.detail}>
-                <span className={classes.detailIcon}><PublicIcon name={'calendrier'} size={20}/></span>
+                <span className={classes.detailIcon} data-rough><PublicIcon name={'calendrier'} size={20}/></span>
                 <span className={classes.detailText}>
                     <span className={classes.detailTitle}>
                         {eventRangeLabel(event.start_date, event.end_date, event.timezone)}
@@ -321,7 +322,7 @@ const EventCard = ({event, order, className}: { event: Event, order: Order, clas
             </div>
             {location && (
                 <div className={classes.detail}>
-                    <span className={classes.detailIcon}><PublicIcon name={'lieu'} size={20}/></span>
+                    <span className={classes.detailIcon} data-rough><PublicIcon name={'lieu'} size={20}/></span>
                     <span className={classes.detailText}>
                         <span className={classes.detailTitle}>{location.title}</span>
                         {location.subtitle && <span className={classes.detailSubtitle}>{location.subtitle}</span>}
@@ -334,7 +335,7 @@ const EventCard = ({event, order, className}: { event: Event, order: Order, clas
             )}
             {event.settings?.is_online_event && (
                 <div className={classes.detail}>
-                    <span className={classes.detailIcon}><PublicIcon name={'globe'} size={20}/></span>
+                    <span className={classes.detailIcon} data-rough><PublicIcon name={'globe'} size={20}/></span>
                     <span className={classes.detailText}>
                         <span className={classes.detailTitle}>{t`Online Event`}</span>
                     </span>
@@ -350,6 +351,7 @@ export const OrderSummaryAndProducts = () => {
     const {data: order, isFetched: orderIsFetched, isError} = useGetOrderPublic(eventId, orderShortId, ['event']);
     const event = order?.event;
     const navigate = useNavigate();
+    const roughEdges = useRoughEdges<HTMLDivElement>();
     const queryClient = useQueryClient();
     const emailUpdated = location.state?.emailUpdated === true;
 
@@ -607,7 +609,7 @@ export const OrderSummaryAndProducts = () => {
         !isCancelled && (
             <div key="share" className={classes.shareAction}>
                 <ShareComponent title={event.title} text={t`Check out this event!`} url={eventHomepageUrl(event)}>
-                    <UnstyledButton className={classes.action}>
+                    <UnstyledButton className={classes.action} data-rough="button">
                         <ActionRow icon={'partager'} label={t`Share Event`}/>
                     </UnstyledButton>
                 </ShareComponent>
@@ -617,7 +619,7 @@ export const OrderSummaryAndProducts = () => {
 
     return (
         <>
-            <div className={classes.page} style={themeStyles}>
+            <div ref={roughEdges} className={classes.page} style={themeStyles}>
                 <style>
                     {`
                         body, .ssr-loader {
@@ -631,7 +633,7 @@ export const OrderSummaryAndProducts = () => {
                     {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
                     <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
 
-                    <header className={classes.hero}>
+                    <header className={classes.hero} data-rough>
                         {isCompleted && <p className={classes.kicker}>{t`See you outside!`}</p>}
                         <h1 className={classes.heroTitle}>{title}</h1>
                         <p className={classes.heroLine}>
@@ -652,8 +654,8 @@ export const OrderSummaryAndProducts = () => {
                     </header>
 
                     {emailUpdated && (
-                        <div className={classes.notice} role="status">
-                            <span className={classes.noticeIcon}><IconCheck size={18}/></span>
+                        <div className={classes.notice} data-rough role="status">
+                            <span className={classes.noticeIcon} data-rough><IconCheck size={18}/></span>
                             {t`Your order details have been updated. A confirmation email has been sent to the new email address.`}
                         </div>
                     )}

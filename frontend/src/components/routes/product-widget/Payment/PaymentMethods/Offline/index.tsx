@@ -13,7 +13,7 @@ export const OfflinePaymentMethod = ({event}: OfflinePaymentMethodProps) => {
         <div className={classes.instructions}>
             <h3 className={classes.instructionsTitle}>{t`Payment Instructions`}</h3>
             <div
-                className={classes.instructionsBody}
+                className={classes.instructionsBody} data-rough
                 dangerouslySetInnerHTML={{
                     __html: eventSettings?.offline_payment_instructions || "",
                 }}

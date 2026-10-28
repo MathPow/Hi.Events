@@ -9,13 +9,14 @@ import {isHiEvents} from "../../../utilites/helpers.ts";
 import {showInfo} from "../../../utilites/notifications.tsx";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 import {usePhotoPan} from "./usePhotoPan.ts";
+import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 const Photo = () => {
     const photo = useRef<HTMLDivElement>(null);
     usePhotoPan(photo);
 
     return (
-        <div className={classes.photo}>
+        <div className={classes.photo} data-rough>
             <div ref={photo} className={classes.photoImage}/>
         </div>
     );
@@ -23,6 +24,7 @@ const Photo = () => {
 
 const AuthLayout = () => {
     useDehorsAppTheme();
+    const roughEdges = useRoughEdges<HTMLDivElement>();
     const me = useGetMe();
     const clickCountRef = useRef(0);
     const clickTimerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -49,17 +51,17 @@ const AuthLayout = () => {
     // Une grande carte creme sur l'orange: le formulaire a gauche, la photo a
     // droite. Sur mobile, la photo passe en haut et porte le retour et le logo.
     return (
-        <div className={classes.authLayout}>
-            <div className={classes.card}>
+        <div ref={roughEdges} className={classes.authLayout}>
+            <div className={classes.card} data-rough>
                 <div className={classes.formColumn}>
                     <div className={classes.top}>
-                        <Link to={'/'} className={classes.backHome}>
+                        <Link to={'/'} className={classes.backHome} data-rough>
                             <img src={'/interface/fleche-retour.svg'} alt={''} className={classes.arrowLong}/>
                             <img src={'/interface/fleche-retour-petite.svg'} alt={''} className={classes.arrowShort}/>
                             <span className={classes.backLong}>{t`Back to home`}</span>
                             <span className={classes.backShort}>{t`Home`}</span>
                         </Link>
-                        <Link to={'/'} className={classes.wordmark} aria-label={'Billetterie Dehors'}>
+                        <Link to={'/'} className={classes.wordmark} data-rough aria-label={'Billetterie Dehors'}>
                             <span>BILLETTERIE</span>
                             <span>DEHORS</span>
                         </Link>

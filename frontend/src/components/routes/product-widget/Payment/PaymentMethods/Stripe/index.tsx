@@ -102,7 +102,7 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMe
 
     if (!enabled) {
         return (
-            <div className={classes.stripeError}>
+            <div className={classes.stripeError} data-rough>
                 <p className={classes.stripeErrorTitle}>{t`Payments not available`}</p>
                 <p>{t`Stripe payments are not enabled for this event.`}</p>
                 {event && <a href={eventHomepagePath(event as Event)}>{t`Return to Event`}</a>}
@@ -112,7 +112,7 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMe
 
     if (stripePaymentIntentError && event) {
         return (
-            <div className={classes.stripeError} role="alert">
+            <div className={classes.stripeError} data-rough role="alert">
                 <p className={classes.stripeErrorTitle}>
                     {(stripePaymentIntentError as any).response?.data?.message || t`Something went wrong`}
                 </p>

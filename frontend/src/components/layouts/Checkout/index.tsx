@@ -21,6 +21,7 @@ import {isDateInFuture} from "../../../utilites/dates.ts";
 import {computeThemeVariables, detectMode, validateThemeSettings} from "../../../utilites/themeUtils.ts";
 import {CheckoutThemeProvider} from "./CheckoutThemeProvider.tsx";
 import {CheckoutTopBar} from "./CheckoutTopBar";
+import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 import {useOrganizerTrackingPixels} from "../../../hooks/useOrganizerTrackingPixels";
 import {trackPixelEvent, hasActivePixels} from "../../../utilites/trackingPixels";
 import {capturePostHogEvent} from "../../../utilites/posthog.ts";
@@ -47,6 +48,7 @@ const Checkout = () => {
     const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
     const [isAbandoning, setIsAbandoning] = useState(false);
     const abandonOrderMutation = useAbandonOrderPublic();
+    const roughEdges = useRoughEdges<HTMLDivElement>();
 
     const getCurrentStep = (): 'details' | 'payment' | 'summary' => {
         const pathname = location.pathname;
@@ -229,7 +231,7 @@ const Checkout = () => {
     return (
         <CheckoutThemeProvider accentColor={accentColor} mode={checkoutMode}>
             {isCheckoutStep ? (
-                <div className={classes.checkoutPage} style={accentStyles}>
+                <div ref={roughEdges} className={classes.checkoutPage} style={accentStyles}>
                     <style>
                         {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
                         {`
