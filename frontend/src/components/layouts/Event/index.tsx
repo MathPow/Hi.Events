@@ -53,6 +53,7 @@ import {useGetMe} from "../../../queries/useGetMe.ts";
 import {useResendEmailConfirmation} from "../../../mutations/useResendEmailConfirmation.ts";
 import {useState} from "react";
 import {eventHomepageUrl} from "../../../utilites/urlHelper.ts";
+import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 
 const EventLayout = () => {
     const location = useLocation();
@@ -194,7 +195,7 @@ const EventLayout = () => {
                     }
                 },
                 onError: (error: any) => {
-                    showError(error?.response?.data?.message || t`Event status update failed. Please try again later`);
+                    showStatusChangeError(error, t`Event status update failed. Please try again later`);
                 }
             });
         });

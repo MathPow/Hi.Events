@@ -17,12 +17,13 @@ import {IconAlertCircle, IconX} from "@tabler/icons-react";
 import {useGetAccount} from "../../../../queries/useGetAccount.ts";
 import {useUpdateEventStatus} from "../../../../mutations/useUpdateEventStatus.ts";
 import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
-import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
+import {showSuccess} from "../../../../utilites/notifications.tsx";
 import {useEffect, useRef, useState} from 'react';
 import {EventLifecycleStatus, EventStatus, StripePlatform} from "../../../../types.ts";
 import {isHiEvents} from "../../../../utilites/helpers.ts";
 import {StripeConnectButton} from "../../../common/StripeConnectButton";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
+import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
 
 export const DashBoardSkeleton = () => {
     return (
@@ -93,7 +94,7 @@ export const EventDashboard = () => {
                     showSuccess(t`Event status updated`);
                 },
                 onError: (error: any) => {
-                    showError(error?.response?.data?.message || t`Event status update failed. Please try again later`);
+                    showStatusChangeError(error, t`Event status update failed. Please try again later`);
                 }
             });
         })

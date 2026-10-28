@@ -20,11 +20,13 @@ export const showInfo = (message: ReactNode, icon: ReactNode = <IconInfoSmall/>)
     })
 }
 
-export const showError = (message: React.ReactNode, icon: ReactNode = <IconX/>) => {
+// autoClose: false garde l'erreur ouverte, quand elle porte un bouton.
+export const showError = (message: React.ReactNode, icon: ReactNode = <IconX/>, autoClose?: number | false) => {
     notifications.show({
         message: message,
         color: 'red',
         icon: icon,
         position: 'top-center',
+        autoClose: autoClose,
     })
 }

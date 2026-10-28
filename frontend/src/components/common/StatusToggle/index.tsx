@@ -2,7 +2,8 @@ import React, {useCallback} from 'react';
 import {Button} from '@mantine/core';
 import {IconEye} from '@tabler/icons-react';
 import {t} from '@lingui/macro';
-import {showError, showSuccess} from '../../../utilites/notifications';
+import {showSuccess} from '../../../utilites/notifications';
+import {showStatusChangeError} from '../EmailNotConfirmedError';
 import {confirmationDialog} from '../../../utilites/confirmationDialog';
 import {useUpdateEventStatus} from '../../../mutations/useUpdateEventStatus';
 import {useUpdateOrganizerStatus} from '../../../mutations/useUpdateOrganizerStatus';
@@ -58,11 +59,9 @@ export const StatusToggle: React.FC<StatusToggleProps> = ({
                     onSuccess?.();
                 },
                 onError: (error: any) => {
-                    const errorMessage = error?.response?.data?.message ||
-                        (entityType === 'event'
-                            ? t`Event status update failed. Please try again later`
-                            : t`Organizer status update failed. Please try again later`);
-                    showError(errorMessage);
+                    showStatusChangeError(error, entityType === 'event'
+                        ? t`Event status update failed. Please try again later`
+                        : t`Organizer status update failed. Please try again later`);
                 }
             });
         });

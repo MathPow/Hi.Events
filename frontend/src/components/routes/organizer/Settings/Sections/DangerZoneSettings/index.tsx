@@ -14,6 +14,7 @@ import {OrganizerStatus} from "../../../../../../types.ts";
 import {IconInfoCircle, IconTrash, IconArchive, IconArrowBackUp} from "@tabler/icons-react";
 import {useIsCurrentUserAdmin} from "../../../../../../hooks/useIsCurrentUserAdmin.ts";
 import {BouncingEmoji} from "../../../../../common/BouncingEmoji";
+import {showStatusChangeError} from "../../../../../common/EmailNotConfirmedError";
 
 export const DangerZoneSettings = () => {
     const {organizerId} = useParams();
@@ -61,7 +62,7 @@ export const DangerZoneSettings = () => {
                         showSuccess(isArchived ? t`Organizer restored successfully` : t`Organizer archived successfully`);
                     },
                     onError: (error: any) => {
-                        showError(error?.response?.data?.message || t`Failed to update organizer status`);
+                        showStatusChangeError(error, t`Failed to update organizer status`);
                     }
                 });
             },

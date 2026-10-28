@@ -16,12 +16,13 @@ import {DuplicateEventModal} from "../../modals/DuplicateEventModal";
 import {useState} from "react";
 import {ActionMenu, ActionMenuItemsGroup} from '../ActionMenu';
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
-import {showError, showSuccess} from "../../../utilites/notifications.tsx";
+import {showSuccess} from "../../../utilites/notifications.tsx";
 import {useUpdateEventStatus} from "../../../mutations/useUpdateEventStatus.ts";
 import {formatCurrency} from "../../../utilites/currency.ts";
 import {formatNumber} from "../../../utilites/helpers.ts";
 import {formatDateWithLocale, relativeDate} from "../../../utilites/dates.ts";
 import {Card} from "../Card";
+import {showStatusChangeError} from "../EmailNotConfirmedError";
 
 const placeholderGradients = [
     'linear-gradient(135deg, var(--dehors-orange) 0%, var(--dehors-sable) 100%)',
@@ -63,7 +64,7 @@ export function EventCard({event}: EventCardProps) {
                     showSuccess(t`Event status updated`);
                 },
                 onError: (error: any) => {
-                    showError(error?.response?.data?.message || t`Event status update failed. Please try again later`);
+                    showStatusChangeError(error, t`Event status update failed. Please try again later`);
                 }
             });
         })

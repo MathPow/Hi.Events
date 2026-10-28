@@ -47,6 +47,7 @@ import { useGetMe } from "../../../queries/useGetMe.ts";
 import { useCanSeeDeveloperPages, useIsCurrentUserSuperAdmin } from "../../../hooks/useIsCurrentUserAdmin.ts";
 import { useGetOrganizerAchievements } from "../../../queries/useGetOrganizerAchievements.ts";
 import { AchievementCelebration } from "../../common/OrganizerAchievements";
+import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -182,7 +183,7 @@ const OrganizerLayout = () => {
                     showSuccess(t`Organizer status updated`);
                 },
                 onError: (error: any) => {
-                    showError(error?.response?.data?.message || t`Organizer status update failed. Please try again later`);
+                    showStatusChangeError(error, t`Organizer status update failed. Please try again later`);
                 }
             });
         });

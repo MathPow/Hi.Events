@@ -13,6 +13,7 @@ import {EventStatus} from "../../../../../../types.ts";
 import {IconInfoCircle, IconTrash, IconArchive, IconArrowBackUp} from "@tabler/icons-react";
 import {useIsCurrentUserAdmin} from "../../../../../../hooks/useIsCurrentUserAdmin.ts";
 import {BouncingEmoji} from "../../../../../common/BouncingEmoji";
+import {showStatusChangeError} from "../../../../../common/EmailNotConfirmedError";
 
 export const DangerZoneSettings = () => {
     const {eventId} = useParams();
@@ -55,7 +56,7 @@ export const DangerZoneSettings = () => {
                         showSuccess(isArchived ? t`Event restored successfully` : t`Event archived successfully`);
                     },
                     onError: (error: any) => {
-                        showError(error?.response?.data?.message || t`Failed to update event status`);
+                        showStatusChangeError(error, t`Failed to update event status`);
                     }
                 });
             },

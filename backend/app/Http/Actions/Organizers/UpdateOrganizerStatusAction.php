@@ -32,7 +32,9 @@ class UpdateOrganizerStatusAction extends BaseAction
                 'accountId' => $this->getAuthenticatedAccountId(),
             ]));
         } catch (AccountNotVerifiedException $e) {
-            return $this->errorResponse($e->getMessage(), ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->errorResponse($e->getMessage(), ResponseCodes::HTTP_UNPROCESSABLE_ENTITY, [
+                'code' => 'email_not_confirmed',
+            ]);
         } catch (CannotDeleteEntityException $e) {
             return $this->errorResponse($e->getMessage(), ResponseCodes::HTTP_CONFLICT);
         }

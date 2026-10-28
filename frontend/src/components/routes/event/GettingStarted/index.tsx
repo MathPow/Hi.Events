@@ -10,12 +10,13 @@ import {useGetEventImages} from "../../../../queries/useGetEventImages.ts";
 import {Tooltip} from "../../../common/Tooltip";
 import {useGetAccount} from "../../../../queries/useGetAccount.ts";
 import {useUpdateEventStatus} from "../../../../mutations/useUpdateEventStatus.ts";
-import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
+import {showSuccess} from "../../../../utilites/notifications.tsx";
 import {getProductsFromEvent} from "../../../../utilites/helpers.ts";
 import {useEffect, useState} from 'react';
 import ConfettiAnimation from "./ConfettiAnimaiton";
 import {Browser, useBrowser} from "../../../../hooks/useGetBrowser.ts";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
+import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
 
 const GettingStarted = () => {
     const {eventId} = useParams();
@@ -65,7 +66,7 @@ const GettingStarted = () => {
                 showSuccess(t`Event status updated`);
             },
             onError: (error: any) => {
-                showError(error?.response?.data?.message || t`Event status update failed. Please try again later`);
+                showStatusChangeError(error, t`Event status update failed. Please try again later`);
             }
         });
     }
