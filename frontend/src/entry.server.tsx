@@ -6,16 +6,16 @@ import {router} from "./router";
 import {App} from "./App";
 import {setAuthToken} from "./utilites/apiClient.ts";
 import {createStaticHandler, createStaticRouter, StaticRouterProvider} from "react-router";
-import {dynamicActivateLocale} from "./locales.ts";
+import {dynamicActivateLocale, getSupportedLocale} from "./locales.ts";
 import {setSsrQueryClient} from "./utilites/ssrQueryClient.ts";
 
 const getLocale = (req: express.Request): string => {
     if (req.cookies.locale) {
-        return req.cookies.locale;
+        return getSupportedLocale(req.cookies.locale);
     }
 
     const acceptLanguage = req.headers['accept-language'];
-    return acceptLanguage ? acceptLanguage.split(',')[0].split('-')[0] : 'en';
+    return acceptLanguage ? getSupportedLocale(acceptLanguage.split(',')[0].split('-')[0]) : 'en';
 }
 
 export async function render(params: {

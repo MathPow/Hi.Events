@@ -4,13 +4,13 @@ import {t} from "@lingui/macro";
 import {ReactNode} from "react";
 import classes from "./PublicPageBar.module.scss";
 import {PublicIcon} from "../PublicIcon";
-import {localeToNameMap, SupportedLocales} from "../../../locales.ts";
+import {availableLocales, SupportedLocales} from "../../../locales.ts";
 import {useLingui} from "@lingui/react";
 import {getLocaleLabel, switchLocale} from "../LanguageSwitcher";
 
 // Le bouton creme de la barre (48px, coins de 16px), lien ou bouton.
 export const PublicBarLink = ({to, children}: { to: string, children: ReactNode }) => (
-    <Link to={to} className={classes.button}>{children}</Link>
+    <Link to={to} className={classes.button} data-rough="button">{children}</Link>
 );
 
 const LanguageMenu = () => {
@@ -21,12 +21,12 @@ const LanguageMenu = () => {
     return (
         <Menu position="bottom-end" shadow="md" withinPortal>
             <Menu.Target>
-                <UnstyledButton className={classes.button} aria-label={t`Language`}>
+                <UnstyledButton className={classes.button} data-rough="button" aria-label={t`Language`}>
                     {current.split('-')[0].toUpperCase()}
                 </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown className={classes.menu}>
-                {(Object.keys(localeToNameMap) as SupportedLocales[]).map((locale) => (
+                {(availableLocales as SupportedLocales[]).map((locale) => (
                     <Menu.Item
                         key={locale}
                         onClick={() => locale !== current && switchLocale(locale)}

@@ -19,7 +19,9 @@ export type SupportedLocales =
     | "sk"
     | "el";
 
-export const availableLocales = ["en", "de", "fr", "it", "nl", "pt", "es", "zh-cn", "zh-hk", "pt-br", "vi", "tr", "hu", "pl", "se", "sk", "el"];
+// Seulement le francais, l'anglais et l'espagnol pour l'instant: les autres catalogues restent
+// dans locales/, mais ne sont plus proposes ni detectes (un navigateur en allemand recoit l'anglais).
+export const availableLocales = ["fr", "en", "es"];
 
 export const localeToFlagEmojiMap: Record<SupportedLocales, string> = {
     en: '🇬🇧',

@@ -114,8 +114,8 @@ const sectionLinks = () => [
 ];
 
 const MENU_ID = 'landing-menu';
-// The landing's two languages, each named in itself.
-const LANGUAGES = [{locale: 'fr', name: 'Français'}, {locale: 'en', name: 'English'}];
+// The landing's languages, each named in itself.
+const LANGUAGES = [{locale: 'fr', name: 'Français'}, {locale: 'en', name: 'English'}, {locale: 'es', name: 'Español'}];
 
 /** Like LanguageSwitcher: kept in the cookie, then the page reloads in it. */
 const chooseLanguage = (locale: string) => {
@@ -871,7 +871,7 @@ const Landing = () => {
                         <header ref={heroNav} className={classes.nav}>
                             <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
                             <div className={classes.navActions}>
-                                <LanguageSwitcher iconColor="currentColor" locales={['fr', 'en']} classNames={{
+                                <LanguageSwitcher iconColor="currentColor" locales={['fr', 'en', 'es']} classNames={{
                                     root: classes.language,
                                     input: classes.languageInput,
                                     section: classes.languageSection,

@@ -13,12 +13,12 @@ import {useCancelEmailChange} from "../../../../mutations/useCancelEmailChange.t
 import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorResponseHandler.tsx";
 import {t, Trans} from "@lingui/macro";
 import {useResendEmailConfirmation} from "../../../../mutations/useResendEmailConfirmation.ts";
-import {localeToFlagEmojiMap, localeToNameMap, SupportedLocales} from "../../../../locales.ts";
+import {availableLocales, localeToFlagEmojiMap, localeToNameMap, SupportedLocales} from "../../../../locales.ts";
 import {Fieldset} from "../../../common/Fieldset";
 import {InputGroup} from "../../../common/InputGroup";
 import {getConfig} from "../../../../utilites/config.ts";
 
-const localeSelectData = Object.keys(localeToNameMap).map(locale => ({
+const localeSelectData = availableLocales.map(locale => ({
     value: locale,
     label: `${localeToFlagEmojiMap[locale as SupportedLocales]} ${localeToNameMap[locale as SupportedLocales]}`,
 }));
