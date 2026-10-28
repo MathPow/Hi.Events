@@ -157,7 +157,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
 
     .hi-product-row {
       --trait-couleur: var(--dehors-brun);
-      --trait-epaisseur: 1.5px;
+      --trait-epaisseur: 6px;
 
       position: relative;
       gap: 12px;
@@ -186,7 +186,10 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       // Decoupee (useRoughEdges, data-rough="stroke"), la bordure garde sa place mais devient
       // transparente: ::after peint le trait le long du bord decoupe, comme le trait de
       // decoupe.ts sur le site. Rongee par la decoupe, elle paraissait pointillee.
+      // La decoupe tient deja la forme; l'overflow: hidden du widget, lui, rognait le trait
+      // pose sur la bordure jusqu'a un filet.
       &[data-rough-cut] {
+        overflow: visible;
         border-color: transparent;
 
         // Pose sur la boite de la bordure, a l'epaisseur que le navigateur lui donne vraiment

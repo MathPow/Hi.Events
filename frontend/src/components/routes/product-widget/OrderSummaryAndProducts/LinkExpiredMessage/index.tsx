@@ -8,7 +8,7 @@ export const LinkExpiredMessage = () => {
     const navigate = useNavigate();
 
     const handleLookupTickets = () => {
-        navigate('/auth/login');
+        navigate('/my-tickets');
     };
 
     return (

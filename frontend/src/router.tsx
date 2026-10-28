@@ -665,7 +665,7 @@ const routes: RouteObject[] = [
         errorElement: <ErrorPage />,
     },
     {
-        path: "/my-tickets/:token",
+        path: "/my-tickets/:token?",
         async lazy() {
             const MyTickets = await import("./components/routes/my-tickets");
             return { Component: MyTickets.default };

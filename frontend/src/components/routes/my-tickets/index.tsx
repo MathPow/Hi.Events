@@ -12,7 +12,6 @@ import {eventCoverImageUrl, eventHomepagePath, organizerHomepagePath} from "../.
 import {getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
-import {LoadingMask} from "../../common/LoadingMask";
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
@@ -174,8 +173,62 @@ const PastEvent = ({group: {event, orders, attendees}}: { group: EventTickets })
     );
 };
 
-// Le lien est expire ou invalide: on en redemande un sur place.
-const ExpiredLink = ({message}: { message?: string }) => {
+// Un os du squelette: la place d'un texte, d'un bouton ou d'une image avant les billets.
+const Bone = ({className = '', width, height}: { className?: string, width?: number | string, height?: number }) => (
+    <span className={`${classes.bone} ${className}`} style={{width, height}}/>
+);
+
+const SkeletonEvent = ({tickets}: { tickets: number }) => (
+    <div className={classes.event} data-rough>
+        <div className={classes.eventHead}>
+            <Bone className={classes.boneCover}/>
+            <div className={classes.eventInfo}>
+                <Bone width={120} height={14}/>
+                <Bone width={'70%'} height={30}/>
+                <div className={classes.meta}>
+                    <Bone width={220}/>
+                    <Bone width={160}/>
+                    <Bone width={90}/>
+                </div>
+                <div className={classes.actions}>
+                    <Bone className={classes.boneButton} width={150}/>
+                    <Bone className={classes.boneButton} width={130}/>
+                </div>
+            </div>
+        </div>
+        <div className={classes.tickets}>
+            {Array.from({length: tickets}, (_, i) => <Bone key={i} className={classes.boneTicket}/>)}
+        </div>
+    </div>
+);
+
+// Le tableau de bord, vide: il bat pendant le chargement, et reste fige sous le courriel.
+const DashboardSkeleton = ({loading}: { loading: boolean }) => (
+    <div className={classes.skeleton} data-loading={loading || undefined} aria-hidden>
+        <div className={`${shell.card} ${classes.hero}`} data-rough>
+            <Bone width={170} height={26}/>
+            <Bone width={340} height={56}/>
+            <Bone width={240}/>
+        </div>
+        <div className={`${shell.card} ${shell.section}`} data-rough>
+            <div className={shell.sectionHeader}>
+                <Bone width={220} height={32}/>
+                <div className={shell.tabs}>
+                    <Bone className={classes.boneTab} width={130}/>
+                    <Bone className={classes.boneTab} width={110}/>
+                </div>
+            </div>
+            <div className={classes.list}>
+                <SkeletonEvent tickets={2}/>
+                <SkeletonEvent tickets={1}/>
+            </div>
+        </div>
+    </div>
+);
+
+// Sans lien valide (page ouverte depuis « Mes billets », lien expire): le courriel de
+// l'achat, par-dessus le tableau de bord, et le lien part par courriel.
+const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }) => {
     const [sent, setSent] = useState(false);
     const lookup = useSendTicketLookupEmail();
     const form = useForm({initialValues: {email: ''}});
@@ -188,36 +241,51 @@ const ExpiredLink = ({message}: { message?: string }) => {
     };
 
     return (
-        <section className={`${shell.card} ${classes.hero}`} data-rough>
-            <h1 className={classes.title}>{t`Link Expired or Invalid`}</h1>
-            <p className={classes.line}>{message || t`This link is invalid or has expired.`}</p>
-            {sent ? (
-                <div className={classes.sent}>
-                    <p>{t`Check your inbox! If tickets are associated with this email, you'll receive a link to view them.`}</p>
-                    <UnstyledButton className={classes.resetLink} onClick={() => {
-                        setSent(false);
-                        form.reset();
-                    }}>
-                        {t`Try another email`}
-                    </UnstyledButton>
-                </div>
-            ) : (
-                <form className={classes.requestForm} onSubmit={form.onSubmit(requestLink)}>
-                    <TextInput {...form.getInputProps('email')} type="email" required
-                               placeholder={t`Enter your email`} aria-label={t`Email`}
-                               className={classes.requestInput}/>
-                    <Button type="submit" loading={lookup.isPending} className={classes.requestButton}>
-                        {t`Request a new link`}
-                    </Button>
-                </form>
-            )}
-        </section>
+        <div className={classes.overlay}>
+            <div className={classes.dialogShadow}>
+                <section className={classes.dialog} data-rough aria-labelledby="my-tickets-lookup">
+                    {!expired && <p className={classes.kicker}>{t`See you outside!`}</p>}
+                    <h1 id="my-tickets-lookup" className={classes.title}>
+                        {expired ? t`Link Expired or Invalid` : t`My tickets`}
+                    </h1>
+                    {sent ? (
+                        <div className={classes.sent}>
+                            <p>{t`Check your inbox! If tickets are associated with this email, you'll receive a link to view them.`}</p>
+                            <UnstyledButton className={classes.resetLink} onClick={() => {
+                                setSent(false);
+                                form.reset();
+                            }}>
+                                {t`Try another email`}
+                            </UnstyledButton>
+                        </div>
+                    ) : (
+                        <>
+                            <p className={classes.line}>
+                                {expired
+                                    ? message || t`This link is invalid or has expired.`
+                                    : t`No account needed: just the email you used at checkout.`}
+                            </p>
+                            <form className={classes.requestForm} onSubmit={form.onSubmit(requestLink)}>
+                                <TextInput {...form.getInputProps('email')} type="email" required
+                                           placeholder={t`Enter your email`} aria-label={t`Email`}
+                                           className={classes.requestInput}/>
+                                <Button type="submit" loading={lookup.isPending} className={classes.requestButton}>
+                                    {expired ? t`Request a new link` : t`Send`}
+                                </Button>
+                            </form>
+                        </>
+                    )}
+                </section>
+            </div>
+        </div>
     );
 };
 
 /**
  * Le tableau de bord du participant, ouvert par le lien du courriel « Vos billets »:
  * comme les pages publiques des organisateurs, aux couleurs de la Billetterie Dehors.
+ * Sans lien (« Mes billets » de la barre) ou avec un lien expire, son squelette reste
+ * sous une carte qui demande le courriel de l'achat.
  * Les evenements a venir montrent leurs billets a code QR; les passes, une rangee avec
  * les codes. Les onglets passent par ?vue=, comme les evenements passes de l'organisateur.
  */
@@ -227,9 +295,7 @@ export const MyTickets = () => {
     const roughEdges = useRoughEdges<HTMLElement>();
     const {data: orders, isLoading, isError, error} = useGetOrdersByLookupToken(token);
 
-    if (isLoading) {
-        return <LoadingMask/>;
-    }
+    const locked = !token || isError;
 
     const groups = groupByEvent(orders ?? []);
     const upcoming = groups.filter((group) => !isPast(group.event)).sort(byStart);
@@ -256,7 +322,12 @@ export const MyTickets = () => {
                     <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
                 </div>
 
-                {isError ? <ExpiredLink message={error?.message}/> : (
+                {locked || isLoading ? (
+                    <div className={classes.locked}>
+                        <DashboardSkeleton loading={isLoading}/>
+                        {locked && <EmailOverlay expired={isError} message={error?.message}/>}
+                    </div>
+                ) : (
                     <>
                         <header className={`${shell.card} ${classes.hero}`} data-rough>
                             <p className={classes.kicker}>{t`See you outside!`}</p>

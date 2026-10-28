@@ -46,7 +46,7 @@ export const PublicPageBar = ({left}: { left: ReactNode }) => (
     <nav className={classes.bar}>
         <div className={classes.left}>{left}</div>
         <div className={classes.right}>
-            <PublicBarLink to={'/auth/login?billets=1'}>
+            <PublicBarLink to={'/my-tickets'}>
                 <PublicIcon name={'billet'} className={classes.accentIcon}/>
                 <span className={classes.myTickets}>{t`My tickets`}</span>
             </PublicBarLink>

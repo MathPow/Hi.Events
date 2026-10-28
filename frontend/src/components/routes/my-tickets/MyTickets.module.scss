@@ -365,7 +365,125 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-// Lien expire: le courriel, puis un nouveau lien, comme la tuile de la connexion.
+// Sans lien: le squelette du tableau de bord, et par-dessus la carte du courriel.
+.locked {
+  display: grid;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 20px;
+  }
+}
+
+.bone {
+  display: block;
+  max-width: 100%;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--dehors-champ);
+}
+
+.boneCover {
+  height: 210px;
+  border-radius: 20px;
+
+  @include mixins.respond-below(md) {
+    height: 170px;
+    border-radius: 18px;
+  }
+}
+
+.boneButton {
+  height: 44px;
+  border-radius: 16px;
+}
+
+.boneTab {
+  height: 44px;
+  border-radius: 999px;
+}
+
+.boneTicket {
+  height: 190px;
+  border-radius: 20px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton[data-loading] .bone {
+    animation: os-battement 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes os-battement {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+// Un voile creme sur le squelette; la carte suit le defilement pour rester a portee.
+.overlay {
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 72px 16px;
+  border-radius: 32px;
+  background: linear-gradient(rgb(255 247 233 / 0.55), rgb(255 247 233 / 0.92) 60%);
+
+  @include mixins.respond-below(md) {
+    padding: 24px 0;
+  }
+}
+
+// L'ombre sur le parent: posee sur la carte, la decoupe la couperait.
+.dialogShadow {
+  position: sticky;
+  top: 32px;
+  width: min(100%, 560px);
+  filter: drop-shadow(0 18px 40px rgb(55 39 33 / 0.16));
+
+  @include mixins.respond-below(md) {
+    top: 16px;
+  }
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 36px;
+  border-radius: 32px;
+  text-align: center;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+
+  .title {
+    font-size: 48px;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 8px;
+    padding: 28px 18px 22px;
+    border-radius: 28px;
+
+    .title {
+      font-size: 34px;
+    }
+  }
+}
+
+// Le courriel, puis le lien, comme la tuile de la connexion.
 .requestForm {
   display: flex;
   gap: 10px;
@@ -378,8 +496,10 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-.requestInput {
+// Doublee pour passer devant la marge des champs de global.scss.
+.requestInput.requestInput {
   flex: 1;
+  margin-bottom: 0;
 
   :global(.mantine-Input-input) {
     height: 48px;

@@ -22,10 +22,12 @@ const ROUND_FULL_SIZE = 64;
 const outlineName = (i: number) => `--rough-clip${i ? `-${i + 1}` : ''}`;
 
 // Le trait de decoupe.ts (option trait): le meme trace en contour, en masque. Centre sur le
-// bord, il perd sa moitie exterieure a la decoupe: on le trace deux fois plus epais.
+// bord, on le trace deux fois plus epais et on n'en garde que la moitie interieure: la
+// decoupe ne mord que le long des cotes, la moitie exterieure debordait dans les coins.
 const strokeMask = (width: number, height: number, path: string, thickness: number) => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width.toFixed(1)} ${height.toFixed(1)}" preserveAspectRatio="none">`
-        + `<path d="${path}" fill="none" stroke="#000" stroke-width="${thickness * 2}"/></svg>`;
+        + `<clipPath id="c"><path d="${path}"/></clipPath>`
+        + `<path d="${path}" fill="none" stroke="#000" stroke-width="${thickness * 2}" clip-path="url(#c)"/></svg>`;
     return `url("data:image/svg+xml;base64,${btoa(svg)}")`;
 };
 
