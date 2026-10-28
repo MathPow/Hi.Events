@@ -15,6 +15,31 @@ declare global {
 
 const dehydratedState = window.__REHYDRATED_STATE__;
 
+// Pendant un déploiement, un fichier /assets peut répondre une erreur que Cloudflare puis le
+// navigateur gardent des heures: la page reste blanche. On redemande alors ces fichiers en
+// sautant le cache (ce qui remplace la mauvaise copie), puis on recharge la page. Une fois par
+// minute au plus, pour ne pas boucler si le serveur est vraiment en panne.
+const ASSETS_RELOAD_KEY = 'dehors-rechargement-fichiers';
+
+window.addEventListener('vite:preloadError', (event) => {
+    const payload = (event as Event & { payload?: unknown }).payload;
+    const files = String((payload as Error)?.message ?? payload).match(/\/assets\/[\w.-]+/g) ?? [];
+
+    try {
+        const last = Number(sessionStorage.getItem(ASSETS_RELOAD_KEY));
+        if (Date.now() - last < 60_000) {
+            return;
+        }
+        sessionStorage.setItem(ASSETS_RELOAD_KEY, String(Date.now()));
+    } catch {
+        return;
+    }
+
+    event.preventDefault();
+    Promise.all(files.map((file) => fetch(file, {cache: 'reload'}).catch(() => null)))
+        .finally(() => window.location.reload());
+});
+
 async function initClientApp() {
     captureInstallPrompt();
 

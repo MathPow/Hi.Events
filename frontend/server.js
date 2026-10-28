@@ -51,6 +51,15 @@ async function main() {
     } else {
         app.use(compression());
         app.use(base, sirv(path.join(__dirname, "./dist/client"), { extensions: [] }));
+
+        // Un fichier haché absent de ce build (pendant un déploiement, l'ancien conteneur reçoit
+        // des demandes pour les fichiers du nouveau, et inversement) ne doit pas tomber dans le
+        // rendu de page ci-dessous: ce HTML en 200 était gardé un an comme feuille de style ou
+        // script, par Cloudflare et par le navigateur. Une vraie 404 que personne ne garde.
+        app.use(`${base}assets`, (req, res) => {
+            res.setHeader("Cache-Control", "no-store");
+            res.status(404).type("text/plain").send("Not found");
+        });
     }
 
     const environment = (process.env.VITE_APP_ENVIRONMENT || '').replace(/[^a-z-]/g, '');
