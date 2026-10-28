@@ -108,4 +108,9 @@ export const eventsClientPublic = {
         const response = await publicApi.get<GenericDataResponse<Event>>('events/' + eventId + (promoCode ? '?promo_code=' + promoCode : ''));
         return response.data;
     },
+
+    upcoming: async () => {
+        const response = await publicApi.get<GenericPaginatedResponse<Event>>('upcoming-events');
+        return response.data;
+    },
 }

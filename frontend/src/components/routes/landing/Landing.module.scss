@@ -498,6 +498,11 @@ $ridge-mobile: 10vw;
   > input[type="hidden"] {
     display: none;
   }
+
+  // The buttons' words stay on one line: the bar has room down to the phone menu.
+  .shaky {
+    flex-wrap: nowrap;
+  }
 }
 
 .language.language {
@@ -1108,6 +1113,11 @@ $ridge-mobile: 10vw;
     justify-content: center;
     width: 100%;
   }
+
+  // « Mes billets », for participants: brown on the cream menu.
+  .button-ghost {
+    color: $brun;
+  }
 }
 
 // The two languages side by side, the current one filled.
@@ -1156,6 +1166,19 @@ $ridge-mobile: 10vw;
 @media (max-width: 1150px) {
   .menuButton {
     display: flex;
+  }
+}
+
+// With « Mes billets » the bar is full: below 900px the language moves to the
+// menu and the buttons tighten, down to the phone menu.
+@media (max-width: 900px) {
+  .language.language {
+    display: none;
+  }
+
+  .navActions .button {
+    padding-inline: 0.9rem;
+    font-size: 1.1rem;
   }
 }
 
@@ -1485,7 +1508,8 @@ $ridge-mobile: 10vw;
 }
 
 // Shown while a keyboard user tabs through its links, the rows being out of the tab order.
-.trustNames:focus-within {
+.trustNames:focus-within,
+.nextEventsNames:focus-within {
   position: static;
   display: flex;
   flex-wrap: wrap;
@@ -1636,6 +1660,152 @@ $ridge-mobile: 10vw;
 
   .trustLogo {
     height: calc(3rem * var(--logo-scale, 1));
+  }
+}
+
+// --- Next events ---
+
+// Under the hero, past the round arrow: the platform's next events rolling to
+// the right (NextEvents). Low pills, a picture and two lines, to be clicked.
+.nextEvents {
+  margin-top: 4rem;
+}
+
+// The banner already marks the break: the intro comes closer.
+.nextEvents + .intro {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
+// The hero footer's small capitals, past `.landing h2`.
+.nextEvents .nextEventsTitle {
+  margin: 0 0 0.875rem;
+  font-family: $sans;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  color: $brun;
+}
+
+// Clipped on the sides only: a hovered pill rises a little. Without motion, it scrolls by hand.
+.nextEventsScroller {
+  overflow: clip visible;
+
+  @media (prefers-reduced-motion: reduce) {
+    overflow-x: auto;
+  }
+}
+
+.nextEventsTrack {
+  display: flex;
+  width: max-content;
+  animation: trust-right var(--duration) linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.nextEventsCopy {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.25rem 0.75rem 0.25rem 0;
+  list-style: none;
+
+  > li {
+    flex: none;
+  }
+}
+
+.nextEvent {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 4.25rem;
+  padding: 0.375rem 1.5rem 0.375rem 0.375rem;
+  border-radius: 62rem;
+  color: $brun;
+  background: rgb(227 173 146 / 0.3);
+  text-decoration: none;
+  transition: background-color 0.2s, translate 0.25s $ease;
+
+  &:hover {
+    background: $abricot;
+    translate: 0 -0.125rem;
+  }
+}
+
+.nextEventPicture {
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: $orange-pale;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.nextEventText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  max-width: 16rem;
+}
+
+.nextEventTitle,
+.nextEventMeta {
+  overflow: hidden;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.nextEventTitle {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.nextEventMeta {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+@media (max-width: $mobile) {
+  .nextEvents {
+    margin-top: 3.5rem;
+  }
+
+  .nextEvent {
+    gap: 0.625rem;
+    height: 3.75rem;
+    padding-right: 1.125rem;
+  }
+
+  .nextEventPicture {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .nextEventText {
+    max-width: 12rem;
+  }
+
+  .nextEventTitle {
+    font-size: 0.9375rem;
+  }
+
+  .nextEventMeta {
+    font-size: 0.75rem;
   }
 }
 

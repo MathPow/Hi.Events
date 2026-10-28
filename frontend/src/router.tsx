@@ -5,6 +5,7 @@ import { useGetMe } from "./queries/useGetMe.ts";
 import { publicEventRouteLoader } from "./routeLoaders/publicEventRouteLoader.ts";
 import { publicOrganizerRouteLoader } from "./routeLoaders/publicOrganizerRouteLoader.ts";
 import { organizerPreviewRouteLoader } from "./routeLoaders/organizerPreviewRouteLoader.ts";
+import { landingRouteLoader } from "./routeLoaders/landingRouteLoader.ts";
 import Landing from "./components/routes/landing";
 
 const Root = () => {
@@ -26,6 +27,7 @@ const routes: RouteObject[] = [
     {
         path: "",
         element: <Root />,
+        loader: landingRouteLoader,
         errorElement: <ErrorPage />
     },
     {

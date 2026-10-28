@@ -11,6 +11,7 @@ import {dynamicActivateLocale} from "../../../locales.ts";
 import {loadWordmarkLetters} from "./wordmarkLetters.ts";
 import {Organizer, TrustedOrganizers} from "./TrustedOrganizers.tsx";
 import {FeesComparator} from "./FeesComparator.tsx";
+import {NextEvents} from "./NextEvents.tsx";
 import {HeroTitle} from "./HeroTitle.tsx";
 import {LandingButton, ShakyText} from "./LandingButton.tsx";
 import {useRoughButton} from "../../../hooks/useRoughButton.ts";
@@ -197,6 +198,7 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
             <div className={classes.menuActions}>
                 <LandingButton as={NavLink} to="/auth/register" label={t`Create my account`} onClick={onClose}/>
                 <LandingButton as={NavLink} to="/auth/login" variant="dark" label={t`Log in`} onClick={onClose}/>
+                <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`} onClick={onClose}/>
             </div>
             <div className={classes.menuLanguages} role="group" aria-label={t`Language`}>
                 {LANGUAGES.map(({locale, name}) => (
@@ -880,6 +882,8 @@ const Landing = () => {
                                     option: classes.languageOption,
                                 }} comboboxProps={{width: 'max-content', position: 'bottom-end', offset: 8}}
                                                   checkIconPosition="right" onDropdownOpen={cutLanguageList}/>
+                                {/* Pour les participants, qui n'ont pas de compte: le hero seulement, pas la barre qui suit. */}
+                                <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>
                                 <LandingButton as={NavLink} to="/auth/login" variant="ghost" label={t`Log in`}/>
                                 <RegisterButton/>
                                 <MenuButton open={menuOpen} onToggle={toggleMenu}/>
@@ -895,6 +899,8 @@ const Landing = () => {
                     </Rough>
                     <ScrollDown/>
                 </section>
+
+                <NextEvents/>
 
                 <section id="intro" className={classes.intro}>
                     <h2 className={classes.introTitle} data-rise><Trans>Made by organizers,<br/>for organizers.</Trans></h2>

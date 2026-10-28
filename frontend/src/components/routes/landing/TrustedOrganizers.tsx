@@ -1,6 +1,7 @@
 import {CSSProperties, PointerEvent, useEffect, useRef} from "react";
 import {Link} from "react-router";
 import classes from "./Landing.module.scss";
+import {useMarqueePace} from "./useMarqueePace.ts";
 
 export interface Organizer {
     name: string;
@@ -19,14 +20,8 @@ const ORANGE = 'var(--landing-orange, #fa7853)';
 const TINTS = ['#352924', '#e3ad92', 'var(--landing-abricot, #ffaa8d)', ORANGE];
 const DARK_TINTS = new Set(['#352924', ORANGE]);
 
-// The rows' pace, like the shop's (RelaisBenevoles.vue): the CSS animation's,
-// times its playback rate. Slowed down under the mouse, sped up by the page's
-// scroll (MOMENTUM per px scrolled per ms, MAX_MOMENTUM more at most), it eases
-// toward its target.
+// Slowed down under the mouse (useMarqueePace).
 const HOVER_PACE = 0.2;
-const MOMENTUM = 3;
-const MAX_MOMENTUM = 8;
-const SUPPLENESS = 0.08;
 
 const PULL = 0.1;
 const MAX_OFFSET = 6;
@@ -106,7 +101,7 @@ export const TrustedOrganizers = ({organizers}: { organizers: Organizer[] }) => 
         {...buildRow(organizers, 1), className: classes.trustRowRight},
     ];
     const scroller = useRef<HTMLDivElement>(null);
-    const hovering = useRef(false);
+    const hovering = useMarqueePace(scroller, classes.trustTrack, HOVER_PACE);
     const motions = useRef(new Map<HTMLElement, Motion>());
     const hovered = useRef<HTMLElement | null>(null);
     const frame = useRef<number | null>(null);
@@ -115,55 +110,6 @@ export const TrustedOrganizers = ({organizers}: { organizers: Organizer[] }) => 
         if (frame.current !== null) {
             cancelAnimationFrame(frame.current);
         }
-    }, []);
-
-    // The pace runs only while the rows are on screen.
-    useEffect(() => {
-        const element = scroller.current;
-        if (!element || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            return;
-        }
-        let loop: number | null = null;
-        let pace = 1;
-        let lastY = 0;
-        let lastTime = 0;
-
-        const tick = (now: number) => {
-            loop = requestAnimationFrame(tick);
-            const speed = Math.abs(window.scrollY - lastY) / Math.max(now - lastTime, 1);
-            lastY = window.scrollY;
-            lastTime = now;
-            const target = (hovering.current ? HOVER_PACE : 1) + Math.min(speed * MOMENTUM, MAX_MOMENTUM);
-            pace += (target - pace) * SUPPLENESS;
-            if (Math.abs(target - pace) < 0.001) {
-                pace = target;
-            }
-            element.querySelectorAll<HTMLElement>(`.${classes.trustTrack}`).forEach((track) => {
-                track.getAnimations().forEach((animation) => {
-                    if (animation.playbackRate !== pace) {
-                        animation.playbackRate = pace;
-                    }
-                });
-            });
-        };
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry?.isIntersecting && loop === null) {
-                lastY = window.scrollY;
-                lastTime = performance.now();
-                loop = requestAnimationFrame(tick);
-            } else if (!entry?.isIntersecting && loop !== null) {
-                cancelAnimationFrame(loop);
-                loop = null;
-            }
-        });
-        observer.observe(element);
-
-        return () => {
-            observer.disconnect();
-            if (loop !== null) {
-                cancelAnimationFrame(loop);
-            }
-        };
     }, []);
 
     const animate = () => {
