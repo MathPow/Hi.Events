@@ -5,11 +5,20 @@ import {useGetMe} from "../../../queries/useGetMe.ts";
 import {PoweredByFooter} from "../../common/PoweredByFooter";
 import {LanguageSwitcher} from "../../common/LanguageSwitcher";
 import {MouseEvent, useCallback, useRef} from "react";
+import {IconChartBar, IconCreditCard, IconPalette, IconQrcode, IconSparkles} from "@tabler/icons-react";
 import {isHiEvents} from "../../../utilites/helpers.ts";
 import {showInfo} from "../../../utilites/notifications.tsx";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 import {usePhotoPan} from "./usePhotoPan.ts";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
+
+// Ce que la billetterie fait pour l'organisateur, sur la photo (grand ecran seulement).
+const features = () => [
+    {icon: IconChartBar, title: t`Real-Time Analytics`, description: t`Track sales, revenue, and attendance with detailed reports`},
+    {icon: IconCreditCard, title: t`Instant Payouts`, description: t`Get paid immediately via Stripe Connect`},
+    {icon: IconQrcode, title: t`QR Code Check-in`, description: t`Mobile scanner with offline support and real-time tracking`},
+    {icon: IconPalette, title: t`Custom Branding`, description: t`Your logo, colors, and style on every page`},
+];
 
 const Photo = () => {
     const photo = useRef<HTMLDivElement>(null);
@@ -18,6 +27,24 @@ const Photo = () => {
     return (
         <div className={classes.photo} data-rough>
             <div ref={photo} className={classes.photoImage}/>
+            <div className={classes.photoShade}/>
+            <div className={classes.photoInfo}>
+                <span className={classes.photoBadge} data-rough>
+                    <IconSparkles size={16}/>
+                    {t`Event Management Platform`}
+                </span>
+                <ul className={classes.features}>
+                    {features().map(({icon: Icon, title, description}) => (
+                        <li key={title} className={classes.feature}>
+                            <span className={classes.featureIcon} data-rough><Icon size={20}/></span>
+                            <span>
+                                <strong>{title}</strong>
+                                <span>{description}</span>
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
@@ -91,6 +118,8 @@ const AuthLayout = () => {
                             </div>
                         )}
                         <LanguageSwitcher
+                            dehorsList
+                            comboboxProps={{position: 'top-start'}}
                             leftSection={null}
                             rightSection={<img src={'/interface/chevron-bas.svg'} alt={''}/>}
                             classNames={{

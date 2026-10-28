@@ -222,6 +222,98 @@
   }
 }
 
+// Sur grand ecran, ce que la billetterie fait, en bas de la photo: un voile brun monte du bas
+// pour que le texte reste lisible pendant que la photo bouge.
+.photoShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(53 41 36 / 0.94) 0%, rgb(53 41 36 / 0.7) 32%, rgb(53 41 36 / 0) 62%);
+  pointer-events: none;
+}
+
+.photoInfo {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  left: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  color: var(--dehors-creme);
+}
+
+.photoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dehors-brun);
+  background: var(--dehors-orange);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 32px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  strong + span {
+    display: block;
+    font-size: 14px;
+    line-height: 1.45;
+    color: rgb(255 247 233 / 0.78);
+  }
+}
+
+.featureIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--dehors-orange-clair);
+  background: rgb(255 247 233 / 0.12);
+}
+
+@include mixins.respond-below(xl) {
+  .features {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+
+// Sous lg, la photo est un bandeau en haut de la carte: pas de place pour le texte.
+@include mixins.respond-below(lg) {
+  .photoShade,
+  .photoInfo {
+    display: none;
+  }
+}
+
 // Zoomed a little so it can pan in its frame with the mouse (usePhotoPan).
 .photoImage {
   position: absolute;

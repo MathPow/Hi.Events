@@ -5,7 +5,6 @@ import {i18n} from "@lingui/core";
 import {Helmet} from "react-helmet-async";
 import {IconArrowDown, IconArrowRight, IconBrandInstagram, IconMinus, IconPlus} from "@tabler/icons-react";
 import {useRoughEdge} from "../../../hooks/useRoughEdge.ts";
-import {roughEdgeClipPath} from "../../../utilites/roughEdge.ts";
 import {LanguageSwitcher} from "../../common/LanguageSwitcher";
 import {dynamicActivateLocale} from "../../../locales.ts";
 import {loadWordmarkLetters} from "./wordmarkLetters.ts";
@@ -447,19 +446,6 @@ const useRiseOnScroll = (root: RefObject<HTMLElement>) => {
     }, [root]);
 };
 
-const LANGUAGE_LIST_SEED = 0x5eed;
-
-/** Cuts the open language list like the DEHORS shop's menus; Mantine renders it in a portal. */
-const cutLanguageList = () => requestAnimationFrame(() => {
-    const list = document.querySelector<HTMLElement>(`.${classes.languageOptions}`);
-    if (!list?.offsetWidth) {
-        return;
-    }
-    const radius = parseFloat(getComputedStyle(list).borderTopLeftRadius) || 0;
-    list.style.clipPath = roughEdgeClipPath(list.offsetWidth, list.offsetHeight,
-        {radius, step: 40, amplitude: 1.5, seed: LANGUAGE_LIST_SEED});
-});
-
 const HeroVideo = () => {
     const video = useRef<HTMLVideoElement>(null);
 
@@ -873,15 +859,11 @@ const Landing = () => {
                         <header ref={heroNav} className={classes.nav}>
                             <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
                             <div className={classes.navActions}>
-                                <LanguageSwitcher iconColor="currentColor" locales={['fr', 'en', 'es']} classNames={{
+                                <LanguageSwitcher iconColor="currentColor" locales={['fr', 'en', 'es']} dehorsList classNames={{
                                     root: classes.language,
                                     input: classes.languageInput,
                                     section: classes.languageSection,
-                                    dropdown: classes.languageDropdown,
-                                    options: classes.languageOptions,
-                                    option: classes.languageOption,
-                                }} comboboxProps={{width: 'max-content', position: 'bottom-end', offset: 8}}
-                                                  checkIconPosition="right" onDropdownOpen={cutLanguageList}/>
+                                }}/>
                                 {/* Pour les participants, qui n'ont pas de compte: le hero seulement, pas la barre qui suit. */}
                                 <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>
                                 <LandingButton as={NavLink} to="/auth/login" variant="ghost" label={t`Log in`}/>

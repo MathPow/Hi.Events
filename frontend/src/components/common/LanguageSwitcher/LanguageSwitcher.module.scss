@@ -1,0 +1,55 @@
+// La liste des langues du site DEHORS (dehorsList): creme, decoupee a la main (LanguageSwitcher),
+// une ombre portee qui suit la decoupe, le choix survole sur fond sable, le choisi en gras avec
+// sa coche a droite. Doublees pour passer devant les styles de Mantine.
+.dropdown.dropdown {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0.75rem 1.25rem rgb(53 41 36 / 0.2));
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: language-open 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+}
+
+@keyframes language-open {
+  from {
+    opacity: 0;
+    translate: 0 -0.375rem;
+  }
+}
+
+.options.options {
+  padding: 0.375rem;
+  border-radius: 1.25rem;
+  background: var(--dehors-creme, #fff7e9);
+}
+
+.option.option {
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.875rem;
+  color: var(--dehors-brun, #352924);
+  font-family: Allotrope, Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.3;
+
+  &:hover, &[data-combobox-selected] {
+    background: rgb(227 173 146 / 0.32);
+  }
+
+  &[data-checked] {
+    font-weight: 700;
+  }
+
+  svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--dehors-brun, #352924);
+  }
+}

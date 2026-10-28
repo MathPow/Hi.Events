@@ -4,6 +4,8 @@ import {t} from "@lingui/macro";
 import {IconWorld} from "@tabler/icons-react";
 import {useLingui} from "@lingui/react";
 import {ReactNode} from "react";
+import {roughEdgeClipPath} from "../../../utilites/roughEdge.ts";
+import classes from "./LanguageSwitcher.module.scss";
 
 // Ideally these would be in the locales.ts file, but when they're there they don't translate.
 // Called at render time, so the active catalog is loaded.
@@ -61,6 +63,19 @@ export const switchLocale = (locale: string) => {
     });
 };
 
+const LIST_SEED = 0x5eed;
+
+// La liste ouverte, decoupee comme les menus de la boutique DEHORS; Mantine la rend dans un portail.
+const cutList = () => requestAnimationFrame(() => {
+    const list = document.querySelector<HTMLElement>(`.${classes.options}`);
+    if (!list?.offsetWidth) {
+        return;
+    }
+    const radius = parseFloat(getComputedStyle(list).borderTopLeftRadius) || 0;
+    list.style.clipPath = roughEdgeClipPath(list.offsetWidth, list.offsetHeight,
+        {radius, step: 40, amplitude: 1.5, seed: LIST_SEED});
+});
+
 export const LanguageSwitcher = ({
     classNames,
     comboboxProps,
@@ -70,6 +85,7 @@ export const LanguageSwitcher = ({
     locales,
     leftSection,
     rightSection,
+    dehorsList,
 }: {
     classNames?: SelectProps['classNames'];
     comboboxProps?: SelectProps['comboboxProps'];
@@ -80,6 +96,8 @@ export const LanguageSwitcher = ({
     // null retire l'icone du globe; absent, on la garde
     leftSection?: ReactNode | null;
     rightSection?: ReactNode;
+    // La liste du site DEHORS (LanguageSwitcher.module.scss), sous le champ, a droite.
+    dehorsList?: boolean;
 }) => {
     useLingui();
 
@@ -88,10 +106,17 @@ export const LanguageSwitcher = ({
             <Select
                 leftSection={leftSection === undefined ? <IconWorld size={15} color={iconColor}/> : leftSection}
                 rightSection={rightSection}
-                classNames={classNames}
-                comboboxProps={comboboxProps}
-                checkIconPosition={checkIconPosition}
-                onDropdownOpen={onDropdownOpen}
+                classNames={dehorsList ? {
+                    ...(classNames as Record<string, string>),
+                    dropdown: classes.dropdown,
+                    options: classes.options,
+                    option: classes.option,
+                } : classNames}
+                comboboxProps={dehorsList
+                    ? {width: 'max-content', position: 'bottom-end', offset: 8, ...comboboxProps}
+                    : comboboxProps}
+                checkIconPosition={dehorsList ? 'right' : checkIconPosition}
+                onDropdownOpen={dehorsList ? cutList : onDropdownOpen}
                 aria-label={t`Language`}
                 width={180}
                 size={'xs'}
