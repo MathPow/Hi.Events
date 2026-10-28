@@ -40,10 +40,12 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   box-shadow: var(--dehors-ombre-carte);
   color: var(--dehors-brun);
 
-  // Colonne de droite collante au defilement (--billets-haut: voir index.tsx).
+  // Colonne de droite collante au defilement, arretee au bas de l'ecran (--billets-max: voir
+  // index.tsx): la liste des billets defile dedans, le sous-total et Continuer restent visibles.
   @include mixins.respond-above(lg) {
     position: sticky;
-    top: var(--billets-haut, 24px);
+    top: 24px;
+    max-height: var(--billets-max, calc(100vh - 48px));
   }
 
   @include mixins.respond-below(md) {
@@ -96,6 +98,35 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
 // Le widget de selection (SelectProducts), restyle seulement ici: la route /widget et l'apercu
 // du back-office gardent styles/widget/default.scss. Les selecteurs reprennent ceux de
 // default.scss, plus .widget, pour passer devant.
+@include mixins.respond-above(lg) {
+  .widget {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .widget :global {
+    .hi-product-widget-container,
+    .hi-product-widget-container > form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    // Un peu d'air autour des rangees: le trait et la decoupe ne touchent pas le bord du defilement.
+    .hi-product-category-rows {
+      flex: 0 1 auto;
+      min-height: 0;
+      margin: -4px;
+      padding: 4px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
+}
+
 .widget :global {
   .hi-product-widget-container {
     padding: 0;
@@ -157,7 +188,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
 
     .hi-product-row {
       --trait-couleur: var(--dehors-brun);
-      --trait-epaisseur: 6px;
+      --trait-epaisseur: 3px;
 
       position: relative;
       gap: 12px;
@@ -269,9 +300,11 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         }
       }
 
-      // La fleche ne sert qu'a rouvrir un billet replie (la maquette n'en montre pas).
-      &:not(:has(> .hi-product-content[hidden])) .hi-product-collapse-arrow {
-        display: none;
+      // Replie, le prix du billet a cote du titre (SelectProducts, collapseProducts).
+      .hi-product-collapsed-price {
+        font-size: 15px;
+        font-weight: 700;
+        white-space: nowrap;
       }
 
       .hi-product-availability {

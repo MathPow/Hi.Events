@@ -91,9 +91,32 @@ interface SelectProductsProps {
     },
     padding?: string;
     continueButtonText?: string;
+    // Products start collapsed, their price beside the title (event page, several products).
+    collapseProducts?: boolean;
     widgetMode?: 'preview' | 'normal' | 'embedded';
     showPoweredBy?: boolean;
 }
+
+// A collapsed product's price beside its title: its lowest and highest prices, taxes and fees
+// included when the event shows prices that way (as ProductPriceDisplay does).
+const collapsedPriceLabel = (product: Product, event: Event): string | null => {
+    if (product.type === ProductPriceType.Donation || !product.prices?.length) {
+        return null;
+    }
+    const inclusive = event.settings?.price_display_mode === 'INCLUSIVE';
+    const prices = product.prices.map((price) => price.price
+        + (inclusive ? (price.tax_total || 0) + (price.fee_total || 0) : 0));
+    const lowest = Math.min(...prices);
+    const highest = Math.max(...prices);
+
+    if (highest === 0) {
+        return t`Free`;
+    }
+
+    return lowest === highest
+        ? formatCurrency(lowest, event.currency)
+        : `${formatCurrency(lowest, event.currency)} – ${formatCurrency(highest, event.currency)}`;
+};
 
 const SelectProducts = (props: SelectProductsProps) => {
     const {eventId} = useParams();
@@ -514,7 +537,11 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                 .map((n) => n.toString());
                                             quantityRange.unshift("0");
 
-                                            const isProductCollapsed = collapsedProducts[Number(product.id)] ?? product.start_collapsed;
+                                            const isProductCollapsed = collapsedProducts[Number(product.id)]
+                                                ?? (props.collapseProducts || product.start_collapsed);
+                                            const collapsedPrice = props.collapseProducts && isProductCollapsed
+                                                ? collapsedPriceLabel(product, event)
+                                                : null;
                                             const toggleCollapse = () => {
                                                 setCollapsedProducts(prev => ({
                                                     ...prev,
@@ -559,6 +586,10 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                                 {(!product.is_available && hasMultiplePrices(product)) && (
                                                                     <ProductAvailabilityMessage product={product}
                                                                                                 event={event}/>
+                                                                )}
+
+                                                                {collapsedPrice && (
+                                                                    <span className={'hi-product-collapsed-price'}>{collapsedPrice}</span>
                                                                 )}
 
                                                                 <span className={`hi-product-collapse-arrow`}>

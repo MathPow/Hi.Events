@@ -1,4 +1,4 @@
-import {CSSProperties, forwardRef, useEffect, useRef, useState} from "react";
+import {forwardRef, useEffect, useRef} from "react";
 import {useMergedRef} from "@mantine/hooks";
 import {t} from "@lingui/macro";
 import SelectProducts, {ProductSelectionSummary} from "../../../routes/product-widget/SelectProducts";
@@ -7,7 +7,9 @@ import {Event, ProductPriceType} from "../../../../types.ts";
 import {Constants} from "../../../../constants.ts";
 import classes from "./TicketsCard.module.scss";
 
-const STICKY_MARGIN = 24;
+const SCREEN_MARGIN = 24;
+// Sur un ecran tres bas, la carte garde de quoi montrer un billet et Continuer.
+const MIN_HEIGHT = 360;
 
 interface TicketsCardProps {
     event: Event;
@@ -19,7 +21,9 @@ interface TicketsCardProps {
 }
 
 // La carte « Billets » de la page evenement: le widget de selection existant, habille comme la
-// maquette (voir TicketsCard.module.scss), avec le sous-total et la mention du paiement.
+// maquette (voir TicketsCard.module.scss), avec le sous-total et la mention du paiement. Avec
+// plusieurs billets, ils commencent replies, leur prix a cote du titre. Sur grand ecran, la
+// carte colle au defilement et s'arrete au bas de l'ecran: la liste des billets defile dedans.
 export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                           event,
                                                                           promoCodeValid,
@@ -30,24 +34,31 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                       }, ref) => {
     const cardRef = useRef<HTMLElement>(null);
     const mergedRef = useMergedRef(ref, cardRef);
-    const [stickyTop, setStickyTop] = useState(STICKY_MARGIN);
 
-    // Plus haute que l'ecran, la carte defile avec la page puis colle par le bas, pour que
-    // Continuer reste a portee.
+    // Le bas de la carte suit le bas de l'ecran, qu'elle soit encore dans la page ou deja collee.
     useEffect(() => {
         const card = cardRef.current;
         if (!card) {
             return;
         }
-        const measure = () => setStickyTop(Math.min(STICKY_MARGIN, window.innerHeight - card.offsetHeight - STICKY_MARGIN));
+        let frame = 0;
+        const measure = () => {
+            frame = 0;
+            const top = Math.max(SCREEN_MARGIN, card.getBoundingClientRect().top);
+            const height = Math.max(MIN_HEIGHT, window.innerHeight - top - SCREEN_MARGIN);
+            card.style.setProperty('--billets-max', `${Math.round(height)}px`);
+        };
+        const schedule = () => {
+            frame ||= requestAnimationFrame(measure);
+        };
         measure();
-        const observer = new ResizeObserver(measure);
-        observer.observe(card);
-        window.addEventListener('resize', measure);
+        window.addEventListener('scroll', schedule, {passive: true});
+        window.addEventListener('resize', schedule);
 
         return () => {
-            observer.disconnect();
-            window.removeEventListener('resize', measure);
+            cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', schedule);
+            window.removeEventListener('resize', schedule);
         };
     }, []);
 
@@ -68,7 +79,6 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
             id="tickets"
             className={className ? `${classes.card} ${className}` : classes.card}
             data-rough
-            style={{'--billets-haut': `${stickyTop}px`} as CSSProperties}
         >
             <div className={classes.header}>
                 <h2 className={classes.title}>{t`Tickets`}</h2>
@@ -93,6 +103,7 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                         bodyBackground: 'var(--dehors-creme)',
                     }}
                     continueButtonText={event.settings?.continue_button_text}
+                    collapseProducts={products.length > 1}
                     padding={'0px'}
                     showPoweredBy={false}
                 />
