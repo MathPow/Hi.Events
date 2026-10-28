@@ -31,7 +31,8 @@ class SendTicketLookupEmailHandler
     }
 
     /**
-     * Returns the lookup token, or null when the email has no completed orders.
+     * Returns the lookup token, or null when the email has no completed orders (unless
+     * email verification is skipped, where an empty dashboard beats "check your inbox").
      *
      * @throws Throwable
      */
@@ -45,7 +46,8 @@ class SendTicketLookupEmailHandler
             $this->logger->info('Ticket lookup requested for email with no orders', [
                 'email' => $email,
             ]);
-            return null;
+
+            return config('app.skip_email_verification') ? $this->generateAndSaveToken($email) : null;
         }
 
         $orderCount = $orders->count();

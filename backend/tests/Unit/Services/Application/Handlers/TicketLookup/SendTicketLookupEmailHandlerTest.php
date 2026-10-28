@@ -130,6 +130,43 @@ class SendTicketLookupEmailHandlerTest extends TestCase
         $this->assertNull($this->handler->handle($dto));
     }
 
+    public function testHandleReturnsATokenWithoutEmailWhenVerificationIsSkippedAndNoOrdersExist(): void
+    {
+        config(['app.skip_email_verification' => true]);
+
+        $email = 'test@example.com';
+        $token = 'tl_test123';
+
+        $this->orderRepository
+            ->shouldReceive('findWhere')
+            ->once()
+            ->andReturn(new Collection());
+
+        $this->logger
+            ->shouldReceive('info')
+            ->once()
+            ->with('Ticket lookup requested for email with no orders', ['email' => $email]);
+
+        $this->ticketLookupTokenRepository
+            ->shouldReceive('deleteWhere')
+            ->once()
+            ->with(['email' => $email]);
+
+        $this->tokenGeneratorService
+            ->shouldReceive('generateToken')
+            ->once()
+            ->andReturn($token);
+
+        $this->ticketLookupTokenRepository
+            ->shouldReceive('create')
+            ->once();
+
+        $this->mailer
+            ->shouldNotReceive('to');
+
+        $this->assertSame($token, $this->handler->handle(new SendTicketLookupEmailDTO(email: $email)));
+    }
+
     public function testHandleConvertsEmailToLowercase(): void
     {
         $email = 'TEST@EXAMPLE.COM';
