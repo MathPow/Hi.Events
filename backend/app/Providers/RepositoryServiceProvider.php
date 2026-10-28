@@ -33,6 +33,7 @@ use HiEvents\Repository\Eloquent\OrderItemRepository;
 use HiEvents\Repository\Eloquent\OrderPaymentPlatformFeeRepository;
 use HiEvents\Repository\Eloquent\OrderRefundRepository;
 use HiEvents\Repository\Eloquent\OrderRepository;
+use HiEvents\Repository\Eloquent\OrganizerAchievementRepository;
 use HiEvents\Repository\Eloquent\OrganizerRepository;
 use HiEvents\Repository\Eloquent\OrganizerSettingsRepository;
 use HiEvents\Repository\Eloquent\OrganizerStripePlatformRepository;
@@ -84,6 +85,7 @@ use HiEvents\Repository\Interfaces\OrderItemRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderPaymentPlatformFeeRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRefundRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
+use HiEvents\Repository\Interfaces\OrganizerAchievementRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerStripePlatformRepositoryInterface;
@@ -151,6 +153,7 @@ class RepositoryServiceProvider extends ServiceProvider
         OrderApplicationFeeRepositoryInterface::class => OrderApplicationFeeRepository::class,
         OrderAuditLogRepositoryInterface::class => OrderAuditLogRepository::class,
         WaiverRepositoryInterface::class => WaiverRepository::class,
+        OrganizerAchievementRepositoryInterface::class => OrganizerAchievementRepository::class,
         OrderPaymentPlatformFeeRepositoryInterface::class => OrderPaymentPlatformFeeRepository::class,
         StripePayoutsRepositoryInterface::class => StripePayoutsRepository::class,
         AccountConfigurationRepositoryInterface::class => AccountConfigurationRepository::class,

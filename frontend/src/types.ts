@@ -411,6 +411,27 @@ export interface OrganizerStats {
     all_organizers_currencies: string[];
 }
 
+export type OrganizerAchievementKey =
+    | 'first_event'
+    | 'organizer_page'
+    | 'payments_connected'
+    | 'event_published'
+    | 'first_order'
+    | 'first_check_in'
+    | 'hundred_attendees'
+    | 'regular_attendees'
+    | 'sales_summit'
+    | 'full_season';
+
+export interface OrganizerAchievementProgress {
+    key: OrganizerAchievementKey;
+    current: number;
+    target: number;
+    earned_at: string | null;
+    // Earned, and the announcement hasn't been shown yet
+    is_new: boolean;
+}
+
 export interface Organizer {
     id?: IdParam;
     name: string;

@@ -31,6 +31,7 @@ import {currenciesMap} from "../../../../../data/currencies.ts";
 import {Card} from "../../../common/Card";
 import {CreateEventModal} from "../../../modals/CreateEventModal";
 import {getEventQueryFilters} from "../../../../utilites/eventsPageFiltersHelper.ts";
+import {AchievementsSummary} from "../../../common/OrganizerAchievements";
 
 interface OrganizerStatDisplayItem {
     value: string | number;
@@ -224,6 +225,8 @@ export const OrganizerDashboard = () => {
                         occurred.</Trans>
                 </Card>
             )}
+
+            <AchievementsSummary organizerId={organizerId} currency={organizer.currency ?? 'CAD'}/>
 
             {/* Recent Orders and Events Lists */}
             <div className={classes.recentItemsGrid}>

@@ -13,6 +13,7 @@ import {
     IconHelpCircle,
     IconPaint,
     IconSettings,
+    IconTrophy,
     IconShare,
     IconUsersGroup,
     IconShield,
@@ -44,6 +45,8 @@ import { showError, showSuccess } from "../../../utilites/notifications.tsx";
 import { useResendEmailConfirmation } from "../../../mutations/useResendEmailConfirmation.ts";
 import { useGetMe } from "../../../queries/useGetMe.ts";
 import { useIsCurrentUserSuperAdmin } from "../../../hooks/useIsCurrentUserAdmin.ts";
+import { useGetOrganizerAchievements } from "../../../queries/useGetOrganizerAchievements.ts";
+import { AchievementCelebration } from "../../common/OrganizerAchievements";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -68,6 +71,8 @@ const OrganizerLayout = () => {
     const isUserEmailVerfied = me?.is_email_verified;
     const isMobile = useMediaQuery('(max-width: 768px)');
 
+    const { data: achievements } = useGetOrganizerAchievements(organizerId);
+    const earnedAchievements = achievements?.filter((achievement) => achievement.earned_at).length;
     const statusToggleMutation = useUpdateOrganizerStatus();
     const isDashboard = /^\/manage\/organizer\/[^/]+(\/dashboard)?\/?$/.test(location.pathname);
 
@@ -87,6 +92,12 @@ const OrganizerLayout = () => {
             icon: IconChartPie,
             isActive: (isActive) => isActive || location.pathname.includes('/report/'),
             mobileTab: true,
+        },
+        {
+            link: 'achievements',
+            label: t`Achievements`,
+            icon: IconTrophy,
+            badge: achievements ? `${earnedAchievements}/${achievements.length}` : null,
         },
 
         { label: t`Manage` },
@@ -294,6 +305,9 @@ const OrganizerLayout = () => {
                 sidebarFooter={<SidebarCalloutQueue callouts={callouts} />}
             />
 
+            {organizer && (
+                <AchievementCelebration organizerId={organizerId} currency={organizer.currency ?? 'CAD'} />
+            )}
             {createModalOpen && <InviteUserModal onClose={closeCreateModal} />}
             {switchOrganizerModalOpen &&
                 <SwitchOrganizerModal

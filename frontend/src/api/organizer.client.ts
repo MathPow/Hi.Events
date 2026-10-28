@@ -6,6 +6,7 @@ import {
     IdParam,
     Order,
     Organizer,
+    OrganizerAchievementProgress,
     OrganizerSettings,
     OrganizerStats,
     QueryFilters,
@@ -88,6 +89,15 @@ export const organizerClient = {
     getOrganizerStats: async (organizerId: IdParam, currencyCode: string) => {
         const response = await api.get<GenericDataResponse<OrganizerStats>>('organizers/' + organizerId + '/stats?currency_code=' + currencyCode);
         return response.data;
+    },
+
+    getAchievements: async (organizerId: IdParam) => {
+        const response = await api.get<GenericDataResponse<OrganizerAchievementProgress[]>>(`organizers/${organizerId}/achievements`);
+        return response.data;
+    },
+
+    markAchievementsSeen: async (organizerId: IdParam) => {
+        await api.post(`organizers/${organizerId}/achievements/seen`);
     },
 
     getOrganizerOrders: async (organizerId: IdParam, pagination: QueryFilters) => {

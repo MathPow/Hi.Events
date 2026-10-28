@@ -134,6 +134,8 @@ use HiEvents\Http\Actions\Organizers\Orders\GetOrganizerOrdersAction;
 use HiEvents\Http\Actions\Organizers\Public\SendOrganizerContactMessagePublicAction;
 use HiEvents\Http\Actions\Organizers\Settings\GetOrganizerSettingsAction;
 use HiEvents\Http\Actions\Organizers\Settings\PartialUpdateOrganizerSettingsAction;
+use HiEvents\Http\Actions\Organizers\Achievements\GetOrganizerAchievementsAction;
+use HiEvents\Http\Actions\Organizers\Achievements\MarkOrganizerAchievementsSeenAction;
 use HiEvents\Http\Actions\Organizers\Stats\GetOrganizerStatsAction;
 use HiEvents\Http\Actions\Organizers\DeleteOrganizerAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizerDeletionStatusAction;
@@ -326,6 +328,8 @@ $router->middleware(['auth:api'])->group(
         $router->post('/organizers/{organizer_id}/stripe/connect', ConnectOrganizerStripeAction::class);
         $router->delete('/organizers/{organizer_id}/stripe', DisconnectOrganizerStripeAction::class);
         $router->get('/organizers/{organizer_id}/stats', GetOrganizerStatsAction::class);
+        $router->get('/organizers/{organizer_id}/achievements', GetOrganizerAchievementsAction::class);
+        $router->post('/organizers/{organizer_id}/achievements/seen', MarkOrganizerAchievementsSeenAction::class);
         $router->get('/organizers/{organizer_id}/orders', GetOrganizerOrdersAction::class);
         $router->get('/organizers/{organizer_id}/settings', GetOrganizerSettingsAction::class);
         $router->patch('/organizers/{organizer_id}/settings', PartialUpdateOrganizerSettingsAction::class);

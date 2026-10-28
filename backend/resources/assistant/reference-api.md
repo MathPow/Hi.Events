@@ -594,6 +594,8 @@ POST /organizers/{organizer_id}
   description: string|nullable|max:1200
   timezone: timezone|required
   currency: required|in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+GET /organizers/{organizer_id}/achievements
+POST /organizers/{organizer_id}/achievements/seen
 GET /organizers/{organizer_id}/deletion-status
 GET /organizers/{organizer_id}/events
   liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)

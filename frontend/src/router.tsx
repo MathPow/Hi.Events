@@ -306,6 +306,13 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                path: "achievements",
+                async lazy() {
+                    const Achievements = await import("./components/routes/organizer/Achievements");
+                    return { Component: Achievements.default };
+                }
+            },
+            {
                 path: "events/:eventsState?",
                 async lazy() {
                     const Events = await import("./components/routes/organizer/Events");
