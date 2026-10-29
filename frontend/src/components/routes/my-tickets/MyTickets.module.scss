@@ -862,8 +862,19 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// Le courriel de l'en-tete, a la hauteur de sa ligne.
+.boneLine {
+  width: 300px;
+  height: 1.55em;
+
+  @include mixins.respond-below(md) {
+    width: 220px;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .skeleton[data-loading] .bone {
+  .skeleton[data-loading] .bone,
+  .boneLine {
     animation: os-battement 1.4s ease-in-out infinite;
   }
 }

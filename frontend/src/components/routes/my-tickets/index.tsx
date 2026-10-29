@@ -425,14 +425,17 @@ const SkeletonTicket = () => (
     </div>
 );
 
-// Le tableau de bord, vide: il bat pendant le chargement, et reste fige sous le courriel.
-const DashboardSkeleton = ({loading}: { loading: boolean }) => (
-    <div className={classes.skeleton} data-loading={loading || undefined} aria-hidden>
-        <div className={`${shell.card} ${classes.hero}`} data-rough>
-            <Bone width={170} height={26}/>
-            <Bone width={340} height={56}/>
-            <Bone width={240}/>
-        </div>
+// Le tableau de bord, vide: il bat pendant le chargement (sous le vrai en-tete), et reste fige
+// sous le courriel, en-tete compris (la fenetre a deja son titre).
+const DashboardSkeleton = ({locked = false}: { locked?: boolean }) => (
+    <div className={classes.skeleton} data-loading={!locked || undefined} aria-hidden>
+        {locked && (
+            <div className={`${shell.card} ${classes.hero}`} data-rough>
+                <Bone width={170} height={26}/>
+                <Bone width={340} height={56}/>
+                <Bone width={240}/>
+            </div>
+        )}
         <div className={`${shell.card} ${classes.section}`} data-rough>
             <div className={classes.sectionHeader}>
                 <Bone width={160} height={30}/>
@@ -445,6 +448,31 @@ const DashboardSkeleton = ({loading}: { loading: boolean }) => (
             </div>
         </div>
     </div>
+);
+
+// L'en-tete ne depend pas des billets: il s'affiche tout de suite, seul le courriel attend la commande.
+const Hero = ({email, loading}: { email?: string, loading: boolean }) => (
+    <header className={`${shell.card} ${classes.hero}`} data-rough>
+        <img src={'/landing/stickers/autocollant-sapin.webp'} alt="" aria-hidden
+             className={classes.stickerPine}/>
+        <p className={classes.kicker}>{t`See you outside!`}</p>
+        <h1 className={classes.title}>
+            <span className={classes.titleText}>
+                {t`My tickets`}
+                <img src={'/landing/stickers/autocollant-drapeau-dehors.webp'} alt="" aria-hidden
+                     className={classes.stickerFlag}/>
+            </span>
+        </h1>
+        {loading ? (
+            <p className={classes.line} aria-hidden><Bone className={classes.boneLine}/></p>
+        ) : email && (
+            <p className={classes.line}>
+                <PublicIcon name={'courriel'} size={18} className={`${classes.accentIcon} ${classes.desktopOnly}`}/>
+                <span>{t`Tickets linked to ${email}`}</span>
+                <Link to={OTHER_EMAIL_PATH} className={classes.change}>{t`Change`}</Link>
+            </p>
+        )}
+    </header>
 );
 
 // Sans lien valide (page ouverte depuis « Mes billets », lien expire): le courriel de
@@ -619,37 +647,22 @@ export const MyTickets = () => {
                                                              subtitle={t`Your tickets and their QR codes in one tap, even at the door.`}/>}/>
                 </div>
 
-                {locked || isLoading ? (
+                {locked ? (
                     <div className={classes.locked}>
-                        <DashboardSkeleton loading={isLoading}/>
-                        {locked && <EmailOverlay expired={isError} message={error?.message}/>}
+                        <DashboardSkeleton locked/>
+                        <EmailOverlay expired={isError} message={error?.message}/>
                     </div>
                 ) : (
                     <>
-                        <header className={`${shell.card} ${classes.hero}`} data-rough>
-                            <img src={'/landing/stickers/autocollant-sapin.webp'} alt="" aria-hidden
-                                 className={classes.stickerPine}/>
-                            <p className={classes.kicker}>{t`See you outside!`}</p>
-                            <h1 className={classes.title}>
-                                <span className={classes.titleText}>
-                                    {t`My tickets`}
-                                    <img src={'/landing/stickers/autocollant-drapeau-dehors.webp'} alt="" aria-hidden
-                                         className={classes.stickerFlag}/>
-                                </span>
-                            </h1>
-                            {email && (
-                                <p className={classes.line}>
-                                    <PublicIcon name={'courriel'} size={18} className={`${classes.accentIcon} ${classes.desktopOnly}`}/>
-                                    <span>{t`Tickets linked to ${email}`}</span>
-                                    <Link to={OTHER_EMAIL_PATH} className={classes.change}>{t`Change`}</Link>
-                                </p>
-                            )}
-                        </header>
-
-                        <UpcomingGrid groups={upcoming}/>
-                        <NextEvent group={upcoming[0]}/>
-                        {upcoming.length > 1 && <AlsoUpcoming groups={upcoming.slice(1)}/>}
-                        {past.length > 0 && <UsedTickets groups={past}/>}
+                        <Hero email={email} loading={isLoading}/>
+                        {isLoading ? <DashboardSkeleton/> : (
+                            <>
+                                <UpcomingGrid groups={upcoming}/>
+                                <NextEvent group={upcoming[0]}/>
+                                {upcoming.length > 1 && <AlsoUpcoming groups={upcoming.slice(1)}/>}
+                                {past.length > 0 && <UsedTickets groups={past}/>}
+                            </>
+                        )}
                     </>
                 )}
 
