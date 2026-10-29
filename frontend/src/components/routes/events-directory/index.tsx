@@ -275,11 +275,35 @@ const TypeSection = ({type, events}: { type: AccountEventType, events: Event[] }
     );
 };
 
+// Avec une recherche ou un filtre: tous les resultats dans une seule grille, par date, au lieu
+// des carrousels par type (trois colonnes sur grand ecran, deux en dessous).
+const ResultsSection = ({events, onClear}: { events: Event[], onClear: () => void }) => (
+    <section className={`${shell.card} ${classes.section} ${classes.results}`} data-rough
+             aria-labelledby={'resultats'}>
+        <div className={classes.sectionHeader}>
+            <div className={classes.sectionText}>
+                <h2 id={'resultats'} className={classes.sectionTitle}>{t`Results`}</h2>
+                <p className={classes.sectionCount}>{upcomingCount(events.length)}</p>
+            </div>
+            <UnstyledButton className={`${shell.button} ${shell.buttonOutline} ${classes.clearResults}`}
+                            onClick={onClear}>
+                {t`Clear filters`}
+            </UnstyledButton>
+        </div>
+        <ul className={classes.grid}>
+            {events.map((event) => (
+                <li key={event.id}><EventCard event={event} compact/></li>
+            ))}
+        </ul>
+    </section>
+);
+
 /**
  * Le repertoire des evenements de la billetterie (maquette Figma « Public · Repertoire
  * d'evenements »): tous les evenements a venir des organisateurs publies, une section par type
  * (Sport, Entrepreneuriat, Social, Autre), a chercher par nom, lieu ou organisateur, et a filtrer
- * par dates et par types. Les filtres agissent sur la page, sans retourner a l'API.
+ * par dates et par types. Les filtres agissent sur la page, sans retourner a l'API; filtres ou
+ * recherche actifs, les resultats passent en grille.
  */
 export const EventsDirectory = () => {
     const roughEdges = useRoughEdges<HTMLElement>();
@@ -292,11 +316,11 @@ export const EventsDirectory = () => {
 
     const bounds = dates === 'ALL' ? null : rangeBounds(dates);
     const words = normalize(query).split(/\s+/).filter(Boolean);
-    const matching = events.filter((event) => (!bounds || isDuring(event, bounds))
-        && words.every((word) => searchableText(event).includes(word)));
+    const results = events.filter((event) => (!bounds || isDuring(event, bounds))
+        && words.every((word) => searchableText(event).includes(word))
+        && (types.length === 0 || types.includes(eventTypeOf(event))));
     const sections = EVENT_TYPES
-        .filter((type) => types.length === 0 || types.includes(type))
-        .map((type) => ({type, events: matching.filter((event) => eventTypeOf(event) === type)}))
+        .map((type) => ({type, events: results.filter((event) => eventTypeOf(event) === type)}))
         .filter((section) => section.events.length > 0);
     const filtered = words.length > 0 || dates !== 'ALL' || types.length > 0;
 
@@ -355,11 +379,13 @@ export const EventsDirectory = () => {
                     <TypesMenu value={types} onChange={setTypes}/>
                 </div>
 
-                {sections.map((section) => (
+                {filtered && results.length > 0 && <ResultsSection events={results} onClear={clearFilters}/>}
+
+                {!filtered && sections.map((section) => (
                     <TypeSection key={section.type} type={section.type} events={section.events}/>
                 ))}
 
-                {!isLoading && sections.length === 0 && (
+                {!isLoading && results.length === 0 && (
                     <section className={`${shell.card} ${classes.noResults}`} data-rough>
                         <div className={shell.empty}>
                             <PublicIcon name={'calendrier'} size={28} className={classes.accentIcon}/>

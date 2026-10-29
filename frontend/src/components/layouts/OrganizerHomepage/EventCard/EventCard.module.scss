@@ -291,4 +291,80 @@
       border-radius: 22px;
     }
   }
+
+  // Dans une colonne etroite (la grille de resultats du repertoire sur telephone, deux cartes de
+  // front, conteneur « carte-evenement »): tout se resserre, les pastilles passent a la ligne et
+  // une fourchette de prix tient sur deux lignes plutot que de pousser la fleche hors de la carte.
+  @container carte-evenement (max-width: 220px) {
+    gap: 8px;
+    padding: 8px 8px 12px;
+    border-radius: 18px;
+
+    .image {
+      height: 120px;
+      border-radius: 12px;
+    }
+
+    .badges {
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 7px 7px 0;
+    }
+
+    .dateBadge,
+    .scarcityBadge {
+      gap: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+
+      > span {
+        width: 13px !important;
+        height: 13px !important;
+      }
+    }
+
+    .body {
+      gap: 4px;
+      padding: 0 4px;
+    }
+
+    .organizer {
+      font-size: 11px;
+    }
+
+    .title {
+      font-size: 15px;
+      line-height: 1.15;
+    }
+
+    .bottom {
+      gap: 6px;
+    }
+
+    .price {
+      min-width: 0;
+      gap: 4px;
+      padding: 5px 9px;
+      border-radius: 12px;
+      font-size: 12px;
+      white-space: normal;
+
+      > span {
+        flex-shrink: 0;
+        width: 13px !important;
+        height: 13px !important;
+      }
+    }
+
+    .arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 17px;
+
+      > span {
+        width: 16px !important;
+        height: 16px !important;
+      }
+    }
+  }
 }

@@ -508,6 +508,55 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// Les resultats d'une recherche ou d'un filtre: une grille, trois colonnes sur grand ecran, deux
+// en dessous. Sans carrousel, la carte garde sa marge a droite sur telephone.
+.results {
+  @include mixins.respond-below(md) {
+    padding: 16px 14px;
+
+    .sectionHeader {
+      padding-right: 0;
+    }
+  }
+}
+
+.clearResults {
+  flex-shrink: 0;
+  width: auto;
+  height: 44px;
+  padding: 0 18px;
+  font-size: 15px;
+
+  @include mixins.respond-below(md) {
+    height: 38px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // Chaque case est un conteneur: dans une colonne etroite, la carte se resserre (EventCard).
+  > li {
+    display: grid;
+    container: carte-evenement / inline-size;
+  }
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 10px;
+  }
+}
+
 .noResults {
   padding: 32px;
 
