@@ -119,14 +119,14 @@ const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
             {(ticketsUrl || mapsUrl) && (
                 <div className={classes.secondaryActions}>
                     {ticketsUrl && (
-                        <a className={`${classes.button} ${classes.buttonOutline}`} data-rough="button" href={ticketsUrl} target="_blank" rel="noreferrer">
+                        <a className={`${classes.button} ${classes.buttonOutline}`} href={ticketsUrl} target="_blank" rel="noreferrer">
                             <PublicIcon name={'telecharger'} size={20}/>
                             <span className={classes.desktopOnly}>{t`Download tickets`}</span>
                             <span className={classes.mobileOnly}>{t`PDF tickets`}</span>
                         </a>
                     )}
                     {mapsUrl && (
-                        <a className={`${classes.button} ${classes.buttonOutline}`} data-rough="button" href={mapsUrl} target="_blank" rel="noreferrer">
+                        <a className={`${classes.button} ${classes.buttonOutline}`} href={mapsUrl} target="_blank" rel="noreferrer">
                             <PublicIcon name={'itineraire'} size={20}/>
                             {t`Directions`}
                         </a>
@@ -606,7 +606,7 @@ export const OrderSummaryAndProducts = () => {
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-orange) !important;
+                            background-color: var(--dehors-creme) !important;
                         }
                     `}
                 </style>

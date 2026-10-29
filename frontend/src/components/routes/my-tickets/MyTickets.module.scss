@@ -274,12 +274,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 .buttonOutline {
-  color: var(--dehors-brun);
-  background: transparent;
-
-  &:hover {
-    background: var(--dehors-carte);
-  }
+  @include mixins.bouton-contour;
 }
 
 .buttonLarge {

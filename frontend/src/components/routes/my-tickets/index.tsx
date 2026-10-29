@@ -217,7 +217,7 @@ const MissingTicket = () => {
             <p className={classes.missingText}>
                 {t`Send us the event name and the email used at checkout, and we'll find it for you.`}
             </p>
-            <a href={mailto} className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
+            <a href={mailto} className={`${classes.button} ${classes.buttonOutline}`}>
                 {t({message: 'Write to us', context: 'ticket buyer'})}
             </a>
             <span className={classes.missingEmail}>{supportEmail}</span>
@@ -271,8 +271,7 @@ const NextEvent = ({group}: { group?: EventTickets }) => {
                 <h2 id="next-title" className={classes.sectionTitle}>{t`Upcoming`}</h2>
                 <NoUpcoming/>
                 <Link to={OTHER_EMAIL_PATH}
-                      className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`}
-                      data-rough="button">
+                      className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`}>
                     {t`Find a ticket`}
                 </Link>
             </section>
@@ -299,14 +298,14 @@ const NextEvent = ({group}: { group?: EventTickets }) => {
             <div className={classes.nextActions}>
                 {location && (
                     <a href={location.mapsUrl} target="_blank" rel="noreferrer"
-                       className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`} data-rough="button">
+                       className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`}>
                         <PublicIcon name={'itineraire'} size={18}/>
                         {t`Directions`}
                     </a>
                 )}
                 {orders.map((order) => (
                     <Link key={order.short_id} to={orderPath(event, order)}
-                          className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`} data-rough="button">
+                          className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`}>
                         <PublicIcon name={'billet'} size={18}/>
                         {orders.length > 1 ? orderLabel(order) : t`Details`}
                     </Link>
@@ -557,7 +556,7 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
                 </h2>
                 {!expanded && shown.length > SHOWN_MOBILE && (
                     <UnstyledButton className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge} ${classes.seeAll}`}
-                                    data-rough="button" onClick={() => setExpanded(true)}
+                                    onClick={() => setExpanded(true)}
                                     data-desktop={shown.length > SHOWN_DESKTOP || undefined}>
                         <span className={shell.longLabel}>{t`See all events`}</span>
                         <span className={shell.shortLabel}>{t`See all`}</span>

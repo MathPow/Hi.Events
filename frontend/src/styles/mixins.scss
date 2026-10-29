@@ -154,6 +154,22 @@ $breakpoints: (
   }
 }
 
+// The outline button of the cookie banner (« Customize »): a clean pill, its 2px border at 60 %, rising
+// a little on hover. Without data-rough: the hand-cut edge would bite into the border.
+@mixin bouton-contour {
+  border: 2px solid rgb(53 41 36 / 0.6);
+  border-radius: 999px;
+  color: var(--dehors-brun);
+  background: transparent;
+  transition: translate 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 -2px;
+    }
+  }
+}
+
 // Phones: each table row becomes a block of "label: value" lines, its first cell as the title and a
 // trailing header-less cell (the row's actions) pinned to the corner. Labels come from useStackedTableLabels.
 @mixin stacked-table {

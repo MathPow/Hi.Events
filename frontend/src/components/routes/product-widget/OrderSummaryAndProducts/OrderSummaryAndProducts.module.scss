@@ -14,7 +14,7 @@ $font-titre: FatFrank, 'Arial Black', sans-serif;
   min-height: 100dvh;
   overflow: hidden;
   color: var(--dehors-brun);
-  background: var(--dehors-orange);
+  background: var(--dehors-creme);
 }
 
 .content {
@@ -182,13 +182,7 @@ $font-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 .buttonOutline {
-  border-color: var(--dehors-brun);
-  color: var(--dehors-brun);
-  background: transparent;
-
-  &:hover {
-    background: rgb(55 39 33 / 0.05);
-  }
+  @include mixins.bouton-contour;
 }
 
 .notice {

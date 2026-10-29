@@ -366,7 +366,7 @@ export const EventsDirectory = () => {
                             <p>{filtered ? t`No events match your search.` : t`No upcoming events`}</p>
                             {filtered && (
                                 <UnstyledButton className={`${shell.button} ${shell.buttonOutline} ${classes.clear}`}
-                                                data-rough="button" onClick={clearFilters}>
+                                                onClick={clearFilters}>
                                     {t`Clear filters`}
                                 </UnstyledButton>
                             )}
