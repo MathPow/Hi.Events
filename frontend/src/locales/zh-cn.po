@@ -136,6 +136,14 @@ msgstr "{availableCount} / {totalCount} 可用"
 msgid "{count} tickets"
 msgstr ""
 
+#: src/components/routes/events-directory/index.tsx:186
+msgid "{count} types"
+msgstr "{count} 种类型"
+
+#: src/components/routes/events-directory/index.tsx:80
+msgid "{count} upcoming events"
+msgstr "{count} 个即将举行的活动"
+
 #: src/components/routes/my-tickets/index.tsx:234
 msgid "{count} upcoming tickets"
 msgstr ""
@@ -289,6 +297,10 @@ msgstr "1张门票"
 msgid "1 ticket type"
 msgstr "1个票种"
 
+#: src/components/routes/events-directory/index.tsx:80
+msgid "1 upcoming event"
+msgstr "1 个即将举行的活动"
+
 #: src/components/routes/my-tickets/index.tsx:234
 msgid "1 upcoming ticket"
 msgstr ""
@@ -387,7 +399,7 @@ msgstr "当此类别中没有产品时显示的消息。"
 msgid "A multi line text input"
 msgstr "多行文本输入"
 
-#: src/components/routes/welcome/index.tsx:111
+#: src/components/routes/welcome/index.tsx:113
 msgid "A new verification code has been sent to your email"
 msgstr "新的验证码已发送到您的邮箱"
 
@@ -515,7 +527,7 @@ msgstr "账户已连接！"
 msgid "Account configuration updated successfully"
 msgstr "账户配置更新成功"
 
-#: src/components/routes/welcome/index.tsx:286
+#: src/components/routes/welcome/index.tsx:258
 msgid "Account created!"
 msgstr "账户已创建！"
 
@@ -620,7 +632,7 @@ msgstr "为此签到列表添加描述"
 msgid "Add a logo and a cover image to your organizer page."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:306
+#: src/components/routes/welcome/index.tsx:278
 msgid "Add a logo and colors that match the organization."
 msgstr "添加符合组织形象的标志和颜色。"
 
@@ -866,6 +878,11 @@ msgstr "推广员帮助您跟踪合作伙伴和网红产生的销售。创建推
 msgid "Alex"
 msgstr "Alex"
 
+#: src/components/routes/events-directory/index.tsx:192
+msgctxt "event types"
+msgid "All"
+msgstr "全部"
+
 #: src/components/routes/events/Dashboard/index.tsx:77
 msgid "All Archived Events"
 msgstr "所有已归档活动"
@@ -881,6 +898,11 @@ msgstr "本次活动的所有与会者"
 #: src/components/common/OrganizerReportTable/index.tsx:291
 msgid "All Currencies"
 msgstr "所有货币"
+
+#: src/components/routes/events-directory/index.tsx:30
+#: src/components/routes/events-directory/index.tsx:126
+msgid "All dates"
+msgstr "所有日期"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:185
 msgid "All done! You're now using our upgraded payment system."
@@ -929,6 +951,10 @@ msgstr "全部时间"
 #: src/components/routes/admin/PlatformRevenue/index.tsx:101
 msgid "All time: {0}"
 msgstr "累计：{0}"
+
+#: src/components/routes/events-directory/index.tsx:181
+msgid "All types"
+msgstr "所有类型"
 
 #: src/components/routes/events/Dashboard/index.tsx:73
 msgid "All Upcoming Events"
@@ -1120,6 +1146,7 @@ msgstr "适用于1个产品"
 #: src/components/common/FilterModal/index.tsx:284
 #: src/components/common/InlineOrderSummary/index.tsx:193
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:235
+#: src/components/routes/events-directory/index.tsx:199
 msgid "Apply"
 msgstr "应用"
 
@@ -2013,7 +2040,7 @@ msgid "Check out this event!"
 msgstr "看看这个活动吧！"
 
 #: src/components/routes/auth/ForgotPassword/index.tsx:42
-#: src/components/routes/welcome/index.tsx:127
+#: src/components/routes/welcome/index.tsx:129
 msgid "Check your email"
 msgstr "查看您的邮箱"
 
@@ -2198,6 +2225,10 @@ msgstr "选择您的尺码"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:741
 msgid "City"
 msgstr "城市"
+
+#: src/components/routes/events-directory/index.tsx:370
+msgid "Clear filters"
+msgstr "清除筛选"
 
 #: src/components/common/SearchBar/index.tsx:75
 msgid "Clear Search Text"
@@ -2505,7 +2536,7 @@ msgstr "恭喜你创建了一个活动！"
 msgid "Congratulations! Your event is now visible to the public."
 msgstr "恭喜！您的活动现已对公众可见。"
 
-#: src/components/routes/welcome/index.tsx:320
+#: src/components/routes/welcome/index.tsx:292
 msgid "Connect"
 msgstr "连接"
 
@@ -2524,7 +2555,7 @@ msgstr "连接支付处理"
 #: src/components/layouts/OrganizerLayout/index.tsx:216
 #: src/components/layouts/OrganizerLayout/index.tsx:224
 #: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
-#: src/components/routes/welcome/index.tsx:316
+#: src/components/routes/welcome/index.tsx:288
 msgid "Connect Stripe"
 msgstr "连接 Stripe"
 
@@ -2611,7 +2642,7 @@ msgstr "联系"
 #: src/components/common/WidgetEditor/index.tsx:222
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:115
 #: src/components/routes/product-widget/SelectProducts/index.tsx:772
-#: src/components/routes/welcome/index.tsx:274
+#: src/components/routes/welcome/index.tsx:246
 msgid "Continue"
 msgstr "继续"
 
@@ -2824,7 +2855,7 @@ msgstr ""
 msgid "Create a custom widget to sell tickets on your site."
 msgstr "创建自定义小部件以在您的网站上销售门票。"
 
-#: src/components/routes/welcome/index.tsx:294
+#: src/components/routes/welcome/index.tsx:266
 msgid "Create a first event"
 msgstr "创建第一个活动"
 
@@ -2859,7 +2890,7 @@ msgstr "创建推广员"
 msgid "Create an account"
 msgstr "创建账户"
 
-#: src/components/routes/welcome/index.tsx:299
+#: src/components/routes/welcome/index.tsx:271
 msgid "Create an event"
 msgstr "创建活动"
 
@@ -3111,7 +3142,7 @@ msgid "Customers"
 msgstr "客户"
 
 #: src/components/common/CookieConsentBanner/index.tsx:182
-#: src/components/routes/welcome/index.tsx:310
+#: src/components/routes/welcome/index.tsx:282
 msgid "Customize"
 msgstr "自定义"
 
@@ -3148,7 +3179,7 @@ msgstr "自定义此事件的搜索引擎优化设置"
 msgid "Customize the text shown on the continue button"
 msgstr "自定义“继续”按钮上显示的文本"
 
-#: src/components/routes/welcome/index.tsx:305
+#: src/components/routes/welcome/index.tsx:277
 msgid "Customize the ticketing"
 msgstr "自定义票务"
 
@@ -3223,6 +3254,11 @@ msgstr "日期和时间"
 #: src/components/common/QuestionsTable/index.tsx:501
 msgid "Date of birth, emergency contact and health, asked of each attendee. The answers are erased 30 days after the event."
 msgstr "出生日期、紧急联系人和健康信息，向每位参与者询问。答案会在活动结束 30 天后删除。"
+
+#: src/components/routes/events-directory/index.tsx:127
+#: src/components/routes/events-directory/index.tsx:133
+msgid "Dates"
+msgstr "日期"
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:38
 msgid "Day one capacity"
@@ -3393,7 +3429,7 @@ msgstr "设计元素"
 msgid "Details"
 msgstr "详细信息"
 
-#: src/components/routes/welcome/index.tsx:164
+#: src/components/routes/welcome/index.tsx:166
 msgid "Didn't receive the code?"
 msgstr "没有收到验证码？"
 
@@ -3908,7 +3944,7 @@ msgstr "给参与者发送邮件"
 msgid "Email Verification Required"
 msgstr "需要验证邮箱"
 
-#: src/components/routes/welcome/index.tsx:92
+#: src/components/routes/welcome/index.tsx:94
 msgid "Email verified successfully!"
 msgstr "邮箱验证成功！"
 
@@ -4067,7 +4103,7 @@ msgstr "输入您的姓名"
 msgid "Enter your VAT number including the country code, without spaces (e.g., IE1234567A, DE123456789)"
 msgstr "输入您的增值税号，包括国家代码，不带空格（例如，IE1234567A，DE123456789）"
 
-#: src/components/routes/welcome/index.tsx:213
+#: src/constants/eventTypes.ts:10
 msgid "Entrepreneurship"
 msgstr "创业"
 
@@ -4271,9 +4307,14 @@ msgstr ""
 #: src/components/routes/admin/Dashboard/index.tsx:521
 #: src/components/routes/admin/Events/index.tsx:77
 #: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:103
+#: src/components/routes/events-directory/index.tsx:335
 #: src/components/routes/organizer/Events/index.tsx:43
 msgid "Events"
 msgstr "活动"
+
+#: src/components/routes/events-directory/index.tsx:312
+msgid "Events · Billetterie Dehors"
+msgstr "活动 · Billetterie Dehors"
 
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:120
 #: src/components/routes/organizer/Reports/index.tsx:23
@@ -4533,7 +4574,7 @@ msgstr "重新发送门票失败"
 msgid "Failed to resend ticket email"
 msgstr "重新发送票据电子邮件失败"
 
-#: src/components/routes/welcome/index.tsx:120
+#: src/components/routes/welcome/index.tsx:122
 msgid "Failed to resend verification code"
 msgstr "重新发送验证码失败"
 
@@ -4638,7 +4679,7 @@ msgstr "上传图片失败。"
 msgid "Failed to upload image. Please try again."
 msgstr "上传图片失败。请重试。"
 
-#: src/components/routes/welcome/index.tsx:97
+#: src/components/routes/welcome/index.tsx:99
 msgid "Failed to verify email"
 msgstr "验证邮箱失败"
 
@@ -4744,6 +4785,10 @@ msgstr "筛选器 ({activeFilterCount})"
 #: src/components/routes/my-tickets/index.tsx:264
 msgid "Find a ticket"
 msgstr ""
+
+#: src/components/routes/events-directory/index.tsx:332
+msgid "Find your next outing"
+msgstr "找到你的下一次出游"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:214
 msgid "Finish Setup"
@@ -5848,7 +5893,7 @@ msgstr "最近使用"
 msgid "Last Used"
 msgstr "最近一次使用"
 
-#: src/components/routes/welcome/index.tsx:327
+#: src/components/routes/welcome/index.tsx:299
 msgid "Later, go to the dashboard"
 msgstr "稍后，前往控制面板"
 
@@ -6430,9 +6475,18 @@ msgstr "新密码"
 msgid "New Signups"
 msgstr "新注册"
 
+#: src/components/routes/events-directory/index.tsx:263
+msgctxt "carousel"
+msgid "Next"
+msgstr "下一页"
+
 #: src/components/routes/my-tickets/index.tsx:276
 msgid "Next"
 msgstr ""
+
+#: src/components/routes/events-directory/index.tsx:33
+msgid "Next 7 days"
+msgstr "未来 7 天"
 
 #: src/components/common/OrganizerAchievements/index.tsx:126
 msgid "Next up:"
@@ -6556,6 +6610,10 @@ msgstr "没有可显示的已结束活动。"
 #: src/components/common/AdminEventsTable/index.tsx:22
 msgid "No events found"
 msgstr "未找到活动"
+
+#: src/components/routes/events-directory/index.tsx:366
+msgid "No events match your search."
+msgstr "没有符合搜索条件的活动。"
 
 #: src/components/routes/admin/Dashboard/index.tsx:608
 msgid "No events starting in the next 24 hours"
@@ -6746,6 +6804,7 @@ msgid "No tokens yet."
 msgstr "暂无令牌。"
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:278
+#: src/components/routes/events-directory/index.tsx:366
 #: src/components/routes/my-tickets/index.tsx:219
 msgid "No upcoming events"
 msgstr "没有即将到来的活动"
@@ -7072,8 +7131,8 @@ msgstr "选项"
 msgid "Option {i}"
 msgstr "方案 {i}"
 
-#: src/components/routes/welcome/index.tsx:304
-#: src/components/routes/welcome/index.tsx:315
+#: src/components/routes/welcome/index.tsx:276
+#: src/components/routes/welcome/index.tsx:287
 msgid "Optional"
 msgstr "可选"
 
@@ -7417,8 +7476,8 @@ msgid "Organizers can only manage events and products. They cannot manage users,
 msgstr "组织者只能管理活动和产品。他们无法管理用户、账户设置或账单信息。"
 
 #: src/components/common/OrdersTable/index.tsx:451
-#: src/components/routes/welcome/index.tsx:217
 #: src/constants/eventCategories.ts:22
+#: src/constants/eventTypes.ts:12
 msgid "Other"
 msgstr "其他"
 
@@ -7813,7 +7872,7 @@ msgstr "个人信息"
 msgid "Phone"
 msgstr "电话"
 
-#: src/components/routes/welcome/index.tsx:245
+#: src/components/routes/welcome/index.tsx:217
 msgid "Pick as many as you like."
 msgstr "可多选。"
 
@@ -7928,7 +7987,7 @@ msgstr "请输入指向图像的有效图片网址。"
 msgid "Please enter a valid URL"
 msgstr "请输入有效的 URL"
 
-#: src/components/routes/welcome/index.tsx:64
+#: src/components/routes/welcome/index.tsx:66
 msgid "Please enter the 5-digit code"
 msgstr "请输入5位数验证码"
 
@@ -7978,7 +8037,7 @@ msgstr "请再试一次。"
 msgid "Please verify your email address to access all features"
 msgstr "请验证您的电子邮件地址，以访问所有功能"
 
-#: src/components/routes/welcome/index.tsx:118
+#: src/components/routes/welcome/index.tsx:120
 msgid "Please wait before requesting another code"
 msgstr "请稍候再请求新的验证码"
 
@@ -8045,6 +8104,11 @@ msgstr "预览结账表单"
 #: src/components/layouts/Event/index.tsx:292
 msgid "Preview Event page"
 msgstr "预览活动页面"
+
+#: src/components/routes/events-directory/index.tsx:259
+msgctxt "carousel"
+msgid "Previous"
+msgstr "上一页"
 
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:360
 #: src/components/forms/ProductForm/index.tsx:85
@@ -8305,7 +8369,7 @@ msgstr "发布活动"
 msgid "Purchased"
 msgstr "已购买"
 
-#: src/components/routes/welcome/index.tsx:295
+#: src/components/routes/welcome/index.tsx:267
 msgid "Put free or paid tickets on sale in a few minutes."
 msgstr "几分钟内即可发售免费或付费门票。"
 
@@ -8384,6 +8448,10 @@ msgstr "问题已重新排序"
 #: src/components/routes/admin/FailedJobs/index.tsx:257
 msgid "Queue"
 msgstr "队列"
+
+#: src/components/routes/events-directory/index.tsx:341
+msgid "Races, outings, workshops and parties organized by the community, all across Québec."
+msgstr "由社区在魁北克各地组织的跑步、户外活动、工作坊和派对。"
 
 #: src/components/forms/QuestionForm/index.tsx:118
 msgid "Radio Option"
@@ -8474,7 +8542,7 @@ msgstr "接收票务平台的最新消息"
 msgid "Receive product updates from {0}."
 msgstr "接收 {0} 的产品更新。"
 
-#: src/components/routes/welcome/index.tsx:317
+#: src/components/routes/welcome/index.tsx:289
 msgid "Receive ticket payments directly in the Stripe account."
 msgstr "门票款项直接进入 Stripe 账户。"
 
@@ -8517,7 +8585,7 @@ msgstr "收件人"
 msgid "Recipients are available after the message is sent"
 msgstr "收件人在消息发送后可用"
 
-#: src/components/routes/welcome/index.tsx:293
+#: src/components/routes/welcome/index.tsx:265
 msgid "Recommended"
 msgstr "推荐"
 
@@ -8701,7 +8769,7 @@ msgstr "必备装备"
 msgid "Requires a charity registration number in Settings, Tax receipts."
 msgstr "需要在设置、税务收据中填写慈善机构注册号。"
 
-#: src/components/routes/welcome/index.tsx:177
+#: src/components/routes/welcome/index.tsx:179
 msgid "Resend code"
 msgstr "重新发送验证码"
 
@@ -8722,7 +8790,7 @@ msgstr "重新发送邮件"
 msgid "Resend email confirmation"
 msgstr "重新发送电子邮件确认"
 
-#: src/components/routes/welcome/index.tsx:176
+#: src/components/routes/welcome/index.tsx:178
 msgid "Resend in {resendCooldown}s"
 msgstr "{resendCooldown}秒后重新发送"
 
@@ -9078,6 +9146,10 @@ msgstr "定时时间"
 msgid "Scroll down"
 msgstr "向下滚动"
 
+#: src/components/routes/events-directory/index.tsx:348
+msgid "Search"
+msgstr "搜索"
+
 #: src/components/routes/event/Affiliates/index.tsx:68
 msgid "Search affiliates..."
 msgstr "搜索推广员..."
@@ -9138,6 +9210,14 @@ msgstr "搜索容量分配..."
 #: src/components/routes/event/CheckInLists/index.tsx:39
 msgid "Search check-in lists..."
 msgstr "搜索签到列表..."
+
+#: src/components/routes/events-directory/index.tsx:349
+msgid "Search events"
+msgstr "搜索活动"
+
+#: src/components/routes/events-directory/index.tsx:348
+msgid "Search for an event, a place or an organizer"
+msgstr "搜索活动、地点或主办方"
 
 #: src/components/routes/event/messages.tsx:242
 msgid "Search messages..."
@@ -9755,7 +9835,7 @@ msgstr "辛普森"
 msgid "Single line text box"
 msgstr "单行文本框"
 
-#: src/components/routes/welcome/index.tsx:271
+#: src/components/routes/welcome/index.tsx:243
 msgid "Skip this step"
 msgstr "跳过此步骤"
 
@@ -9775,8 +9855,8 @@ msgstr "Snapchat"
 msgid "So you can tell them apart later, e.g. dehorsqc.com website"
 msgstr "便于日后区分，例如 dehorsqc.com 网站"
 
-#: src/components/routes/welcome/index.tsx:216
 #: src/constants/eventCategories.ts:13
+#: src/constants/eventTypes.ts:11
 msgid "Social"
 msgstr "社交"
 
@@ -9841,8 +9921,8 @@ msgstr "出了点问题。请稍后再试。"
 #: src/components/routes/organizer/Settings/Sections/PlatformSupportSettings/index.tsx:34
 #: src/components/routes/profile/ManageProfile/index.tsx:90
 #: src/components/routes/profile/ManageProfile/index.tsx:104
-#: src/components/routes/welcome/index.tsx:237
-#: src/components/routes/welcome/index.tsx:385
+#: src/components/routes/welcome/index.tsx:209
+#: src/components/routes/welcome/index.tsx:357
 msgid "Something went wrong. Please try again."
 msgstr "出错了。请重试。"
 
@@ -9862,7 +9942,7 @@ msgstr "来源"
 msgid "Spanish"
 msgstr "西班牙语"
 
-#: src/components/routes/welcome/index.tsx:210
+#: src/constants/eventTypes.ts:9
 msgid "Sport"
 msgstr "体育"
 
@@ -9932,7 +10012,7 @@ msgstr "统计数据基于账户创建日期"
 msgid "Status"
 msgstr "状态"
 
-#: src/components/routes/welcome/index.tsx:36
+#: src/components/routes/welcome/index.tsx:38
 msgid "Step {step} of 2"
 msgstr "第 {step} 步，共 2 步"
 
@@ -10455,7 +10535,7 @@ msgstr "您查找的签到列表不存在。"
 msgid "The club"
 msgstr "俱乐部"
 
-#: src/components/routes/welcome/index.tsx:182
+#: src/components/routes/welcome/index.tsx:184
 msgid "The code will expire in 10 minutes. Check your spam folder if you don't see the email."
 msgstr "验证码将在10分钟后过期。如果您没有收到邮件，请检查垃圾邮件文件夹。"
 
@@ -10744,6 +10824,10 @@ msgstr "此信息将包含在本次活动发送的所有电子邮件的页脚中
 msgid "This message will only be shown if order is completed successfully. Orders awaiting payment will not show this message"
 msgstr "此消息仅在订单成功完成后显示。等待付款的订单不会显示此消息。"
 
+#: src/components/routes/events-directory/index.tsx:34
+msgid "This month"
+msgstr "本月"
+
 #: src/components/routes/admin/Configurations/index.tsx:220
 msgid "This name is visible to end users"
 msgstr "此名称对最终用户可见"
@@ -10832,6 +10916,10 @@ msgstr "此门票刚刚被扫描。请等待后再次扫描。"
 #: src/components/modals/EditUserModal/index.tsx:65
 msgid "This user is not active, as they have not accepted their invitation."
 msgstr "该用户未激活，因为他们没有接受邀请。"
+
+#: src/components/routes/events-directory/index.tsx:32
+msgid "This weekend"
+msgstr "本周末"
 
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:82
 msgid "This will be used for notifications and communication with your users."
@@ -11069,6 +11157,7 @@ msgstr "需提前安排"
 msgid "To receive credit card payments, you need to connect your Stripe account. Stripe is our payment processing partner that ensures secure transactions and timely payouts."
 msgstr "要接受信用卡付款，您需要连接您的 Stripe 账户。Stripe 是我们的支付处理合作伙伴，确保安全交易和及时付款。"
 
+#: src/components/routes/events-directory/index.tsx:31
 #: src/components/routes/my-tickets/index.tsx:111
 msgid "Today"
 msgstr ""
@@ -11266,6 +11355,11 @@ msgstr "输入\"删除\"以确认"
 #: src/components/common/WaiverSignature/index.tsx:32
 msgid "Type your full name to sign."
 msgstr "请输入您的全名以签署。"
+
+#: src/components/routes/events-directory/index.tsx:182
+#: src/components/routes/events-directory/index.tsx:190
+msgid "Types"
+msgstr "类型"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:248
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:280
@@ -11662,7 +11756,7 @@ msgstr "增值税验证服务暂时不可用"
 msgid "Venue Name"
 msgstr "地点名称"
 
-#: src/components/routes/welcome/index.tsx:137
+#: src/components/routes/welcome/index.tsx:139
 msgid "Verification code"
 msgstr "验证码"
 
@@ -11671,7 +11765,7 @@ msgstr "验证码"
 msgid "Verified"
 msgstr "已验证"
 
-#: src/components/routes/welcome/index.tsx:159
+#: src/components/routes/welcome/index.tsx:161
 msgid "Verify Email"
 msgstr "验证邮箱"
 
@@ -11679,7 +11773,7 @@ msgstr "验证邮箱"
 msgid "Verify your email"
 msgstr "验证您的邮箱"
 
-#: src/components/routes/welcome/index.tsx:159
+#: src/components/routes/welcome/index.tsx:161
 msgid "Verifying..."
 msgstr "正在验证..."
 
@@ -11950,7 +12044,7 @@ msgstr "我们已正式将总部迁至爱尔兰 🇮🇪。作为此次过渡的
 msgid "We've relocated our headquarters to Ireland. As a result, we need you to reconnect your Stripe account. This quick process takes just a few minutes. Your sales and existing data remain completely unaffected."
 msgstr "我们已将总部搬迁至爱尔兰。因此，我们需要您重新连接您的 Stripe 账户。这个快速过程只需几分钟。您的销售和现有数据完全不受影响。"
 
-#: src/components/routes/welcome/index.tsx:128
+#: src/components/routes/welcome/index.tsx:130
 msgid "We've sent a 5-digit verification code to:"
 msgstr "我们已向以下邮箱发送了5位数验证码："
 
@@ -12026,7 +12120,7 @@ msgstr "欢迎回来{0} 👋"
 msgid "Welcome to {0}, here's a listing of all your events"
 msgstr "欢迎来到 {0}，这是您所有活动的列表"
 
-#: src/components/routes/welcome/index.tsx:243
+#: src/components/routes/welcome/index.tsx:215
 msgid "Welcome, {0}!"
 msgstr "欢迎，{0}！"
 
@@ -12042,7 +12136,7 @@ msgstr "什么是分层产品？"
 msgid "What is a Category?"
 msgstr "什么是类别？"
 
-#: src/components/routes/welcome/index.tsx:244
+#: src/components/routes/welcome/index.tsx:216
 msgid "What kinds of events do you organize?"
 msgstr "您组织哪些类型的活动？"
 
@@ -12200,7 +12294,7 @@ msgstr "地点"
 msgid "Where the money from this organizer's ticket sales is paid."
 msgstr "该主办方的门票销售款项去向。"
 
-#: src/components/routes/welcome/index.tsx:288
+#: src/components/routes/welcome/index.tsx:260
 msgid "Where to start? The rest can wait."
 msgstr "从哪里开始？其余的可以稍后再做。"
 
@@ -12681,7 +12775,7 @@ msgstr "您的入场券"
 msgid "Your ticketing in 4 steps"
 msgstr "4 步搭建你的票务"
 
-#: src/components/routes/welcome/index.tsx:287
+#: src/components/routes/welcome/index.tsx:259
 msgid "Your ticketing is ready!"
 msgstr "您的票务已就绪！"
 

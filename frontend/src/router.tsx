@@ -6,6 +6,7 @@ import { publicEventRouteLoader } from "./routeLoaders/publicEventRouteLoader.ts
 import { publicOrganizerRouteLoader } from "./routeLoaders/publicOrganizerRouteLoader.ts";
 import { organizerPreviewRouteLoader } from "./routeLoaders/organizerPreviewRouteLoader.ts";
 import { landingRouteLoader } from "./routeLoaders/landingRouteLoader.ts";
+import { eventsDirectoryRouteLoader } from "./routeLoaders/eventsDirectoryRouteLoader.ts";
 import Landing from "./components/routes/landing";
 
 const Root = () => {
@@ -521,6 +522,15 @@ const routes: RouteObject[] = [
                 }
             }
         ]
+    },
+    {
+        path: "/events",
+        loader: eventsDirectoryRouteLoader,
+        async lazy() {
+            const EventsDirectory = await import("./components/routes/events-directory");
+            return { Component: EventsDirectory.default };
+        },
+        errorElement: <ErrorPage />,
     },
     {
         path: "/events/:organizerId/:organizerSlug",

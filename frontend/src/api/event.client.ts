@@ -109,8 +109,10 @@ export const eventsClientPublic = {
         return response.data;
     },
 
-    upcoming: async () => {
-        const response = await publicApi.get<GenericPaginatedResponse<Event>>('upcoming-events');
+    upcoming: async (perPage?: number) => {
+        const response = await publicApi.get<GenericPaginatedResponse<Event>>('upcoming-events', {
+            params: perPage ? {per_page: perPage} : undefined,
+        });
         return response.data;
     },
 }

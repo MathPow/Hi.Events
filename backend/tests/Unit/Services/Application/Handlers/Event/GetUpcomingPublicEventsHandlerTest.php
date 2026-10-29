@@ -33,6 +33,33 @@ class GetUpcomingPublicEventsHandlerTest extends TestCase
         $this->assertSame($events, (new GetUpcomingPublicEventsHandler($repository))->handle());
     }
 
+    /**
+     * @dataProvider limitProvider
+     */
+    public function testHandleKeepsTheLimitBetweenOneAndTheMaximum(int $limit, int $expectedPerPage): void
+    {
+        $repository = m::mock(EventRepositoryInterface::class);
+        $events = new LengthAwarePaginator([], 0, $expectedPerPage);
+
+        $repository->shouldReceive('loadRelation')->andReturnSelf();
+        $repository->shouldReceive('findEvents')
+            ->once()
+            ->withArgs(fn(array $where, QueryParamsDTO $params) => $params->per_page === $expectedPerPage)
+            ->andReturn($events);
+
+        $this->assertSame($events, (new GetUpcomingPublicEventsHandler($repository))->handle($limit));
+    }
+
+    public static function limitProvider(): array
+    {
+        return [
+            'the events directory' => [100, 100],
+            'more than the maximum' => [500, GetUpcomingPublicEventsHandler::MAX_LIMIT],
+            'zero' => [0, 1],
+            'negative' => [-5, 1],
+        ];
+    }
+
     protected function tearDown(): void
     {
         m::close();

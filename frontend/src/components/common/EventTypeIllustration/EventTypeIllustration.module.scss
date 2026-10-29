@@ -1,0 +1,67 @@
+.illustration {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: calc(var(--taille, 150) * 1px);
+  height: calc(var(--taille, 150) * 1px);
+}
+
+// Le dossard (« Illustration · Sport » dans la maquette), a 150px.
+.sport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  scale: calc(var(--taille, 150) / 150);
+  transform-origin: top left;
+}
+
+.bibFrame {
+  position: absolute;
+  left: 8.79px;
+  top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 126.347px;
+  height: 105.451px;
+}
+
+.bib {
+  position: relative;
+  width: 116px;
+  height: 92px;
+  border: 4px solid var(--dehors-brun);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--dehors-creme);
+  rotate: 7deg;
+
+  img {
+    position: absolute;
+  }
+}
+
+.bibBand {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 116px;
+  height: 24px;
+  background: var(--dehors-orange);
+}
+
+.bibNumber {
+  position: absolute;
+  left: 25.5px;
+  top: 30px;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 42px;
+  line-height: normal;
+  color: var(--dehors-brun);
+}
+
+.speedLine {
+  position: absolute;
+}

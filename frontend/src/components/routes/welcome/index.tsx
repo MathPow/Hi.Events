@@ -18,6 +18,8 @@ import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {trackEvent, AnalyticsEvents} from "../../../utilites/analytics.ts";
 import {AccountEventType} from "../../../types.ts";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
+import {EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
+import {EventTypeIllustration} from "../../common/EventTypeIllustration";
 
 // La carte creme sur l'orange, son logo et la progression en haut.
 const OnboardingCard = ({step, children}: { step?: 1 | 2, children: ReactNode }) => {
@@ -187,36 +189,6 @@ const ConfirmVerificationPin = () => {
     );
 }
 
-// L'illustration du sport, un dossard penche avec ses traits de vitesse, montee en HTML comme dans la maquette.
-const SportIllustration = () => (
-    <div className={classes.sportIllustration} aria-hidden>
-        <div className={classes.bibFrame}>
-            <div className={classes.bib}>
-                <span className={classes.bibBand}/>
-                <span className={classes.bibNumber}>07</span>
-                <img src={'/interface/bienvenue/dossard-trou.svg'} alt={''} style={{left: 6, top: 4}}/>
-                <img src={'/interface/bienvenue/dossard-trou.svg'} alt={''} style={{left: 94, top: 4}}/>
-                <img src={'/interface/bienvenue/dossard-trou.svg'} alt={''} style={{left: 6, top: 70}}/>
-                <img src={'/interface/bienvenue/dossard-trou.svg'} alt={''} style={{left: 94, top: 70}}/>
-            </div>
-        </div>
-        <img src={'/interface/bienvenue/trait-1.svg'} alt={''} className={classes.speedLine} style={{left: -6, top: 64}}/>
-        <img src={'/interface/bienvenue/trait-2.svg'} alt={''} className={classes.speedLine} style={{left: -14, top: 82}}/>
-        <img src={'/interface/bienvenue/trait-3.svg'} alt={''} className={classes.speedLine} style={{left: -2, top: 100}}/>
-    </div>
-);
-
-const eventTypeChoices = (): { value: AccountEventType, label: string, illustration: ReactNode }[] => [
-    {value: 'SPORT', label: t`Sport`, illustration: <SportIllustration/>},
-    {
-        value: 'ENTREPRENEURSHIP',
-        label: t`Entrepreneurship`,
-        illustration: <img src={'/interface/bienvenue/entrepreneuriat.svg'} alt={''}/>,
-    },
-    {value: 'SOCIAL', label: t`Social`, illustration: <img src={'/interface/bienvenue/social.svg'} alt={''}/>},
-    {value: 'OTHER', label: t`Other`, illustration: <img src={'/interface/bienvenue/autre.svg'} alt={''}/>},
-];
-
 const EventTypesStep = ({onDone}: { onDone: () => void }) => {
     const {data: me} = useGetMe();
     const {data: account} = useGetAccount();
@@ -245,19 +217,19 @@ const EventTypesStep = ({onDone}: { onDone: () => void }) => {
             <p className={classes.subtitle}>{t`Pick as many as you like.`}</p>
 
             <div className={classes.choices}>
-                {eventTypeChoices().map((choice) => {
-                    const isSelected = selected.includes(choice.value);
+                {EVENT_TYPES.map((type) => {
+                    const isSelected = selected.includes(type);
                     return (
                         <button
-                            key={choice.value}
+                            key={type}
                             type="button"
                             className={classes.choice} data-rough="button"
                             data-selected={isSelected || undefined}
                             aria-pressed={isSelected}
-                            onClick={() => toggle(choice.value)}
+                            onClick={() => toggle(type)}
                         >
-                            <span className={classes.illustration}>{choice.illustration}</span>
-                            <span className={classes.choiceLabel}>{choice.label}</span>
+                            <span className={classes.illustration}><EventTypeIllustration type={type}/></span>
+                            <span className={classes.choiceLabel}>{eventTypeLabel(type)}</span>
                             {isSelected && (
                                 <img src={'/interface/bienvenue/coche.svg'} alt={''} className={classes.check}/>
                             )}

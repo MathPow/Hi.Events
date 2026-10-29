@@ -1,0 +1,523 @@
+@use "../../../styles/mixins.scss";
+
+$police-titre: FatFrank, 'Arial Black', sans-serif;
+
+// Maquette Figma « Public · Repertoire d'evenements » (bureau 1440, telephone 402). Le cadre
+// (page, barre, cartes) vient de la page organisateur (OrganizerHomepage.module.scss), l'en-tete
+// et le fond creme de Mes billets.
+
+.page {
+  // L'accent fonce de la maquette (accroche, organisateurs des cartes).
+  --public-accent-fonce: color-mix(in srgb, var(--public-accent) 72%, var(--dehors-brun));
+
+  background: var(--dehors-creme);
+}
+
+.content {
+  gap: 28px;
+
+  @include mixins.respond-below(md) {
+    gap: 16px;
+  }
+}
+
+.accentIcon {
+  flex-shrink: 0;
+  color: var(--public-accent);
+}
+
+// L'en-tete, centre et pose sur le fond: l'accroche, le titre en tres grand entre l'appareil
+// photo et le drapeau, puis la ligne.
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 40px 0 16px;
+  text-align: center;
+  color: var(--dehors-brun);
+
+  @include mixins.respond-below(md) {
+    gap: 2px;
+    padding: 40px 0 4px;
+  }
+}
+
+.kicker {
+  margin: 0;
+  font-family: 'Felt Tip', 'Comic Sans MS', cursive;
+  font-size: 28px;
+  line-height: normal;
+  color: var(--public-accent-fonce);
+
+  @include mixins.respond-below(md) {
+    font-size: 22px;
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: clamp(64px, 7.7vw, 110px);
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: min(46px, 11.4vw);
+  }
+}
+
+// Le drapeau suit la fin du titre; sur telephone, il se pose dans le coin de l'en-tete.
+.titleText {
+  position: relative;
+  display: inline-block;
+
+  @include mixins.respond-below(md) {
+    position: static;
+  }
+}
+
+.line {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: normal;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+// Les autocollants du site (public/landing/stickers), places comme dans la maquette.
+%autocollant {
+  position: absolute;
+  z-index: 1;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.stickerFlag {
+  @extend %autocollant;
+  top: -0.83em;
+  left: calc(100% + 0.05em);
+  width: 1.18em;
+  height: 1.18em;
+  rotate: -10deg;
+
+  @include mixins.respond-below(md) {
+    top: -11px;
+    right: -4px;
+    left: auto;
+    width: 56px;
+    height: 56px;
+  }
+}
+
+.stickerCamera {
+  @extend %autocollant;
+  top: 130px;
+  left: 29px;
+  width: 120px;
+  height: 120px;
+  rotate: 10deg;
+
+  @include mixins.respond-below(lg) {
+    display: none;
+  }
+}
+
+// La recherche et les deux menus deroulants; sur telephone, les menus passent dessous, cote a cote.
+.filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px 230px;
+  gap: 12px;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+// L'ombre des cartes, sur le parent: posee sur le champ ou le bouton, la decoupe la couperait.
+.shadow {
+  min-width: 0;
+  filter: drop-shadow(0 10px 16px rgb(55 39 33 / 0.08));
+}
+
+.search {
+  @include mixins.respond-below(md) {
+    grid-column: 1 / -1;
+  }
+}
+
+.searchRoot {
+  margin: 0;
+}
+
+.searchInput {
+  height: 56px;
+  min-height: 56px;
+  padding-right: 18px;
+  padding-left: 50px;
+  border: none;
+  border-radius: 16px;
+  font-size: 17px;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+
+  &::placeholder {
+    color: var(--dehors-texte-doux);
+  }
+
+  &:focus {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: -2px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 52px;
+    min-height: 52px;
+    padding-left: 42px;
+    font-size: 16px;
+  }
+}
+
+.searchIcon {
+  width: 56px;
+  color: var(--dehors-brun);
+
+  @include mixins.respond-below(md) {
+    width: 46px;
+  }
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 56px;
+  padding: 0 16px 0 18px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: #fff;
+  }
+
+  &[data-active] {
+    border-color: var(--dehors-brun);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 48px;
+  }
+}
+
+.triggerLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition: rotate 0.15s ease;
+
+  [aria-expanded='true'] > & {
+    rotate: 180deg;
+  }
+}
+
+// Le menu ouvert: une carte creme, des rangees a cocher, puis « Appliquer » pour les types.
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 10px 14px;
+  border: none;
+  border-radius: 20px;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  box-shadow: 0 10px 40px rgb(55 39 33 / 0.16);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--dehors-creme);
+  }
+
+  &[data-checked] {
+    background: var(--public-accent-doux);
+  }
+
+  &:has(:focus-visible) {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: -2px;
+  }
+}
+
+.optionInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.optionIllustration {
+  --taille: 36;
+
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.box {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--dehors-brun);
+  border-radius: 6px;
+  color: var(--dehors-creme);
+
+  [data-checked] > & {
+    background: var(--dehors-brun);
+  }
+}
+
+.apply {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: #4a3830;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+}
+
+// Une section par type. Le carrousel deborde dans les marges de la carte, pour que les cartes
+// glissent jusqu'au bord; sur telephone, la carte n'a pas de marge a droite.
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  overflow: hidden;
+
+  @include mixins.respond-below(md) {
+    gap: 14px;
+    padding: 16px 0 16px 14px;
+    border-radius: 28px;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  @include mixins.respond-below(md) {
+    padding-right: 14px;
+  }
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+  }
+}
+
+.sectionIllustration {
+  --taille: 64;
+
+  flex-shrink: 0;
+
+  @include mixins.respond-below(md) {
+    --taille: 44;
+  }
+}
+
+.sectionText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 0;
+  }
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 22px;
+  }
+}
+
+.sectionCount {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: normal;
+
+  @include mixins.respond-below(md) {
+    font-size: 13px;
+  }
+}
+
+.carouselNav {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--dehors-brun);
+  border-radius: 24px;
+  color: var(--dehors-brun);
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--dehors-creme);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+}
+
+// Les cartes (EventCard compacte), aimantees au debut de la carte. Le haut et le bas laissent
+// la place au contour du clavier et a l'ombre du survol.
+.carousel {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin: -6px -32px -24px;
+  padding: 6px 32px 24px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 32px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > li {
+    flex: 0 0 340px;
+    scroll-snap-align: start;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    margin: -6px 0 -16px -14px;
+    padding: 6px 14px 16px;
+    scroll-padding-inline: 14px;
+
+    > li {
+      flex-basis: 260px;
+    }
+  }
+}
+
+.noResults {
+  padding: 32px;
+
+  @include mixins.respond-below(md) {
+    padding: 14px;
+    border-radius: 28px;
+  }
+}
+
+.clear {
+  width: auto;
+  margin-top: 6px;
+}
