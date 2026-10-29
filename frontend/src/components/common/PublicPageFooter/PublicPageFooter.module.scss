@@ -66,3 +66,19 @@
     color: inherit;
   }
 }
+
+// Nu, sur grand ecran (maquette « Public · Mes billets »): sur le fond creme, sans carte ni
+// ombre, la mention en pastille douce. Sans coins arrondis, la decoupe (useRoughEdges) le laisse.
+.bare {
+  @include mixins.respond-above(md) {
+    min-height: 0;
+    padding: 16px 4px;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+
+    .poweredBy {
+      background: var(--public-accent-doux);
+    }
+  }
+}

@@ -9,6 +9,9 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 .page {
   // L'accent fonce de la maquette (liens, organisateurs, accroche), comme sur la page evenement.
   --public-accent-fonce: color-mix(in srgb, var(--public-accent) 72%, var(--dehors-brun));
+
+  // La maquette pose la page sur le creme, pas sur l'orange des autres pages publiques.
+  background: var(--dehors-creme);
 }
 
 .content {
@@ -41,21 +44,66 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   color: var(--public-accent-fonce);
 }
 
-// L'en-tete, centre comme celui de la confirmation.
+// L'en-tete, centre. Grand ecran: pose sur le fond, sans carte, le titre en tres grand entre
+// deux autocollants (sans coins arrondis, la decoupe de useRoughEdges le laisse, et les
+// autocollants peuvent deborder). Telephone: la carte de la maquette mobile.
 .hero {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 40px;
+  padding: 40px 40px 24px;
   text-align: center;
   color: var(--dehors-brun);
+
+  @include mixins.respond-above(md) {
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
 
   @include mixins.respond-below(md) {
     gap: 6px;
     padding: 20px;
     border-radius: 28px;
   }
+}
+
+.titleText {
+  position: relative;
+  display: inline-block;
+}
+
+// Les autocollants du site (public/landing/stickers), places comme dans la maquette: le
+// drapeau sur la fin du titre, le sapin en bas a gauche, qui deborde un peu sur « A venir ».
+%autocollant {
+  position: absolute;
+  z-index: 1;
+  object-fit: contain;
+  pointer-events: none;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.stickerFlag {
+  @extend %autocollant;
+  top: -0.88em;
+  right: -0.24em;
+  width: 1.18em;
+  height: 1.18em;
+  rotate: -10deg;
+}
+
+.stickerPine {
+  @extend %autocollant;
+  top: 158px;
+  left: 31px;
+  width: 120px;
+  height: 120px;
+  rotate: 8deg;
 }
 
 .kicker {
@@ -73,9 +121,9 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 .title {
   margin: 0;
   font-family: $police-titre;
-  font-size: 60px;
+  font-size: clamp(64px, 7.7vw, 110px);
   font-weight: 400;
-  line-height: normal;
+  line-height: 0.95;
   text-transform: uppercase;
   text-wrap: balance;
 
@@ -716,11 +764,11 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-// « Tout voir »: seulement s'il reste des cartes cachees.
+// « Voir tous les evenements » (« Tout voir » sur telephone): seulement s'il reste des cartes cachees.
 .seeAll {
-  font-size: 16px;
-
   @include mixins.respond-below(md) {
+    height: 40px;
+    padding: 0 14px;
     font-size: 14px;
   }
 

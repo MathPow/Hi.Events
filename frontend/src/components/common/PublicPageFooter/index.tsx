@@ -4,8 +4,9 @@ import {PoweredByFooter} from "../PoweredByFooter";
 import {getConfig} from "../../../utilites/config.ts";
 
 // Le pied des pages publiques: les liens legaux a gauche, la mention en pastille a droite.
-export const PublicPageFooter = () => (
-    <footer className={classes.footer} data-rough>
+// Nu (bare), il est pose sur le fond sur grand ecran, sans carte (Mes billets).
+export const PublicPageFooter = ({bare = false}: { bare?: boolean }) => (
+    <footer className={bare ? `${classes.footer} ${classes.bare}` : classes.footer} data-rough>
         <p className={classes.links}>
             <a href={getConfig("VITE_PRIVACY_URL", 'https://hi.events/privacy-policy') as string} target="_blank" rel="noreferrer">
                 {t`Privacy Policy`}

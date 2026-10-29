@@ -116,6 +116,7 @@
 
 .body {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 10px;
   padding: 0 8px 8px;
@@ -232,7 +233,12 @@
     padding: 0 6px;
   }
 
+  // Deux lignes au plus, puis « ... »: le prix et la fleche restent au bas de la carte (.bottom).
   .title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     font-size: 20px;
   }
 

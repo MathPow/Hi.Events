@@ -516,10 +516,12 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
                     <span className={shell.shortLabel}>{t`Discover`}</span>
                 </h2>
                 {!expanded && shown.length > SHOWN_MOBILE && (
-                    <UnstyledButton className={`${classes.textLink} ${classes.seeAll}`} onClick={() => setExpanded(true)}
+                    <UnstyledButton className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge} ${classes.seeAll}`}
+                                    data-rough="button" onClick={() => setExpanded(true)}
                                     data-desktop={shown.length > SHOWN_DESKTOP || undefined}>
-                        {t`See all`}
-                        <PublicIcon name={'fleche'} size={16}/>
+                        <span className={shell.longLabel}>{t`See all events`}</span>
+                        <span className={shell.shortLabel}>{t`See all`}</span>
+                        <PublicIcon name={'fleche'} size={18}/>
                     </UnstyledButton>
                 )}
             </div>
@@ -592,7 +594,7 @@ export const MyTickets = () => {
             <style>
                 {`
                     body, .ssr-loader {
-                        background-color: var(--dehors-orange) !important;
+                        background-color: var(--dehors-creme) !important;
                     }
                 `}
             </style>
@@ -613,8 +615,16 @@ export const MyTickets = () => {
                 ) : (
                     <>
                         <header className={`${shell.card} ${classes.hero}`} data-rough>
+                            <img src={'/landing/stickers/autocollant-sapin.webp'} alt="" aria-hidden
+                                 className={classes.stickerPine}/>
                             <p className={classes.kicker}>{t`See you outside!`}</p>
-                            <h1 className={classes.title}>{t`My tickets`}</h1>
+                            <h1 className={classes.title}>
+                                <span className={classes.titleText}>
+                                    {t`My tickets`}
+                                    <img src={'/landing/stickers/autocollant-drapeau-dehors.webp'} alt="" aria-hidden
+                                         className={classes.stickerFlag}/>
+                                </span>
+                            </h1>
                             {email && (
                                 <p className={classes.line}>
                                     <PublicIcon name={'courriel'} size={18} className={`${classes.accentIcon} ${classes.desktopOnly}`}/>
@@ -633,7 +643,7 @@ export const MyTickets = () => {
 
                 {!isLoading && <DiscoverEvents groups={groups} suggested={past.length > 0}/>}
 
-                <PublicPageFooter/>
+                <PublicPageFooter bare/>
             </div>
         </main>
     );
