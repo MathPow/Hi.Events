@@ -186,9 +186,11 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       gap: 12px;
     }
 
+    // Le contour des cases du calendrier de dehorsqc.com (GrilleMois.vue): 2px de brun a 12 %,
+    // plus marque au survol, a l'accent une fois choisie.
     .hi-product-row {
-      --trait-couleur: var(--dehors-brun);
-      --trait-epaisseur: 3px;
+      --trait-couleur: rgb(53 41 36 / 0.12);
+      --trait-epaisseur: 2px;
 
       position: relative;
       gap: 12px;
@@ -201,6 +203,12 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         gap: 10px;
         padding: 14px 14px 14px 16px;
         border-radius: 18px;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          --trait-couleur: rgb(53 41 36 / 0.45);
+        }
       }
 
       &.hi-product-highlighted {
@@ -232,6 +240,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
           background: var(--trait-couleur);
           mask: var(--rough-stroke) 0 0 / 100% 100% no-repeat;
           pointer-events: none;
+          transition: background-color 0.25s ease-in-out;
         }
       }
 

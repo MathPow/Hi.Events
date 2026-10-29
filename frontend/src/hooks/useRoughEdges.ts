@@ -13,6 +13,8 @@ const OUTLINES = 3;
 // les 40px environ, on le sent plus qu'on ne le voit. Une petite pastille, d'un pixel.
 const AMPLITUDE = 1.5;
 const SMALL_AMPLITUDE = 1;
+// Un bloc a trait ondule comme les cases du calendrier du site (v-decoupe="{ amplitude: 1, trait: 2 }").
+const STROKE_AMPLITUDE = 1;
 const STEP = 40;
 // Plus haut que ca, un « bouton » est une tuile (choix de l'accueil): il garde ses coins.
 const PILL_MAX_HEIGHT = 80;
@@ -144,7 +146,7 @@ export const useRoughEdges = <T extends HTMLElement>() => {
                 element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
                 element.style.clipPath = 'var(--rough-clip)';
             } else if (stroke) {
-                const options = {radius, step: STEP, amplitude: AMPLITUDE, seed: cut.seed};
+                const options = {radius, step: STEP, amplitude: STROKE_AMPLITUDE, seed: cut.seed};
                 element.style.clipPath = roughEdgeClipPath(width, height, options);
                 element.style.setProperty('--rough-stroke', strokeMask(width, height, roughEdgePath(width, height, options), stroke));
                 element.style.setProperty('--rough-border', `${stroke}px`);
