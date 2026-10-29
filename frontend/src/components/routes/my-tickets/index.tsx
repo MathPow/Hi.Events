@@ -14,6 +14,7 @@ import {showError} from "../../../utilites/notifications.tsx";
 import {eventCoverImageUrl, eventHomepagePath, organizerHomepagePath} from "../../../utilites/urlHelper.ts";
 import {eventLocation, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {getAttendeeProductTitle} from "../../../utilites/products.ts";
+import {getConfig} from "../../../utilites/config.ts";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
@@ -202,16 +203,27 @@ const TicketCard = ({group}: { group: EventTickets }) => {
     );
 };
 
-const MissingTicket = () => (
-    <div className={classes.missing}>
-        <span className={classes.missingIcon}><PublicIcon name={'billet'} size={24}/></span>
-        <p className={classes.missingTitle}>{t`Missing a ticket?`}</p>
-        <p className={classes.missingText}>{t`Tickets bought with another email don't show up here.`}</p>
-        <Link to={OTHER_EMAIL_PATH} className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
-            {t`Find a ticket`}
-        </Link>
-    </div>
-);
+// Un billet introuvable: on nous ecrit, le courriel deja prepare (l'evenement et le courriel de l'achat a remplir).
+const MissingTicket = () => {
+    const supportEmail = getConfig('VITE_PLATFORM_SUPPORT_EMAIL', 'support@dehorsqc.com');
+    const subject = t`Ticket not found`;
+    const body = `${t`Event:`} \n${t`Email used at checkout:`} \n`;
+    const mailto = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    return (
+        <div className={classes.missing}>
+            <span className={classes.missingIcon}><PublicIcon name={'courriel'} size={24}/></span>
+            <p className={classes.missingTitle}>{t`Can't find a ticket?`}</p>
+            <p className={classes.missingText}>
+                {t`Send us the event name and the email used at checkout, and we'll find it for you.`}
+            </p>
+            <a href={mailto} className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
+                {t({message: 'Write to us', context: 'ticket buyer'})}
+            </a>
+            <span className={classes.missingEmail}>{supportEmail}</span>
+        </div>
+    );
+};
 
 const NoUpcoming = () => (
     <div className={`${shell.empty} ${classes.empty}`}>

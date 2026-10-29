@@ -506,7 +506,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   min-width: 0;
 }
 
-// Un billet manquant: le pointille, et le courriel a changer.
+// Un billet introuvable: le pointille, et le courriel pour nous joindre.
 .missing {
   display: flex;
   flex-direction: column;
@@ -548,6 +548,13 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   margin: 0;
   font-size: 14px;
   line-height: 1.45;
+}
+
+// L'adresse en clair, a copier sans application de courriel.
+.missingEmail {
+  font-size: 13px;
+  opacity: 0.7;
+  user-select: all;
 }
 
 // Sans evenement a venir: la tuile vide de la page organisateur, a la hauteur d'un billet.
