@@ -1,11 +1,11 @@
 @use "../../../styles/mixins.scss";
 
-// Comme l'inscription: une grande carte creme sur l'orange. En haut, le logo et
-// la progression; au centre, le contenu de l'etape.
+// Comme l'inscription: une grande carte creme sur la roche voilee d'orange. En haut,
+// le logo et la progression; au centre, le contenu de l'etape.
 .page {
   min-height: 100vh;
   padding: 40px;
-  background: var(--dehors-orange);
+  @include mixins.fond-roche;
 
   @include mixins.respond-below(lg) {
     padding: 12px;
