@@ -11,7 +11,8 @@ import {useCardHover} from "../../../../hooks/useCardHover.ts";
 
 interface EventCardProps {
     event: Event;
-    // Plus petite, et seule la photo bouge au survol (« Decouvrir des evenements » de Mes billets).
+    // Plus petite, l'organisateur au-dessus du titre, sans horaire ni lieu, et seule la photo
+    // bouge au survol (« Decouvrir des evenements » de Mes billets).
     compact?: boolean;
 }
 
@@ -132,12 +133,15 @@ export const EventCard = ({event, compact = false}: EventCardProps) => {
             </div>
 
             <div className={classes.body}>
+                {compact && event.organizer && <span className={classes.organizer}>{event.organizer.name}</span>}
                 <h3 className={classes.title}>{event.title}</h3>
-                <p className={classes.line}>
-                    <PublicIcon name={'horloge'} size={18} className={classes.icon}/>
-                    <span>{formatSchedule(event)}</span>
-                </p>
-                {(location || isOnlineEvent) && (
+                {!compact && (
+                    <p className={classes.line}>
+                        <PublicIcon name={'horloge'} size={18} className={classes.icon}/>
+                        <span>{formatSchedule(event)}</span>
+                    </p>
+                )}
+                {!compact && (location || isOnlineEvent) && (
                     <p className={classes.line}>
                         <PublicIcon name={isOnlineEvent ? 'globe' : 'lieu'} size={18} className={classes.icon}/>
                         <span>{isOnlineEvent ? t`Online Event` : location}</span>

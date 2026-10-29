@@ -7,7 +7,7 @@ import {useQueryClient} from "@tanstack/react-query";
 
 import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {eventCheckoutPath, eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
-import {formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
+import {eventLocation, formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {computeThemeVariables, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
@@ -71,23 +71,6 @@ const orderStatusPill = (order: Order): string | null => {
     if (order.payment_status === 'NO_PAYMENT_REQUIRED') return t`Free`;
     if (order.payment_status === 'PAYMENT_RECEIVED') return t`Paid`;
     return null;
-};
-
-const eventLocation = (event: Event) => {
-    const details = event.settings?.location_details;
-
-    if (event.settings?.is_online_event || !details || (!isAddressSet(details) && !details.venue_name)) {
-        return null;
-    }
-
-    const address = formatAddress(details);
-    const query = [details.venue_name, address].filter(Boolean).join(', ');
-
-    return {
-        title: details.venue_name || address,
-        subtitle: details.venue_name ? address : null,
-        mapsUrl: event.settings?.maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`,
-    };
 };
 
 const Card = ({title, aside, className, children}: {

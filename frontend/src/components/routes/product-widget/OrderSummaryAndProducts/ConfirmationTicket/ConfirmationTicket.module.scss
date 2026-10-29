@@ -274,3 +274,85 @@
 a.value:hover {
   text-decoration: underline;
 }
+
+// Compact (« Prochain » de Mes billets, sur telephone): pose dans une carte presque blanche,
+// le bas passe au creme et le code QR a la carte; le participant tient sur une ligne, sans
+// etiquettes (gardees pour les lecteurs d'ecran).
+.compact {
+  filter: none;
+
+  .top {
+    gap: 8px;
+    padding: 18px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .organizer {
+    font-size: 13px;
+  }
+
+  .title {
+    font-size: 22px;
+    line-height: 1.04;
+  }
+
+  .infos {
+    gap: 6px 14px;
+  }
+
+  .info {
+    gap: 5px;
+    font-size: 13px;
+
+    > span {
+      width: 15px !important;
+      height: 15px !important;
+    }
+  }
+
+  .perforation {
+    background: linear-gradient(to bottom, var(--public-accent) 50%, var(--dehors-creme) 50%);
+  }
+
+  .bottom {
+    gap: 12px;
+    padding: 18px 18px 16px;
+    border-radius: 0 0 20px 20px;
+    background: var(--dehors-creme);
+  }
+
+  .qr,
+  .qrPlaceholder {
+    width: 210px;
+    height: 210px;
+    background: var(--dehors-carte);
+  }
+
+  .hint {
+    font-size: 13px;
+  }
+
+  .attendee {
+    align-items: center;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .attendeeName {
+    flex-basis: 120px;
+  }
+
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .value {
+    font-size: 16px;
+  }
+}

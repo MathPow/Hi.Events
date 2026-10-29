@@ -27,6 +27,11 @@ class AttendeeResourcePublic extends JsonResource
             'product_price_id' => $this->getProductPriceId(),
             'product' => $this->when((bool)$this->getProduct(), fn() => new ProductMinimalResourcePublic($this->getProduct())),
             'locale' => $this->getLocale(),
+            // Le premier passage a l'entree, quand les check-ins sont charges (Mes billets).
+            'checked_in_at' => $this->when(
+                condition: $this->getCheckIns() !== null,
+                value: fn() => $this->getCheckIns()->min(fn($checkIn) => $checkIn->getCreatedAt()),
+            ),
         ];
     }
 }

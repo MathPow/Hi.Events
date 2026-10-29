@@ -2,71 +2,32 @@
 
 $police-titre: FatFrank, 'Arial Black', sans-serif;
 
-// Le cadre (page, barre, cartes, onglets) vient de la page organisateur
-// (OrganizerHomepage.module.scss); ici, ce qui est propre aux billets du participant.
+// Maquette Figma « Public · Mes billets » (bureau 1440, telephone 402). Le cadre (page, barre,
+// cartes) vient de la page organisateur (OrganizerHomepage.module.scss); ici, ce qui est propre
+// aux billets du participant.
 
-// L'en-tete, centre comme celui de la confirmation.
-.hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 36px;
-  text-align: center;
-  color: var(--dehors-brun);
+.page {
+  // L'accent fonce de la maquette (liens, organisateurs, accroche), comme sur la page evenement.
+  --public-accent-fonce: color-mix(in srgb, var(--public-accent) 72%, var(--dehors-brun));
+}
+
+.content {
+  gap: 28px;
 
   @include mixins.respond-below(md) {
-    gap: 8px;
-    padding: 22px 18px;
-    border-radius: 28px;
+    gap: 16px;
   }
 }
 
-.kicker {
-  margin: 0;
-  font-family: 'Felt Tip', 'Comic Sans MS', cursive;
-  font-size: 32px;
-  line-height: normal;
-  color: var(--public-accent);
-
+.desktopOnly {
   @include mixins.respond-below(md) {
-    font-size: 26px;
+    display: none !important;
   }
 }
 
-.title {
-  margin: 0;
-  font-family: $police-titre;
-  font-size: 64px;
-  font-weight: 400;
-  line-height: normal;
-  text-transform: uppercase;
-  text-wrap: balance;
-
-  @include mixins.respond-below(md) {
-    font-size: 38px;
-    line-height: 1;
-  }
-}
-
-.line {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-
-  @include mixins.respond-below(md) {
-    font-size: 14px;
-  }
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  @include mixins.respond-below(md) {
-    gap: 14px;
+.mobileOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
   }
 }
 
@@ -75,18 +36,147 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   color: var(--public-accent);
 }
 
-.coverPlaceholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--public-accent);
+.darkIcon {
+  flex-shrink: 0;
+  color: var(--public-accent-fonce);
 }
 
-.organizer {
+// L'en-tete, centre comme celui de la confirmation.
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px;
+  text-align: center;
+  color: var(--dehors-brun);
+
+  @include mixins.respond-below(md) {
+    gap: 6px;
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.kicker {
+  margin: 0;
+  font-family: 'Felt Tip', 'Comic Sans MS', cursive;
+  font-size: 28px;
+  line-height: normal;
+  color: var(--public-accent-fonce);
+
+  @include mixins.respond-below(md) {
+    font-size: 22px;
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 60px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  @include mixins.respond-below(md) {
+    font-size: 36px;
+    line-height: 1.05;
+  }
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 10px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    gap: 2px 8px;
+    font-size: 13px;
+  }
+}
+
+%lien-accent {
+  font-weight: 700;
+  color: var(--public-accent-fonce);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+.change {
+  @extend %lien-accent;
+}
+
+// Les sections (a venir, billets utilises, decouvrir).
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+
+  @include mixins.respond-below(md) {
+    gap: 14px;
+    padding: 16px;
+    border-radius: 28px;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 18px;
+  }
+}
+
+.sectionNote {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: var(--dehors-brun);
+
+  // Sans souris (tablette), pas de survol: « Voir le billet » ouvre le code QR.
+  @media (hover: none) {
+    display: none;
+  }
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  color: var(--public-accent-fonce);
   text-decoration: none;
 
   &:hover {
@@ -94,29 +184,25 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-.eventTitle {
-  margin: 0;
-  font-family: $police-titre;
-  font-size: 30px;
-  font-weight: 400;
-  line-height: 1.05;
-  overflow-wrap: anywhere;
-
-  a {
-    color: inherit;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  @include mixins.respond-below(md) {
-    font-size: 24px;
-  }
+%pastille {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  color: var(--dehors-brun);
 }
 
-// Les boutons de la page organisateur, en plus petit.
+.pill {
+  @extend %pastille;
+  font-size: 14px;
+  background: var(--public-accent-doux);
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -148,36 +234,47 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-.buttonFilled {
-  color: var(--dehors-creme);
-  background: var(--dehors-brun);
-
-  &:hover {
-    background: #4a3830;
-  }
-}
-
-// A venir: une tuile creme, l'evenement en haut et ses billets dessous.
-.event {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 16px;
-  border-radius: 28px;
-  background: var(--dehors-creme);
+.buttonLarge {
+  height: 48px;
+  font-size: 18px;
 
   @include mixins.respond-below(md) {
-    gap: 14px;
-    padding: 10px;
-    border-radius: 24px;
+    padding: 0 16px;
+    font-size: 17px;
   }
 }
 
-.eventHead {
-  display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
+.coverPlaceholder {
+  display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+}
+
+.organizer {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--public-accent-fonce);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// A venir, grand ecran: trois colonnes, la carte du billet manquant au bout.
+.ticketGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
   @include mixins.respond-below(md) {
     grid-template-columns: minmax(0, 1fr);
@@ -185,12 +282,60 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-.cover {
-  display: block;
-  height: 210px;
+// Un billet: tuile creme; au survol, le trait accent et l'ombre, et le code QR a la place
+// de la photo. Le trait garde sa place (transparent) pour que rien ne bouge; decoupee
+// (data-rough="stroke"), ::after le peint le long du bord, comme les billets de l'evenement.
+.ticketCard {
+  --trait-couleur: transparent;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 10px 10px 14px;
+  border: 2px solid var(--trait-couleur);
+  border-radius: 26px;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+  transition: box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-within {
+    --trait-couleur: var(--public-accent);
+    box-shadow: var(--dehors-ombre-carte);
+  }
+
+  &[data-rough-cut] {
+    border-color: transparent;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: calc(-1 * var(--rough-border, 2px));
+      background: var(--trait-couleur);
+      mask: var(--rough-stroke) 0 0 / 100% 100% no-repeat;
+      pointer-events: none;
+      transition: background-color 0.2s ease;
+    }
+  }
+}
+
+.ticketMedia {
+  position: relative;
+  height: 240px;
   overflow: hidden;
   border-radius: 20px;
-  background: var(--public-accent-doux);
+}
+
+.ticketCover {
+  display: block;
+  height: 100%;
+}
+
+.ticketPhoto {
+  display: block;
+  height: 100%;
 
   img {
     display: block;
@@ -198,105 +343,265 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
     height: 100%;
     object-fit: cover;
   }
+}
 
-  @include mixins.respond-below(md) {
-    height: 170px;
-    border-radius: 18px;
+.datePill {
+  @extend %pastille;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 13px;
+  background: var(--dehors-creme);
+}
+
+// Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier.
+.ticketQr {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  color: var(--public-sur-accent);
+  background: var(--public-accent);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s;
+
+  .ticketCard:hover &,
+  .ticketCard:focus-within & {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
-.eventInfo {
+.qrBox {
+  width: 176px;
+  height: 176px;
+  padding: 12px;
+  border-radius: 14px;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.qrCaption {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticketText {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
+  padding: 0 6px;
+}
 
-  @include mixins.respond-below(md) {
-    padding: 0 6px;
+.ticketTitle {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
-.meta {
+.ticketLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin: 0;
+  font-size: 15px;
+  line-height: normal;
+  overflow-wrap: anywhere;
+}
+
+.ticketBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.ticketLinks {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+}
+
+// Un billet manquant: le pointille, et le courriel a changer.
+.missing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 100%;
+  padding: 24px;
+  border: 2px dashed var(--dehors-brun);
+  border-radius: 26px;
+  text-align: center;
+
+  .button {
+    height: 48px;
+    font-size: 18px;
+  }
+}
+
+.missingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  color: var(--public-accent-fonce);
+  background: var(--public-accent-doux);
+}
+
+.missingTitle {
+  margin: 0;
+  font-family: $police-titre;
+  font-size: 18px;
+  line-height: normal;
+}
+
+.missingText {
+  max-width: 240px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+// Sans evenement a venir: la tuile vide de la page organisateur, a la hauteur d'un billet.
+.empty {
+  justify-content: center;
+  margin: 0;
+
+  p {
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+// Telephone: le prochain evenement, son billet pose dans la carte.
+.next {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: 28px;
+}
+
+.nextHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px 12px;
+}
+
+.countdown {
+  @extend %pastille;
+  gap: 5px;
+  padding: 6px 11px;
+  font-size: 12px;
+  color: var(--public-sur-accent);
+  background: var(--public-accent);
+}
+
+.nextTickets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nextActions {
+  display: flex;
+  gap: 8px;
+  padding-top: 12px;
+
+  .button {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+// Les rangees (aussi a venir, billets utilises): vignette, texte, puis pastille ou fleche.
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
 
-  li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 15px;
-    font-weight: 700;
-
-    @include mixins.respond-below(md) {
-      font-size: 14px;
-    }
+  @include mixins.respond-below(md) {
+    gap: 14px;
   }
 }
 
-.actions {
+.row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 6px;
-
-  @include mixins.respond-below(md) {
-    width: 100%;
-
-    .button {
-      flex: 1 1 auto;
-    }
-  }
-}
-
-// Un billet a code QR par participant (le billet de la confirmation).
-.tickets {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-
-  @include mixins.respond-below(md) {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-  }
-}
-
-// Passe: une rangee, la vignette, l'evenement et les codes, la commande a droite.
-.past {
-  display: grid;
-  grid-template-columns: 120px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  padding: 12px 20px 12px 12px;
-  border-radius: 24px;
+  gap: 16px;
+  padding: 12px 16px 12px 12px;
+  border-radius: 20px;
+  color: var(--dehors-brun);
+  text-decoration: none;
   background: var(--dehors-creme);
+  transition: box-shadow 0.2s ease;
 
-  .eventTitle {
-    font-size: 22px;
+  &:hover {
+    box-shadow: var(--dehors-ombre-carte);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
   }
 
   @include mixins.respond-below(md) {
-    grid-template-columns: 72px minmax(0, 1fr);
     gap: 12px;
-    padding: 10px;
-    border-radius: 20px;
-
-    .eventTitle {
-      font-size: 18px;
-    }
+    padding: 10px 12px 10px 10px;
+    border-radius: 18px;
   }
 }
 
-.pastCover {
-  display: block;
-  height: 120px;
+.rowPhoto {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
   overflow: hidden;
-  border-radius: 18px;
-  background: var(--public-accent-doux);
+  border-radius: 14px;
 
   img {
     display: block;
@@ -306,61 +611,122 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 
   @include mixins.respond-below(md) {
-    align-self: start;
-    height: 72px;
-    border-radius: 14px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
   }
 }
 
-.pastInfo {
+.usedPhoto {
+  opacity: 0.8;
+}
+
+.rowText {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
+  gap: 3px;
   min-width: 0;
 }
 
-.pastWhen {
-  font-size: 14px;
-  font-weight: 700;
-}
+.rowTitle {
+  font-family: $police-titre;
+  font-size: 18px;
+  line-height: normal;
+  overflow-wrap: anywhere;
 
-.codes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.code {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  background: var(--dehors-carte);
-
-  a {
-    color: var(--dehors-brun);
-    text-decoration: underline;
-    text-underline-position: from-font;
+  @include mixins.respond-below(md) {
+    font-size: 15px;
   }
 }
 
-.pastActions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.rowLine {
+  font-size: 14px;
+  line-height: normal;
+  overflow-wrap: anywhere;
 
   @include mixins.respond-below(md) {
-    grid-column: 1 / -1;
+    font-size: 13px;
+  }
+}
 
-    .button {
-      width: 100%;
+.rowArrow {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  color: var(--public-sur-accent);
+  background: var(--public-accent);
+}
+
+.rowChevron {
+  flex-shrink: 0;
+}
+
+.usedPill {
+  @extend %pastille;
+  font-size: 13px;
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    gap: 5px;
+    padding: 6px 11px;
+    font-size: 12px;
+
+    > span {
+      width: 15px !important;
+      height: 15px !important;
+    }
+  }
+}
+
+// Billets utilises: l'en-tete plus pres des rangees, comme la maquette.
+.used {
+  gap: 18px;
+
+  @include mixins.respond-below(md) {
+    gap: 14px;
+  }
+}
+
+// Repliees: trois rangees (deux sur telephone), puis le lien pour voir le reste.
+.rows:not([data-expanded]) > li:nth-child(n + 4) {
+  display: none;
+}
+
+@include mixins.respond-below(md) {
+  .rows:not([data-expanded]) > li:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+.moreLink {
+  @extend %lien-accent;
+  align-self: flex-start;
+  font-size: 14px;
+
+  // Sur grand ecran, seulement s'il reste des rangees apres les trois premieres.
+  &:not([data-desktop]) {
+    @include mixins.respond-above(md) {
+      display: none;
+    }
+  }
+}
+
+// « Tout voir »: seulement s'il reste des cartes cachees.
+.seeAll {
+  font-size: 16px;
+
+  @include mixins.respond-below(md) {
+    font-size: 14px;
+  }
+
+  &:not([data-desktop]) {
+    @include mixins.respond-above(md) {
+      display: none;
     }
   }
 }
@@ -368,12 +734,24 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 // Les prochains evenements de la billetterie, en petites cartes (EventCard compact).
 .discover {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+
+  &:not([data-expanded]) > :nth-child(n + 4) {
+    display: none;
+  }
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
   @include mixins.respond-below(md) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+
+    &:not([data-expanded]) > :nth-child(n + 3) {
+      display: none;
+    }
   }
 }
 
@@ -389,11 +767,11 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 .skeleton {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 28px;
   min-width: 0;
 
   @include mixins.respond-below(md) {
-    gap: 20px;
+    gap: 16px;
   }
 }
 
@@ -405,29 +783,28 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   background: var(--dehors-champ);
 }
 
+// Une carte de billet vide, comme celles de la grille.
+.boneCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 16px;
+  border-radius: 26px;
+  background: var(--dehors-creme);
+
+  > .bone:not(.boneCover) {
+    margin-left: 6px;
+  }
+}
+
 .boneCover {
-  height: 210px;
+  height: 240px;
   border-radius: 20px;
 
   @include mixins.respond-below(md) {
     height: 170px;
-    border-radius: 18px;
+    border-radius: 16px;
   }
-}
-
-.boneButton {
-  height: 44px;
-  border-radius: 16px;
-}
-
-.boneTab {
-  height: 44px;
-  border-radius: 999px;
-}
-
-.boneTicket {
-  height: 190px;
-  border-radius: 20px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

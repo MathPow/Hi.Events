@@ -3,6 +3,7 @@
 namespace HiEvents\Services\Application\Handlers\TicketLookup;
 
 use Carbon\Carbon;
+use HiEvents\DomainObjects\AttendeeCheckInDomainObject;
 use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
@@ -87,7 +88,12 @@ class GetOrdersByLookupTokenHandler
                             )
                         ],
                         name: ProductDomainObjectAbstract::SINGULAR_NAME,
-                    )
+                    ),
+                    // Pour « Scanne le ... » des billets utilises de Mes billets.
+                    new Relationship(
+                        domainObject: AttendeeCheckInDomainObject::class,
+                        name: 'check_ins',
+                    ),
                 ],
             ))
             ->loadRelation(new Relationship(

@@ -1,4 +1,4 @@
-import {VenueAddress} from "../types.ts";
+import {Event, VenueAddress} from "../types.ts";
 
 export const isAddressSet = (address?: VenueAddress) => {
     if (!address) return false;
@@ -45,4 +45,22 @@ export const getShortLocationDisplay = (locationDetails?: VenueAddress) => {
 export const getGoogleMapsUrl = (locationDetails: VenueAddress) => {
     if (!locationDetails) return '';
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formatAddress(locationDetails))}`;
+};
+
+// Le lieu d'un evenement sur place (salle, adresse) et son lien d'itineraire; rien en ligne ou sans adresse.
+export const eventLocation = (event: Event) => {
+    const details = event.settings?.location_details;
+
+    if (event.settings?.is_online_event || !details || (!isAddressSet(details) && !details.venue_name)) {
+        return null;
+    }
+
+    const address = formatAddress(details);
+    const query = [details.venue_name, address].filter(Boolean).join(', ');
+
+    return {
+        title: details.venue_name || address,
+        subtitle: details.venue_name ? address : null,
+        mapsUrl: event.settings?.maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`,
+    };
 };

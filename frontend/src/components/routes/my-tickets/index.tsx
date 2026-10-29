@@ -4,6 +4,7 @@ import {Button, TextInput, UnstyledButton} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useEffect, useState} from "react";
 import {Helmet} from "react-helmet-async";
+import QRCode from "react-qr-code";
 import dayjs from "dayjs";
 
 import {useGetOrdersByLookupToken} from "../../../queries/useGetOrdersByLookupToken.ts";
@@ -11,7 +12,8 @@ import {useSendTicketLookupEmail} from "../../../mutations/useSendTicketLookupEm
 import {useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
 import {showError} from "../../../utilites/notifications.tsx";
 import {eventCoverImageUrl, eventHomepagePath, organizerHomepagePath} from "../../../utilites/urlHelper.ts";
-import {getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
+import {eventLocation, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
+import {getAttendeeProductTitle} from "../../../utilites/products.ts";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
@@ -20,14 +22,28 @@ import {PublicIcon} from "../../common/PublicIcon";
 import {InstallAppButton} from "../../common/InstallAppButton";
 import {EventCard} from "../../layouts/OrganizerHomepage/EventCard";
 import {ConfirmationTicket} from "../product-widget/OrderSummaryAndProducts/ConfirmationTicket";
-import {eventRangeLabel, shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
+import {
+    dayMonthLabel,
+    shortDayLabel,
+    shortTimeLabel,
+} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 
-import {Attendee, Event, EventLifecycleStatus, Order} from "../../../types.ts";
+import {Attendee, Event, EventLifecycleStatus, Order, Product} from "../../../types.ts";
 import shell from "../../layouts/OrganizerHomepage/OrganizerHomepage.module.scss";
 import classes from './MyTickets.module.scss';
 
 // Le dernier lien valide de l'appareil, pour que l'app installee rouvre le tableau de bord.
 const SAVED_LINK_KEY = 'dehors-mes-billets-lien';
+
+// « Changer » (de courriel) et « Retrouver un billet »: le formulaire du courriel, meme dans
+// l'app installee, qui sinon rouvre le dernier lien.
+const OTHER_EMAIL_PARAM = 'autre-courriel';
+const OTHER_EMAIL_PATH = `/my-tickets?${OTHER_EMAIL_PARAM}`;
+
+// Les rangees de billets utilises et les cartes a decouvrir montrees avant « Voir tout »:
+// moins sur telephone (le CSS cache le reste).
+const SHOWN_DESKTOP = 3;
+const SHOWN_MOBILE = 2;
 
 const isInstalledApp = () => window.matchMedia('(display-mode: standalone)').matches
     || (navigator as Navigator & { standalone?: boolean }).standalone === true;
@@ -69,117 +85,316 @@ const byStart = (a: EventTickets, b: EventTickets) => dayjs.utc(a.event.start_da
 
 const orderPath = (event: Event, order: Order) => `/checkout/${event.id}/${order.short_id}/summary`;
 
-const EventCover = ({event, className}: { event: Event, className: string }) => {
+const ticketCount = (count: number) => count === 1 ? t`1 ticket` : t`${count} tickets`;
+
+const orderLabel = (order: Order) => {
+    const id = order.public_id;
+
+    return t`Order ${id}`;
+};
+
+// Le billet dont on montre le code QR: le premier qui en a un (ni annule, ni en attente de paiement).
+const scannable = (attendees: Attendee[]) => attendees.find((attendee) => attendee.status === 'ACTIVE');
+
+// Le premier passage a l'entree parmi les billets de l'evenement.
+const firstCheckIn = (attendees: Attendee[]) => attendees
+    .map((attendee) => attendee.checked_in_at)
+    .filter((date): date is string => !!date)
+    .sort()[0];
+
+// « Aujourd'hui », « Demain », « Dans 2 jours », en jours du calendrier du fuseau de l'evenement.
+const countdownLabel = (event: Event) => {
+    const days = dayjs.utc(event.start_date).tz(event.timezone).startOf('day')
+        .diff(dayjs().tz(event.timezone).startOf('day'), 'day');
+
+    if (days <= 0) {
+        return t`Today`;
+    }
+
+    return days === 1 ? t`Tomorrow` : t`In ${days} days`;
+};
+
+const Cover = ({event, className}: { event: Event, className: string }) => {
     const cover = eventCoverImageUrl(event);
 
     return (
-        <Link to={eventHomepagePath(event)} className={className} data-rough tabIndex={-1} aria-hidden>
+        <span className={className}>
             {cover
                 ? <img src={cover} alt="" loading="lazy"/>
-                : <span className={classes.coverPlaceholder}><PublicIcon name={'calendrier'} size={36}/></span>}
-        </Link>
+                : <span className={classes.coverPlaceholder}><PublicIcon name={'calendrier'} size={28}/></span>}
+        </span>
     );
 };
 
-const EventHeading = ({event}: { event: Event }) => (
-    <>
-        {event.organizer && (
-            <Link to={organizerHomepagePath(event.organizer)} className={classes.organizer}>{event.organizer.name}</Link>
-        )}
-        <h3 className={classes.eventTitle}>
-            <Link to={eventHomepagePath(event)}>{event.title}</Link>
-        </h3>
-    </>
+// Les liens vers les billets: la commande (ses billets a code QR), une par commande s'il y en a plusieurs.
+const TicketLinks = ({group: {event, orders, attendees}}: { group: EventTickets }) => (
+    <div className={classes.ticketLinks}>
+        {orders.map((order) => (
+            <Link key={order.short_id} to={orderPath(event, order)} className={classes.textLink}>
+                {orders.length > 1
+                    ? orderLabel(order)
+                    : attendees.length > 1 ? t`View tickets` : t`View Ticket`}
+                <PublicIcon name={'fleche'} size={16}/>
+            </Link>
+        ))}
+    </div>
 );
 
-// A venir: l'evenement, ses commandes, et un billet a code QR par participant.
-const UpcomingEvent = ({group: {event, orders, attendees}}: { group: EventTickets }) => {
+// A venir, grand ecran: la carte de l'evenement; au survol (ou au clavier), la photo laisse
+// place au code QR du billet.
+const TicketCard = ({group}: { group: EventTickets }) => {
+    const {event, attendees} = group;
+    const attendee = scannable(attendees);
     const place = getShortLocationDisplay(event.settings?.location_details);
+    const productTitle = attendee && getAttendeeProductTitle(attendee, attendee.product as Product);
 
     return (
-        <article className={classes.event} data-rough>
-            <div className={classes.eventHead}>
-                <EventCover event={event} className={classes.cover}/>
-                <div className={classes.eventInfo}>
-                    <EventHeading event={event}/>
-                    <ul className={classes.meta}>
-                        <li>
-                            <PublicIcon name={'calendrier'} size={18} className={classes.accentIcon}/>
-                            {eventRangeLabel(event.start_date, event.end_date, event.timezone)}
-                        </li>
-                        {place && (
-                            <li><PublicIcon name={'lieu-petit'} size={18} className={classes.accentIcon}/>{place}</li>
-                        )}
-                        <li>
-                            <PublicIcon name={'billet'} size={18} className={classes.accentIcon}/>
-                            {attendees.length} {attendees.length === 1 ? t`ticket` : t`tickets`}
-                        </li>
-                    </ul>
-                    <div className={classes.actions}>
-                        <Link to={eventHomepagePath(event)} className={`${classes.button} ${classes.buttonFilled}`}
-                              data-rough="button">
-                            {t`View Event`}
-                            <PublicIcon name={'fleche'} size={18}/>
-                        </Link>
-                        {orders.map((order) => (
-                            <Link key={order.short_id} to={orderPath(event, order)}
-                                  className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
-                                {orders.length > 1 ? `${t`Order`} ${order.public_id}` : t`View Order`}
-                            </Link>
-                        ))}
-                        {orders.length === 1 && (
-                            <Link to={`/order/${event.id}/${orders[0].short_id}/print`} target="_blank"
-                                  className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
-                                <PublicIcon name={'imprimer'} size={18}/>
-                                {t`Print Tickets`}
-                            </Link>
-                        )}
+        <article className={classes.ticketCard} data-rough="stroke">
+            <div className={classes.ticketMedia}>
+                <Link to={eventHomepagePath(event)} className={classes.ticketCover} tabIndex={-1} aria-hidden>
+                    <Cover event={event} className={classes.ticketPhoto}/>
+                    <span className={classes.datePill}>
+                        <PublicIcon name={'calendrier'} size={16} className={classes.accentIcon}/>
+                        {shortDayLabel(event.start_date, event.timezone, false)}
+                    </span>
+                </Link>
+                {attendee && (
+                    <div className={classes.ticketQr} aria-hidden>
+                        <span className={classes.qrBox}>
+                            <QRCode value={String(attendee.public_id)} size={152} level="M"
+                                    fgColor="currentColor" bgColor="transparent"/>
+                        </span>
+                        <span className={classes.qrCaption}>
+                            {[productTitle, attendee.public_id].filter(Boolean).join(' · ')}
+                        </span>
                     </div>
-                </div>
+                )}
             </div>
 
-            <div className={classes.tickets}>
-                {attendees.map((attendee) => (
-                    <ConfirmationTicket key={attendee.public_id} attendee={attendee} event={event}/>
-                ))}
+            <div className={classes.ticketText}>
+                {event.organizer && (
+                    <Link to={organizerHomepagePath(event.organizer)} className={classes.organizer}>
+                        {event.organizer.name}
+                    </Link>
+                )}
+                <h3 className={classes.ticketTitle}>
+                    <Link to={eventHomepagePath(event)}>{event.title}</Link>
+                </h3>
+                <p className={classes.ticketLine}>
+                    <PublicIcon name={'horloge'} size={17} className={classes.accentIcon}/>
+                    {shortDayLabel(event.start_date, event.timezone)} · {shortTimeLabel(event.start_date, event.timezone)}
+                </p>
+                {place && (
+                    <p className={classes.ticketLine}>
+                        <PublicIcon name={'lieu-petit'} size={17} className={classes.accentIcon}/>
+                        {place}
+                    </p>
+                )}
+                <div className={classes.ticketBottom}>
+                    <span className={classes.pill}>
+                        <PublicIcon name={'billet'} size={16} className={classes.accentIcon}/>
+                        {ticketCount(attendees.length)}
+                    </span>
+                    <TicketLinks group={group}/>
+                </div>
             </div>
         </article>
     );
 };
 
-// Passe: une rangee, avec le code de chaque billet et le lien vers la commande.
-const PastEvent = ({group: {event, orders, attendees}}: { group: EventTickets }) => {
-    const place = getShortLocationDisplay(event.settings?.location_details);
+const MissingTicket = () => (
+    <div className={classes.missing}>
+        <span className={classes.missingIcon}><PublicIcon name={'billet'} size={24}/></span>
+        <p className={classes.missingTitle}>{t`Missing a ticket?`}</p>
+        <p className={classes.missingText}>{t`Tickets bought with another email don't show up here.`}</p>
+        <Link to={OTHER_EMAIL_PATH} className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
+            {t`Find a ticket`}
+        </Link>
+    </div>
+);
+
+const NoUpcoming = () => (
+    <div className={`${shell.empty} ${classes.empty}`}>
+        <PublicIcon name={'calendrier'} size={28} className={classes.accentIcon}/>
+        <p>{t`No upcoming events`}</p>
+    </div>
+);
+
+// A venir, grand ecran: la grille des billets, et la carte du billet manquant au bout.
+const UpcomingGrid = ({groups}: { groups: EventTickets[] }) => {
+    const count = groups.reduce((total, group) => total + group.attendees.length, 0);
 
     return (
-        <article className={classes.past} data-rough>
-            <EventCover event={event} className={classes.pastCover}/>
-            <div className={classes.pastInfo}>
-                <EventHeading event={event}/>
-                <span className={classes.pastWhen}>
-                    {shortDayLabel(event.start_date, event.timezone)}{place && ` · ${place}`}
-                </span>
-                <ul className={classes.codes}>
-                    {attendees.map((attendee) => (
-                        <li key={attendee.public_id} className={classes.code} data-rough>
-                            <span>{attendee.first_name} {attendee.last_name}</span>
-                            <a href={`/product/${event.id}/${attendee.short_id}`} target="_blank" rel="noreferrer"
-                               title={t`View Ticket`}>
-                                {attendee.public_id}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+        <section className={`${shell.card} ${classes.section} ${classes.desktopOnly}`} data-rough
+                 aria-labelledby="upcoming-title">
+            <div className={classes.sectionHeader}>
+                <h2 id="upcoming-title" className={classes.sectionTitle}>{t`Upcoming`}</h2>
+                {count > 0 && (
+                    <span className={classes.sectionNote}>
+                        {count === 1 ? t`1 upcoming ticket` : t`${count} upcoming tickets`}
+                    </span>
+                )}
             </div>
-            <div className={classes.pastActions}>
+            {count > 0 && (
+                <p className={classes.tip}>
+                    <PublicIcon name={'qr'} size={18} className={classes.darkIcon}/>
+                    {t`Hover over a ticket to show its QR code.`}
+                </p>
+            )}
+            <div className={classes.ticketGrid}>
+                {groups.length === 0 && <NoUpcoming/>}
+                {groups.map((group) => <TicketCard key={group.event.id} group={group}/>)}
+                <MissingTicket/>
+            </div>
+        </section>
+    );
+};
+
+// Telephone: le prochain evenement, ses billets a code QR tout de suite, puis l'itineraire et la commande.
+const NextEvent = ({group}: { group?: EventTickets }) => {
+    if (!group) {
+        return (
+            <section className={`${shell.card} ${classes.section} ${classes.mobileOnly}`} data-rough
+                     aria-labelledby="next-title">
+                <h2 id="next-title" className={classes.sectionTitle}>{t`Upcoming`}</h2>
+                <NoUpcoming/>
+                <Link to={OTHER_EMAIL_PATH}
+                      className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`}
+                      data-rough="button">
+                    {t`Find a ticket`}
+                </Link>
+            </section>
+        );
+    }
+
+    const {event, orders, attendees} = group;
+    const location = eventLocation(event);
+
+    return (
+        <section className={`${shell.card} ${classes.next} ${classes.mobileOnly}`} data-rough aria-labelledby="next-title">
+            <div className={classes.nextHeader}>
+                <h2 id="next-title" className={classes.sectionTitle}>{t`Next`}</h2>
+                <span className={classes.countdown}>
+                    <PublicIcon name={'soleil'} size={15}/>
+                    {countdownLabel(event)}
+                </span>
+            </div>
+            <div className={classes.nextTickets}>
+                {attendees.map((attendee) => (
+                    <ConfirmationTicket key={attendee.public_id} attendee={attendee} event={event} compact/>
+                ))}
+            </div>
+            <div className={classes.nextActions}>
+                {location && (
+                    <a href={location.mapsUrl} target="_blank" rel="noreferrer"
+                       className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`} data-rough="button">
+                        <PublicIcon name={'itineraire'} size={18}/>
+                        {t`Directions`}
+                    </a>
+                )}
                 {orders.map((order) => (
                     <Link key={order.short_id} to={orderPath(event, order)}
-                          className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
-                        {orders.length > 1 ? `${t`Order`} ${order.public_id}` : t`View Order`}
+                          className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge}`} data-rough="button">
+                        <PublicIcon name={'billet'} size={18}/>
+                        {orders.length > 1 ? orderLabel(order) : t`Details`}
                     </Link>
                 ))}
             </div>
-        </article>
+        </section>
+    );
+};
+
+// Telephone: les autres evenements a venir, en rangees qui ouvrent leurs billets.
+const AlsoUpcoming = ({groups}: { groups: EventTickets[] }) => (
+    <section className={`${shell.card} ${classes.section} ${classes.mobileOnly}`} data-rough
+             aria-labelledby="also-upcoming-title">
+        <h2 id="also-upcoming-title" className={classes.sectionTitle}>{t`Also upcoming`}</h2>
+        <ul className={classes.rows}>
+            {groups.map(({event, orders, attendees}) => (
+                <li key={event.id}>
+                    <Link to={orderPath(event, orders[0])} className={classes.row}>
+                        <Cover event={event} className={classes.rowPhoto}/>
+                        <span className={classes.rowText}>
+                            <span className={classes.rowTitle}>{event.title}</span>
+                            <span className={classes.rowLine}>
+                                {[event.organizer?.name, shortDayLabel(event.start_date, event.timezone), ticketCount(attendees.length)]
+                                    .filter(Boolean).join(' · ')}
+                            </span>
+                        </span>
+                        <span className={classes.rowArrow} aria-hidden><PublicIcon name={'fleche'} size={18}/></span>
+                    </Link>
+                </li>
+            ))}
+        </ul>
+    </section>
+);
+
+// Passe: la rangee de l'evenement, et « Utilise » quand un billet a ete scanne a l'entree.
+const scannedLabels = (scannedAt: string, timezone: string) => {
+    const day = shortDayLabel(scannedAt, timezone, false);
+    const time = shortTimeLabel(scannedAt, timezone);
+    const shortDay = dayMonthLabel(scannedAt, timezone);
+
+    return {desktop: t`Scanned on ${day} at ${time}`, mobile: t`Scanned on ${shortDay}`};
+};
+
+const UsedRow = ({group: {event, orders, attendees}}: { group: EventTickets }) => {
+    const scannedAt = firstCheckIn(attendees);
+    const organizer = event.organizer?.name;
+    const scanned = scannedAt ? scannedLabels(scannedAt, event.timezone) : null;
+    const desktopWhen = scanned?.desktop ?? shortDayLabel(event.start_date, event.timezone);
+    const mobileWhen = scanned?.mobile ?? dayMonthLabel(event.start_date, event.timezone);
+
+    return (
+        <li>
+            <Link to={orderPath(event, orders[0])} className={classes.row}>
+                <Cover event={event} className={`${classes.rowPhoto} ${classes.usedPhoto}`}/>
+                <span className={classes.rowText}>
+                    <span className={classes.rowTitle}>{event.title}</span>
+                    <span className={`${classes.rowLine} ${classes.desktopOnly}`}>
+                        {[organizer, desktopWhen].filter(Boolean).join(' · ')}
+                    </span>
+                    <span className={`${classes.rowLine} ${classes.mobileOnly}`}>
+                        {[mobileWhen, organizer].filter(Boolean).join(' · ')}
+                    </span>
+                </span>
+                {scannedAt && (
+                    <span className={classes.usedPill}>
+                        <PublicIcon name={'coche'} size={16} className={classes.accentIcon}/>
+                        {t({message: 'Used', context: 'scanned ticket'})}
+                    </span>
+                )}
+                <PublicIcon name={'chevron-droite'} size={18} className={`${classes.rowChevron} ${classes.desktopOnly}`}/>
+            </Link>
+        </li>
+    );
+};
+
+const UsedTickets = ({groups}: { groups: EventTickets[] }) => {
+    const [expanded, setExpanded] = useState(false);
+    const total = groups.length;
+    const thisYear = groups.filter((group) => dayjs.utc(group.event.start_date).year() === dayjs().year()).length;
+
+    return (
+        <section className={`${shell.card} ${classes.section} ${classes.used}`} data-rough aria-labelledby="used-title">
+            <div className={classes.sectionHeader}>
+                <h2 id="used-title" className={classes.sectionTitle}>{t`Used tickets`}</h2>
+                {thisYear > 0 && (
+                    <span className={`${classes.sectionNote} ${classes.desktopOnly}`}>
+                        {thisYear === 1 ? t`1 outing this year` : t`${thisYear} outings this year`}
+                    </span>
+                )}
+            </div>
+            <ul className={classes.rows} data-expanded={expanded || undefined}>
+                {groups.map((group) => <UsedRow key={group.event.id} group={group}/>)}
+            </ul>
+            {!expanded && total > SHOWN_MOBILE && (
+                <UnstyledButton className={classes.moreLink} onClick={() => setExpanded(true)}
+                                data-desktop={total > SHOWN_DESKTOP || undefined}>
+                    {t`See all ${total} used tickets`}
+                </UnstyledButton>
+            )}
+        </section>
     );
 };
 
@@ -188,27 +403,13 @@ const Bone = ({className = '', width, height}: { className?: string, width?: num
     <span className={`${classes.bone} ${className}`} style={{width, height}}/>
 );
 
-const SkeletonEvent = ({tickets}: { tickets: number }) => (
-    <div className={classes.event} data-rough>
-        <div className={classes.eventHead}>
-            <Bone className={classes.boneCover}/>
-            <div className={classes.eventInfo}>
-                <Bone width={120} height={14}/>
-                <Bone width={'70%'} height={30}/>
-                <div className={classes.meta}>
-                    <Bone width={220}/>
-                    <Bone width={160}/>
-                    <Bone width={90}/>
-                </div>
-                <div className={classes.actions}>
-                    <Bone className={classes.boneButton} width={150}/>
-                    <Bone className={classes.boneButton} width={130}/>
-                </div>
-            </div>
-        </div>
-        <div className={classes.tickets}>
-            {Array.from({length: tickets}, (_, i) => <Bone key={i} className={classes.boneTicket}/>)}
-        </div>
+const SkeletonTicket = () => (
+    <div className={classes.boneCard}>
+        <Bone className={classes.boneCover}/>
+        <Bone width={90} height={13}/>
+        <Bone width={'75%'} height={22}/>
+        <Bone width={150}/>
+        <Bone width={120}/>
     </div>
 );
 
@@ -220,17 +421,15 @@ const DashboardSkeleton = ({loading}: { loading: boolean }) => (
             <Bone width={340} height={56}/>
             <Bone width={240}/>
         </div>
-        <div className={`${shell.card} ${shell.section}`} data-rough>
-            <div className={shell.sectionHeader}>
-                <Bone width={220} height={32}/>
-                <div className={shell.tabs}>
-                    <Bone className={classes.boneTab} width={130}/>
-                    <Bone className={classes.boneTab} width={110}/>
-                </div>
+        <div className={`${shell.card} ${classes.section}`} data-rough>
+            <div className={classes.sectionHeader}>
+                <Bone width={160} height={30}/>
+                <Bone width={110}/>
             </div>
-            <div className={classes.list}>
-                <SkeletonEvent tickets={2}/>
-                <SkeletonEvent tickets={1}/>
+            <div className={classes.ticketGrid}>
+                <SkeletonTicket/>
+                <SkeletonTicket/>
+                <SkeletonTicket/>
             </div>
         </div>
     </div>
@@ -294,21 +493,40 @@ const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }
 };
 
 // Les prochains evenements de la billetterie, pour en decouvrir d'autres depuis ses billets: les
-// cartes des pages organisateur, sans ceux dont on a deja des billets.
-const DiscoverEvents = ({owned}: { owned: Set<string> }) => {
+// petites cartes des pages organisateur, sans ceux dont on a deja des billets, et d'abord ceux
+// des organisateurs avec qui on est deja sorti.
+const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested: boolean }) => {
     const {data: events = []} = useGetUpcomingEventsPublic();
-    const shown = events.filter((event) => !owned.has(String(event.id)));
+    const [expanded, setExpanded] = useState(false);
+    const owned = new Set(groups.map((group) => String(group.event.id)));
+    const known = new Set(groups.flatMap((group) => group.event.organizer ? [String(group.event.organizer.id)] : []));
+    const shown = events
+        .filter((event) => !owned.has(String(event.id)))
+        .sort((a, b) => Number(known.has(String(b.organizer?.id))) - Number(known.has(String(a.organizer?.id))));
 
     if (!shown.length) {
         return null;
     }
 
     return (
-        <section className={`${shell.card} ${shell.section}`} data-rough aria-labelledby="discover-events-title">
-            <div className={shell.sectionHeader}>
-                <h2 id="discover-events-title" className={shell.sectionTitle}>{t`Discover events`}</h2>
+        <section className={`${shell.card} ${classes.section}`} data-rough aria-labelledby="discover-events-title">
+            <div className={classes.sectionHeader}>
+                <h2 id="discover-events-title" className={classes.sectionTitle}>
+                    <span className={shell.longLabel}>{t`Discover events`}</span>
+                    <span className={shell.shortLabel}>{t`Discover`}</span>
+                </h2>
+                {!expanded && shown.length > SHOWN_MOBILE && (
+                    <UnstyledButton className={`${classes.textLink} ${classes.seeAll}`} onClick={() => setExpanded(true)}
+                                    data-desktop={shown.length > SHOWN_DESKTOP || undefined}>
+                        {t`See all`}
+                        <PublicIcon name={'fleche'} size={16}/>
+                    </UnstyledButton>
+                )}
             </div>
-            <div className={classes.discover}>
+            {suggested && known.size > 0 && (
+                <p className={`${classes.sectionNote} ${classes.desktopOnly}`}>{t`Suggestions based on your past outings.`}</p>
+            )}
+            <div className={classes.discover} data-expanded={expanded || undefined}>
                 {shown.map((event) => <EventCard key={event.id} event={event} compact/>)}
             </div>
         </section>
@@ -316,12 +534,12 @@ const DiscoverEvents = ({owned}: { owned: Set<string> }) => {
 };
 
 /**
- * Le tableau de bord du participant, ouvert par le lien du courriel « Vos billets »:
- * comme les pages publiques des organisateurs, aux couleurs de la Billetterie Dehors.
+ * Le tableau de bord du participant, ouvert par le lien du courriel « Vos billets »
+ * (maquette Figma « Public · Mes billets »), aux couleurs de la Billetterie Dehors.
  * Sans lien (« Mes billets » de la barre) ou avec un lien expire, son squelette reste
  * sous une carte qui demande le courriel de l'achat.
- * Les evenements a venir montrent leurs billets a code QR; les passes, une rangee avec
- * les codes. Les onglets passent par ?vue=, comme les evenements passes de l'organisateur.
+ * Grand ecran: les billets a venir en grille (code QR au survol), puis les billets utilises.
+ * Telephone: le prochain evenement et ses codes QR d'abord, les autres en rangees.
  * En bas, les prochains evenements de la billetterie, pour naviguer vers d'autres.
  */
 export const MyTickets = () => {
@@ -330,10 +548,11 @@ export const MyTickets = () => {
     const roughEdges = useRoughEdges<HTMLElement>();
     const {data: orders, isLoading, isError, error} = useGetOrdersByLookupToken(token);
     const navigate = useNavigate();
+    const otherEmail = searchParams.has(OTHER_EMAIL_PARAM);
 
     // L'app installee s'ouvre sur /my-tickets (le manifeste): elle reprend le dernier lien.
     useEffect(() => {
-        if (token || !isInstalledApp()) {
+        if (token || otherEmail || !isInstalledApp()) {
             return;
         }
         try {
@@ -344,7 +563,7 @@ export const MyTickets = () => {
         } catch {
             // localStorage indisponible: le courriel, comme dans le navigateur.
         }
-    }, [token]);
+    }, [token, otherEmail]);
 
     useEffect(() => {
         try {
@@ -363,14 +582,10 @@ export const MyTickets = () => {
     const groups = groupByEvent(orders ?? []);
     const upcoming = groups.filter((group) => !isPast(group.event)).sort(byStart);
     const past = groups.filter((group) => isPast(group.event)).sort((a, b) => byStart(b, a));
-    const upcomingCount = upcoming.length;
-    const pastCount = past.length;
-    const view = searchParams.get('vue');
-    const showPast = view === 'passes' || (view !== 'a-venir' && !upcomingCount && pastCount > 0);
     const email = orders?.[0]?.email;
 
     return (
-        <main ref={roughEdges} className={shell.page}>
+        <main ref={roughEdges} className={`${shell.page} ${classes.page}`}>
             <Helmet>
                 <link rel="manifest" href="/my-tickets.webmanifest"/>
             </Helmet>
@@ -382,7 +597,7 @@ export const MyTickets = () => {
                 `}
             </style>
 
-            <div className={shell.content}>
+            <div className={`${shell.content} ${classes.content}`}>
                 <div className={shell.bar}>
                     {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
                     <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}
@@ -400,46 +615,23 @@ export const MyTickets = () => {
                         <header className={`${shell.card} ${classes.hero}`} data-rough>
                             <p className={classes.kicker}>{t`See you outside!`}</p>
                             <h1 className={classes.title}>{t`My tickets`}</h1>
-                            {email && <p className={classes.line}>{t`Tickets bought with ${email}`}</p>}
+                            {email && (
+                                <p className={classes.line}>
+                                    <PublicIcon name={'courriel'} size={18} className={`${classes.accentIcon} ${classes.desktopOnly}`}/>
+                                    <span>{t`Tickets linked to ${email}`}</span>
+                                    <Link to={OTHER_EMAIL_PATH} className={classes.change}>{t`Change`}</Link>
+                                </p>
+                            )}
                         </header>
 
-                        <section className={`${shell.card} ${shell.section}`} data-rough aria-labelledby="my-tickets-title">
-                            <div className={shell.sectionHeader}>
-                                <h2 id="my-tickets-title" className={shell.sectionTitle}>
-                                    <span className={shell.longLabel}>{showPast ? t`Past Events` : t`Upcoming Events`}</span>
-                                    <span className={shell.shortLabel}>{showPast ? t`Past` : t`Upcoming`}</span>
-                                </h2>
-                                <nav className={shell.tabs}>
-                                    <Link to={'?vue=a-venir'} replace className={shell.tab}
-                                          aria-current={!showPast ? 'page' : undefined}>
-                                        <span className={shell.longLabel}>{t`Upcoming (${upcomingCount})`}</span>
-                                        <span className={shell.shortLabel}>{t`Upcoming`}</span>
-                                    </Link>
-                                    <Link to={'?vue=passes'} replace className={shell.tab}
-                                          aria-current={showPast ? 'page' : undefined}>
-                                        <span className={shell.longLabel}>{t`Past (${pastCount})`}</span>
-                                        <span className={shell.shortLabel}>{t`Past`}</span>
-                                    </Link>
-                                </nav>
-                            </div>
-
-                            {(showPast ? past : upcoming).length === 0 ? (
-                                <div className={shell.empty} data-rough>
-                                    <PublicIcon name={'calendrier'} size={28} className={classes.accentIcon}/>
-                                    <p>{showPast ? t`No past events` : t`No upcoming events`}</p>
-                                </div>
-                            ) : (
-                                <div className={classes.list}>
-                                    {showPast
-                                        ? past.map((group) => <PastEvent key={group.event.id} group={group}/>)
-                                        : upcoming.map((group) => <UpcomingEvent key={group.event.id} group={group}/>)}
-                                </div>
-                            )}
-                        </section>
+                        <UpcomingGrid groups={upcoming}/>
+                        <NextEvent group={upcoming[0]}/>
+                        {upcoming.length > 1 && <AlsoUpcoming groups={upcoming.slice(1)}/>}
+                        {past.length > 0 && <UsedTickets groups={past}/>}
                     </>
                 )}
 
-                {!isLoading && <DiscoverEvents owned={new Set(groups.map((group) => String(group.event.id)))}/>}
+                {!isLoading && <DiscoverEvents groups={groups} suggested={past.length > 0}/>}
 
                 <PublicPageFooter/>
             </div>

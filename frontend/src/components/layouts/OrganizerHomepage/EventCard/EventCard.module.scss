@@ -208,37 +208,81 @@
   }
 }
 
-// Compacte (« Decouvrir des evenements »): photo moins haute, textes et fleche plus petits.
+// Compacte (« Decouvrir des evenements » de Mes billets, maquette « Public · Mes billets »):
+// photo moins haute, l'organisateur en accent fonce au-dessus du titre.
+.organizer {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--public-accent-fonce, var(--public-accent));
+  overflow-wrap: anywhere;
+}
+
 .compact {
-  gap: 12px;
-  padding: 10px;
-  border-radius: 24px;
+  gap: 14px;
+  padding: 12px 12px 16px;
+  border-radius: 26px;
 
   .image {
-    height: 150px;
-    border-radius: 16px;
+    height: 200px;
   }
 
   .body {
-    gap: 6px;
-    padding: 0 6px 6px;
+    gap: 8px;
+    padding: 0 6px;
   }
 
   .title {
-    font-size: 18px;
+    font-size: 20px;
   }
 
-  .line {
-    font-size: 14px;
+  .bottom {
+    padding-top: 4px;
   }
 
   .price {
-    font-size: 13px;
+    font-size: 14px;
   }
 
-  .arrow {
-    width: 40px;
-    height: 40px;
+  @include mixins.respond-below(md) {
+    gap: 10px;
+    padding: 10px 10px 14px;
     border-radius: 20px;
+
+    .image {
+      height: 150px;
+      border-radius: 16px;
+    }
+
+    .badges {
+      padding: 10px 10px 0;
+    }
+
+    .body {
+      gap: 6px;
+    }
+
+    .organizer {
+      font-size: 12px;
+    }
+
+    .title {
+      font-size: 17px;
+      line-height: normal;
+    }
+
+    .bottom {
+      padding-top: 0;
+    }
+
+    .price {
+      font-size: 13px;
+    }
+
+    .arrow {
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+    }
   }
 }

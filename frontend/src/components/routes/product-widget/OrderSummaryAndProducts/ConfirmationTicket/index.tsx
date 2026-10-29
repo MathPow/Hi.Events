@@ -3,22 +3,32 @@ import QRCode from "react-qr-code";
 import {IconX} from "@tabler/icons-react";
 import {Attendee, Event, Product} from "../../../../../types.ts";
 import {getAttendeeProductTitle} from "../../../../../utilites/products.ts";
+import {getShortLocationDisplay} from "../../../../../utilites/addressUtilities.ts";
 import {PublicIcon} from "../../../../common/PublicIcon";
 import {shortDayLabel, shortTimeLabel} from "../confirmationDates.ts";
 import classes from "./ConfirmationTicket.module.scss";
 
 // Le billet de la maquette: le haut couleur accent, la perforation, puis le code QR et le participant.
-export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, event: Event }) => {
+// Compact, c'est le « Prochain » de Mes billets sur telephone: pose dans une carte, le bas creme,
+// le lieu avec la date, et le participant sur une ligne (nom a gauche, numero a droite).
+export const ConfirmationTicket = ({attendee, event, compact = false}: {
+    attendee: Attendee,
+    event: Event,
+    compact?: boolean,
+}) => {
     const isCancelled = attendee.status === 'CANCELLED';
     const isAwaitingPayment = attendee.status === 'AWAITING_PAYMENT';
     const productTitle = getAttendeeProductTitle(attendee, attendee.product as Product);
+    const place = compact ? getShortLocationDisplay(event.settings?.location_details) : null;
 
     return (
-        <article className={classes.ticket}>
+        <article className={compact ? `${classes.ticket} ${classes.compact}` : classes.ticket}>
             <div className={classes.top}>
                 <div className={classes.topRow}>
                     <span className={classes.organizer}>{event.organizer?.name}</span>
-                    {productTitle && <span className={classes.typePill} data-rough title={productTitle}>{productTitle}</span>}
+                    {productTitle && !compact && (
+                        <span className={classes.typePill} data-rough title={productTitle}>{productTitle}</span>
+                    )}
                 </div>
                 <h3 className={classes.title}>{event.title}</h3>
                 <div className={classes.infos}>
@@ -30,6 +40,12 @@ export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, even
                         <PublicIcon name={'horloge'} size={18}/>
                         {shortTimeLabel(event.start_date, event.timezone)}
                     </span>
+                    {place && (
+                        <span className={classes.info}>
+                            <PublicIcon name={'lieu-petit'} size={18}/>
+                            {place}
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -54,7 +70,9 @@ export const ConfirmationTicket = ({attendee, event}: { attendee: Attendee, even
                                 bgColor="transparent"
                             />
                         </div>
-                        <p className={classes.hint}>{t`Show this code at the entrance`}</p>
+                        <p className={classes.hint}>
+                            {compact ? t`Show this code at the entrance · max brightness` : t`Show this code at the entrance`}
+                        </p>
                     </>
                 )}
 

@@ -21,6 +21,13 @@ export const shortDayLabel = (date: string, timezone: string, capitalized = true
     return capitalized ? capitalize(label) : label;
 };
 
+// « 17 oct. », sans le jour de la semaine.
+export const dayMonthLabel = (date: string, timezone: string): string => {
+    const format = currentLocale() === 'en' ? 'MMM D' : 'D MMM';
+
+    return inZone(date, timezone).format(format);
+};
+
 export const shortTimeLabel = (date: string, timezone: string): string => {
     const locale = currentLocale();
 
