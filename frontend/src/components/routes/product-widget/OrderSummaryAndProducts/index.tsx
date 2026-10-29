@@ -606,7 +606,7 @@ export const OrderSummaryAndProducts = () => {
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-orange-fond) !important;
+                            background-color: var(--dehors-orange) !important;
                         }
                     `}
                 </style>

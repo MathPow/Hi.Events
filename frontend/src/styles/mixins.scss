@@ -127,11 +127,10 @@ $breakpoints: (
 
 // The page background of the public pages and the login: the rock of the landing's fees section
 // under the orange veil, held to the screen while the page scrolls. Two fixed layers behind the
-// content (isolation keeps them above the page's own background); --dehors-orange-fond stays the
-// brand orange on dev.
+// content (isolation keeps them above the page's own background).
 @mixin fond-roche {
   isolation: isolate;
-  background: var(--dehors-orange-fond);
+  background: var(--dehors-orange);
 
   &::before,
   &::after {
@@ -150,7 +149,7 @@ $breakpoints: (
   }
 
   &::after {
-    background: var(--dehors-orange-fond);
+    background: var(--dehors-orange);
     opacity: 0.6;
   }
 }

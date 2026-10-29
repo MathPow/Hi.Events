@@ -16,8 +16,8 @@ export interface Organizer {
 const COPIES = 4;
 const MIN_NAMES_PER_COPY = 7;
 const SECONDS_PER_NAME = 6.4;
-const ORANGE = 'var(--landing-orange, #fa7853)';
-const TINTS = ['#352924', '#e3ad92', 'var(--landing-abricot, #ffaa8d)', ORANGE];
+const ORANGE = '#fa7853';
+const TINTS = ['#352924', '#e3ad92', '#ffaa8d', ORANGE];
 const DARK_TINTS = new Set(['#352924', ORANGE]);
 
 // Slowed down under the mouse (useMarqueePace).

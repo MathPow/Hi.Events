@@ -2,8 +2,6 @@
   --dehors-creme: #fff7e9;
   --dehors-brun: #352924;
   --dehors-orange: #fa7853;
-  // Le fond des pages (mixin fond-roche): l'orange de marque, que dev ne rougit pas.
-  --dehors-orange-fond: #fa7853;
   --dehors-orange-survol: #ee6741;
   --dehors-orange-clair: #ffaa8d;
   --dehors-sable: #e3ad92;
@@ -108,18 +106,6 @@
   50% {
     translate: 0 0;
   }
-}
-
-// Dev deployments (VITE_APP_ENVIRONMENT=dev, set on <html> by server.js) turn the oranges
-// about 10 degrees toward red, back office and landing page alike, so they are never mistaken for prod.
-:root[data-environment='dev'] {
-  --dehors-orange: #f45d3e;
-  --dehors-orange-survol: #e84a2a;
-  --dehors-orange-clair: #ff937d;
-  --landing-orange: #f96143;
-  --landing-abricot: #ff937d;
-  --landing-orange-pale: #f68872;
-  --landing-orange-hover: #ff7458;
 }
 
 // Organizer app styled after the DEHORS website (dehorsqc.com). Scoped to body.dehors-app,
