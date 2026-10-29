@@ -400,7 +400,7 @@ export const EventsDirectory = () => {
                     </section>
                 )}
 
-                <PublicPageFooter bare/>
+                <PublicPageFooter/>
             </div>
         </main>
     );

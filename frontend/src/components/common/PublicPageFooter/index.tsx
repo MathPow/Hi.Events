@@ -3,10 +3,10 @@ import classes from "./PublicPageFooter.module.scss";
 import {PoweredByFooter} from "../PoweredByFooter";
 import {getConfig} from "../../../utilites/config.ts";
 
-// Le pied des pages publiques: les liens legaux a gauche, la mention en pastille a droite.
-// Nu (bare), il est pose sur le fond sur grand ecran, sans carte (Mes billets).
-export const PublicPageFooter = ({bare = false}: { bare?: boolean }) => (
-    <footer className={bare ? `${classes.footer} ${classes.bare}` : classes.footer} data-rough>
+// Le pied des pages publiques, pose sur le fond sans carte: les liens legaux a gauche, la
+// mention en pastille a droite.
+export const PublicPageFooter = () => (
+    <footer className={classes.footer}>
         <p className={classes.links}>
             <a href={getConfig("VITE_PRIVACY_URL", 'https://hi.events/privacy-policy') as string} target="_blank" rel="noreferrer">
                 {t`Privacy Policy`}

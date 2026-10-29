@@ -667,7 +667,7 @@ export const MyTickets = () => {
 
                 {!isLoading && <DiscoverEvents groups={groups} suggested={past.length > 0}/>}
 
-                <PublicPageFooter bare/>
+                <PublicPageFooter/>
             </div>
         </main>
     );

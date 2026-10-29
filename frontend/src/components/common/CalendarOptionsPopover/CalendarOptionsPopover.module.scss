@@ -1,0 +1,44 @@
+// La carte des menus du repertoire (EventsDirectory.module.scss), hors de la page: brun et creme
+// de Dehors, sans l'accent de l'evenement.
+.menu {
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  box-shadow: 0 10px 40px rgb(55 39 33 / 0.16);
+}
+
+.label {
+  padding: 4px 10px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgb(55 39 33 / 0.6);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--dehors-brun);
+  transition: background-color 0.15s ease;
+
+  &[data-hovered] {
+    background: var(--dehors-creme);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: -2px;
+  }
+}
+
+.icon {
+  margin: 0;
+}

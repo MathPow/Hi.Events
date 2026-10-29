@@ -9,18 +9,11 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  min-height: 87px;
-  padding: 16px 16px 16px 24px;
-  border-radius: 24px;
-  background: var(--dehors-carte);
-  box-shadow: var(--dehors-ombre-carte);
+  padding: 16px 4px;
 
   @include mixins.respond-below(md) {
     flex-direction: column;
     align-items: flex-start;
-    min-height: 0;
-    padding: 16px;
-    border-radius: 20px;
   }
 }
 
@@ -47,7 +40,7 @@
   }
 }
 
-// La mention Hi.Events (AGPL) en pastille creme, par-dessus les styles du composant.
+// La mention Hi.Events (AGPL) en pastille douce, par-dessus les styles du composant.
 .footer .poweredBy {
   margin: 0;
   padding: 7px 12px;
@@ -55,7 +48,7 @@
   font-size: 13px;
   font-weight: 700;
   color: var(--dehors-brun);
-  background: var(--dehors-creme);
+  background: var(--public-accent-doux);
 
   div {
     font-size: inherit;
@@ -64,21 +57,5 @@
   a {
     font-weight: inherit;
     color: inherit;
-  }
-}
-
-// Nu, sur grand ecran (maquette « Public · Mes billets »): sur le fond creme, sans carte ni
-// ombre, la mention en pastille douce. Sans coins arrondis, la decoupe (useRoughEdges) le laisse.
-.bare {
-  @include mixins.respond-above(md) {
-    min-height: 0;
-    padding: 16px 4px;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-
-    .poweredBy {
-      background: var(--public-accent-doux);
-    }
   }
 }
