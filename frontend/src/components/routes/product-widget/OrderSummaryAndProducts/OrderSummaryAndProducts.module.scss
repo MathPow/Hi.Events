@@ -14,28 +14,7 @@ $font-titre: FatFrank, 'Arial Black', sans-serif;
   min-height: 100dvh;
   overflow: hidden;
   color: var(--dehors-brun);
-  background: var(--dehors-creme);
-}
-
-// Le halo de la maquette: trois ellipses floues aux couleurs de l'accent.
-.halo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1700px;
-  pointer-events: none;
-  background:
-    radial-gradient(770px 570px at 20.8% 100px, color-mix(in srgb, var(--public-accent) 16%, transparent) 0%, color-mix(in srgb, var(--public-accent) 9%, transparent) 50%, transparent 100%),
-    radial-gradient(670px 520px at 86.8% 100px, color-mix(in srgb, var(--public-accent) 11%, transparent) 0%, color-mix(in srgb, var(--public-accent) 6%, transparent) 50%, transparent 100%),
-    radial-gradient(720px 520px at 48.6% 1000px, color-mix(in srgb, var(--public-accent-doux) 34%, transparent) 0%, transparent 100%);
-
-  @include mixins.respond-below(md) {
-    height: 900px;
-    background:
-      radial-gradient(400px 350px at 25% 80px, color-mix(in srgb, var(--public-accent) 18%, transparent) 0%, transparent 100%),
-      radial-gradient(330px 270px at 95% 50px, color-mix(in srgb, var(--public-accent) 12%, transparent) 0%, transparent 100%);
-  }
+  background: var(--dehors-orange);
 }
 
 .content {

@@ -623,11 +623,10 @@ export const OrderSummaryAndProducts = () => {
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-creme) !important;
+                            background-color: var(--dehors-orange) !important;
                         }
                     `}
                 </style>
-                <div className={classes.halo} aria-hidden/>
 
                 <div className={classes.content}>
                     {/* eslint-disable-next-line lingui/no-unlocalized-strings */}

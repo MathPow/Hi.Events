@@ -4,56 +4,13 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 
 // Les --public-* suivent l'accent de l'organisateur pose en style inline (regle commune dans dehors-app.scss).
 .page {
-  --halo-clair: color-mix(in srgb, var(--public-accent) 60%, #fff);
-  --halo-pale: color-mix(in srgb, var(--public-accent) 25%, #fff);
-
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow-x: clip;
   color: var(--dehors-brun);
-  background: var(--dehors-creme);
-
-  // Le halo de la maquette (trois ellipses floues aux couleurs de l'organisateur).
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto;
-    height: 1533px;
-    pointer-events: none;
-    background:
-      radial-gradient(770px 570px at 20.8% 100px,
-        color-mix(in srgb, var(--halo-clair) 22%, transparent) 0%,
-        color-mix(in srgb, var(--halo-clair) 18%, transparent) 40%,
-        color-mix(in srgb, var(--halo-clair) 8%, transparent) 70%,
-        transparent 100%),
-      radial-gradient(670px 520px at 86.8% 100px,
-        color-mix(in srgb, var(--public-accent) 11%, transparent) 0%,
-        color-mix(in srgb, var(--public-accent) 9%, transparent) 40%,
-        color-mix(in srgb, var(--public-accent) 4%, transparent) 70%,
-        transparent 100%),
-      radial-gradient(720px 520px at 48.6% 900px,
-        color-mix(in srgb, var(--halo-pale) 32%, transparent) 0%,
-        color-mix(in srgb, var(--halo-pale) 26%, transparent) 40%,
-        color-mix(in srgb, var(--halo-pale) 12%, transparent) 70%,
-        transparent 100%);
-
-    @include mixins.respond-below(md) {
-      height: 900px;
-      background:
-        radial-gradient(390px 340px at 24.9% 80px,
-          color-mix(in srgb, var(--halo-clair) 24%, transparent) 0%,
-          color-mix(in srgb, var(--halo-clair) 19%, transparent) 40%,
-          color-mix(in srgb, var(--halo-clair) 8%, transparent) 70%,
-          transparent 100%),
-        radial-gradient(340px 290px at 94.5% 50px,
-          color-mix(in srgb, var(--public-accent) 12%, transparent) 0%,
-          color-mix(in srgb, var(--public-accent) 9%, transparent) 40%,
-          color-mix(in srgb, var(--public-accent) 4%, transparent) 70%,
-          transparent 100%);
-    }
-  }
+  background: var(--dehors-orange);
 }
 
 .content {

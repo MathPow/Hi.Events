@@ -129,7 +129,7 @@ export const OrganizerHomepage = ({
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-creme) !important;
+                            background-color: var(--dehors-orange) !important;
                         }
                     `}
                 </style>

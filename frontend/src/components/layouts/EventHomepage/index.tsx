@@ -233,14 +233,12 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-creme) !important;
+                            background-color: var(--dehors-orange) !important;
                         }
                     `}
                 </style>
 
                 <EventDocumentHead event={event}/>
-
-                <div className={classes.halo} aria-hidden/>
 
                 <div className={classes.content}>
                     <div className={classes.bar}>
