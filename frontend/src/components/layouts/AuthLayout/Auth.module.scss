@@ -1,12 +1,12 @@
 @use "../../../styles/mixins.scss";
 
-// Une grande carte creme sur la page orange: le formulaire a gauche, centre
+// Une grande carte creme sur la roche voilee d'orange: le formulaire a gauche, centre
 // entre le retour et le pied, la photo a droite, en retrait de 16px. Sous lg,
 // la photo passe en haut de la carte et porte le retour et le logo.
 .authLayout {
   min-height: 100vh;
   padding: 40px;
-  background: var(--dehors-orange);
+  @include mixins.fond-roche;
 
   @include mixins.respond-below(lg) {
     padding: 12px;

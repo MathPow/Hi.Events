@@ -233,7 +233,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-orange) !important;
+                            background-color: var(--dehors-orange-fond) !important;
                         }
                     `}
                 </style>

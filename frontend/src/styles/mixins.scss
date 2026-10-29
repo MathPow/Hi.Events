@@ -125,6 +125,36 @@ $breakpoints: (
   mask: $layers;
 }
 
+// The page background of the public pages and the login: the rock of the landing's fees section
+// under the orange veil, held to the screen while the page scrolls. Two fixed layers behind the
+// content (isolation keeps them above the page's own background); --dehors-orange-fond stays the
+// brand orange on dev.
+@mixin fond-roche {
+  isolation: isolate;
+  background: var(--dehors-orange-fond);
+
+  &::before,
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100lvh;
+    pointer-events: none;
+  }
+
+  &::before {
+    background: url('/landing/roche-frais.webp') center / cover no-repeat;
+  }
+
+  &::after {
+    background: var(--dehors-orange-fond);
+    opacity: 0.6;
+  }
+}
+
 // Phones: each table row becomes a block of "label: value" lines, its first cell as the title and a
 // trailing header-less cell (the row's actions) pinned to the corner. Labels come from useStackedTableLabels.
 @mixin stacked-table {
