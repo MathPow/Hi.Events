@@ -193,6 +193,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     })();
     const hasOrganizerLinks = socialLinks.length > 0 || !!websiteHost || !!organizer?.donation_url;
 
+    // Le rond sur la photo garde son bord decoupe; le bouton contour est une pilule nette.
     const shareButton = (className: string, withLabel: boolean) => (
         <ShareComponent
             title={'Check out this event: ' + event.title}
@@ -200,7 +201,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
             url={eventHomepageUrl(event)}
             imageUrl={coverImage?.url}
         >
-            <button type="button" className={className} title={t`Share`} aria-label={t`Share`} data-rough="button">
+            <button type="button" className={className} title={t`Share`} aria-label={t`Share`}
+                    data-rough={withLabel ? undefined : 'button'}>
                 <PublicIcon name={'partager'} size={withLabel ? 20 : 18}/>
                 {withLabel && t`Share`}
             </button>
@@ -233,7 +235,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                 <style>
                     {`
                         body, .ssr-loader {
-                            background-color: var(--dehors-orange) !important;
+                            background-color: var(--dehors-creme) !important;
                         }
                     `}
                 </style>
@@ -396,7 +398,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                                 <span className={classes.organizerLocation}>{organizerLocation}</span>
                                             )}
                                         </div>
-                                        <button type="button" className={classes.outlineButton} data-rough="button" onClick={() => setContactModalOpen(true)}>
+                                        <button type="button" className={classes.outlineButton} onClick={() => setContactModalOpen(true)}>
                                             <PublicIcon name={'courriel'} size={20}/>
                                             {t`Contact organizer`}
                                         </button>
