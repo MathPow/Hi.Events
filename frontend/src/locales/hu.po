@@ -132,6 +132,14 @@ msgstr "Több mint {athletes} sportoló"
 msgid "{availableCount} of {totalCount} available"
 msgstr "{availableCount} / {totalCount} elérhető"
 
+#: src/components/routes/my-tickets/index.tsx:88
+msgid "{count} tickets"
+msgstr ""
+
+#: src/components/routes/my-tickets/index.tsx:234
+msgid "{count} upcoming tickets"
+msgstr ""
+
 #: src/components/common/Countdown/index.tsx:68
 msgid "{days} days, {hours} hours, {minutes} minutes, and {seconds} seconds"
 msgstr "{days} nap, {hours} óra, {minutes} perc, és {seconds} másodperc"
@@ -160,6 +168,10 @@ msgstr "{minutes} perc és {seconds} másodperc"
 #: src/components/forms/ProductForm/SizedProductForm.tsx:151
 msgid "{sold} sold"
 msgstr "{sold} eladva"
+
+#: src/components/routes/my-tickets/index.tsx:384
+msgid "{thisYear} outings this year"
+msgstr ""
 
 #: src/components/modals/SendMessageModal/reminderTemplates.ts:47
 msgid "{title} is in one week. Here's what you need to know to get ready."
@@ -259,11 +271,16 @@ msgstr "1 nappal az esemény előtt"
 msgid "1 hour before event"
 msgstr "1 órával az esemény előtt"
 
+#: src/components/routes/my-tickets/index.tsx:384
+msgid "1 outing this year"
+msgstr ""
+
 #: src/components/common/Assistant/index.tsx:455
 msgid "1 step"
 msgstr ""
 
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:123
+#: src/components/routes/my-tickets/index.tsx:88
 #: src/components/routes/product-widget/SelectProducts/index.tsx:757
 msgid "1 ticket"
 msgstr "1 jegy"
@@ -271,6 +288,10 @@ msgstr "1 jegy"
 #: src/components/common/EventCard/index.tsx:116
 msgid "1 ticket type"
 msgstr "1 jegytípus"
+
+#: src/components/routes/my-tickets/index.tsx:234
+msgid "1 upcoming ticket"
+msgstr ""
 
 #: src/components/modals/SendMessageModal/index.tsx:117
 msgid "1 week before event"
@@ -326,7 +347,7 @@ msgstr "90 nap"
 msgid "94103"
 msgstr "94103"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:641
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:623
 msgid "A cancellation notice has been sent to"
 msgstr "Lemondási értesítés elküldve ide:"
 
@@ -383,7 +404,7 @@ msgid "A Radio option has multiple options but only one can be selected."
 msgstr "A rádió opció több lehetőséget kínál, de csak egy választható ki."
 
 #: src/components/common/DepositInstructions/index.tsx:21
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:689
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:671
 msgid "A security deposit of <0>{0}</0> must be sent separately. It is not included in your order total."
 msgstr "<0>{0}</0> kauciót külön kell elküldeni. Nem része a rendelés végösszegének."
 
@@ -420,7 +441,7 @@ msgstr "Standard adó, mint az ÁFA vagy a GST"
 msgid "Abandoned"
 msgstr "Elhagyott"
 
-#: src/components/layouts/EventHomepage/index.tsx:361
+#: src/components/layouts/EventHomepage/index.tsx:359
 msgid "About"
 msgstr "Rólunk"
 
@@ -699,8 +720,8 @@ msgstr "Szint hozzáadása"
 
 #: src/components/common/AddEventToCalendarButton/index.tsx:14
 #: src/components/common/AddToCalendarCTA/index.tsx:24
-#: src/components/layouts/EventHomepage/index.tsx:315
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:133
+#: src/components/layouts/EventHomepage/index.tsx:313
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:116
 msgid "Add to Calendar"
 msgstr "Hozzáadás a naptárhoz"
 
@@ -727,7 +748,7 @@ msgstr "Adja hozzá közösségi média hivatkozásait és weboldalának URL-jé
 msgid "Additional Fees"
 msgstr "További díjak"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:712
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:694
 msgid "Additional Information"
 msgstr "További információk"
 
@@ -967,6 +988,10 @@ msgstr "A megrendelés lemondása is"
 #: src/components/modals/CancelOrderModal/index.tsx:76
 msgid "Also refund this order"
 msgstr "A megrendelés visszatérítése is"
+
+#: src/components/routes/my-tickets/index.tsx:311
+msgid "Also upcoming"
+msgstr ""
 
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:443
 msgid "Always available"
@@ -1245,11 +1270,11 @@ msgstr "Biztosan közzé szeretné tenni ezt a szervezői profilt? A közzétét
 msgid "Are you sure you want to remove this entry from the waitlist?"
 msgstr "Biztosan el szeretné távolítani ezt a bejegyzést a várólistáról?"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:463
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:446
 msgid "Are you sure you want to resend the order confirmation to {0}?"
 msgstr "Biztosan újra szeretné küldeni a rendelés visszaigazolását a következő címre: {0}?"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:438
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:421
 msgid "Are you sure you want to resend the ticket to {0}?"
 msgstr "Biztosan újra szeretné küldeni a jegyet a következő címre: {0}?"
 
@@ -1422,7 +1447,7 @@ msgstr "Résztvevői jegy"
 msgid "Attendee Updated"
 msgstr "Résztvevő frissítve"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:386
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:369
 msgid "Attendee updated successfully"
 msgstr "A résztvevő sikeresen frissítve"
 
@@ -1628,7 +1653,7 @@ msgstr "Alapvető információk"
 msgid "Before your event can go live, there are a few things you need to do. Complete all the steps below to get started."
 msgstr "Mielőtt az esemény élővé válna, néhány dolgot meg kell tennie. Fejezze be az összes alábbi lépést a kezdéshez."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:68
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:86
 msgid "Bib"
 msgstr "Rajtszám"
 
@@ -1663,7 +1688,7 @@ msgid "Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, acc
 msgstr "Billetterie Dehors: 2,5% + Stripe 2,9% + 0,30 $. Eventbrite Kanadában, a súgóközpontja szerint (2026. október): jegyenként 3,5% + 1,29 $ + 2,9% feldolgozási díj. Rendelésenként egy jegy, a díjak az árban."
 
 #: src/components/routes/product-widget/CollectInformation/index.tsx:723
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:292
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:275
 msgid "Billing Address"
 msgstr "Számlázási cím"
 
@@ -1679,7 +1704,7 @@ msgstr "Letiltja a bejelentkezést, és offline állapotba helyezi a fiók esem�
 msgid "Body is required"
 msgstr "A törzs kötelező"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:725
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:707
 msgid "Bookmark this page to manage your order anytime."
 msgstr "Könyvjelzőzze ezt az oldalt, hogy bármikor kezelhesse rendelését."
 
@@ -1781,7 +1806,7 @@ msgstr "Alkalmazási díjak megkerülése"
 msgid "Calculation Type"
 msgstr "Számítás típusa"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:317
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:300
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -1860,7 +1885,7 @@ msgstr "A törlés törli az összes ehhez a rendeléshez tartozó résztvevőt,
 #: src/components/routes/event/orders.tsx:24
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:75
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:356
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:44
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:60
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:67
 msgid "Cancelled"
 msgstr "Törölve"
@@ -1926,6 +1951,10 @@ msgstr "Kategória"
 msgid "Category Created Successfully"
 msgstr "Kategória sikeresen létrehozva"
 
+#: src/components/routes/my-tickets/index.tsx:622
+msgid "Change"
+msgstr ""
+
 #: src/components/routes/profile/ManageProfile/index.tsx:240
 msgid "Change password"
 msgstr "Jelszó módosítása"
@@ -1979,7 +2008,7 @@ msgid "Check Out"
 msgstr "Kijelentkezés"
 
 #: src/components/layouts/Checkout/index.tsx:304
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:611
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:594
 msgid "Check out this event!"
 msgstr "Nézze meg ezt az eseményt!"
 
@@ -1989,7 +2018,7 @@ msgid "Check your email"
 msgstr "Ellenőrizze e-mail címét"
 
 #: src/components/routes/auth/Login/index.tsx:137
-#: src/components/routes/my-tickets/index.tsx:265
+#: src/components/routes/my-tickets/index.tsx:464
 msgid "Check your inbox! If tickets are associated with this email, you'll receive a link to view them."
 msgstr "Nézze meg a postafiókját! Ha ehhez az e-mail címhez jegyek tartoznak, kap egy linket a megtekintésükhöz."
 
@@ -2460,7 +2489,7 @@ msgstr "Megerősítés"
 msgid "Confirmation email sent! Please check your inbox."
 msgstr "Megerősítő e-mail elküldve! Kérjük, ellenőrizze postaládáját."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:640
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:622
 msgid "Confirmation sent to"
 msgstr "Megerősítés elküldve a következő címre:"
 
@@ -2572,7 +2601,7 @@ msgstr "Kapcsolatfelvétel {0}"
 msgid "Contact Email"
 msgstr "Kapcsolattartási e-mail"
 
-#: src/components/layouts/EventHomepage/index.tsx:403
+#: src/components/layouts/EventHomepage/index.tsx:401
 #: src/components/layouts/OrganizerHomepage/index.tsx:242
 msgid "Contact organizer"
 msgstr "Kapcsolat"
@@ -3360,6 +3389,7 @@ msgstr "Tervezési elemek"
 
 #: src/components/common/ProgressStepper/index.tsx:18
 #: src/components/common/ProgressStepper/index.tsx:23
+#: src/components/routes/my-tickets/index.tsx:299
 msgid "Details"
 msgstr "Részletek"
 
@@ -3371,8 +3401,9 @@ msgstr "Nem kapta meg a kódot?"
 msgid "Digits only, 4 to 12. Anyone with the check-in link can see your attendee list and undo check-ins, so give this code to your staff and leave it set."
 msgstr "Csak számjegyek, 4 és 12 között. Aki rendelkezik a bejelentkeztetési linkkel, látja a résztvevők listáját és vissza is vonhat bejelentkeztetéseket, ezért add meg ezt a kódot a személyzetnek, és hagyd beállítva."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:148
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:331
+#: src/components/routes/my-tickets/index.tsx:292
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:131
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:314
 msgid "Directions"
 msgstr "Útvonal"
 
@@ -3408,7 +3439,11 @@ msgstr "Kedvezmény {0}-ban"
 msgid "Discount Type"
 msgstr "Kedvezmény típusa"
 
-#: src/components/routes/my-tickets/index.tsx:309
+#: src/components/routes/my-tickets/index.tsx:516
+msgid "Discover"
+msgstr ""
+
+#: src/components/routes/my-tickets/index.tsx:515
 msgid "Discover events"
 msgstr ""
 
@@ -3436,8 +3471,8 @@ msgstr "Dokumentáció"
 msgid "Don't forget!"
 msgstr "Ne felejtse el!"
 
-#: src/components/layouts/EventHomepage/index.tsx:430
-#: src/components/layouts/EventHomepage/index.tsx:430
+#: src/components/layouts/EventHomepage/index.tsx:428
+#: src/components/layouts/EventHomepage/index.tsx:428
 #: src/components/layouts/OrganizerHomepage/index.tsx:218
 msgid "Donate"
 msgstr "Adományozás"
@@ -3481,7 +3516,7 @@ msgid "Download invoice"
 msgstr "Számla letöltése"
 
 #: src/components/layouts/Checkout/index.tsx:324
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:605
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:588
 msgid "Download Invoice"
 msgstr "Számla letöltése"
 
@@ -3497,13 +3532,13 @@ msgstr "Értékesítési, résztvevői és pénzügyi jelentések letöltése mi
 msgid "Download tax receipt"
 msgstr "Adóigazolás letöltése"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:141
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:124
 msgid "Download tickets"
 msgstr "Jegyek letöltése"
 
 #: src/components/common/OrdersTable/index.tsx:98
 #: src/components/layouts/Checkout/index.tsx:92
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:494
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:477
 msgid "Downloading Invoice"
 msgstr "Számla letöltése"
 
@@ -3634,7 +3669,7 @@ msgstr "{0} sablon szerkesztése"
 msgid "Edit Affiliate"
 msgstr "Partner szerkesztése"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:568
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:551
 msgid "Edit an attendee"
 msgstr "Résztvevő szerkesztése"
 
@@ -3679,7 +3714,7 @@ msgid "Edit Configuration"
 msgstr "Konfiguráció szerkesztése"
 
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:45
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:577
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:560
 msgid "Edit Order Details"
 msgstr "Rendelés részleteinek szerkesztése"
 
@@ -3776,7 +3811,7 @@ msgstr "Hivatalos adóigazolásra jogosít."
 #: src/components/routes/auth/Login/index.tsx:98
 #: src/components/routes/auth/Login/index.tsx:155
 #: src/components/routes/auth/Register/index.tsx:154
-#: src/components/routes/my-tickets/index.tsx:282
+#: src/components/routes/my-tickets/index.tsx:481
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:80
 #: src/components/routes/product-widget/CollectInformation/index.tsx:593
 #: src/components/routes/product-widget/CollectInformation/index.tsx:701
@@ -4016,7 +4051,7 @@ msgstr "Add meg a kódot"
 
 #: src/components/common/ContactOrganizerModal/index.tsx:80
 #: src/components/routes/auth/Login/index.tsx:154
-#: src/components/routes/my-tickets/index.tsx:282
+#: src/components/routes/my-tickets/index.tsx:481
 msgid "Enter your email"
 msgstr "Adja meg e-mail címét"
 
@@ -4044,7 +4079,7 @@ msgstr "A bejegyzések itt jelennek meg, amikor az ügyfelek csatlakoznak az elf
 #: src/components/common/OrdersTable/index.tsx:129
 #: src/components/common/OrganizerWebhookTable/index.tsx:149
 #: src/components/layouts/Checkout/index.tsx:100
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:502
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:485
 msgid "Error"
 msgstr "Hiba"
 
@@ -4433,7 +4468,7 @@ msgstr "A sablon törlése sikertelen"
 
 #: src/components/common/OrdersTable/index.tsx:107
 #: src/components/layouts/Checkout/index.tsx:101
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:503
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:486
 msgid "Failed to download invoice. Please try again."
 msgstr "Nem sikerült letölteni a számlát. Kérjük, próbálja újra."
 
@@ -4486,11 +4521,11 @@ msgstr "Nem sikerült eltávolítani a várólistáról"
 msgid "Failed to reorder questions"
 msgstr "A kérdések újrarendezése sikertelen"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:479
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:462
 msgid "Failed to resend order confirmation"
 msgstr "A rendelés visszaigazolásának újraküldése sikertelen"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:455
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:438
 msgid "Failed to resend ticket"
 msgstr "A jegy újraküldése sikertelen"
 
@@ -4563,7 +4598,7 @@ msgstr "Partner frissítése sikertelen"
 msgid "Failed to update answer."
 msgstr "Válasz frissítése sikertelen."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:395
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:378
 msgid "Failed to update attendee"
 msgstr "A résztvevő frissítése sikertelen"
 
@@ -4579,7 +4614,7 @@ msgstr "Nem sikerült frissíteni az esemény állapotát"
 msgid "Failed to update messaging tier"
 msgstr "Az üzenetküldési szint frissítése sikertelen"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:430
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:413
 msgid "Failed to update order"
 msgstr "A rendelés frissítése sikertelen"
 
@@ -4704,6 +4739,11 @@ msgstr "Szűrők"
 #: src/components/common/FilterModal/index.tsx:254
 msgid "Filters ({activeFilterCount})"
 msgstr "Szűrők ({activeFilterCount})"
+
+#: src/components/routes/my-tickets/index.tsx:211
+#: src/components/routes/my-tickets/index.tsx:264
+msgid "Find a ticket"
+msgstr ""
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:214
 msgid "Finish Setup"
@@ -4846,7 +4886,7 @@ msgstr "Elfelejtette jelszavát?"
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:113
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:123
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:160
-#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:61
+#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:64
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:71
 #: src/components/routes/product-widget/OrderSummaryAndProducts/OtherEvents/index.tsx:27
 #: src/components/routes/product-widget/SelectProducts/index.tsx:113
@@ -4953,7 +4993,7 @@ msgstr "Német"
 msgid "Get directions"
 msgstr "Útvonal megtekintése"
 
-#: src/components/layouts/EventHomepage/index.tsx:351
+#: src/components/layouts/EventHomepage/index.tsx:349
 msgid "Get Directions"
 msgstr "Útvonal"
 
@@ -5238,6 +5278,10 @@ msgstr "Honlap előnézet"
 msgid "Homer"
 msgstr "Homer"
 
+#: src/components/routes/my-tickets/index.tsx:241
+msgid "Hover over a ticket to show its QR code."
+msgstr ""
+
 #: src/components/common/Assistant/index.tsx:91
 msgid "How are ticket sales going for my next event?"
 msgstr ""
@@ -5400,6 +5444,10 @@ msgstr "Fontos: Az e-mail cím módosítása frissíti a rendeléshez való hozz
 #: src/components/routes/event/EventDashboard/index.tsx:138
 msgid "Important: Stripe reconnection required"
 msgstr "Fontos: Stripe újracsatlakozás szükséges"
+
+#: src/components/routes/my-tickets/index.tsx:114
+msgid "In {days} days"
+msgstr ""
 
 #: src/components/routes/admin/Dashboard/index.tsx:51
 msgid "In {diffHours} hours"
@@ -5578,7 +5626,7 @@ msgstr "Számla"
 
 #: src/components/common/OrdersTable/index.tsx:103
 #: src/components/layouts/Checkout/index.tsx:97
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:499
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:482
 msgid "Invoice downloaded successfully"
 msgstr "Számla sikeresen letöltve"
 
@@ -5618,7 +5666,7 @@ msgstr "Hivatalos adományigazolás kiállítása a rendelés jótékonysági r�
 msgid "It may have been revoked. Ask the organizer for a new link."
 msgstr "Lehet, hogy visszavonták. Kérj új linket a szervezőtől."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:560
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:543
 msgid "It's confirmed!"
 msgstr "Megerősítve!"
 
@@ -5667,7 +5715,7 @@ msgstr "Feladat újrapróbálásra sorba állítva"
 msgid "Johnson"
 msgstr "Johnson"
 
-#: src/components/layouts/EventHomepage/index.tsx:335
+#: src/components/layouts/EventHomepage/index.tsx:333
 msgid "Join from anywhere"
 msgstr "Csatlakozzon bárhonnan"
 
@@ -5861,7 +5909,7 @@ msgstr "Világos"
 msgid "Limited spots"
 msgstr "Korlátozott helyek"
 
-#: src/components/routes/my-tickets/index.tsx:261
+#: src/components/routes/my-tickets/index.tsx:460
 msgid "Link Expired or Invalid"
 msgstr "A link lejárt vagy érvénytelen"
 
@@ -5887,7 +5935,7 @@ msgstr "Linkek engedélyezve"
 msgid "Live"
 msgstr "Élő"
 
-#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:108
+#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:111
 msgid "LIVE"
 msgstr "ÉLŐ"
 
@@ -5926,7 +5974,7 @@ msgid "Local organizers already trust us"
 msgstr "Helyi szervezők már megbíznak bennünk"
 
 #: src/components/common/AttendeeTicket/index.tsx:97
-#: src/components/layouts/EventHomepage/index.tsx:368
+#: src/components/layouts/EventHomepage/index.tsx:366
 #: src/components/routes/event/Settings/index.tsx:52
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:84
 msgid "Location"
@@ -6026,7 +6074,7 @@ msgid "Manage event"
 msgstr "Esemény kezelése"
 
 #: src/components/common/OrdersTable/index.tsx:176
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:718
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:700
 msgid "Manage order"
 msgstr "Megrendelés kezelése"
 
@@ -6221,6 +6269,10 @@ msgstr "Egyéb"
 msgid "Miscellaneous Settings"
 msgstr "Egyéb beállítások"
 
+#: src/components/routes/my-tickets/index.tsx:208
+msgid "Missing a ticket?"
+msgstr ""
+
 #: src/components/routes/landing/index.tsx:978
 msgid "Missing something?"
 msgstr "Hiányzik valami?"
@@ -6294,8 +6346,8 @@ msgstr "Profilom"
 #: src/components/common/PublicPageBar/index.tsx:56
 #: src/components/routes/landing/index.tsx:200
 #: src/components/routes/landing/index.tsx:868
-#: src/components/routes/my-tickets/index.tsx:261
-#: src/components/routes/my-tickets/index.tsx:402
+#: src/components/routes/my-tickets/index.tsx:460
+#: src/components/routes/my-tickets/index.tsx:617
 msgid "My tickets"
 msgstr "Jegyeim"
 
@@ -6378,6 +6430,10 @@ msgstr "Új jelszó"
 msgid "New Signups"
 msgstr "Új regisztrációk"
 
+#: src/components/routes/my-tickets/index.tsx:276
+msgid "Next"
+msgstr ""
+
 #: src/components/common/OrganizerAchievements/index.tsx:126
 msgid "Next up:"
 msgstr ""
@@ -6396,7 +6452,7 @@ msgid "No - I'm an individual or non-VAT registered business"
 msgstr "Nem - Magánszemély vagyok vagy nem ÁFA-s vállalkozás"
 
 #: src/components/routes/auth/Login/index.tsx:128
-#: src/components/routes/my-tickets/index.tsx:278
+#: src/components/routes/my-tickets/index.tsx:477
 msgid "No account needed: just the email you used at checkout."
 msgstr "Nincs szükség fiókra: elég a vásárláskor megadott e-mail-cím."
 
@@ -6583,7 +6639,6 @@ msgid "No paid orders over this period"
 msgstr "Nincs fizetett rendelés ebben az időszakban"
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:278
-#: src/components/routes/my-tickets/index.tsx:429
 msgid "No past events"
 msgstr "Nincsenek múltbeli események"
 
@@ -6691,7 +6746,7 @@ msgid "No tokens yet."
 msgstr "Még nincs token."
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:278
-#: src/components/routes/my-tickets/index.tsx:429
+#: src/components/routes/my-tickets/index.tsx:219
 msgid "No upcoming events"
 msgstr "Nincsenek közelgő események"
 
@@ -6922,14 +6977,14 @@ msgid "Online"
 msgstr "Online"
 
 #: src/components/layouts/EventHomepage/index.tsx:170
-#: src/components/layouts/EventHomepage/index.tsx:334
-#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:140
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:340
+#: src/components/layouts/EventHomepage/index.tsx:332
+#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:147
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:323
 msgid "Online Event"
 msgstr "Online esemény"
 
 #: src/components/common/OnlineEventDetails/index.tsx:9
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:708
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:690
 msgid "Online Event Details"
 msgstr "Online esemény részletei"
 
@@ -6937,11 +6992,11 @@ msgstr "Online esemény részletei"
 msgid "Only {0} can use this link."
 msgstr "Ezt a linket csak {0} használhatja."
 
-#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:91
+#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:94
 msgid "Only {count} spots left"
 msgstr "Már csak {count} hely"
 
-#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:91
+#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:94
 msgid "Only 1 spot left"
 msgstr "Már csak 1 hely"
 
@@ -7078,12 +7133,17 @@ msgstr "vagy"
 #: src/components/common/QuestionsTable/index.tsx:304
 #: src/components/common/QuestionsTable/index.tsx:471
 #: src/components/routes/event/Deposits/index.tsx:299
-#: src/components/routes/my-tickets/index.tsx:127
-#: src/components/routes/my-tickets/index.tsx:178
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:286
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:644
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:269
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:626
 msgid "Order"
 msgstr "Megrendelés"
+
+#: src/components/routes/my-tickets/index.tsx:129
+#: src/components/routes/my-tickets/index.tsx:293
+
+#: src/components/routes/my-tickets/index.tsx:93
+msgid "Order {id}"
+msgstr ""
 
 #: src/components/common/AttendeeTable/index.tsx:242
 msgid "Order & Ticket"
@@ -7107,7 +7167,7 @@ msgstr "Rendelés befejezve"
 msgid "Order Confirmation"
 msgstr "Rendelés megerősítése"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:473
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:456
 msgid "Order confirmation resent successfully"
 msgstr "Rendelés visszaigazolása sikeresen újraküldve"
 
@@ -7158,7 +7218,7 @@ msgstr "Megrendelés fizetettként megjelölve"
 msgid "Order not found"
 msgstr "Rendelés nem található"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:513
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:496
 msgid "Order Not Found"
 msgstr "Rendelés nem található"
 
@@ -7178,7 +7238,7 @@ msgstr "Megrendelők meghatározott termékkel"
 msgid "Order owners with products"
 msgstr "Megrendelők termékekkel"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:231
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:214
 msgid "Order recap"
 msgstr "Összegzés"
 
@@ -7215,7 +7275,7 @@ msgstr "Rendelés összege"
 msgid "Order Updated"
 msgstr "Megrendelés frissítve"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:412
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:395
 msgid "Order updated successfully"
 msgstr "A rendelés sikeresen frissítve"
 
@@ -7279,7 +7339,7 @@ msgstr "Szervezet neve"
 msgid "Organization name is required"
 msgstr "A szervezet neve kötelező"
 
-#: src/components/layouts/EventHomepage/index.tsx:393
+#: src/components/layouts/EventHomepage/index.tsx:391
 msgid "Organized by"
 msgstr "Szervező"
 
@@ -7468,7 +7528,7 @@ msgid "Partially refunded: {0}"
 msgstr "Részben visszatérítve: {0}"
 
 #: src/components/routes/event/Deposits/index.tsx:300
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:63
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:81
 msgid "Participant"
 msgstr "Résztvevő"
 
@@ -7534,18 +7594,15 @@ msgstr "A jelszavak nem egyeznek."
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:255
 #: src/components/layouts/OrganizerHomepage/index.tsx:270
-#: src/components/routes/my-tickets/index.tsx:410
-#: src/components/routes/my-tickets/index.tsx:421
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:30
 msgid "Past"
 msgstr "Múlt"
 
 #: src/components/routes/my-tickets/index.tsx:420
-msgid "Past ({pastCount})"
-msgstr ""
+#~ msgid "Past ({pastCount})"
+#~ msgstr ""
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:252
-#: src/components/routes/my-tickets/index.tsx:409
 msgid "Past Events"
 msgstr "Múltbeli események"
 
@@ -7575,7 +7632,7 @@ msgid "Pay"
 msgstr "Fizetés"
 
 #: src/components/common/AttendeeTicket/index.tsx:161
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:44
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:60
 msgid "Pay to unlock"
 msgstr "Fizessen a feloldáshoz"
 
@@ -7615,7 +7672,7 @@ msgstr "Fizetési határidő"
 msgid "Payment Failed"
 msgstr "Fizetés sikertelen"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:682
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:664
 #: src/components/routes/product-widget/Payment/PaymentMethods/Offline/index.tsx:14
 msgid "Payment Instructions"
 msgstr "Fizetési utasítások"
@@ -7681,7 +7738,7 @@ msgstr "A fizetések megszakítás nélkül folytatódnak"
 msgid "PDF only, up to {MAX_ATTACHMENTS} files and {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Csak PDF, legfeljebb {MAX_ATTACHMENTS} fájl és összesen {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:142
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:125
 msgid "PDF tickets"
 msgstr "PDF-jegyek"
 
@@ -7942,7 +7999,7 @@ msgstr "Kérjük, várjon, amíg előkészítjük résztvevőit az exportálásr
 
 #: src/components/common/OrdersTable/index.tsx:99
 #: src/components/layouts/Checkout/index.tsx:93
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:495
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:478
 msgid "Please wait while we prepare your invoice..."
 msgstr "Kérjük, várjon, amíg előkészítjük számláját..."
 
@@ -8032,8 +8089,7 @@ msgid "Print Preview"
 msgstr "Nyomtatási előnézet"
 
 #: src/components/layouts/Checkout/index.tsx:312
-#: src/components/routes/my-tickets/index.tsx:134
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:599
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:582
 msgid "Print Tickets"
 msgstr "Jegyek nyomtatása"
 
@@ -8062,7 +8118,7 @@ msgstr "Kezelési díj"
 msgid "Processing Fees"
 msgstr "Kezelési díjak"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:532
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:515
 msgid "Processing order"
 msgstr "Rendelés feldolgozása"
 
@@ -8171,7 +8227,7 @@ msgstr "Promóciós kód {promo_code} alkalmazva"
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:217
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:218
 #: src/components/routes/partner/index.tsx:255
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:256
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:239
 msgid "Promo code"
 msgstr "Promóciós kód"
 
@@ -8340,10 +8396,10 @@ msgstr "Rádió opció"
 msgid "Rate"
 msgstr "Arány"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:393
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:428
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:453
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:477
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:376
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:411
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:436
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:460
 msgid "Rate limit exceeded. Please try again later."
 msgstr "Túllépte a korlátot. Kérjük, próbálja újra később."
 
@@ -8627,7 +8683,7 @@ msgstr "Jelentés nem található"
 msgid "Reports"
 msgstr "Jelentések"
 
-#: src/components/routes/my-tickets/index.tsx:285
+#: src/components/routes/my-tickets/index.tsx:484
 msgid "Request a new link"
 msgstr "Új link kérése"
 
@@ -8653,7 +8709,7 @@ msgid "Resend code"
 msgstr "Kód újraküldése"
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:21
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:585
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:568
 msgid "Resend Confirmation"
 msgstr "Visszaigazolás újraküldése"
 
@@ -8681,7 +8737,7 @@ msgstr "Meghívó újraküldése"
 msgid "Resend order email"
 msgstr "Megrendelés e-mail újraküldése"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:593
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:576
 msgid "Resend Ticket"
 msgstr "Jegy újraküldése"
 
@@ -8995,6 +9051,18 @@ msgstr "ÁFA beállítások mentése"
 msgid "Scan"
 msgstr "Beolvasás"
 
+#: src/components/routes/my-tickets/index.tsx:334
+
+#: src/components/routes/my-tickets/index.tsx:331
+
+#: src/components/routes/my-tickets/index.tsx:338
+msgid "Scanned on {day} at {time}"
+msgstr ""
+
+#: src/components/routes/my-tickets/index.tsx:338
+msgid "Scanned on {shortDay}"
+msgstr ""
+
 #: src/components/modals/SendMessageModal/index.tsx:451
 msgid "Schedule for later"
 msgstr "Ütemezés későbbre"
@@ -9114,12 +9182,12 @@ msgstr "Biztonságos fizetés a Stripe-pal. A kártyaadatokat a jegyrendszer soh
 #: src/components/common/InlineOrderSummary/index.tsx:284
 #: src/components/common/OrderSummary/index.tsx:106
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:250
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:277
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:260
 msgid "Security deposit"
 msgstr "Kaució"
 
 #: src/components/common/DepositInstructions/index.tsx:18
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:686
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:668
 msgid "Security Deposit"
 msgstr "Kaució"
 
@@ -9131,6 +9199,16 @@ msgstr "Kaució (egységenként)"
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:187
 msgid "Security Deposits"
 msgstr "Kauciók"
+
+#: src/components/routes/my-tickets/index.tsx:521
+msgid "See all"
+msgstr ""
+
+#: src/components/routes/my-tickets/index.tsx:382
+
+#: src/components/routes/my-tickets/index.tsx:394
+msgid "See all {total} used tickets"
+msgstr ""
 
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:151
 msgid "See all tickets"
@@ -9144,9 +9222,9 @@ msgstr ""
 msgid "See the full breakdown"
 msgstr "Teljes bontás megtekintése"
 
-#: src/components/routes/my-tickets/index.tsx:259
-#: src/components/routes/my-tickets/index.tsx:401
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:637
+#: src/components/routes/my-tickets/index.tsx:458
+#: src/components/routes/my-tickets/index.tsx:616
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:619
 msgid "See you outside!"
 msgstr "Találkozunk a szabadban!"
 
@@ -9328,7 +9406,7 @@ msgstr "Gyorsan fogy 🔥"
 #: src/components/common/Assistant/index.tsx:383
 #: src/components/common/Assistant/index.tsx:383
 #: src/components/routes/auth/Login/index.tsx:164
-#: src/components/routes/my-tickets/index.tsx:285
+#: src/components/routes/my-tickets/index.tsx:484
 msgid "Send"
 msgstr "Küldés"
 
@@ -9409,7 +9487,7 @@ msgstr "Küldte"
 #: src/components/common/InlineOrderSummary/index.tsx:285
 #: src/components/common/OrderSummary/index.tsx:107
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:251
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:278
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:261
 msgid "Sent separately, not included in the total"
 msgstr "Külön küldve, nem része a végösszegnek"
 
@@ -9539,7 +9617,7 @@ msgstr "Partnerlink megosztása"
 #: src/components/layouts/Event/index.tsx:264
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:102
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:131
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:613
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:596
 msgid "Share Event"
 msgstr "Esemény megosztása"
 
@@ -9593,9 +9671,13 @@ msgstr "Több platform megjelenítése"
 msgid "Show tax and fees separately"
 msgstr "Adó és díjak külön megjelenítése"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:57
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:74
 msgid "Show this code at the entrance"
 msgstr "Mutassa fel ezt a kódot a bejáratnál"
+
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:74
+msgid "Show this code at the entrance · max brightness"
+msgstr ""
 
 #: src/components/forms/ProductForm/SizedProductForm.tsx:156
 msgid "Show this option to buyers"
@@ -9718,7 +9800,7 @@ msgstr "Eladva"
 #: src/components/common/EventCard/index.tsx:112
 #: src/components/common/ProductPriceAvailability/index.tsx:20
 #: src/components/common/ProductPriceAvailability/index.tsx:51
-#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:84
+#: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:87
 msgid "Sold out"
 msgstr "Elfogyott"
 
@@ -9760,7 +9842,7 @@ msgstr "Valami hiba történt. Kérjük, próbálja újra később."
 #: src/components/layouts/Event/index.tsx:87
 #: src/components/layouts/OrganizerLayout/index.tsx:151
 #: src/components/routes/auth/Login/index.tsx:77
-#: src/components/routes/my-tickets/index.tsx:251
+#: src/components/routes/my-tickets/index.tsx:450
 #: src/components/routes/organizer/Settings/Sections/PlatformSupportSettings/index.tsx:34
 #: src/components/routes/profile/ManageProfile/index.tsx:90
 #: src/components/routes/profile/ManageProfile/index.tsx:104
@@ -9959,7 +10041,7 @@ msgstr "Részösszeg"
 #: src/components/common/OrdersTable/index.tsx:125
 #: src/components/common/OrganizerWebhookTable/index.tsx:149
 #: src/components/layouts/Checkout/index.tsx:96
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:498
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:481
 msgid "Success"
 msgstr "Sikeres"
 
@@ -10117,6 +10199,10 @@ msgstr "Követési beállítások sikeresen frissítve"
 msgid "Successfully updated Webhook"
 msgstr "Webhook sikeresen frissítve"
 
+#: src/components/routes/my-tickets/index.tsx:527
+msgid "Suggestions based on your past outings."
+msgstr ""
+
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:128
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:86
 msgid "Suite 100"
@@ -10143,7 +10229,7 @@ msgstr "Támogatási e-mail"
 
 #: src/components/common/PlatformSupportInput/index.tsx:47
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:158
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:261
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:244
 msgid "Support the platform"
 msgstr "Támogasd a platformot"
 
@@ -10400,7 +10486,7 @@ msgstr "Az események alapértelmezett időzónája."
 msgid "The email address has been changed. The attendee will receive a new ticket at the updated email address."
 msgstr "Az e-mail cím megváltozott. A résztvevő új jegyet kap a frissített e-mail címre."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:305
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:288
 msgid "The event"
 msgstr "Az esemény"
 
@@ -10606,7 +10692,7 @@ msgstr "Ezt a kódot az értékesítések nyomon követésére használjuk. Csak
 msgid "This color combination may be hard to read for some users"
 msgstr "Ez a színkombináció nehezen olvasható lehet egyes felhasználók számára"
 
-#: src/components/layouts/EventHomepage/index.tsx:325
+#: src/components/layouts/EventHomepage/index.tsx:323
 msgid "This event has ended"
 msgstr "Ez az esemény véget ért"
 
@@ -10647,7 +10733,7 @@ msgstr "Ez a szervezőjének neve, amely megjelenik a felhasználók számára."
 msgid "This is the only time the signing secret will be shown. Please copy it now and store it securely."
 msgstr "Az aláírási titok csak most jelenik meg. Kérjük, másolja ki most, és tárolja biztonságosan."
 
-#: src/components/routes/my-tickets/index.tsx:277
+#: src/components/routes/my-tickets/index.tsx:476
 msgid "This link is invalid or has expired."
 msgstr "Ez a link érvénytelen vagy lejárt."
 
@@ -10684,7 +10770,7 @@ msgstr "Ez a megrendelés már visszatérítésre került."
 msgid "This order has expired. Please start again."
 msgstr "Ez a megrendelés lejárt. Kérjük, kezdje újra."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:533
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:516
 msgid "This order is being processed."
 msgstr "Ez a rendelés feldolgozás alatt áll."
 
@@ -10761,7 +10847,6 @@ msgid "This will not be visible to customers, but helps you identify the affilia
 msgstr "Ez nem lesz látható az ügyfelek számára, de segít azonosítani a partnert."
 
 #: src/components/common/AttendeeTable/index.tsx:372
-#: src/components/routes/my-tickets/index.tsx:115
 msgid "ticket"
 msgstr "jegy"
 
@@ -10770,7 +10855,7 @@ msgstr "jegy"
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:482
 #: src/components/forms/ProductForm/index.tsx:143
 #: src/components/modals/CreateAttendeeModal/index.tsx:162
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:73
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:91
 msgid "Ticket"
 msgstr "Jegy"
 
@@ -10840,7 +10925,7 @@ msgstr "Jegy előnézet ehhez:"
 msgid "Ticket price"
 msgstr "Jegyár"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:449
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:432
 msgid "Ticket resent successfully"
 msgstr "Jegy sikeresen újraküldve"
 
@@ -10870,8 +10955,8 @@ msgid "Ticketing & Sales"
 msgstr "Jegyértékesítés"
 
 #: src/components/routes/my-tickets/index.tsx:115
-msgid "tickets"
-msgstr "jegyek"
+#~ msgid "tickets"
+#~ msgstr "jegyek"
 
 #: src/components/layouts/EventHomepage/TicketsCard/index.tsx:84
 msgid "Tickets"
@@ -10895,7 +10980,11 @@ msgid "Tickets Available"
 msgstr "Elérhető jegyek"
 
 #: src/components/routes/my-tickets/index.tsx:403
-msgid "Tickets bought with {email}"
+#~ msgid "Tickets bought with {email}"
+#~ msgstr ""
+
+#: src/components/routes/my-tickets/index.tsx:209
+msgid "Tickets bought with another email don't show up here."
 msgstr ""
 
 #: src/components/common/CheckIn/DoorSaleModal.tsx:121
@@ -10905,6 +10994,10 @@ msgstr "Erről a bejelentkeztetési listáról nem lehet jegyet eladni."
 #: src/components/routes/product-widget/PrintOrder/index.tsx:40
 msgid "Tickets for"
 msgstr "Jegyek ehhez:"
+
+#: src/components/routes/my-tickets/index.tsx:621
+msgid "Tickets linked to {email}"
+msgstr ""
 
 #: src/components/layouts/Checkout/CheckoutTopBar/index.tsx:41
 msgid "Tickets reserved for {countdown}"
@@ -10981,6 +11074,10 @@ msgstr "Előre tervezendő"
 msgid "To receive credit card payments, you need to connect your Stripe account. Stripe is our payment processing partner that ensures secure transactions and timely payouts."
 msgstr "Hitelkártyás fizetések fogadásához csatlakoztatnia kell Stripe-fiókját. A Stripe a fizetésfeldolgozó partnerünk, amely biztosítja a biztonságos tranzakciókat és az időben történő kifizetéseket."
 
+#: src/components/routes/my-tickets/index.tsx:111
+msgid "Today"
+msgstr ""
+
 #: src/components/common/ColumnVisibilityToggle/index.tsx:26
 msgid "Toggle columns"
 msgstr "Oszlopok kapcsolása"
@@ -10992,6 +11089,10 @@ msgstr "Token neve"
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:44
 msgid "Token revoked"
 msgstr "Token visszavonva"
+
+#: src/components/routes/my-tickets/index.tsx:114
+msgid "Tomorrow"
+msgstr ""
 
 #: src/components/modals/SendMessageModal/reminderTemplates.ts:58
 msgid "Tomorrow: {0}"
@@ -11018,7 +11119,7 @@ msgstr "Legjobb szervezők (Elmúlt 14 nap)"
 #: src/components/routes/admin/PlatformRevenue/index.tsx:260
 #: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:58
 #: src/components/routes/product-widget/CollectInformation/index.tsx:819
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:271
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:254
 msgid "Total"
 msgstr "Összesen"
 
@@ -11126,7 +11227,7 @@ msgid "Trust and safety"
 msgstr "Bizalom és biztonság"
 
 #: src/components/routes/auth/Login/index.tsx:145
-#: src/components/routes/my-tickets/index.tsx:270
+#: src/components/routes/my-tickets/index.tsx:469
 msgid "Try another email"
 msgstr "Próbáljon másik e-mailt"
 
@@ -11284,20 +11385,18 @@ msgstr "Nem megbízható"
 #: src/components/layouts/OrganizerHomepage/index.tsx:255
 #: src/components/layouts/OrganizerHomepage/index.tsx:264
 #: src/components/layouts/OrganizerHomepage/index.tsx:266
-#: src/components/routes/my-tickets/index.tsx:410
-#: src/components/routes/my-tickets/index.tsx:416
+#: src/components/routes/my-tickets/index.tsx:231
+#: src/components/routes/my-tickets/index.tsx:259
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:33
 msgid "Upcoming"
 msgstr "Közelgő"
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:263
-#: src/components/routes/my-tickets/index.tsx:415
 msgid "Upcoming ({upcomingCount})"
 msgstr "Közelgő ({upcomingCount})"
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:252
 #: src/components/routes/landing/NextEvents.tsx:60
-#: src/components/routes/my-tickets/index.tsx:409
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:235
 msgid "Upcoming Events"
 msgstr "Közelgő események"
@@ -11405,9 +11504,18 @@ msgstr "Vásárló adatainak használata minden résztvevőhöz"
 msgid "Used"
 msgstr "Felhasználva"
 
+#: src/components/routes/my-tickets/index.tsx:364
+msgctxt "scanned ticket"
+msgid "Used"
+msgstr ""
+
 #: src/components/routes/event/TicketDesigner/index.tsx:134
 msgid "Used for borders, highlights, and QR code styling"
 msgstr "Határok, kiemelések és QR kód stílusához használva"
+
+#: src/components/routes/my-tickets/index.tsx:381
+msgid "Used tickets"
+msgstr ""
 
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:157
 msgid "User"
@@ -11617,7 +11725,6 @@ msgstr "Részletek megtekintése"
 
 #: src/components/common/AdminEventsTable/index.tsx:157
 #: src/components/routes/admin/Dashboard/index.tsx:597
-#: src/components/routes/my-tickets/index.tsx:121
 msgid "View Event"
 msgstr "Esemény megtekintése"
 
@@ -11638,7 +11745,7 @@ msgstr "Naplók megtekintése"
 msgid "View Message"
 msgstr "Üzenet megtekintése"
 
-#: src/components/layouts/EventHomepage/index.tsx:374
+#: src/components/layouts/EventHomepage/index.tsx:372
 msgid "View on Google Maps"
 msgstr "Megtekintés a Google Térképen"
 
@@ -11646,8 +11753,6 @@ msgstr "Megtekintés a Google Térképen"
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:57
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:69
 #: src/components/common/WaitlistTable/index.tsx:61
-#: src/components/routes/my-tickets/index.tsx:127
-#: src/components/routes/my-tickets/index.tsx:178
 msgid "View Order"
 msgstr "Rendelés megtekintése"
 
@@ -11667,10 +11772,14 @@ msgstr "Szervezői honlap megtekintése"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:57
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:69
-#: src/components/routes/my-tickets/index.tsx:167
-#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:79
+#: src/components/routes/my-tickets/index.tsx:136
+#: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:97
 msgid "View Ticket"
 msgstr "Jegy megtekintése"
+
+#: src/components/routes/my-tickets/index.tsx:136
+msgid "View tickets"
+msgstr ""
 
 #: src/components/routes/event/attendees.tsx:172
 msgid "View, edit, and export your registered attendees."
@@ -11768,7 +11877,7 @@ msgstr "Nem sikerült törölni a kategóriát. Kérjük, próbálja újra."
 msgid "We couldn't find any tickets matching {0}"
 msgstr "Nem találtunk jegyeket, amelyek megfelelnek a következőnek: {0}"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:514
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:497
 msgid "We couldn't find the order you're looking for. The link may have expired or the order details may have changed."
 msgstr "Nem találtuk a keresett rendelést. A link lejárhatott, vagy a rendelés adatai megváltozhattak."
 
@@ -12484,11 +12593,11 @@ msgstr "Az új jelszónak legalább 8 karakter hosszúnak kell lennie."
 msgid "Your Order"
 msgstr "Az Ön megrendelése"
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:659
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:641
 msgid "Your order details have been updated. A confirmation email has been sent to the new email address."
 msgstr "A rendelés adatai frissültek. Megerősítő e-mailt küldtünk az új e-mail címre."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:561
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:544
 msgid "Your order has been cancelled"
 msgstr "Az Ön megrendelése törölve lett."
 
@@ -12496,7 +12605,7 @@ msgstr "Az Ön megrendelése törölve lett."
 msgid "Your order has been cancelled."
 msgstr "A rendelésed törlésre került."
 
-#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:561
+#: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:544
 msgid "Your order is awaiting payment"
 msgstr "A rendelése fizetésre vár"
 
@@ -12581,7 +12690,7 @@ msgstr "Jegyértékesítésed 4 lépésben"
 msgid "Your ticketing is ready!"
 msgstr "A jegyértékesítése kész!"
 
-#: src/components/routes/my-tickets/index.tsx:390
+#: src/components/routes/my-tickets/index.tsx:605
 msgid "Your tickets and their QR codes in one tap, even at the door."
 msgstr ""
 
