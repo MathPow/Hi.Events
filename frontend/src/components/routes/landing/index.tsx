@@ -5,7 +5,6 @@ import {i18n} from "@lingui/core";
 import {Helmet} from "react-helmet-async";
 import {IconArrowDown, IconArrowRight, IconBrandInstagram, IconMinus, IconPlus} from "@tabler/icons-react";
 import {useRoughEdge} from "../../../hooks/useRoughEdge.ts";
-import {LanguageSwitcher} from "../../common/LanguageSwitcher";
 import {dynamicActivateLocale} from "../../../locales.ts";
 import {loadWordmarkLetters} from "./wordmarkLetters.ts";
 import {Organizer, TrustedOrganizers} from "./TrustedOrganizers.tsx";
@@ -188,6 +187,7 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
 
     return (
         <nav ref={nav} id={MENU_ID} className={classes.menu} aria-label={t`Menu`}>
+            <NavLink to="/events" onClick={onClose}><ShakyText text={t`Events`}/></NavLink>
             {sectionLinks().map((link) => (
                 <a key={link.href} href={link.href} onClick={(event) => {
                     onClose();
@@ -890,15 +890,25 @@ const Landing = () => {
                         <HeroVideo/>
                         <div className={classes.heroShade}/>
                         <header ref={heroNav} className={classes.nav}>
-                            <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
+                            {/* Deux publics: a gauche, ceux qui sortent (les evenements, leurs billets), sans
+                                compte; a droite, les organisateurs. Le hero seulement, pas la barre qui suit. */}
+                            <div className={classes.navStart}>
+                                <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
+                                <div className={classes.navLinks}>
+                                    <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`}/>
+                                    <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>
+                                </div>
+                            </div>
                             <div className={classes.navActions}>
-                                <LanguageSwitcher iconColor="currentColor" locales={['fr', 'en']} dehorsList classNames={{
-                                    root: classes.language,
-                                    input: classes.languageInput,
-                                    section: classes.languageSection,
-                                }}/>
-                                {/* Pour les participants, qui n'ont pas de compte: le hero seulement, pas la barre qui suit. */}
-                                <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>
+                                <div className={classes.navLanguages} role="group" aria-label={t`Language`}>
+                                    {LANGUAGES.map(({locale, name}) => (
+                                        <button key={locale} type="button" lang={locale} aria-label={name}
+                                                aria-pressed={i18n.locale.startsWith(locale)}
+                                                onClick={() => !i18n.locale.startsWith(locale) && chooseLanguage(locale)}>
+                                            {locale.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
                                 <LandingButton as={NavLink} to="/auth/login" variant="ghost" label={t`Log in`}/>
                                 <RegisterButton/>
                                 <MenuButton open={menuOpen} onToggle={toggleMenu}/>
@@ -1052,6 +1062,7 @@ const Landing = () => {
                         <nav className={classes.footerLinks} aria-label={t`Footer`}>
                             <div>
                                 <span className={classes.eyebrow}>{t`Ticketing`}</span>
+                                <NavLink to="/events"><ShakyText text={t`Events`}/></NavLink>
                                 <a href="#steps" onClick={smoothScrollTo}><ShakyText text={t`How it works`}/></a>
                                 <a href="#fees" onClick={smoothScrollTo}><ShakyText text={t`Fees`}/></a>
                                 <NavLink to="/auth/login"><ShakyText text={t`Log in`}/></NavLink>

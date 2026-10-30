@@ -502,15 +502,30 @@ $ridge-mobile: 10vw;
   text-align: center;
 }
 
+// A gauche, le logo et ce qui sert a ceux qui sortent (les evenements, leurs billets); a droite,
+// la langue et les organisateurs (navActions).
+.navStart {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2.25rem);
+  min-width: 0;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  .shaky {
+    flex-wrap: nowrap;
+  }
+}
+
 .navActions {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   height: 2.75rem;
-
-  > input[type="hidden"] {
-    display: none;
-  }
 
   // The buttons' words stay on one line: the bar has room down to the phone menu.
   .shaky {
@@ -518,38 +533,53 @@ $ridge-mobile: 10vw;
   }
 }
 
-.language.language {
-  width: 10.5rem;
-  margin-bottom: 0;
-}
+// FR | EN, au lieu d'une liste: la langue courante pleine et soulignee, l'autre attenuee,
+// un trait entre les deux. Choisir l'autre recharge la page dans sa langue.
+.navLanguages {
+  display: flex;
+  align-items: center;
+  margin-right: 0.25rem;
 
-// Mantine's Select as a ghost button on the video: no fill or outline until hovered.
-// Doubled class so it outranks Mantine's own input styles.
-.language .languageInput.languageInput {
-  height: 3rem;
-  min-height: 3rem;
-  padding-left: 2.25rem;
-  border: 0;
-  border-radius: 0.7rem;
-  color: $creme;
-  background: transparent;
-  font-family: $sans;
-  font-size: 1.25rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  button {
+    position: relative;
+    padding: 0.55rem 0.6rem;
+    border: 0;
+    border-radius: 0.6rem;
+    color: $creme;
+    background: transparent;
+    font-family: $sans;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
 
-  &:hover {
-    background: rgb(255 247 233 / 0.14);
+    &:hover {
+      opacity: 1;
+      background: rgb(255 247 233 / 0.14);
+    }
+
+    &[aria-pressed='true'] {
+      opacity: 1;
+      background: transparent;
+      text-decoration: underline 2px;
+      text-underline-offset: 0.35em;
+      cursor: default;
+    }
+  }
+
+  button + button::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    bottom: 30%;
+    left: -1px;
+    width: 2px;
+    border-radius: 1px;
+    background: rgb(255 247 233 / 0.45);
   }
 }
-
-.language .languageSection.languageSection {
-  color: $creme;
-  pointer-events: none;
-}
-
-// The open list is the DEHORS one (LanguageSwitcher, dehorsList).
 
 .heroContent {
   position: relative;
@@ -1126,10 +1156,16 @@ $ridge-mobile: 10vw;
   }
 }
 
-// With « Mes billets » the bar is full: below 900px the language moves to the
-// menu and the buttons tighten, down to the phone menu.
+// Once the menu button is there, « Evenements » and « Mes billets » move into the menu
+// (MobileMenu); below 900px the language follows and the buttons tighten, down to the phone menu.
+@media (max-width: 1150px) {
+  .navLinks {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
-  .language.language {
+  .navLanguages {
     display: none;
   }
 
@@ -1643,6 +1679,13 @@ $ridge-mobile: 10vw;
   letter-spacing: normal;
   text-align: center;
   color: $orange;
+}
+
+// « Voir tous les evenements », centre sous la file: le repertoire (/events).
+.nextEventsMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.75rem;
 }
 
 // Clipped on the sides only: a hovered card rises a little. Without motion, it scrolls by hand.
@@ -2814,10 +2857,6 @@ $footer-ridge-mobile: 13.205056%;
     white-space: nowrap;
   }
 
-  // On phones the language is chosen in the menu (MobileMenu).
-  .language.language {
-    display: none;
-  }
 
   .heroFooter {
     display: none;

@@ -7,6 +7,7 @@ import {eventCoverImageUrl, eventHomepagePath} from "../../../utilites/urlHelper
 import {shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 import classes from "./Landing.module.scss";
 import {useMarqueePace} from "./useMarqueePace.ts";
+import {LandingButton} from "./LandingButton.tsx";
 
 const COPIES = 4;
 // Enough events in a copy for it to be wider than a wide screen.
@@ -32,8 +33,8 @@ const EventCard = ({event}: { event: Event }) => {
 
 /**
  * The platform's next events under the hero, a photo and its title rolling to
- * the left: stopped under the mouse to be clicked, faster as the page scrolls.
- * Nothing when no event is coming up.
+ * the left: stopped under the mouse to be clicked, faster as the page scrolls,
+ * then a button to all of them (/events). Nothing when no event is coming up.
  */
 export const NextEvents = () => {
     const {data: events = []} = useGetUpcomingEventsPublic();
@@ -67,6 +68,9 @@ export const NextEvents = () => {
                         </ul>
                     ))}
                 </div>
+            </div>
+            <div className={classes.nextEventsMore}>
+                <LandingButton as={Link} to="/events" variant="dark" label={t`See all events`}/>
             </div>
         </section>
     );
