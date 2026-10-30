@@ -423,7 +423,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         }
 
         // Plus precis que .hi-price-tier-row .hi-price-tier (plus bas), qui l'affiche.
-        .hi-price-tier-row .hi-price-tier, .hi-sized-price {
+        .hi-price-tier-row .hi-price-tier {
           display: none;
         }
 
@@ -579,12 +579,10 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         }
       }
 
+      // Le prix commun des tailles est deja a cote du titre; dessous, le titre des options et une
+      // rangee par taille, son nom a gauche.
       .hi-sized-price {
-        margin-bottom: 0;
-        font-family: $affichage;
-        font-size: 20px;
-        font-weight: 400;
-        text-transform: uppercase;
+        display: none;
       }
 
       .hi-sized-heading {

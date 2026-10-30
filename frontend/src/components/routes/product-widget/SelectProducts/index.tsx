@@ -630,6 +630,9 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                 // below keeps only the note and the quantity.
                                                 const singlePrice = product.type === ProductPriceType.Sized
                                                     || (product.type !== ProductPriceType.Donation && product.prices?.length === 1);
+                                                // Sizes keep their rows (the heading, then one line per size, its label
+                                                // shown); a lone price fits the note and the quantity on one line.
+                                                const singleRow = singlePrice && product.type !== ProductPriceType.Sized;
                                                 const count = product.quantity_available;
                                                 const spotsLeft = product.is_available && !!count && count !== Constants.INFINITE_TICKETS;
                                                 const price = product.prices?.[0];
@@ -700,8 +703,8 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                             )}
                                                         </div>
                                                         {!isProductCollapsed && (
-                                                            <div className={singlePrice ? 'hi-product-content hi-product-content-single' : 'hi-product-content'}>
-                                                                {singlePrice ? <>{notes}{pricing}</> : <>{pricing}{notes}</>}
+                                                            <div className={singleRow ? 'hi-product-content hi-product-content-single' : 'hi-product-content'}>
+                                                                {singleRow ? <>{notes}{pricing}</> : <>{pricing}{notes}</>}
                                                             </div>
                                                         )}
                                                         {!isProductCollapsed && messages}
