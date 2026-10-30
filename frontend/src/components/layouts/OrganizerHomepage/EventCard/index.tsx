@@ -109,8 +109,8 @@ export const EventCard = ({event, compact = false}: EventCardProps) => {
     const endDate = event.end_date ? dayjs(event.end_date) : startDate.add(8, 'hour');
     const isLive = dayjs().isAfter(startDate) && dayjs().isBefore(endDate);
     const badge = isLive ? t`LIVE` : scarcityLabel(event, products);
-    // Comme les cartes du site: la carte suit un peu le curseur, sa photo zoome et se decale.
-    const {card, photo, handlers} = useCardHover<HTMLAnchorElement, HTMLImageElement>({moveCard: !compact});
+    // Comme les cartes du site, sans glissement: la carte reste en place, sa photo zoome et se decale.
+    const {card, photo, handlers} = useCardHover<HTMLAnchorElement, HTMLImageElement>();
 
     return (
         <Link ref={card} to={eventHomepagePath(event)} className={compact ? `${classes.card} ${classes.compact}` : classes.card}
