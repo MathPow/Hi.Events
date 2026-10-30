@@ -21,6 +21,9 @@
   --public-accent: var(--dehors-orange);
   --public-accent-doux: #f7dccd;
   --public-sur-accent: var(--dehors-brun);
+  // Les champs des pages publiques: peche Dehors, ou teintes de la couleur de l'organisateur.
+  --public-champ: var(--dehors-champ);
+  --public-champ-survol: var(--dehors-champ-survol);
 
   // Le surlignage du texte: l'orange Dehors, ou la couleur de l'organisateur sur ses pages
   // (publicHighlightCss, dans la balise style de la page).
@@ -40,6 +43,8 @@
   --public-accent: var(--theme-accent);
   --public-accent-doux: color-mix(in srgb, var(--theme-accent) 20%, var(--dehors-creme));
   --public-sur-accent: var(--theme-accent-contrast, var(--dehors-brun));
+  --public-champ: color-mix(in srgb, var(--theme-accent) 16%, var(--dehors-creme));
+  --public-champ-survol: color-mix(in srgb, var(--theme-accent) 26%, var(--dehors-creme));
 }
 
 // Les blocs coupes par useRoughEdges, comme [data-decoupe] sur le site: Chrome ne peint un
