@@ -404,7 +404,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 // Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier: un voile creme monte
-// du bas sur la photo, puis redescend. Il reste visible le temps de redescendre.
+// du bas sur la photo, puis redescend. Il reste visible le temps de redescendre. Pas de flou
+// (backdrop-filter): Safari ne le decoupe pas avec clip-path, il couvrirait la photo d'un coup.
 $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 
 .ticketQr {
@@ -417,8 +418,7 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
   gap: 10px;
   padding: 12px;
   color: var(--dehors-brun);
-  background: rgb(255 247 233 / 0.72);
-  backdrop-filter: blur(3px);
+  background: rgb(255 247 233 / 0.8);
   clip-path: inset(100% 0 0);
   visibility: hidden;
   transition: clip-path $remplissage, visibility 0s 0.4s;
