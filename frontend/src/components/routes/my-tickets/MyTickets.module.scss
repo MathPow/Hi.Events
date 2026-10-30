@@ -404,8 +404,10 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 // Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier: un voile creme monte
-// du bas sur la photo, puis redescend. Il reste visible le temps de redescendre. Pas de flou
-// (backdrop-filter): Safari ne le decoupe pas avec clip-path, il couvrirait la photo d'un coup.
+// du bas sur la photo, puis redescend, et le code s'y pose. Il reste visible le temps de
+// redescendre. Le voile grandit (scaleY) et le code glisse et apparait: des transformations et
+// de l'opacite, que le compositeur anime seul. Le clip-path d'avant repeignait la carte a chaque
+// image et saccadait. Pas de flou (backdrop-filter): trop lourd, et Safari le montrait d'un coup.
 $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 
 .ticketQr {
@@ -418,26 +420,54 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
   gap: 10px;
   padding: 12px;
   color: var(--dehors-brun);
-  background: rgb(255 247 233 / 0.8);
-  clip-path: inset(100% 0 0);
   visibility: hidden;
-  transition: clip-path $remplissage, visibility 0s 0.4s;
+  transition: visibility 0s 0.4s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(255 247 233 / 0.8);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform $remplissage;
+  }
+
+  // Le code et sa legende; translate reste au survol du code (.qrBox).
+  > * {
+    position: relative;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.2s ease, transform $remplissage, translate 0.2s ease;
+  }
 
   .ticketCard:hover &,
   .ticketCard:focus-within & {
-    clip-path: inset(0);
     visibility: visible;
-    transition: clip-path $remplissage, visibility 0s;
+    transition: visibility 0s;
+
+    &::before {
+      transform: none;
+    }
+
+    > * {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0.06s, 0.06s, 0s;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    clip-path: none;
     opacity: 0;
     transition: opacity 0.2s ease, visibility 0.2s;
 
+    &::before,
+    > * {
+      transform: none;
+    }
+
     .ticketCard:hover &,
     .ticketCard:focus-within & {
-      clip-path: none;
       opacity: 1;
       transition: opacity 0.2s ease, visibility 0s;
     }
@@ -456,7 +486,7 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
   background: var(--dehors-creme);
   box-shadow: 0 6px 18px rgb(55 39 33 / 0.14);
   cursor: pointer;
-  transition: translate 0.2s ease;
+  // Sa transition (translate compris) est celle des enfants de .ticketQr.
 
   @media (hover: hover) {
     &:hover {
