@@ -1,16 +1,17 @@
 import {ReactNode, useState} from 'react';
-import {ActionIcon, Button, CopyButton, Group, Input, Popover} from '@mantine/core';
+import {ActionIcon, Button, CopyButton, Popover, UnstyledButton} from '@mantine/core';
 import {
     IconBrandFacebook,
     IconBrandLinkedin,
-    IconBrandTwitter,
     IconBrandWhatsapp,
+    IconBrandX,
     IconCheck,
     IconCopy,
     IconMail,
     IconShare
 } from "@tabler/icons-react";
 import {t} from "@lingui/macro";
+import classes from './ShareIcon.module.scss';
 
 interface ShareComponentProps {
     title: string;
@@ -54,12 +55,43 @@ export const ShareComponent = ({
         }
     };
 
+    const links = [
+        {
+            label: 'X',
+            icon: IconBrandX,
+            href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`,
+        },
+        {
+            label: 'Facebook',
+            icon: IconBrandFacebook,
+            href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+        },
+        {
+            label: 'LinkedIn',
+            icon: IconBrandLinkedin,
+            href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(shareText)}&source=${encodeURIComponent(typeof window !== "undefined" ? window?.location?.hostname : "")}`,
+        },
+        {
+            label: 'WhatsApp',
+            icon: IconBrandWhatsapp,
+            href: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${url}`)}`,
+        },
+        {
+            label: t`Email`,
+            icon: IconMail,
+            href: `mailto:?subject=${encodeURIComponent(title)}&body=${url}`,
+        },
+    ];
+
+    // Sans partage natif (ordinateur): une carte creme comme le menu du calendrier, les reseaux
+    // en ronds et « Copier le lien » en dessous.
     return (
         <Popover
             opened={opened}
             onClose={() => setOpened(false)}
             position="bottom"
-            withArrow
+            offset={10}
+            classNames={{dropdown: classes.dropdown}}
         >
             <Popover.Target>
                 <div style={{display: 'flex'}} onClick={handleShareClick}>
@@ -77,43 +109,24 @@ export const ShareComponent = ({
                 </div>
             </Popover.Target>
 
-            <Popover.Dropdown style={{display: 'flex'}}>
-                <Group>
-                    <ActionIcon variant={'transparent'} component="a"
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`}
-                                target="_blank" rel="noopener noreferrer">
-                        <IconBrandTwitter size={24}/>
-                    </ActionIcon>
-                    <ActionIcon variant={'transparent'} component="a"
-                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                                target="_blank" rel="noopener noreferrer">
-                        <IconBrandFacebook size={24}/>
-                    </ActionIcon>
-                    <ActionIcon variant={'transparent'} component="a"
-                                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(shareText)}&source=${encodeURIComponent(typeof window !== "undefined" ? window?.location?.hostname : "")}`}
-                                target="_blank" rel="noopener noreferrer">
-                        <IconBrandLinkedin size={24}/>
-                    </ActionIcon>
-                    <ActionIcon variant={'transparent'} component="a"
-                                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${url}`)}`}
-                                target="_blank" rel="noopener noreferrer">
-                        <IconBrandWhatsapp size={24}/>
-                    </ActionIcon>
-                    <ActionIcon variant={'transparent'} component="a"
-                                href={`mailto:?subject=${encodeURIComponent(title)}&body=${url}`}
-                                target="_blank" rel="noopener noreferrer">
-                        <IconMail size={24}/>
-                    </ActionIcon>
-                </Group>
-                <Input rightSectionPointerEvents={'all'} mt={10} value={url} rightSection={(
-                    <CopyButton value={url}>
-                        {({copied, copy}) => (
-                            <ActionIcon variant={'transparent'} onClick={copy}>
-                                {copied ? <IconCheck/> : <IconCopy/>}
-                            </ActionIcon>
-                        )}
-                    </CopyButton>
-                )}/>
+            <Popover.Dropdown>
+                <p className={classes.label}>{t`Share`}</p>
+                <div className={classes.networks}>
+                    {links.map(({label, icon: Icon, href}) => (
+                        <a key={label} className={classes.network} href={href} target="_blank"
+                           rel="noopener noreferrer" aria-label={label} title={label}>
+                            <Icon size={22} stroke={1.75}/>
+                        </a>
+                    ))}
+                </div>
+                <CopyButton value={url}>
+                    {({copied, copy}) => (
+                        <UnstyledButton className={classes.copy} onClick={copy}>
+                            {copied ? <IconCheck size={18} stroke={2}/> : <IconCopy size={18} stroke={2}/>}
+                            {copied ? t`Copied!` : t`Copy link`}
+                        </UnstyledButton>
+                    )}
+                </CopyButton>
             </Popover.Dropdown>
         </Popover>
     );

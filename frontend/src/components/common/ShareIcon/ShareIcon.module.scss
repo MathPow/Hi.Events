@@ -1,0 +1,73 @@
+// La carte des menus publics (CalendarOptionsPopover, le repertoire): creme, brun, sans fleche.
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  border: none;
+  border-radius: 20px;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  box-shadow: 0 10px 40px rgb(55 39 33 / 0.16);
+}
+
+.label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgb(55 39 33 / 0.6);
+}
+
+.networks {
+  display: flex;
+  gap: 8px;
+}
+
+// Chaque reseau dans un rond creme, plus fonce au survol.
+.network {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+  transition: background-color 0.15s ease, translate 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--dehors-champ);
+      translate: 0 -2px;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: 2px;
+  }
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+  transition: translate 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 -2px;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: 2px;
+  }
+}
