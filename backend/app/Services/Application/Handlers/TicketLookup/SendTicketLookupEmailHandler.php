@@ -18,7 +18,7 @@ use Throwable;
 
 class SendTicketLookupEmailHandler
 {
-    private const TOKEN_EXPIRY_HOURS = 24;
+    private const TOKEN_EXPIRY_DAYS = 30;
 
     public function __construct(
         private readonly OrderRepositoryInterface $orderRepository,
@@ -74,11 +74,15 @@ class SendTicketLookupEmailHandler
     {
         $token = $this->tokenGeneratorService->generateToken(prefix: 'tl');
 
-        $this->ticketLookupTokenRepository->deleteWhere(['email' => $email]);
+        // Only expired links are cleared: a link still in use on another device keeps working.
+        $this->ticketLookupTokenRepository->deleteWhere([
+            'email' => $email,
+            ['expires_at', '<', Carbon::now()->toDateTimeString()],
+        ]);
         $this->ticketLookupTokenRepository->create([
             'email' => $email,
             'token' => $token,
-            'expires_at' => Carbon::now()->addHours(self::TOKEN_EXPIRY_HOURS)->toDateTimeString(),
+            'expires_at' => Carbon::now()->addDays(self::TOKEN_EXPIRY_DAYS)->toDateTimeString(),
         ]);
 
         return $token;

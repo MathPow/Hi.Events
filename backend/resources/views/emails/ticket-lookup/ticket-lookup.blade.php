@@ -15,7 +15,7 @@
 {{ __('View My Tickets') }}
 </x-mail::button>
 
-{{ __('This link will expire in 24 hours.') }}
+{{ __('This link will expire in 30 days.') }}
 
 {{ __('If you did not request this, please ignore this email.') }}
 

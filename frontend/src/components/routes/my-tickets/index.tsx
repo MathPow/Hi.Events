@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {Link, useLocation, useNavigate, useParams, useSearchParams} from "react-router";
+import {Link, useLocation, useNavigate, useParams} from "react-router";
 import {Button, TextInput, UnstyledButton} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useEffect, useState} from "react";
@@ -15,6 +15,7 @@ import {backToMyTickets, eventCoverImageUrl, eventHomepagePath, organizerHomepag
 import {eventLocation, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {getAttendeeProductTitle} from "../../../utilites/products.ts";
 import {getConfig} from "../../../utilites/config.ts";
+import {forgetTicketsLink, OTHER_EMAIL_PARAM, savedTicketsLink, saveTicketsLink} from "../../../utilites/myTicketsLink.ts";
 
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
@@ -34,21 +35,12 @@ import {Attendee, Event, EventLifecycleStatus, Order, Product} from "../../../ty
 import shell from "../../layouts/OrganizerHomepage/OrganizerHomepage.module.scss";
 import classes from './MyTickets.module.scss';
 
-// Le dernier lien valide de l'appareil, pour que l'app installee rouvre le tableau de bord.
-const SAVED_LINK_KEY = 'dehors-mes-billets-lien';
-
-// « Changer » (de courriel) et « Retrouver un billet »: le formulaire du courriel, meme dans
-// l'app installee, qui sinon rouvre le dernier lien.
-const OTHER_EMAIL_PARAM = 'autre-courriel';
 const OTHER_EMAIL_PATH = `/my-tickets?${OTHER_EMAIL_PARAM}`;
 
 // Les rangees de billets utilises et les cartes a decouvrir montrees avant « Voir tout »:
 // moins sur telephone (le CSS cache le reste).
 const SHOWN_DESKTOP = 3;
 const SHOWN_MOBILE = 2;
-
-const isInstalledApp = () => window.matchMedia('(display-mode: standalone)').matches
-    || (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
 // Les billets d'un evenement, toutes commandes confondues.
 interface EventTickets {
@@ -593,35 +585,15 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
  */
 export const MyTickets = () => {
     const {token} = useParams();
-    const [searchParams] = useSearchParams();
     const {data: orders, isLoading, isError, error} = useGetOrdersByLookupToken(token);
-    const navigate = useNavigate();
-    const otherEmail = searchParams.has(OTHER_EMAIL_PARAM);
 
-    // L'app installee s'ouvre sur /my-tickets (le manifeste): elle reprend le dernier lien.
+    // Un lien qui marche est retenu par l'appareil (myTicketsRouteLoader le rouvre); un lien
+    // expire est oublie.
     useEffect(() => {
-        if (token || otherEmail || !isInstalledApp()) {
-            return;
-        }
-        try {
-            const saved = localStorage.getItem(SAVED_LINK_KEY);
-            if (saved) {
-                navigate(`/my-tickets/${saved}`, {replace: true});
-            }
-        } catch {
-            // localStorage indisponible: le courriel, comme dans le navigateur.
-        }
-    }, [token, otherEmail]);
-
-    useEffect(() => {
-        try {
-            if (token && orders) {
-                localStorage.setItem(SAVED_LINK_KEY, token);
-            } else if (token && isError && localStorage.getItem(SAVED_LINK_KEY) === token) {
-                localStorage.removeItem(SAVED_LINK_KEY);
-            }
-        } catch {
-            // localStorage indisponible
+        if (token && orders) {
+            saveTicketsLink(token);
+        } else if (token && isError && savedTicketsLink(document.cookie) === token) {
+            forgetTicketsLink();
         }
     }, [token, orders, isError]);
 

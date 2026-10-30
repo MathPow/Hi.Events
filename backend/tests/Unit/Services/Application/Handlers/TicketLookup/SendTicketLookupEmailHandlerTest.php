@@ -72,7 +72,8 @@ class SendTicketLookupEmailHandlerTest extends TestCase
         $this->ticketLookupTokenRepository
             ->shouldReceive('deleteWhere')
             ->once()
-            ->with(['email' => $email]);
+            ->with(m::on(fn(array $conditions) => $conditions['email'] === $email
+                && $conditions[0][0] === 'expires_at' && $conditions[0][1] === '<'));
 
         $this->tokenGeneratorService
             ->shouldReceive('generateToken')
@@ -150,7 +151,8 @@ class SendTicketLookupEmailHandlerTest extends TestCase
         $this->ticketLookupTokenRepository
             ->shouldReceive('deleteWhere')
             ->once()
-            ->with(['email' => $email]);
+            ->with(m::on(fn(array $conditions) => $conditions['email'] === $email
+                && $conditions[0][0] === 'expires_at' && $conditions[0][1] === '<'));
 
         $this->tokenGeneratorService
             ->shouldReceive('generateToken')
