@@ -88,7 +88,7 @@ export const ShareComponent = ({
     return (
         <Popover
             opened={opened}
-            onClose={() => setOpened(false)}
+            onChange={setOpened}
             position="bottom"
             offset={10}
             classNames={{dropdown: classes.dropdown}}
