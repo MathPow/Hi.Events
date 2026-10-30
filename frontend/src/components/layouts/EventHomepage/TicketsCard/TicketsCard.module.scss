@@ -487,10 +487,20 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
               height: 36px;
               min-height: 36px;
               padding: 0;
-              border: 1.5px solid var(--dehors-brun);
+              // Le trait des boutons contour (mixins.bouton-contour), que useRoughEdges peint
+              // le long du bord decoupe.
+              border: 2px solid rgb(53 41 36 / 0.6);
               border-radius: 50%;
               background: transparent;
               color: var(--dehors-brun);
+              // Les rondelles ne sautillent pas: leur bord bouillonne au survol comme celui des
+              // autres boutons, sans le saut d'un pixel (une animation ne passe pas un !important)
+              // ni l'enfoncement au clic.
+              translate: none !important;
+
+              &:active {
+                transform: none;
+              }
 
               @include mixins.respond-below(md) {
                 width: 34px;
