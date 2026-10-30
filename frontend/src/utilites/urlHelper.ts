@@ -13,6 +13,14 @@ export const eventHomepagePath = (event: Event) => {
     return `/event/${event?.id}/${event?.slug}`;
 }
 
+// L'etat d'un lien vers un evenement ouvert depuis Mes billets: le retour de la page de
+// l'evenement y ramene (a la meme adresse, jeton compris) au lieu de l'organisateur.
+export interface EventPageBackState {
+    myTicketsPath: string;
+}
+
+export const backToMyTickets = (myTicketsPath: string): EventPageBackState => ({myTicketsPath});
+
 export const organizerHomepagePath = (organizer: Organizer) => {
     return `/events/${organizer?.id}/${organizer?.slug}`;
 }

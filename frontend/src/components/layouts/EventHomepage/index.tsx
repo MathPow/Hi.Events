@@ -1,11 +1,17 @@
 import classes from "./EventPage.module.scss";
 import "../../../styles/widget/default.scss";
 import React, {useEffect, useRef, useState} from "react";
-import {Link} from "react-router";
+import {Link, useLocation} from "react-router";
+import {useIsomorphicEffect} from "@mantine/hooks";
 import {t} from "@lingui/macro";
 import {IconHeart, IconWorld} from "@tabler/icons-react";
 import {EventDocumentHead} from "../../common/EventDocumentHead";
-import {eventCoverImage, eventHomepageUrl, organizerHomepagePath} from "../../../utilites/urlHelper.ts";
+import {
+    eventCoverImage,
+    eventHomepageUrl,
+    EventPageBackState,
+    organizerHomepagePath
+} from "../../../utilites/urlHelper.ts";
 import {Event, Organizer, OrganizerStatus} from "../../../types.ts";
 import {EventNotAvailable} from "./EventNotAvailable";
 import {ContactOrganizerModal} from "../../common/ContactOrganizerModal";
@@ -96,6 +102,12 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const ticketsRef = useRef<HTMLElement>(null);
     const {i18n} = useLingui();
     const roughEdges = useRoughEdges<HTMLElement>();
+    const location = useLocation();
+    // Ouverte depuis Mes billets, la page y ramene. Cet etat n'existe qu'au navigateur: on attend
+    // l'hydratation pour ne pas contredire la page rendue au serveur (un rechargement le garde).
+    const [hydrated, setHydrated] = useState(false);
+    useIsomorphicEffect(() => setHydrated(true), []);
+    const myTicketsPath = hydrated ? (location.state as EventPageBackState | null)?.myTicketsPath : undefined;
 
     const {consentPending, consentGranted, onConsent} = useOrganizerTrackingPixels(
         event?.organizer?.settings?.tracking_pixels
@@ -209,7 +221,12 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
         </ShareComponent>
     );
 
-    const organizerBackLink = organizerIsLive && (
+    const backLink = myTicketsPath ? (
+        <PublicBarLink to={myTicketsPath}>
+            <PublicIcon name={'retour'} className={classes.accentIcon}/>
+            {t`My tickets`}
+        </PublicBarLink>
+    ) : organizerIsLive && (
         <PublicBarLink to={organizerHomepagePath(organizer)}>
             <PublicIcon name={'retour'} className={classes.accentIcon}/>
             {t`All events by ${organizer.name}`}
@@ -245,7 +262,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                 <div className={classes.content}>
                     <div className={classes.bar}>
-                        <PublicPageBar left={organizerBackLink}/>
+                        <PublicPageBar left={backLink}/>
                     </div>
 
                     <div className={classes.columns}>
@@ -265,10 +282,11 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                                         {/* Sur mobile, le retour et le partage passent sur l'image. */}
                                         <div className={classes.coverActions}>
-                                            {organizerIsLive ? (
-                                                <Link to={organizerHomepagePath(organizer)} className={classes.coverBack} data-rough="button">
+                                            {(myTicketsPath || organizerIsLive) ? (
+                                                <Link to={myTicketsPath ?? organizerHomepagePath(organizer)}
+                                                      className={classes.coverBack} data-rough="button">
                                                     <PublicIcon name={'retour'} size={15} className={classes.accentIcon}/>
-                                                    <span>{organizer.name}</span>
+                                                    <span>{myTicketsPath ? t`My tickets` : organizer.name}</span>
                                                 </Link>
                                             ) : <span/>}
                                             {shareButton(classes.coverShare, false)}

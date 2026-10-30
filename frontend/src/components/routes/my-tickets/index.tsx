@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {Link, useNavigate, useParams, useSearchParams} from "react-router";
+import {Link, useLocation, useNavigate, useParams, useSearchParams} from "react-router";
 import {Button, TextInput, UnstyledButton} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useEffect, useState} from "react";
@@ -11,7 +11,7 @@ import {useGetOrdersByLookupToken} from "../../../queries/useGetOrdersByLookupTo
 import {useSendTicketLookupEmail} from "../../../mutations/useSendTicketLookupEmail.ts";
 import {useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
 import {showError} from "../../../utilites/notifications.tsx";
-import {eventCoverImageUrl, eventHomepagePath, organizerHomepagePath} from "../../../utilites/urlHelper.ts";
+import {backToMyTickets, eventCoverImageUrl, eventHomepagePath, organizerHomepagePath} from "../../../utilites/urlHelper.ts";
 import {eventLocation, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {getAttendeeProductTitle} from "../../../utilites/products.ts";
 import {getConfig} from "../../../utilites/config.ts";
@@ -148,11 +148,15 @@ const TicketCard = ({group}: { group: EventTickets }) => {
     const attendee = scannable(attendees);
     const place = getShortLocationDisplay(event.settings?.location_details);
     const productTitle = attendee && getAttendeeProductTitle(attendee, attendee.product as Product);
+    // Le retour de la page de l'evenement ramene ici, plutot qu'a l'organisateur.
+    const {pathname} = useLocation();
+    const backState = backToMyTickets(pathname);
 
     return (
         <article className={classes.ticketCard} data-rough="stroke">
             <div className={classes.ticketMedia}>
-                <Link to={eventHomepagePath(event)} className={classes.ticketCover} tabIndex={-1} aria-hidden>
+                <Link to={eventHomepagePath(event)} state={backState} className={classes.ticketCover}
+                      tabIndex={-1} aria-hidden>
                     <Cover event={event} className={classes.ticketPhoto}/>
                     <span className={classes.datePill}>
                         <PublicIcon name={'calendrier'} size={16} className={classes.accentIcon}/>
@@ -179,7 +183,7 @@ const TicketCard = ({group}: { group: EventTickets }) => {
                     </Link>
                 )}
                 <h3 className={classes.ticketTitle}>
-                    <Link to={eventHomepagePath(event)}>{event.title}</Link>
+                    <Link to={eventHomepagePath(event)} state={backState}>{event.title}</Link>
                 </h3>
                 <p className={classes.ticketLine}>
                     <PublicIcon name={'horloge'} size={17} className={classes.accentIcon}/>
