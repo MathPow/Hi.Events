@@ -15,7 +15,6 @@ import {backToMyTickets, eventCoverImageUrl, eventHomepagePath, organizerHomepag
 import {eventLocation, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {getAttendeeProductTitle} from "../../../utilites/products.ts";
 import {getConfig} from "../../../utilites/config.ts";
-import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
@@ -595,7 +594,6 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
 export const MyTickets = () => {
     const {token} = useParams();
     const [searchParams] = useSearchParams();
-    const roughEdges = useRoughEdges<HTMLElement>();
     const {data: orders, isLoading, isError, error} = useGetOrdersByLookupToken(token);
     const navigate = useNavigate();
     const otherEmail = searchParams.has(OTHER_EMAIL_PARAM);
@@ -635,7 +633,7 @@ export const MyTickets = () => {
     const email = orders?.[0]?.email;
 
     return (
-        <main ref={roughEdges} className={`${shell.page} ${classes.page}`}>
+        <main className={`${shell.page} ${classes.page}`}>
             <Helmet>
                 <link rel="manifest" href="/my-tickets.webmanifest"/>
             </Helmet>

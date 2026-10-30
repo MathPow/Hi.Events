@@ -17,16 +17,14 @@ import {IconClock} from "@tabler/icons-react";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {trackEvent, AnalyticsEvents} from "../../../utilites/analytics.ts";
 import {AccountEventType} from "../../../types.ts";
-import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 import {EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
 import {EventTypeIllustration} from "../../common/EventTypeIllustration";
 
 // La carte creme sur l'orange, son logo et la progression en haut.
 const OnboardingCard = ({step, children}: { step?: 1 | 2, children: ReactNode }) => {
-    const roughEdges = useRoughEdges<HTMLDivElement>();
 
     return (
-        <div ref={roughEdges} className={classes.page}>
+        <div className={classes.page}>
             <div className={classes.card} data-rough>
                 <div className={classes.topBar}>
                     <Link to={'/'} className={classes.wordmark} aria-label={'Billetterie Dehors'}>

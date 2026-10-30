@@ -6,7 +6,6 @@ import {Helmet} from "react-helmet-async";
 import dayjs, {Dayjs} from "dayjs";
 
 import {ALL_UPCOMING_EVENTS, useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
-import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 import {EVENT_TYPES, eventTypeLabel, eventTypeOf} from "../../../constants/eventTypes.ts";
 
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
@@ -248,7 +247,6 @@ const ResultsSection = ({events, onClear}: { events: Event[], onClear: () => voi
  * recherche actifs, les resultats passent en grille.
  */
 export const EventsDirectory = () => {
-    const roughEdges = useRoughEdges<HTMLElement>();
     // eslint-disable-next-line lingui/no-unlocalized-strings
     const isMobile = useMediaQuery('(max-width: 767px)');
     const {data: events = [], isLoading} = useGetUpcomingEventsPublic(ALL_UPCOMING_EVENTS);
@@ -273,7 +271,7 @@ export const EventsDirectory = () => {
     };
 
     return (
-        <main ref={roughEdges} className={`${shell.page} ${classes.page}`}>
+        <main className={`${shell.page} ${classes.page}`}>
             <Helmet>
                 <title>{t`Events · Billetterie Dehors`}</title>
             </Helmet>

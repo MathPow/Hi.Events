@@ -10,7 +10,6 @@ import {isHiEvents} from "../../../utilites/helpers.ts";
 import {showInfo} from "../../../utilites/notifications.tsx";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 import {usePhotoPan} from "./usePhotoPan.ts";
-import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 // Ce que la billetterie fait pour l'organisateur, sur la photo (grand ecran seulement).
 const features = () => [
@@ -51,7 +50,6 @@ const Photo = () => {
 
 const AuthLayout = () => {
     useDehorsAppTheme();
-    const roughEdges = useRoughEdges<HTMLDivElement>();
     const me = useGetMe();
     const clickCountRef = useRef(0);
     const clickTimerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -78,7 +76,7 @@ const AuthLayout = () => {
     // Une grande carte creme sur l'orange: le formulaire a gauche, la photo a
     // droite. Sur mobile, la photo passe en haut et porte le retour et le logo.
     return (
-        <div ref={roughEdges} className={classes.authLayout}>
+        <div className={classes.authLayout}>
             <div className={classes.card} data-rough>
                 <div className={classes.formColumn}>
                     <div className={classes.top}>

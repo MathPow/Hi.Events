@@ -25,6 +25,7 @@ import {CookieConsentBanner} from "./components/common/CookieConsentBanner";
 import {setConsentState, updateGoogleConsentMode} from "./utilites/trackingPixels/consent";
 import {initPostHog} from "./utilites/posthog.ts";
 import "./utilites/dateLocales.ts";
+import {useRoughEdges} from "./hooks/useRoughEdges.ts";
 
 declare global {
     interface Window {
@@ -54,6 +55,8 @@ export const App: FC<
         setIsLoadedOnBrowser(!isSsr());
         initPostHog();
     }, []);
+
+    useRoughEdges();
 
     return (
         <React.StrictMode>

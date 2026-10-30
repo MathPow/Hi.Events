@@ -20,7 +20,6 @@ import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
 import {ShareComponent} from "../../common/ShareIcon";
-import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 interface OrganizerHomepageProps {
     organizer?: Organizer;
@@ -63,7 +62,6 @@ export const OrganizerHomepage = ({
                                       isPastEvents = false,
                                   }: OrganizerHomepageProps) => {
     const navigate = useNavigate();
-    const roughEdges = useRoughEdges<HTMLElement>();
     const [contactModalOpen, setContactModalOpen] = useState(false);
 
     const {consentPending, onConsent} = useOrganizerTrackingPixels(
@@ -125,7 +123,7 @@ export const OrganizerHomepage = ({
             )}
 
             {organizer && <OrganizerDocumentHead organizer={organizer}/>}
-            <main ref={roughEdges} className={classes.page} style={themeStyles}>
+            <main className={classes.page} style={themeStyles}>
                 <style>
                     {`
                         body, .ssr-loader {

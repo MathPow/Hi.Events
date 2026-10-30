@@ -40,7 +40,6 @@ import {findDefaultTicket, StickyBuyBar} from "./StickyBuyBar";
 import {TicketsCard} from "./TicketsCard";
 import {EventLocationMap} from "./EventLocationMap";
 import {CollapsibleDescription} from "./CollapsibleDescription";
-import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
 const TICKETS_FORM_ID = 'event-tickets-form';
 
@@ -102,7 +101,6 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const [selection, setSelection] = useState<ProductSelectionSummary | null>(null);
     const ticketsRef = useRef<HTMLElement>(null);
     const {i18n} = useLingui();
-    const roughEdges = useRoughEdges<HTMLElement>();
     const location = useLocation();
     // Ouverte depuis Mes billets, la page y ramene. Cet etat n'existe qu'au navigateur: on attend
     // l'hydratation pour ne pas contredire la page rendue au serveur (un rechargement le garde).
@@ -249,7 +247,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                 />
             )}
 
-            <main ref={roughEdges} className={classes.page} style={pageStyle}>
+            <main className={classes.page} style={pageStyle}>
                 <style>
                     {`
                         body, .ssr-loader {

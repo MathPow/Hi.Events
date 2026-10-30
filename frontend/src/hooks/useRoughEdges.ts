@@ -1,13 +1,13 @@
-import {useCallback, useRef} from "react";
+import {useEffect} from "react";
 import {roughClipPath, roughEdgeClipPath, roughEdgePath} from "../utilites/roughEdge.ts";
 import {ROUGH_BUTTON_BUMP, roughButtonPath} from "./useRoughButton.ts";
 
-// Ce qui se coupe sous la racine: les blocs marques data-rough, et tous les champs et
-// boutons Mantine (ceux des questions de la caisse arrivent apres coup).
-const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root';
+// Ce qui se coupe: les blocs marques data-rough, et tous les champs et boutons Mantine,
+// partout (pages publiques, back-office, fenetres et menus en portail).
+const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root';
 // Les boutons prennent le contour des boutons du site (rugueux.ts: des bosses lisses, les
 // bouts nets) sur leur propre rayon, et bouillonnent au survol entre trois traces.
-const BUTTON = '[data-rough="button"], .mantine-Button-root, .mantine-ActionIcon-root';
+const BUTTON = '[data-rough="button"], .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root';
 const OUTLINES = 3;
 // Les reglages par defaut de v-decoupe (decoupe.ts): le bord rentre d'un pixel et demi tous
 // les 40px environ, on le sent plus qu'on ne le voit. Une petite pastille, d'un pixel. Toutes
@@ -79,149 +79,166 @@ const visibleBorder = (style: CSSStyleDeclaration) => {
 
 /**
  * Les bords decoupes a la main du site DEHORS (dehors-shop-new: decoupe.ts pour les blocs,
- * rugueux.ts pour les boutons), pour toute une page: la racine recoit ce callback ref, et
- * chaque element vise en dessous est coupe a sa taille, redecoupe quand il change de
- * taille, y compris ceux ajoutes plus tard. Un element aux coins inegaux (24px 24px 0 0)
- * ou sans coins reste lisse.
+ * rugueux.ts pour les boutons), pour toute l'application: chaque element vise sous la racine
+ * est coupe a sa taille, redecoupe quand il change de taille, y compris ceux ajoutes plus
+ * tard. Un element aux coins inegaux (24px 24px 0 0) ou sans coins reste lisse.
  *
  * Les boutons gardent leur propre fond: leur contour rugueux est tire vers l'interieur et
  * pose en clip-path, au lieu des masques de la boutique, pour que les couleurs de survol,
  * de chargement ou d'etat desactive restent celles du CSS.
  */
-export const useRoughEdges = <T extends HTMLElement>() => {
-    const cleanup = useRef<() => void>();
+const cutRoughEdges = (root: HTMLElement) => {
+    // ring: la bordure d'un bouton contour, lue avant qu'elle devienne transparente.
+    const cuts = new WeakMap<Element, { seed: number, drawn: string, ring?: Ring | null }>();
 
-    return useCallback((root: T | null) => {
-        cleanup.current?.();
-        cleanup.current = undefined;
-
-        if (!root || typeof ResizeObserver === 'undefined' || typeof MutationObserver === 'undefined') {
+    const draw = (element: HTMLElement, entry: ResizeObserverEntry) => {
+        const cut = cuts.get(element);
+        if (!cut || !element.isConnected) {
+            resizes.unobserve(element);
+            cuts.delete(element);
             return;
         }
 
-        // ring: la bordure d'un bouton contour, lue avant qu'elle devienne transparente.
-        const cuts = new WeakMap<Element, { seed: number, drawn: string, ring?: Ring | null }>();
+        const box = entry.borderBoxSize?.[0];
+        const width = box?.inlineSize ?? element.offsetWidth;
+        const height = box?.blockSize ?? element.offsetHeight;
+        const style = getComputedStyle(element);
+        const corners = [style.borderTopLeftRadius, style.borderTopRightRadius,
+            style.borderBottomRightRadius, style.borderBottomLeftRadius];
+        const radius = radiusOf(style, width, height);
+        const key = `${Math.round(width * 2)}x${Math.round(height * 2)}x${corners.join(' ')}`;
 
-        const draw = (element: HTMLElement, entry: ResizeObserverEntry) => {
-            const cut = cuts.get(element);
-            if (!cut || !element.isConnected) {
-                resizes.unobserve(element);
-                cuts.delete(element);
-                return;
-            }
+        if (width <= 0 || height <= 0 || key === cut.drawn) {
+            return;
+        }
+        cut.drawn = key;
 
-            const box = entry.borderBoxSize?.[0];
-            const width = box?.inlineSize ?? element.offsetWidth;
-            const height = box?.blockSize ?? element.offsetHeight;
-            const style = getComputedStyle(element);
-            const corners = [style.borderTopLeftRadius, style.borderTopRightRadius,
-                style.borderBottomRightRadius, style.borderBottomLeftRadius];
-            const radius = radiusOf(style, width, height);
-            const key = `${Math.round(width * 2)}x${Math.round(height * 2)}x${corners.join(' ')}`;
+        if (!radius || corners.some((corner) => corner !== corners[0])) {
+            clear(element);
+            return;
+        }
 
-            if (width <= 0 || height <= 0 || key === cut.drawn) {
-                return;
-            }
-            cut.drawn = key;
+        // Un bloc a trait (data-rough="stroke") peint sa bordure le long du bord decoupe:
+        // la coupe n'a pas a l'epargner. Sa bordure CSS, devenue transparente, en donne
+        // l'epaisseur.
+        const stroke = element.dataset.rough === 'stroke' ? parseFloat(style.borderTopWidth) || 0 : 0;
+        const isButton = element.matches(BUTTON);
+        // Un bouton contour (bordure visible) aussi, et il bouillonne avec sa decoupe: sa
+        // bordure, retenue au premier passage, est peinte le long de chacun de ses traces.
+        const ring = isButton
+            ? cut.ring ??= (visibleBorder(style) ? {width: visibleBorder(style), color: style.borderTopColor} : null)
+            : null;
+        const border = stroke || ring ? 0 : visibleBorder(style);
+        const round = isButton && Math.abs(width - height) <= 2 && radius >= Math.min(width, height) / 2 - 1;
+        const pill = isButton && !round && height <= PILL_MAX_HEIGHT && width >= height * 0.9;
+        const boxRadius = Math.min(radius, width / 2, height / 2);
 
-            if (!radius || corners.some((corner) => corner !== corners[0])) {
-                clear(element);
-                return;
-            }
-
-            // Un bloc a trait (data-rough="stroke") peint sa bordure le long du bord decoupe:
-            // la coupe n'a pas a l'epargner. Sa bordure CSS, devenue transparente, en donne
-            // l'epaisseur.
-            const stroke = element.dataset.rough === 'stroke' ? parseFloat(style.borderTopWidth) || 0 : 0;
-            const isButton = element.matches(BUTTON);
-            // Un bouton contour (bordure visible) aussi, et il bouillonne avec sa decoupe: sa
-            // bordure, retenue au premier passage, est peinte le long de chacun de ses traces.
-            const ring = isButton
-                ? cut.ring ??= (visibleBorder(style) ? {width: visibleBorder(style), color: style.borderTopColor} : null)
-                : null;
-            const border = stroke || ring ? 0 : visibleBorder(style);
-            const round = isButton && Math.abs(width - height) <= 2 && radius >= Math.min(width, height) / 2 - 1;
-            const pill = isButton && !round && height <= PILL_MAX_HEIGHT && width >= height * 0.9;
-            const boxRadius = Math.min(radius, width / 2, height / 2);
-
-            // Le trace (pour le trait d'un bouton contour) et la coupe qu'il donne.
-            const shape = (seed: number) => {
-                if (round || pill) {
-                    // Les bosses vont de 0 a deux fois la plus grande vers l'interieur. Un petit
-                    // rond (le + des billets) les prend plus fines: pleines, il devenait carre.
-                    let scale = border ? Math.min(1, (border * 0.75) / (2 * ROUGH_BUTTON_BUMP)) : 1;
-                    if (round) {
-                        scale *= Math.min(1, Math.min(width, height) / ROUND_FULL_SIZE) ** 2;
-                    }
-                    const path = roughButtonPath(width, height, seed, {radius: boxRadius, round, scale});
-                    return {path, clip: roughClipPath(width, height, boxRadius, path)};
+        // Le trace (pour le trait d'un bouton contour) et la coupe qu'il donne.
+        const shape = (seed: number) => {
+            if (round || pill) {
+                // Les bosses vont de 0 a deux fois la plus grande vers l'interieur. Un petit
+                // rond (le + des billets) les prend plus fines: pleines, il devenait carre.
+                let scale = border ? Math.min(1, (border * 0.75) / (2 * ROUGH_BUTTON_BUMP)) : 1;
+                if (round) {
+                    scale *= Math.min(1, Math.min(width, height) / ROUND_FULL_SIZE) ** 2;
                 }
-                let amplitude = Math.min(width, height) < 40 ? SMALL_AMPLITUDE : AMPLITUDE;
-                if (border) {
-                    amplitude = Math.min(amplitude, border * 0.75);
-                }
-                const options = {radius, step: STEP, amplitude, seed};
-                return {path: roughEdgePath(width, height, options), clip: roughEdgeClipPath(width, height, options)};
-            };
+                const path = roughButtonPath(width, height, seed, {radius: boxRadius, round, scale});
+                return {path, clip: roughClipPath(width, height, boxRadius, path)};
+            }
+            let amplitude = Math.min(width, height) < 40 ? SMALL_AMPLITUDE : AMPLITUDE;
+            if (border) {
+                amplitude = Math.min(amplitude, border * 0.75);
+            }
+            const options = {radius, step: STEP, amplitude, seed};
+            return {path: roughEdgePath(width, height, options), clip: roughEdgeClipPath(width, height, options)};
+        };
 
-            element.dataset.roughCut = '';
-            if (isButton) {
-                for (let i = 0; i < OUTLINES; i++) {
-                    const {path, clip} = shape(cut.seed + i * 104729);
-                    element.style.setProperty(outlineName(i), clip);
-                    if (ring) {
-                        element.style.setProperty(strokeName(i), strokeMask(width, height, path, ring.width));
-                    }
-                }
+        element.dataset.roughCut = '';
+        if (isButton) {
+            for (let i = 0; i < OUTLINES; i++) {
+                const {path, clip} = shape(cut.seed + i * 104729);
+                element.style.setProperty(outlineName(i), clip);
                 if (ring) {
-                    element.dataset.roughOutlined = '';
-                    element.style.setProperty('--rough-border', `${ring.width}px`);
-                    element.style.setProperty('--rough-border-color', ring.color);
-                    // Le trait (::after) se place sur le bouton.
-                    if (style.position === 'static') {
-                        element.style.position = 'relative';
-                        element.dataset.roughPositioned = '';
-                    }
+                    element.style.setProperty(strokeName(i), strokeMask(width, height, path, ring.width));
                 }
-                element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
-                element.style.setProperty('--rough-grow', (1 + Math.min(PILL_GROW, PILL_GROW_MAX / width)).toFixed(4));
-                element.style.clipPath = 'var(--rough-clip)';
-            } else if (stroke) {
-                const options = {radius, step: STEP, amplitude: STROKE_AMPLITUDE, seed: cut.seed};
-                element.style.clipPath = roughEdgeClipPath(width, height, options);
-                element.style.setProperty('--rough-stroke', strokeMask(width, height, roughEdgePath(width, height, options), stroke));
-                element.style.setProperty('--rough-border', `${stroke}px`);
-            } else {
-                element.style.clipPath = shape(cut.seed).clip;
             }
-        };
-
-        const resizes = new ResizeObserver((entries) => {
-            entries.forEach((entry) => draw(entry.target as HTMLElement, entry));
-        });
-
-        let frame = 0;
-        const scan = () => {
-            frame = 0;
-            root.querySelectorAll(SELECTOR).forEach((element) => {
-                if (!cuts.has(element)) {
-                    cuts.set(element, {seed: Math.floor(Math.random() * 2 ** 32), drawn: ''});
-                    resizes.observe(element);
+            if (ring) {
+                element.dataset.roughOutlined = '';
+                element.style.setProperty('--rough-border', `${ring.width}px`);
+                element.style.setProperty('--rough-border-color', ring.color);
+                // Le trait (::after) se place sur le bouton.
+                if (style.position === 'static') {
+                    element.style.position = 'relative';
+                    element.dataset.roughPositioned = '';
                 }
-            });
-        };
-        // Un rendu React ajoute souvent plusieurs elements d'un coup: un seul passage par image.
-        const mutations = new MutationObserver(() => {
-            frame ||= requestAnimationFrame(scan);
+            }
+            element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
+            element.style.setProperty('--rough-grow', (1 + Math.min(PILL_GROW, PILL_GROW_MAX / width)).toFixed(4));
+            element.style.clipPath = 'var(--rough-clip)';
+        } else if (stroke) {
+            const options = {radius, step: STEP, amplitude: STROKE_AMPLITUDE, seed: cut.seed};
+            element.style.clipPath = roughEdgeClipPath(width, height, options);
+            element.style.setProperty('--rough-stroke', strokeMask(width, height, roughEdgePath(width, height, options), stroke));
+            element.style.setProperty('--rough-border', `${stroke}px`);
+        } else {
+            element.style.clipPath = shape(cut.seed).clip;
+        }
+    };
+
+    const resizes = new ResizeObserver((entries) => {
+        entries.forEach((entry) => draw(entry.target as HTMLElement, entry));
+    });
+
+    const watch = (element: Element) => {
+        if (!cuts.has(element)) {
+            cuts.set(element, {seed: Math.floor(Math.random() * 2 ** 32), drawn: ''});
+            resizes.observe(element);
+        }
+    };
+
+    // Un rendu React ajoute souvent plusieurs elements d'un coup: un seul passage par image,
+    // sur ce qui vient d'arriver seulement.
+    const added = new Set<Element>();
+    let frame = 0;
+    const scan = () => {
+        frame = 0;
+        added.forEach((node) => {
+            if (node.isConnected) {
+                if (node.matches(SELECTOR)) {
+                    watch(node);
+                }
+                node.querySelectorAll(SELECTOR).forEach(watch);
+            }
         });
+        added.clear();
+    };
+    const mutations = new MutationObserver((records) => {
+        records.forEach((record) => record.addedNodes.forEach((node) => {
+            if (node instanceof Element) {
+                added.add(node);
+            }
+        }));
+        if (added.size) {
+            frame ||= requestAnimationFrame(scan);
+        }
+    });
 
-        scan();
-        mutations.observe(root, {childList: true, subtree: true});
+    root.querySelectorAll(SELECTOR).forEach(watch);
+    mutations.observe(root, {childList: true, subtree: true});
 
-        cleanup.current = () => {
-            cancelAnimationFrame(frame);
-            mutations.disconnect();
-            resizes.disconnect();
-        };
+    return () => {
+        cancelAnimationFrame(frame);
+        mutations.disconnect();
+        resizes.disconnect();
+    };
+};
+
+// Pose une fois, a la racine de l'application: tout le document, portails compris.
+export const useRoughEdges = () => {
+    useEffect(() => {
+        if (typeof ResizeObserver === 'undefined' || typeof MutationObserver === 'undefined') {
+            return;
+        }
+        return cutRoughEdges(document.body);
     }, []);
 };

@@ -36,7 +36,6 @@ import {useResendOrderConfirmationPublic} from "../../../../mutations/useResendO
 import {Attendee, Event, Invoice, Order} from "../../../../types.ts";
 import classes from './OrderSummaryAndProducts.module.scss';
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
-import {useRoughEdges} from "../../../../hooks/useRoughEdges.ts";
 // Purchase tracking is handled by the parent Checkout layout
 
 const paymentStatusLabel = (order: Order): string | null => {
@@ -334,7 +333,6 @@ export const OrderSummaryAndProducts = () => {
     const {data: order, isFetched: orderIsFetched, isError} = useGetOrderPublic(eventId, orderShortId, ['event']);
     const event = order?.event;
     const navigate = useNavigate();
-    const roughEdges = useRoughEdges<HTMLDivElement>();
     const queryClient = useQueryClient();
     const emailUpdated = location.state?.emailUpdated === true;
 
@@ -602,7 +600,7 @@ export const OrderSummaryAndProducts = () => {
 
     return (
         <>
-            <div ref={roughEdges} className={classes.page} style={themeStyles}>
+            <div className={classes.page} style={themeStyles}>
                 <style>
                     {`
                         body, .ssr-loader {
