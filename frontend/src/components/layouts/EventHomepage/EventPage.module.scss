@@ -20,6 +20,41 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   background: var(--dehors-creme);
 }
 
+// Le degrade aux couleurs de l'organisateur (maquette « Public · Evenement »): trois halos
+// flous en haut et au milieu de la page, sous le contenu.
+.halo {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2100px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 770px 570px at calc(50% - 420px) 100px,
+      color-mix(in srgb, var(--public-accent-clair) 22%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent-clair) 22%, transparent) 45%,
+      transparent 100%),
+    radial-gradient(ellipse 670px 520px at calc(50% + 530px) 100px,
+      color-mix(in srgb, var(--public-accent) 11%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent) 11%, transparent) 45%,
+      transparent 100%),
+    radial-gradient(ellipse 720px 520px at calc(50% - 20px) 1000px,
+      color-mix(in srgb, var(--public-accent-doux) 32%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent-doux) 32%, transparent) 45%,
+      transparent 100%);
+
+  @include mixins.respond-below(md) {
+    height: 900px;
+    background:
+      radial-gradient(ellipse 390px 340px at 100px 80px,
+        color-mix(in srgb, var(--public-accent-clair) 24%, transparent) 0%,
+        color-mix(in srgb, var(--public-accent-clair) 24%, transparent) 40%,
+        transparent 100%),
+      radial-gradient(ellipse 340px 290px at calc(100% - 22px) 50px,
+        color-mix(in srgb, var(--public-accent) 12%, transparent) 0%,
+        color-mix(in srgb, var(--public-accent) 12%, transparent) 40%,
+        transparent 100%);
+  }
+}
+
 .content {
   position: relative;
   // Le z-index de la mention Hi.Events (PoweredByFooter) reste sous la barre collante du bas.

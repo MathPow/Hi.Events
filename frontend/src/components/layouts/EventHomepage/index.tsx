@@ -260,6 +260,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                 <EventDocumentHead event={event}/>
 
+                <div className={classes.halo} aria-hidden/>
+
                 <div className={classes.content}>
                     <div className={classes.bar}>
                         <PublicPageBar left={backLink}/>

@@ -135,6 +135,8 @@ export const OrganizerHomepage = ({
                     `}
                 </style>
 
+                <div className={classes.halo} aria-hidden/>
+
                 <div className={classes.content}>
                     <div className={classes.bar}>
                         <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
