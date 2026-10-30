@@ -2748,6 +2748,24 @@ $footer-ridge-mobile: 13.205056%;
   }
 }
 
+// The studio's name stands out of the muted line, and underlines on hover.
+.footerCredit {
+  strong {
+    color: $creme;
+    font-weight: 700;
+    background: linear-gradient(currentColor, currentColor) left bottom / 0 1.5px no-repeat;
+    transition: background-size 0.3s $ease;
+  }
+
+  &:hover strong {
+    background-size: 100% 1.5px;
+  }
+
+  &:focus-visible {
+    outline-color: $creme;
+  }
+}
+
 // 97% of the width, cut by the bottom of the page like on the DEHORS site.
 .footerWordmark {
   display: block;
