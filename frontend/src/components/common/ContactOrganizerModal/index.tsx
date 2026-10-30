@@ -97,15 +97,13 @@ export const ContactOrganizerModal: React.FC<ContactOrganizerModalProps> = ({
 
                 <Group justify="flex-end">
                     <Button
-                        variant="subtle"
+                        variant="default"
                         onClick={onClose}
-                        className={classes.cancelButton}
                     >
                         {t`Cancel`}
                     </Button>
                     <Button
                         type="submit"
-                        className={classes.submitButton}
                         loading={contactMutation.isPending}
                         disabled={contactMutation.isPending}
                     >

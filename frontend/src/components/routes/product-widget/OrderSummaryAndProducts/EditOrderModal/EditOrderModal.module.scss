@@ -1,12 +1,5 @@
-.modal {
-  :global {
-    .mantine-Modal-title {
-      color: var(--checkout-text-primary, #1a1a1a);
-    }
+@use "../../../../../styles/mixins.scss";
 
-    .mantine-TextInput-label,
-    .mantine-Checkbox-label {
-      color: var(--checkout-text-primary, #1a1a1a);
-    }
-  }
+.modal {
+  @include mixins.modale-publique;
 }
