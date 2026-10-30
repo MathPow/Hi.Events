@@ -28,7 +28,7 @@ import {TieredPricing} from "./Prices/Tiered";
 import {SizedPricing} from "./Prices/Sized";
 import {hasMultiplePrices} from "../../../../utilites/products.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
-import {Event, Product, ProductPriceType} from "../../../../types.ts";
+import {Event, Product, ProductPriceType, TaxAndFeeType} from "../../../../types.ts";
 import classNames from 'classnames';
 import '../../../../styles/widget/default.scss';
 import {ProductAvailabilityMessage} from "../../../common/ProductPriceAvailability";
@@ -91,15 +91,16 @@ interface SelectProductsProps {
     },
     padding?: string;
     continueButtonText?: string;
-    // Products start collapsed, their price beside the title (event page, several products).
-    collapseProducts?: boolean;
+    // Event page (maquette « Public · Evenement »): each product open as a card, its title and
+    // description beside the price, then a note (spots left, fees) and the quantity.
+    productCards?: boolean;
     widgetMode?: 'preview' | 'normal' | 'embedded';
     showPoweredBy?: boolean;
 }
 
-// A collapsed product's price beside its title: its lowest and highest prices, taxes and fees
+// A product card's price beside its title: its lowest and highest prices, taxes and fees
 // included when the event shows prices that way (as ProductPriceDisplay does).
-const collapsedPriceLabel = (product: Product, event: Event): string | null => {
+const cardPriceLabel = (product: Product, event: Event): string | null => {
     if (product.type === ProductPriceType.Donation || !product.prices?.length) {
         return null;
     }
@@ -538,10 +539,7 @@ const SelectProducts = (props: SelectProductsProps) => {
                                             quantityRange.unshift("0");
 
                                             const isProductCollapsed = collapsedProducts[Number(product.id)]
-                                                ?? (props.collapseProducts || product.start_collapsed);
-                                            const collapsedPrice = props.collapseProducts && isProductCollapsed
-                                                ? collapsedPriceLabel(product, event)
-                                                : null;
+                                                ?? product.start_collapsed;
                                             const toggleCollapse = () => {
                                                 setCollapsedProducts(prev => ({
                                                     ...prev,
@@ -551,14 +549,119 @@ const SelectProducts = (props: SelectProductsProps) => {
 
                                             const productSelectedQuantity = form.values.products?.[currentProductIndex]?.quantities
                                                 ?.reduce((acc, {quantity}) => acc + Number(quantity), 0) || 0;
+                                            const rowClassName = `hi-product-row ${product.is_highlighted ? 'hi-product-highlighted' : ''} ${productSelectedQuantity > 0 ? 'hi-product-selected' : ''}`;
 
-                                            return (
-                                                <div key={product.id} className={`hi-product-row ${product.is_highlighted ? 'hi-product-highlighted' : ''} ${productSelectedQuantity > 0 ? 'hi-product-selected' : ''}`} data-rough="stroke">
-                                                    {product.is_highlighted && product.highlight_message && (
-                                                        <div className={'hi-product-highlight-message'}>
-                                                            {product.highlight_message}
+                                            const highlightMessage = product.is_highlighted && product.highlight_message && (
+                                                <div className={'hi-product-highlight-message'}>
+                                                    {product.highlight_message}
+                                                </div>
+                                            );
+
+                                            const pricing = (
+                                                <div className={'hi-price-tiers-rows'}>
+                                                    {product.type === ProductPriceType.Sized ? (
+                                                        <SizedPricing
+                                                            productIndex={productIndex++}
+                                                            event={event}
+                                                            product={product}
+                                                            form={form}
+                                                        />
+                                                    ) : (
+                                                        <TieredPricing
+                                                            productIndex={productIndex++}
+                                                            event={event}
+                                                            product={product}
+                                                            form={form}
+                                                        />
+                                                    )}
+                                                </div>
+                                            );
+
+                                            const messages = (
+                                                <>
+                                                    {!!product.deposit_amount && product.deposit_amount > 0 && (
+                                                        <div className={'hi-product-deposit-row'}>
+                                                            <Trans>
+                                                                + Security deposit of {formatCurrency(product.deposit_amount, event.currency)} per
+                                                                unit, sent separately and returned after the event
+                                                            </Trans>
                                                         </div>
                                                     )}
+
+                                                    {product.max_per_order && form.values.products && isObjectEmpty(form.errors) && (form.values.products[currentProductIndex]?.quantities.reduce((acc, {quantity}) => acc + Number(quantity), 0) > product.max_per_order) && (
+                                                        <div className={'hi-product-quantity-error'}>
+                                                            <Trans>The maximum number of products
+                                                                for {product.title}
+                                                                is {product.max_per_order}</Trans>
+                                                        </div>
+                                                    )}
+
+                                                    {form.errors[`products.${currentProductIndex}`] && (
+                                                        <div className={'hi-product-quantity-error'}>
+                                                            {form.errors[`products.${currentProductIndex}`]}
+                                                        </div>
+                                                    )}
+                                                </>
+                                            );
+
+                                            const description = product.description && (
+                                                <div
+                                                    className={'hi-product-description-row'}>
+                                                    <Spoiler maxHeight={87} showLabel={t`Show more`}
+                                                             hideLabel={t`Hide`}>
+                                                        <div dangerouslySetInnerHTML={{
+                                                            __html: product.description
+                                                        }}/>
+                                                    </Spoiler>
+                                                </div>
+                                            );
+
+                                            if (props.productCards) {
+                                                // One price (or one for every size): beside the title, the row
+                                                // below keeps only the note and the quantity.
+                                                const singlePrice = product.type === ProductPriceType.Sized
+                                                    || (product.type !== ProductPriceType.Donation && product.prices?.length === 1);
+                                                const count = product.quantity_available;
+                                                const spotsLeft = product.is_available && !!count && count !== Constants.INFINITE_TICKETS;
+                                                const price = product.prices?.[0];
+                                                const feesExcluded = singlePrice && !!price
+                                                    && event.settings?.price_display_mode !== 'INCLUSIVE'
+                                                    && (price.tax_total || 0) + (price.fee_total || 0) > 0;
+
+                                                return (
+                                                    <div key={product.id} className={rowClassName} data-rough="stroke">
+                                                        {highlightMessage}
+                                                        <div className={'hi-product-head'}>
+                                                            <div className={'hi-product-text'}>
+                                                                <h3>{product.title}</h3>
+                                                                {description}
+                                                            </div>
+                                                            {singlePrice && (
+                                                                <span className={'hi-product-head-price'}>{cardPriceLabel(product, event)}</span>
+                                                            )}
+                                                        </div>
+                                                        <div className={singlePrice ? 'hi-product-content hi-product-content-single' : 'hi-product-content'}>
+                                                            {spotsLeft && (
+                                                                <span className={'hi-product-availability'}>{t`Only ${count} spots left`}</span>
+                                                            )}
+                                                            {feesExcluded && (
+                                                                <span className={'hi-product-fees-note'}>
+                                                                    {product.taxes?.some((tax) => tax.type === TaxAndFeeType.Tax) ? t`+ taxes and fees` : t`+ service fees`}
+                                                                </span>
+                                                            )}
+                                                            {(!product.is_available && hasMultiplePrices(product)) && (
+                                                                <ProductAvailabilityMessage product={product} event={event}/>
+                                                            )}
+                                                            {pricing}
+                                                        </div>
+                                                        {messages}
+                                                    </div>
+                                                );
+                                            }
+
+                                            return (
+                                                <div key={product.id} className={rowClassName} data-rough="stroke">
+                                                    {highlightMessage}
                                                     <div className={'hi-title-row'}>
                                                         <UnstyledButton variant={'transparent'}
                                                                         className={'hi-product-title'}
@@ -588,10 +691,6 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                                                                 event={event}/>
                                                                 )}
 
-                                                                {collapsedPrice && (
-                                                                    <span className={'hi-product-collapsed-price'}>{collapsedPrice}</span>
-                                                                )}
-
                                                                 <span className={`hi-product-collapse-arrow`}>
                                                                 <IconChevronRight
                                                                     className={isProductCollapsed ? "" : "open"}/>
@@ -601,58 +700,9 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                     </div>
                                                     <Collapse transitionDuration={100} in={!isProductCollapsed}
                                                               className={'hi-product-content'} hidden={isProductCollapsed}>
-                                                        <div className={'hi-price-tiers-rows'}>
-                                                            {product.type === ProductPriceType.Sized ? (
-                                                                <SizedPricing
-                                                                    productIndex={productIndex++}
-                                                                    event={event}
-                                                                    product={product}
-                                                                    form={form}
-                                                                />
-                                                            ) : (
-                                                                <TieredPricing
-                                                                    productIndex={productIndex++}
-                                                                    event={event}
-                                                                    product={product}
-                                                                    form={form}
-                                                                />
-                                                            )}
-                                                        </div>
-
-                                                        {!!product.deposit_amount && product.deposit_amount > 0 && (
-                                                            <div className={'hi-product-deposit-row'}>
-                                                                <Trans>
-                                                                    + Security deposit of {formatCurrency(product.deposit_amount, event.currency)} per
-                                                                    unit, sent separately and returned after the event
-                                                                </Trans>
-                                                            </div>
-                                                        )}
-
-                                                        {product.max_per_order && form.values.products && isObjectEmpty(form.errors) && (form.values.products[currentProductIndex]?.quantities.reduce((acc, {quantity}) => acc + Number(quantity), 0) > product.max_per_order) && (
-                                                            <div className={'hi-product-quantity-error'}>
-                                                                <Trans>The maximum number of products
-                                                                    for {product.title}
-                                                                    is {product.max_per_order}</Trans>
-                                                            </div>
-                                                        )}
-
-                                                        {form.errors[`products.${currentProductIndex}`] && (
-                                                            <div className={'hi-product-quantity-error'}>
-                                                                {form.errors[`products.${currentProductIndex}`]}
-                                                            </div>
-                                                        )}
-
-                                                        {product.description && (
-                                                            <div
-                                                                className={'hi-product-description-row'}>
-                                                                <Spoiler maxHeight={87} showLabel={t`Show more`}
-                                                                         hideLabel={t`Hide`}>
-                                                                    <div dangerouslySetInnerHTML={{
-                                                                        __html: product.description
-                                                                    }}/>
-                                                                </Spoiler>
-                                                            </div>
-                                                        )}
+                                                        {pricing}
+                                                        {messages}
+                                                        {description}
                                                     </Collapse>
                                                 </div>
                                             )

@@ -21,9 +21,9 @@ interface TicketsCardProps {
 }
 
 // La carte « Billets » de la page evenement: le widget de selection existant, habille comme la
-// maquette (voir TicketsCard.module.scss), avec le sous-total et la mention du paiement. Avec
-// plusieurs billets, ils commencent replies, leur prix a cote du titre. Sur grand ecran, la
-// carte colle au defilement et s'arrete au bas de l'ecran: la liste des billets defile dedans.
+// maquette (voir TicketsCard.module.scss), avec le sous-total et la mention du paiement. Chaque
+// billet est ouvert, son prix a cote du titre. Sur grand ecran, la carte colle au defilement et
+// s'arrete au bas de l'ecran: la liste des billets defile dedans.
 export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                           event,
                                                                           promoCodeValid,
@@ -103,7 +103,7 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                         bodyBackground: 'var(--dehors-creme)',
                     }}
                     continueButtonText={event.settings?.continue_button_text}
-                    collapseProducts={products.length > 1}
+                    productCards
                     padding={'0px'}
                     showPoweredBy={false}
                 />

@@ -248,14 +248,17 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       &:not(:has(.button-input)) {
         background: var(--dehors-carte);
 
-        h3, .hi-price-tier-label, .hi-price-tier-price, .hi-sized-price, .hi-product-description-row {
+        h3, .hi-product-head-price, .hi-price-tier-label, .hi-price-tier-price, .hi-sized-price, .hi-product-description-row {
           opacity: 0.4;
         }
       }
 
+      // Le bandeau garde les coins de la rangee (moins la bordure): sans la decoupe, pas encore
+      // posee ou a refaire apres un changement de taille, ses coins carres depassaient.
       .hi-product-highlight-message {
         margin: -18px -18px 0;
         padding: 8px 18px;
+        border-radius: 18px 18px 0 0;
         background: var(--public-accent);
         color: var(--public-sur-accent);
         font-size: 13px;
@@ -266,54 +269,51 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         @include mixins.respond-below(md) {
           margin: -14px -14px 0 -16px;
           padding: 7px 16px;
+          border-radius: 16px 16px 0 0;
         }
       }
 
-      .hi-title-row {
-        display: block;
+      // En haut, le titre et la description a gauche, le prix a droite (SelectProducts, productCards).
+      .hi-product-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
 
-        .hi-product-title {
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-          width: 100%;
-          padding: 0;
+      .hi-product-text {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
 
-          h3 {
-            margin: 0;
-            font-size: 17px;
-            font-weight: 700;
-            line-height: normal;
+        h3 {
+          margin: 0;
+          font-size: 17px;
+          font-weight: 700;
+          line-height: normal;
 
-            @include mixins.respond-below(md) {
-              font-size: 15px;
-            }
-          }
-
-          .hi-product-title-metadata {
-            align-items: center;
-            gap: 8px;
-            margin-left: 0;
-            font-size: 13px;
-          }
-
-          .hi-product-collapse-arrow {
-            margin-left: 0;
-            color: var(--dehors-brun);
-
-            svg {
-              width: 18px;
-              height: 18px;
-            }
+          @include mixins.respond-below(md) {
+            font-size: 15px;
           }
         }
       }
 
-      // Replie, le prix du billet a cote du titre (SelectProducts, collapseProducts).
-      .hi-product-collapsed-price {
-        font-size: 15px;
-        font-weight: 700;
+      .hi-product-head-price {
+        font-family: $affichage;
+        font-size: 20px;
+        line-height: normal;
         white-space: nowrap;
+        text-transform: uppercase;
+
+        @include mixins.respond-below(md) {
+          font-size: 17px;
+        }
+      }
+
+      .hi-product-fees-note {
+        font-size: 13px;
       }
 
       .hi-product-availability {
@@ -322,7 +322,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         color: var(--public-accent-fonce);
       }
 
-      // Le contenu repliable: la description remonte sous le titre, puis les prix.
+      // Sous le haut, les prix et les quantites.
       .hi-product-content {
         display: flex;
         flex-direction: column;
@@ -330,8 +330,29 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         padding: 0;
       }
 
+      // Un seul prix, deja en haut: une ligne, la note (places, frais) a gauche, la quantite a
+      // droite. Plus rien a choisir: la pastille (« Epuise ») passe a gauche.
+      .hi-product-content-single {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+
+        .hi-price-tiers-rows {
+          margin-left: auto;
+        }
+
+        .hi-price-tier, .hi-sized-price {
+          display: none;
+        }
+
+        &:not(:has(.button-input, .hi-waitlist-button)) .hi-price-tiers-rows {
+          margin-left: 0;
+        }
+      }
+
       .hi-product-description-row {
-        order: -1;
         font-size: 14px;
         line-height: 1.4;
 
