@@ -274,20 +274,21 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         }
       }
 
-      // En haut, le titre et la description a gauche, le prix a droite (SelectProducts, productCards).
+      // En haut, le titre et le prix (SelectProducts, productCards), la description dessous sur
+      // toute la largeur: une etendue de prix ne la serre pas dans une colonne etroite.
       .hi-product-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 4px 12px;
+
+        .hi-product-description-row, .hi-product-description-short {
+          grid-column: 1 / -1;
+        }
       }
 
       .hi-product-text {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        gap: 4px;
-        min-width: 0;
+        display: contents;
 
         h3 {
           margin: 0;
@@ -324,6 +325,8 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       }
 
       .hi-product-head-side {
+        grid-column: 2;
+        grid-row: 1;
         display: flex;
         flex-shrink: 0;
         align-items: center;
