@@ -14,6 +14,8 @@ import classes from "../../Payment.module.scss";
 interface StripePaymentMethodProps {
     enabled: boolean;
     setSubmitHandler: (submitHandler: () => () => Promise<void>) => void;
+    // Le paiement en ligne est impossible (organisateur pas configure...): la page grise « Payer ».
+    onUnavailableChange?: (unavailable: boolean) => void;
 }
 
 /* eslint-disable lingui/no-unlocalized-strings */
@@ -77,7 +79,7 @@ const stripeAppearance = (accent: string): Appearance => ({
 });
 /* eslint-enable lingui/no-unlocalized-strings */
 
-export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMethodProps) => {
+export const StripePaymentMethod = ({enabled, setSubmitHandler, onUnavailableChange}: StripePaymentMethodProps) => {
     const {eventId, orderShortId} = useParams();
     const {
         data: stripeData,
@@ -99,6 +101,10 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler}: StripePaymentMe
 
         setStripePromise(loadStripe(stripeData.public_key, options));
     }, [stripeData]);
+
+    useEffect(() => {
+        onUnavailableChange?.(!enabled || !!stripePaymentIntentError);
+    }, [enabled, stripePaymentIntentError, onUnavailableChange]);
 
     if (!enabled) {
         return (

@@ -401,6 +401,13 @@ $erreur: #c0392b;
     filter: brightness(1.06);
   }
 
+  // Rien a payer en ligne pour l'instant (paiements de l'organisateur pas configures): gris.
+  &:disabled:not([data-loading]) {
+    color: rgb(53 41 36 / 0.45);
+    background: rgb(53 41 36 / 0.12);
+    cursor: not-allowed;
+  }
+
   :global(.mantine-Button-section[data-position="left"]) {
     margin-inline-end: 10px;
   }

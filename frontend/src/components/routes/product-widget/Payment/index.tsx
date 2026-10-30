@@ -38,6 +38,8 @@ const Payment = () => {
     const [isPaymentLoading, setIsPaymentLoading] = useState(false);
     const [activePaymentMethod, setActivePaymentMethod] = useState<'STRIPE' | 'OFFLINE' | null>(null);
     const [submitHandler, setSubmitHandler] = useState<(() => Promise<void>) | null>(null);
+    // Stripe a refuse le paiement en ligne (l'organisateur n'a pas fini sa configuration...).
+    const [isStripeUnavailable, setIsStripeUnavailable] = useState(false);
     const transitionOrderToOfflinePaymentMutation = useTransitionOrderToOfflinePaymentPublic();
 
     const isStripeEnabled = event?.settings?.payment_providers?.includes('STRIPE');
@@ -185,7 +187,8 @@ const Payment = () => {
 
                 {isStripeEnabled && (
                     <div style={{display: activePaymentMethod === 'STRIPE' ? 'block' : 'none'}}>
-                        <StripePaymentMethod enabled={true} setSubmitHandler={setSubmitHandler}/>
+                        <StripePaymentMethod enabled={true} setSubmitHandler={setSubmitHandler}
+                                             onUnavailableChange={setIsStripeUnavailable}/>
                     </div>
                 )}
 
@@ -207,6 +210,7 @@ const Payment = () => {
                     <Button
                         className={checkoutClasses.primaryButton}
                         loading={isLoading || isPaymentLoading}
+                        disabled={activePaymentMethod === 'STRIPE' && isStripeUnavailable}
                         onClick={handleSubmit}
                         leftSection={<PublicIcon name={'cadenas'} size={20}/>}
                     >
