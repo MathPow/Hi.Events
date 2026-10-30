@@ -67,7 +67,7 @@ class EventLocationCoordinatesService
         $countryCode = strlen($country) === 2 ? strtolower($country) : null;
 
         foreach ($this->queries($details, $countryCode === null ? $country : null) as $query) {
-            $location = $this->geocodingService->search($query, $countryCode);
+            $location = $this->geocodingService->search($query, $countryCode, $details['city'] ?? null);
             if ($location !== null) {
                 return $location;
             }
@@ -175,8 +175,10 @@ class EventLocationCoordinatesService
         return implode(', ', $this->clean($details, $keys));
     }
 
+    // Le numero de la recherche: les coordonnees trouvees avant qu'un resultat doive etre dans
+    // la ville de l'adresse sont cherchees de nouveau.
     private function fingerprint(array $details, ?string $mapsUrl): string
     {
-        return sha1(json_encode([$details, trim((string)$mapsUrl)]));
+        return sha1(json_encode([$details, trim((string)$mapsUrl), 2]));
     }
 }

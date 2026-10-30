@@ -9,6 +9,7 @@ use HiEvents\Services\Infrastructure\Geocoding\DTO\GeocodedLocationDTO;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Client\Factory as HttpClient;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -27,6 +28,10 @@ class NominatimGeocodingService
 
     private const MIN_INTERVAL_SECONDS = 1.1;
 
+    // Les champs de l'adresse d'un resultat qui nomment sa ville, ou une partie (quartier,
+    // arrondissement, agglomeration). Pas la province: « Québec » en est une aussi.
+    private const LOCALITY_KEYS = ['city', 'town', 'village', 'municipality', 'hamlet', 'suburb', 'borough', 'city_district', 'county'];
+
     public function __construct(
         private readonly Repository      $config,
         private readonly HttpClient      $httpClient,
@@ -37,13 +42,17 @@ class NominatimGeocodingService
     }
 
     /**
+     * Avec une ville, seul un resultat situe dans cette ville compte: Nominatim confond les rues
+     * de meme nom (« 3180 rue Laberge, Québec » donnait la rue Laberge de Montréal, dans la
+     * province de Québec).
+     *
      * @param array<string, string> $query Recherche libre (q) ou par champs (street, city, state, postalcode, country)
      * @throws GeocodingUnavailableException
      */
-    public function search(array $query, ?string $countryCode = null): ?GeocodedLocationDTO
+    public function search(array $query, ?string $countryCode = null, ?string $city = null): ?GeocodedLocationDTO
     {
         try {
-            $response = $this->cache->lock(self::LOCK_KEY, 15)->block(10, function () use ($query, $countryCode) {
+            $response = $this->cache->lock(self::LOCK_KEY, 15)->block(10, function () use ($query, $countryCode, $city) {
                 $this->waitForRateLimit();
 
                 try {
@@ -53,7 +62,8 @@ class NominatimGeocodingService
                         ->get(self::SEARCH_URL, array_filter([
                             ...$query,
                             'format' => 'jsonv2',
-                            'limit' => 1,
+                            'limit' => $city === null ? 1 : 5,
+                            'addressdetails' => $city === null ? null : 1,
                             'countrycodes' => $countryCode,
                         ]));
                 } finally {
@@ -74,8 +84,12 @@ class NominatimGeocodingService
             throw new GeocodingUnavailableException('Nominatim responded with status ' . $response->status());
         }
 
-        $result = $response->json('0');
-        if (!is_array($result) || !is_numeric($result['lat'] ?? null) || !is_numeric($result['lon'] ?? null)) {
+        $results = $response->json();
+        $result = collect(is_array($results) ? $results : [])->first(fn($result) => is_array($result)
+            && is_numeric($result['lat'] ?? null)
+            && is_numeric($result['lon'] ?? null)
+            && ($city === null || $this->isInCity($result, $city)));
+        if ($result === null) {
             return null;
         }
 
@@ -83,6 +97,24 @@ class NominatimGeocodingService
             latitude: (float)$result['lat'],
             longitude: (float)$result['lon'],
         );
+    }
+
+    private function isInCity(array $result, string $city): bool
+    {
+        $wanted = $this->normalize($city);
+        foreach (self::LOCALITY_KEYS as $key) {
+            $place = is_string($result['address'][$key] ?? null) ? $this->normalize($result['address'][$key]) : '';
+            if ($place !== '' && (str_contains(" $place ", " $wanted ") || str_contains(" $wanted ", " $place "))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function normalize(string $value): string
+    {
+        return trim(preg_replace('/[^a-z0-9]+/', ' ', strtolower(Str::ascii($value))));
     }
 
     private function waitForRateLimit(): void

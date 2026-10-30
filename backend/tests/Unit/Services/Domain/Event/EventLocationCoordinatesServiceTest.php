@@ -45,7 +45,7 @@ class EventLocationCoordinatesServiceTest extends TestCase
                 'city' => 'Sherbrooke',
                 'state' => 'QC',
                 'postalcode' => 'J1H 1A1',
-            ], 'ca')
+            ], 'ca', 'Sherbrooke')
             ->andReturn(new GeocodedLocationDTO(45.4, -71.89));
         $this->eventSettingsRepository->shouldReceive('updateWhere')->once()
             ->with(Mockery::on(fn(array $attributes) => $attributes['location_latitude'] === 45.4
@@ -60,10 +60,10 @@ class EventLocationCoordinatesServiceTest extends TestCase
     public function testTheVenueIsSearchedWhenTheAddressIsNotFound(): void
     {
         $this->geocodingService->shouldReceive('search')->once()
-            ->with(Mockery::on(fn(array $query) => isset($query['street'])), 'ca')
+            ->with(Mockery::on(fn(array $query) => isset($query['street'])), 'ca', 'Sherbrooke')
             ->andReturnNull();
         $this->geocodingService->shouldReceive('search')->once()
-            ->with(['q' => 'Mont Ham, Sherbrooke, QC'], 'ca')
+            ->with(['q' => 'Mont Ham, Sherbrooke, QC'], 'ca', 'Sherbrooke')
             ->andReturn(new GeocodedLocationDTO(45.77, -71.62));
         $this->eventSettingsRepository->shouldReceive('updateWhere')->once();
 
@@ -74,7 +74,7 @@ class EventLocationCoordinatesServiceTest extends TestCase
     {
         $this->geocodingService->shouldReceive('search')->twice()->andReturnNull();
         $this->geocodingService->shouldReceive('search')->once()
-            ->with(['q' => 'Mont Ham, QC'], 'ca')
+            ->with(['q' => 'Mont Ham, QC'], 'ca', 'Sherbrooke')
             ->andReturn(new GeocodedLocationDTO(45.79, -71.63));
         $this->eventSettingsRepository->shouldReceive('updateWhere')->once();
 
