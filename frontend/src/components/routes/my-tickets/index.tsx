@@ -146,8 +146,10 @@ const TicketLinks = ({group: {event, orders, attendees}}: { group: EventTickets 
 // A venir, grand ecran: la carte de l'evenement; au survol (ou au clavier), la photo laisse
 // place au code QR du billet.
 const TicketCard = ({group}: { group: EventTickets }) => {
-    const {event, attendees} = group;
+    const {event, orders, attendees} = group;
     const attendee = scannable(attendees);
+    // La commande du billet montre: le code QR y mene.
+    const order = orders.find((candidate) => candidate.id === attendee?.order_id) ?? orders[0];
     const place = getShortLocationDisplay(event.settings?.location_details);
     const productTitle = attendee && getAttendeeProductTitle(attendee, attendee.product as Product);
     // Le retour de la page de l'evenement ramene ici, plutot qu'a l'organisateur.
@@ -166,12 +168,12 @@ const TicketCard = ({group}: { group: EventTickets }) => {
                     </span>
                 </Link>
                 {attendee && (
-                    <div className={classes.ticketQr} aria-hidden>
-                        <span className={classes.qrBox}>
+                    <div className={classes.ticketQr}>
+                        <Link to={orderPath(event, order)} className={classes.qrBox} aria-label={t`View Ticket`}>
                             <QRCode value={String(attendee.public_id)} size={152} level="M"
                                     fgColor="currentColor" bgColor="transparent"/>
-                        </span>
-                        <span className={classes.qrCaption}>
+                        </Link>
+                        <span className={classes.qrCaption} aria-hidden>
                             {[productTitle, attendee.public_id].filter(Boolean).join(' · ')}
                         </span>
                     </div>

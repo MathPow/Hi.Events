@@ -157,13 +157,21 @@
   }
 }
 
+// Un bouton: toucher ou cliquer le code l'enregistre en image.
 .qr {
   width: 200px;
   height: 200px;
   padding: 10px;
+  border: none;
   border-radius: 12px;
   color: var(--dehors-brun);
   background: var(--dehors-creme);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
 
   svg {
     display: block;

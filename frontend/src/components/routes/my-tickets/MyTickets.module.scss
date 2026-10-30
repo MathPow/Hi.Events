@@ -403,8 +403,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   background: var(--dehors-creme);
 }
 
-// Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier: l'aplat monte du bas
-// et remplit la photo, puis redescend. Il reste visible le temps de redescendre.
+// Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier: un voile creme monte
+// du bas sur la photo, puis redescend. Il reste visible le temps de redescendre.
 $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 
 .ticketQr {
@@ -416,8 +416,9 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
   justify-content: center;
   gap: 10px;
   padding: 12px;
-  color: var(--public-sur-accent);
-  background: var(--public-accent);
+  color: var(--dehors-brun);
+  background: rgb(255 247 233 / 0.72);
+  backdrop-filter: blur(3px);
   clip-path: inset(100% 0 0);
   visibility: hidden;
   transition: clip-path $remplissage, visibility 0s 0.4s;
@@ -443,13 +444,30 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
   }
 }
 
+// Un lien: le code mene a la commande du billet.
 .qrBox {
+  display: block;
   width: 176px;
   height: 176px;
   padding: 12px;
+  border: none;
   border-radius: 14px;
   color: var(--dehors-brun);
   background: var(--dehors-creme);
+  box-shadow: 0 6px 18px rgb(55 39 33 / 0.14);
+  cursor: pointer;
+  transition: translate 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 -2px;
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
 
   svg {
     display: block;

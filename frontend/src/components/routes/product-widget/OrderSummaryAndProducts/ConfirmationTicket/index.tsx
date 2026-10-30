@@ -6,6 +6,7 @@ import {getAttendeeProductTitle} from "../../../../../utilites/products.ts";
 import {getShortLocationDisplay} from "../../../../../utilites/addressUtilities.ts";
 import {PublicIcon} from "../../../../common/PublicIcon";
 import {shortDayLabel, shortTimeLabel} from "../confirmationDates.ts";
+import {downloadQrCode} from "../../../../../utilites/download.ts";
 import classes from "./ConfirmationTicket.module.scss";
 
 // Le billet de la maquette: le haut couleur accent, la perforation, puis le code QR et le participant.
@@ -61,7 +62,13 @@ export const ConfirmationTicket = ({attendee, event, compact = false}: {
                     </div>
                 ) : (
                     <>
-                        <div className={classes.qr} data-rough>
+                        {/* Touche ou clic: le code enregistre en image (downloadQrCode). */}
+                        <button type="button" className={classes.qr} data-rough title={t`Download the QR code`}
+                                aria-label={t`Download the QR code`}
+                                onClick={(clickEvent) => {
+                                    const svg = clickEvent.currentTarget.querySelector('svg');
+                                    svg && downloadQrCode(svg, `qr-${attendee.public_id}.png`);
+                                }}>
                             <QRCode
                                 value={String(attendee.public_id)}
                                 size={180}
@@ -69,7 +76,7 @@ export const ConfirmationTicket = ({attendee, event, compact = false}: {
                                 fgColor="currentColor"
                                 bgColor="transparent"
                             />
-                        </div>
+                        </button>
                         <p className={classes.hint}>
                             {compact ? t`Show this code at the entrance · max brightness` : t`Show this code at the entrance`}
                         </p>
