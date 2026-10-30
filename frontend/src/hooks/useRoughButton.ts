@@ -1,4 +1,5 @@
 import {useCallback, useRef} from "react";
+import {ROUGH_INTENSITY} from "../utilites/roughEdge.ts";
 
 /**
  * The hand-cut outline of the DEHORS shop buttons (dehors-shop-new, rugueux.ts).
@@ -137,7 +138,7 @@ const roughPath = (width: number, height: number, seed: number, round: boolean,
     const {perimeter, point} = round ? circle(Math.min(width, height)) : pill(width, height, inward?.radius);
     const layers = round ? ROUND_LAYERS : LAYERS;
     const noises = layers.map((layer, i) => ({
-        amplitude: layer.amplitude * (inward?.scale ?? 1),
+        amplitude: layer.amplitude * ROUGH_INTENSITY * (inward?.scale ?? 1),
         noise: loopingNoise(perimeter, layer.step, random(seed + i * 7919)),
     }));
     // The spline can overshoot its values by a quarter.
@@ -166,7 +167,7 @@ const roughPath = (width: number, height: number, seed: number, round: boolean,
 };
 
 /** The largest bump of a rough button, before scaling, in px. */
-export const ROUGH_BUTTON_BUMP = 1.25 * LAYERS.reduce((sum, layer) => sum + layer.amplitude, 0);
+export const ROUGH_BUTTON_BUMP = 1.25 * ROUGH_INTENSITY * LAYERS.reduce((sum, layer) => sum + layer.amplitude, 0);
 
 /** The rough outline of a button with corners of `radius`, inside its own box. */
 export const roughButtonPath = (width: number, height: number, seed: number,

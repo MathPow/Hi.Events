@@ -10,7 +10,8 @@ const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .man
 const BUTTON = '[data-rough="button"], .mantine-Button-root, .mantine-ActionIcon-root';
 const OUTLINES = 3;
 // Les reglages par defaut de v-decoupe (decoupe.ts): le bord rentre d'un pixel et demi tous
-// les 40px environ, on le sent plus qu'on ne le voit. Une petite pastille, d'un pixel.
+// les 40px environ, on le sent plus qu'on ne le voit. Une petite pastille, d'un pixel. Toutes
+// les decoupes sont ensuite adoucies par ROUGH_INTENSITY (roughEdge.ts).
 const AMPLITUDE = 1.5;
 const SMALL_AMPLITUDE = 1;
 // Un bloc a trait ondule comme les cases du calendrier du site (v-decoupe="{ amplitude: 1, trait: 2 }").

@@ -7,6 +7,13 @@
  * The edge only ever goes inward, so the shape stays inside the box.
  */
 
+/**
+ * How pronounced every hand-cut edge of the app is, blocks and buttons alike: 1 keeps the
+ * shop's settings, lower makes the edges quieter. Applied where the paths are drawn, so the
+ * amplitudes passed around stay the shop's.
+ */
+export const ROUGH_INTENSITY = 0.7;
+
 export interface RoughEdgeOptions {
     radius: number;
     step: number;
@@ -29,7 +36,8 @@ const KAPPA = 0.5523;
 const f = (v: number) => v.toFixed(1);
 
 export const roughEdgePath = (width: number, height: number, options: RoughEdgeOptions): string => {
-    const {step, amplitude} = options;
+    const {step} = options;
+    const amplitude = options.amplitude * ROUGH_INTENSITY;
     const radius = Math.min(options.radius, width / 2, height / 2);
     const random = mulberry32(options.seed);
     let alternate = 1;
