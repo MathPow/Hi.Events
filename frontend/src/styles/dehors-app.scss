@@ -22,11 +22,10 @@
   --public-accent-doux: #f7dccd;
   --public-sur-accent: var(--dehors-brun);
 
-  // Le surlignage du texte et le survol de la barre de defilement: l'orange Dehors, ou la couleur
-  // de l'organisateur sur ses pages (publicHighlightCss, dans la balise style de la page).
+  // Le surlignage du texte: l'orange Dehors, ou la couleur de l'organisateur sur ses pages
+  // (publicHighlightCss, dans la balise style de la page).
   --dehors-selection: var(--dehors-orange);
   --dehors-sur-selection: var(--dehors-brun);
-  --dehors-barre-survol: var(--dehors-orange);
 }
 
 ::selection {
@@ -41,45 +40,6 @@
   --public-accent: var(--theme-accent);
   --public-accent-doux: color-mix(in srgb, var(--theme-accent) 20%, var(--dehors-creme));
   --public-sur-accent: var(--theme-accent-contrast, var(--dehors-brun));
-}
-
-// La barre de defilement de la page: une pilule sable sur le creme, qui s'epaissit et prend
-// l'orange (ou la couleur de l'organisateur) au survol. Seulement celle de la page: forcer les
-// autres zones a defiler garderait une barre fixe dans chaque liste sur Mac. Firefox ne connait
-// pas les pseudo-elements et n'en prend que la couleur. Sur telephone, la barre flottante du
-// systeme.
-@media (pointer: fine) {
-  html::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
-  }
-
-  html::-webkit-scrollbar-track,
-  html::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-
-  html::-webkit-scrollbar-thumb {
-    min-height: 48px;
-    border: 4px solid transparent;
-    border-radius: 999px;
-    background: var(--dehors-sable) padding-box;
-  }
-
-  html::-webkit-scrollbar-thumb:hover {
-    border-width: 3px;
-    background-color: var(--dehors-barre-survol);
-  }
-
-  html::-webkit-scrollbar-thumb:active {
-    background-color: color-mix(in srgb, var(--dehors-barre-survol) 85%, var(--dehors-brun));
-  }
-
-  @supports not selector(::-webkit-scrollbar) {
-    html {
-      scrollbar-color: var(--dehors-sable) transparent;
-    }
-  }
 }
 
 // Les blocs coupes par useRoughEdges, comme [data-decoupe] sur le site: Chrome ne peint un

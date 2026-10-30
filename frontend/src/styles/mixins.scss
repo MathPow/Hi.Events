@@ -53,6 +53,45 @@ $breakpoints: (
   }
 }
 
+// La barre de defilement Dehors d'une zone qui defile dans la page (la page garde celle du
+// navigateur): une pilule teintee de l'accent, sans fleches ni rail, en couleur pleine au
+// survol. Firefox ne connait pas les pseudo-elements et n'en prend que la couleur.
+@mixin barre-defilement() {
+  $pilule: color-mix(in srgb, var(--public-accent) 35%, var(--dehors-creme));
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    min-height: 40px;
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background: $pilule padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    border-width: 2px;
+    background-color: var(--public-accent);
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: $pilule transparent;
+  }
+}
+
 @mixin ellipsis() {
   text-overflow: ellipsis;
   white-space: nowrap;

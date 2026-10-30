@@ -251,9 +251,8 @@ export function mixHexColors(first: string, second: string, weight: number): str
 }
 
 /**
- * CSS for a public page's style tag: text selection and the scrollbar hover follow the
- * organizer's accent, darkened like getAccentText so it stays visible on the cream page and
- * keeps white text readable. Without an accent, the Dehors defaults (dehors-app.scss) apply.
+ * CSS for a public page's style tag: text selection follows the organizer's accent, darkened
+ * like getAccentText so it stays visible on the cream page and keeps white text readable. Without an accent, the Dehors defaults (dehors-app.scss) apply.
  */
 export function publicHighlightCss(accent?: string): string {
     const hex = toHexColor(accent);
@@ -266,7 +265,6 @@ export function publicHighlightCss(accent?: string): string {
     return `:root {
         --dehors-selection: ${highlight};
         --dehors-sur-selection: ${getContrastColor(highlight)};
-        --dehors-barre-survol: ${highlight};
     }`;
 }
 
