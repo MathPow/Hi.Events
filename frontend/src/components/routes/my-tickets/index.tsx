@@ -537,10 +537,9 @@ const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }
 
 // Les prochains evenements de la billetterie, pour en decouvrir d'autres depuis ses billets: les
 // petites cartes des pages organisateur, sans ceux dont on a deja des billets, et d'abord ceux
-// des organisateurs avec qui on est deja sorti.
+// des organisateurs avec qui on est deja sorti. « Voir tous les evenements » mene au repertoire.
 const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested: boolean }) => {
     const {data: events = []} = useGetUpcomingEventsPublic();
-    const [expanded, setExpanded] = useState(false);
     const owned = new Set(groups.map((group) => String(group.event.id)));
     const known = new Set(groups.flatMap((group) => group.event.organizer ? [String(group.event.organizer.id)] : []));
     const shown = events
@@ -558,20 +557,17 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
                     <span className={shell.longLabel}>{t`Discover events`}</span>
                     <span className={shell.shortLabel}>{t`Discover`}</span>
                 </h2>
-                {!expanded && shown.length > SHOWN_MOBILE && (
-                    <UnstyledButton className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge} ${classes.seeAll}`}
-                                    onClick={() => setExpanded(true)}
-                                    data-desktop={shown.length > SHOWN_DESKTOP || undefined}>
-                        <span className={shell.longLabel}>{t`See all events`}</span>
-                        <span className={shell.shortLabel}>{t`See all`}</span>
-                        <PublicIcon name={'fleche'} size={18}/>
-                    </UnstyledButton>
-                )}
+                <Link to={'/events'}
+                      className={`${classes.button} ${classes.buttonOutline} ${classes.buttonLarge} ${classes.seeAll}`}>
+                    <span className={shell.longLabel}>{t`See all events`}</span>
+                    <span className={shell.shortLabel}>{t`See all`}</span>
+                    <PublicIcon name={'fleche'} size={18}/>
+                </Link>
             </div>
             {suggested && known.size > 0 && (
                 <p className={`${classes.sectionNote} ${classes.desktopOnly}`}>{t`Suggestions based on your past outings.`}</p>
             )}
-            <div className={classes.discover} data-expanded={expanded || undefined}>
+            <div className={classes.discover}>
                 {shown.map((event) => <EventCard key={event.id} event={event} compact/>)}
             </div>
         </section>

@@ -780,28 +780,23 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
   }
 }
 
-// « Voir tous les evenements » (« Tout voir » sur telephone): seulement s'il reste des cartes cachees.
+// « Voir tous les evenements » (« Tout voir » sur telephone), vers le repertoire (/events).
 .seeAll {
   @include mixins.respond-below(md) {
     height: 40px;
     padding: 0 14px;
     font-size: 14px;
   }
-
-  &:not([data-desktop]) {
-    @include mixins.respond-above(md) {
-      display: none;
-    }
-  }
 }
 
-// Les prochains evenements de la billetterie, en petites cartes (EventCard compact).
+// Les prochains evenements de la billetterie, en petites cartes (EventCard compact): trois, deux
+// sur telephone; les autres sont au repertoire.
 .discover {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 
-  &:not([data-expanded]) > :nth-child(n + 4) {
+  > :nth-child(n + 4) {
     display: none;
   }
 
@@ -813,7 +808,7 @@ $remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
     grid-template-columns: minmax(0, 1fr);
     gap: 14px;
 
-    &:not([data-expanded]) > :nth-child(n + 3) {
+    > :nth-child(n + 3) {
       display: none;
     }
   }
