@@ -144,27 +144,17 @@ const DatesMenu = ({value, onChange}: { value: DateRange, onChange: (value: Date
     );
 };
 
-// Plusieurs types a la fois: les cases se cochent, puis « Appliquer ». Aucun type, ou tous, c'est « Tous ».
+// Plusieurs types a la fois: chaque case filtre tout de suite, le menu reste ouvert pour en cocher
+// d'autres. Aucun type, ou tous, c'est « Tous ».
 const TypesMenu = ({value, onChange}: {
     value: AccountEventType[],
     onChange: (value: AccountEventType[]) => void,
 }) => {
     const [opened, setOpened] = useState(false);
-    const [draft, setDraft] = useState(value);
 
-    const toggleMenu = () => {
-        setDraft(value);
-        setOpened((current) => !current);
-    };
-
-    const toggle = (type: AccountEventType) => setDraft((current) => {
-        const next = current.includes(type) ? current.filter((item) => item !== type) : [...current, type];
-        return next.length === EVENT_TYPES.length ? [] : next;
-    });
-
-    const apply = () => {
-        onChange(EVENT_TYPES.filter((type) => draft.includes(type)));
-        setOpened(false);
+    const toggle = (type: AccountEventType) => {
+        const next = value.includes(type) ? value.filter((item) => item !== type) : [...value, type];
+        onChange(next.length === EVENT_TYPES.length ? [] : EVENT_TYPES.filter((item) => next.includes(item)));
     };
 
     const count = value.length;
@@ -173,7 +163,7 @@ const TypesMenu = ({value, onChange}: {
         <Popover opened={opened} onChange={setOpened} position="bottom-end" offset={10} width={300}
                  trapFocus classNames={{dropdown: classes.menu}}>
             <Popover.Target>
-                <MenuTrigger opened={opened} active={value.length > 0} onClick={toggleMenu}>
+                <MenuTrigger opened={opened} active={value.length > 0} onClick={() => setOpened((current) => !current)}>
                     <PublicIcon name={'filtres'} size={18} className={classes.accentIcon}/>
                     {value.length === 0 && (
                         <>
@@ -187,15 +177,14 @@ const TypesMenu = ({value, onChange}: {
             </Popover.Target>
             <Popover.Dropdown>
                 <div role="group" aria-label={t`Types`} className={classes.options}>
-                    <MenuOption type={'checkbox'} name={'types'} checked={draft.length === 0} illustration={null}
-                                label={t({message: 'All', context: 'event types'})} onChange={() => setDraft([])}/>
+                    <MenuOption type={'checkbox'} name={'types'} checked={value.length === 0} illustration={null}
+                                label={t({message: 'All', context: 'event types'})} onChange={() => onChange([])}/>
                     {EVENT_TYPES.map((type) => (
-                        <MenuOption key={type} type={'checkbox'} name={'types'} checked={draft.includes(type)}
+                        <MenuOption key={type} type={'checkbox'} name={'types'} checked={value.includes(type)}
                                     illustration={<EventTypeIllustration type={type}/>}
                                     label={eventTypeLabel(type)} onChange={() => toggle(type)}/>
                     ))}
                 </div>
-                <UnstyledButton className={classes.apply} onClick={apply}>{t`Apply`}</UnstyledButton>
             </Popover.Dropdown>
         </Popover>
     );

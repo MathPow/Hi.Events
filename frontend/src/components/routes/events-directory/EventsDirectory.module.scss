@@ -246,7 +246,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-// Le menu ouvert: une carte creme, des rangees a cocher, puis « Appliquer » pour les types.
+// Le menu ouvert: une carte creme et des rangees a cocher.
 .menu {
   display: flex;
   flex-direction: column;
@@ -326,28 +326,6 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 
   [data-checked] > & {
     background: var(--dehors-brun);
-  }
-}
-
-.apply {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  border-radius: 16px;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--dehors-creme);
-  background: var(--dehors-brun);
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background: #4a3830;
-  }
-
-  &:focus-visible {
-    outline: 3px solid var(--dehors-brun);
-    outline-offset: 3px;
   }
 }
 
