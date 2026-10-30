@@ -25,7 +25,7 @@ const LanguageMenu = () => {
     return (
         <Menu position="bottom-end" shadow="md" withinPortal>
             <Menu.Target>
-                <UnstyledButton className={classes.button} data-rough="button" aria-label={t`Language`}>
+                <UnstyledButton className={`${classes.button} ${classes.language}`} data-rough="button" aria-label={t`Language`}>
                     {current.split('-')[0].toUpperCase()}
                 </UnstyledButton>
             </Menu.Target>

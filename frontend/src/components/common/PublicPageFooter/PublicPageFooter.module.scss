@@ -13,7 +13,19 @@
 
   @include mixins.respond-below(md) {
     flex-direction: column;
-    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 4px 16px;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  @include mixins.respond-below(md) {
+    width: 100%;
   }
 }
 
@@ -35,8 +47,68 @@
     }
   }
 
+  // Telephone: l'un sous l'autre, soulignes.
   @include mixins.respond-below(md) {
-    font-size: 13px;
+    flex-direction: column;
+    gap: 6px;
+
+    a {
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    .dot {
+      display: none;
+    }
+  }
+}
+
+.short {
+  display: none;
+}
+
+@include mixins.respond-below(md) {
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
+  }
+}
+
+.languages {
+  display: none;
+
+  @include mixins.respond-below(md) {
+    display: flex;
+    padding: 2px;
+    border: 1.5px solid var(--dehors-brun);
+    border-radius: 999px;
+  }
+}
+
+.language {
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dehors-brun);
+  background: none;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: 2px;
   }
 }
 
@@ -49,6 +121,11 @@
   font-weight: 700;
   color: var(--dehors-brun);
   background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
 
   div {
     font-size: inherit;

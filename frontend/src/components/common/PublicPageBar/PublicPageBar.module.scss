@@ -53,3 +53,10 @@
 .menu [data-current] {
   font-weight: 700;
 }
+
+// Sur telephone, la langue se choisit dans le pied de page (PublicPageFooter).
+.language {
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
