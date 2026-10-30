@@ -171,9 +171,10 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
     color: var(--dehors-texte-doux);
   }
 
+  // Le contour du formulaire de connexion: droit, ecarte du bord, que la decoupe ne ronge pas.
   &:focus {
-    outline: 2px solid var(--dehors-brun);
-    outline-offset: -2px;
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
   }
 
   @include mixins.respond-below(md) {
@@ -200,8 +201,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   gap: 8px;
   width: 100%;
   height: 56px;
-  padding: 0 16px 0 18px;
-  border: 2px solid transparent;
+  padding: 0 18px 0 20px;
   border-radius: 16px;
   font-size: 16px;
   font-weight: 700;
@@ -214,10 +214,9 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
     background: #fff;
   }
 
-  &[data-active] {
-    border-color: var(--dehors-brun);
-  }
-
+  // Ouvert ou filtrant, comme au clavier: le contour d'un champ selectionne du formulaire de
+  // connexion, plutot qu'une bordure foncee que la decoupe rongeait.
+  &[data-active],
   &:focus-visible {
     outline: 3px solid var(--dehors-brun);
     outline-offset: 3px;
@@ -446,19 +445,21 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// Les fleches du carrousel: un rond peche plein, decoupe a la main (data-rough="button"). Sans
+// bordure, la decoupe garde toutes ses bosses.
 .navButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  border: 2px solid var(--dehors-brun);
-  border-radius: 24px;
+  border-radius: 50%;
   color: var(--dehors-brun);
+  background: rgb(227 173 146 / 0.55);
   transition: background-color 0.15s ease, opacity 0.15s ease;
 
   &:hover:not(:disabled) {
-    background: var(--dehors-creme);
+    background: rgb(227 173 146 / 0.85);
   }
 
   &:disabled {
@@ -472,11 +473,11 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
-// Les cartes (EventCard compacte), aimantees au debut de la carte. Le haut et le bas laissent
-// la place au contour du clavier et a l'ombre du survol.
+// Les cartes (EventCard compacte), aimantees au debut de la carte, toutes de la hauteur de la
+// plus haute: un titre sur une ligne ne raccourcit pas sa carte, le prix et la fleche restent
+// alignes en bas. Le haut et le bas laissent la place au contour du clavier et a l'ombre du survol.
 .carousel {
   display: flex;
-  align-items: flex-start;
   gap: 24px;
   margin: -6px -32px -24px;
   padding: 6px 32px 24px;
@@ -492,6 +493,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 
   > li {
+    display: grid;
     flex: 0 0 340px;
     scroll-snap-align: start;
   }
