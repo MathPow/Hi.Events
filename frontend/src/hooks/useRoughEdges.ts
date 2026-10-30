@@ -21,6 +21,10 @@ const STEP = 40;
 const PILL_MAX_HEIGHT = 80;
 // La taille du bouton rond du site d'accueil (4rem), ou ses bosses sont pleines.
 const ROUND_FULL_SIZE = 64;
+// Au survol, une pilule grossit de 4 %, mais jamais de plus de 10px en largeur: une rangee
+// pleine largeur (les actions de la commande) ne fait pas un bond de 35px.
+const PILL_GROW = 0.04;
+const PILL_GROW_MAX = 10;
 
 const outlineName = (i: number) => `--rough-clip${i ? `-${i + 1}` : ''}`;
 
@@ -40,6 +44,7 @@ const clear = (element: HTMLElement) => {
     delete element.dataset.roughBoil;
     element.style.removeProperty('--rough-stroke');
     element.style.removeProperty('--rough-border');
+    element.style.removeProperty('--rough-grow');
     for (let i = 0; i < OUTLINES; i++) {
         element.style.removeProperty(outlineName(i));
     }
@@ -145,6 +150,7 @@ export const useRoughEdges = <T extends HTMLElement>() => {
                     element.style.setProperty(outlineName(i), outline(cut.seed + i * 104729));
                 }
                 element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
+                element.style.setProperty('--rough-grow', (1 + Math.min(PILL_GROW, PILL_GROW_MAX / width)).toFixed(4));
                 element.style.clipPath = 'var(--rough-clip)';
             } else if (stroke) {
                 const options = {radius, step: STEP, amplitude: STROKE_AMPLITUDE, seed: cut.seed};

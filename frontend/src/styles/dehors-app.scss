@@ -63,8 +63,9 @@
 
 // Le survol des boutons du site (bouton-sautillant, bouton-rugueux): sans transition, le
 // bouton saute d'un pixel cinq fois par seconde et son contour bouillonne entre ses trois
-// traces, sur un autre rythme. Une pilule grossit aussi un peu, avec un soupcon de rebond.
-// Enfonce, il se pose en bas et ne bouge plus.
+// traces, sur un autre rythme. Une pilule grossit aussi un peu, avec un soupcon de rebond:
+// 4 %, au plus 10px de large (--rough-grow, useRoughEdges). Enfonce, il se pose en bas et ne
+// bouge plus.
 @media (prefers-reduced-motion: no-preference) {
   [data-rough-boil='pill'] {
     transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -76,7 +77,7 @@
     }
 
     [data-rough-boil='pill']:hover {
-      scale: 1.04;
+      scale: var(--rough-grow, 1.04);
     }
   }
 
@@ -85,7 +86,7 @@
   }
 
   [data-rough-boil='pill']:focus-visible {
-    scale: 1.04;
+    scale: var(--rough-grow, 1.04);
   }
 
   [data-rough-boil]:active {
@@ -263,7 +264,8 @@ body.dehors-app {
 
     @media (hover: hover) and (prefers-reduced-motion: no-preference) {
       &:where(:not([data-variant]), [data-variant='filled'], [data-variant='light'], [data-variant='outline'], [data-variant='default']):where(:not(:disabled, [data-disabled], [data-loading])):hover {
-        scale: 1.03;
+        // Au plus 10px de large, comme les pilules (--rough-grow, useRoughEdges).
+        scale: min(1.03, var(--rough-grow, 1.03));
       }
     }
   }
