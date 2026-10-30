@@ -218,6 +218,30 @@ export function getAccentText(accent: string, mode: 'light' | 'dark'): string {
     return hslToHex(h, s, passing);
 }
 
+/**
+ * CSS for a public page's style tag: text selection and the scrollbar hover follow the
+ * organizer's accent, darkened like getAccentText so it stays visible on the cream page and
+ * keeps white text readable. Without an accent, the Dehors defaults (dehors-app.scss) apply.
+ */
+export function publicHighlightCss(accent?: string): string {
+    const rgb = hexToRgb(accent ?? '');
+    if (!rgb) {
+        return '';
+    }
+    // Rebuilt as plain hex: the value comes from the organizer and ends up inside a style tag.
+    const hex = `#${[rgb.r, rgb.g, rgb.b]
+        .map((value) => Math.min(255, Math.max(0, Math.round(value))).toString(16).padStart(2, '0'))
+        .join('')}`;
+    const highlight = getAccentText(hex, 'light');
+
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    return `:root {
+        --dehors-selection: ${highlight};
+        --dehors-sur-selection: ${getContrastColor(highlight)};
+        --dehors-barre-survol: ${highlight};
+    }`;
+}
+
 export function computeThemeVariables(settings: HomepageThemeSettings): ThemeCSSVariables {
     const derived = getDerivedColors(settings.mode);
     const accentContrast = getContrastColor(settings.accent);

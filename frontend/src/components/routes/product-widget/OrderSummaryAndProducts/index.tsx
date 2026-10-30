@@ -9,7 +9,7 @@ import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries
 import {eventCheckoutPath, eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
 import {eventLocation, formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
-import {computeThemeVariables, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
+import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {orderClientPublic} from "../../../../api/order.client.ts";
 import {downloadBinary} from "../../../../utilites/download.ts";
@@ -608,6 +608,7 @@ export const OrderSummaryAndProducts = () => {
                         body, .ssr-loader {
                             background-color: var(--dehors-creme) !important;
                         }
+                        ${publicHighlightCss(rawThemeSettings?.accent)}
                     `}
                 </style>
 

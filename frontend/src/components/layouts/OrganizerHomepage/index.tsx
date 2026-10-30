@@ -13,7 +13,7 @@ import {getGoogleMapsUrl, getShortLocationDisplay} from "../../../utilites/addre
 import {organizerHomepagePath, organizerHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {StatusToggle} from "../../common/StatusToggle";
 import {Pagination} from "../../common/Pagination";
-import {computeThemeVariables, validateThemeSettings} from "../../../utilites/themeUtils.ts";
+import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../utilites/themeUtils.ts";
 import {useOrganizerTrackingPixels} from "../../../hooks/useOrganizerTrackingPixels";
 import {CookieConsentBanner} from "../../common/CookieConsentBanner";
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
@@ -131,6 +131,7 @@ export const OrganizerHomepage = ({
                         body, .ssr-loader {
                             background-color: var(--dehors-creme) !important;
                         }
+                        ${publicHighlightCss(rawThemeSettings?.accent)}
                     `}
                 </style>
 

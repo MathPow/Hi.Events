@@ -18,7 +18,7 @@ import {withLoadingNotification} from "../../../utilites/withLoadingNotification
 import {useAbandonOrderPublic} from "../../../mutations/useAbandonOrderPublic.ts";
 import {showError, showInfo} from "../../../utilites/notifications.tsx";
 import {isDateInFuture} from "../../../utilites/dates.ts";
-import {computeThemeVariables, detectMode, validateThemeSettings} from "../../../utilites/themeUtils.ts";
+import {computeThemeVariables, detectMode, publicHighlightCss, validateThemeSettings} from "../../../utilites/themeUtils.ts";
 import {CheckoutThemeProvider} from "./CheckoutThemeProvider.tsx";
 import {CheckoutTopBar} from "./CheckoutTopBar";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
@@ -238,6 +238,7 @@ const Checkout = () => {
                             body, .ssr-loader {
                                 background-color: var(--dehors-creme) !important;
                             }
+                            ${publicHighlightCss(homepageSettings?.accent)}
                         `}
                     </style>
                     <div className={classes.checkoutInner}>

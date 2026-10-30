@@ -18,7 +18,7 @@ import {
     isAddressSet
 } from "../../../utilites/addressUtilities.ts";
 import {StatusToggle} from "../../common/StatusToggle";
-import {computeThemeVariables, validateThemeSettings} from "../../../utilites/themeUtils.ts";
+import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../utilites/themeUtils.ts";
 import {useOrganizerTrackingPixels} from "../../../hooks/useOrganizerTrackingPixels";
 import {hasActivePixels, trackPixelEvent} from "../../../utilites/trackingPixels";
 import {CookieConsentBanner} from "../../common/CookieConsentBanner";
@@ -237,6 +237,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                         body, .ssr-loader {
                             background-color: var(--dehors-creme) !important;
                         }
+                        ${publicHighlightCss(themeSettings?.accent)}
                     `}
                 </style>
 
