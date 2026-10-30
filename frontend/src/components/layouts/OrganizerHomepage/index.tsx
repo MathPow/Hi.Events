@@ -36,14 +36,22 @@ const FaqPastille = () => (
     </span>
 );
 
+// En arrivant sur la page, on part du haut. Pas en passant d'« A venir » a « Passes »: l'adresse
+// change, mais on reste ou on etait dans la page (TAB_STATE).
+const TAB_STATE = {keepScroll: true};
+
 const ScrollToTop = () => {
-    const {pathname} = useLocation();
+    const {pathname, state} = useLocation();
+    const keepScroll = (state as typeof TAB_STATE | null)?.keepScroll === true;
 
     useEffect(() => {
+        if (keepScroll) {
+            return;
+        }
         setTimeout(() => {
             window.scrollTo(0, 0);
         }, 100);
-    }, [pathname]);
+    }, [pathname, keepScroll]);
 
     return null;
 }
@@ -257,7 +265,7 @@ export const OrganizerHomepage = ({
                                 </span>
                             </h2>
                             <nav className={classes.tabs}>
-                                <Link to={homepagePath} className={classes.tab} data-rough
+                                <Link to={homepagePath} state={TAB_STATE} className={classes.tab} data-rough
                                       aria-current={!isPastEvents ? 'page' : undefined}>
                                     {upcomingCount !== null ? (
                                         <>
@@ -266,7 +274,7 @@ export const OrganizerHomepage = ({
                                         </>
                                     ) : t`Upcoming`}
                                 </Link>
-                                <Link to={pastEventsPath} className={classes.tab} data-rough
+                                <Link to={pastEventsPath} state={TAB_STATE} className={classes.tab} data-rough
                                       aria-current={isPastEvents ? 'page' : undefined}>
                                     {t`Past`}
                                 </Link>
