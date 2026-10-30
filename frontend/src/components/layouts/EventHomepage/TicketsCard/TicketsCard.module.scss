@@ -244,11 +244,12 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
         }
       }
 
-      // Plus rien a choisir (epuise, ventes terminees...): carte pale, texte estompe.
-      &:not(:has(.button-input)) {
+      // Plus rien a choisir (epuise, ventes terminees...): carte pale, texte estompe. Fermee, la
+      // fiche n'a pas de quantite a regarder: SelectProducts la marque.
+      &:not(.hi-product-collapsed):not(:has(.button-input)), &.hi-product-collapsed.hi-product-unavailable {
         background: var(--dehors-carte);
 
-        h3, .hi-product-head-price, .hi-price-tier-label, .hi-price-tier-price, .hi-sized-price, .hi-product-description-row {
+        h3, .hi-product-head-price, .hi-price-tier-label, .hi-price-tier-price, .hi-sized-price, .hi-product-description-row, .hi-product-description-short {
           opacity: 0.4;
         }
       }
@@ -297,6 +298,62 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
           @include mixins.respond-below(md) {
             font-size: 15px;
           }
+        }
+      }
+
+      // Plus de trois lignes a choisir (SelectProducts): les fiches s'ouvrent par le haut, le titre
+      // pour bouton. Fermee: le titre, la description sur deux lignes et le prix (ou l'etendue).
+      .hi-product-head-toggle {
+        cursor: pointer;
+      }
+
+      .hi-product-toggle {
+        padding: 0;
+        border: none;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+
+        &:focus-visible {
+          outline: 2px solid var(--dehors-brun);
+          outline-offset: 3px;
+          border-radius: 4px;
+        }
+      }
+
+      .hi-product-head-side {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hi-product-chevron {
+        transition: rotate 0.2s ease;
+      }
+
+      &:not(.hi-product-collapsed) .hi-product-chevron {
+        rotate: 180deg;
+      }
+
+      .hi-product-description-short {
+        display: -webkit-box;
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 1.4;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+
+        p {
+          display: inline;
+          margin: 0;
+        }
+
+        p + p::before {
+          content: ' ';
         }
       }
 

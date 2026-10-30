@@ -38,6 +38,7 @@ import {promoCodeClientPublic} from "../../../../api/promo-code.client.ts";
 import {IconChevronRight, IconExternalLink, IconTag, IconX} from "@tabler/icons-react"
 import {getSessionIdentifier} from "../../../../utilites/sessionIdentifier.ts";
 import {Constants} from "../../../../constants.ts";
+import {PublicIcon} from "../../../common/PublicIcon";
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
 import {getProductInfoIcon} from "../../../../constants/productInfoIcons.ts";
 import {CHECKOUT_PREFILL_PARAM_KEYS} from "../../../../hooks/useCheckoutPrefill.ts";
@@ -400,6 +401,13 @@ const SelectProducts = (props: SelectProductsProps) => {
 
     let productIndex = 0;
 
+    // Product cards: past three lines to choose from (each price of a product counts, its
+    // distances or sizes), the cards start closed on their title, description and price.
+    const choiceLines = (event?.product_categories || [])
+        .flatMap((category) => category.products || [])
+        .reduce((lines, product) => lines + Math.max(1, product.prices?.length || 0), 0);
+    const collapsibleCards = !!props.productCards && choiceLines > 3;
+
     return (
         <div className={'hi-product-widget-container'}
              ref={resizeRef}
@@ -538,8 +546,9 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                 .map((n) => n.toString());
                                             quantityRange.unshift("0");
 
-                                            const isProductCollapsed = collapsedProducts[Number(product.id)]
-                                                ?? product.start_collapsed;
+                                            const isProductCollapsed = props.productCards
+                                                ? collapsibleCards && (collapsedProducts[Number(product.id)] ?? true)
+                                                : collapsedProducts[Number(product.id)] ?? product.start_collapsed;
                                             const toggleCollapse = () => {
                                                 setCollapsedProducts(prev => ({
                                                     ...prev,
@@ -627,34 +636,75 @@ const SelectProducts = (props: SelectProductsProps) => {
                                                 const feesExcluded = singlePrice && !!price
                                                     && event.settings?.price_display_mode !== 'INCLUSIVE'
                                                     && (price.tax_total || 0) + (price.fee_total || 0) > 0;
+                                                // Closed, a product with several prices shows their range.
+                                                const headPrice = (singlePrice || isProductCollapsed) && cardPriceLabel(product, event);
+
+                                                // Bottom left of the open card, beside the quantity.
+                                                const notes = (
+                                                    <>
+                                                        {spotsLeft && (
+                                                            <span className={'hi-product-availability'}>{t`Only ${count} spots left`}</span>
+                                                        )}
+                                                        {feesExcluded && (
+                                                            <span className={'hi-product-fees-note'}>
+                                                                {product.taxes?.some((tax) => tax.type === TaxAndFeeType.Tax) ? t`+ taxes and fees` : t`+ service fees`}
+                                                            </span>
+                                                        )}
+                                                        {(!product.is_available && hasMultiplePrices(product)) && (
+                                                            <ProductAvailabilityMessage product={product} event={event}/>
+                                                        )}
+                                                    </>
+                                                );
+
+                                                // The whole top opens and closes the card, but for its own links and
+                                                // buttons (the description's, « Show more »); the title is the button.
+                                                const onHeadClick = (clickEvent: React.MouseEvent) => {
+                                                    const target = clickEvent.target as Element;
+                                                    if (collapsibleCards && !target.closest('a, button:not(.hi-product-toggle)')) {
+                                                        toggleCollapse();
+                                                    }
+                                                };
 
                                                 return (
-                                                    <div key={product.id} className={rowClassName} data-rough="stroke">
+                                                    <div key={product.id}
+                                                         className={classNames(rowClassName, {
+                                                             'hi-product-collapsed': isProductCollapsed,
+                                                             'hi-product-unavailable': !product.is_available,
+                                                         })}
+                                                         data-rough="stroke">
                                                         {highlightMessage}
-                                                        <div className={'hi-product-head'}>
+                                                        <div className={collapsibleCards ? 'hi-product-head hi-product-head-toggle' : 'hi-product-head'}
+                                                             onClick={onHeadClick}>
                                                             <div className={'hi-product-text'}>
-                                                                <h3>{product.title}</h3>
-                                                                {description}
+                                                                <h3>
+                                                                    {collapsibleCards ? (
+                                                                        <button type={'button'} className={'hi-product-toggle'}
+                                                                                aria-expanded={!isProductCollapsed}>
+                                                                            {product.title}
+                                                                        </button>
+                                                                    ) : product.title}
+                                                                </h3>
+                                                                {isProductCollapsed && product.description ? (
+                                                                    <div className={'hi-product-description-short'}
+                                                                         dangerouslySetInnerHTML={{__html: product.description}}/>
+                                                                ) : description}
                                                             </div>
-                                                            {singlePrice && (
-                                                                <span className={'hi-product-head-price'}>{cardPriceLabel(product, event)}</span>
-                                                            )}
-                                                        </div>
-                                                        <div className={singlePrice ? 'hi-product-content hi-product-content-single' : 'hi-product-content'}>
-                                                            {spotsLeft && (
-                                                                <span className={'hi-product-availability'}>{t`Only ${count} spots left`}</span>
-                                                            )}
-                                                            {feesExcluded && (
-                                                                <span className={'hi-product-fees-note'}>
-                                                                    {product.taxes?.some((tax) => tax.type === TaxAndFeeType.Tax) ? t`+ taxes and fees` : t`+ service fees`}
+                                                            {(headPrice || collapsibleCards) && (
+                                                                <span className={'hi-product-head-side'}>
+                                                                    {headPrice && <span className={'hi-product-head-price'}>{headPrice}</span>}
+                                                                    {collapsibleCards && (
+                                                                        <PublicIcon name={'chevron'} size={18}
+                                                                                    className={'hi-product-chevron'}/>
+                                                                    )}
                                                                 </span>
                                                             )}
-                                                            {(!product.is_available && hasMultiplePrices(product)) && (
-                                                                <ProductAvailabilityMessage product={product} event={event}/>
-                                                            )}
-                                                            {pricing}
                                                         </div>
-                                                        {messages}
+                                                        {!isProductCollapsed && (
+                                                            <div className={singlePrice ? 'hi-product-content hi-product-content-single' : 'hi-product-content'}>
+                                                                {singlePrice ? <>{notes}{pricing}</> : <>{pricing}{notes}</>}
+                                                            </div>
+                                                        )}
+                                                        {!isProductCollapsed && messages}
                                                     </div>
                                                 );
                                             }
