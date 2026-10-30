@@ -2,6 +2,7 @@ import {CSSProperties, PointerEvent, useEffect, useRef} from "react";
 import {Link} from "react-router";
 import classes from "./Landing.module.scss";
 import {useMarqueePace} from "./useMarqueePace.ts";
+import {DARK_TINTS, seededRandom, TINTS} from "./tints.ts";
 
 export interface Organizer {
     name: string;
@@ -16,9 +17,6 @@ export interface Organizer {
 const COPIES = 4;
 const MIN_NAMES_PER_COPY = 7;
 const SECONDS_PER_NAME = 6.4;
-const ORANGE = '#fa7853';
-const TINTS = ['#352924', '#e3ad92', '#ffaa8d', ORANGE];
-const DARK_TINTS = new Set(['#352924', ORANGE]);
 
 // Slowed down under the mouse (useMarqueePace).
 const HOVER_PACE = 0.2;
@@ -36,12 +34,6 @@ interface Motion {
     targetY: number;
     targetScale: number;
 }
-
-// Seeded, for the server and the browser to draw the same order.
-const seededRandom = (seed: number) => () => {
-    seed = (seed * 16807) % 2147483647;
-    return (seed - 1) / 2147483646;
-};
 
 const shuffle = <T, >(items: T[], random: () => number) => {
     const shuffled = [...items];

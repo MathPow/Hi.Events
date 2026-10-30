@@ -7,42 +7,48 @@ import {eventCoverImageUrl, eventHomepagePath} from "../../../utilites/urlHelper
 import {shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 import classes from "./Landing.module.scss";
 import {useMarqueePace} from "./useMarqueePace.ts";
+import {DARK_TINTS, seededRandom, TINTS} from "./tints.ts";
 
 const COPIES = 4;
 // Enough events in a copy for it to be wider than a wide screen.
-const MIN_EVENTS_PER_COPY = 6;
-const SECONDS_PER_EVENT = 7;
+const MIN_EVENTS_PER_COPY = 10;
+const SECONDS_PER_EVENT = 5;
 // Stopped under the mouse, for the event to be clicked.
 const HOVER_PACE = 0;
 
-const metaLabel = (event: Event) => {
-    const city = event.settings?.location_details?.city?.trim();
-    const day = shortDayLabel(event.start_date, event.timezone);
-
-    return city ? `${day} · ${city}` : day;
+/** A tint per card, drawn at random but never the same twice in a row, the copies' seam included. */
+const drawTints = (count: number) => {
+    const random = seededRandom(104729);
+    const tints: string[] = [];
+    for (let index = 0; index < count; index++) {
+        const neighbours = [tints[index - 1], index === count - 1 ? tints[0] : undefined];
+        const choices = TINTS.filter((tint) => !neighbours.includes(tint));
+        tints.push(choices[Math.floor(random() * choices.length)]);
+    }
+    return tints;
 };
 
-const EventPill = ({event}: { event: Event }) => {
+const EventCard = ({event, tint}: { event: Event, tint: string }) => {
     const cover = eventCoverImageUrl(event);
 
     return (
         // Out of the tab order: the list above the row holds the same links.
-        <Link to={eventHomepagePath(event)} tabIndex={-1} className={classes.nextEvent}>
+        <Link to={eventHomepagePath(event)} tabIndex={-1}
+              className={DARK_TINTS.has(tint) ? `${classes.nextEvent} ${classes.nextEventDark}` : classes.nextEvent}
+              style={{'--tint': tint} as CSSProperties}>
             <span className={classes.nextEventPicture}>
                 {cover && <img src={cover} alt="" loading="lazy" decoding="async"/>}
+                <span className={classes.nextEventDate}>{shortDayLabel(event.start_date, event.timezone)}</span>
             </span>
-            <span className={classes.nextEventText}>
-                <span className={classes.nextEventTitle}>{event.title}</span>
-                <span className={classes.nextEventMeta}>{metaLabel(event)}</span>
-            </span>
+            <span className={classes.nextEventTitle}>{event.title}</span>
         </Link>
     );
 };
 
 /**
- * The platform's next events under the hero, as small pills rolling to the
- * right like the organizers' row: stopped under the mouse to be clicked,
- * faster as the page scrolls. Nothing when no event is coming up.
+ * The platform's next events under the hero, as small cards rolling to the
+ * left, each on one of the organizers' tints: stopped under the mouse to be
+ * clicked, faster as the page scrolls. Nothing when no event is coming up.
  */
 export const NextEvents = () => {
     const {data: events = []} = useGetUpcomingEventsPublic();
@@ -54,10 +60,11 @@ export const NextEvents = () => {
     }
 
     const repeated = Array.from({length: Math.ceil(MIN_EVENTS_PER_COPY / events.length)}, () => events).flat();
+    const tints = drawTints(repeated.length);
 
     return (
         <section className={classes.nextEvents} aria-labelledby="next-events-title">
-            <h2 id="next-events-title" className={classes.nextEventsTitle}>{t`Upcoming Events`}</h2>
+            <h2 id="next-events-title" className={classes.nextEventsTitle}>{t`Things are moving on the box office!`}</h2>
             <ul className={`${classes.visuallyHidden} ${classes.nextEventsNames}`}>
                 {events.map((event) => (
                     <li key={event.id}><Link to={eventHomepagePath(event)}>{event.title}</Link></li>
@@ -71,7 +78,7 @@ export const NextEvents = () => {
                     {Array.from({length: COPIES}).map((_, copy) => (
                         <ul key={copy} className={classes.nextEventsCopy}>
                             {repeated.map((event, index) => (
-                                <li key={index}><EventPill event={event}/></li>
+                                <li key={index}><EventCard event={event} tint={tints[index]}/></li>
                             ))}
                         </ul>
                     ))}
