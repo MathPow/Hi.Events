@@ -12,7 +12,8 @@ $font-titre: FatFrank, 'Arial Black', sans-serif;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
-  overflow: hidden;
+  // clip, pas hidden: hidden en ferait un conteneur de defilement, et le billet ne collerait plus.
+  overflow-x: clip;
   color: var(--dehors-brun);
   background: var(--dehors-creme);
 }
@@ -234,6 +235,15 @@ $font-titre: FatFrank, 'Arial Black', sans-serif;
   flex-shrink: 0;
   gap: 20px;
   width: 440px;
+
+  // Un seul billet: il reste en haut de l'ecran pendant qu'on lit la colonne de droite. A
+  // plusieurs, plus hauts que l'ecran, ils defilent avec la page (colle, le bas serait cache).
+  @include mixins.respond-above(md) {
+    &:has(> :only-child) {
+      position: sticky;
+      top: 24px;
+    }
+  }
 
   @include mixins.respond-below(lg) {
     width: 340px;
