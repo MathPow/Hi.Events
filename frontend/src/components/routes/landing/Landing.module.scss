@@ -293,6 +293,20 @@ $ridge-mobile: 10vw;
     height: 100%;
     object-fit: cover;
   }
+
+  // Filled from the bottom as it comes into view (usePhotoFill): the picture rises into its
+  // sable block, settling from a little closer. inset(0) and not none: none doesn't animate.
+  &[data-fill] img {
+    clip-path: inset(0);
+    scale: 1;
+    transition: clip-path 1.1s cubic-bezier(0.77, 0, 0.18, 1) var(--fill-delay, 0s),
+      scale 1.8s $ease var(--fill-delay, 0s);
+  }
+
+  &[data-fill='waiting'] img {
+    clip-path: inset(100% 0 0);
+    scale: 1.2;
+  }
 }
 
 // --- Opening ---

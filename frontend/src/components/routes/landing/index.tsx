@@ -78,7 +78,7 @@ const Sticker = ({name, className}: { name: string, className?: string }) => {
 };
 
 const Photo = ({name, className}: { name: string, className?: string }) => (
-    <Rough className={`${classes.photo} ${className ?? ''}`} amplitude={2.2} step={34}>
+    <Rough className={`${classes.photo} ${className ?? ''}`} amplitude={2.2} step={34} data-photo>
         <img src={`${ASSETS}/photos/${name}.webp`} alt="" loading="lazy" decoding="async"/>
     </Rough>
 );
@@ -373,6 +373,38 @@ const RISE = 0.14;
 const RISE_MAX = 140;
 // Share of the screen, from the bottom, a block crosses before being in place.
 const RISE_ZONE = 0.4;
+
+// Between the photos that come into view together.
+const FILL_STAGGER = 0.12;
+
+/**
+ * The photos fill their hand-cut frame from the bottom as they come into view,
+ * the sable block first, the picture settling from a little closer. Marked from
+ * here, not in the markup: without the script, or in view on arrival, they show.
+ */
+const usePhotoFill = (root: RefObject<HTMLElement>) => {
+    useEffect(() => {
+        if (typeof IntersectionObserver === 'undefined'
+            || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+        const photos = [...root.current?.querySelectorAll<HTMLElement>('[data-photo]') ?? []]
+            .filter((photo) => photo.getBoundingClientRect().top > window.innerHeight);
+        photos.forEach((photo) => photo.dataset.fill = 'waiting');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
+                const photo = entry.target as HTMLElement;
+                photo.style.setProperty('--fill-delay', `${index * FILL_STAGGER}s`);
+                photo.dataset.fill = 'filled';
+                observer.unobserve(photo);
+            });
+        }, {threshold: 0.25});
+        photos.forEach((photo) => observer.observe(photo));
+
+        return () => observer.disconnect();
+    }, [root]);
+};
 
 /**
  * Blocks arrive from below as the page scrolls, like on the DEHORS shop: when
@@ -792,6 +824,7 @@ const Landing = () => {
     // The stack first: the blocks rise from where the sections are held.
     useStackOnScroll(root);
     useRiseOnScroll(root);
+    usePhotoFill(root);
     // The opening plays on a first load only: the server rendered it. Arriving
     // from another page of the app, the hero's entrance plays right away.
     const [opening, setOpening] = useState(() => typeof document === 'undefined'
