@@ -394,7 +394,10 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   background: var(--dehors-creme);
 }
 
-// Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier.
+// Le code QR, par-dessus la photo, n'apparait qu'au survol ou au clavier: l'aplat monte du bas
+// et remplit la photo, puis redescend. Il reste visible le temps de redescendre.
+$remplissage: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+
 .ticketQr {
   position: absolute;
   inset: 0;
@@ -406,14 +409,28 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   padding: 12px;
   color: var(--public-sur-accent);
   background: var(--public-accent);
-  opacity: 0;
+  clip-path: inset(100% 0 0);
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s;
+  transition: clip-path $remplissage, visibility 0s 0.4s;
 
   .ticketCard:hover &,
   .ticketCard:focus-within & {
-    opacity: 1;
+    clip-path: inset(0);
     visibility: visible;
+    transition: clip-path $remplissage, visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0.2s;
+
+    .ticketCard:hover &,
+    .ticketCard:focus-within & {
+      clip-path: none;
+      opacity: 1;
+      transition: opacity 0.2s ease, visibility 0s;
+    }
   }
 }
 
