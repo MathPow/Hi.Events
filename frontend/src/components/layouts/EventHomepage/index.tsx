@@ -12,7 +12,7 @@ import {
     EventPageBackState,
     organizerHomepagePath
 } from "../../../utilites/urlHelper.ts";
-import {Event, Organizer, OrganizerStatus} from "../../../types.ts";
+import {Event, EventLifecycleStatus, Organizer, OrganizerStatus} from "../../../types.ts";
 import {EventNotAvailable} from "./EventNotAvailable";
 import {ContactOrganizerModal} from "../../common/ContactOrganizerModal";
 import {socialMediaConfig} from "../../../constants/socialMediaConfig";
@@ -166,7 +166,10 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const isOnlineEvent = event.settings?.is_online_event;
     const hasLocation = isAddressSet(locationDetails) && !isOnlineEvent;
     const mapUrl = event.settings?.maps_url || (locationDetails ? getGoogleMapsUrl(locationDetails) : null);
-    const hasEnded = !!event.end_date && isDateInPast(event.end_date);
+    // Le statut du serveur compte aussi un evenement sans date de fin (termine quelques heures
+    // apres son debut); la date de fin, pour une page restee ouverte.
+    const hasEnded = event.lifecycle_status === EventLifecycleStatus.ENDED
+        || (!!event.end_date && isDateInPast(event.end_date));
 
     const products = event.products || event.product_categories?.flatMap(c => c.products || []) || [];
     const defaultTicket = findDefaultTicket(event);
@@ -261,7 +264,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                 <div className={classes.halo} aria-hidden/>
 
-                <div className={classes.content}>
+                <div className={hasEnded ? `${classes.content} ${classes.withoutBuyBar}` : classes.content}>
                     <div className={classes.bar}>
                         <PublicPageBar left={backLink}/>
                     </div>
@@ -453,22 +456,25 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                             promoCode={promoCode}
                             formId={TICKETS_FORM_ID}
                             onSelectionChange={setSelection}
+                            ended={hasEnded}
                         />
                     </div>
 
                     <PublicPageFooter/>
                 </div>
 
-                <StickyBuyBar
-                    event={event}
-                    formId={TICKETS_FORM_ID}
-                    selection={selection}
-                    defaultTicket={defaultTicket}
-                    ticketsOutOfView={ticketsOutOfView}
-                    promoCode={promoCodeValid ? promoCode : null}
-                    onSeeAllTickets={hasOtherProducts ? scrollToTickets : undefined}
-                    onShowTickets={scrollToTickets}
-                />
+                {!hasEnded && (
+                    <StickyBuyBar
+                        event={event}
+                        formId={TICKETS_FORM_ID}
+                        selection={selection}
+                        defaultTicket={defaultTicket}
+                        ticketsOutOfView={ticketsOutOfView}
+                        promoCode={promoCodeValid ? promoCode : null}
+                        onSeeAllTickets={hasOtherProducts ? scrollToTickets : undefined}
+                        onShowTickets={scrollToTickets}
+                    />
+                )}
 
                 {organizer && (
                     <ContactOrganizerModal

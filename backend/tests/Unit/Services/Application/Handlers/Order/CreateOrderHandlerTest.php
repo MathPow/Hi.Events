@@ -120,6 +120,18 @@ class CreateOrderHandlerTest extends TestCase
         $this->handler->handle($eventId, $dto);
     }
 
+    public function testThrowsWhenEventHasEnded(): void
+    {
+        $eventId = 1;
+
+        $this->databaseManager->shouldReceive('statement')->andReturn(true);
+        $this->setupEventMock($eventId, hasEnded: true);
+        $this->orderManagementService->shouldNotReceive('createNewOrder');
+
+        $this->expectException(ValidationException::class);
+        $this->handler->handle($eventId, $this->createOrderDTO());
+    }
+
     public function testPassesWhenQuantityIsWithinAvailability(): void
     {
         $eventId = 1;
@@ -166,7 +178,7 @@ class CreateOrderHandlerTest extends TestCase
         ]);
     }
 
-    private function setupEventMock(int $eventId): void
+    private function setupEventMock(int $eventId, bool $hasEnded = false): void
     {
         $eventSettings = Mockery::mock(EventSettingDomainObject::class);
         $eventSettings->shouldReceive('getOrderTimeoutInMinutes')->andReturn(15);
@@ -174,6 +186,7 @@ class CreateOrderHandlerTest extends TestCase
         $event = Mockery::mock(EventDomainObject::class);
         $event->shouldReceive('getId')->andReturn($eventId);
         $event->shouldReceive('getStatus')->andReturn(EventStatus::LIVE->name);
+        $event->shouldReceive('isEventInPast')->andReturn($hasEnded);
         $event->shouldReceive('getEventSettings')->andReturn($eventSettings);
         $event->shouldReceive('getAccountId')->andReturn(1);
 

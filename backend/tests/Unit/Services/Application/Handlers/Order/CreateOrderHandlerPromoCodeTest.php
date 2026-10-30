@@ -54,6 +54,7 @@ class CreateOrderHandlerPromoCodeTest extends TestCase
         $eventSettings->shouldReceive('getOrderTimeoutInMinutes')->andReturn(15);
 
         $event = Mockery::mock(EventDomainObject::class);
+        $event->shouldReceive('isEventInPast')->andReturn(false);
         $event->shouldReceive('getEventSettings')->andReturn($eventSettings);
         $event->shouldReceive('getCurrency')->andReturn('USD');
         $event->shouldReceive('getAccountId')->andReturn(1);

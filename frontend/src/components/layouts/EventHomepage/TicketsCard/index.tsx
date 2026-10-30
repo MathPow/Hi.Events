@@ -17,19 +17,22 @@ interface TicketsCardProps {
     promoCode?: string;
     formId: string;
     onSelectionChange: (summary: ProductSelectionSummary) => void;
+    ended?: boolean;
     className?: string;
 }
 
 // La carte « Billets » de la page evenement: le widget de selection existant, habille comme la
 // maquette (voir TicketsCard.module.scss), avec le sous-total et la mention du paiement. Chaque
 // billet est ouvert, son prix a cote du titre. Sur grand ecran, la carte colle au defilement et
-// s'arrete au bas de l'ecran: la liste des billets defile dedans.
+// s'arrete au bas de l'ecran: la liste des billets defile dedans. Un evenement termine ne vend
+// plus rien: la carte le dit a la place du widget.
 export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                           event,
                                                                           promoCodeValid,
                                                                           promoCode,
                                                                           formId,
                                                                           onSelectionChange,
+                                                                          ended,
                                                                           className,
                                                                       }, ref) => {
     const cardRef = useRef<HTMLElement>(null);
@@ -82,38 +85,47 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
         >
             <div className={classes.header}>
                 <h2 className={classes.title}>{t`Tickets`}</h2>
-                {hasLimitedSpots && <span className={classes.pill} data-rough>{t`Limited spots`}</span>}
+                {hasLimitedSpots && !ended && <span className={classes.pill} data-rough>{t`Limited spots`}</span>}
             </div>
 
-            <div className={classes.widget}>
-                <SelectProducts
-                    event={event}
-                    promoCodeValid={promoCodeValid}
-                    promoCode={promoCode}
-                    formId={formId}
-                    onSelectionChange={onSelectionChange}
-                    showSubtotal
-                    collapsiblePromoCode
-                    colors={{
-                        background: 'transparent',
-                        primary: 'var(--dehors-brun)',
-                        primaryText: 'var(--dehors-brun)',
-                        secondary: 'var(--public-accent)',
-                        secondaryText: 'var(--public-sur-accent)',
-                        bodyBackground: 'var(--dehors-creme)',
-                    }}
-                    continueButtonText={event.settings?.continue_button_text}
-                    productCards
-                    padding={'0px'}
-                    showPoweredBy={false}
-                />
-            </div>
+            {ended ? (
+                <div className={classes.ended} data-rough>
+                    <PublicIcon name={'horloge'} size={24}/>
+                    <p>{t`This event has ended`}</p>
+                </div>
+            ) : (
+                <>
+                    <div className={classes.widget}>
+                        <SelectProducts
+                            event={event}
+                            promoCodeValid={promoCodeValid}
+                            promoCode={promoCode}
+                            formId={formId}
+                            onSelectionChange={onSelectionChange}
+                            showSubtotal
+                            collapsiblePromoCode
+                            colors={{
+                                background: 'transparent',
+                                primary: 'var(--dehors-brun)',
+                                primaryText: 'var(--dehors-brun)',
+                                secondary: 'var(--public-accent)',
+                                secondaryText: 'var(--public-sur-accent)',
+                                bodyBackground: 'var(--dehors-creme)',
+                            }}
+                            continueButtonText={event.settings?.continue_button_text}
+                            productCards
+                            padding={'0px'}
+                            showPoweredBy={false}
+                        />
+                    </div>
 
-            {paysWithStripe && (
-                <p className={classes.secure}>
-                    <PublicIcon name={'cadenas'} size={16}/>
-                    {t`Secure payment by Stripe`}
-                </p>
+                    {paysWithStripe && (
+                        <p className={classes.secure}>
+                            <PublicIcon name={'cadenas'} size={16}/>
+                            {t`Secure payment by Stripe`}
+                        </p>
+                    )}
+                </>
             )}
         </section>
     );

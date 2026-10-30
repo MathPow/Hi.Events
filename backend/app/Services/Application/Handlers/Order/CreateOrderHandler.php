@@ -134,6 +134,12 @@ class CreateOrderHandler
                 __('This event is not live.')
             );
         }
+
+        if ($event->isEventInPast()) {
+            throw ValidationException::withMessages([
+                'products' => __('This event has ended.'),
+            ]);
+        }
     }
 
     /**
