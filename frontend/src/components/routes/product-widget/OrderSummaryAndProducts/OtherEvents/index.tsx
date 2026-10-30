@@ -59,7 +59,7 @@ const OtherEventCard = ({event}: { event: Event }) => {
                     </span>
                 )}
             </span>
-            <span className={classes.go} data-rough aria-hidden>
+            <span className={classes.go} data-rough="button" aria-hidden>
                 <PublicIcon name={'fleche'} size={20}/>
             </span>
             <PublicIcon name={'chevron-droite'} size={18} className={classes.chevron}/>

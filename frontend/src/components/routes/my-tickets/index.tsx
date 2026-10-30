@@ -336,7 +336,7 @@ const AlsoUpcoming = ({groups}: { groups: EventTickets[] }) => (
                                     .filter(Boolean).join(' · ')}
                             </span>
                         </span>
-                        <span className={classes.rowArrow} aria-hidden><PublicIcon name={'fleche'} size={18}/></span>
+                        <span className={classes.rowArrow} data-rough="button" aria-hidden><PublicIcon name={'fleche'} size={18}/></span>
                     </Link>
                 </li>
             ))}

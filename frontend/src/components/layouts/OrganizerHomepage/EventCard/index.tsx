@@ -154,7 +154,7 @@ export const EventCard = ({event, compact = false}: EventCardProps) => {
                             {price}
                         </span>
                     )}
-                    <span className={classes.arrow} aria-hidden>
+                    <span className={classes.arrow} data-rough="button" aria-hidden>
                         <PublicIcon name={'fleche'} size={20}/>
                     </span>
                 </div>
