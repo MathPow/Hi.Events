@@ -22,6 +22,8 @@ import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
 import {InstallAppButton} from "../../common/InstallAppButton";
 import {EventCard} from "../../layouts/OrganizerHomepage/EventCard";
+import {CarouselList, CarouselNav} from "../../common/Carousel";
+import {useCarousel} from "../../../hooks/useCarousel.ts";
 import {ConfirmationTicket} from "../product-widget/OrderSummaryAndProducts/ConfirmationTicket";
 import {
     dayMonthLabel,
@@ -236,20 +238,25 @@ const NoUpcoming = () => (
     </div>
 );
 
-// A venir, grand ecran: la grille des billets, et la carte du billet manquant au bout.
+// A venir, grand ecran: les billets en carrousel, comme le repertoire (fleches dans l'en-tete),
+// et la carte du billet manquant au bout.
 const UpcomingGrid = ({groups}: { groups: EventTickets[] }) => {
     const count = groups.reduce((total, group) => total + group.attendees.length, 0);
+    const carousel = useCarousel(groups.length + 1);
 
     return (
         <section className={`${shell.card} ${classes.section} ${classes.desktopOnly}`} data-rough
                  aria-labelledby="upcoming-title">
             <div className={classes.sectionHeader}>
-                <h2 id="upcoming-title" className={classes.sectionTitle}>{t`Upcoming`}</h2>
-                {count > 0 && (
-                    <span className={classes.sectionNote}>
-                        {count === 1 ? t`1 upcoming ticket` : t`${count} upcoming tickets`}
-                    </span>
-                )}
+                <div className={classes.sectionHeading}>
+                    <h2 id="upcoming-title" className={classes.sectionTitle}>{t`Upcoming`}</h2>
+                    {count > 0 && (
+                        <span className={classes.sectionNote}>
+                            {count === 1 ? t`1 upcoming ticket` : t`${count} upcoming tickets`}
+                        </span>
+                    )}
+                </div>
+                <CarouselNav carousel={carousel}/>
             </div>
             {count > 0 && (
                 <p className={classes.tip}>
@@ -257,11 +264,11 @@ const UpcomingGrid = ({groups}: { groups: EventTickets[] }) => {
                     {t`Hover over a ticket to show its QR code.`}
                 </p>
             )}
-            <div className={classes.ticketGrid}>
-                {groups.length === 0 && <NoUpcoming/>}
-                {groups.map((group) => <TicketCard key={group.event.id} group={group}/>)}
-                <MissingTicket/>
-            </div>
+            <CarouselList carousel={carousel}>
+                {groups.length === 0 && <li><NoUpcoming/></li>}
+                {groups.map((group) => <li key={group.event.id}><TicketCard group={group}/></li>)}
+                <li><MissingTicket/></li>
+            </CarouselList>
         </section>
     );
 };

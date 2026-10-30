@@ -1,7 +1,7 @@
 import {t} from "@lingui/macro";
 import {Popover, TextInput, UnstyledButton} from "@mantine/core";
 import {useMediaQuery} from "@mantine/hooks";
-import {ComponentPropsWithoutRef, forwardRef, ReactNode, useEffect, useRef, useState} from "react";
+import {ComponentPropsWithoutRef, forwardRef, ReactNode, useState} from "react";
 import {Helmet} from "react-helmet-async";
 import dayjs, {Dayjs} from "dayjs";
 
@@ -13,6 +13,8 @@ import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
 import {EventTypeIllustration} from "../../common/EventTypeIllustration";
+import {CarouselList, CarouselNav} from "../../common/Carousel";
+import {useCarousel} from "../../../hooks/useCarousel.ts";
 import {EventCard} from "../../layouts/OrganizerHomepage/EventCard";
 
 import {AccountEventType, Event} from "../../../types.ts";
@@ -22,9 +24,6 @@ import classes from './EventsDirectory.module.scss';
 type DateRange = 'ALL' | 'TODAY' | 'WEEKEND' | 'NEXT_7_DAYS' | 'THIS_MONTH';
 
 const DATE_RANGES: DateRange[] = ['ALL', 'TODAY', 'WEEKEND', 'NEXT_7_DAYS', 'THIS_MONTH'];
-
-// Trois cartes tiennent dans une section sur grand ecran: au-dela, le carrousel defile.
-const CARDS_IN_VIEW = 3;
 
 const dateRangeLabel = (range: DateRange) => ({
     ALL: t`All dates`,
@@ -205,42 +204,7 @@ const TypesMenu = ({value, onChange}: {
 // Une section par type: l'illustration, le nombre d'evenements, puis les cartes en carrousel.
 // Sur grand ecran, les fleches le font defiler d'une page; sur telephone, on glisse.
 const TypeSection = ({type, events}: { type: AccountEventType, events: Event[] }) => {
-    const carousel = useRef<HTMLUListElement>(null);
-    const [edges, setEdges] = useState({atStart: true, atEnd: events.length <= CARDS_IN_VIEW});
-
-    useEffect(() => {
-        const list = carousel.current;
-        if (!list) {
-            return;
-        }
-        const update = () => setEdges({
-            atStart: list.scrollLeft <= 1,
-            atEnd: list.scrollLeft + list.clientWidth >= list.scrollWidth - 1,
-        });
-        update();
-        list.addEventListener('scroll', update, {passive: true});
-        const observer = new ResizeObserver(update);
-        observer.observe(list);
-
-        return () => {
-            list.removeEventListener('scroll', update);
-            observer.disconnect();
-        };
-    }, [events.length]);
-
-    // Une page: la largeur visible, que l'aimantation ramene au debut d'une carte.
-    const page = (direction: 1 | -1) => {
-        const list = carousel.current;
-        if (!list) {
-            return;
-        }
-        const style = getComputedStyle(list);
-        const visible = list.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-        // eslint-disable-next-line lingui/no-unlocalized-strings
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        list.scrollBy({left: direction * visible, behavior: reduceMotion ? 'auto' : 'smooth'});
-    };
-
+    const carousel = useCarousel(events.length);
     const titleId = `type-${type.toLowerCase()}`;
 
     return (
@@ -253,24 +217,13 @@ const TypeSection = ({type, events}: { type: AccountEventType, events: Event[] }
                         <p className={classes.sectionCount}>{upcomingCount(events.length)}</p>
                     </div>
                 </div>
-                {!(edges.atStart && edges.atEnd) && (
-                    <div className={classes.carouselNav}>
-                        <UnstyledButton className={classes.navButton} data-rough="button" disabled={edges.atStart}
-                                        aria-label={t({message: 'Previous', context: 'carousel'})} onClick={() => page(-1)}>
-                            <PublicIcon name={'retour'} size={20}/>
-                        </UnstyledButton>
-                        <UnstyledButton className={classes.navButton} data-rough="button" disabled={edges.atEnd}
-                                        aria-label={t({message: 'Next', context: 'carousel'})} onClick={() => page(1)}>
-                            <PublicIcon name={'fleche'} size={20}/>
-                        </UnstyledButton>
-                    </div>
-                )}
+                <CarouselNav carousel={carousel}/>
             </div>
-            <ul ref={carousel} className={classes.carousel}>
+            <CarouselList carousel={carousel}>
                 {events.map((event) => (
                     <li key={event.id}><EventCard event={event} compact/></li>
                 ))}
-            </ul>
+            </CarouselList>
         </section>
     );
 };
