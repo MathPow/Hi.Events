@@ -1,4 +1,4 @@
-import {forwardRef, useEffect, useRef} from "react";
+import {forwardRef, useEffect, useRef, useState} from "react";
 import {useMergedRef} from "@mantine/hooks";
 import {t} from "@lingui/macro";
 import SelectProducts, {ProductSelectionSummary} from "../../../routes/product-widget/SelectProducts";
@@ -10,6 +10,8 @@ import classes from "./TicketsCard.module.scss";
 const SCREEN_MARGIN = 24;
 // Sur un ecran tres bas, la carte garde de quoi montrer un billet et Continuer.
 const MIN_HEIGHT = 360;
+// La duree du depliage du sous-total ($deplie dans TicketsCard.module.scss).
+const UNFOLD_MS = 450;
 
 interface TicketsCardProps {
     event: Event;
@@ -25,7 +27,8 @@ interface TicketsCardProps {
 // maquette (voir TicketsCard.module.scss), avec le sous-total et la mention du paiement. Chaque
 // billet est ouvert, son prix a cote du titre. Sur grand ecran, la carte colle au defilement et
 // s'arrete au bas de l'ecran: la liste des billets defile dedans. Un evenement termine ne vend
-// plus rien: la carte le dit a la place du widget.
+// plus rien: la carte le dit a la place du widget. Le sous-total, Continuer et la mention
+// Stripe restent replies jusqu'au premier billet choisi, puis se deplient et restent la.
 export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                           event,
                                                                           promoCodeValid,
@@ -37,6 +40,23 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                       }, ref) => {
     const cardRef = useRef<HTMLElement>(null);
     const mergedRef = useMergedRef(ref, cardRef);
+    // opening: le depliage, contenu coupe; open: deplie, Continuer peut deborder (son survol grossit).
+    const [unfold, setUnfold] = useState<'folded' | 'opening' | 'open'>('folded');
+
+    useEffect(() => {
+        if (unfold !== 'opening') {
+            return;
+        }
+        const timer = window.setTimeout(() => setUnfold('open'), UNFOLD_MS);
+        return () => window.clearTimeout(timer);
+    }, [unfold]);
+
+    const handleSelectionChange = (summary: ProductSelectionSummary) => {
+        if (summary.quantity > 0) {
+            setUnfold((current) => current === 'folded' ? 'opening' : current);
+        }
+        onSelectionChange(summary);
+    };
 
     // Le bas de la carte suit le bas de l'ecran, qu'elle soit encore dans la page ou deja collee.
     useEffect(() => {
@@ -82,6 +102,7 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
             id="tickets"
             className={className ? `${classes.card} ${className}` : classes.card}
             data-rough
+            data-unfold={unfold}
         >
             <div className={classes.header}>
                 <h2 className={classes.title}>{t`Tickets`}</h2>
@@ -101,7 +122,7 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                             promoCodeValid={promoCodeValid}
                             promoCode={promoCode}
                             formId={formId}
-                            onSelectionChange={onSelectionChange}
+                            onSelectionChange={handleSelectionChange}
                             showSubtotal
                             collapsiblePromoCode
                             colors={{
@@ -120,10 +141,12 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                     </div>
 
                     {paysWithStripe && (
-                        <p className={classes.secure}>
-                            <PublicIcon name={'cadenas'} size={16}/>
-                            {t`Secure payment by Stripe`}
-                        </p>
+                        <div className={classes.secureUnfold}>
+                            <p className={classes.secure}>
+                                <PublicIcon name={'cadenas'} size={16}/>
+                                {t`Secure payment by Stripe`}
+                            </p>
+                        </div>
                     )}
                 </>
             )}

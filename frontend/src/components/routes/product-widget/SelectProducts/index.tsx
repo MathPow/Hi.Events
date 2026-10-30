@@ -408,6 +408,33 @@ const SelectProducts = (props: SelectProductsProps) => {
         .reduce((lines, product) => lines + Math.max(1, product.prices?.length || 0), 0);
     const collapsibleCards = !!props.productCards && choiceLines > 3;
 
+    const renderCheckout = () => (
+        <>
+            {props.showSubtotal && (
+                <div className={'hi-subtotal-row'}>
+                    <div className={'hi-subtotal-label'}>
+                        <span className={'hi-subtotal-title'}>
+                            {t`Subtotal`} · {selectedProductQuantitySum === 1
+                                ? t`1 ticket`
+                                : t`${Number(selectedProductQuantitySum)} tickets`}
+                        </span>
+                        {selectedProductsSubtotal > 0 && (
+                            <span className={'hi-subtotal-note'}>{t`Fees calculated at the next step`}</span>
+                        )}
+                    </div>
+                    <span className={'hi-subtotal-amount'}>
+                        {formatCurrency(selectedProductsSubtotal, event.currency)}
+                    </span>
+                </div>
+            )}
+            <Button disabled={isButtonDisabled} fullWidth className={'hi-continue-button'}
+                    type={"submit"}
+                    loading={productMutation.isPending}>
+                {props.continueButtonText || event?.settings?.continue_button_text || t`Continue`}
+            </Button>
+        </>
+    );
+
     return (
         <div className={'hi-product-widget-container'}
              ref={resizeRef}
@@ -852,28 +879,13 @@ const SelectProducts = (props: SelectProductsProps) => {
                                 __html: event.settings.product_page_message.replace(/\n/g, '<br/>')
                             }} className={'hi-product-page-message'}/>
                         )}
-                        {props.showSubtotal && (
-                            <div className={'hi-subtotal-row'}>
-                                <div className={'hi-subtotal-label'}>
-                                    <span className={'hi-subtotal-title'}>
-                                        {t`Subtotal`} · {selectedProductQuantitySum === 1
-                                            ? t`1 ticket`
-                                            : t`${Number(selectedProductQuantitySum)} tickets`}
-                                    </span>
-                                    {selectedProductsSubtotal > 0 && (
-                                        <span className={'hi-subtotal-note'}>{t`Fees calculated at the next step`}</span>
-                                    )}
-                                </div>
-                                <span className={'hi-subtotal-amount'}>
-                                    {formatCurrency(selectedProductsSubtotal, event.currency)}
-                                </span>
+                        {props.productCards ? (
+                            // On the event page, the card (TicketsCard) unfolds the subtotal and
+                            // Continue when the first ticket is picked.
+                            <div className={'hi-footer-summary'}>
+                                <div className={'hi-footer-summary-content'}>{renderCheckout()}</div>
                             </div>
-                        )}
-                        <Button disabled={isButtonDisabled} fullWidth className={'hi-continue-button'}
-                                type={"submit"}
-                                loading={productMutation.isPending}>
-                            {props.continueButtonText || event?.settings?.continue_button_text || t`Continue`}
-                        </Button>
+                        ) : renderCheckout()}
                     </div>
                 </form>
             )}

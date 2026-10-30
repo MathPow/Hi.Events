@@ -1,6 +1,44 @@
 @use "../../../../styles/mixins.scss";
 
 $affichage: FatFrank, 'Arial Black', sans-serif;
+// Le depliage du sous-total, de Continuer et de la mention Stripe (UNFOLD_MS dans index.tsx).
+$deplie: 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+
+// Replie jusqu'au premier billet choisi (data-unfold sur la carte), puis deplie pour de bon: une
+// grille de 0fr a 1fr, la hauteur suit le contenu. Le contenu glisse un peu vers le bas en
+// apparaissant.
+@mixin depliable {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows $deplie;
+
+  [data-unfold='opening'] &,
+  [data-unfold='open'] & {
+    grid-template-rows: 1fr;
+    visibility: visible;
+  }
+
+  > * {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    translate: 0 -12px;
+    transition: opacity 0.3s ease 0.1s, translate $deplie;
+
+    [data-unfold='opening'] &,
+    [data-unfold='open'] & {
+      opacity: 1;
+      translate: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &, > * {
+      transition: none;
+    }
+  }
+}
 
 // Icone de la maquette peinte en currentColor, posee en pseudo-element sur un element du widget
 // (dont on ne touche pas le balisage).
@@ -98,7 +136,18 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// La marge negative reprend l'ecart de la carte tant que la mention est repliee.
+.secureUnfold {
+  @include depliable;
+  margin-top: -16px;
+
+  @include mixins.respond-below(lg) {
+    display: none;
+  }
+}
+
 .secure {
+  padding-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -596,7 +645,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       .hi-donation-input-wrapper .hi-donation-input {
         border: 2px solid transparent;
         border-radius: 14px;
-        background: var(--dehors-champ);
+        background: var(--public-champ);
         color: var(--dehors-brun);
         font-family: inherit;
 
@@ -687,7 +736,7 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
       height: 44px;
       border: 2px solid transparent;
       border-radius: 14px;
-      background: var(--dehors-champ);
+      background: var(--public-champ);
       color: var(--dehors-brun);
       font-size: 15px;
 
@@ -749,13 +798,30 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
     }
   }
 
-  // Trait, sous-total puis Continuer (sous lg, la barre collante du bas les remplace).
+  // Trait, sous-total puis Continuer (sous lg, la barre collante du bas les remplace), replies
+  // jusqu'au premier billet choisi.
   .hi-product-widget-container .hi-footer-row {
-    gap: 16px;
-    margin-top: 16px;
+    gap: 0;
+    margin-top: 0;
+
+    .hi-footer-summary {
+      @include depliable;
+    }
+
+    .hi-footer-summary-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 16px;
+
+      // Deplie, Continuer deborde: son survol grossit.
+      [data-unfold='open'] & {
+        overflow: visible;
+      }
+    }
 
     .hi-product-page-message {
-      margin: 0;
+      margin: 16px 0 0;
       padding: 12px 16px;
       border-radius: 14px;
       background: var(--dehors-creme);
@@ -822,9 +888,11 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
     }
 
     @include mixins.respond-below(lg) {
-      margin-top: 12px;
+      .hi-product-page-message {
+        margin-top: 12px;
+      }
 
-      .hi-subtotal-row, .hi-continue-button {
+      .hi-footer-summary {
         display: none;
       }
 
