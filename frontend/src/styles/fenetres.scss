@@ -1,0 +1,217 @@
+@use "mixins";
+
+// Les fenetres, menus et notifications aux couleurs de Dehors. Rendus dans un portail, hors de la
+// page, ils n'en prennent rien: c'est ici qu'ils sont habilles, tous de la meme facon. Le
+// back-office (body.dehors-app) habille ses fenetres et menus dans dehors-app.scss.
+$publiques: 'body:not(.dehors-app)';
+
+// Les icones de showInfo, showSuccess et showError (Tabler: info-small, check, x), en creme.
+@function icone($trace) {
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff7e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='#{$trace}'/%3E%3C/svg%3E");
+}
+
+// Partout, les notifications (showSuccess, showInfo, showError comme les notifications.show
+// directes): une carte creme decoupee (useRoughEdges), le texte fonce. Les couleurs de Mantine
+// sont ramenees a celles de Dehors dans la pastille de l'icone. Sans icone, la barre de couleur
+// de Mantine devient la meme pastille, l'icone dessinee selon la couleur.
+.mantine-Notification-root {
+  --mantine-color-blue-filled: var(--dehors-brun);
+  --mantine-color-green-filled: #4f7a5a;
+  --mantine-color-red-filled: #b42318;
+  --mantine-color-orange-filled: var(--dehors-orange);
+  --mantine-color-yellow-filled: var(--dehors-orange);
+  --notification-radius: 18px;
+  min-height: 60px;
+  padding: 12px 12px 12px 14px;
+  border: none;
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  box-shadow: 0 10px 40px rgb(55 39 33 / 0.16);
+
+  &::before {
+    top: 50%;
+    bottom: auto;
+    inset-inline-start: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    translate: 0 -50%;
+    background: icone('M12 9h.01M11 12h1v4h1') center / 24px no-repeat var(--notification-color);
+  }
+
+  &[style*='-green-']::before {
+    background-image: icone('M5 12l5 5l10 -10');
+  }
+
+  &[style*='-red-']::before {
+    background-image: icone('M18 6l-12 12M6 6l12 12');
+  }
+
+  &:where(:not([data-with-icon])) {
+    padding-inline-start: 64px;
+  }
+}
+
+.mantine-Notification-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--dehors-creme);
+}
+
+.mantine-Notification-loader {
+  --loader-color: var(--dehors-brun);
+}
+
+.mantine-Notification-title {
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-weight: 400;
+  color: var(--dehors-brun);
+}
+
+.mantine-Notification-description {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dehors-brun);
+}
+
+.mantine-Notification-closeButton {
+  border-radius: 50%;
+  color: var(--dehors-brun);
+
+  &:hover {
+    background: var(--dehors-champ);
+  }
+}
+
+#{$publiques} {
+  // Les fenetres: carte creme, titre en FatFrank, champs peche comme a la caisse, le bouton
+  // secondaire (variant default) en bouton contour et le principal en pilule a la couleur de
+  // l'evenement.
+  .mantine-Modal-overlay {
+    background: rgb(53 41 36 / 0.45);
+  }
+
+  .mantine-Modal-content {
+    border-radius: 24px;
+    color: var(--dehors-brun);
+    background: var(--dehors-carte);
+  }
+
+  .mantine-Modal-header {
+    padding: 22px 24px 10px;
+    background: var(--dehors-carte);
+  }
+
+  .mantine-Modal-title {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--dehors-brun);
+  }
+
+  .mantine-Modal-close {
+    border-radius: 999px;
+    color: var(--dehors-brun);
+    background: var(--dehors-champ);
+
+    &:hover {
+      background: var(--dehors-champ-survol);
+    }
+  }
+
+  .mantine-Modal-body {
+    padding: 6px 24px 24px;
+  }
+
+  .mantine-Modal-body .mantine-InputWrapper-label {
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dehors-brun);
+  }
+
+  .mantine-Modal-body .mantine-Input-input {
+    min-height: 48px;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    font-size: 16px;
+    color: var(--dehors-brun);
+    background: var(--dehors-champ);
+
+    &[data-error] {
+      border-color: #b42318;
+    }
+  }
+
+  .mantine-Modal-body .mantine-InputWrapper-error {
+    color: #b42318;
+  }
+
+  .mantine-Modal-body .mantine-Alert-root {
+    border: none;
+    border-radius: 14px;
+    color: var(--dehors-brun);
+    background: var(--dehors-champ);
+  }
+
+  .mantine-Modal-body .mantine-Alert-icon {
+    color: var(--dehors-brun);
+  }
+
+  .mantine-Modal-body .mantine-Button-root {
+    height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .mantine-Modal-body .mantine-Button-root[data-variant='default'] {
+    @include mixins.bouton-contour;
+  }
+
+  // Les menus, popovers et listes de choix: la carte des menus du repertoire, comme ceux qui ont
+  // deja leur classe (agenda, partage, langue). Seules ces proprietes, aux memes valeurs: leur
+  // espacement reste le leur.
+  .mantine-Menu-dropdown,
+  .mantine-Popover-dropdown,
+  .mantine-Combobox-dropdown {
+    border: none;
+    border-radius: 20px;
+    color: var(--dehors-brun);
+    background: var(--dehors-carte);
+    box-shadow: 0 10px 40px rgb(55 39 33 / 0.16);
+  }
+
+  .mantine-Popover-arrow {
+    border: none;
+    background: var(--dehors-carte);
+  }
+
+  .mantine-Menu-item,
+  .mantine-Combobox-option {
+    border-radius: 14px;
+    font-weight: 700;
+    color: var(--dehors-brun);
+  }
+
+  .mantine-Menu-item:where(:not([data-disabled]))[data-hovered],
+  .mantine-Combobox-option:where(:not([data-combobox-disabled])):hover {
+    background: var(--dehors-creme);
+  }
+
+  .mantine-Combobox-option[data-combobox-selected] {
+    color: var(--dehors-brun);
+    background: var(--dehors-champ);
+  }
+
+  .mantine-Tooltip-tooltip {
+    border-radius: 10px;
+    font-weight: 600;
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
+  }
+}

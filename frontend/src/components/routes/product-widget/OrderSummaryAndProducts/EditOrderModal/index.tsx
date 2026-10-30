@@ -3,7 +3,6 @@ import {Alert, Button, Group, Modal, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {IconInfoCircle} from "@tabler/icons-react";
 import {Order} from "../../../../../types";
-import classes from "./EditOrderModal.module.scss";
 import {InputGroup} from "../../../../common/InputGroup";
 
 interface EditOrderModalProps {
@@ -44,7 +43,6 @@ export const EditOrderModal = ({
             onClose={onClose}
             title={t`Edit Order Details`}
             size="md"
-            className={classes.modal}
         >
             <form onSubmit={form.onSubmit(onSuccess)}>
                 <div>

@@ -2,9 +2,10 @@ import {useEffect} from "react";
 import {roughClipPath, roughEdgeClipPath, roughEdgePath} from "../utilites/roughEdge.ts";
 import {roughButtonPath} from "./useRoughButton.ts";
 
-// Ce qui se coupe: les blocs marques data-rough, et tous les champs et boutons Mantine,
-// partout (pages publiques, back-office, fenetres et menus en portail).
-const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root';
+// Ce qui se coupe: les blocs marques data-rough, tous les champs et boutons Mantine, les
+// fenetres et les notifications, partout (pages publiques, back-office, portails).
+const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root,'
+    + ' .mantine-Modal-content, .mantine-Notification-root';
 // Les boutons pleins prennent le contour des boutons du site (rugueux.ts: des bosses lisses,
 // les bouts nets) sur leur propre rayon, les boutons contour celui des blocs; tous
 // bouillonnent au survol entre trois traces.

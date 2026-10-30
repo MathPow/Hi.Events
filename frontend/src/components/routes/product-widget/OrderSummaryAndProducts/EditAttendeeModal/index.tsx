@@ -3,7 +3,6 @@ import {Alert, Button, Group, Modal, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {IconInfoCircle} from "@tabler/icons-react";
 import {Attendee} from "../../../../../types";
-import classes from "./EditAttendeeModal.module.scss";
 import {InputGroup} from "../../../../common/InputGroup";
 
 interface EditAttendeeModalProps {
@@ -44,7 +43,6 @@ export const EditAttendeeModal = ({
             onClose={onClose}
             title={t`Edit Attendee Details`}
             size="md"
-            className={classes.modal}
         >
             <form onSubmit={form.onSubmit(onSuccess)}>
                 <div>

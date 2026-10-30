@@ -347,20 +347,18 @@ const Checkout = () => {
                 centered
                 size="m"
             >
-                <div style={{textAlign: 'center', padding: '20px 0'}}>
-                    <h3 style={{color: 'var(--checkout-text-primary)', margin: '0 0 8px 0'}}>
+                <div className={classes.dialog}>
+                    <h3 className={classes.dialogTitle}>
                         {t`You have run out of time to complete your order.`}
                     </h3>
-                    <p style={{color: 'var(--checkout-text-secondary)', margin: '0'}}>
+                    <p className={classes.dialogText}>
                         {t`Please return to the event page to start over.`}
                     </p>
-                    <Button
-                        onClick={handleReturn}
-                        variant="filled"
-                        mt="xl"
-                    >
-                        {t`Return to Event Page`}
-                    </Button>
+                    <div className={classes.dialogActions}>
+                        <Button onClick={handleReturn}>
+                            {t`Return to Event Page`}
+                        </Button>
+                    </div>
                 </div>
             </Modal>
 
@@ -371,29 +369,25 @@ const Checkout = () => {
                 centered
                 size="m"
             >
-                <div style={{textAlign: 'center', padding: '20px 0'}}>
-                    <h3 style={{color: 'var(--checkout-text-primary)', margin: '0 0 8px 0'}}>
+                <div className={classes.dialog}>
+                    <h3 className={classes.dialogTitle}>
                         {t`Are you sure you want to leave?`}
                     </h3>
-                    <p style={{color: 'var(--checkout-text-secondary)', margin: '0'}}>
+                    <p className={classes.dialogText}>
                         {t`Your current order will be lost.`}
                     </p>
-                    <Group justify="center" gap="md" mt="xl">
-                        <Button
-                            onClick={handleAbandonCancel}
-                            variant="subtle"
-                        >
+                    <div className={classes.dialogActions}>
+                        <Button onClick={handleAbandonCancel}>
                             {t`No, keep me here`}
                         </Button>
                         <Button
                             onClick={handleAbandonConfirm}
-                            variant="outline"
-                            color="gray"
+                            variant="default"
                             loading={abandonOrderMutation.isPending}
                         >
                             {t`Yes, cancel my order`}
                         </Button>
-                    </Group>
+                    </div>
                 </div>
             </Modal>
             {consentPending && (

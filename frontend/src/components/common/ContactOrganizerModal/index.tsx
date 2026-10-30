@@ -5,7 +5,6 @@ import {t} from '@lingui/macro';
 import {Organizer} from '../../../types';
 import {useContactOrganizer} from '../../../mutations/useContactOrganizer';
 import {showSuccess, showError} from '../../../utilites/notifications';
-import classes from './ContactOrganizerModal.module.scss';
 import {InputGroup} from "../InputGroup";
 
 interface ContactOrganizerModalProps {
@@ -65,7 +64,6 @@ export const ContactOrganizerModal: React.FC<ContactOrganizerModalProps> = ({
             onClose={onClose}
             title={t`Contact ${organizer?.name || 'Organizer'}`}
             size="md"
-            className={classes.contactModal}
         >
             <form onSubmit={contactForm.onSubmit(handleContactSubmit)}>
                 <InputGroup>
