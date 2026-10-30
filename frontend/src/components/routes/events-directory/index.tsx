@@ -227,7 +227,7 @@ const ResultsSection = ({events, onClear}: { events: Event[], onClear: () => voi
                 <h2 id={'resultats'} className={classes.sectionTitle}>{t`Results`}</h2>
                 <p className={classes.sectionCount}>{upcomingCount(events.length)}</p>
             </div>
-            <UnstyledButton className={`${shell.button} ${shell.buttonOutline} ${classes.clearResults}`}
+            <UnstyledButton className={`${shell.button} ${shell.buttonOutline} ${classes.clearResults}`} data-rough="button"
                             onClick={onClear}>
                 {t`Clear filters`}
             </UnstyledButton>
@@ -333,7 +333,7 @@ export const EventsDirectory = () => {
                             <PublicIcon name={'calendrier'} size={28} className={classes.accentIcon}/>
                             <p>{filtered ? t`No events match your search.` : t`No upcoming events`}</p>
                             {filtered && (
-                                <UnstyledButton className={`${shell.button} ${shell.buttonOutline} ${classes.clear}`}
+                                <UnstyledButton className={`${shell.button} ${shell.buttonOutline} ${classes.clear}`} data-rough="button"
                                                 onClick={clearFilters}>
                                     {t`Clear filters`}
                                 </UnstyledButton>

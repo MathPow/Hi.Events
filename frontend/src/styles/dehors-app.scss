@@ -51,6 +51,22 @@
   outline-offset: 0;
 }
 
+// Un bouton contour decoupe (useRoughEdges): sa bordure, transparente, garde sa place, et ::after
+// la peint le long du bord decoupe (--rough-stroke, de l'epaisseur et de la couleur de la
+// bordure). La decoupe ne la ronge plus; au survol, le trait bouillonne avec elle.
+[data-rough-outlined] {
+  border-color: transparent !important;
+}
+
+[data-rough-outlined]::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--rough-border));
+  background: var(--rough-border-color);
+  mask: var(--rough-stroke) 0 0 / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
 // Partout (pages publiques, back-office, apercus), un champ selectionne prend le contour du
 // formulaire de connexion, comme les champs du site (Champ.vue): droit, fonce, ecarte du bord.
 // La bordure de focus de Mantine, rongee par le bord decoupe, tremblait: elle garde sa couleur
@@ -76,6 +92,10 @@
       animation: rough-clip-boil 0.6s steps(1) infinite, rough-hop 0.4s steps(1) infinite;
     }
 
+    [data-rough-outlined][data-rough-boil]:hover::after {
+      animation: rough-stroke-boil 0.6s steps(1) infinite;
+    }
+
     [data-rough-boil='pill']:hover {
       scale: var(--rough-grow, 1.04);
     }
@@ -83,6 +103,10 @@
 
   [data-rough-boil]:focus-visible {
     animation: rough-clip-boil 0.6s steps(1) infinite, rough-hop 0.4s steps(1) infinite;
+  }
+
+  [data-rough-outlined][data-rough-boil]:focus-visible::after {
+    animation: rough-stroke-boil 0.6s steps(1) infinite;
   }
 
   [data-rough-boil='pill']:focus-visible {
@@ -103,6 +127,10 @@
     animation: none;
     scale: none;
   }
+
+  [data-rough-outlined]:is(:active, :disabled, [data-disabled])::after {
+    animation: none;
+  }
 }
 
 @keyframes rough-clip-boil {
@@ -116,6 +144,21 @@
 
   66.667% {
     clip-path: var(--rough-clip-3);
+  }
+}
+
+// Le trait d'un bouton contour suit les trois traces de rough-clip-boil, au meme rythme.
+@keyframes rough-stroke-boil {
+  0% {
+    mask-image: var(--rough-stroke);
+  }
+
+  33.333% {
+    mask-image: var(--rough-stroke-2);
+  }
+
+  66.667% {
+    mask-image: var(--rough-stroke-3);
   }
 }
 

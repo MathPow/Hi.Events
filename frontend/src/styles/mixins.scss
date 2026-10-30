@@ -193,20 +193,14 @@ $breakpoints: (
   }
 }
 
-// The outline button of the cookie banner (« Customize »): a clean pill, its 2px border at 60 %, rising
-// a little on hover. Without data-rough: the hand-cut edge would bite into the border.
+// The outline button of the public pages: a pill, its 2px border at 60 %. The button carries
+// data-rough="button": useRoughEdges cuts it by hand and paints this border along the cut
+// (data-rough-outlined), and on hover it bounces and boils like the filled buttons.
 @mixin bouton-contour {
   border: 2px solid rgb(53 41 36 / 0.6);
   border-radius: 999px;
   color: var(--dehors-brun);
   background: transparent;
-  transition: translate 0.2s ease;
-
-  @media (hover: hover) {
-    &:hover {
-      translate: 0 -2px;
-    }
-  }
 }
 
 // The public pages' modals (edit an order or an attendee, contact the organizer). In a portal,

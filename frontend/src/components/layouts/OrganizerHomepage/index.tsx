@@ -233,7 +233,7 @@ export const OrganizerHomepage = ({
                                         text={organizer.name}
                                         url={organizerHomepageUrl(organizer)}
                                     >
-                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`}>
+                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
                                             <PublicIcon name={'partager'} size={20}/>
                                             {t`Share`}
                                         </button>

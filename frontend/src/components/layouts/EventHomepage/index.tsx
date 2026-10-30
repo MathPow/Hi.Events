@@ -215,7 +215,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
             imageUrl={coverImage?.url}
         >
             <button type="button" className={className} title={t`Share`} aria-label={t`Share`}
-                    data-rough={withLabel ? undefined : 'button'}>
+                    data-rough="button">
                 <PublicIcon name={'partager'} size={withLabel ? 20 : 18}/>
                 {withLabel && t`Share`}
             </button>
@@ -407,7 +407,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                                 <span className={classes.organizerLocation}>{organizerLocation}</span>
                                             )}
                                         </div>
-                                        <button type="button" className={classes.outlineButton} onClick={() => setContactModalOpen(true)}>
+                                        <button type="button" className={classes.outlineButton} data-rough="button"
+                                                onClick={() => setContactModalOpen(true)}>
                                             <PublicIcon name={'courriel'} size={20}/>
                                             {t`Contact organizer`}
                                         </button>
