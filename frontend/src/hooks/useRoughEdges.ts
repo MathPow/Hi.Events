@@ -1,12 +1,13 @@
 import {useEffect} from "react";
 import {roughClipPath, roughEdgeClipPath, roughEdgePath} from "../utilites/roughEdge.ts";
-import {ROUGH_BUTTON_BUMP, roughButtonPath} from "./useRoughButton.ts";
+import {roughButtonPath} from "./useRoughButton.ts";
 
 // Ce qui se coupe: les blocs marques data-rough, et tous les champs et boutons Mantine,
 // partout (pages publiques, back-office, fenetres et menus en portail).
 const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root';
-// Les boutons prennent le contour des boutons du site (rugueux.ts: des bosses lisses, les
-// bouts nets) sur leur propre rayon, et bouillonnent au survol entre trois traces.
+// Les boutons pleins prennent le contour des boutons du site (rugueux.ts: des bosses lisses,
+// les bouts nets) sur leur propre rayon, les boutons contour celui des blocs; tous
+// bouillonnent au survol entre trois traces.
 const BUTTON = '[data-rough="button"], .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root';
 const OUTLINES = 3;
 // Les reglages par defaut de v-decoupe (decoupe.ts): le bord rentre d'un pixel et demi tous
@@ -27,7 +28,6 @@ const PILL_GROW = 0.04;
 const PILL_GROW_MAX = 10;
 
 const outlineName = (i: number) => `--rough-clip${i ? `-${i + 1}` : ''}`;
-const strokeName = (i: number) => `--rough-stroke${i ? `-${i + 1}` : ''}`;
 
 // Le trait de decoupe.ts (option trait): le meme trace en contour, en masque. Centre sur le
 // bord, on le trace deux fois plus epais et on n'en garde que la moitie interieure: la
@@ -43,17 +43,11 @@ const clear = (element: HTMLElement) => {
     element.style.clipPath = '';
     delete element.dataset.roughCut;
     delete element.dataset.roughBoil;
-    delete element.dataset.roughOutlined;
     element.style.removeProperty('--rough-border');
-    element.style.removeProperty('--rough-border-color');
+    element.style.removeProperty('--rough-stroke');
     element.style.removeProperty('--rough-grow');
     for (let i = 0; i < OUTLINES; i++) {
         element.style.removeProperty(outlineName(i));
-        element.style.removeProperty(strokeName(i));
-    }
-    if (element.dataset.roughPositioned !== undefined) {
-        element.style.position = '';
-        delete element.dataset.roughPositioned;
     }
 };
 
@@ -63,11 +57,6 @@ const radiusOf = (style: CSSStyleDeclaration, width: number, height: number) => 
     const number = parseFloat(value) || 0;
     return value.endsWith('%') ? (number / 100) * Math.min(width, height) : number;
 };
-
-interface Ring {
-    width: number;
-    color: string;
-}
 
 // L'epaisseur d'une bordure visible: la coupe n'en mord jamais plus que les trois quarts,
 // pour que le trait reste continu.
@@ -88,8 +77,7 @@ const visibleBorder = (style: CSSStyleDeclaration) => {
  * de chargement ou d'etat desactive restent celles du CSS.
  */
 const cutRoughEdges = (root: HTMLElement) => {
-    // ring: la bordure d'un bouton contour, lue avant qu'elle devienne transparente.
-    const cuts = new WeakMap<Element, { seed: number, drawn: string, ring?: Ring | null }>();
+    const cuts = new WeakMap<Element, { seed: number, drawn: string }>();
 
     const draw = (element: HTMLElement, entry: ResizeObserverEntry) => {
         const cut = cuts.get(element);
@@ -123,54 +111,33 @@ const cutRoughEdges = (root: HTMLElement) => {
         // l'epaisseur.
         const stroke = element.dataset.rough === 'stroke' ? parseFloat(style.borderTopWidth) || 0 : 0;
         const isButton = element.matches(BUTTON);
-        // Un bouton contour (bordure visible) aussi, et il bouillonne avec sa decoupe: sa
-        // bordure, retenue au premier passage, est peinte le long de chacun de ses traces.
-        const ring = isButton
-            ? cut.ring ??= (visibleBorder(style) ? {width: visibleBorder(style), color: style.borderTopColor} : null)
-            : null;
-        const border = stroke || ring ? 0 : visibleBorder(style);
+        const border = stroke ? 0 : visibleBorder(style);
         const round = isButton && Math.abs(width - height) <= 2 && radius >= Math.min(width, height) / 2 - 1;
         const pill = isButton && !round && height <= PILL_MAX_HEIGHT && width >= height * 0.9;
         const boxRadius = Math.min(radius, width / 2, height / 2);
 
-        // Le trace (pour le trait d'un bouton contour) et la coupe qu'il donne.
-        const shape = (seed: number) => {
-            if (round || pill) {
-                // Les bosses vont de 0 a deux fois la plus grande vers l'interieur. Un petit
-                // rond (le + des billets) les prend plus fines: pleines, il devenait carre.
-                let scale = border ? Math.min(1, (border * 0.75) / (2 * ROUGH_BUTTON_BUMP)) : 1;
-                if (round) {
-                    scale *= Math.min(1, Math.min(width, height) / ROUND_FULL_SIZE) ** 2;
-                }
+        // Un bouton plein prend les bosses des boutons du site. Un bouton contour (bordure
+        // visible) se coupe comme un bloc borde, les onglets de l'organisateur: de petites
+        // ondulations qui mordent a peine sa propre bordure, et il bouillonne entre trois.
+        const clipFor = (seed: number) => {
+            if ((round || pill) && !border) {
+                // Un petit rond (le + des billets) prend des bosses plus fines: pleines, il
+                // devenait carre.
+                const scale = round ? Math.min(1, Math.min(width, height) / ROUND_FULL_SIZE) ** 2 : 1;
                 const path = roughButtonPath(width, height, seed, {radius: boxRadius, round, scale});
-                return {path, clip: roughClipPath(width, height, boxRadius, path)};
+                return roughClipPath(width, height, boxRadius, path);
             }
             let amplitude = Math.min(width, height) < 40 ? SMALL_AMPLITUDE : AMPLITUDE;
             if (border) {
                 amplitude = Math.min(amplitude, border * 0.75);
             }
-            const options = {radius, step: STEP, amplitude, seed};
-            return {path: roughEdgePath(width, height, options), clip: roughEdgeClipPath(width, height, options)};
+            return roughEdgeClipPath(width, height, {radius, step: STEP, amplitude, seed});
         };
 
         element.dataset.roughCut = '';
         if (isButton) {
             for (let i = 0; i < OUTLINES; i++) {
-                const {path, clip} = shape(cut.seed + i * 104729);
-                element.style.setProperty(outlineName(i), clip);
-                if (ring) {
-                    element.style.setProperty(strokeName(i), strokeMask(width, height, path, ring.width));
-                }
-            }
-            if (ring) {
-                element.dataset.roughOutlined = '';
-                element.style.setProperty('--rough-border', `${ring.width}px`);
-                element.style.setProperty('--rough-border-color', ring.color);
-                // Le trait (::after) se place sur le bouton.
-                if (style.position === 'static') {
-                    element.style.position = 'relative';
-                    element.dataset.roughPositioned = '';
-                }
+                element.style.setProperty(outlineName(i), clipFor(cut.seed + i * 104729));
             }
             element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
             element.style.setProperty('--rough-grow', (1 + Math.min(PILL_GROW, PILL_GROW_MAX / width)).toFixed(4));
@@ -181,7 +148,7 @@ const cutRoughEdges = (root: HTMLElement) => {
             element.style.setProperty('--rough-stroke', strokeMask(width, height, roughEdgePath(width, height, options), stroke));
             element.style.setProperty('--rough-border', `${stroke}px`);
         } else {
-            element.style.clipPath = shape(cut.seed).clip;
+            element.style.clipPath = clipFor(cut.seed);
         }
     };
 

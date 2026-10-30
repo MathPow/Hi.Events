@@ -193,11 +193,11 @@ $breakpoints: (
   }
 }
 
-// The outline button of the public pages: a pill, its 2px border at 60 %. The button carries
-// data-rough="button": useRoughEdges cuts it by hand and paints this border along the cut
-// (data-rough-outlined), and on hover it bounces and boils like the filled buttons.
+// The outline button of the public pages: a pill with a 2px brown border, like the organizer's
+// tabs. The button carries data-rough="button": useRoughEdges cuts its edge by hand, the cut
+// biting just into this border, and on hover it boils like the filled buttons.
 @mixin bouton-contour {
-  border: 2px solid rgb(53 41 36 / 0.6);
+  border: 2px solid var(--dehors-brun);
   border-radius: 999px;
   color: var(--dehors-brun);
   background: transparent;
