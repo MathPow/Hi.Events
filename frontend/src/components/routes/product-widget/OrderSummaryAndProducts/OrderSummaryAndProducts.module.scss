@@ -18,6 +18,55 @@ $font-titre: FatFrank, 'Arial Black', sans-serif;
   background: var(--dehors-creme);
 }
 
+// Le halo de la maquette « Public · Confirmation » (les trois ellipses floues de la page de
+// l'organisateur, aux couleurs de l'evenement), le grand halo clair a cote du billet.
+.halo {
+  --halo-clair: color-mix(in srgb, var(--public-accent) 60%, #fff);
+  --halo-pale: color-mix(in srgb, var(--public-accent) 25%, #fff);
+
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1708px;
+  pointer-events: none;
+  background:
+    radial-gradient(770px 570px at 22.4% 795px,
+      color-mix(in srgb, var(--halo-clair) 22%, transparent) 0%,
+      color-mix(in srgb, var(--halo-clair) 18%, transparent) 40%,
+      color-mix(in srgb, var(--halo-clair) 8%, transparent) 70%,
+      transparent 100%),
+    radial-gradient(670px 520px at 86.8% 100px,
+      color-mix(in srgb, var(--public-accent) 11%, transparent) 0%,
+      color-mix(in srgb, var(--public-accent) 9%, transparent) 40%,
+      color-mix(in srgb, var(--public-accent) 4%, transparent) 70%,
+      transparent 100%),
+    radial-gradient(720px 520px at 48.6% 1000px,
+      color-mix(in srgb, var(--halo-pale) 32%, transparent) 0%,
+      color-mix(in srgb, var(--halo-pale) 26%, transparent) 40%,
+      color-mix(in srgb, var(--halo-pale) 12%, transparent) 70%,
+      transparent 100%);
+
+  // Sur telephone, le meme halo resserre: l'accent en haut a droite, le clair derriere le billet.
+  @include mixins.respond-below(md) {
+    height: 1200px;
+    background:
+      radial-gradient(390px 340px at 10% 560px,
+        color-mix(in srgb, var(--halo-clair) 24%, transparent) 0%,
+        color-mix(in srgb, var(--halo-clair) 19%, transparent) 40%,
+        color-mix(in srgb, var(--halo-clair) 8%, transparent) 70%,
+        transparent 100%),
+      radial-gradient(340px 290px at 94.5% 50px,
+        color-mix(in srgb, var(--public-accent) 12%, transparent) 0%,
+        color-mix(in srgb, var(--public-accent) 9%, transparent) 40%,
+        color-mix(in srgb, var(--public-accent) 4%, transparent) 70%,
+        transparent 100%),
+      radial-gradient(360px 300px at 70% 820px,
+        color-mix(in srgb, var(--halo-pale) 32%, transparent) 0%,
+        color-mix(in srgb, var(--halo-pale) 26%, transparent) 40%,
+        color-mix(in srgb, var(--halo-pale) 12%, transparent) 70%,
+        transparent 100%);
+  }
+}
+
 .content {
   position: relative;
   display: flex;

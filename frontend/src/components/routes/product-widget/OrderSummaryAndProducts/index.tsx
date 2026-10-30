@@ -610,6 +610,7 @@ export const OrderSummaryAndProducts = () => {
                     `}
                 </style>
 
+                <div className={classes.halo} aria-hidden/>
                 <div className={classes.content}>
                     {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
                     <PublicPageBar left={<PublicBarLink to={'/'}>Billetterie Dehors</PublicBarLink>}/>
