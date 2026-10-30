@@ -1,0 +1,120 @@
+@use "../../../../styles/mixins.scss";
+
+.frame {
+  position: relative;
+}
+
+// Le lien vers l'itineraire: le plan dessine, la carte par-dessus quand elle est prete, le repere.
+.map {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 240px;
+  border-radius: 24px;
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    height: 170px;
+    border-radius: 22px;
+  }
+}
+
+.roads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.4s ease;
+
+  // La carte laisse passer le dessin dessous: il s'efface quand elle arrive.
+  .map[data-shown] & {
+    opacity: 0;
+  }
+
+  path {
+    fill: none;
+    stroke: var(--public-accent-clair);
+    stroke-width: 10px;
+
+    @include mixins.respond-below(md) {
+      stroke-width: 8px;
+    }
+  }
+}
+
+// Doublee: la feuille de MapLibre, chargee apres, rend son conteneur relatif.
+.map .canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.map[data-shown] .canvas {
+  opacity: 1;
+}
+
+.pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--public-accent);
+  color: var(--public-sur-accent);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+
+  .map:hover & {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  // Sur la vraie carte, un lisere creme le detache des rues.
+  .map[data-shown] & {
+    box-shadow: 0 0 0 4px var(--dehors-carte);
+  }
+
+  @include mixins.respond-below(md) {
+    width: 48px;
+    height: 48px;
+
+    > span {
+      width: 22px !important;
+      height: 22px !important;
+    }
+  }
+}
+
+// Le credit des donnees, dans le coin, hors du lien de la carte.
+.credit {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  z-index: 1;
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--dehors-texte-doux);
+  background: rgb(255 252 248 / 0.85);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    + a {
+      margin-left: 6px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

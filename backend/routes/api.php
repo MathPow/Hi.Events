@@ -57,6 +57,7 @@ use HiEvents\Http\Actions\Common\Webhooks\StripeIncomingWebhookAction;
 use HiEvents\Http\Actions\Events\CreateEventAction;
 use HiEvents\Http\Actions\Events\DuplicateEventAction;
 use HiEvents\Http\Actions\Events\GetEventAction;
+use HiEvents\Http\Actions\Events\GetEventMapLocationPublicAction;
 use HiEvents\Http\Actions\Events\GetEventPublicAction;
 use HiEvents\Http\Actions\Events\GetEventsAction;
 use HiEvents\Http\Actions\Events\GetOrganizerEventsPublicAction;
@@ -562,6 +563,8 @@ $router->prefix('/public')->group(
     function (Router $router): void {
         // Events
         $router->get('/events/{event_id}', GetEventPublicAction::class);
+        $router->get('/events/{event_id}/map-location', GetEventMapLocationPublicAction::class)
+            ->middleware('throttle:30,1');
 
         // Organizers
         $router->get('/organizers/{organizer_id}', GetPublicOrganizerAction::class);

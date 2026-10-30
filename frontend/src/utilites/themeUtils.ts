@@ -219,19 +219,47 @@ export function getAccentText(accent: string, mode: 'light' | 'dark'): string {
 }
 
 /**
+ * The color rebuilt as plain #rrggbb, or null when it can't be read. Organizer colors go through
+ * it before ending up in a style tag or a map style.
+ */
+export function toHexColor(color?: string | null): string | null {
+    const rgb = hexToRgb(color ?? '');
+    if (!rgb) {
+        return null;
+    }
+
+    return `#${[rgb.r, rgb.g, rgb.b]
+        .map((value) => Math.min(255, Math.max(0, Math.round(value))).toString(16).padStart(2, '0'))
+        .join('')}`;
+}
+
+/**
+ * Two #rrggbb colors mixed like CSS color-mix() in srgb, for places that can't use it (a map
+ * style): weight is the share of the first color, from 0 to 1.
+ */
+export function mixHexColors(first: string, second: string, weight: number): string {
+    const a = hexToRgb(first);
+    const b = hexToRgb(second);
+    if (!a || !b) {
+        return second;
+    }
+
+    const channel = (x: number, y: number) => Math.round(x * weight + y * (1 - weight));
+
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    return toHexColor(`rgb(${channel(a.r, b.r)}, ${channel(a.g, b.g)}, ${channel(a.b, b.b)})`) ?? second;
+}
+
+/**
  * CSS for a public page's style tag: text selection and the scrollbar hover follow the
  * organizer's accent, darkened like getAccentText so it stays visible on the cream page and
  * keeps white text readable. Without an accent, the Dehors defaults (dehors-app.scss) apply.
  */
 export function publicHighlightCss(accent?: string): string {
-    const rgb = hexToRgb(accent ?? '');
-    if (!rgb) {
+    const hex = toHexColor(accent);
+    if (!hex) {
         return '';
     }
-    // Rebuilt as plain hex: the value comes from the organizer and ends up inside a style tag.
-    const hex = `#${[rgb.r, rgb.g, rgb.b]
-        .map((value) => Math.min(255, Math.max(0, Math.round(value))).toString(16).padStart(2, '0'))
-        .join('')}`;
     const highlight = getAccentText(hex, 'light');
 
     // eslint-disable-next-line lingui/no-unlocalized-strings

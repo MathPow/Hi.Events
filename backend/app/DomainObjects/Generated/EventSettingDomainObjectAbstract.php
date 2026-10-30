@@ -75,6 +75,9 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const PRODUCT_INFO_BUTTON_URL = 'product_info_button_url';
     final public const PRODUCT_INFO_ICON = 'product_info_icon';
     final public const WAIVER_TEXT = 'waiver_text';
+    final public const LOCATION_LATITUDE = 'location_latitude';
+    final public const LOCATION_LONGITUDE = 'location_longitude';
+    final public const LOCATION_GEOCODED_FOR = 'location_geocoded_for';
 
     protected int $id;
     protected int $event_id;
@@ -141,6 +144,9 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?string $product_info_button_url = null;
     protected ?string $product_info_icon = null;
     protected ?string $waiver_text = null;
+    protected ?float $location_latitude = null;
+    protected ?float $location_longitude = null;
+    protected ?string $location_geocoded_for = null;
 
     public function toArray(): array
     {
@@ -210,6 +216,9 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'product_info_button_url' => $this->product_info_button_url ?? null,
                     'product_info_icon' => $this->product_info_icon ?? null,
                     'waiver_text' => $this->waiver_text ?? null,
+                    'location_latitude' => $this->location_latitude ?? null,
+                    'location_longitude' => $this->location_longitude ?? null,
+                    'location_geocoded_for' => $this->location_geocoded_for ?? null,
                 ];
     }
 
@@ -927,5 +936,38 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getWaiverText(): ?string
     {
         return $this->waiver_text;
+    }
+
+    public function setLocationLatitude(?float $location_latitude): self
+    {
+        $this->location_latitude = $location_latitude;
+        return $this;
+    }
+
+    public function getLocationLatitude(): ?float
+    {
+        return $this->location_latitude;
+    }
+
+    public function setLocationLongitude(?float $location_longitude): self
+    {
+        $this->location_longitude = $location_longitude;
+        return $this;
+    }
+
+    public function getLocationLongitude(): ?float
+    {
+        return $this->location_longitude;
+    }
+
+    public function setLocationGeocodedFor(?string $location_geocoded_for): self
+    {
+        $this->location_geocoded_for = $location_geocoded_for;
+        return $this;
+    }
+
+    public function getLocationGeocodedFor(): ?string
+    {
+        return $this->location_geocoded_for;
     }
 }

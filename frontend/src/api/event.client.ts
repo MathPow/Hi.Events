@@ -115,4 +115,15 @@ export const eventsClientPublic = {
         });
         return response.data;
     },
+
+    mapLocation: async (eventId: IdParam) => {
+        const response = await publicApi.get<GenericDataResponse<EventMapLocation>>(`events/${eventId}/map-location`);
+        return response.data;
+    },
+}
+
+// Les coordonnees du lieu, pour la carte « Emplacement » (404 si le lieu est introuvable).
+export interface EventMapLocation {
+    latitude: number;
+    longitude: number;
 }

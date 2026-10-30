@@ -38,6 +38,7 @@ import {PublicIcon} from "../../common/PublicIcon";
 import {ProductSelectionSummary} from "../../routes/product-widget/SelectProducts";
 import {findDefaultTicket, StickyBuyBar} from "./StickyBuyBar";
 import {TicketsCard} from "./TicketsCard";
+import {EventLocationMap} from "./EventLocationMap";
 import {CollapsibleDescription} from "./CollapsibleDescription";
 import {useRoughEdges} from "../../../hooks/useRoughEdges.ts";
 
@@ -387,21 +388,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                             {hasLocation && locationDetails && mapUrl && (
                                 <section className={`${classes.card} ${classes.section} ${classes.location}`} data-rough>
                                     <h2 className={classes.sectionTitle}>{t`Location`}</h2>
-                                    <a
-                                        href={mapUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={classes.map} data-rough
-                                        aria-label={t`View on Google Maps`}
-                                    >
-                                        {/* Plan stylise (pas une vraie carte): des routes et le repere, aux couleurs de l'organisateur. */}
-                                        <svg className={classes.mapRoads} viewBox="0 0 696 240" preserveAspectRatio="none" aria-hidden>
-                                            <path d="M0 80L760 140M0 200L760 170M200 0L260 240M520 0L470 240" vectorEffect="non-scaling-stroke"/>
-                                        </svg>
-                                        <span className={classes.mapPin}>
-                                            <PublicIcon name={'lieu'} size={24}/>
-                                        </span>
-                                    </a>
+                                    <EventLocationMap eventId={event.id} mapUrl={mapUrl}
+                                                      accent={themeVariables?.['--theme-accent']}/>
                                     <p className={classes.mapAddress}>{formatAddress(locationDetails)}</p>
                                 </section>
                             )}
