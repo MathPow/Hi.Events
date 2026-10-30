@@ -178,8 +178,11 @@
     background: var(--dehors-champ-survol);
   }
 
+  // Le contour d'un champ selectionne du formulaire de connexion: un trait interieur colle au
+  // bord etait ronge par la decoupe.
   &[data-selected] {
-    box-shadow: inset 0 0 0 3px var(--dehors-brun);
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
   }
 
   @include mixins.respond-below(lg) {

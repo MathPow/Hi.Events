@@ -41,6 +41,16 @@
   outline-offset: 0;
 }
 
+// Partout (pages publiques, back-office, apercus), un champ selectionne prend le contour du
+// formulaire de connexion, comme les champs du site (Champ.vue): droit, fonce, ecarte du bord.
+// La bordure de focus de Mantine, rongee par le bord decoupe, tremblait: elle garde sa couleur
+// de repos (une erreur reste rouge).
+.mantine-Input-input:where(:not([data-variant='unstyled'])):is(:focus, :focus-within) {
+  --input-bd-focus: var(--input-bd);
+  outline: 3px solid var(--dehors-brun);
+  outline-offset: 3px;
+}
+
 // Le survol des boutons du site (bouton-sautillant, bouton-rugueux): sans transition, le
 // bouton saute d'un pixel cinq fois par seconde et son contour bouillonne entre ses trois
 // traces, sur un autre rythme. Une pilule grossit aussi un peu, avec un soupcon de rebond.
@@ -275,14 +285,6 @@ body.dehors-app {
 
     &:hover:where(:not(:disabled, [data-disabled])) {
       background-color: var(--dehors-champ-survol);
-    }
-
-    // Au focus, un contour droit ecarte du bord, comme les champs du site (Champ.vue):
-    // une bordure foncee, rongee par le bord decoupe, tremblait.
-    &:focus,
-    &:focus-within {
-      outline: 3px solid var(--dehors-brun);
-      outline-offset: 3px;
     }
   }
 
