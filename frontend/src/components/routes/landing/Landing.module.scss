@@ -1933,126 +1933,95 @@ $ridge-mobile: 10vw;
   position: relative;
 }
 
-// A ticket: the sale written above, the fees on the stub. Each part carries
-// its own brown and is cut by a half-circle at the perforation, where the rock
-// shows through.
-$notch: 0.9rem;
-
 .feesCard {
   border-radius: 1.25rem;
   color: $creme;
+  background: $brun;
+
+  .eyebrow {
+    color: $abricot;
+  }
 }
 
 .feesCompare {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.feesTicketTop,
-.feesTicketStub {
-  --notch-y: 100%;
-  background: $brun;
-  mask:
-    radial-gradient(circle at 0 var(--notch-y), #0000 $notch, #000 calc(#{$notch} + 0.5px)) left / 51% 100% no-repeat,
-    radial-gradient(circle at 100% var(--notch-y), #0000 $notch, #000 calc(#{$notch} + 0.5px)) right / 51% 100% no-repeat;
+.feesSetting {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.feesTicketTop {
-  padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 2.6vw, 2.25rem);
-}
+.feesSettingHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
 
-// The sentence to fill in, its numbers in peach blanks you type in.
-.feesSentence {
-  font-family: $display;
-  font-size: clamp(2rem, 3.3vw, 2.85rem);
-  line-height: 1.32;
-  text-wrap: balance;
-}
-
-.feesFieldRoot {
-  display: inline-block;
-  vertical-align: baseline;
-}
-
-.feesCard .feesField {
-  width: calc(var(--chars) * 1ch + 0.6em);
-  height: 1.2em;
-  min-height: 0;
-  padding: 0 0.3em;
-  border: 0;
-  border-radius: 0.3em;
-  font: inherit;
-  line-height: 1.2em;
-  text-align: center;
-  color: $brun;
-  background: $peche;
-  cursor: text;
-
-  &:focus,
-  &:focus-visible {
-    outline: 3px solid $orange;
-    outline-offset: 3px;
+  strong {
+    color: $orange;
+    font-family: $display;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1;
   }
 }
 
-// The stub, torn along a line of holes.
-.feesTicketStub {
-  --notch-y: 0%;
-  position: relative;
+// Mantine's slider in the shop's colours, above its own rules.
+.feesCard .feesCompare .feesSlider {
+  --slider-color: #{$orange};
+  --slider-track-bg: rgb(255 247 233 / 0.2);
+}
+
+.feesCard .feesSliderThumb {
+  border: 4px solid $orange;
+  background: $creme;
+}
+
+// Each total over a bar as long as its share of Eventbrite's.
+.feesResults {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: clamp(1.5rem, 2.6vw, 2.25rem) clamp(1.5rem, 3vw, 2.5rem) clamp(1.75rem, 3vw, 2.5rem);
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: calc(#{$notch} + 0.6rem);
-    left: calc(#{$notch} + 0.6rem);
-    height: 4px;
-    background: radial-gradient(circle, rgb(255 247 233 / 0.35) 1.6px, transparent 2.2px) center / 11px 4px repeat-x;
-  }
-}
-
-.feesStubTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  color: $abricot;
-}
-
-// Each platform's fees at the end of a dotted line, like on a receipt.
-.feesReceipt {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 0;
+  margin: 0.5rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(255 247 233 / 0.6);
 
   > div {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: 0.5rem 1rem;
+
+    // On its own row under the name and the total, however short.
+    &::after {
+      content: '';
+      grid-column: 1 / -1;
+      width: calc(var(--share) * 100%);
+      height: 0.6rem;
+      border-radius: 1rem;
+      background: rgb(255 247 233 / 0.3);
+      transition: width 0.3s $ease;
+    }
+
+    &:first-child::after {
+      background: $orange;
+    }
   }
 
   dt {
-    display: flex;
-    flex: 1;
-    align-items: baseline;
-    gap: 0.75rem;
     font-weight: 700;
-
-    &::after {
-      content: '';
-      flex: 1;
-      min-width: 1.5rem;
-      border-bottom: 3px dotted rgb(255 247 233 / 0.3);
-    }
   }
 
   dd {
     margin: 0;
     font-family: $display;
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-size: clamp(1.5rem, 2.6vw, 2.25rem);
     line-height: 1;
     white-space: nowrap;
   }
@@ -2060,40 +2029,14 @@ $notch: 0.9rem;
   > div:first-child dd {
     color: $orange;
   }
-
-  > div:last-child {
-    color: rgb(255 247 233 / 0.6);
-  }
 }
 
-// What's kept, stamped on the stub in orange ink that didn't take everywhere.
-.feesStamp {
-  align-self: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  max-width: 100%;
-  margin: 0.75rem 0 0 -0.25rem;
-  padding: 0.75rem 1rem 0.8rem;
-  border: 3px solid $orange;
-  border-radius: 0.6rem;
-  color: $orange;
-  rotate: -2.5deg;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 -0.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-
-  strong {
-    font-family: $display;
-    font-weight: 400;
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    line-height: 1;
-    text-transform: uppercase;
-    text-wrap: balance;
-  }
-
-  span {
-    font-size: 1rem;
-    font-weight: 700;
-  }
+.feesTotal {
+  display: block;
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  line-height: 1;
 }
 
 .feesNote {
