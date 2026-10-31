@@ -1,5 +1,5 @@
 import {Menu, UnstyledButton} from "@mantine/core";
-import {Link} from "react-router";
+import {Link, useLocation} from "react-router";
 import {t} from "@lingui/macro";
 import {ReactNode} from "react";
 import classes from "./PublicPageBar.module.scss";
@@ -9,8 +9,8 @@ import {useLingui} from "@lingui/react";
 import {getLocaleLabel, switchLocale} from "../LanguageSwitcher";
 
 // Le bouton creme de la barre (48px, coins de 16px), lien ou bouton.
-export const PublicBarLink = ({to, children}: { to: string, children: ReactNode }) => (
-    <Link to={to} className={classes.button} data-rough="button">{children}</Link>
+export const PublicBarLink = ({to, className, children}: { to: string, className?: string, children: ReactNode }) => (
+    <Link to={to} className={className ? `${classes.button} ${className}` : classes.button} data-rough="button">{children}</Link>
 );
 
 export const PublicBarButton = ({onClick, children}: { onClick: () => void, children: ReactNode }) => (
@@ -45,18 +45,32 @@ const LanguageMenu = () => {
 };
 
 // La barre du haut des pages publiques: a gauche ce que la page y met (retour, nom de la
-// billetterie), a droite « Mes billets », ou l'action de la page (action), et la langue.
-export const PublicPageBar = ({left, action}: { left: ReactNode, action?: ReactNode }) => (
-    <nav className={classes.bar}>
-        <div className={classes.left}>{left}</div>
-        <div className={classes.right}>
-            {action ?? (
-                <PublicBarLink to={'/my-tickets'}>
-                    <PublicIcon name={'billet'} className={classes.accentIcon}/>
-                    <span>{t`My tickets`}</span>
-                </PublicBarLink>
-            )}
-            <LanguageMenu/>
-        </div>
-    </nav>
-);
+// billetterie), a droite « Evenements » (sauf sur leur page) et « Mes billets », ou l'action
+// de la page (action), et la langue.
+export const PublicPageBar = ({left, action}: { left: ReactNode, action?: ReactNode }) => {
+    const {pathname} = useLocation();
+    const onEvents = pathname.replace(/\/$/, '') === '/events';
+
+    return (
+        <nav className={classes.bar}>
+            <div className={classes.left}>{left}</div>
+            <div className={classes.right}>
+                {action ?? (
+                    <>
+                        {!onEvents && (
+                            <PublicBarLink to={'/events'} className={classes.events}>
+                                <PublicIcon name={'calendrier'} className={classes.accentIcon}/>
+                                <span>{t`Events`}</span>
+                            </PublicBarLink>
+                        )}
+                        <PublicBarLink to={'/my-tickets'}>
+                            <PublicIcon name={'billet'} className={classes.accentIcon}/>
+                            <span>{t`My tickets`}</span>
+                        </PublicBarLink>
+                    </>
+                )}
+                <LanguageMenu/>
+            </div>
+        </nav>
+    );
+};
