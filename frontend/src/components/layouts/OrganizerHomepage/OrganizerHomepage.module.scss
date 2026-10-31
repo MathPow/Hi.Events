@@ -462,6 +462,16 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// Sous les trois premieres rangees, centre; pleine largeur sur telephone comme les autres boutons.
+.seeAllEvents {
+  align-self: center;
+  width: auto;
+
+  @include mixins.respond-below(md) {
+    align-self: stretch;
+  }
+}
+
 .empty {
   display: flex;
   flex-direction: column;

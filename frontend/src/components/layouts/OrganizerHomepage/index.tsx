@@ -2,7 +2,7 @@ import {Link, useLocation, useNavigate} from "react-router";
 import {Accordion} from '@mantine/core';
 import {EventCard} from './EventCard';
 import classes from './OrganizerHomepage.module.scss';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Event, GenericPaginatedResponse, Organizer} from "../../../types.ts";
 import {OrganizerDocumentHead} from "../../common/OrganizerDocumentHead";
 import {IconHeart} from '@tabler/icons-react';
@@ -39,6 +39,7 @@ const FaqPastille = () => (
 // En arrivant sur la page, on part du haut. Pas en passant d'« A venir » a « Passes »: l'adresse
 // change, mais on reste ou on etait dans la page (TAB_STATE).
 const TAB_STATE = {keepScroll: true};
+const FIRST_EVENTS = 9;
 
 const ScrollToTop = () => {
     const {pathname, state} = useLocation();
@@ -71,6 +72,9 @@ export const OrganizerHomepage = ({
                                   }: OrganizerHomepageProps) => {
     const navigate = useNavigate();
     const [contactModalOpen, setContactModalOpen] = useState(false);
+    const [showAllEvents, setShowAllEvents] = useState(false);
+    const eventsGrid = useRef<HTMLDivElement>(null);
+    useEffect(() => setShowAllEvents(false), [isPastEvents]);
 
     const {consentPending, onConsent} = useOrganizerTrackingPixels(
         organizer?.settings?.tracking_pixels
@@ -103,6 +107,13 @@ export const OrganizerHomepage = ({
     const organizerCover = organizer.images?.find(img => img.type === 'ORGANIZER_COVER');
 
     const events = eventsData?.data || [];
+    // Trois rangees d'abord; « Voir tous les evenements » montre le reste, puis la pagination.
+    const allEventsShown = showAllEvents || (eventsData?.meta.current_page ?? 1) > 1;
+    const shownEvents = allEventsShown ? events : events.slice(0, FIRST_EVENTS);
+    const showAll = () => {
+        setShowAllEvents(true);
+        requestAnimationFrame(() => eventsGrid.current?.querySelectorAll('a')[FIRST_EVENTS]?.focus({preventScroll: true}));
+    };
     const faqs = organizer.settings?.faqs ?? [];
     const upcomingCount = !isPastEvents && eventsData ? eventsData.meta.total : null;
 
@@ -287,14 +298,22 @@ export const OrganizerHomepage = ({
                                 <p>{isPastEvents ? t`No past events` : t`No upcoming events`}</p>
                             </div>
                         ) : (
-                            <div className={classes.grid}>
-                                {events.map((event) => (
+                            <div ref={eventsGrid} className={classes.grid}>
+                                {shownEvents.map((event) => (
                                     <EventCard key={event.id} event={event as Event}/>
                                 ))}
                             </div>
                         )}
 
-                        {eventsData && eventsData.meta.total > eventsData.meta.per_page && (
+                        {shownEvents.length < events.length && (
+                            <button type="button" onClick={showAll} data-rough="button"
+                                    className={`${classes.button} ${classes.buttonOutline} ${classes.seeAllEvents}`}>
+                                {t`See all events`}
+                                <PublicIcon name={'chevron'} size={20}/>
+                            </button>
+                        )}
+
+                        {allEventsShown && eventsData && eventsData.meta.total > eventsData.meta.per_page && (
                             <Pagination
                                 size="sm"
                                 siblings={1}
