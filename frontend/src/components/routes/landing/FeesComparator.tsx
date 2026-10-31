@@ -1,7 +1,7 @@
 import {CSSProperties, useState} from "react";
-import {t} from "@lingui/macro";
+import {plural, t, Trans} from "@lingui/macro";
 import {i18n} from "@lingui/core";
-import {Slider} from "@mantine/core";
+import {NumberInput} from "@mantine/core";
 import classes from "./Landing.module.scss";
 
 interface Rate {
@@ -18,15 +18,33 @@ const EVENTBRITE: Rate = {percent: 0.035 + 0.029, fixed: 1.29};
 
 const totalFees = ({percent, fixed}: Rate, price: number, tickets: number) => (price * percent + fixed) * tickets;
 
-const SLIDER_CLASSES = {root: classes.feesSlider, thumb: classes.feesSliderThumb};
+const FIELD_CLASSES = {root: classes.feesFieldRoot, input: classes.feesField};
+
+/**
+ * A blank of the sentence, as wide as what's typed in it.
+ */
+const Blank = ({label, value, onChange, max, prefix, suffix}: {
+    label: string;
+    value: number | string;
+    onChange: (value: number | string) => void;
+    max: number;
+    prefix?: string;
+    suffix?: string;
+}) => (
+    <NumberInput value={value} onChange={onChange} min={0} max={max} clampBehavior="strict"
+                 allowNegative={false} allowDecimal={false} hideControls prefix={prefix} suffix={suffix}
+                 inputMode="numeric" aria-label={label} classNames={FIELD_CLASSES}
+                 style={{'--chars': `${value}`.length + (prefix ?? suffix ?? '').length} as CSSProperties}/>
+);
 
 /**
  * What a sale of the chosen size costs in fees here and on Eventbrite, the
- * most used ticketing platform in Quebec.
+ * most used ticketing platform in Quebec, on a ticket: the sale written in
+ * a sentence to fill in, the fees on the stub.
  */
 export const FeesComparator = () => {
-    const [price, setPrice] = useState(30);
-    const [tickets, setTickets] = useState(200);
+    const [price, setPrice] = useState<number | string>(30);
+    const [tickets, setTickets] = useState<number | string>(200);
     const locale = `${i18n.locale.split('-')[0]}-CA`;
     const money = new Intl.NumberFormat(locale, {
         style: 'currency',
@@ -34,42 +52,51 @@ export const FeesComparator = () => {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     });
-    const count = new Intl.NumberFormat(locale);
-    const dehors = totalFees(DEHORS, price, tickets);
-    const eventbrite = totalFees(EVENTBRITE, price, tickets);
-    const saved = money.format(eventbrite - dehors);
+    // "$30" in English, "30 $" in French: the dollar sign on the side the language puts it.
+    const parts = money.formatToParts(30);
+    const sign = parts.find(part => part.type === 'currency')?.value ?? '$';
+    const signFirst = parts[0]?.type === 'currency';
 
-    const settings = [
-        {label: t`Ticket price`, shown: money.format(price), value: price, onChange: setPrice, min: 5, max: 200, step: 1},
-        {label: t`Tickets sold`, shown: count.format(tickets), value: tickets, onChange: setTickets, min: 10, max: 1000, step: 10},
-    ];
-    const results = [
-        {name: 'Billetterie Dehors', amount: dehors},
-        {name: 'Eventbrite', amount: eventbrite},
-    ];
+    const ticketPrice = Number(price) || 0;
+    const ticketCount = Number(tickets) || 0;
+    const dehors = totalFees(DEHORS, ticketPrice, ticketCount);
+    const eventbrite = totalFees(EVENTBRITE, ticketPrice, ticketCount);
+    const saved = money.format(eventbrite - dehors);
+    const ticketsWorth = ticketPrice > 0 ? Math.floor((eventbrite - dehors) / ticketPrice) : 0;
+
+    const ticketsField = <Blank label={t`Tickets sold`} value={tickets} onChange={setTickets} max={99999}/>;
+    const priceField = <Blank label={t`Ticket price`} value={price} onChange={setPrice} max={9999}
+                              prefix={signFirst ? sign : undefined} suffix={signFirst ? undefined : ` ${sign}`}/>;
 
     return (
         <div className={classes.feesCompare}>
-            <span className={classes.eyebrow}>{t`Your fees, compared with Eventbrite`}</span>
-            {settings.map(({label, shown, ...slider}) => (
-                <div key={label} className={classes.feesSetting}>
-                    <div className={classes.feesSettingHead}>
-                        <span>{label}</span>
-                        <strong>{shown}</strong>
-                    </div>
-                    <Slider {...slider} size="sm" thumbSize={22} label={null} thumbLabel={label}
-                            thumbProps={{'aria-valuetext': shown}} classNames={SLIDER_CLASSES}/>
+            <div className={classes.feesTicketTop}>
+                <div className={classes.feesSentence}>
+                    <Trans>I sell {ticketsField} tickets at {priceField}.</Trans>
                 </div>
-            ))}
-            <dl className={classes.feesResults}>
-                {results.map(({name, amount}) => (
-                    <div key={name} style={{'--share': amount / eventbrite} as CSSProperties}>
-                        <dt>{name}</dt>
-                        <dd>{money.format(amount)}</dd>
+            </div>
+            <div className={classes.feesTicketStub}>
+                <span className={classes.feesStubTitle}>{t`Your fees, compared with Eventbrite`}</span>
+                <dl className={classes.feesReceipt}>
+                    <div>
+                        <dt>Billetterie Dehors</dt>
+                        <dd>{money.format(dehors)}</dd>
                     </div>
-                ))}
-            </dl>
-            <strong className={classes.feesTotal}>{t`You keep ${saved} more.`}</strong>
+                    <div>
+                        <dt>Eventbrite</dt>
+                        <dd>{money.format(eventbrite)}</dd>
+                    </div>
+                </dl>
+                <p className={classes.feesStamp} aria-live="polite">
+                    <strong>{t`You keep ${saved} more.`}</strong>
+                    {ticketsWorth > 0 && (
+                        <span>{plural(ticketsWorth, {
+                            one: "That's the price of # ticket.",
+                            other: "That's the price of # tickets.",
+                        })}</span>
+                    )}
+                </p>
+            </div>
         </div>
     );
 };
