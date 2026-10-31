@@ -54,11 +54,26 @@
   font-weight: 700;
 }
 
-// Sur telephone, la barre garde « Mes billets » seul: les evenements restent a un lien de
-// la billetterie (son menu).
-.events {
+// Sur telephone, « Evenements » et « Mes billets » en icones seules, carrees: le texte reste
+// lu par les lecteurs d'ecran.
+.iconOnMobile {
   @include mixins.respond-below(md) {
-    display: none;
+    justify-content: center;
+    width: 40px;
+    padding: 0;
+
+    .accentIcon {
+      scale: 1.25;
+    }
+
+    .label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   }
 }
 

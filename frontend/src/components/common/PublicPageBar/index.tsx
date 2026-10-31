@@ -45,8 +45,8 @@ const LanguageMenu = () => {
 };
 
 // La barre du haut des pages publiques: a gauche ce que la page y met (retour, nom de la
-// billetterie), a droite « Evenements » (sauf sur leur page) et « Mes billets », ou l'action
-// de la page (action), et la langue.
+// billetterie), a droite « Evenements » (sauf sur leur page) et « Mes billets », en icones
+// seules sur telephone, ou l'action de la page (action), et la langue.
 export const PublicPageBar = ({left, action}: { left: ReactNode, action?: ReactNode }) => {
     const {pathname} = useLocation();
     const onEvents = pathname.replace(/\/$/, '') === '/events';
@@ -58,14 +58,14 @@ export const PublicPageBar = ({left, action}: { left: ReactNode, action?: ReactN
                 {action ?? (
                     <>
                         {!onEvents && (
-                            <PublicBarLink to={'/events'} className={classes.events}>
+                            <PublicBarLink to={'/events'} className={classes.iconOnMobile}>
                                 <PublicIcon name={'calendrier'} className={classes.accentIcon}/>
-                                <span>{t`Events`}</span>
+                                <span className={classes.label}>{t`Events`}</span>
                             </PublicBarLink>
                         )}
-                        <PublicBarLink to={'/my-tickets'}>
+                        <PublicBarLink to={'/my-tickets'} className={classes.iconOnMobile}>
                             <PublicIcon name={'billet'} className={classes.accentIcon}/>
-                            <span>{t`My tickets`}</span>
+                            <span className={classes.label}>{t`My tickets`}</span>
                         </PublicBarLink>
                     </>
                 )}
