@@ -8,7 +8,7 @@ import utc from "dayjs/plugin/utc";
 import {Event, Order} from "../../../../types.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {eventCoverImageUrl} from "../../../../utilites/urlHelper.ts";
-import {getConfig} from "../../../../utilites/config.ts";
+import {platformSupportLabel} from "../../../common/PlatformSupportInput";
 import {PublicIcon} from "../../../common/PublicIcon";
 import classes from "./CheckoutOrderPanel.module.scss";
 
@@ -155,7 +155,7 @@ export const CheckoutOrderPanel = ({
                 {!!order.platform_contribution && order.platform_contribution > 0 && (
                     <div className={classes.line}>
                         <span className={classes.lineLabel}>
-                            {getConfig('VITE_PLATFORM_SUPPORT_LABEL') || t`Support the platform`}
+                            {platformSupportLabel()}
                         </span>
                         <span className={classes.lineValue}>
                             {formatCurrency(order.platform_contribution, currency)}

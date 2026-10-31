@@ -1,0 +1,148 @@
+@use "../../../styles/mixins.scss";
+
+// « Don (active par defaut) » de la maquette (Public · Checkout 424:207, telephone 418:168):
+// creme, cadre 2px a l'accent, le coeur dans une tuile, puis les montants en pastilles.
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  border: 2px solid var(--public-accent);
+  border-radius: 22px;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+
+  // Decoupee (useRoughEdges, data-rough="stroke"): la bordure devient transparente et ::after
+  // peint le trait le long du bord decoupe, comme les cartes des billets.
+  &[data-rough-cut] {
+    border-color: transparent;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: calc(-1 * var(--rough-border, 2px));
+      background: var(--public-accent);
+      mask: var(--rough-stroke) 0 0 / 100% 100% no-repeat;
+      pointer-events: none;
+    }
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 14px;
+    padding: 16px;
+    border-radius: 20px;
+  }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  @include mixins.respond-below(md) {
+    gap: 10px;
+  }
+}
+
+.icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+
+    > span {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: normal;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    font-size: 15px;
+  }
+}
+
+.description {
+  font-size: 14px;
+
+  @include mixins.respond-below(md) {
+    font-size: 13px;
+  }
+}
+
+.amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Les pastilles: accent doux, la choisie en brun sur creme.
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  color: var(--dehors-brun);
+  background: var(--public-accent-doux);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--public-accent) 32%, var(--dehors-creme));
+  }
+
+  // Aussi au survol: la regle du survol, plus specifique, l'eclaircissait.
+  &[aria-checked='true'],
+  &[aria-checked='true']:hover:not(:disabled) {
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.customAmount {
+  max-width: 220px;
+
+  @include mixins.respond-below(md) {
+    max-width: none;
+  }
+}

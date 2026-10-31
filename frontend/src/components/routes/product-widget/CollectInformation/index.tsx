@@ -804,14 +804,12 @@ export const CollectInformation = () => {
                 )}
 
                 {canContribute && platformSupportEnabled() && (
-                    <div className={checkoutClasses.embedded}>
-                        <PlatformSupportInput
-                            value={platformContribution}
-                            onChange={setPlatformContribution}
-                            currency={event?.currency}
-                            disabled={mutation.isPending}
-                        />
-                    </div>
+                    <PlatformSupportInput
+                        value={platformContribution}
+                        onChange={setPlatformContribution}
+                        currency={event?.currency}
+                        disabled={mutation.isPending}
+                    />
                 )}
 
                 <CheckoutActions>

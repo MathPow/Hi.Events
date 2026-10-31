@@ -22,6 +22,7 @@ import {ShareComponent} from "../../../common/ShareIcon";
 import {PublicBarLink, PublicPageBar} from "../../../common/PublicPageBar";
 import {PublicPageFooter} from "../../../common/PublicPageFooter";
 import {PublicIcon, PublicIconName} from "../../../common/PublicIcon";
+import {platformSupportLabel} from "../../../common/PlatformSupportInput";
 import {EditAttendeeModal} from "./EditAttendeeModal";
 import {EditOrderModal} from "./EditOrderModal";
 import {ConfirmationTicket} from "./ConfirmationTicket";
@@ -240,7 +241,7 @@ const OrderRecap = ({order}: { order: Order }) => {
                     />
                 )}
                 {!!order.platform_contribution && order.platform_contribution > 0 && (
-                    <RecapLine label={t`Support the platform`} value={formatCurrency(order.platform_contribution, currency)}/>
+                    <RecapLine label={platformSupportLabel()} value={formatCurrency(order.platform_contribution, currency)}/>
                 )}
                 {order.taxes_and_fees_rollup?.fees?.map((fee, index) => (
                     <RecapLine key={`fee-${index}`} label={fee.name} value={formatCurrency(fee.value, currency)}/>
