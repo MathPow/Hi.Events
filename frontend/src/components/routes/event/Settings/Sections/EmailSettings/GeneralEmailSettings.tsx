@@ -68,6 +68,7 @@ export const GeneralEmailSettings = () => {
                         value={form.values.email_footer_message || ''}
                         description={t`This message will be included in the footer of all emails sent from this event`}
                         onChange={(value) => form.setFieldValue('email_footer_message', value)}
+                        allowTextStyling
                     />
 
                     <h3>{t`Notification Settings`}</h3>

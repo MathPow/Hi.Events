@@ -149,6 +149,7 @@ export const EmailTemplateEditor = ({
                                     label={<Trans>Email Body</Trans>}
                                     description={<Trans>Use <a href={'https://shopify.github.io/liquid/'} target={'_blank'}>Liquid templating</a> to personalize your emails</Trans>}
                                     editorType="full"
+                                    allowTextStyling
                                     additionalToolbarControls={
                                         <LiquidTokenControl templateType={templateType} />
                                     }

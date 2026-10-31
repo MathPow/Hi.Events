@@ -14,6 +14,9 @@ import {InsertImageControl} from "./Controls/InsertImageControl";
 import {ImageResize} from "./Extensions/ImageResizeExtension";
 import {Extension} from '@tiptap/core';
 
+const COLORS = ['#25262b', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6',
+    '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
+
 interface EditorProps {
     onChange: (value: string) => void;
     value: string;
@@ -27,6 +30,10 @@ interface EditorProps {
     size?: MantineFontSize;
     additionalExtensions?: Extension[];
     additionalToolbarControls?: React.ReactNode;
+    // Couleur et alignement du texte: les courriels seulement. Ailleurs (descriptions,
+    // messages des pages publiques), le texte garde la typo et les couleurs de Dehors, et
+    // ce qu'on colle perd les siennes.
+    allowTextStyling?: boolean;
 }
 
 export const Editor = ({
@@ -42,6 +49,7 @@ export const Editor = ({
                            size = 'md',
                            additionalExtensions = [],
                            additionalToolbarControls,
+                           allowTextStyling = false,
                        }: EditorProps) => {
     const [charError, setCharError] = useState<string | null | React.ReactNode>(null);
 
@@ -61,10 +69,8 @@ export const Editor = ({
             }),
             Underline,
             Link,
-            TextAlign.configure({types: ['heading', 'paragraph']}),
             ImageResize,
-            TextStyle,
-            Color,
+            ...(allowTextStyling ? [TextAlign.configure({types: ['heading', 'paragraph']}), TextStyle, Color] : []),
             ...additionalExtensions
         ],
         onUpdate: ({editor}) => {
@@ -114,24 +120,7 @@ export const Editor = ({
                                 <RichTextEditor.Italic/>
                                 <RichTextEditor.Underline/>
                                 <RichTextEditor.ClearFormatting/>
-                                <RichTextEditor.ColorPicker
-                                    colors={[
-                                        '#25262b',
-                                        '#868e96',
-                                        '#fa5252',
-                                        '#e64980',
-                                        '#be4bdb',
-                                        '#7950f2',
-                                        '#4c6ef5',
-                                        '#228be6',
-                                        '#15aabf',
-                                        '#12b886',
-                                        '#40c057',
-                                        '#82c91e',
-                                        '#fab005',
-                                        '#fd7e14',
-                                    ]}
-                                />
+                                {allowTextStyling && <RichTextEditor.ColorPicker colors={COLORS}/>}
                             </RichTextEditor.ControlsGroup>
 
                             <RichTextEditor.ControlsGroup>
@@ -151,12 +140,14 @@ export const Editor = ({
                                 <RichTextEditor.Unlink/>
                             </RichTextEditor.ControlsGroup>
 
-                            <RichTextEditor.ControlsGroup>
-                                <RichTextEditor.AlignLeft/>
-                                <RichTextEditor.AlignCenter/>
-                                <RichTextEditor.AlignJustify/>
-                                <RichTextEditor.AlignRight/>
-                            </RichTextEditor.ControlsGroup>
+                            {allowTextStyling && (
+                                <RichTextEditor.ControlsGroup>
+                                    <RichTextEditor.AlignLeft/>
+                                    <RichTextEditor.AlignCenter/>
+                                    <RichTextEditor.AlignJustify/>
+                                    <RichTextEditor.AlignRight/>
+                                </RichTextEditor.ControlsGroup>
+                            )}
                             <RichTextEditor.ControlsGroup>
                                 <InsertImageControl/>
                             </RichTextEditor.ControlsGroup>
@@ -170,24 +161,7 @@ export const Editor = ({
                                 <RichTextEditor.Italic/>
                                 <RichTextEditor.Underline/>
                                 <RichTextEditor.ClearFormatting/>
-                                <RichTextEditor.ColorPicker
-                                    colors={[
-                                        '#25262b',
-                                        '#868e96',
-                                        '#fa5252',
-                                        '#e64980',
-                                        '#be4bdb',
-                                        '#7950f2',
-                                        '#4c6ef5',
-                                        '#228be6',
-                                        '#15aabf',
-                                        '#12b886',
-                                        '#40c057',
-                                        '#82c91e',
-                                        '#fab005',
-                                        '#fd7e14',
-                                    ]}
-                                />
+                                {allowTextStyling && <RichTextEditor.ColorPicker colors={COLORS}/>}
                             </RichTextEditor.ControlsGroup>
 
                             <RichTextEditor.ControlsGroup>
@@ -195,11 +169,13 @@ export const Editor = ({
                                 <RichTextEditor.Unlink/>
                             </RichTextEditor.ControlsGroup>
 
-                            <RichTextEditor.ControlsGroup>
-                                <RichTextEditor.AlignLeft/>
-                                <RichTextEditor.AlignCenter/>
-                                <RichTextEditor.AlignRight/>
-                            </RichTextEditor.ControlsGroup>
+                            {allowTextStyling && (
+                                <RichTextEditor.ControlsGroup>
+                                    <RichTextEditor.AlignLeft/>
+                                    <RichTextEditor.AlignCenter/>
+                                    <RichTextEditor.AlignRight/>
+                                </RichTextEditor.ControlsGroup>
+                            )}
 
                             <RichTextEditor.ControlsGroup>
                                 <RichTextEditor.BulletList/>

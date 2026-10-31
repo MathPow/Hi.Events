@@ -411,6 +411,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                 value={form.values.message || ''}
                                 onChange={(value) => form.setFieldValue('message', value)}
                                 error={form.errors.message as string}
+                                allowTextStyling
                             />
 
                             <FileInput
