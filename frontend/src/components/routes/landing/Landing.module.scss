@@ -2709,15 +2709,10 @@ $footer-ridge-mobile: 13.205056%;
     gap: 0.6rem;
   }
 
+  // Au survol, les lettres tremblent comme les autres liens: pas de soulignement en plus.
   a {
     width: fit-content;
     font-weight: 500;
-    background: linear-gradient(currentColor, currentColor) left bottom / 0 1.5px no-repeat;
-    transition: background-size 0.3s $ease;
-
-    &:hover {
-      background-size: 100% 1.5px;
-    }
 
     .shaky {
       justify-content: flex-start;
