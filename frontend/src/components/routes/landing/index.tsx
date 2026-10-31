@@ -375,14 +375,13 @@ const RISE_MAX = 140;
 const RISE_ZONE = 0.4;
 
 // Between the photos that come into view together.
-const FILL_STAGGER = 0.12;
+const ZOOM_STAGGER = 0.12;
 
 /**
- * The photos fill their hand-cut frame from the bottom as they come into view,
- * the sable block first, the picture settling from a little closer. Marked from
+ * The photos settle from a little closer as they come into view. Marked from
  * here, not in the markup: without the script, or in view on arrival, they show.
  */
-const usePhotoFill = (root: RefObject<HTMLElement>) => {
+const usePhotoZoom = (root: RefObject<HTMLElement>) => {
     useEffect(() => {
         if (typeof IntersectionObserver === 'undefined'
             || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -390,13 +389,13 @@ const usePhotoFill = (root: RefObject<HTMLElement>) => {
         }
         const photos = [...root.current?.querySelectorAll<HTMLElement>('[data-photo]') ?? []]
             .filter((photo) => photo.getBoundingClientRect().top > window.innerHeight);
-        photos.forEach((photo) => photo.dataset.fill = 'waiting');
+        photos.forEach((photo) => photo.dataset.zoom = 'waiting');
 
         const observer = new IntersectionObserver((entries) => {
             entries.filter((entry) => entry.isIntersecting).forEach((entry, index) => {
                 const photo = entry.target as HTMLElement;
-                photo.style.setProperty('--fill-delay', `${index * FILL_STAGGER}s`);
-                photo.dataset.fill = 'filled';
+                photo.style.setProperty('--zoom-delay', `${index * ZOOM_STAGGER}s`);
+                photo.dataset.zoom = 'settled';
                 observer.unobserve(photo);
             });
         }, {threshold: 0.25});
@@ -824,7 +823,7 @@ const Landing = () => {
     // The stack first: the blocks rise from where the sections are held.
     useStackOnScroll(root);
     useRiseOnScroll(root);
-    usePhotoFill(root);
+    usePhotoZoom(root);
     // The opening plays on a first load only: the server rendered it. Arriving
     // from another page of the app, the hero's entrance plays right away.
     const [opening, setOpening] = useState(() => typeof document === 'undefined'
