@@ -381,12 +381,38 @@ export function checkContrast(foreground: string, background: string): ContrastR
     };
 }
 
+export type AccentReadability = 'good' | 'poor' | 'unreadable';
+
+// The public pages keep the Dehors cream page and cards (dehors-app.scss): only the accent follows
+// the organizer, as text, icons, outlines and button fills, with no correction. The thresholds
+// start from the Dehors orange (about 2.5:1 on the cream), which reads well in icons and bold text.
+const PUBLIC_SURFACES = ['#fff7e9', '#fffcf8'];
+export const ACCENT_READABLE_CONTRAST = 2.2;
+export const ACCENT_UNREADABLE_CONTRAST = 1.5;
+const BUTTON_TEXT_MIN_CONTRAST = 3;
+
 /**
- * Check if theme settings have any contrast issues
- * Returns true if there are readability problems
+ * How well the accent stands out on the public pages: 'unreadable' when its text and icons all
+ * but vanish (white or pale yellow on the cream), 'poor' when they are faint or the text on its
+ * buttons is weak. A see-through accent (#rrggbbaa) is measured as it shows, mixed into the page.
  */
-export function hasContrastIssues(settings: HomepageThemeSettings): boolean {
-    // Accent text on the surface is auto-corrected by getAccentText, so only button text can fail
-    const accentContrast = getContrastColor(settings.accent);
-    return !checkContrast(accentContrast, settings.accent).passesAA;
+export function getAccentReadability(accent: string): AccentReadability {
+    const hex = toHexColor(accent);
+    if (!hex) {
+        return 'good';
+    }
+    const alphaHex = accent.trim().replace(/^#/, '').match(/^[0-9a-f]{6}([0-9a-f]{2})$/i)?.[1];
+    const alpha = alphaHex ? parseInt(alphaHex, 16) / 255 : 1;
+
+    const onPage = Math.min(...PUBLIC_SURFACES.map((surface) =>
+        getContrastRatio(mixHexColors(hex, surface, alpha), surface)));
+    const onButton = getContrastRatio(getContrastColor(hex), hex);
+
+    if (onPage < ACCENT_UNREADABLE_CONTRAST) {
+        return 'unreadable';
+    }
+    if (onPage < ACCENT_READABLE_CONTRAST || onButton < BUTTON_TEXT_MIN_CONTRAST) {
+        return 'poor';
+    }
+    return 'good';
 }

@@ -1,8 +1,8 @@
 import {ColorInput, SegmentedControl, Stack, Text, Group, Tooltip} from "@mantine/core";
 import {t} from "@lingui/macro";
 import {HomepageThemeSettings} from "../../../types.ts";
-import {detectMode, validateThemeSettings, hasContrastIssues} from "../../../utilites/themeUtils.ts";
-import {IconSun, IconMoon, IconEyeCheck, IconEyeExclamation} from "@tabler/icons-react";
+import {detectMode, getAccentReadability, getDefaultThemeSettings} from "../../../utilites/themeUtils.ts";
+import {IconSun, IconMoon, IconEyeCheck, IconEyeExclamation, IconEyeOff} from "@tabler/icons-react";
 import {useEffect, useMemo} from "react";
 
 interface ThemeColorControlsProps {
@@ -39,10 +39,12 @@ export const ThemeColorControls = ({
 
     const currentMode = values.mode || 'light';
 
-    const hasIssues = useMemo(() => {
-        const validated = validateThemeSettings(values);
-        return hasContrastIssues(validated);
-    }, [values.accent, values.background, values.mode]);
+    // Sur les pages publiques, seul l'accent suit l'organisateur (le creme et les cartes de
+    // Dehors restent): c'est lui qu'on juge, en texte, en icones et en fond de bouton.
+    const readability = useMemo(
+        () => getAccentReadability(values.accent || getDefaultThemeSettings().accent),
+        [values.accent],
+    );
 
     return (
         <Stack gap="md">
@@ -100,14 +102,23 @@ export const ThemeColorControls = ({
             </div>
 
             <Group gap={6} style={{ minHeight: 20 }}>
-                {hasIssues ? (
-                    <Tooltip label={t`This color combination may be hard to read for some users`} multiline w={220}>
+                {readability === 'unreadable' && (
+                    <Tooltip label={t`Text and icons in the accent color barely stand out on the cream page. Pick a darker or more saturated color.`} multiline w={240}>
+                        <Group gap={6} wrap="nowrap" style={{ cursor: 'help' }}>
+                            <IconEyeOff size={30} color="var(--mantine-color-red-7)" />
+                            <Text size="xs" fw={700} c="red.7">{t`Unreadable: text and icons in this color disappear on the page`}</Text>
+                        </Group>
+                    </Tooltip>
+                )}
+                {readability === 'poor' && (
+                    <Tooltip label={t`Text and icons in the accent color barely stand out on the cream page. Pick a darker or more saturated color.`} multiline w={240}>
                         <Group gap={6} style={{ cursor: 'help' }}>
                             <IconEyeExclamation size={30} color="var(--mantine-color-yellow-6)" />
                             <Text size="xs" c="yellow.7">{t`Text may be hard to read`}</Text>
                         </Group>
                     </Tooltip>
-                ) : (
+                )}
+                {readability === 'good' && (
                     <Group gap={6}>
                         <IconEyeCheck size={30} color="var(--mantine-color-teal-6)" />
                         <Text size="xs" c="dimmed">{t`Good readability`}</Text>
