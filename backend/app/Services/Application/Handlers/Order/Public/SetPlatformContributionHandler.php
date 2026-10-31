@@ -13,6 +13,7 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Services\Domain\Order\OrderManagementService;
+use HiEvents\Services\Domain\Organizer\PlatformSupportService;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class SetPlatformContributionHandler
@@ -22,6 +23,7 @@ class SetPlatformContributionHandler
         private readonly OrderManagementService   $orderManagementService,
         private readonly EventRepositoryInterface $eventRepository,
         private readonly OrganizerSettingsRepositoryInterface $organizerSettingsRepository,
+        private readonly PlatformSupportService $platformSupportService,
     )
     {
     }
@@ -77,6 +79,6 @@ class SetPlatformContributionHandler
             'organizer_id' => $event->getOrganizerId(),
         ]);
 
-        return $settings?->getPlatformSupportEnabled() ?? true;
+        return $this->platformSupportService->isEnabled($event->getAccountId(), $settings);
     }
 }

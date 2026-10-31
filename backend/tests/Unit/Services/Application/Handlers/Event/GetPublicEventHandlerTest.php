@@ -3,12 +3,15 @@
 namespace Tests\Unit\Services\Application\Handlers\Event;
 
 use HiEvents\DomainObjects\EventDomainObject;
+use HiEvents\DomainObjects\OrganizerDomainObject;
+use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\DomainObjects\PromoCodeDomainObject;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\PromoCodeRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Event\DTO\GetPublicEventDTO;
 use HiEvents\Services\Application\Handlers\Event\GetPublicEventHandler;
 use HiEvents\Services\Domain\Event\EventPageViewIncrementService;
+use HiEvents\Services\Domain\Organizer\PlatformSupportService;
 use HiEvents\Services\Domain\Product\ProductFilterService;
 use Mockery as m;
 use Tests\TestCase;
@@ -19,6 +22,7 @@ class GetPublicEventHandlerTest extends TestCase
     private PromoCodeRepositoryInterface $promoCodeRepository;
     private ProductFilterService $ticketFilterService;
     private EventPageViewIncrementService $eventPageViewIncrementService;
+    private PlatformSupportService $platformSupportService;
     private GetPublicEventHandler $handler;
 
     protected function setUp(): void
@@ -29,13 +33,50 @@ class GetPublicEventHandlerTest extends TestCase
         $this->promoCodeRepository = m::mock(PromoCodeRepositoryInterface::class);
         $this->ticketFilterService = m::mock(ProductFilterService::class);
         $this->eventPageViewIncrementService = m::mock(EventPageViewIncrementService::class);
+        $this->platformSupportService = m::mock(PlatformSupportService::class);
 
         $this->handler = new GetPublicEventHandler(
             $this->eventRepository,
             $this->promoCodeRepository,
             $this->ticketFilterService,
-            $this->eventPageViewIncrementService
+            $this->eventPageViewIncrementService,
+            $this->platformSupportService,
         );
+    }
+
+    public function testPlatformContributionStaysOnWhenTheOrganizerFeeIsLowEnough(): void
+    {
+        $settings = $this->eventWithOrganizerSettings(platformSupportEnabled: false, alwaysOn: true);
+
+        $this->assertTrue($settings->getPlatformSupportEnabled());
+    }
+
+    public function testOrganizerCanTurnOffPlatformContributionAboveTheFeeThreshold(): void
+    {
+        $settings = $this->eventWithOrganizerSettings(platformSupportEnabled: false, alwaysOn: false);
+
+        $this->assertFalse($settings->getPlatformSupportEnabled());
+    }
+
+    private function eventWithOrganizerSettings(bool $platformSupportEnabled, bool $alwaysOn): OrganizerSettingDomainObject
+    {
+        $data = new GetPublicEventDTO(eventId: 1, isAuthenticated: true, ipAddress: '127.0.0.1', promoCode: null);
+        $settings = (new OrganizerSettingDomainObject())->setPlatformSupportEnabled($platformSupportEnabled);
+        $organizer = new OrganizerDomainObject();
+        $organizer->setOrganizerSettings($settings);
+        $event = new EventDomainObject();
+        $event->setAccountId(3);
+        $event->setOrganizer($organizer);
+        $event->setProductCategories(collect());
+
+        $this->setupEventRepositoryMock($event, $data->eventId);
+        $this->platformSupportService->shouldReceive('isAlwaysOn')->once()->with(3)->andReturn($alwaysOn);
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect());
+        $this->ticketFilterService->shouldReceive('filter')->once()->andReturn(collect());
+
+        $this->handler->handle($data);
+
+        return $settings;
     }
 
     public function testHandleWithoutPromoCodeAndUnauthenticatedUser(): void

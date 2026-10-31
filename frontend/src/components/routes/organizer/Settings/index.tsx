@@ -24,10 +24,17 @@ import { PlatformSupportSettings } from "./Sections/PlatformSupportSettings";
 import { platformSupportEnabled } from "../../../common/PlatformSupportInput";
 import { useGetAccount } from "../../../../queries/useGetAccount.ts";
 
+// Jusqu'a ce taux de frais compris, la contribution des acheteurs est toujours proposee et
+// l'organisateur n'a pas le choix (PlatformSupportService::ALWAYS_ON_UP_TO_FEE_PERCENT).
+const PLATFORM_SUPPORT_ALWAYS_ON_UP_TO_FEE_PERCENT = 1.5;
+
 const Settings = () => {
     const { organizerId } = useParams();
     const { data: account } = useGetAccount();
     const isSaasMode = account?.is_saas_mode_enabled;
+    const feePercentage = account?.configuration ? Number(account.configuration.application_fees?.percentage ?? 0) : null;
+    const platformSupportChoice = platformSupportEnabled()
+        && feePercentage !== null && feePercentage > PLATFORM_SUPPORT_ALWAYS_ON_UP_TO_FEE_PERCENT;
 
     const SECTIONS = useMemo(() => {
         const baseSections = [
@@ -100,7 +107,7 @@ const Settings = () => {
             },
         ];
 
-        if (platformSupportEnabled()) {
+        if (platformSupportChoice) {
             baseSections.splice(baseSections.findIndex(section => section.id === 'payment-settings') + 1, 0, {
                 id: 'platform-support',
                 label: t`Platform contribution`,
@@ -119,7 +126,7 @@ const Settings = () => {
         }
 
         return baseSections;
-    }, [isSaasMode, organizerId]);
+    }, [isSaasMode, organizerId, platformSupportChoice]);
 
     const isLargeScreen = useMediaQuery('(min-width: 1200px)', true);
     const [activeSection, setActiveSection] = useState('basic-settings');

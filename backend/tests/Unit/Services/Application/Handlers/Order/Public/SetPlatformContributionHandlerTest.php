@@ -12,6 +12,7 @@ use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Order\Public\SetPlatformContributionHandler;
 use HiEvents\Services\Domain\Order\OrderManagementService;
+use HiEvents\Services\Domain\Organizer\PlatformSupportService;
 use Illuminate\Support\Collection;
 use Mockery as m;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -23,6 +24,7 @@ class SetPlatformContributionHandlerTest extends TestCase
     private OrderRepositoryInterface $orderRepository;
     private OrderManagementService $orderManagementService;
     private OrganizerSettingsRepositoryInterface $organizerSettingsRepository;
+    private PlatformSupportService $platformSupportService;
 
     protected function setUp(): void
     {
@@ -35,16 +37,19 @@ class SetPlatformContributionHandlerTest extends TestCase
         $event = new EventDomainObject();
         $event->setId(1);
         $event->setOrganizerId(7);
+        $event->setAccountId(3);
         $eventRepository = m::mock(EventRepositoryInterface::class);
         $eventRepository->shouldReceive('findById')->with(1)->andReturn($event);
 
         $this->organizerSettingsRepository = m::mock(OrganizerSettingsRepositoryInterface::class);
+        $this->platformSupportService = m::mock(PlatformSupportService::class);
 
         $this->handler = new SetPlatformContributionHandler(
             $this->orderRepository,
             $this->orderManagementService,
             $eventRepository,
             $this->organizerSettingsRepository,
+            $this->platformSupportService,
         );
     }
 
@@ -165,7 +170,26 @@ class SetPlatformContributionHandlerTest extends TestCase
         $this->handler->handle(1, 'abc123', 0.0);
     }
 
-    private function givenPlatformSupportEnabled(bool $enabled): void
+    public function testAcceptsAContributionWhenTheOrganizerFeeKeepsItAlwaysOn(): void
+    {
+        $order = $this->makeOrder(OrderStatus::RESERVED);
+        $this->givenPlatformSupportEnabled(false, effective: true);
+
+        $this->orderRepository->shouldReceive('findFirstWhere')->andReturn($order);
+        $this->orderRepository->shouldReceive('findById')->with(10)->andReturn($order);
+
+        $this->orderRepository
+            ->shouldReceive('updateFromArray')
+            ->once()
+            ->with(10, ['platform_contribution' => 2.0])
+            ->andReturn($order);
+
+        $this->orderManagementService->shouldReceive('updateOrderTotals')->once()->andReturn($order);
+
+        $this->handler->handle(1, 'abc123', 2.00);
+    }
+
+    private function givenPlatformSupportEnabled(bool $enabled, ?bool $effective = null): void
     {
         $settings = new OrganizerSettingDomainObject();
         $settings->setPlatformSupportEnabled($enabled);
@@ -174,6 +198,11 @@ class SetPlatformContributionHandlerTest extends TestCase
             ->shouldReceive('findFirstWhere')
             ->with(['organizer_id' => 7])
             ->andReturn($settings);
+
+        $this->platformSupportService
+            ->shouldReceive('isEnabled')
+            ->with(3, $settings)
+            ->andReturn($effective ?? $enabled);
     }
 
     private function makeOrder(OrderStatus $status, bool $isPaymentRequired = true): OrderDomainObject

@@ -19,6 +19,7 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\PromoCodeRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Event\DTO\GetPublicEventDTO;
 use HiEvents\Services\Domain\Event\EventPageViewIncrementService;
+use HiEvents\Services\Domain\Organizer\PlatformSupportService;
 use HiEvents\Services\Domain\Product\ProductFilterService;
 
 class GetPublicEventHandler
@@ -28,6 +29,7 @@ class GetPublicEventHandler
         private readonly PromoCodeRepositoryInterface  $promoCodeRepository,
         private readonly ProductFilterService          $productFilterService,
         private readonly EventPageViewIncrementService $eventPageViewIncrementService,
+        private readonly PlatformSupportService        $platformSupportService,
     )
     {
     }
@@ -55,6 +57,12 @@ class GetPublicEventHandler
                 new Relationship(OrganizerSettingDomainObject::class),
             ], name: 'organizer'))
             ->findById($data->eventId);
+
+        $organizerSettings = $event->getOrganizer()?->getOrganizerSettings();
+        if ($organizerSettings?->getPlatformSupportEnabled() === false
+            && $this->platformSupportService->isAlwaysOn($event->getAccountId())) {
+            $organizerSettings->setPlatformSupportEnabled(true);
+        }
 
         $validPromoCodes = $this->promoCodeRepository
             ->findWhere([PromoCodeDomainObjectAbstract::EVENT_ID => $data->eventId])
