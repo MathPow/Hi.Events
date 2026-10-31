@@ -1076,7 +1076,6 @@ const Landing = () => {
                     </div>
                     <div className={classes.footerLegal}>
                         <span>© {new Date().getFullYear()} Billetterie Dehors</span>
-                        <span>{t`Made in Québec, for people on the move.`}</span>
                         <a className={classes.footerCredit} href="https://melonstudio.ca/" target="_blank" rel="noopener">
                             <Trans>Designed with the help of <strong>MelonStudio</strong></Trans>
                         </a>
