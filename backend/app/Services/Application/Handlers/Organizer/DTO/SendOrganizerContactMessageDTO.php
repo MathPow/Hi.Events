@@ -12,6 +12,8 @@ class SendOrganizerContactMessageDTO extends BaseDataObject
         public string $name,
         public string $email,
         public string $message,
+        // La page d'evenement d'ou le message est parti (facultatif).
+        public ?int   $event_id = null,
     )
     {
     }

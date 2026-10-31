@@ -11,6 +11,7 @@ import {
     IconEye,
     IconEyeOff,
     IconHelpCircle,
+    IconInbox,
     IconPaint,
     IconSettings,
     IconTrophy,
@@ -22,10 +23,10 @@ import {
 import { t } from "@lingui/macro";
 import { BreadcrumbItem, NavItem } from "../AppLayout/types.ts";
 import AppLayout from "../AppLayout";
-import { NavLink, useLocation, useParams, useSearchParams } from "react-router";
+import { NavLink, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { Button, Modal, Stack, Text } from "@mantine/core";
 import { useGetOrganizer } from "../../../queries/useGetOrganizer.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CreateEventModal } from "../../modals/CreateEventModal";
 import { TopBarButton } from "../../common/TopBarButton";
 import classes from "./OrganizerLayout.module.scss";
@@ -48,6 +49,8 @@ import { useCanSeeDeveloperPages, useIsCurrentUserSuperAdmin } from "../../../ho
 import { useGetOrganizerAchievements } from "../../../queries/useGetOrganizerAchievements.ts";
 import { AchievementCelebration } from "../../common/OrganizerAchievements";
 import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
+import { notifications } from "@mantine/notifications";
+import { useGetOrganizerUnreadMessagesCount } from "../../../queries/useGetOrganizerMessages.ts";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -78,6 +81,35 @@ const OrganizerLayout = () => {
     const earnedAchievements = achievements?.filter((achievement) => achievement.earned_at).length;
     const statusToggleMutation = useUpdateOrganizerStatus();
     const isDashboard = /^\/manage\/organizer\/[^/]+(\/dashboard)?\/?$/.test(location.pathname);
+    const navigate = useNavigate();
+
+    // Les messages « Contacter » non lus: la pastille du menu, et une alerte quand un nouveau
+    // arrive pendant que le tableau de bord est ouvert (hors de la page des messages).
+    const { data: unreadMessages } = useGetOrganizerUnreadMessagesCount(organizerId);
+    const previousUnreadMessages = useRef<number | undefined>(undefined);
+    const isMessagesPage = location.pathname.endsWith('/messages');
+    useEffect(() => {
+        if (unreadMessages === undefined) {
+            return;
+        }
+        const previous = previousUnreadMessages.current;
+        previousUnreadMessages.current = unreadMessages;
+        if (previous === undefined || unreadMessages <= previous || isMessagesPage) {
+            return;
+        }
+        notifications.show({
+            id: 'organizer-new-message',
+            title: t`New message`,
+            message: t`Someone wrote to you with the Contact button. Click to read it.`,
+            icon: <IconInbox size={18}/>,
+            autoClose: 8000,
+            style: { cursor: 'pointer' },
+            onClick: () => {
+                notifications.hide('organizer-new-message');
+                navigate(`/manage/organizer/${organizerId}/messages`);
+            },
+        });
+    }, [unreadMessages]);
 
     // « Creer un evenement » a l'accueil mene ici avec ?create_event: on ouvre la fenetre de creation.
     useEffect(() => {
@@ -114,6 +146,13 @@ const OrganizerLayout = () => {
 
         { label: t`Manage` },
         { link: 'events', label: t`Events`, icon: IconCalendar, mobileTab: true },
+        {
+            link: 'messages',
+            label: t`Messages`,
+            icon: IconInbox,
+            badge: unreadMessages ? String(unreadMessages) : undefined,
+            attention: !!unreadMessages,
+        },
         { link: 'settings', label: t`Settings`, icon: IconSettings, mobileTab: true },
 
         { label: t`Tools` },

@@ -35,6 +35,46 @@ button{border:0;border-radius:999px;padding:.875rem 1.75rem;background:#fa7853;c
 </html>`;
 };
 
+// Les notifications du tableau de bord (Web Push): un nouveau message « Contacter », par exemple.
+// Le serveur envoie {title, body, url, tag}; toucher la notification ouvre url dans l'app.
+self.addEventListener('push', (event) => {
+    let data = {};
+    try {
+        data = event.data ? event.data.json() : {};
+    } catch {
+        data = {body: event.data ? event.data.text() : ''};
+    }
+
+    event.waitUntil(self.registration.showNotification(data.title || 'DEHORS Billets', {
+        body: data.body || '',
+        tag: data.tag,
+        icon: '/manifest-icons/favicon-192x192.png',
+        data: {url: data.url || '/manage/events'},
+    }));
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const url = new URL((event.notification.data && event.notification.data.url) || '/manage/events', self.location.origin).href;
+
+    event.waitUntil((async () => {
+        const windows = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
+        for (const client of windows) {
+            if (!client.url.startsWith(self.location.origin)) {
+                continue;
+            }
+            try {
+                await client.focus();
+                await client.navigate(url);
+                return;
+            } catch {
+                // Une fenetre que ce service worker ne controle pas: on en ouvre une autre.
+            }
+        }
+        await self.clients.openWindow(url);
+    })());
+});
+
 self.addEventListener('install', () => self.skipWaiting());
 
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));

@@ -136,6 +136,14 @@ use HiEvents\Http\Actions\Organizers\GetOrganizersAction;
 use HiEvents\Http\Actions\Organizers\GetPublicOrganizerAction;
 use HiEvents\Http\Actions\Organizers\Orders\GetOrganizerOrdersAction;
 use HiEvents\Http\Actions\Organizers\Public\SendOrganizerContactMessagePublicAction;
+use HiEvents\Http\Actions\Organizers\Messages\DeleteOrganizerMessageAction;
+use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerMessagesAction;
+use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerUnreadMessagesCountAction;
+use HiEvents\Http\Actions\Organizers\Messages\MarkAllOrganizerMessagesReadAction;
+use HiEvents\Http\Actions\Organizers\Messages\UpdateOrganizerMessageAction;
+use HiEvents\Http\Actions\Users\Push\CreatePushSubscriptionAction;
+use HiEvents\Http\Actions\Users\Push\DeletePushSubscriptionAction;
+use HiEvents\Http\Actions\Users\Push\GetWebPushPublicKeyAction;
 use HiEvents\Http\Actions\Organizers\Settings\GetOrganizerSettingsAction;
 use HiEvents\Http\Actions\Organizers\Settings\PartialUpdateOrganizerSettingsAction;
 use HiEvents\Http\Actions\Organizers\Achievements\GetOrganizerAchievementsAction;
@@ -335,6 +343,16 @@ $router->middleware(['auth:api'])->group(
         $router->get('/organizers/{organizer_id}/stats', GetOrganizerStatsAction::class);
         $router->get('/organizers/{organizer_id}/achievements', GetOrganizerAchievementsAction::class);
         $router->post('/organizers/{organizer_id}/achievements/seen', MarkOrganizerAchievementsSeenAction::class);
+
+        // La boite de reception (« Contacter » des pages publiques) et ses notifications
+        $router->get('/organizers/{organizer_id}/messages', GetOrganizerMessagesAction::class);
+        $router->get('/organizers/{organizer_id}/messages/unread-count', GetOrganizerUnreadMessagesCountAction::class);
+        $router->post('/organizers/{organizer_id}/messages/read-all', MarkAllOrganizerMessagesReadAction::class);
+        $router->patch('/organizers/{organizer_id}/messages/{message_id}', UpdateOrganizerMessageAction::class);
+        $router->delete('/organizers/{organizer_id}/messages/{message_id}', DeleteOrganizerMessageAction::class);
+        $router->get('/push/public-key', GetWebPushPublicKeyAction::class);
+        $router->post('/push/subscriptions', CreatePushSubscriptionAction::class);
+        $router->delete('/push/subscriptions', DeletePushSubscriptionAction::class);
         $router->get('/organizers/{organizer_id}/orders', GetOrganizerOrdersAction::class);
         $router->get('/organizers/{organizer_id}/settings', GetOrganizerSettingsAction::class);
         $router->patch('/organizers/{organizer_id}/settings', PartialUpdateOrganizerSettingsAction::class);

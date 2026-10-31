@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal, TextInput, Textarea, Group, Button} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {t} from '@lingui/macro';
-import {Organizer} from '../../../types';
+import {IdParam, Organizer} from '../../../types';
 import {useContactOrganizer} from '../../../mutations/useContactOrganizer';
 import {showSuccess, showError} from '../../../utilites/notifications';
 import {InputGroup} from "../InputGroup";
@@ -11,12 +11,15 @@ interface ContactOrganizerModalProps {
     opened: boolean;
     onClose: () => void;
     organizer: Organizer;
+    // Ouvert depuis la page d'un evenement: le message le rappelle a l'organisateur.
+    eventId?: IdParam;
 }
 
 export const ContactOrganizerModal: React.FC<ContactOrganizerModalProps> = ({
     opened,
     onClose,
-    organizer
+    organizer,
+    eventId,
 }) => {
     const contactMutation = useContactOrganizer();
     
@@ -45,7 +48,7 @@ export const ContactOrganizerModal: React.FC<ContactOrganizerModalProps> = ({
     const handleContactSubmit = (values: typeof contactForm.values) => {
         contactMutation.mutate({
             organizerId: organizer.id,
-            contactData: values,
+            contactData: eventId ? {...values, event_id: eventId} : values,
         }, {
             onSuccess: () => {
                 showSuccess(t`Your message has been sent successfully!`);

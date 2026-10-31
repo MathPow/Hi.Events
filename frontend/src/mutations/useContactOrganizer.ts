@@ -10,6 +10,7 @@ export const useContactOrganizer = () => {
                 name: string;
                 email: string;
                 message: string;
+                event_id?: IdParam;
             };
         }) => organizerPublicClient.contactOrganizer(organizerId, contactData),
     });

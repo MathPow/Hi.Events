@@ -188,6 +188,8 @@ export const organizerPublicClient = {
         name: string;
         email: string;
         message: string;
+        // La page d'evenement d'ou le message part: rappelee dans la boite de reception.
+        event_id?: IdParam;
     }) => {
         const response = await publicApi.post<GenericDataResponse<any>>(
             `organizers/${organizerId}/contact`, 

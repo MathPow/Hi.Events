@@ -26,6 +26,7 @@ class SendOrganizerContactMessagePublicAction extends BaseAction
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'message' => 'required|string|max:5000',
+            'event_id' => 'nullable|integer',
         ]);
 
         $this->handler->handle(SendOrganizerContactMessageDTO::from([
@@ -34,6 +35,7 @@ class SendOrganizerContactMessagePublicAction extends BaseAction
             'name' => $data['name'],
             'email' => $data['email'],
             'message' => $data['message'],
+            'event_id' => isset($data['event_id']) ? (int)$data['event_id'] : null,
         ]));
 
         return $this->jsonResponse([

@@ -481,6 +481,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                         opened={contactModalOpen}
                         onClose={() => setContactModalOpen(false)}
                         organizer={organizer}
+                        eventId={event.id}
                     />
                 )}
 
