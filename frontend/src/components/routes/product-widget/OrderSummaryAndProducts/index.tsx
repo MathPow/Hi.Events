@@ -701,12 +701,6 @@ export const OrderSummaryAndProducts = () => {
                                     <div className={classes.actionList}>
                                         {manageActions}
                                     </div>
-                                    {isCompleted && allowSelfEdit && (
-                                        <p className={classes.tip}>
-                                            <PublicIcon name={'etoile'} size={18}/>
-                                            {t`Bookmark this page to manage your order anytime.`}
-                                        </p>
-                                    )}
                                 </Card>
                             )}
                         </div>
