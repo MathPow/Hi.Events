@@ -66,6 +66,36 @@
   outline-offset: 3px;
 }
 
+// Un element borde et decoupe (useRoughEdges): la coupe mord sa bordure par endroits, le trait
+// s'y amincissait et devenait flou. ::after le repeint le long du bord decoupe, de l'epaisseur
+// de la bordure (--rough-stroke) et de sa couleur, heritee: elle suit le survol et les etats.
+// La bordure reste dessous et l'anneau la couvre, ses coins compris.
+[data-rough-outlined]::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--rough-border));
+  border: calc(var(--rough-border) + 2px) solid;
+  border-color: inherit;
+  border-radius: inherit;
+  mask: var(--rough-stroke) 0 0 / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+// Un champ n'a pas de ::after: son enveloppe (Mantine) repeint son trait a sa place, de la
+// couleur et de l'opacite de sa bordure, que useRoughEdges suit (une erreur, le focus).
+[data-rough-ring]::after {
+  content: '';
+  position: absolute;
+  top: var(--rough-ring-y);
+  left: var(--rough-ring-x);
+  width: var(--rough-ring-w);
+  height: var(--rough-ring-h);
+  background: var(--rough-ring-color, transparent);
+  opacity: var(--rough-ring-opacity, 1);
+  mask: var(--rough-ring) 0 0 / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
 // Le survol des boutons du site (bouton-sautillant, bouton-rugueux): sans transition, le
 // bouton saute d'un pixel cinq fois par seconde et son contour bouillonne entre ses trois
 // traces, sur un autre rythme. Une pilule grossit aussi un peu, avec un soupcon de rebond:
@@ -81,6 +111,10 @@
       animation: rough-clip-boil 0.6s steps(1) infinite, rough-hop 0.4s steps(1) infinite;
     }
 
+    [data-rough-outlined][data-rough-boil]:hover::after {
+      animation: rough-stroke-boil 0.6s steps(1) infinite;
+    }
+
     [data-rough-boil='pill']:hover {
       scale: var(--rough-grow, 1.04);
     }
@@ -88,6 +122,10 @@
 
   [data-rough-boil]:focus-visible {
     animation: rough-clip-boil 0.6s steps(1) infinite, rough-hop 0.4s steps(1) infinite;
+  }
+
+  [data-rough-outlined][data-rough-boil]:focus-visible::after {
+    animation: rough-stroke-boil 0.6s steps(1) infinite;
   }
 
   [data-rough-boil='pill']:focus-visible {
@@ -108,6 +146,10 @@
     animation: none;
     scale: none;
   }
+
+  [data-rough-outlined][data-rough-boil]:is(:active, :disabled, [data-disabled])::after {
+    animation: none;
+  }
 }
 
 @keyframes rough-clip-boil {
@@ -121,6 +163,21 @@
 
   66.667% {
     clip-path: var(--rough-clip-3);
+  }
+}
+
+// Le trait repeint suit les trois traces de rough-clip-boil, au meme rythme.
+@keyframes rough-stroke-boil {
+  0% {
+    mask-image: var(--rough-stroke);
+  }
+
+  33.333% {
+    mask-image: var(--rough-stroke-2);
+  }
+
+  66.667% {
+    mask-image: var(--rough-stroke-3);
   }
 }
 
