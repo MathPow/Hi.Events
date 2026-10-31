@@ -1919,6 +1919,16 @@ $ridge-mobile: 10vw;
   }
 }
 
+// Selected text turns cream on the orange, like under the mountain (.mountain).
+.feesText,
+.feesNote,
+.stripeCard {
+  &::selection,
+  ::selection {
+    background: $creme;
+  }
+}
+
 .feesCardWrap {
   position: relative;
 }
