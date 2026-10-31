@@ -79,7 +79,6 @@ export const OrganizerDocumentHead = ({organizer}: OrganizerDocumentHeadProps) =
         }
     });
 
-    const allowIndexing = organizerSettings?.allow_search_engine_indexing !== false;
 
     return (
         <Helmet>
@@ -98,7 +97,7 @@ export const OrganizerDocumentHead = ({organizer}: OrganizerDocumentHeadProps) =
             {image && <meta name="twitter:image" content={image}/>}
             <meta name="twitter:card" content="summary_large_image"/>
 
-            <meta name="robots" content={allowIndexing ? "index, follow" : "noindex, nofollow"}/>
+            <meta name="robots" content="index, follow"/>
 
             <link rel="canonical" href={url}/>
 

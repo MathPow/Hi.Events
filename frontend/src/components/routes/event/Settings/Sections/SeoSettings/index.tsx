@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {Button, Switch, TextInput} from "@mantine/core";
+import {Button, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {useParams} from "react-router";
 import {useEffect} from "react";
@@ -28,7 +28,8 @@ export const SeoSettings = () => {
     useEffect(() => {
         if (eventSettingsQuery?.isFetched && eventSettingsQuery?.data) {
             form.setValues({
-                allow_search_engine_indexing: eventSettingsQuery.data.allow_search_engine_indexing,
+                // Toujours indexable: le choix n'est plus offert, et enregistrer le remet.
+                allow_search_engine_indexing: true,
                 seo_title: eventSettingsQuery.data.seo_title,
                 seo_description: eventSettingsQuery.data.seo_description,
                 seo_keywords: eventSettingsQuery.data.seo_keywords,
@@ -75,11 +76,6 @@ export const SeoSettings = () => {
                         description={t`Comma seperated keywords that describe the event. These will be used by search engines to help categorize and index the event`}
                         label={t`SEO Keywords`}
                         placeholder={t`Amazing, Event, Keywords...`}
-                    />
-                    <Switch
-                        {...form.getInputProps('allow_search_engine_indexing', {type: 'checkbox'})}
-                        description={t`Allow search engines to index this event`}
-                        label={t`Allow search engine indexing`}
                     />
                     <Button loading={updateMutation.isPending} type={'submit'}>
                         {t`Save`}
