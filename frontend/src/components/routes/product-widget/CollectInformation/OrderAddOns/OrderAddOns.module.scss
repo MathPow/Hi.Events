@@ -1,0 +1,185 @@
+@use "../../../../../styles/mixins.scss";
+
+$font-titre: FatFrank, 'Arial Black', sans-serif;
+
+// « Ajouter a votre commande » (maquette 424:184; telephone 418:146): deux colonnes de fiches
+// creme, une par telephone.
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px 16px 14px 14px;
+  border-radius: 20px;
+  color: var(--dehors-brun);
+  background: var(--dehors-creme);
+
+  @include mixins.respond-below(md) {
+    gap: 12px;
+    padding: 12px 14px 12px 12px;
+    border-radius: 18px;
+  }
+}
+
+// La tuile de l'image: les produits n'ont pas de photo, l'etiquette en tient lieu.
+.image {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+  color: var(--public-accent);
+  background: var(--public-accent-doux);
+
+  @include mixins.respond-below(md) {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+  }
+}
+
+.text {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  line-height: normal;
+
+  @include mixins.respond-below(md) {
+    gap: 2px;
+  }
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 15px;
+  }
+}
+
+.price {
+  font-family: $font-titre;
+  font-size: 17px;
+
+  @include mixins.respond-below(md) {
+    font-size: 16px;
+  }
+}
+
+.chosen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+// Une taille deja dans la commande: la toucher la retire.
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dehors-brun);
+  background: var(--public-accent-doux);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--public-accent) 32%, var(--dehors-creme));
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+}
+
+.chipRemove {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+// Deja dans la commande: « − n + » en ronds plus petits, pour laisser la place au nom.
+.stepperActive {
+  gap: 6px;
+
+  .round {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+
+    > span {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+}
+
+.quantity {
+  min-width: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+}
+
+// Le rond « + » de la maquette: 48px, contour brun de 2px.
+.round {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--dehors-brun);
+  border-radius: 24px;
+  color: var(--dehors-brun);
+
+  &:hover:not(:disabled) {
+    background: var(--public-accent-doux);
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+
+  @include mixins.respond-below(md) {
+    > span {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+}

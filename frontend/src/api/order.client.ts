@@ -238,6 +238,21 @@ export const orderClientPublic = {
         return response.data;
     },
 
+    // La merch ajoutee a la caisse: la quantite voulue pour ce prix (0 la retire). Le
+    // session_identifier de l'adresse, s'il y est, prouve que c'est le navigateur de la reservation.
+    setProductQuantity: async (eventId: IdParam, orderShortId: IdParam, data: {
+        product_id: IdParam,
+        product_price_id: IdParam,
+        quantity: number,
+    }, sessionIdentifier?: string | null) => {
+        const query = sessionIdentifier ? `?session_identifier=${encodeURIComponent(sessionIdentifier)}` : '';
+        const response = await publicApi.put<GenericDataResponse<Order>>(
+            `events/${eventId}/order/${orderShortId}/products${query}`,
+            data,
+        );
+        return response.data;
+    },
+
     abandonOrder: async (eventId: IdParam, orderShortId: IdParam) => {
         const response = await publicApi.post<GenericDataResponse<Order>>(`events/${eventId}/order/${orderShortId}/abandon`);
         return response.data;

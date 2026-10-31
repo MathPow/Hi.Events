@@ -10,7 +10,7 @@ import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries
 import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {useGetEventQuestionsPublic} from "../../../../queries/useGetEventQuestionsPublic.ts";
 import {CheckoutOrderQuestions, CheckoutProductQuestions} from "../../../common/CheckoutQuestion";
-import {Event, IdParam, Question} from "../../../../types.ts";
+import {Event, IdParam, Product, Question} from "../../../../types.ts";
 import {useEffect, useRef, useState} from "react";
 import {
     CheckoutActions,
@@ -36,6 +36,7 @@ import {useApplyPromoCodeToOrder} from "../../../../mutations/useApplyPromoCodeT
 import {WaiverSignature} from "../../../common/WaiverSignature";
 import {isMinorOnEventDay} from "../../../../utilites/dates.ts";
 import {isEmptyHtml} from "../../../../utilites/helpers.ts";
+import {OrderAddOns} from "./OrderAddOns";
 
 const LoadingSkeleton = () =>
     (
@@ -476,6 +477,52 @@ export const CollectInformation = () => {
         // prefill/lock intentionally omitted: they're memoized off query params that don't change during the page's lifetime
     }, [isEventFetched, isOrderFetched, isQuestionsFetched]);
 
+    // De la merch ajoutee ou retiree (« Ajouter a votre commande ») change les lignes de la
+    // commande: les fiches du formulaire (une par article, dans l'ordre des lignes) suivent.
+    // Chaque fiche gardee reprend ce qu'on y avait ecrit (meme prix, meme rang); une nouvelle
+    // part vide. Sans ca, la fin de commande recevrait un prix retire de la commande, ou des
+    // fiches decalees par rapport aux billets.
+    const formEntries: { product_price_id?: IdParam }[] = Array.isArray(form.values.products) ? form.values.products : [];
+    const formEntriesKey = formEntries.map(entry => entry.product_price_id).join(',');
+    const orderEntriesKey = (orderItems ?? [])
+        .flatMap(item => Array.from({length: item.quantity ?? 0}, () => item.product_price_id))
+        .join(',');
+    const isFormBuilt = formEntries.some(entry => !!entry.product_price_id);
+    // Les coordonnees deja envoyees (on revient du paiement): plus de merch a ajouter.
+    const detailsAlreadySent = !!order?.email || order?.payment_status === 'AWAITING_PAYMENT';
+
+    useEffect(() => {
+        if (!isFormBuilt || !orderItems || !productQuestions || formEntriesKey === orderEntriesKey) {
+            return;
+        }
+
+        const fresh = createProductsAndQuestions(createProductIdToQuestionMap());
+        const seen = new Map<IdParam | undefined, number>();
+        const movedTo = new Map<number, number>();
+
+        const rebuilt = fresh.map((entry: { product_price_id?: IdParam }, newIndex: number) => {
+            const rank = seen.get(entry.product_price_id) ?? 0;
+            seen.set(entry.product_price_id, rank + 1);
+
+            const oldIndex = formEntries
+                .map((old, index) => old.product_price_id === entry.product_price_id ? index : -1)
+                .filter(index => index !== -1)[rank];
+
+            if (oldIndex === undefined) {
+                return entry;
+            }
+
+            movedTo.set(oldIndex, newIndex);
+            return form.values.products[oldIndex];
+        });
+
+        form.setFieldValue('products', rebuilt);
+        setCopiedIndices(current => current === null
+            ? null
+            : current.flatMap(index => movedTo.has(index) ? [movedTo.get(index)!] : []));
+        // Les cles resument les lignes de la commande et les fiches: elles suffisent.
+    }, [isFormBuilt, formEntriesKey, orderEntriesKey]);
+
     useEffect(() => {
         if ((order && event) && order?.is_expired) {
             showInfo(t`This order has expired. Please start again.`);
@@ -826,6 +873,17 @@ export const CollectInformation = () => {
                     >
                         {attendeeCards}
                     </CheckoutSection>
+                )}
+
+                {/* La merch de l'evenement, avant le paiement seulement: une fois les coordonnees
+                    envoyees, le montant du paiement est fixe. */}
+                {!!order && !!event && !detailsAlreadySent && (
+                    <OrderAddOns
+                        number={attendeeCards.length > 0 ? 3 : 2}
+                        event={event as Event}
+                        order={order}
+                        products={(products ?? []).filter((product): product is Product => !!product)}
+                    />
                 )}
 
                 {!!event?.settings?.pre_checkout_message && (

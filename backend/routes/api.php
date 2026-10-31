@@ -116,6 +116,7 @@ use HiEvents\Http\Actions\Orders\Public\CompleteOrderActionPublic;
 use HiEvents\Http\Actions\Orders\Public\CreateOrderActionPublic;
 use HiEvents\Http\Actions\Orders\Public\DownloadDonationReceiptPublicAction;
 use HiEvents\Http\Actions\Orders\Public\SetPlatformContributionAction;
+use HiEvents\Http\Actions\Orders\Public\SetOrderProductQuantityActionPublic;
 use HiEvents\Http\Actions\Orders\Public\DownloadOrderInvoicePublicAction;
 use HiEvents\Http\Actions\Orders\Public\GetOrderActionPublic;
 use HiEvents\Http\Actions\Orders\Public\TransitionOrderToOfflinePaymentPublicAction;
@@ -583,6 +584,9 @@ $router->prefix('/public')->group(
         $router->post('/events/{event_id}/order/{order_short_id}/abandon', AbandonOrderActionPublic::class);
         $router->post('/events/{event_id}/order/{order_short_id}/promo-code', ApplyPromoCodeToOrderActionPublic::class)
             ->middleware('throttle:10,1');
+        // La merch ajoutee a la caisse, avant le paiement.
+        $router->put('/events/{event_id}/order/{order_short_id}/products', SetOrderProductQuantityActionPublic::class)
+            ->middleware('throttle:30,1');
         $router->post('/events/{event_id}/order/{order_short_id}/await-offline-payment', TransitionOrderToOfflinePaymentPublicAction::class);
         $router->get('/events/{event_id}/order/{order_short_id}/invoice', DownloadOrderInvoicePublicAction::class);
         $router->get('/events/{event_id}/order/{order_short_id}/donation-receipt', DownloadDonationReceiptPublicAction::class);
