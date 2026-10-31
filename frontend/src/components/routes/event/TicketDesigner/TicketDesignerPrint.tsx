@@ -7,7 +7,7 @@ import {AttendeeTicket} from '../../../common/AttendeeTicket';
 import {PoweredByFooter} from '../../../common/PoweredByFooter';
 import {t} from '@lingui/macro';
 import {useEffect} from "react";
-import classes from '../../../routes/product-widget/PrintOrder/PrintOrder.module.scss';
+import classes from './TicketDesignerPrint.module.scss';
 
 const TicketDesignerPrint = () => {
     const {eventId} = useParams();
