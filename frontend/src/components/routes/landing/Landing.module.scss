@@ -1694,6 +1694,35 @@ $ridge-mobile: 10vw;
   margin-top: 1.75rem;
 }
 
+// A plain link: its letters shake like every link's, its arrow hops forward on the shop's beat.
+.nextEventsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: $brun;
+
+  svg {
+    flex: none;
+  }
+
+  @media (hover: hover) {
+    &:hover svg {
+      animation: arrow-hop 0.8s steps(1) infinite;
+    }
+  }
+
+  &:focus-visible svg {
+    animation: arrow-hop 0.8s steps(1) infinite;
+  }
+}
+
+@keyframes arrow-hop {
+  50% {
+    translate: 0.25rem 0;
+  }
+}
+
 // Clipped on the sides only: a hovered card rises a little. Without motion, it scrolls by hand.
 .nextEventsScroller {
   overflow: clip visible;

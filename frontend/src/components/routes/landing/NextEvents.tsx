@@ -1,13 +1,14 @@
 import {CSSProperties, useRef} from "react";
 import {Link} from "react-router";
 import {t} from "@lingui/macro";
+import {IconArrowRight} from "@tabler/icons-react";
 import {Event} from "../../../types.ts";
 import {useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
 import {eventCoverImageUrl, eventHomepagePath} from "../../../utilites/urlHelper.ts";
 import {shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 import classes from "./Landing.module.scss";
 import {useMarqueePace} from "./useMarqueePace.ts";
-import {LandingButton} from "./LandingButton.tsx";
+import {ShakyText} from "./LandingButton.tsx";
 
 const COPIES = 4;
 // Enough events in a copy for it to be wider than a wide screen.
@@ -34,7 +35,7 @@ const EventCard = ({event}: { event: Event }) => {
 /**
  * The platform's next events under the hero, a photo and its title rolling to
  * the left: stopped under the mouse to be clicked, faster as the page scrolls,
- * then a button to all of them (/events). Nothing when no event is coming up.
+ * then a link to all of them (/events). Nothing when no event is coming up.
  */
 export const NextEvents = () => {
     const {data: events = []} = useGetUpcomingEventsPublic();
@@ -70,7 +71,10 @@ export const NextEvents = () => {
                 </div>
             </div>
             <div className={classes.nextEventsMore}>
-                <LandingButton as={Link} to="/events" variant="dark" label={t`See all events`}/>
+                <Link to="/events" className={classes.nextEventsLink}>
+                    <ShakyText text={t`See all events`}/>
+                    <IconArrowRight size={22} stroke={2.4} aria-hidden="true"/>
+                </Link>
             </div>
         </section>
     );
