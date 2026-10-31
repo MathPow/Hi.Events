@@ -1097,9 +1097,19 @@ $ridge-mobile: 10vw;
     width: 100%;
   }
 
-  // « Mes billets », for participants: brown on the cream menu.
+  // For participants, side by side like in the hero: « Événements » and
+  // « Mes billets », brown on the cream menu.
   .button-ghost {
     color: $brun;
+  }
+}
+
+.menuVisitors {
+  display: flex;
+  gap: 0.5rem;
+
+  > * {
+    flex: 1 1 0;
   }
 }
 

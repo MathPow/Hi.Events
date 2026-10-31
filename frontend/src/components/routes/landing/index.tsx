@@ -187,7 +187,6 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
 
     return (
         <nav ref={nav} id={MENU_ID} className={classes.menu} aria-label={t`Menu`}>
-            <NavLink to="/events" onClick={onClose}><ShakyText text={t`Events`}/></NavLink>
             {sectionLinks().map((link) => (
                 <a key={link.href} href={link.href} onClick={(event) => {
                     onClose();
@@ -197,7 +196,10 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
             <div className={classes.menuActions}>
                 <LandingButton as={NavLink} to="/auth/register" label={t`Create my account`} onClick={onClose}/>
                 <LandingButton as={NavLink} to="/auth/login" variant="dark" label={t`Log in`} onClick={onClose}/>
-                <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`} onClick={onClose}/>
+                <div className={classes.menuVisitors}>
+                    <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`} onClick={onClose}/>
+                    <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`} onClick={onClose}/>
+                </div>
             </div>
             <div className={classes.menuLanguages} role="group" aria-label={t`Language`}>
                 {LANGUAGES.map(({locale, name}) => (
