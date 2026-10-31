@@ -1,4 +1,4 @@
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {FinaliseOrderPayload, orderClientPublic} from "../../../../api/order.client.ts";
 import {useNavigate, useParams, useSearchParams} from "react-router";
 import {Button, Checkbox, NativeSelect, Skeleton, TextInput} from "@mantine/core";
@@ -6,7 +6,7 @@ import {IconCircleCheck, IconClock} from "@tabler/icons-react";
 import {t, Trans} from "@lingui/macro";
 import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
-import {useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
+import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {useGetEventQuestionsPublic} from "../../../../queries/useGetEventQuestionsPublic.ts";
 import {CheckoutOrderQuestions, CheckoutProductQuestions} from "../../../common/CheckoutQuestion";
@@ -92,6 +92,13 @@ export const CollectInformation = () => {
     const productQuestions = questions?.filter(question => question.belongs_to === "PRODUCT");
     const orderQuestions = questions?.filter(question => question.belongs_to === "ORDER");
     const products = productCategories?.flatMap(category => category.products);
+    const queryClient = useQueryClient();
+
+    // L'acheteur revient de l'etape du paiement (« Modifier »): ses coordonnees et ses participants
+    // sont deja enregistres, rien n'est paye. Le total ne doit plus bouger (le paiement Stripe deja
+    // prepare garde son montant): ni contribution, ni code promo.
+    const isEditing = order?.status === 'RESERVED' && !!order?.email
+        && (order.payment_status === 'AWAITING_PAYMENT' || order.payment_status === 'PAYMENT_FAILED');
     const requireBillingAddress = event?.settings?.require_billing_address;
     const isPerOrderCollection = event?.settings?.attendee_details_collection_method === 'PER_ORDER';
     const allowCopyToAllAttendees = event?.settings?.allow_copy_details_to_all_attendees ?? true;
@@ -279,6 +286,8 @@ export const CollectInformation = () => {
             if (nextPage === 'summary') {
                 trackEvent(AnalyticsEvents.PURCHASE_COMPLETED_FREE);
             }
+            // Les participants modifies, pas ceux du premier envoi encore en cache.
+            queryClient.invalidateQueries({queryKey: [GET_ORDER_PUBLIC_QUERY_KEY]});
             navigate(eventCheckoutPath(eventId, data.data.short_id, nextPage));
         },
 
@@ -377,7 +386,7 @@ export const CollectInformation = () => {
     }
 
     const handleSubmit = async (values: any) => {
-        if (canContribute && platformSupportEnabled() && platformContribution > 0) {
+        if (canContribute && !isEditing && platformSupportEnabled() && platformContribution > 0) {
             try {
                 await orderClientPublic.setPlatformContribution(Number(eventId), String(orderShortId), platformContribution);
             } catch {
@@ -415,9 +424,13 @@ export const CollectInformation = () => {
             const formOrderQuestions = createFormOrderQuestions();
 
             const prefillFullName = [prefill.first_name, prefill.last_name].filter(Boolean).join(' ');
+            const savedFullName = isEditing ? [order?.first_name, order?.last_name].filter(Boolean).join(' ') : '';
             const orderPrefill = {
                 ...(prefillFullName ? {full_name: prefillFullName} : {}),
                 ...(prefill.email !== undefined ? {email: prefill.email, email_confirmation: prefill.email} : {}),
+                // De retour du paiement: ce que l'acheteur avait envoye.
+                ...(savedFullName ? {full_name: savedFullName} : {}),
+                ...(isEditing && order?.email ? {email: order.email, email_confirmation: order.email} : {}),
             };
 
             const ticketProductIds = new Set(
@@ -426,11 +439,28 @@ export const CollectInformation = () => {
                     .map(product => product!.id)
             );
 
-            const prefilledProducts = builtProducts.map((product: any) =>
-                (!isPerOrderCollection && ticketProductIds.has(product.product_id))
-                    ? {...product, ...orderPrefill}
-                    : product
-            );
+            // Chaque participant deja enregistre retrouve sa place, billet par billet (meme prix).
+            const savedAttendees = isEditing ? [...(order?.attendees ?? [])] : [];
+            const takeSavedAttendee = (productPriceId: unknown) => {
+                const index = savedAttendees.findIndex(attendee => String(attendee.product_price_id) === String(productPriceId));
+                return index === -1 ? undefined : savedAttendees.splice(index, 1)[0];
+            };
+
+            const prefilledProducts = builtProducts.map((product: any) => {
+                if (isPerOrderCollection || !ticketProductIds.has(product.product_id)) {
+                    return product;
+                }
+                const saved = takeSavedAttendee(product.product_price_id);
+
+                return saved
+                    ? {
+                        ...product,
+                        full_name: [saved.first_name, saved.last_name].filter(Boolean).join(' '),
+                        email: saved.email,
+                        email_confirmation: saved.email,
+                    }
+                    : {...product, ...orderPrefill};
+            });
 
             form.setValues({
                 ...form.values,
@@ -438,6 +468,7 @@ export const CollectInformation = () => {
                 order: {
                     ...form.values.order,
                     ...orderPrefill,
+                    ...(isEditing && order?.address ? {address: order.address} : {}),
                     questions: formOrderQuestions,
                 },
             });
@@ -466,7 +497,7 @@ export const CollectInformation = () => {
         />;
     }
 
-    if (order?.payment_status === 'AWAITING_PAYMENT') {
+    if (order?.payment_status === 'AWAITING_PAYMENT' && !isEditing) {
         return <HomepageInfoMessage
             status="awaiting_payment"
             message={t`Waiting for payment`}
@@ -659,7 +690,7 @@ export const CollectInformation = () => {
                         event={event}
                         order={order}
                         notice={<ProductInfoNotice settings={event.settings}/>}
-                        onPromoCodeChange={handlePromoCodeChange}
+                        onPromoCodeChange={isEditing ? undefined : handlePromoCodeChange}
                         isPromoCodePending={promoCodeMutation.isPending}
                     />
                 )}
@@ -803,7 +834,7 @@ export const CollectInformation = () => {
                     </div>
                 )}
 
-                {canContribute && platformSupportEnabled() && (
+                {canContribute && !isEditing && platformSupportEnabled() && (
                     <PlatformSupportInput
                         value={platformContribution}
                         onChange={setPlatformContribution}

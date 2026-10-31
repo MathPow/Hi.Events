@@ -10,6 +10,7 @@ use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrderItemDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
+use HiEvents\DomainObjects\Status\OrderPaymentStatus;
 use HiEvents\Exceptions\ResourceConflictException;
 use HiEvents\Repository\Interfaces\AffiliateRepositoryInterface;
 use HiEvents\Repository\Interfaces\AttendeeRepositoryInterface;
@@ -313,6 +314,51 @@ class CompleteOrderHandlerTest extends TestCase
         $this->completeOrderHandler->handle($orderShortId, $orderData);
 
         $this->expectNotToPerformAssertions();
+    }
+
+    public function testHandleReplacesPreviousDetailsWhenTheBuyerComesBackBeforePaying(): void
+    {
+        $orderShortId = 'ABC123';
+        $orderData = $this->createMockCompleteOrderDTO();
+        $order = $this->createMockOrder()
+            ->setEmail('d@d.com')
+            ->setPaymentStatus(OrderPaymentStatus::AWAITING_PAYMENT->name);
+
+        $this->orderRepository->shouldReceive('findByShortId')->with($orderShortId)->andReturn($order);
+        $this->orderRepository->shouldReceive('loadRelation')->andReturnSelf();
+        $this->orderRepository->shouldReceive('updateFromArray')->andReturn($this->createMockOrder());
+
+        $this->questionAnswersRepository->shouldReceive('deleteWhere')->once()->with(['order_id' => 1])->andReturn(2);
+        $this->attendeeRepository->shouldReceive('deleteWhere')->once()->with(['order_id' => 1])->andReturn(1);
+
+        $this->productPriceRepository->shouldReceive('findWhereIn')->andReturn(new Collection([$this->createMockProductPrice()]));
+        $this->attendeeRepository->shouldReceive('insert')->once()->andReturn(true);
+        $this->attendeeRepository->shouldReceive('findWhereIn')->andReturn(new Collection([$this->createMockAttendee()]));
+
+        $this->eventSettingsRepository->shouldReceive('findFirstWhere')->andReturn($this->createMockEventSetting());
+
+        $this->completeOrderHandler->handle($orderShortId, $orderData);
+
+        // Les deleteWhere attendus une fois sont verifies par Mockery::close().
+        $this->addToAssertionCount(1);
+    }
+
+    public function testHandleRefusesNewDetailsOncePaymentIsReceived(): void
+    {
+        $this->expectException(ResourceConflictException::class);
+        $this->expectExceptionMessage('This order has already been processed');
+
+        $orderShortId = 'ABC123';
+        $order = $this->createMockOrder()
+            ->setEmail('d@d.com')
+            ->setPaymentStatus(OrderPaymentStatus::PAYMENT_RECEIVED->name);
+
+        $this->eventSettingsRepository->shouldReceive('findFirstWhere')->andReturn($this->createMockEventSetting());
+        $this->orderRepository->shouldReceive('findByShortId')->with($orderShortId)->andReturn($order);
+        $this->orderRepository->shouldReceive('loadRelation')->andReturnSelf();
+        $this->attendeeRepository->shouldNotReceive('deleteWhere');
+
+        $this->completeOrderHandler->handle($orderShortId, $this->createMockCompleteOrderDTO());
     }
 
     public function testHandleThrowsExceptionWhenAttendeeInsertFails(): void

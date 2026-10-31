@@ -21,11 +21,13 @@ interface CheckoutSectionProps {
     number: number;
     title: string;
     subtitle?: ReactNode;
+    // A droite du titre (« Modifier » d'une etape deja remplie).
+    action?: ReactNode;
     children?: ReactNode;
 }
 
 // Une etape numerotee du formulaire (« 1 Vos coordonnees », « 2 Participants », « 3 Paiement »).
-export const CheckoutSection = ({number, title, subtitle, children}: CheckoutSectionProps) => (
+export const CheckoutSection = ({number, title, subtitle, action, children}: CheckoutSectionProps) => (
     <section className={classes.section}>
         <header className={classes.sectionHeader}>
             <span className={classes.sectionNumber} aria-hidden>{number}</span>
@@ -33,6 +35,7 @@ export const CheckoutSection = ({number, title, subtitle, children}: CheckoutSec
                 <h2 className={classes.sectionTitle}>{title}</h2>
                 {subtitle && <p className={classes.sectionSubtitle}>{subtitle}</p>}
             </div>
+            {action && <div className={classes.sectionAction}>{action}</div>}
         </header>
         {children}
     </section>

@@ -86,6 +86,12 @@ class CompleteOrderHandler
 
             $order = $this->getOrder($orderShortId);
 
+            // L'acheteur revient de l'etape du paiement pour corriger ses coordonnees ou ses
+            // participants: les precedents sont remplaces, pas doubles.
+            if ($order->getEmail() !== null) {
+                $this->clearPreviousDetails($order);
+            }
+
             $updatedOrder = $this->updateOrder($order, $orderDTO);
 
             $waiverText = $eventSettings->getWaiverText();
@@ -293,7 +299,7 @@ class CompleteOrderHandler
      */
     private function validateOrder(OrderDomainObject $order): void
     {
-        if ($order->getEmail() !== null) {
+        if ($order->getEmail() !== null && !$this->awaitsOnlinePayment($order)) {
             throw new ResourceConflictException(__('This order has already been processed'));
         }
 
@@ -304,6 +310,34 @@ class CompleteOrderHandler
         if ($order->getStatus() !== OrderStatus::RESERVED->name) {
             throw new ResourceConflictException(__('This order has already been processed'));
         }
+    }
+
+    /**
+     * Coordonnees deja envoyees, mais rien de paye: la commande attend encore son paiement en
+     * ligne (ou un nouvel essai apres un refus), on peut donc les reprendre.
+     */
+    private function awaitsOnlinePayment(OrderDomainObject $order): bool
+    {
+        return $order->getStatus() === OrderStatus::RESERVED->name
+            && in_array($order->getPaymentStatus(), [
+                OrderPaymentStatus::AWAITING_PAYMENT->name,
+                OrderPaymentStatus::PAYMENT_FAILED->name,
+            ], true);
+    }
+
+    /**
+     * Les participants et les reponses du premier envoi. Rien n'est encore paye ni envoye pour
+     * une commande reservee: aucun billet, courriel ou statistique ne s'y rattache.
+     */
+    private function clearPreviousDetails(OrderDomainObject $order): void
+    {
+        $this->questionAnswersRepository->deleteWhere([
+            'order_id' => $order->getId(),
+        ]);
+
+        $this->attendeeRepository->deleteWhere([
+            'order_id' => $order->getId(),
+        ]);
     }
 
     /**

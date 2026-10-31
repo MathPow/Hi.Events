@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useNavigate, useParams} from "react-router";
+import {Link, useNavigate, useParams} from "react-router";
 import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {StripePaymentMethod} from "./PaymentMethods/Stripe";
 import {OfflinePaymentMethod} from "./PaymentMethods/Offline";
@@ -142,14 +142,22 @@ const Payment = () => {
         .map(attendee => `${attendee.first_name ?? ''} ${attendee.last_name ?? ''}`.trim())
         .filter(Boolean);
     const buyer = [`${order.first_name ?? ''} ${order.last_name ?? ''}`.trim(), order.email].filter(Boolean).join(' · ');
+    // Retour a l'etape des details, remplie avec ce qui a ete envoye (CompleteOrderHandler l'accepte
+    // tant que rien n'est paye).
+    const editDetails = (
+        <Link to={eventCheckoutPath(eventId, orderShortId, 'details')} data-rough="button">
+            <PublicIcon name={'modifier'} size={16}/>
+            {t`Edit`}
+        </Link>
+    );
 
     return (
         <CheckoutColumns panel={<CheckoutOrderPanel event={checkoutEvent} order={order}/>}>
             {/* Les etapes deja remplies, rappelees en une ligne. */}
             <div className={classes.completedSteps}>
-                <CheckoutSection number={1} title={t`Your contact details`} subtitle={buyer}/>
+                <CheckoutSection number={1} title={t`Your contact details`} subtitle={buyer} action={editDetails}/>
                 {attendeeNames.length > 0 && (
-                    <CheckoutSection number={2} title={t`Attendees`} subtitle={attendeeNames.join(', ')}/>
+                    <CheckoutSection number={2} title={t`Attendees`} subtitle={attendeeNames.join(', ')} action={editDetails}/>
                 )}
             </div>
 

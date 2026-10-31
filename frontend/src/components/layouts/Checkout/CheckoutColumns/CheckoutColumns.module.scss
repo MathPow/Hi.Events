@@ -267,6 +267,36 @@ $erreur: #c0392b;
   }
 }
 
+// « Modifier »: une pastille accent doux, poussee a droite du titre.
+.sectionAction {
+  flex-shrink: 0;
+  margin-left: auto;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: normal;
+    color: var(--dehors-brun);
+    text-decoration: none;
+    background: var(--public-accent-doux);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: color-mix(in srgb, var(--public-accent) 32%, var(--dehors-creme));
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--dehors-brun);
+      outline-offset: 3px;
+    }
+  }
+}
+
 .sectionSubtitle {
   margin: 0;
   font-size: 14px;
