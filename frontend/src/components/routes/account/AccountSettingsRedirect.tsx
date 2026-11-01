@@ -1,8 +1,10 @@
-import {settingsTabPath, SettingsTab} from "../organizer/Settings/settingsTabs.ts";
+import {SETTINGS_TABS, settingsTabPath, SettingsTab} from "../organizer/Settings/settingsTabs.ts";
 import {OrganizerRedirect} from "./OrganizerRedirect.tsx";
 
-// The former « Paramètres du compte » pages, now tabs of the organizer's « Paramètres ».
+// The former « Paramètres du compte » pages, now sections of the organizer's « Paramètres »; and the
+// sections themselves (/account/payments), linked from the account menu outside an organizer.
 const TAB_OF_SECTION: Record<string, SettingsTab> = {
+    ...Object.fromEntries(SETTINGS_TABS.map(tab => [tab, tab])),
     'settings': 'team',
     'users': 'team',
     'api-tokens': 'team',

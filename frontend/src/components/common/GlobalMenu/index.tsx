@@ -1,16 +1,20 @@
 import {Avatar, Menu, UnstyledButton} from "@mantine/core";
 import {getInitials} from "../../../utilites/helpers.ts";
 import {
+    IconBuilding,
+    IconCreditCard,
     IconLogout,
-    IconSettingsCog,
+    IconMail,
+    IconReceipt,
     IconShield,
     IconUser,
     IconUserShield,
     IconUsers,
 } from "@tabler/icons-react";
 import {useGetMe} from "../../../queries/useGetMe.ts";
+import {Fragment} from "react";
 import {NavLink, useParams} from "react-router";
-import {settingsTabPath} from "../../routes/organizer/Settings/settingsTabs.ts";
+import {SettingsTab, settingsTabLabel, settingsTabPath} from "../../routes/organizer/Settings/settingsTabs.ts";
 import {t} from "@lingui/macro";
 import {authClient} from "../../../api/auth.client.ts";
 import {useStopImpersonating} from "../ImpersonationBanner/useStopImpersonating";
@@ -21,6 +25,8 @@ export interface AccountMenuLink {
     link?: string;
     target?: string;
     onClick?: (event: any) => void;
+    // A line above it: the menu reads in groups (profile, settings, the rest).
+    dividerBefore?: boolean;
 }
 
 export const logout = async () => {
@@ -50,26 +56,31 @@ export const useAccountMenu = () => {
         });
     }
 
+    // The settings of the organizer being viewed; outside an organizer, /account/<section> opens them
+    // for the last one opened.
+    const settingsLink = (tab: SettingsTab, icon: any): AccountMenuLink => ({
+        label: settingsTabLabel(tab),
+        icon,
+        link: organizerId ? settingsTabPath(organizerId, tab) : `/account/${tab}`,
+    });
+
     links.push(
         {
             label: t`My Profile`,
             icon: IconUser,
-            link: "/manage/profile",
+            link: organizerId ? `/manage/organizer/${organizerId}/profile` : "/manage/profile",
         },
-        {
-            label: t`Settings`,
-            icon: IconSettingsCog,
-            link: organizerId ? settingsTabPath(organizerId, 'organization') : '/account',
-        },
+        {...settingsLink('organization', IconBuilding), dividerBefore: true},
+        settingsLink('payments', IconCreditCard),
+        settingsLink('taxes', IconReceipt),
+        settingsLink('emails', IconMail),
     );
 
     if (me?.role === 'ADMIN' || me?.role === 'SUPERADMIN') {
-        links.push({
-            label: t`Team`,
-            icon: IconUsers,
-            link: organizerId ? settingsTabPath(organizerId, 'team') : '/account/users',
-        })
+        links.push(settingsLink('team', IconUsers));
     }
+
+    const afterSettings = links.length;
 
     if (me?.role === 'SUPERADMIN') {
         links.push({
@@ -89,23 +100,35 @@ export const useAccountMenu = () => {
             await logout();
         },
     });
+    links[afterSettings].dividerBefore = true;
 
     return {me, links};
 };
 
-export const AccountMenuItems = ({links}: { links: AccountMenuLink[] }) => (
+export const AccountMenuItems = ({links, onNavigate}: { links: AccountMenuLink[], onNavigate?: () => void }) => (
     <>
         {links.map((link) => (
-            <NavLink
-                onClick={link.onClick}
-                to={link.link ?? "#"}
-                key={link.label}
-                target={link.target ?? ""}
-            >
-                <Menu.Item component={"div"} leftSection={<link.icon/>}>
-                    {link.label}
-                </Menu.Item>
-            </NavLink>
+            <Fragment key={link.label}>
+                {link.dividerBefore && <Menu.Divider/>}
+                <NavLink
+                    onClick={(event) => {
+                        link.onClick?.(event);
+                        if (link.link) {
+                            onNavigate?.();
+                        }
+                    }}
+                    to={link.link ?? "#"}
+                    end
+                    target={link.target ?? ""}
+                >
+                    {({isActive}) => (
+                        <Menu.Item component={"div"} leftSection={<link.icon/>}
+                                   data-current={(isActive && link.link) || undefined}>
+                            {link.label}
+                        </Menu.Item>
+                    )}
+                </NavLink>
+            </Fragment>
         ))}
     </>
 );

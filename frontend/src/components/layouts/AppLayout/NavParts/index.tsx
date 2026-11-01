@@ -1,9 +1,8 @@
 import {Menu, UnstyledButton} from "@mantine/core";
-import {NavLink} from "react-router";
 import {t} from "@lingui/macro";
 import classNames from "classnames";
 import {getInitials} from "../../../../utilites/helpers.ts";
-import {AccountMenuItems, logout, useAccountMenu} from "../../../common/GlobalMenu";
+import {AccountMenuItems, useAccountMenu} from "../../../common/GlobalMenu";
 import {NavContext, NavItem} from "../types.ts";
 import classes from './NavParts.module.scss';
 
@@ -88,18 +87,23 @@ export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, on
         </>
     );
 
-    // On phones the card leads to the profile and logging out is one tap away.
+    // On phones the card opens the same menu, above it (it sits at the bottom of the menu sheet).
     if (variant === 'menu') {
         return (
-            <div className={classNames(classes.card, classes.accountCard, classes.menu)}>
-                <NavLink to="/manage/profile" className={classes.cardLink} onClick={onNavigate}>
-                    {identity}
-                </NavLink>
-                <UnstyledButton className={classes.cardAction} onClick={() => logout()}
-                                aria-label={t`Logout`} title={t`Logout`}>
-                    <img src={adminIcon('deconnexion')} alt=""/>
-                </UnstyledButton>
-            </div>
+            <>
+                <Menu position="top" offset={8} width="target" shadow="md" withinPortal>
+                    <Menu.Target>
+                        <UnstyledButton className={classNames(classes.card, classes.accountCard, classes.menu)}
+                                        aria-label={t`Account`}>
+                            {identity}
+                            <img src={adminIcon('plus')} alt="" className={classes.cardTrailing}/>
+                        </UnstyledButton>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        <AccountMenuItems links={links} onNavigate={onNavigate}/>
+                    </Menu.Dropdown>
+                </Menu>
+            </>
         );
     }
 
