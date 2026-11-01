@@ -1,0 +1,243 @@
+// The little sheet of a document or template (DocumentThumbnail.tsx): a tinted frame, a white page
+// rising from its bottom. The parent gives the height.
+
+$ink: var(--dehors-brun, #352924);
+$grey: rgb(53 41 36 / 0.14);
+
+.frame {
+  --tint: rgb(250 120 83 / 0.16);
+  --mark: var(--dehors-orange, #fa7853);
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+  padding-top: 12px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--tint);
+
+  // The tones of the dashboards' figures (StatBoxes), softened.
+  &[data-kind='parental_consent'] {
+    --tint: #dcebf5;
+    --mark: #2f6f98;
+  }
+
+  &[data-kind='liability_waiver'] {
+    --tint: #f7dccd;
+    --mark: #c4553a;
+  }
+
+  &[data-kind='medical_form'] {
+    --tint: #dcebd2;
+    --mark: #d9483b;
+  }
+
+  &[data-kind='photo_consent'] {
+    --tint: #fbe7b5;
+    --mark: #e09a1a;
+  }
+
+  &[data-kind='blank'] {
+    --tint: var(--dehors-creme, #fff7e9);
+  }
+}
+
+.sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(58%, 150px);
+  height: 100%;
+  padding: 14px 12px 0;
+  border-radius: 4px 4px 0 0;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 -2px 12px rgb(55 39 33 / 0.06);
+  transition: transform 0.2s ease;
+
+  [data-kind='blank'] & {
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px dashed rgb(53 41 36 / 0.25);
+    border-bottom: none;
+    background: rgb(255 255 255 / 0.6);
+    box-shadow: none;
+  }
+}
+
+.title {
+  flex-shrink: 0;
+  width: 62%;
+  height: 6px;
+  margin-bottom: 3px;
+  border-radius: 3px;
+  background: $ink;
+}
+
+.line {
+  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: $grey;
+}
+
+.accent {
+  flex-shrink: 0;
+  width: 38%;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 2px;
+  background: var(--mark);
+}
+
+// Parental consent: who signs (parent and minor), and their two signatures.
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--mark);
+}
+
+.signatures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: auto;
+  padding-bottom: 12px;
+}
+
+.signature {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  .line {
+    height: 2px;
+    background: rgb(53 41 36 / 0.4);
+  }
+}
+
+// The waiver's signature, at the bottom of the page.
+.bottom {
+  margin-top: auto;
+  padding-bottom: 12px;
+}
+
+.scribble {
+  width: 100%;
+  max-width: 54px;
+  height: 14px;
+  fill: none;
+  stroke: var(--mark);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Waiver and photo consent: boxes and choices to tick.
+.check {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.box,
+.radio {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid rgb(53 41 36 / 0.45);
+  border-radius: 2px;
+
+  &[data-checked] {
+    border-color: var(--mark);
+    background: var(--mark);
+  }
+}
+
+.radio {
+  border-radius: 50%;
+}
+
+// Medical form: a red cross, fields to fill.
+.cross {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  background:
+    linear-gradient(var(--mark), var(--mark)) center / 5px 100% no-repeat,
+    linear-gradient(var(--mark), var(--mark)) center / 100% 5px no-repeat;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  .line {
+    height: 3px;
+  }
+}
+
+.input {
+  height: 10px;
+  border: 1.5px solid rgb(53 41 36 / 0.25);
+  border-radius: 3px;
+
+}
+
+// Photo consent: a landscape.
+.photo {
+  flex-shrink: 0;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--mark) 22%, #fff);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.sun {
+  fill: var(--mark);
+}
+
+.mountain {
+  fill: $ink;
+  opacity: 0.85;
+}
+
+// Blank document: a page to start.
+.plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: $ink;
+  background: rgb(250 120 83 / 0.2);
+}
+
+// The page rises a little under the pointer (a document card or a template).
+:where(button, a):hover > .frame .sheet {
+  transform: translateY(-3px);
+}

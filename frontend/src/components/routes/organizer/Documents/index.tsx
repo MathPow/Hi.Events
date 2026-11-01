@@ -1,8 +1,7 @@
 import {t, Trans} from "@lingui/macro";
 import {useNavigate, useParams} from "react-router";
-import {ActionIcon, Button, Menu, Skeleton} from "@mantine/core";
+import {ActionIcon, Button, Loader, Menu, Skeleton} from "@mantine/core";
 import {
-    IconAlertCircle,
     IconArrowRight,
     IconCopy,
     IconDots,
@@ -10,13 +9,11 @@ import {
     IconFileText,
     IconHelpCircle,
     IconPencil,
-    IconPhoto,
     IconPlus,
     IconTrash,
-    IconUser,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import {ReactNode} from "react";
+import {useState} from "react";
 import {PageBody} from "../../../common/PageBody";
 import {PageTitle} from "../../../common/PageTitle";
 import {useGetOrganizerDocuments} from "../../../../queries/useGetOrganizerDocuments.ts";
@@ -31,15 +28,39 @@ import {templateLabel} from "../../../common/OrganizerDocument/blocks.ts";
 import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {getClientLocale} from "../../../../locales.ts";
+import {Modal} from "../../../common/Modal";
+import {DocumentThumbnail} from "./DocumentThumbnail.tsx";
 import classes from "./Documents.module.scss";
 
-const TEMPLATES: { key: DocumentTemplateKey, icon: ReactNode }[] = [
-    {key: 'parental_consent', icon: <IconUser size={20} stroke={1.75}/>},
-    {key: 'liability_waiver', icon: <IconFileText size={20} stroke={1.75}/>},
-    {key: 'medical_form', icon: <IconAlertCircle size={20} stroke={1.75}/>},
-    {key: 'photo_consent', icon: <IconPhoto size={20} stroke={1.75}/>},
-    {key: 'blank', icon: <IconPlus size={20} stroke={1.75}/>},
-];
+const TEMPLATES: DocumentTemplateKey[] = ['parental_consent', 'liability_waiver', 'medical_form', 'photo_consent', 'blank'];
+
+// The starting templates, each with its little page: on the page, and in the « New document » popup.
+const TemplateChoices = ({onPick, pendingKey, compact = false}: {
+    onPick: (key: DocumentTemplateKey) => void,
+    pendingKey: DocumentTemplateKey | null | undefined,
+    compact?: boolean,
+}) => (
+    <div className={compact ? `${classes.templateGrid} ${classes.templateGridCompact}` : classes.templateGrid}>
+        {TEMPLATES.map((key) => (
+            <button
+                key={key}
+                type="button"
+                className={classes.template}
+                disabled={pendingKey !== undefined}
+                onClick={() => onPick(key)}
+            >
+                <DocumentThumbnail template={key} className={classes.templateThumb}/>
+                <span className={classes.templateText}>
+                    <span className={classes.templateName}>{templateLabel(key)}</span>
+                    <span className={classes.templateAction}>
+                        {key === 'blank' ? t`Start` : t`Use`}
+                        {pendingKey === key ? <Loader size={12} color="currentColor"/> : <IconArrowRight size={14}/>}
+                    </span>
+                </span>
+            </button>
+        ))}
+    </div>
+);
 
 /**
  * Les documents a faire signer aux participants (attestations, decharges,
@@ -50,6 +71,9 @@ const Documents = () => {
     const navigate = useNavigate();
     const {data: documents, isLoading} = useGetOrganizerDocuments(organizerId);
     const createDocument = useCreateOrganizerDocument();
+    const [choosing, setChoosing] = useState(false);
+    // The template being created, for its card's spinner (undefined: none).
+    const pendingKey = createDocument.isPending ? createDocument.variables?.template : undefined;
 
     const editorPath = (documentId: number) => `/manage/organizer/${organizerId}/documents/${documentId}`;
 
@@ -67,12 +91,19 @@ const Documents = () => {
                 <Button
                     className={classes.newButton}
                     leftSection={<IconPlus size={18}/>}
-                    loading={createDocument.isPending && createDocument.variables?.template === null}
-                    onClick={() => create(null)}
+                    onClick={() => setChoosing(true)}
                 >
                     {t`New document`}
                 </Button>
             </div>
+
+            {/* « New document »: a template first (or the blank page). */}
+            <Modal opened={choosing} onClose={() => setChoosing(false)} heading={t`New document`}>
+                <p className={classes.pickerIntro}>
+                    <Trans>Start from a template, then adapt it to your event.</Trans>
+                </p>
+                <TemplateChoices onPick={create} pendingKey={pendingKey} compact/>
+            </Modal>
 
             <h2 className={classes.sectionTitle}>{t`Your documents`}</h2>
             {isLoading && (
@@ -99,25 +130,7 @@ const Documents = () => {
                 <p className={classes.templatesIntro}>
                     <Trans>Prepared by Billetterie Dehors. Pick one, then adapt it to your event.</Trans>
                 </p>
-                <div className={classes.templateGrid}>
-                    {TEMPLATES.map(({key, icon}) => (
-                        <button
-                            key={key}
-                            type="button"
-                            className={classes.template}
-                            data-blank={key === 'blank' || undefined}
-                            disabled={createDocument.isPending}
-                            onClick={() => create(key)}
-                        >
-                            <span className={classes.templateIcon}>{icon}</span>
-                            <span className={classes.templateName}>{templateLabel(key)}</span>
-                            <span className={classes.templateAction}>
-                                {key === 'blank' ? t`Start` : t`Use`}
-                                <IconArrowRight size={14}/>
-                            </span>
-                        </button>
-                    ))}
-                </div>
+                <TemplateChoices onPick={create} pendingKey={pendingKey}/>
             </section>
 
             <div className={classes.legal}>
@@ -145,11 +158,7 @@ const DocumentCard = ({document, onOpen}: { document: OrganizerDocument, onOpen:
     return (
         <article className={classes.card}>
             <button type="button" className={classes.thumbnail} onClick={onOpen} aria-label={t`Edit ${title}`}>
-                <span className={classes.sheet} aria-hidden>
-                    <span className={classes.sheetTitle}/>
-                    <span/><span/><span/><span/><span/>
-                    <span className={classes.sheetAccent}/>
-                </span>
+                <DocumentThumbnail template={document.template}/>
             </button>
             <div className={classes.cardBody}>
                 <div className={classes.cardTitleRow}>
