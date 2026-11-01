@@ -33,7 +33,8 @@ import classes from './OrganizerDashboard.module.scss';
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
 
 const PERIODS: (number | null)[] = [7, 30, 90, 365, null];
-const DEFAULT_PERIOD = 30;
+// All time until the organizer picks a period (then remembered).
+const DEFAULT_PERIOD: number | null = null;
 const PERIOD_STORAGE_KEY = 'dehors-dashboard-period';
 
 const periodLabel = (days: number | null) => {
