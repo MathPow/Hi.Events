@@ -78,18 +78,17 @@ const routes: RouteObject[] = [
         ]
     },
     {
+        // The pages without an organizer in their address open in the organizer's space
+        // (account/OrganizerRedirect): the dashboard, the profile, the email confirmations.
         path: "manage",
         errorElement: <ErrorPage />,
-        async lazy() {
-            const DefaultLayout = await import("./components/layouts/DefaultLayout");
-            return { Component: DefaultLayout.default };
-        },
+        element: <Outlet />,
         children: [
             {
                 path: "events/:eventsState?",
                 async lazy() {
-                    const Dashboard = await import("./components/routes/events/Dashboard");
-                    return { Component: Dashboard.default };
+                    const {DashboardRedirect} = await import("./components/routes/account/OrganizerRedirect");
+                    return { Component: DashboardRedirect };
                 },
             },
             {
@@ -103,22 +102,22 @@ const routes: RouteObject[] = [
             {
                 path: "profile",
                 async lazy() {
-                    const ManageProfile = await import("./components/routes/profile/ManageProfile");
-                    return { Component: ManageProfile.default };
+                    const {ProfileRedirect} = await import("./components/routes/account/OrganizerRedirect");
+                    return { Component: ProfileRedirect };
                 }
             },
             {
                 path: "profile/confirm-email-change/:token",
                 async lazy() {
-                    const ConfirmEmailChange = await import("./components/routes/profile/ConfirmEmailChange");
-                    return { Component: ConfirmEmailChange.default };
+                    const {ConfirmEmailChangeRedirect} = await import("./components/routes/account/OrganizerRedirect");
+                    return { Component: ConfirmEmailChangeRedirect };
                 }
             },
             {
                 path: "profile/confirm-email-address/:token",
                 async lazy() {
-                    const ConfirmEmailAddress = await import("./components/routes/profile/ConfirmEmailAddress");
-                    return { Component: ConfirmEmailAddress.default };
+                    const {ConfirmEmailAddressRedirect} = await import("./components/routes/account/OrganizerRedirect");
+                    return { Component: ConfirmEmailAddressRedirect };
                 }
             },
         ]
@@ -263,6 +262,13 @@ const routes: RouteObject[] = [
                 async lazy() {
                     const OrganizerDashboard = await import("./components/routes/organizer/OrganizerDashboard");
                     return { Component: OrganizerDashboard.default };
+                }
+            },
+            {
+                path: "profile",
+                async lazy() {
+                    const ManageProfile = await import("./components/routes/profile/ManageProfile");
+                    return { Component: ManageProfile.default };
                 }
             },
             {

@@ -63,11 +63,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     useDehorsAppTheme();
     const location = useLocation();
     const currentNavItem = findCurrentNavItem(navItems, location.pathname);
-    // The page may add a detail to its name (« Paramètres / Organisation »).
+    // The page may add a detail to its name (« Paramètres / Organisation »); a page outside the sidebar
+    // (« Mon profil ») gives its name that way.
     const currentPageName = currentNavItem?.crumbLabel ?? currentNavItem?.label;
     const breadcrumbsWithCurrentPage = (detail: string | null) => currentNavItem
         ? [...breadcrumbItems, {content: detail ? `${currentPageName} / ${detail}` : currentPageName}]
-        : breadcrumbItems;
+        : (detail ? [...breadcrumbItems, {content: detail}] : breadcrumbItems);
     const [collapsed, setCollapsed] = useState(false);
     // Only a click animates the sidebar: the choice read at load applies at once.
     const [navAnimating, setNavAnimating] = useState(false);
