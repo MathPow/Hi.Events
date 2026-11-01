@@ -6,6 +6,8 @@ namespace HiEvents\Services\Domain\Email;
 
 use Carbon\Carbon;
 use HiEvents\DomainObjects\AttendeeDomainObject;
+use HiEvents\DomainObjects\EmailTemplateDomainObject;
+use HiEvents\DomainObjects\Enums\AutomaticEmailType;
 use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\DomainObjects\Enums\PaymentProviders;
 use HiEvents\DomainObjects\Enums\ProductType;
@@ -20,27 +22,45 @@ use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\Status\OrderPaymentStatus;
 use HiEvents\DomainObjects\Status\OrderStatus;
+use HiEvents\DomainObjects\WaitlistEntryDomainObject;
+use HiEvents\Mail\Attendee\AttendeeDetailsChangedMail;
+use HiEvents\Mail\BaseMail;
 use HiEvents\Mail\Attendee\AttendeeTicketMail;
+use HiEvents\Mail\Order\OrderCancelled;
+use HiEvents\Mail\Order\OrderDepositResolved;
+use HiEvents\Mail\Order\OrderDetailsChangedMail;
+use HiEvents\Mail\Order\OrderFailed;
+use HiEvents\Mail\Order\OrderRefunded;
 use HiEvents\Mail\Order\OrderSummary;
+use HiEvents\Mail\Order\PaymentSuccessButOrderExpiredMail;
+use HiEvents\Mail\Organizer\OrderSummaryForOrganizer;
+use HiEvents\Mail\Organizer\OrganizerContactEmail;
+use HiEvents\Mail\Waitlist\WaitlistConfirmationMail;
+use HiEvents\Mail\Waitlist\WaitlistOfferExpiredMail;
+use HiEvents\Mail\Waitlist\WaitlistOfferMail;
 use HiEvents\Repository\Eloquent\Value\OrderAndDirection;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
+use HiEvents\Values\MoneyValue;
 
 /**
  * The automatic emails of an organizer, as they would be sent, for the preview and the test send of
  * Settings → Emails. The organizer's latest event provides the event details; the buyer is made up.
- * Event-level templates are ignored: the page shows the organizer's own version.
+ * The order confirmation and the ticket show the organizer's own version (not an event's); the
+ * other emails take the organizer's subject and message like when they are sent.
  */
 class SampleEmailService
 {
     public const SAMPLE_FIRST_NAME = 'Marie';
     public const SAMPLE_LAST_NAME = 'Tremblay';
     public const SAMPLE_EMAIL = 'marie.tremblay@example.com';
+    public const SAMPLE_NEW_EMAIL = 'marie@example.com';
 
     private const SAMPLE_QUANTITY = 2;
     private const SAMPLE_TICKET_PRICE = 35.0;
     private const SAMPLE_PRODUCT_PRICE_ID = -1;
+    private const SAMPLE_DEPOSIT = 50.0;
 
     public function __construct(
         private readonly EventRepositoryInterface   $eventRepository,
@@ -51,39 +71,64 @@ class SampleEmailService
     {
     }
 
-    public function buildMail(EmailTemplateType $type, OrganizerDomainObject $organizer): OrderSummary|AttendeeTicketMail
+    public function buildMail(AutomaticEmailType $type, OrganizerDomainObject $organizer): BaseMail
     {
         $event = $this->sampleEvent($organizer);
         $eventSettings = $event->getEventSettings() ?? $this->sampleEventSettings($organizer);
         $orderItem = $this->sampleOrderItem($event);
         $order = $this->sampleOrder($event, $orderItem);
         $attendee = $this->sampleAttendee($orderItem);
+        $currency = $event->getCurrency() ?: 'CAD';
 
-        $template = $this->emailTemplateService->getTemplateByType(
-            type: $type,
-            accountId: $organizer->getAccountId(),
-            organizerId: $organizer->getId(),
-        );
+        return match ($type) {
+            AutomaticEmailType::ORDER_CONFIRMATION => $this->orderConfirmation($organizer, $event, $eventSettings, $order),
+            AutomaticEmailType::ATTENDEE_TICKET => $this->attendeeTicket($organizer, $event, $eventSettings, $order, $attendee),
+            AutomaticEmailType::ORDER_FAILED => new OrderFailed($order, $event, $organizer, $eventSettings),
+            AutomaticEmailType::PAYMENT_AFTER_EXPIRY => new PaymentSuccessButOrderExpiredMail($order, $event, $eventSettings, $organizer),
+            AutomaticEmailType::ORDER_CANCELLED => new OrderCancelled($order, $event, $organizer, $eventSettings),
+            AutomaticEmailType::ORDER_REFUNDED => new OrderRefunded(
+                $order, $event, $organizer, $eventSettings, MoneyValue::fromFloat($order->getTotalGross(), $currency),
+            ),
+            AutomaticEmailType::DEPOSIT_RESOLVED => new OrderDepositResolved(
+                $order->setDepositAmount(self::SAMPLE_DEPOSIT)->setDepositRetainedAmount(0.0),
+                $event, $organizer, $eventSettings,
+            ),
+            AutomaticEmailType::ORDER_DETAILS_CHANGED => new OrderDetailsChangedMail($event, $organizer, $eventSettings, [
+                __('Email') => ['old' => self::SAMPLE_EMAIL, 'new' => self::SAMPLE_NEW_EMAIL],
+            ]),
+            AutomaticEmailType::ATTENDEE_DETAILS_CHANGED => new AttendeeDetailsChangedMail(
+                $orderItem->getItemName(), $event, $organizer, $eventSettings, [
+                    __('Email') => ['old' => self::SAMPLE_EMAIL, 'new' => self::SAMPLE_NEW_EMAIL],
+                ],
+            ),
+            AutomaticEmailType::WAITLIST_JOINED => new WaitlistConfirmationMail(
+                $this->sampleWaitlistEntry($event), $event, $this->sampleProduct($orderItem), null, $organizer, $eventSettings,
+            ),
+            AutomaticEmailType::WAITLIST_OFFER => new WaitlistOfferMail(
+                $this->sampleWaitlistEntry($event, offered: true), $event, $this->sampleProduct($orderItem), null,
+                $organizer, $eventSettings, $order->getShortId(), 'sample',
+            ),
+            AutomaticEmailType::WAITLIST_OFFER_EXPIRED => new WaitlistOfferExpiredMail(
+                $this->sampleWaitlistEntry($event), $event, $this->sampleProduct($orderItem), null, $organizer, $eventSettings,
+            ),
+            AutomaticEmailType::ORGANIZER_NEW_ORDER => new OrderSummaryForOrganizer($order->setId(0), $event),
+            AutomaticEmailType::ORGANIZER_CONTACT_MESSAGE => new OrganizerContactEmail(
+                $organizer,
+                self::SAMPLE_FIRST_NAME . ' ' . self::SAMPLE_LAST_NAME,
+                self::SAMPLE_EMAIL,
+                __('Hello! Is the outing suitable for beginners? Thank you!'),
+            ),
+        };
+    }
 
-        if ($type === EmailTemplateType::ATTENDEE_TICKET) {
-            // The PDF ticket and the calendar file are left out: only the message is shown or sent.
-            return new class(
-                order: $order,
-                attendee: $attendee,
-                event: $event,
-                eventSettings: $eventSettings,
-                organizer: $organizer,
-                renderedTemplate: $template === null ? null : $this->emailTemplateService->renderTemplate(
-                    $template,
-                    $this->tokenContextBuilder->buildAttendeeTicketContext($attendee, $order, $event, $organizer, $eventSettings),
-                ),
-            ) extends AttendeeTicketMail {
-                public function attachments(): array
-                {
-                    return [];
-                }
-            };
-        }
+    private function orderConfirmation(
+        OrganizerDomainObject    $organizer,
+        EventDomainObject        $event,
+        EventSettingDomainObject $eventSettings,
+        OrderDomainObject        $order,
+    ): OrderSummary
+    {
+        $template = $this->organizerTemplate(EmailTemplateType::ORDER_CONFIRMATION, $organizer);
 
         return new OrderSummary(
             order: $order,
@@ -96,6 +141,64 @@ class SampleEmailService
                 $this->tokenContextBuilder->buildOrderConfirmationContext($order, $event, $organizer, $eventSettings),
             ),
         );
+    }
+
+    private function attendeeTicket(
+        OrganizerDomainObject    $organizer,
+        EventDomainObject        $event,
+        EventSettingDomainObject $eventSettings,
+        OrderDomainObject        $order,
+        AttendeeDomainObject     $attendee,
+    ): AttendeeTicketMail
+    {
+        $template = $this->organizerTemplate(EmailTemplateType::ATTENDEE_TICKET, $organizer);
+
+        // The PDF ticket and the calendar file are left out: only the message is shown or sent.
+        return new class(
+            order: $order,
+            attendee: $attendee,
+            event: $event,
+            eventSettings: $eventSettings,
+            organizer: $organizer,
+            renderedTemplate: $template === null ? null : $this->emailTemplateService->renderTemplate(
+                $template,
+                $this->tokenContextBuilder->buildAttendeeTicketContext($attendee, $order, $event, $organizer, $eventSettings),
+            ),
+        ) extends AttendeeTicketMail {
+            public function attachments(): array
+            {
+                return [];
+            }
+        };
+    }
+
+    private function organizerTemplate(EmailTemplateType $type, OrganizerDomainObject $organizer): ?EmailTemplateDomainObject
+    {
+        return $this->emailTemplateService->getTemplateByType(
+            type: $type,
+            accountId: $organizer->getAccountId(),
+            organizerId: $organizer->getId(),
+        );
+    }
+
+    private function sampleProduct(OrderItemDomainObject $orderItem): ProductDomainObject
+    {
+        return (new ProductDomainObject())->setTitle($orderItem->getItemName());
+    }
+
+    private function sampleWaitlistEntry(EventDomainObject $event, bool $offered = false): WaitlistEntryDomainObject
+    {
+        $entry = (new WaitlistEntryDomainObject())
+            ->setEventId($event->getId())
+            ->setFirstName(self::SAMPLE_FIRST_NAME)
+            ->setLastName(self::SAMPLE_LAST_NAME)
+            ->setEmail(self::SAMPLE_EMAIL);
+
+        if ($offered) {
+            $entry->setOfferExpiresAt(Carbon::now('UTC')->addDay()->startOfHour()->toDateTimeString());
+        }
+
+        return $entry;
     }
 
     private function sampleEvent(OrganizerDomainObject $organizer): EventDomainObject

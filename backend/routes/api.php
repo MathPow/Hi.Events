@@ -87,6 +87,7 @@ use HiEvents\Http\Actions\EmailTemplates\PreviewEventEmailTemplateAction;
 use HiEvents\Http\Actions\EmailTemplates\GetAvailableTokensAction;
 use HiEvents\Http\Actions\EmailTemplates\GetDefaultEmailTemplateAction;
 use HiEvents\Http\Actions\EmailTemplates\GetOrganizerSampleEmailAction;
+use HiEvents\Http\Actions\EmailTemplates\UpsertOrganizerEmailCustomizationAction;
 use HiEvents\Http\Actions\EmailTemplates\SendOrganizerTestEmailAction;
 use HiEvents\Http\Actions\EventSettings\PartialEditEventSettingsAction;
 use HiEvents\Http\Actions\Images\CreateImageAction;
@@ -408,6 +409,7 @@ $router->middleware(['auth:api'])->group(
         $router->get('/organizers/{organizerId}/email-templates/{templateType}/sample', GetOrganizerSampleEmailAction::class);
         $router->post('/organizers/{organizerId}/email-templates/{templateType}/test', SendOrganizerTestEmailAction::class)->middleware('throttle:10,10');
         $router->get('/email-templates/tokens/{templateType}', GetAvailableTokensAction::class);
+        $router->put('/organizers/{organizerId}/email-customizations/{templateType}', UpsertOrganizerEmailCustomizationAction::class);
 
         // Taxes and Fees
         $router->post('/accounts/{account_id}/taxes-and-fees', CreateTaxOrFeeAction::class);

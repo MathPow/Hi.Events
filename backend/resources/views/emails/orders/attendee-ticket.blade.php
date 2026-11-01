@@ -1,60 +1,39 @@
 @php use HiEvents\DomainObjects\AttendeeDomainObject; @endphp
-@php /** @uses \HiEvents\Mail\Order\OrderSummary */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventSettingDomainObject $eventSettings */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrganizerDomainObject $organizer */ @endphp
 @php /** @var \HiEvents\DomainObjects\AttendeeDomainObject $attendee */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrderDomainObject $order */ @endphp
-
-@php /** @var string $ticketUrl */ @endphp
+@php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
 @php /** @var \Illuminate\Support\Collection $tickets */ @endphp
 @php /** @see \HiEvents\Mail\Attendee\AttendeeTicketMail */ @endphp
+<x-mail::event-message :branding="$branding" :note="$organizerMessage" :footer="$eventSettings->getGetEmailFooterHtml()">
+# {{ trans_choice('{1} Your ticket|[2,*] Your :count tickets', $tickets->count(), ['count' => $tickets->count()]) }}
 
-<x-mail::message>
-# {{ __('You\'re going to :event!', ['event' => $event->getTitle()]) }} 🎉
-<br>
-<br>
+{{ $attendee->getFirstName() ? __('Hello :name,', ['name' => $attendee->getFirstName()]) : __('Hello,') }}
+
 @if($order->isOrderAwaitingOfflinePayment())
-<div style="border-radius: 4px; background-color: #f8d7da; color: #842029; margin-bottom: 1.5rem; padding: 1rem;">
-<p>
-{{ __('ℹ️ Your order is pending payment. Tickets have been issued but will not be valid until payment is received.') }}
-</p>
-</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 20px; background-color: {{ $branding->accentSoftColor }}; border-radius: 16px; border-collapse: separate;"><tr><td style="padding: 16px 20px; font-size: 15px; color: #352924;">
+{{ __('Your order is pending payment. Tickets have been issued but will not be valid until payment is received.') }}
+</td></tr></table>
 @endif
 
-{{ trans_choice('{1} Your ticket is below, and also attached to this email as a PDF.|[2,*] Your :count tickets are below, and also attached to this email as a PDF.', $tickets->count(), ['count' => $tickets->count()]) }}
+{{ trans_choice('{1} Show this QR code at the entrance. It is also attached to this email as a PDF.|[2,*] Show these QR codes at the entrance. They are also attached to this email as a PDF.', $tickets->count()) }}
 
 @foreach($tickets as $ticket)
 @php /** @var AttendeeDomainObject $ticketAttendee */ @endphp
 @php $ticketAttendee = $ticket['attendee']; @endphp
-
-<table style="width: 100%; margin: 24px 0; border: 1px solid #f1dccd; border-radius: 12px;" cellpadding="0" cellspacing="0">
-<tr>
-<td style="padding: 20px; text-align: center;">
-<div style="font-size: 16px; font-weight: 700; color: #352924;">{{ $ticketAttendee->getFullName() }}</div>
-<div style="margin: 16px 0;">
-<img src="{{ $message->embedData($ticket['qrCode'], $ticketAttendee->getPublicId() . '.png', 'image/png') }}"
-alt="{{ $ticketAttendee->getPublicId() }}"
-width="180" height="180"
-style="display: block; margin: 0 auto; width: 180px; height: 180px;">
-</div>
-<div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #9c8478;">{{ __('Ticket ID') }}</div>
-<div style="font-family: monospace; font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #352924;">{{ $ticketAttendee->getPublicId() }}</div>
-<div style="margin-top: 14px;">
-<a href="{{ $ticket['ticketUrl'] }}" style="font-size: 13px; color: #ee6741;">{{ __('View this ticket online') }}</a>
-</div>
-</td>
-</tr>
-</table>
-
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; margin: 20px 0; background-color: #ffffff; border: 1px solid #f1dccd; border-radius: 18px; border-collapse: separate;"><tr><td style="padding: 22px 20px; text-align: center;">
+<div style="font-size: 17px; font-weight: bold; color: #352924;">{{ $ticketAttendee->getFullName() }}</div>
+<div style="margin: 16px 0;"><img src="{{ $message->embedData($ticket['qrCode'], $ticketAttendee->getPublicId() . '.png', 'image/png') }}" alt="{{ $ticketAttendee->getPublicId() }}" width="180" height="180" style="display: block; margin: 0 auto; width: 180px; height: 180px;"></div>
+<div style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(53, 41, 36, 0.6);">{{ __('Ticket ID') }}</div>
+<div style="font-family: monospace; font-size: 15px; font-weight: bold; letter-spacing: 1px; color: #352924;">{{ $ticketAttendee->getPublicId() }}</div>
+<div style="margin-top: 14px;"><a href="{{ $ticket['ticketUrl'] }}" style="font-size: 14px; font-weight: bold; color: {{ $branding->accentDeepColor }};">{{ __('View this ticket online') }}</a></div>
+</td></tr></table>
 @endforeach
 
 {{ __('Each QR code can only be scanned once, so please do not share it.') }}
 
-{{ __('If you have any questions or need assistance, please reply to this email or contact the event organizer') }}
-{{ __('at') }} <a href="mailto:{{$eventSettings->getSupportEmail()}}">{{$eventSettings->getSupportEmail()}}</a>.
-
-{{ __('Best regards,') }}<br>
+{{ __('See you soon,') }}<br>
 {{ $organizer->getName() ?: config('app.name') }}
-
-</x-mail::message>
+</x-mail::event-message>

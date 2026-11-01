@@ -6,6 +6,10 @@ msgstr ""
 "Fournissez un contexte ou des instructions supplémentaires pour cette question. Utilisez ce champ pour ajouter des conditions\n"
 "générales, des directives ou toute information importante que les participants doivent connaître avant de répondre."
 
+#: src/components/routes/profile/ManageProfile/index.tsx
+msgid "Receive product updates from {appName}."
+msgstr "Recevoir les nouveautés de {appName}."
+
 #: src/components/layouts/Event/index.tsx:242
 #: src/components/layouts/OrganizerLayout/index.tsx:293
 msgid "- Click to Publish"
@@ -160,6 +164,10 @@ msgstr "{checkedIn} sur {attendees} enregistrés"
 msgid "{count} Club"
 msgstr "Club des {count}"
 
+#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
+msgid "{count} events"
+msgstr "{count} événements"
+
 #: src/components/routes/my-tickets/index.tsx:82
 msgid "{count} tickets"
 msgstr "{count} billets"
@@ -204,6 +212,10 @@ msgstr "{faqCount, plural, =0 {Aucune question pour l'instant} one {# question �
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:101
 msgid "{faqCount} questions"
 msgstr "{faqCount} questions"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "{from} to {to} of {total} orders"
+msgstr "{from} à {to} sur {total} commandes"
 
 #: src/components/routes/organizer/Reports/reportPanels.tsx:170
 msgid "{gross} gross"
@@ -266,9 +278,17 @@ msgstr "{sold} billets"
 msgid "{thisYear} outings this year"
 msgstr "{thisYear} sorties cette année"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "{tickets, plural, one {# ticket} other {# tickets}}"
+msgstr "{tickets, plural, one {# billet} other {# billets}}"
+
 #: src/components/routes/landing/FeesComparator.tsx:93
 #~ msgid "{ticketsWorth, plural, one {That's the price of # ticket.} other {That's the price of # tickets.}}"
 #~ msgstr "{ticketsWorth, plural, one {C'est le prix de # billet.} other {C'est le prix de # billets.}}"
+
+#: src/components/routes/organizer/Achievements/index.tsx
+msgid "{title} (locked)"
+msgstr "{title} (à débloquer)"
 
 #: src/components/modals/SendMessageModal/reminderTemplates.ts:47
 msgid "{title} is in one week. Here's what you need to know to get ready."
@@ -1146,6 +1166,11 @@ msgstr "Tous"
 msgid "All"
 msgstr "Tous"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgctxt "orders"
+msgid "All"
+msgstr "Toutes"
+
 #: src/components/routes/events/Dashboard/index.tsx:77
 msgid "All Archived Events"
 msgstr "Tous les événements archivés"
@@ -1192,6 +1217,10 @@ msgstr "Tous les événements"
 msgid "All events by {0}"
 msgstr "Tous les événements de {0}"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "All events together."
+msgstr "Tous événements confondus."
+
 #: src/components/routes/admin/FailedJobs/index.tsx:90
 msgid "All failed jobs deleted"
 msgstr "Tous les travaux échoués supprimés"
@@ -1220,6 +1249,10 @@ msgstr "Tous les statuts"
 msgid "All the event's details"
 msgstr "Tous les détails de l'événement"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "All the orders, all events together."
+msgstr "Toutes les commandes, tous événements confondus."
+
 #: src/components/routes/admin/PlatformRevenue/index.tsx:125
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:46
 msgid "All time"
@@ -1232,6 +1265,10 @@ msgstr "Depuis le début : {0}"
 #: src/components/common/EventFilters/index.tsx:161
 msgid "All types"
 msgstr "Tous les types"
+
+#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
+msgid "All upcoming events"
+msgstr "Tous les événements à venir"
 
 #: src/components/routes/events/Dashboard/index.tsx:73
 msgid "All Upcoming Events"
@@ -1490,6 +1527,14 @@ msgstr "Archiver l'événement"
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:138
 msgid "Archive Event"
 msgstr "Archiver l'événement"
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Archive it to set it aside, or delete it permanently."
+msgstr "Archivez-le pour le mettre de côté, ou supprimez-le définitivement."
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Archive or delete"
+msgstr "Archiver ou supprimer"
 
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:130
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:147
@@ -2009,6 +2054,11 @@ msgstr "En attente de paiement"
 msgid "Awesome Organizer Ltd."
 msgstr "Organisateur génial Ltd."
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
+msgctxt "blue"
+msgid "B"
+msgstr "B"
+
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:128
 msgid "Back to Accounts"
 msgstr "Retour aux comptes"
@@ -2142,6 +2192,10 @@ msgstr "Outils du bloc"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:224
 msgid "Blocks sign-in and takes the account's events and organizer pages offline. Nothing is deleted: lifting the suspension restores everything."
 msgstr "Bloque la connexion et met hors ligne les événements et les pages d'organisateur du compte. Rien n'est supprimé : lever la suspension remet tout en place."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
+msgid "Blue"
+msgstr "Bleu"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:47
 msgid "Body is required"
@@ -2402,6 +2456,11 @@ msgstr "Annulées"
 msgctxt "waitlist filter"
 msgid "Cancelled"
 msgstr "Annulées"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgctxt "order status"
+msgid "Cancelled"
+msgstr "Annulée"
 
 #: src/components/common/Assistant/Answer.tsx:53
 msgid "Cancelled: nothing changed."
@@ -2812,6 +2871,10 @@ msgstr "Fermer l'assistant"
 msgid "Close the menu"
 msgstr "Fermer le menu"
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Close the organizer"
+msgstr "Fermer l'organisateur"
+
 #: src/components/common/CheckInListList/index.tsx
 msgid "Closes {0}"
 msgstr "Ferme le {0}"
@@ -2982,6 +3045,16 @@ msgstr "Complété"
 msgctxt "orders filter"
 msgid "Completed"
 msgstr "Terminées"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgctxt "orders tab"
+msgid "Completed"
+msgstr "Complétées"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgctxt "order status"
+msgid "Completed"
+msgstr "Complétée"
 
 #: src/components/common/StatBoxes/index.tsx:75
 msgid "Completed orders"
@@ -3229,6 +3302,10 @@ msgstr "E-mail de contact"
 #: src/components/layouts/OrganizerHomepage/index.tsx:254
 msgid "Contact organizer"
 msgstr "Contacter"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "Contents"
+msgstr "Contenu"
 
 #: src/components/common/OrganizerAchievements/index.tsx:104
 #: src/components/common/WidgetEditor/index.tsx:29
@@ -4073,6 +4150,10 @@ msgstr "Supprimer le travail"
 msgid "Delete Organizer"
 msgstr "Supprimer l'organisateur"
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Delete permanently"
+msgstr "Supprimer définitivement"
+
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:121
 msgid "Delete Template"
 msgstr "Supprimer le modèle"
@@ -4105,6 +4186,10 @@ msgstr "Supprime l'événement, ses billets et son historique. C'est irréversib
 #: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
 msgid "Deletes the page, the events and their history. This cannot be undone."
 msgstr "Supprime la page, les événements et l'historique. Impossible à annuler."
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Deletes the page, the events, the orders and the history. This cannot be undone."
+msgstr "Supprime la page, les événements, les commandes et l’historique. Impossible à annuler."
 
 #: src/components/common/Assistant/Answer.tsx:89
 msgid "Deletion to approve"
@@ -4512,6 +4597,10 @@ msgstr "Lève tôt"
 msgid "Earned on {0}"
 msgstr "Obtenu le {0}"
 
+#: src/components/routes/organizer/Achievements/index.tsx
+msgid "Earned on {earnedDate}"
+msgstr "Obtenu le {earnedDate}"
+
 #: src/components/common/QuestionsTable/index.tsx:152
 #: src/components/common/TaxAndFeeList/index.tsx:70
 #: src/components/modals/ManageAttendeeModal/index.tsx:225
@@ -4775,6 +4864,10 @@ msgstr "E-mail non vérifié"
 msgid "Email Preview"
 msgstr "Aperçu de l'e-mail"
 
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:42
+msgid "Email saved"
+msgstr "Courriel enregistré"
+
 #: src/components/common/Assistant/assistant.ts:202
 msgid "email templates"
 msgstr "les modèles de courriel"
@@ -4811,6 +4904,10 @@ msgstr "Écrivez à vos participants, maintenant ou plus tard."
 #: src/components/routes/organizer/Settings/index.tsx
 msgid "Emails"
 msgstr "Courriels"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:90
+msgid "Emails you receive"
+msgstr "Courriels que vous recevez"
 
 #: src/components/common/WidgetEditor/index.tsx:246
 #: src/components/common/WidgetEditor/index.tsx:275
@@ -6011,6 +6108,11 @@ msgstr "Plein écran"
 msgid "Full Season"
 msgstr "Saison complète"
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
+msgctxt "green"
+msgid "G"
+msgstr "V"
+
 #: src/components/routes/landing/index.tsx:849
 msgid "Gather your people"
 msgstr "Rassemble ton monde"
@@ -6145,6 +6247,10 @@ msgstr "Compris"
 #: src/components/common/LanguageSwitcher/index.tsx:47
 msgid "Greek"
 msgstr "Grec"
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
+msgid "Green"
+msgstr "Vert"
 
 #: src/components/routes/organizer/Events/index.tsx:338
 msgid "Grid"
@@ -6630,6 +6736,10 @@ msgstr "Dans {diffMinutes} minutes"
 msgid "in the last 30 days"
 msgstr "en 30 jours"
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:239
+msgid "In your colors, like your event pages. Sent for all your events."
+msgstr "À vos couleurs, comme vos pages d'événement. Envoyés pour tous vos événements."
+
 #: src/components/common/AffiliateTable/index.tsx:138
 #: src/components/common/CheckInListList/index.tsx:114
 #: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:267
@@ -7100,6 +7210,10 @@ msgstr "Laissez vide pour « Continuer »."
 msgid "Leave empty for a link that never expires."
 msgstr "Laissez vide pour un lien sans expiration."
 
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:68
+msgid "Leave empty to keep the usual subject."
+msgstr "Laissez vide pour garder l'objet habituel."
+
 #: src/components/forms/ProductForm/SizedProductForm.tsx:187
 msgid "Leave quantity empty for unlimited stock"
 msgstr "Laissez la quantité vide pour un stock illimité"
@@ -7223,6 +7337,10 @@ msgstr "Événements en Direct"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx
 msgid "Live preview of your page"
 msgstr "Aperçu en direct de votre page"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "Load more orders"
+msgstr "Charger plus de commandes"
 
 #: src/components/routes/event/TicketDesigner/TicketPreview.tsx:35
 msgid "Loading preview..."
@@ -7535,6 +7653,10 @@ msgstr "Message supprimé"
 msgid "Message Details"
 msgstr "Détails du message"
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:93
+msgid "Message from your page"
+msgstr "Message de votre page"
+
 #: src/components/modals/SendMessageModal/index.tsx:99
 msgid "Message individual attendees"
 msgstr "Envoyer un message à des participants individuels"
@@ -7709,18 +7831,6 @@ msgstr "Mon autre application"
 msgid "My page"
 msgstr "Ma page"
 
-#: src/components/routes/organizer/Emails/index.tsx
-msgid "The emails your buyers and attendees receive automatically."
-msgstr "Les courriels que vos acheteurs et participants reçoivent automatiquement."
-
-#: src/components/routes/profile/ManageProfile/index.tsx
-msgid "Your details, your language and your password."
-msgstr "Vos informations, votre langue et votre mot de passe."
-
-#: src/components/routes/profile/ManageProfile/index.tsx
-msgid "Receive product updates from {appName}."
-msgstr "Recevoir les nouveautés de {appName}."
-
 #: src/components/common/GlobalMenu/index.tsx:46
 #: src/components/layouts/AppLayout/NavParts/index.tsx:90
 #: src/components/layouts/DefaultLayout/index.tsx:21
@@ -7798,6 +7908,10 @@ msgstr "Nom du lieu"
 msgid "Name of the place or address"
 msgstr "Nom du lieu ou adresse"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "Name, email or no."
+msgstr "Nom, courriel ou no"
+
 #: src/components/routes/auth/Login/index.tsx:99
 #: src/components/routes/auth/Register/index.tsx:155
 #: src/components/routes/product-widget/CollectInformation/index.tsx:735
@@ -7852,6 +7966,10 @@ msgstr "Nouveau document"
 #: src/components/layouts/OrganizerLayout/index.tsx:88
 msgid "New message"
 msgstr "Nouveau message"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:92
+msgid "New order"
+msgstr "Nouvelle commande"
 
 #: src/components/routes/auth/ResetPassword/index.tsx:64
 #: src/components/routes/profile/ManageProfile/index.tsx:233
@@ -8027,6 +8145,10 @@ msgstr "Aucun événement terminé à afficher."
 msgid "No ended events yet."
 msgstr "Aucun événement terminé pour l'instant."
 
+#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
+msgid "No event"
+msgstr "Aucun événement"
+
 #: src/components/common/AdminEventsTable/index.tsx:22
 msgid "No events found"
 msgstr "Aucun événement trouvé"
@@ -8101,6 +8223,10 @@ msgstr "Aucun message à afficher"
 #: src/components/routes/organizer/Messages/index.tsx:234
 msgid "No messages yet"
 msgstr "Aucun message pour l'instant"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "No order matches these filters."
+msgstr "Aucune commande ne correspond à ces filtres."
 
 #: src/components/common/QuestionsTable/index.tsx:527
 msgid "No order questions yet"
@@ -8594,6 +8720,10 @@ msgstr "Plus qu'une place"
 msgid "Only a registered charity may issue official receipts. Leave the registration number empty and no receipt will ever be issued. You remain responsible for the accuracy of every receipt, including the valuation of any advantage received by the donor."
 msgstr "Seul un organisme de bienfaisance enregistré peut émettre des reçus officiels. Laissez le numéro d'enregistrement vide et aucun reçu ne sera jamais émis. Vous demeurez responsable de l'exactitude de chaque reçu, y compris de l'évaluation de tout avantage reçu par le donateur."
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Only account administrators can archive or delete an organizer."
+msgstr "Seuls les administrateurs du compte peuvent archiver ou supprimer un organisateur."
+
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:74
 msgid "Only account administrators can delete or archive events. Contact your account admin for assistance."
 msgstr "Seuls les administrateurs de compte peuvent supprimer ou archiver des événements. Contactez votre administrateur de compte pour obtenir de l'aide."
@@ -8629,6 +8759,10 @@ msgstr "Afficher uniquement la date et l'heure de début"
 #: src/components/common/QuestionsTable/index.tsx:125
 msgid "Only the organizers see the answers. They are erased 30 days after the event."
 msgstr "Seuls les organisateurs voient les réponses. Elles sont effacées 30 jours après l'événement."
+
+#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
+msgid "Only upcoming events."
+msgstr "Seulement les événements à venir."
 
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:311
 msgid "Only visible with promo code"
@@ -8704,6 +8838,10 @@ msgstr "Préfixe optionnel pour les numéros de facture (par exemple, INV-)"
 msgid "Optional text for disclaimers, contact info, or thank you notes (single line only)"
 msgstr "Texte optionnel pour les avertissements, informations de contact ou notes de remerciement (une seule ligne)"
 
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:79
+msgid "Optional. Add automatic info (first name, event, date…) with the last button of the toolbar."
+msgstr "Facultatif. Ajoutez des infos automatiques (prénom, événement, date…) avec le dernier bouton de la barre d'outils."
+
 #: src/components/common/PlatformSupportInput/index.tsx:49
 #~ msgid "Optional. Helps cover the cost of hosting this ticketing service."
 #~ msgstr "Facultatif. Aide à couvrir les frais d'hébergement de la billetterie."
@@ -8775,6 +8913,10 @@ msgstr "Commande annulée"
 #: src/components/forms/WebhookForm/index.tsx:97
 msgid "Order Cancelled"
 msgstr "Commande annulée"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:77
+msgid "Order changed"
+msgstr "Commande modifiée"
 
 #: src/components/routes/product-widget/CollectInformation/index.tsx:614
 msgid "Order complete"
@@ -8924,6 +9066,10 @@ msgstr "les commandes"
 #: src/components/routes/partner/index.tsx:210
 msgid "Orders"
 msgstr "Commandes"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:54
+msgid "Orders and tickets"
+msgstr "Commandes et billets"
 
 #: src/components/routes/admin/Dashboard/index.tsx:209
 msgid "Orders Completed"
@@ -9194,6 +9340,11 @@ msgstr "Remboursement partiel"
 msgid "Partially Refunded"
 msgstr "Partiellement remboursé"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgctxt "order status"
+msgid "Partially Refunded"
+msgstr "Remboursée en partie"
+
 #: src/components/common/OrdersTable/index.tsx:421
 msgid "Partially refunded: {0}"
 msgstr "Partiellement remboursé : {0}"
@@ -9347,6 +9498,10 @@ msgstr "Paiement et abonnement"
 msgid "Payment Due Period"
 msgstr "Délai de paiement"
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:74
+msgid "Payment failed"
+msgstr "Paiement échoué"
+
 #: src/components/common/OrderStatusBadge/index.tsx:14
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:46
 msgid "Payment Failed"
@@ -9387,6 +9542,10 @@ msgstr "Paiement reçu"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:47
 msgid "Payment Received"
 msgstr "Paiement reçu"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:75
+msgid "Payment received too late"
+msgstr "Paiement reçu trop tard"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:816
 msgid "Payment Settings"
@@ -9450,6 +9609,10 @@ msgstr "PDF à imprimer"
 #: src/components/common/OrganizerAchievements/achievements.ts:80
 msgid "Peloton"
 msgstr "Peloton"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "Pending"
+msgstr "En attente"
 
 #: src/components/routes/admin/Messages/index.tsx:124
 msgid "Pending Review"
@@ -10159,6 +10322,11 @@ msgstr "Questions réorganisées"
 msgid "Queue"
 msgstr "File d'attente"
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
+msgctxt "red"
+msgid "R"
+msgstr "R"
+
 #: src/components/routes/events-directory/index.tsx:154
 msgid "Races, outings, workshops and parties organized by the community, all across Québec."
 msgstr "Courses, sorties, ateliers et soirées organisés par la communauté, partout au Québec."
@@ -10319,6 +10487,10 @@ msgstr "Recommandé"
 msgid "Reconnect Stripe →"
 msgstr "Reconnecter Stripe →"
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
+msgid "Red"
+msgstr "Rouge"
+
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:80
 msgid "Reddit"
 msgstr "Reddit"
@@ -10344,6 +10516,10 @@ msgstr "Comptes de parrainage"
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:176
 msgid "Refresh Preview"
 msgstr "Actualiser l'aperçu"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:73
+msgid "Refund"
+msgstr "Remboursement"
 
 #: src/components/modals/RefundOrderModal/index.tsx:107
 msgid "Refund amount"
@@ -10387,6 +10563,11 @@ msgstr "Statut du remboursement"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:68
 msgid "Refunded"
 msgstr "Remboursé"
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgctxt "order status"
+msgid "Refunded"
+msgstr "Remboursée"
 
 #: src/components/common/OrdersTable/index.tsx:420
 msgid "Refunded: {0}"
@@ -10606,6 +10787,11 @@ msgstr "Détails de la réponse"
 msgid "Restore"
 msgstr "Restaurer"
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgctxt "organizer"
+msgid "Restore"
+msgstr "Réactiver"
+
 #: src/components/common/EventCard/index.tsx:143
 msgid "Restore event"
 msgstr "Restaurer l'événement"
@@ -10615,10 +10801,18 @@ msgstr "Restaurer l'événement"
 msgid "Restore Event"
 msgstr "Restaurer l'événement"
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Restore or delete"
+msgstr "Réactiver ou supprimer"
+
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:130
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:147
 msgid "Restore Organizer"
 msgstr "Restaurer l'organisateur"
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Restore the organizer"
+msgstr "Réactiver l'organisateur"
 
 #: src/components/routes/event/Settings/Sections/DangerZoneSettings/index.tsx:127
 msgid "Restore this event to make it visible again."
@@ -10965,6 +11159,10 @@ msgstr "Défiler vers le bas"
 msgid "Search"
 msgstr "Rechercher"
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "Search a name, an email or an order number"
+msgstr "Rechercher un nom, un courriel ou un no de commande"
+
 #: src/components/routes/event/Affiliates/index.tsx:68
 msgid "Search affiliates..."
 msgstr "Rechercher des affiliés..."
@@ -11045,6 +11243,10 @@ msgstr "Rechercher un événement, un lieu ou un organisateur"
 #: src/components/routes/event/messages.tsx:242
 msgid "Search messages..."
 msgstr "Rechercher des messages..."
+
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "Search orders"
+msgstr "Rechercher des commandes"
 
 #: src/components/routes/event/products.tsx:54
 msgid "Search products"
@@ -11936,6 +12138,14 @@ msgstr "Sport"
 msgid "Sports"
 msgstr "Sports"
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:85
+msgid "Spot available"
+msgstr "Place libérée"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:86
+msgid "Spot offer expired"
+msgstr "Offre de place expirée"
+
 #: src/components/common/CapacityAssignmentList/index.tsx
 msgctxt "capacity assignment count"
 msgid "spots taken"
@@ -11968,6 +12178,10 @@ msgstr "Date de début"
 #~ msgid "Start Date & Time"
 #~ msgstr "Date et heure de début"
 
+#: src/components/routes/organizer/Documents/index.tsx
+msgid "Start from a template, then adapt it to your event."
+msgstr "Partez d'un modèle, puis adaptez-le à votre événement."
+
 #: src/components/routes/organizer/Events/index.tsx:395
 msgid "Start with a draft, you'll publish when you're ready."
 msgstr "Commencez par un brouillon, vous publierez quand vous serez prêt."
@@ -11975,10 +12189,6 @@ msgstr "Commencez par un brouillon, vous publierez quand vous serez prêt."
 #: src/components/common/OrganizerAchievements/achievements.ts
 msgid "Starting Line"
 msgstr "Ligne de départ"
-
-#: src/components/routes/organizer/Documents/index.tsx
-msgid "Start from a template, then adapt it to your event."
-msgstr "Partez d'un modèle, puis adaptez-le à votre événement."
 
 #: src/components/routes/organizer/Documents/index.tsx:98
 msgid "Starting templates"
@@ -12144,6 +12354,11 @@ msgstr "Stripe,<0/>c'est quoi?"
 #: src/components/routes/admin/Messages/index.tsx:272
 msgid "Subject"
 msgstr "Sujet"
+
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:67
+msgctxt "email"
+msgid "Subject"
+msgstr "Objet"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:46
 msgid "Subject is required"
@@ -12708,6 +12923,18 @@ msgstr "Le document n'a pas pu être dupliqué."
 msgid "The email address has been changed. The attendee will receive a new ticket at the updated email address."
 msgstr "L'adresse e-mail a été modifiée. Le participant recevra un nouveau billet à l'adresse e-mail mise à jour."
 
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:47
+msgid "The email could not be saved. Please try again."
+msgstr "Le courriel n'a pas pu être enregistré. Veuillez réessayer."
+
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:58
+msgid "The email keeps its usual content, with the right amounts, dates and links. You can change its subject and add a message, shown at the top with your name."
+msgstr "Le courriel garde son contenu habituel, avec les bons montants, dates et liens. Vous pouvez changer son objet et ajouter un message, affiché en haut avec votre nom."
+
+#: src/components/routes/organizer/Emails/index.tsx
+msgid "The emails your buyers and attendees receive automatically."
+msgstr "Les courriels que vos acheteurs et participants reçoivent automatiquement."
+
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:288
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:36
 msgid "The event"
@@ -12762,6 +12989,10 @@ msgstr "Les étapes de votre parcours d'organisateur."
 msgid "The name your buyers will see. You can change it later."
 msgstr "Nom affiché aux participants. Modifiable en tout temps."
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "The orders could not be exported. Try again."
+msgstr "Les commandes n'ont pas pu être exportées. Réessayez."
+
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
 #: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
@@ -12778,6 +13009,14 @@ msgstr "Les courriels de l'organisateur, avec leur aperçu"
 #: src/components/routes/event/Settings/cards/EmailTemplatesCard.tsx
 msgid "The organizer's version is sent, unless this event has its own."
 msgstr "La version de l'organisateur est envoyée, à moins que l'événement ait la sienne."
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "The page and the events are hidden. Your data and your history are kept: you can restore it at any time."
+msgstr "La page et les événements sont cachés. Vos données et votre historique sont gardés : vous pouvez le réactiver en tout temps."
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "The page and the events are visible again."
+msgstr "La page et les événements sont de nouveau visibles."
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:23
 msgid "The page could not be read. Check the address and try again."
@@ -12870,6 +13109,10 @@ msgstr "Le corps du modèle contient une syntaxe Liquid invalide. Veuillez la co
 #: src/components/routes/organizer/Documents/index.tsx:126
 msgid "The templates are a starting point and do not replace legal advice. Make sure they suit your activity."
 msgstr "Les modèles sont un point de départ et ne remplacent pas un avis juridique. Vérifiez qu'ils conviennent à votre activité."
+
+#: src/components/routes/organizer/Documents/index.tsx
+msgid "The templates are a starting point. Make sure they suit your activity before using them."
+msgstr "Les modèles sont un point de départ. Vérifiez qu'ils conviennent à votre activité avant de les utiliser."
 
 #: src/components/routes/organizer/Settings/tabs/EmailsTab.tsx
 msgid "The test could not be sent. Please try again."
@@ -13055,6 +13298,10 @@ msgstr "C'est un produit général, comme un t-shirt ou une tasse. Aucun billet 
 msgid "This is an online event"
 msgstr "Ceci est un événement en ligne"
 
+#: src/components/routes/organizer/Documents/index.tsx
+msgid "This is not legal advice"
+msgstr "Ce n’est pas un avis juridique"
+
 #: src/components/forms/ProductCategoryForm/index.tsx:17
 msgid "This is the name of the category that will be displayed on the event page."
 msgstr "Il s'agit du nom de la catégorie qui sera affiché sur la page de l'événement."
@@ -13133,6 +13380,10 @@ msgstr "Cette commande a été annulée. Vous pouvez passer une nouvelle command
 msgid "This organizer is already connected to Stripe."
 msgstr "Cet organisateur est deja connecte a Stripe."
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "This organizer is archived: its page and its events are hidden. Restore it, or delete it permanently."
+msgstr "Cet organisateur est archivé : sa page et ses événements sont cachés. Réactivez-le, ou supprimez-le définitivement."
+
 #: src/components/common/StatusToggle/index.tsx:82
 msgid "This organizer profile is not published yet"
 msgstr "Ce profil d'organisateur n'est pas encore publié"
@@ -13205,6 +13456,10 @@ msgstr "Ceci sera utilisé pour les notifications et la communication avec vos u
 msgid "This will not be visible to customers, but helps you identify the affiliate."
 msgstr "Ceci ne sera pas visible pour les clients, mais vous aide à identifier l'affilié."
 
+#: src/components/routes/organizer/Orders/index.tsx
+msgid "This year"
+msgstr "Cette année"
+
 #: src/components/common/AttendeeTable/index.tsx:372
 msgid "ticket"
 msgstr "billet"
@@ -13237,6 +13492,10 @@ msgstr "Billet annulé"
 #: src/components/common/Assistant/assistant.ts:187
 msgid "ticket categories"
 msgstr "les catégories de billets"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:78
+msgid "Ticket changed"
+msgstr "Billet modifié"
 
 #: src/components/routes/event/TicketDesigner/index.tsx:111
 msgid "Ticket Design"
@@ -13480,6 +13739,10 @@ msgstr "Pour recevoir des paiements par carte bancaire, vous devez connecter vot
 msgid "To the buyer, after the purchase"
 msgstr "À l'acheteur, après l'achat"
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:92
+msgid "To you, for each order (can be turned off per event)"
+msgstr "À vous, pour chaque commande (désactivable par événement)"
+
 #: src/components/common/EventFilters/index.tsx:22
 #: src/components/routes/my-tickets/index.tsx:105
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:304
@@ -13703,6 +13966,10 @@ msgstr "Type"
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:106
 msgid "Type \"delete\" to confirm"
 msgstr "Tapez \"supprimer\" pour confirmer"
+
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Type « {name} » to confirm"
+msgstr "Tapez « {name} » pour confirmer"
 
 #: src/components/common/DocumentSigning/index.tsx:151
 #: src/components/common/WaiverSignature/index.tsx:32
@@ -14384,6 +14651,10 @@ msgstr "Liste d'attente activée"
 msgid "Waitlist offer expired"
 msgstr "L'offre de liste d'attente a expiré"
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:84
+msgid "Waitlist sign-up"
+msgstr "Inscription à la liste d'attente"
+
 #: src/components/common/AttendeeDetails/index.tsx:62
 #: src/components/routes/event/Settings/index.tsx:82
 msgid "Waiver"
@@ -14612,6 +14883,10 @@ msgstr "Ce que les acheteurs remplissent, et le temps dont ils disposent."
 msgid "What buyers fill in, question by question."
 msgstr "Ce que les acheteurs remplissent, question par question."
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "What do you want to do with {name}?"
+msgstr "Que voulez-vous faire avec {name}?"
+
 #: src/components/modals/CreateProductCategoryModal/index.tsx:53
 msgid "What is a Category?"
 msgstr "Qu'est-ce qu'une catégorie ?"
@@ -14697,6 +14972,14 @@ msgstr "Quand un produit est épuisé, les acheteurs peuvent s'inscrire sur une 
 msgid "When a product sells out, customers can join a waitlist to be notified when spots become available."
 msgstr "Lorsqu'un produit est épuisé, les clients peuvent rejoindre une liste d'attente pour être notifiés lorsque des places se libèrent."
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:85
+msgid "When a spot opens up for them"
+msgstr "Quand une place se libère pour la personne"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:78
+msgid "When an attendee changes their ticket"
+msgstr "Quand un participant modifie son billet"
+
 #: src/components/forms/WebhookForm/index.tsx:117
 msgid "When an attendee is cancelled"
 msgstr "Lorsqu'un participant est annulé"
@@ -14773,9 +15056,45 @@ msgstr "Lorsqu'activé, aucun frais d'application ne sera facturé sur les trans
 msgid "When offline payments are enabled, users will be able to complete their orders and receive their tickets. Their tickets will clearly indicate the order is not paid, and the check-in tool will notify the check-in staff if an order requires payment."
 msgstr "Lorsque les paiements hors ligne sont activés, les utilisateurs pourront finaliser leurs commandes et recevoir leurs billets. Leurs billets indiqueront clairement que la commande n'est pas payée, et l'outil d'enregistrement informera le personnel si une commande nécessite un paiement."
 
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:84
+msgid "When someone joins the waitlist"
+msgstr "Quand quelqu'un s'inscrit à la liste d'attente"
+
 #: src/components/routes/organizer/Messages/index.tsx:235
 msgid "When someone uses the “Contact” button on your page or your events, their message appears here."
 msgstr "Quand quelqu'un utilise le bouton « Contacter » de votre page ou de vos événements, son message apparaît ici."
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:93
+msgid "When someone writes to you from « My page »"
+msgstr "Quand quelqu'un vous écrit depuis « Ma page »"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:77
+msgid "When the buyer changes their order"
+msgstr "Quand l'acheteur modifie sa commande"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:75
+msgid "When the payment arrives after the reservation expired"
+msgstr "Quand le paiement arrive après l'expiration de la réservation"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:74
+msgid "When the payment of an order fails"
+msgstr "Quand le paiement d'une commande échoue"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:86
+msgid "When they did not take the spot in time"
+msgstr "Quand la personne n'a pas pris la place à temps"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:72
+msgid "When you cancel an order"
+msgstr "Quand vous annulez une commande"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:73
+msgid "When you refund an order"
+msgstr "Quand vous remboursez une commande"
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:76
+msgid "When you return or keep a deposit"
+msgstr "Quand vous retournez ou retenez un dépôt"
 
 #: src/components/modals/SendMessageModal/reminderTemplates.ts:49
 #: src/components/modals/SendMessageModal/reminderTemplates.ts:62
@@ -14853,6 +15172,10 @@ msgstr "vont voir passer ton événement"
 #: src/components/routes/organizer/Settings/tabs/EmailsTab.tsx
 msgid "With a sample buyer and your latest event. The test is sent to your own email address."
 msgstr "Avec un acheteur fictif et votre dernier événement. Le test est envoyé à votre propre adresse courriel."
+
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:315
+msgid "With a sample buyer and your latest event. You receive this email; it cannot be changed."
+msgstr "Avec un acheteur fictif et votre dernier événement. Vous recevez ce courriel : il ne peut pas être modifié."
 
 #: src/components/routes/event/TicketDesigner/index.tsx
 msgid "With your name and a sample ticket."
@@ -15161,6 +15484,10 @@ msgstr "Votre contribution n'a pas pu être appliquée, nous continuons sans ell
 msgid "Your current order will be lost."
 msgstr "Votre commande actuelle sera perdue."
 
+#: src/components/routes/profile/ManageProfile/index.tsx
+msgid "Your details, your language and your password."
+msgstr "Vos informations, votre langue et votre mot de passe."
+
 #: src/components/routes/organizer/Documents/index.tsx:77
 msgid "Your documents"
 msgstr "Vos documents"
@@ -15208,6 +15535,10 @@ msgstr "Votre logo, vos couleurs et votre style sur chaque page"
 #: src/components/routes/landing/index.tsx:847
 msgid "Your logo, your colours: ticketing that looks like your brand."
 msgstr "Ton logo, tes couleurs : ta billetterie à l'image de ta marque."
+
+#: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:78
+msgid "Your message"
+msgstr "Votre message"
 
 #: src/components/common/OrdersTable/index.tsx:85
 msgid "Your message has been sent"
@@ -15413,201 +15744,3 @@ msgstr "Code Postal"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:904
 msgid "ZIP or Postal Code"
 msgstr "Code postal"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgctxt "orders"
-msgid "All"
-msgstr "Toutes"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgctxt "orders tab"
-msgid "Completed"
-msgstr "Complétées"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgctxt "order status"
-msgid "Completed"
-msgstr "Complétée"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgctxt "order status"
-msgid "Cancelled"
-msgstr "Annulée"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgctxt "order status"
-msgid "Refunded"
-msgstr "Remboursée"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgctxt "order status"
-msgid "Partially Refunded"
-msgstr "Remboursée en partie"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "Pending"
-msgstr "En attente"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "This year"
-msgstr "Cette année"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "All the orders, all events together."
-msgstr "Toutes les commandes, tous événements confondus."
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "All events together."
-msgstr "Tous événements confondus."
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "Name, email or no."
-msgstr "Nom, courriel ou no"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "Search a name, an email or an order number"
-msgstr "Rechercher un nom, un courriel ou un no de commande"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "Search orders"
-msgstr "Rechercher des commandes"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "No order matches these filters."
-msgstr "Aucune commande ne correspond à ces filtres."
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "Contents"
-msgstr "Contenu"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "{from} to {to} of {total} orders"
-msgstr "{from} à {to} sur {total} commandes"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "Load more orders"
-msgstr "Charger plus de commandes"
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "The orders could not be exported. Try again."
-msgstr "Les commandes n'ont pas pu être exportées. Réessayez."
-
-#: src/components/routes/organizer/Orders/index.tsx
-msgid "{tickets, plural, one {# ticket} other {# tickets}}"
-msgstr "{tickets, plural, one {# billet} other {# billets}}"
-
-#: src/components/routes/organizer/Achievements/index.tsx
-msgid "Earned on {earnedDate}"
-msgstr "Obtenu le {earnedDate}"
-
-#: src/components/routes/organizer/Achievements/index.tsx
-msgid "{title} (locked)"
-msgstr "{title} (à débloquer)"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgctxt "organizer"
-msgid "Restore"
-msgstr "Réactiver"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "The page and the events are visible again."
-msgstr "La page et les événements sont de nouveau visibles."
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "The page and the events are hidden. Your data and your history are kept: you can restore it at any time."
-msgstr "La page et les événements sont cachés. Vos données et votre historique sont gardés : vous pouvez le réactiver en tout temps."
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Delete permanently"
-msgstr "Supprimer définitivement"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Deletes the page, the events, the orders and the history. This cannot be undone."
-msgstr "Supprime la page, les événements, les commandes et l’historique. Impossible à annuler."
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Type « {name} » to confirm"
-msgstr "Tapez « {name} » pour confirmer"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Restore the organizer"
-msgstr "Réactiver l'organisateur"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Close the organizer"
-msgstr "Fermer l'organisateur"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "What do you want to do with {name}?"
-msgstr "Que voulez-vous faire avec {name}?"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Only account administrators can archive or delete an organizer."
-msgstr "Seuls les administrateurs du compte peuvent archiver ou supprimer un organisateur."
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "This organizer is archived: its page and its events are hidden. Restore it, or delete it permanently."
-msgstr "Cet organisateur est archivé : sa page et ses événements sont cachés. Réactivez-le, ou supprimez-le définitivement."
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Archive it to set it aside, or delete it permanently."
-msgstr "Archivez-le pour le mettre de côté, ou supprimez-le définitivement."
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Restore or delete"
-msgstr "Réactiver ou supprimer"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Archive or delete"
-msgstr "Archiver ou supprimer"
-
-#: src/components/routes/organizer/Documents/index.tsx
-msgid "This is not legal advice"
-msgstr "Ce n’est pas un avis juridique"
-
-#: src/components/routes/organizer/Documents/index.tsx
-msgid "The templates are a starting point. Make sure they suit your activity before using them."
-msgstr "Les modèles sont un point de départ. Vérifiez qu'ils conviennent à votre activité avant de les utiliser."
-
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
-msgid "No event"
-msgstr "Aucun événement"
-
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
-msgid "All upcoming events"
-msgstr "Tous les événements à venir"
-
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
-msgid "{count} events"
-msgstr "{count} événements"
-
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx
-msgid "Only upcoming events."
-msgstr "Seulement les événements à venir."
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
-msgctxt "red"
-msgid "R"
-msgstr "R"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
-msgctxt "green"
-msgid "G"
-msgstr "V"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
-msgctxt "blue"
-msgid "B"
-msgstr "B"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
-msgid "Red"
-msgstr "Rouge"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
-msgid "Green"
-msgstr "Vert"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx
-msgid "Blue"
-msgstr "Bleu"

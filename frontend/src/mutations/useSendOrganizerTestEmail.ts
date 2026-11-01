@@ -1,10 +1,10 @@
 import {useMutation} from "@tanstack/react-query";
 import {emailTemplateClient} from "../api/email-template.client";
-import {EmailTemplateType, IdParam} from "../types";
+import {AutomaticEmailType, IdParam} from "../types";
 
 export const useSendOrganizerTestEmail = () => {
     return useMutation({
-        mutationFn: ({organizerId, templateType}: { organizerId: IdParam, templateType: EmailTemplateType }) =>
+        mutationFn: ({organizerId, templateType}: { organizerId: IdParam, templateType: AutomaticEmailType }) =>
             emailTemplateClient.sendTestForOrganizer(organizerId, templateType),
     });
 };

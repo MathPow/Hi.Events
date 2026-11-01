@@ -9,12 +9,16 @@ use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\WaitlistEntryDomainObject;
 use HiEvents\Helper\Url;
+use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\Mail\BaseMail;
+use HiEvents\Mail\Concerns\HasEventBranding;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class WaitlistConfirmationMail extends BaseMail
 {
+    use HasEventBranding;
+
     public function __construct(
         private readonly WaitlistEntryDomainObject  $entry,
         private readonly EventDomainObject          $event,
@@ -31,27 +35,24 @@ class WaitlistConfirmationMail extends BaseMail
     {
         return new Envelope(
             replyTo: $this->eventSettings->getSupportEmail(),
-            subject: __("You're on the waitlist!"),
+            subject: $this->brandedSubject(__("You're on the waitlist!")),
         );
     }
 
     public function content(): Content
     {
-        return new Content(
-            markdown: 'emails.waitlist.confirmation',
-            with: [
-                'entry' => $this->entry,
-                'event' => $this->event,
-                'productName' => $this->buildProductName(),
-                'organizer' => $this->organizer,
-                'eventSettings' => $this->eventSettings,
-                'eventUrl' => sprintf(
-                    Url::getFrontEndUrlFromConfig(Url::EVENT_HOMEPAGE),
-                    $this->event->getId(),
-                    $this->event->getSlug(),
-                ),
-            ]
-        );
+        return $this->brandedContent('emails.waitlist.confirmation', [
+            'entry' => $this->entry,
+            'event' => $this->event,
+            'productName' => $this->buildProductName(),
+            'organizer' => $this->organizer,
+            'eventSettings' => $this->eventSettings,
+            'eventUrl' => sprintf(
+                Url::getFrontEndUrlFromConfig(Url::EVENT_HOMEPAGE),
+                $this->event->getId(),
+                $this->event->getSlug(),
+            ),
+        ]);
     }
 
     private function buildProductName(): ?string
@@ -67,5 +68,20 @@ class WaitlistConfirmationMail extends BaseMail
         }
 
         return $name;
+    }
+
+    protected function emailTemplateType(): EmailTemplateType
+    {
+        return EmailTemplateType::WAITLIST_JOINED;
+    }
+
+    protected function participantFirstName(): ?string
+    {
+        return $this->entry->getFirstName();
+    }
+
+    protected function participantLastName(): ?string
+    {
+        return $this->entry->getLastName();
     }
 }

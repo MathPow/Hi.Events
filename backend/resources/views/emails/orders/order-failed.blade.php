@@ -1,25 +1,21 @@
+@php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrderDomainObject $order */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrganizerDomainObject $organizer */ @endphp
-@php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventSettingDomainObject $eventSettings */ @endphp
+@php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
 @php /** @var string $eventUrl */ @endphp
-
 @php /** @see \HiEvents\Mail\Order\OrderFailed */ @endphp
+<x-mail::event-message :branding="$branding" :note="$organizerMessage" :footer="$eventSettings->getGetEmailFooterHtml()">
+# {{ __('Order not completed') }}
 
-<x-mail::message>
-{{ __('Hello') }},
+{{ $order->getFirstName() ? __('Hello :name,', ['name' => $order->getFirstName()]) : __('Hello,') }}
 
-{{ __('Your recent order for') }} <b>{{$event->getTitle()}}</b> {{ __('was not successful.') }}
+{{ __('Your order for :event could not be completed. You can try again from the event page.', ['event' => $event->getTitle()]) }}
 
 <x-mail::button :url="$eventUrl">
-{{ __('View Event Homepage') }}
+{{ __('Try again') }}
 </x-mail::button>
 
-{{ __('If you have any questions or need assistance, feel free to reach out to our support team') }}
-{{ __('at') }} {{ $eventSettings->getSupportEmail() ?: config('mail.from.address') }}.
-
-{{ __('Best regards') }},<br>
+{{ __('See you soon,') }}<br>
 {{ $organizer->getName() ?: config('app.name') }}
-
-{!! $eventSettings->getGetEmailFooterHtml() !!}
-</x-mail::message>
+</x-mail::event-message>

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\Application\Handlers\EmailTemplate;
 
-use HiEvents\DomainObjects\Enums\EmailTemplateType;
+use HiEvents\DomainObjects\Enums\AutomaticEmailType;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\Exceptions\ResourceNotFoundException;
 use HiEvents\Mail\Order\OrderSummary;
@@ -20,6 +20,7 @@ class GetOrganizerSampleEmailHandlerTest extends TestCase
     {
         $organizer = (new OrganizerDomainObject())->setId(7)->setAccountId(3);
         $organizerRepository = m::mock(OrganizerRepositoryInterface::class);
+        $organizerRepository->shouldReceive('loadRelation')->andReturnSelf();
         $organizerRepository->shouldReceive('findFirstWhere')
             ->once()
             ->with(['id' => 7, 'account_id' => 3])
@@ -33,11 +34,11 @@ class GetOrganizerSampleEmailHandlerTest extends TestCase
         $sampleEmailService = m::mock(SampleEmailService::class);
         $sampleEmailService->shouldReceive('buildMail')
             ->once()
-            ->with(EmailTemplateType::ORDER_CONFIRMATION, $organizer)
+            ->with(AutomaticEmailType::ORDER_CONFIRMATION, $organizer)
             ->andReturn($mail);
 
         $result = (new GetOrganizerSampleEmailHandler($organizerRepository, $sampleEmailService))
-            ->handle(new OrganizerSampleEmailDTO(organizerId: 7, accountId: 3, type: EmailTemplateType::ORDER_CONFIRMATION));
+            ->handle(new OrganizerSampleEmailDTO(organizerId: 7, accountId: 3, type: AutomaticEmailType::ORDER_CONFIRMATION));
 
         $this->assertSame('Votre commande est confirmée', $result->subject);
         $this->assertSame('<html>Merci</html>', $result->html);
@@ -46,6 +47,7 @@ class GetOrganizerSampleEmailHandlerTest extends TestCase
     public function test_an_organizer_of_another_account_is_not_found(): void
     {
         $organizerRepository = m::mock(OrganizerRepositoryInterface::class);
+        $organizerRepository->shouldReceive('loadRelation')->andReturnSelf();
         $organizerRepository->shouldReceive('findFirstWhere')->andReturnNull();
         $sampleEmailService = m::mock(SampleEmailService::class);
         $sampleEmailService->shouldNotReceive('buildMail');
@@ -53,7 +55,7 @@ class GetOrganizerSampleEmailHandlerTest extends TestCase
         $this->expectException(ResourceNotFoundException::class);
 
         (new GetOrganizerSampleEmailHandler($organizerRepository, $sampleEmailService))
-            ->handle(new OrganizerSampleEmailDTO(organizerId: 7, accountId: 99, type: EmailTemplateType::ATTENDEE_TICKET));
+            ->handle(new OrganizerSampleEmailDTO(organizerId: 7, accountId: 99, type: AutomaticEmailType::ATTENDEE_TICKET));
     }
 
     protected function tearDown(): void

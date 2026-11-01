@@ -227,6 +227,54 @@ class LiquidTemplateRenderer
         return match ($type) {
             EmailTemplateType::ORDER_CONFIRMATION => array_merge($commonTokens, $orderTokens),
             EmailTemplateType::ATTENDEE_TICKET => array_merge($commonTokens, $orderTokens, $attendeeTokens),
+            default => $this->messageTokens(),
         };
+    }
+
+    /** What the subject and message of the other participant emails can use (ParticipantEmailService::context). */
+    private function messageTokens(): array
+    {
+        return [
+            [
+                'token' => '{{ participant.first_name }}',
+                'description' => __('The first name of the participant'),
+                'example' => 'Marie',
+            ],
+            [
+                'token' => '{{ participant.last_name }}',
+                'description' => __('The last name of the participant'),
+                'example' => 'Tremblay',
+            ],
+            [
+                'token' => '{{ event.title }}',
+                'description' => __('The name of the event'),
+                'example' => 'Summer Music Festival 2024',
+            ],
+            [
+                'token' => '{{ event.date }}',
+                'description' => __('The event start date'),
+                'example' => 'January 15, 2024',
+            ],
+            [
+                'token' => '{{ event.time }}',
+                'description' => __('The event start time'),
+                'example' => '7:00 PM',
+            ],
+            [
+                'token' => '{{ event.full_address }}',
+                'description' => __('The full event address'),
+                'example' => '123 Main St, Montreal, QC',
+            ],
+            [
+                'token' => '{{ organizer.name }}',
+                'description' => __('The organizer\'s name'),
+                'example' => 'ACME Events',
+            ],
+            [
+                'token' => '{{ organizer.email }}',
+                'description' => __('The organizer\'s email'),
+                'example' => 'contact@example.com',
+            ],
+        ];
     }
 }

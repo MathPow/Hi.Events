@@ -9,6 +9,8 @@ import {
     GenericDataResponse,
     IdParam,
     EmailTemplateType,
+    EmailCustomizationType,
+    AutomaticEmailType,
     DefaultEmailTemplate,
     SampleEmail
 } from "../types";
@@ -48,13 +50,13 @@ export const emailTemplateClient = {
     },
 
     // The organizer's automatic email exactly as it is sent (its version or the default one), with sample data.
-    getSampleForOrganizer: async (organizerId: IdParam, templateType: EmailTemplateType) => {
+    getSampleForOrganizer: async (organizerId: IdParam, templateType: AutomaticEmailType) => {
         const response = await api.get<GenericDataResponse<SampleEmail>>(`organizers/${organizerId}/email-templates/${templateType}/sample`);
         return response.data.data;
     },
 
     // Sends that email to the person asking.
-    sendTestForOrganizer: async (organizerId: IdParam, templateType: EmailTemplateType) => {
+    sendTestForOrganizer: async (organizerId: IdParam, templateType: AutomaticEmailType) => {
         const response = await api.post<GenericDataResponse<{ sent_to: string }>>(`organizers/${organizerId}/email-templates/${templateType}/test`);
         return response.data.data;
     },
@@ -93,7 +95,13 @@ export const emailTemplateClient = {
     },
 
     // Get available tokens
-    getAvailableTokens: async (templateType: EmailTemplateType) => {
+    // The subject and message of a participant email that keeps its content; both empty: the default email.
+    saveCustomizationForOrganizer: async (organizerId: IdParam, templateType: EmailCustomizationType, data: { subject: string, message: string }) => {
+        const response = await api.put<{ data?: EmailTemplate }>(`organizers/${organizerId}/email-customizations/${templateType}`, data);
+        return response.data?.data ?? null;
+    },
+
+    getAvailableTokens: async (templateType: EmailTemplateType | EmailCustomizationType) => {
         const response = await api.get<{ tokens: EmailTemplateToken[] }>(`email-templates/tokens/${templateType}`);
         return response.data;
     },

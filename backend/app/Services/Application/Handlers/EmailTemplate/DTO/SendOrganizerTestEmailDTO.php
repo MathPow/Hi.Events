@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace HiEvents\Services\Application\Handlers\EmailTemplate\DTO;
 
 use HiEvents\DataTransferObjects\BaseDataObject;
-use HiEvents\DomainObjects\Enums\EmailTemplateType;
+use HiEvents\DomainObjects\Enums\AutomaticEmailType;
 
 class SendOrganizerTestEmailDTO extends BaseDataObject
 {
@@ -13,7 +13,7 @@ class SendOrganizerTestEmailDTO extends BaseDataObject
         public readonly int               $organizerId,
         public readonly int               $accountId,
         public readonly int               $userId,
-        public readonly EmailTemplateType $type,
+        public readonly AutomaticEmailType $type,
     )
     {
     }

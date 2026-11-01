@@ -20,7 +20,7 @@ class GetDefaultEmailTemplateAction extends BaseAction
     {
         $defaults = [];
 
-        foreach (EmailTemplateType::cases() as $type) {
+        foreach (EmailTemplateType::fullEditorTypes() as $type) {
             $template = $this->emailTemplateService->getDefaultTemplate($type);
             $defaults[$type->value] = [
                 'type' => $type->value,

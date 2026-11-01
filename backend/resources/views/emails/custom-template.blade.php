@@ -1,13 +1,11 @@
-{{-- Custom Liquid Template Wrapper --}}
-<x-mail::message>
+{{-- The organizer's own version of the order confirmation or the ticket (Liquid), in the event's look. --}}
+@php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
+<x-mail::event-message :branding="$branding" :footer="$eventSettings->getGetEmailFooterHtml()">
 {!! $renderedBody !!}
 
 @if(isset($renderedCta))
 <x-mail::button :url="$renderedCta['url']">
-    {{ $renderedCta['label'] }}
+{{ $renderedCta['label'] }}
 </x-mail::button>
 @endif
-
-{!! $eventSettings->getGetEmailFooterHtml() !!}
-
-</x-mail::message>
+</x-mail::event-message>

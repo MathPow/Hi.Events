@@ -1,16 +1,15 @@
 @php /** @var \HiEvents\DomainObjects\WaitlistEntryDomainObject $entry */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
-@php /** @var ?string $productName */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrganizerDomainObject $organizer */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventSettingDomainObject $eventSettings */ @endphp
+@php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
+@php /** @var string|null $productName */ @endphp
 @php /** @var string $eventUrl */ @endphp
-
 @php /** @see \HiEvents\Mail\Waitlist\WaitlistOfferExpiredMail */ @endphp
-
-<x-mail::message>
+<x-mail::event-message :branding="$branding" :note="$organizerMessage" :footer="$eventSettings->getGetEmailFooterHtml()">
 # {{ __('Your waitlist offer has expired') }}
 
-{{ __('Hello') }},
+{{ $entry->getFirstName() ? __('Hello :name,', ['name' => $entry->getFirstName()]) : __('Hello,') }}
 
 @if($productName)
 {{ __('Unfortunately, your waitlist offer for **:product** for the event **:event** has expired.', ['product' => $productName, 'event' => $event->getTitle()]) }}
@@ -24,10 +23,6 @@
 {{ __('View Event') }}
 </x-mail::button>
 
-{{ __('If you have any questions or need assistance, please respond to this email.') }}
-
-{{ __('Thank you') }},<br>
+{{ __('See you soon,') }}<br>
 {{ $organizer->getName() ?: config('app.name') }}
-
-{!! $eventSettings->getGetEmailFooterHtml() !!}
-</x-mail::message>
+</x-mail::event-message>

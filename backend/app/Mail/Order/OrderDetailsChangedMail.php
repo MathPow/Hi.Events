@@ -5,7 +5,9 @@ namespace HiEvents\Mail\Order;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
+use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\Mail\BaseMail;
+use HiEvents\Mail\Concerns\HasEventBranding;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -14,6 +16,8 @@ use Illuminate\Mail\Mailables\Envelope;
  */
 class OrderDetailsChangedMail extends BaseMail
 {
+    use HasEventBranding;
+
     public function __construct(
         private readonly EventDomainObject $event,
         private readonly OrganizerDomainObject $organizer,
@@ -27,20 +31,22 @@ class OrderDetailsChangedMail extends BaseMail
     {
         return new Envelope(
             replyTo: $this->eventSettings->getSupportEmail(),
-            subject: __('Your Order Details Have Been Changed'),
+            subject: $this->brandedSubject(__('Your Order Details Have Been Changed')),
         );
     }
 
     public function content(): Content
     {
-        return new Content(
-            markdown: 'emails.orders.order-details-changed',
-            with: [
-                'event' => $this->event,
-                'organizer' => $this->organizer,
-                'eventSettings' => $this->eventSettings,
-                'changedFields' => $this->changedFields,
-            ]
-        );
+        return $this->brandedContent('emails.orders.order-details-changed', [
+            'event' => $this->event,
+            'organizer' => $this->organizer,
+            'eventSettings' => $this->eventSettings,
+            'changedFields' => $this->changedFields,
+        ]);
+    }
+
+    protected function emailTemplateType(): EmailTemplateType
+    {
+        return EmailTemplateType::ORDER_DETAILS_CHANGED;
     }
 }

@@ -9,12 +9,16 @@ use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\WaitlistEntryDomainObject;
 use HiEvents\Helper\Url;
+use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\Mail\BaseMail;
+use HiEvents\Mail\Concerns\HasEventBranding;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class WaitlistOfferExpiredMail extends BaseMail
 {
+    use HasEventBranding;
+
     public function __construct(
         private readonly WaitlistEntryDomainObject  $entry,
         private readonly EventDomainObject          $event,
@@ -31,27 +35,24 @@ class WaitlistOfferExpiredMail extends BaseMail
     {
         return new Envelope(
             replyTo: $this->eventSettings->getSupportEmail(),
-            subject: __('Your waitlist offer has expired'),
+            subject: $this->brandedSubject(__('Your waitlist offer has expired')),
         );
     }
 
     public function content(): Content
     {
-        return new Content(
-            markdown: 'emails.waitlist.offer-expired',
-            with: [
-                'entry' => $this->entry,
-                'event' => $this->event,
-                'productName' => $this->buildProductName(),
-                'organizer' => $this->organizer,
-                'eventSettings' => $this->eventSettings,
-                'eventUrl' => sprintf(
-                    Url::getFrontEndUrlFromConfig(Url::EVENT_HOMEPAGE),
-                    $this->event->getId(),
-                    $this->event->getSlug(),
-                ) . '?clear_waitlist=true',
-            ]
-        );
+        return $this->brandedContent('emails.waitlist.offer-expired', [
+            'entry' => $this->entry,
+            'event' => $this->event,
+            'productName' => $this->buildProductName(),
+            'organizer' => $this->organizer,
+            'eventSettings' => $this->eventSettings,
+            'eventUrl' => sprintf(
+                Url::getFrontEndUrlFromConfig(Url::EVENT_HOMEPAGE),
+                $this->event->getId(),
+                $this->event->getSlug(),
+            ) . '?clear_waitlist=true',
+        ]);
     }
 
     private function buildProductName(): ?string
@@ -67,5 +68,20 @@ class WaitlistOfferExpiredMail extends BaseMail
         }
 
         return $name;
+    }
+
+    protected function emailTemplateType(): EmailTemplateType
+    {
+        return EmailTemplateType::WAITLIST_OFFER_EXPIRED;
+    }
+
+    protected function participantFirstName(): ?string
+    {
+        return $this->entry->getFirstName();
+    }
+
+    protected function participantLastName(): ?string
+    {
+        return $this->entry->getLastName();
     }
 }

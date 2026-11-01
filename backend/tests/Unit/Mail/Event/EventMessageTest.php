@@ -92,26 +92,33 @@ class EventMessageTest extends TestCase
 
         $this->assertStringContainsString('Bonjour les coureurs', $html);
         $this->assertStringContainsString('Footer from organizer', $html);
-        $this->assertStringContainsString('background-color: #180d40', $html);
-        $this->assertStringContainsString('background-color: #fff6e8', $html);
+        $this->assertStringContainsString('background-color: #e8f3ff', $html);
         $this->assertStringContainsString('https://example.com/storage/logo.jpg', $html);
         $this->assertStringContainsString('https://example.com/storage/cover.png', $html);
-        $this->assertStringContainsString('https://billets.example.com/logos/dehors-billetterie-clair.png', $html);
-        $this->assertStringContainsString('Raleway', $html);
-        $this->assertStringNotContainsString('hi-events-stacked', $html);
+        $this->assertStringContainsString('BACKYARD BORÉAL', mb_strtoupper($html));
+        $this->assertStringContainsString('Samedi 24 octobre', $html);
+        $this->assertStringContainsString('https://hi.events', $html);
+        $this->assertStringContainsString('dehorsqc.com', $html);
     }
 
     private function branding(): EventEmailBrandingDTO
     {
         return new EventEmailBrandingDTO(
-            accentColor: '#180d40',
-            accentTextColor: '#ffffff',
-            backgroundColor: '#fff6e8',
-            fontFamily: "'Raleway', Arial, sans-serif",
-            fontStylesheetUrl: 'https://fonts.googleapis.com/css2?family=Raleway',
+            accentColor: '#1d6fd8',
+            accentSoftColor: '#e8f3ff',
+            accentDeepColor: '#1f4f8f',
+            accentTextColor: '#fffcf8',
             organizerName: 'Boréal',
             organizerLogoUrl: 'https://example.com/storage/logo.jpg',
+            eventTitle: 'Backyard Boréal',
+            eventUrl: 'https://billets.example.com/event/1/backyard',
             eventCoverUrl: 'https://example.com/storage/cover.png',
+            dateLine: 'Samedi 24 octobre · 08:00 → 16:00',
+            timezoneLine: 'Heure de l’Est (HAE)',
+            placeLine: 'Mont Orford',
+            addressLine: null,
+            supportEmail: 'info@example.com',
+            assetsUrl: 'https://billets.example.com',
             platformLogoUrl: 'https://billets.example.com/logos/dehors-billetterie-clair.png',
             platformUrl: 'https://example.com',
         );

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace HiEvents\Services\Application\Handlers\EmailTemplate;
 
 use HiEvents\DomainObjects\Generated\OrganizerDomainObjectAbstract;
+use HiEvents\DomainObjects\ImageDomainObject;
+use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Services\Application\Handlers\EmailTemplate\DTO\OrganizerSampleEmailDTO;
@@ -27,10 +29,13 @@ class GetOrganizerSampleEmailHandler
     public function handle(OrganizerSampleEmailDTO $dto): RenderedSampleEmailDTO
     {
         /** @var OrganizerDomainObject|null $organizer */
-        $organizer = $this->organizerRepository->findFirstWhere([
-            OrganizerDomainObjectAbstract::ID => $dto->organizerId,
-            OrganizerDomainObjectAbstract::ACCOUNT_ID => $dto->accountId,
-        ]);
+        $organizer = $this->organizerRepository
+            ->loadRelation(ImageDomainObject::class)
+            ->loadRelation(OrganizerSettingDomainObject::class)
+            ->findFirstWhere([
+                OrganizerDomainObjectAbstract::ID => $dto->organizerId,
+                OrganizerDomainObjectAbstract::ACCOUNT_ID => $dto->accountId,
+            ]);
 
         if ($organizer === null) {
             throw new ResourceNotFoundException(__('Organizer not found'));

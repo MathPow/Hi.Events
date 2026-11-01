@@ -11,7 +11,7 @@ use HiEvents\Services\Application\Handlers\EmailTemplate\PreviewEmailTemplateHan
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
 abstract class BaseEmailTemplateAction extends BaseAction
 {
@@ -48,7 +48,7 @@ abstract class BaseEmailTemplateAction extends BaseAction
     protected function validateEmailTemplateRequest(Request $request): array
     {
         return $request->validate([
-            'template_type' => ['required', new Enum(EmailTemplateType::class)],
+            'template_type' => ['required', Rule::in(array_map(fn(EmailTemplateType $type) => $type->value, EmailTemplateType::fullEditorTypes()))],
             'subject' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'ctaLabel' => ['required', 'string', 'max:100'],
@@ -69,7 +69,7 @@ abstract class BaseEmailTemplateAction extends BaseAction
     protected function validatePreviewRequest(Request $request): array
     {
         return $request->validate([
-            'template_type' => ['required', new Enum(EmailTemplateType::class)],
+            'template_type' => ['required', Rule::in(array_map(fn(EmailTemplateType $type) => $type->value, EmailTemplateType::fullEditorTypes()))],
             'subject' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'ctaLabel' => ['required', 'string', 'max:100'],

@@ -1126,6 +1126,12 @@ export interface WebhookLog {
 
 // Email Template Types
 export type EmailTemplateType = 'order_confirmation' | 'attendee_ticket';
+// The other participant emails: their content stays, the organizer changes the subject and adds a message.
+export type EmailCustomizationType = 'order_failed' | 'payment_after_expiry' | 'order_cancelled' | 'order_refunded'
+    | 'deposit_resolved' | 'order_details_changed' | 'attendee_details_changed'
+    | 'waitlist_joined' | 'waitlist_offer' | 'waitlist_offer_expired';
+// Every automatic email of « Courriels », including those the organizer receives (preview only).
+export type AutomaticEmailType = EmailTemplateType | EmailCustomizationType | 'organizer_new_order' | 'organizer_contact_message';
 export type EmailTemplateEngine = 'liquid' | 'blade';
 
 export interface EmailTemplate {
@@ -1133,7 +1139,7 @@ export interface EmailTemplate {
     account_id: number;
     organizer_id?: number;
     event_id?: number;
-    template_type: EmailTemplateType;
+    template_type: EmailTemplateType | EmailCustomizationType;
     subject: string;
     body: string;
     cta?: {

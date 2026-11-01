@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\Application\Handlers\EmailTemplate;
 
-use HiEvents\DomainObjects\Enums\EmailTemplateType;
+use HiEvents\DomainObjects\Enums\AutomaticEmailType;
 use HiEvents\DomainObjects\UserDomainObject;
 use HiEvents\Mail\EmailTemplate\TestEmailMail;
 use HiEvents\Repository\Interfaces\UserRepositoryInterface;
@@ -25,7 +25,7 @@ class SendOrganizerTestEmailHandlerTest extends TestCase
             ->once()
             ->withArgs(fn(OrganizerSampleEmailDTO $dto) => $dto->organizerId === 7
                 && $dto->accountId === 3
-                && $dto->type === EmailTemplateType::ATTENDEE_TICKET)
+                && $dto->type === AutomaticEmailType::ATTENDEE_TICKET)
             ->andReturn(new RenderedSampleEmailDTO(subject: 'Votre billet', html: '<html>Billet</html>'));
 
         $userRepository = m::mock(UserRepositoryInterface::class);
@@ -48,7 +48,7 @@ class SendOrganizerTestEmailHandlerTest extends TestCase
                 organizerId: 7,
                 accountId: 3,
                 userId: 12,
-                type: EmailTemplateType::ATTENDEE_TICKET,
+                type: AutomaticEmailType::ATTENDEE_TICKET,
             ));
 
         $this->assertSame('jules@sulpace.ca', $sentTo);

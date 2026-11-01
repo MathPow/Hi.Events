@@ -1,80 +1,57 @@
-@php use Carbon\Carbon; use HiEvents\Helper\Currency; use HiEvents\Helper\DateHelper; @endphp
+@php use HiEvents\Helper\Currency; @endphp
 @php /** @var \HiEvents\DomainObjects\OrderDomainObject $order */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrganizerDomainObject $organizer */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventSettingDomainObject $eventSettings */ @endphp
+@php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
 @php /** @var string $orderUrl */ @endphp
-
 @php /** @see \HiEvents\Mail\Order\OrderSummary */ @endphp
-
 @php
-    $eventStart = (new Carbon(DateHelper::convertFromUTC($event->getStartDate(), $event->getTimezone())))->locale(app()->getLocale());
-    $eventDate = $eventStart->isoFormat('LL');
-    $eventTime = $eventStart->isoFormat('LT');
+    $cell = 'padding: 11px 0; border-bottom: 1px solid #f1dccd; font-size: 15px; color: #352924;';
+    $items = $order->getOrderItems() ?? collect();
 @endphp
+<x-mail::event-message :branding="$branding" :note="$organizerMessage" :footer="$eventSettings->getGetEmailFooterHtml()">
+# {{ __('Your order is confirmed') }}
 
-<x-mail::message>
-# {{ __('Your Order is Confirmed! ') }} 🎉
+{{ $order->getFirstName() ? __('Hello :name,', ['name' => $order->getFirstName()]) : __('Hello,') }}
 
-@if($order->isOrderAwaitingOfflinePayment() === false)
-
-<p>
-{{ __('Congratulations! Your order for :eventTitle on :eventDate at :eventTime was successful. Please find your order details below.', ['eventTitle' => $event->getTitle(), 'eventDate' => $eventDate, 'eventTime' => $eventTime]) }}
-</p>
-
-@else
-
-<div>
-<p>
+@if($order->isOrderAwaitingOfflinePayment())
 {{ __('Your order is pending payment. Tickets have been issued but will not be valid until payment is received.') }}
-</p>
 
-<div style="border-radius: 4px; background-color: #d7e8f8; color: #204e84; margin-bottom: 1.5rem; padding: 1rem;">
-<h2>{{ __('Payment Instructions') }}</h2>
-{{ __('Please follow the instructions below to complete your payment.') }}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 24px; background-color: {{ $branding->accentSoftColor }}; border-radius: 16px; border-collapse: separate;"><tr><td style="padding: 16px 20px; font-size: 15px; color: #352924;">
+<strong>{{ __('Payment Instructions') }}</strong><br>
 {!! $eventSettings->getOfflinePaymentInstructions() !!}
-</div>
-</div>
-
+</td></tr></table>
+@else
+{{ __('Thank you for your order! Here is the summary.') }}
 @endif
 
-<p>
-
-# {{ __('Event Details') }}
-**{{ __('Event Name:') }}** {{ $event->getTitle() }}
-    <br>
-**{{ __('Date & Time:') }}** {{ __(':date at :time', ['date' => $eventDate, 'time' => $eventTime]) }}
-
-</p>
-
-@if($eventSettings->getPostCheckoutMessage() && $order->isOrderCompleted())
-<p>
-
-# {{ __('Additional Information') }}
-
-{!! $eventSettings->getPostCheckoutMessage() !!}
-
-</p>
-@endif
-
-# {{ __('Order Summary') }}
-- **{{ __('Order Number:') }}** {{ $order->getPublicId() }}
-- **{{ __('Total Amount:') }}** {{ Currency::format($order->getTotalGross(), $event->getCurrency()) }}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 4px 0 24px; border-collapse: collapse;">
+<tr><td style="{{ $cell }} color: rgba(53, 41, 36, 0.7);">{{ __('Order number') }}</td><td align="right" style="{{ $cell }} font-weight: bold;">{{ $order->getPublicId() }}</td></tr>
+@foreach($items as $item)
+<tr><td style="{{ $cell }}">{{ $item->getItemName() }} × {{ $item->getQuantity() }}</td><td align="right" style="{{ $cell }}">{{ Currency::format($item->getTotalGross() ?? ($item->getPrice() * $item->getQuantity()), $event->getCurrency()) }}</td></tr>
+@endforeach
+<tr><td style="{{ $cell }} border-bottom: 0; font-weight: bold;">{{ __('Total') }}</td><td align="right" style="{{ $cell }} border-bottom: 0; font-weight: bold;">{{ Currency::format($order->getTotalGross(), $event->getCurrency()) }}</td></tr>
+</table>
 
 @if($order->getDepositAmount() > 0)
-<div style="border-radius: 4px; background-color: #fdf1e6; color: #6b3a14; margin: 1rem 0 1.5rem; padding: 1rem;">
-<h2>{{ __('Security Deposit') }}</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 24px; background-color: {{ $branding->accentSoftColor }}; border-radius: 16px; border-collapse: separate;"><tr><td style="padding: 16px 20px; font-size: 15px; color: #352924;">
+<strong>{{ __('Security Deposit') }}</strong><br>
 {{ __('A security deposit of :amount must be sent separately. It is not included in the total above.', ['amount' => Currency::format($order->getDepositAmount(), $event->getCurrency())]) }}
 {!! $eventSettings->getDepositInstructions() !!}
-</div>
+</td></tr></table>
+@endif
+
+@if($eventSettings->getPostCheckoutMessage() && $order->isOrderCompleted())
+## {{ __('Additional Information') }}
+
+{!! $eventSettings->getPostCheckoutMessage() !!}
 @endif
 
 <x-mail::button :url="$orderUrl">
-    {{ __('View Order Summary & Tickets') }}
+{{ __('View Order Summary & Tickets') }}
 </x-mail::button>
 
-{{ __('If you have any questions or need assistance, please contact') }} <a href="mailto:{{ $organizer->getEmail() }}">{{ $organizer->getEmail() }}</a>.
-
-{{ __('Best regards,') }}<br>
+{{ __('See you soon,') }}<br>
 {{ $organizer->getName() ?: config('app.name') }}
-</x-mail::message>
+</x-mail::event-message>

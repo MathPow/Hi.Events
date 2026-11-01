@@ -1,24 +1,23 @@
+@php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrderDomainObject $order */ @endphp
 @php /** @var \HiEvents\DomainObjects\OrganizerDomainObject $organizer */ @endphp
-@php /** @var \HiEvents\DomainObjects\EventDomainObject $event */ @endphp
 @php /** @var \HiEvents\DomainObjects\EventSettingDomainObject $eventSettings */ @endphp
-@php /** @var string $ticketUrl */ @endphp
-
+@php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
+@php /** @var string $eventUrl */ @endphp
 @php /** @see \HiEvents\Mail\Order\OrderCancelled */ @endphp
+<x-mail::event-message :branding="$branding" :note="$organizerMessage" :footer="$eventSettings->getGetEmailFooterHtml()">
+# {{ __('Order cancelled') }}
 
-<x-mail::message>
-{{ __('Hello') }},
+{{ $order->getFirstName() ? __('Hello :name,', ['name' => $order->getFirstName()]) : __('Hello,') }}
 
-{{ __('Your order for') }} <b>{{$event->getTitle()}}</b> {{ __('has been cancelled.') }}
-<br>
-<br>
-{{ __('Order #:') }} <b>{{$order->getPublicId()}}</b>
-<br>
-<br>
-{{ __('If you have any questions or need assistance, please respond to this email.') }}
-<br><br>
-{{ __('Thank you') }},<br>
+{{ __('Your order :number for :event has been cancelled. Your tickets are no longer valid.', ['number' => $order->getPublicId(), 'event' => $event->getTitle()]) }}
+
+{{ __('If you think this is a mistake, simply reply to this email.') }}
+
+<x-mail::button :url="$eventUrl">
+{{ __('View Event Page') }}
+</x-mail::button>
+
+{{ __('See you soon,') }}<br>
 {{ $organizer->getName() ?: config('app.name') }}
-
-{!! $eventSettings->getGetEmailFooterHtml() !!}
-</x-mail::message>
+</x-mail::event-message>

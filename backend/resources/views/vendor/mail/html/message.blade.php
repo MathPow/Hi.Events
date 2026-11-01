@@ -37,7 +37,14 @@
                 {{-- In accordance with Section 7(b) of the AGPL, we ask that you retain the "Powered by Hi.Events" notice. --}}
                 {{-- If you wish to remove this notice, a commercial license is available at: https://hi.events/licensing --}}
 
-                © {{ date('Y') }} {{ config('app.name') }} · {{ __('Powered by') }} <a title="Hi.Events" href="https://hi.events?utm_source=app-email-footer">Hi.Events</a>
+{{-- No indentation: the footer goes through Markdown (an indented line becomes code). --}}
+<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="background-color: #f7dccd; border-radius: 999px; padding: 8px 16px; font-size: 12px; font-weight: bold; color: #352924;">
+{!! __('Powered by :hievents and :dehors', ['hievents' => '<a title="Hi.Events" href="https://hi.events?utm_source=app-email-footer" style="color: #352924; font-weight: bold; text-decoration: none;">Hi.Events</a>', 'dehors' => '<a href="https://dehorsqc.com" style="color: #352924; font-weight: bold; text-decoration: none;">DehorsQC</a>']) !!}
+</td>
+</tr>
+</table>
             @endif
         </x-mail::footer>
     </x-slot:footer>

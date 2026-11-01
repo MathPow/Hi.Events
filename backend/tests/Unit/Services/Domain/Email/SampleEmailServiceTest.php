@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Domain\Email;
 
 use HiEvents\DomainObjects\EmailTemplateDomainObject;
+use HiEvents\DomainObjects\Enums\AutomaticEmailType;
 use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
@@ -11,6 +12,7 @@ use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\Mail\Attendee\AttendeeTicketMail;
 use HiEvents\Mail\Order\OrderSummary;
+use HiEvents\Repository\Interfaces\EmailTemplateRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\ProductRepositoryInterface;
 use HiEvents\Services\Domain\Email\DTO\RenderedEmailTemplateDTO;
@@ -26,6 +28,7 @@ class SampleEmailServiceTest extends TestCase
     private EventRepositoryInterface&MockInterface $eventRepository;
     private ProductRepositoryInterface&MockInterface $productRepository;
     private EmailTemplateService&MockInterface $emailTemplateService;
+    private EmailTemplateRepositoryInterface&MockInterface $templateRepository;
     private SampleEmailService $service;
 
     protected function setUp(): void
@@ -37,7 +40,13 @@ class SampleEmailServiceTest extends TestCase
         $this->emailTemplateService = m::mock(EmailTemplateService::class);
 
         $this->eventRepository->shouldReceive('loadRelation')->andReturnSelf();
+        $this->eventRepository->shouldReceive('findFirst')->andReturnNull();
         $this->productRepository->shouldReceive('loadRelation')->andReturnSelf();
+
+        // The look and the organizer's subject and message are read when the email is rendered.
+        $this->templateRepository = m::mock(EmailTemplateRepositoryInterface::class);
+        $this->app->instance(EventRepositoryInterface::class, $this->eventRepository);
+        $this->app->instance(EmailTemplateRepositoryInterface::class, $this->templateRepository);
 
         $this->service = new SampleEmailService(
             $this->eventRepository,
@@ -57,7 +66,7 @@ class SampleEmailServiceTest extends TestCase
             ->with(EmailTemplateType::ORDER_CONFIRMATION, 3, null, 7)
             ->andReturnNull();
 
-        $mail = $this->service->buildMail(EmailTemplateType::ORDER_CONFIRMATION, $this->organizer());
+        $mail = $this->service->buildMail(AutomaticEmailType::ORDER_CONFIRMATION, $this->organizer());
 
         $this->assertInstanceOf(OrderSummary::class, $mail);
         $html = $mail->render();
@@ -90,7 +99,7 @@ class SampleEmailServiceTest extends TestCase
             })
             ->andReturn(new RenderedEmailTemplateDTO(subject: 'Merci Marie', body: '<p>Bonjour Marie</p>', cta: null));
 
-        $mail = $this->service->buildMail(EmailTemplateType::ORDER_CONFIRMATION, $this->organizer());
+        $mail = $this->service->buildMail(AutomaticEmailType::ORDER_CONFIRMATION, $this->organizer());
 
         $this->assertSame('Merci Marie', $mail->envelope()->subject);
         $this->assertStringContainsString('Bonjour Marie', $mail->render());
@@ -102,7 +111,7 @@ class SampleEmailServiceTest extends TestCase
         $this->productRepository->shouldNotReceive('findFirstWhere');
         $this->emailTemplateService->shouldReceive('getTemplateByType')->andReturnNull();
 
-        $mail = $this->service->buildMail(EmailTemplateType::ORDER_CONFIRMATION, $this->organizer());
+        $mail = $this->service->buildMail(AutomaticEmailType::ORDER_CONFIRMATION, $this->organizer());
 
         $html = $mail->render();
         $this->assertStringContainsString(__('Your event'), $html);
@@ -118,11 +127,51 @@ class SampleEmailServiceTest extends TestCase
             ->with(EmailTemplateType::ATTENDEE_TICKET, 3, null, 7)
             ->andReturnNull();
 
-        $mail = $this->service->buildMail(EmailTemplateType::ATTENDEE_TICKET, $this->organizer());
+        $mail = $this->service->buildMail(AutomaticEmailType::ATTENDEE_TICKET, $this->organizer());
 
         $this->assertInstanceOf(AttendeeTicketMail::class, $mail);
         $this->assertSame([], $mail->attachments());
         $this->assertStringContainsString(SampleEmailService::SAMPLE_FIRST_NAME, $mail->render());
+    }
+
+    public function test_every_automatic_email_renders_in_the_event_look(): void
+    {
+        $this->eventRepository->shouldReceive('findWhere')->andReturn(collect([$this->event()]));
+        $this->productRepository->shouldReceive('findFirstWhere')->andReturn($this->ticket(20));
+        $this->emailTemplateService->shouldReceive('getTemplateByType')->andReturnNull();
+        $this->templateRepository->shouldReceive('findByTypeWithFallback')->andReturnNull();
+
+        foreach (AutomaticEmailType::cases() as $type) {
+            $mail = $this->service->buildMail($type, $this->organizer());
+
+            $this->assertNotEmpty($mail->envelope()->subject, $type->value);
+            $html = $mail->render();
+            $this->assertStringContainsString('dehorsqc.com', $html, $type->value);
+
+            if ($type->templateType() !== null) {
+                $this->assertStringContainsString('COURSE DES LIÈVRES', mb_strtoupper($html), $type->value);
+                $this->assertStringContainsString('bonjour@sulpace.ca', $html, $type->value);
+            }
+        }
+    }
+
+    public function test_the_organizer_subject_and_message_are_added_to_an_email_that_keeps_its_content(): void
+    {
+        $this->eventRepository->shouldReceive('findWhere')->andReturn(collect([$this->event()]));
+        $this->productRepository->shouldReceive('findFirstWhere')->andReturn($this->ticket(20));
+        $this->templateRepository
+            ->shouldReceive('findByTypeWithFallback')
+            ->with(EmailTemplateType::ORDER_REFUNDED, 3, 11, 7)
+            ->andReturn((new EmailTemplateDomainObject())
+                ->setSubject('Remboursement pour {{ event.title }}')
+                ->setBody('<p>Merci de votre patience, {{ participant.first_name }}.</p>'));
+
+        $mail = $this->service->buildMail(AutomaticEmailType::ORDER_REFUNDED, $this->organizer());
+
+        $this->assertSame('Remboursement pour Course des Lièvres', $mail->envelope()->subject);
+        $html = $mail->render();
+        $this->assertStringContainsString('Merci de votre patience, Marie.', $html);
+        $this->assertStringContainsString('40.00', $html);
     }
 
     private function organizer(): OrganizerDomainObject

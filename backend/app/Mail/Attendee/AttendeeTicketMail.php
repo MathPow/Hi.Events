@@ -10,7 +10,9 @@ use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\Helper\StringHelper;
 use HiEvents\Helper\Url;
+use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\Mail\BaseMail;
+use HiEvents\Mail\Concerns\HasEventBranding;
 use HiEvents\Services\Domain\Attendee\GenerateAttendeeTicketPDFService;
 use HiEvents\DomainObjects\DocumentSignatureDomainObject;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
@@ -30,6 +32,8 @@ use Spatie\IcalendarGenerator\Components\Event;
  */
 class AttendeeTicketMail extends BaseMail
 {
+    use HasEventBranding;
+
     private readonly ?RenderedEmailTemplateDTO $renderedTemplate;
 
     /**
@@ -81,14 +85,11 @@ class AttendeeTicketMail extends BaseMail
     public function content(): Content
     {
         if ($this->renderedTemplate) {
-            return new Content(
-                markdown: 'emails.custom-template',
-                with: [
-                    'renderedBody' => $this->renderedTemplate->body,
-                    'renderedCta' => $this->renderedTemplate->cta,
-                    'eventSettings' => $this->eventSettings,
-                ]
-            );
+            return $this->brandedContent('emails.custom-template', [
+                'renderedBody' => $this->renderedTemplate->body,
+                'renderedCta' => $this->renderedTemplate->cta,
+                'eventSettings' => $this->eventSettings,
+            ]);
         }
 
         $qrCodeImageService = app(QrCodeImageService::class);
@@ -103,23 +104,29 @@ class AttendeeTicketMail extends BaseMail
             ),
         ]);
 
-        // If no template is provided, use the default blade template
-        return new Content(
-            markdown: 'emails.orders.attendee-ticket',
-            with: [
-                'event' => $this->event,
-                'attendee' => $this->attendee,
-                'eventSettings' => $this->eventSettings,
-                'organizer' => $this->organizer,
-                'order' => $this->order,
-                'tickets' => $tickets,
-                'ticketUrl' => sprintf(
-                    Url::getFrontEndUrlFromConfig(Url::ATTENDEE_TICKET),
-                    $this->event->getId(),
-                    $this->attendee->getShortId(),
-                )
-            ]
-        );
+        return $this->brandedContent('emails.orders.attendee-ticket', [
+            'event' => $this->event,
+            'attendee' => $this->attendee,
+            'eventSettings' => $this->eventSettings,
+            'organizer' => $this->organizer,
+            'order' => $this->order,
+            'tickets' => $tickets,
+            'ticketUrl' => sprintf(
+                Url::getFrontEndUrlFromConfig(Url::ATTENDEE_TICKET),
+                $this->event->getId(),
+                $this->attendee->getShortId(),
+            )
+        ]);
+    }
+
+    protected function emailTemplateType(): EmailTemplateType
+    {
+        return EmailTemplateType::ATTENDEE_TICKET;
+    }
+
+    protected function participantFirstName(): ?string
+    {
+        return $this->attendee->getFirstName();
     }
 
     public function attachments(): array

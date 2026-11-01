@@ -1,0 +1,19 @@
+// « Courriels »: the emails of the list, by group (orders and tickets, waitlist, those you receive).
+.emailGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  & + & {
+    margin-top: 0.5rem;
+  }
+}
+
+.emailGroupTitle {
+  padding: 0.5rem 0.875rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}

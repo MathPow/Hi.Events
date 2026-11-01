@@ -1,12 +1,12 @@
 import {Badge, Menu, ScrollArea, Text} from '@mantine/core';
 import {IconBraces} from '@tabler/icons-react';
 import {RichTextEditor, useRichTextEditorContext} from '@mantine/tiptap';
-import {EmailTemplateToken, EmailTemplateType} from '../../../../types';
+import {EmailCustomizationType, EmailTemplateToken, EmailTemplateType} from '../../../../types';
 import {useGetEmailTemplateTokens} from '../../../../queries/useGetEmailTemplateTokens';
 import {t, Trans} from '@lingui/macro';
 
 interface LiquidTokenControlProps {
-    templateType: EmailTemplateType;
+    templateType: EmailTemplateType | EmailCustomizationType;
     excludeTokens?: string[];
 }
 

@@ -6,7 +6,9 @@ use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
+use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\Mail\BaseMail;
+use HiEvents\Mail\Concerns\HasEventBranding;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
@@ -15,6 +17,8 @@ use Illuminate\Mail\Mailables\Envelope;
  */
 class PaymentSuccessButOrderExpiredMail extends BaseMail
 {
+    use HasEventBranding;
+
     public function __construct(
         private readonly OrderDomainObject        $order,
         private readonly EventDomainObject        $event,
@@ -29,20 +33,32 @@ class PaymentSuccessButOrderExpiredMail extends BaseMail
     {
         return new Envelope(
             replyTo: $this->eventSettings->getSupportEmail(),
-            subject: __('We were unable to process your order'),
+            subject: $this->brandedSubject(__('We were unable to process your order')),
         );
     }
 
     public function content(): Content
     {
-        return new Content(
-            markdown: 'emails.orders.payment-success-but-order-expired',
-            with: [
-                'event' => $this->event,
-                'order' => $this->order,
-                'organizer' => $this->organizer,
-                'eventSettings' => $this->eventSettings,
-            ]
-        );
+        return $this->brandedContent('emails.orders.payment-success-but-order-expired', [
+            'event' => $this->event,
+            'order' => $this->order,
+            'organizer' => $this->organizer,
+            'eventSettings' => $this->eventSettings,
+        ]);
+    }
+
+    protected function emailTemplateType(): EmailTemplateType
+    {
+        return EmailTemplateType::PAYMENT_AFTER_EXPIRY;
+    }
+
+    protected function participantFirstName(): ?string
+    {
+        return $this->order->getFirstName();
+    }
+
+    protected function participantLastName(): ?string
+    {
+        return $this->order->getLastName();
     }
 }

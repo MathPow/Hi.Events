@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HiEvents\Http\Actions\EmailTemplates;
 
-use HiEvents\DomainObjects\Enums\EmailTemplateType;
+use HiEvents\DomainObjects\Enums\AutomaticEmailType;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\Exceptions\ResourceNotFoundException;
 use HiEvents\Http\Actions\BaseAction;
@@ -31,7 +31,7 @@ class GetOrganizerSampleEmailAction extends BaseAction
     {
         $this->isActionAuthorized($organizerId, OrganizerDomainObject::class);
 
-        $type = EmailTemplateType::tryFrom($templateType);
+        $type = AutomaticEmailType::tryFrom($templateType);
 
         if ($type === null) {
             return $this->errorResponse(__('Invalid template type'), ResponseCodes::HTTP_BAD_REQUEST);

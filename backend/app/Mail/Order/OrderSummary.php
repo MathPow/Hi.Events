@@ -9,7 +9,9 @@ use HiEvents\DomainObjects\InvoiceDomainObject;
 use HiEvents\DomainObjects\OrderDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\Helper\Url;
+use HiEvents\DomainObjects\Enums\EmailTemplateType;
 use HiEvents\Mail\BaseMail;
+use HiEvents\Mail\Concerns\HasEventBranding;
 use HiEvents\Services\Domain\Email\DTO\RenderedEmailTemplateDTO;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -20,6 +22,8 @@ use Illuminate\Mail\Mailables\Envelope;
  */
 class OrderSummary extends BaseMail
 {
+    use HasEventBranding;
+
     private readonly ?RenderedEmailTemplateDTO $renderedTemplate;
 
     public function __construct(
@@ -38,7 +42,7 @@ class OrderSummary extends BaseMail
 
     public function envelope(): Envelope
     {
-        $subject = $this->renderedTemplate?->subject ?? __('Your Order is Confirmed!') . '  🎉';
+        $subject = $this->renderedTemplate?->subject ?? __('Your order is confirmed') . ' 🎉';
 
         return new Envelope(
             replyTo: $this->eventSettings->getSupportEmail(),
@@ -49,31 +53,34 @@ class OrderSummary extends BaseMail
     public function content(): Content
     {
         if ($this->renderedTemplate) {
-            return new Content(
-                markdown: 'emails.custom-template',
-                with: [
-                    'renderedBody' => $this->renderedTemplate->body,
-                    'renderedCta' => $this->renderedTemplate->cta,
-                    'eventSettings' => $this->eventSettings,
-                ]
-            );
+            return $this->brandedContent('emails.custom-template', [
+                'renderedBody' => $this->renderedTemplate->body,
+                'renderedCta' => $this->renderedTemplate->cta,
+                'eventSettings' => $this->eventSettings,
+            ]);
         }
 
-        // Fallback to original template
-        return new Content(
-            markdown: 'emails.orders.summary',
-            with: [
-                'eventSettings' => $this->eventSettings,
-                'event' => $this->event,
-                'order' => $this->order,
-                'organizer' => $this->organizer,
-                'orderUrl' => sprintf(
-                    Url::getFrontEndUrlFromConfig(Url::ORDER_SUMMARY),
-                    $this->event->getId(),
-                    $this->order->getShortId(),
-                )
-            ]
-        );
+        return $this->brandedContent('emails.orders.summary', [
+            'eventSettings' => $this->eventSettings,
+            'event' => $this->event,
+            'order' => $this->order,
+            'organizer' => $this->organizer,
+            'orderUrl' => sprintf(
+                Url::getFrontEndUrlFromConfig(Url::ORDER_SUMMARY),
+                $this->event->getId(),
+                $this->order->getShortId(),
+            )
+        ]);
+    }
+
+    protected function emailTemplateType(): EmailTemplateType
+    {
+        return EmailTemplateType::ORDER_CONFIRMATION;
+    }
+
+    protected function participantFirstName(): ?string
+    {
+        return $this->order->getFirstName();
     }
 
     public function attachments(): array
