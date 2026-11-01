@@ -4,7 +4,6 @@ import {
     IconBuilding,
     IconCreditCard,
     IconLogout,
-    IconMail,
     IconReceipt,
     IconShield,
     IconUser,
@@ -73,7 +72,6 @@ export const useAccountMenu = () => {
         {...settingsLink('organization', IconBuilding), dividerBefore: true},
         settingsLink('payments', IconCreditCard),
         settingsLink('taxes', IconReceipt),
-        settingsLink('emails', IconMail),
     );
 
     if (me?.role === 'ADMIN' || me?.role === 'SUPERADMIN') {

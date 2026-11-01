@@ -14,9 +14,12 @@ const TAB_OF_SECTION: Record<string, SettingsTab> = {
 };
 
 // /account/... keeps working (help center, Stripe's return link): it opens the matching tab of the
-// organizer last opened, else the first active one. The query string (Stripe's) is kept.
+// organizer last opened, else the first active one. The query string (Stripe's) is kept. « Courriels »
+// is its own page now.
 const AccountSettingsRedirect = () => (
-    <OrganizerRedirect to={(id, {section}) => settingsTabPath(id, TAB_OF_SECTION[section ?? ''] ?? 'organization')}/>
+    <OrganizerRedirect to={(id, {section}) => section === 'emails'
+        ? `/manage/organizer/${id}/emails`
+        : settingsTabPath(id, TAB_OF_SECTION[section ?? ''] ?? 'organization')}/>
 );
 
 export default AccountSettingsRedirect;

@@ -172,7 +172,7 @@ export const EmailTemplatesCard = ({eventId, event}: { eventId: IdParam, event: 
                 </div>
             )}
 
-            <Link className={classes.textButton} to={`/manage/organizer/${organizerId}/settings/emails`}>
+            <Link className={classes.textButton} to={`/manage/organizer/${organizerId}/emails`}>
                 {t`The organizer's emails, with their preview`} →
             </Link>
 

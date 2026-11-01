@@ -6,7 +6,6 @@ import {useAutosaveStatus, usePageDetail} from "../../../layouts/AppLayout/PageS
 import {OrganizationTab} from "./tabs/OrganizationTab.tsx";
 import {PaymentsTab} from "./tabs/PaymentsTab.tsx";
 import {TaxesTab} from "./tabs/TaxesTab.tsx";
-import {EmailsTab} from "./tabs/EmailsTab.tsx";
 import {TeamTab} from "./tabs/TeamTab.tsx";
 import {SETTINGS_TABS, SettingsTab, settingsTabLabel, settingsTabPath} from "./settingsTabs.ts";
 import classes from "./Settings.module.scss";
@@ -43,6 +42,11 @@ const Settings = () => {
         return null;
     }
 
+    // « Courriels » became its own page, under « Gérer ».
+    if (tab === 'emails') {
+        return <Navigate to={`/manage/organizer/${organizerId}/emails`} replace/>;
+    }
+
     if (tab && !isKnownTab) {
         return <Navigate to={settingsTabPath(organizerId, 'organization')} replace/>;
     }
@@ -51,7 +55,7 @@ const Settings = () => {
         <div className={classes.page}>
             <header className={classes.header}>
                 <h1 className={classes.title}>{t`Settings`}</h1>
-                <p className={classes.subtitle}>{t`Your organization's details, your payments, your emails and your team.`}</p>
+                <p className={classes.subtitle}>{t`Your organization's details, your payments, your taxes and your team.`}</p>
             </header>
 
             <div className={classes.tabsSticky}>
@@ -72,7 +76,6 @@ const Settings = () => {
             {active === 'organization' && <OrganizationTab key={organizerId} organizerId={organizerId}/>}
             {active === 'payments' && <PaymentsTab key={organizerId} organizerId={organizerId}/>}
             {active === 'taxes' && <TaxesTab key={organizerId} organizerId={organizerId}/>}
-            {active === 'emails' && <EmailsTab key={organizerId} organizerId={organizerId}/>}
             {active === 'team' && <TeamTab/>}
         </div>
     );

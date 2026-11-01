@@ -158,6 +158,12 @@ const OrganizerLayout = () => {
             iconSrc: adminIcon('messages'),
             tileIconSrc: adminIcon('messages-22'),
         },
+        {
+            link: 'emails',
+            label: t`Emails`,
+            iconSrc: adminIcon('courriels'),
+            tileIconSrc: adminIcon('courriels-22'),
+        },
 
         { label: t`Customize` },
         {

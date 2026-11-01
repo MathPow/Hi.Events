@@ -2,23 +2,23 @@ import {useState} from "react";
 import {t} from "@lingui/macro";
 import {Button, Loader, Modal} from "@mantine/core";
 import {useQueryClient} from "@tanstack/react-query";
-import {CreateEmailTemplateRequest, EmailTemplate, EmailTemplateType, IdParam, UpdateEmailTemplateRequest} from "../../../../../types.ts";
-import {useGetAccount} from "../../../../../queries/useGetAccount.ts";
-import {useGetEmailTemplatesForOrganizer} from "../../../../../queries/useGetEmailTemplates.ts";
-import {useGetDefaultEmailTemplates} from "../../../../../queries/useGetDefaultEmailTemplates.ts";
-import {GET_ORGANIZER_SAMPLE_EMAIL_QUERY_KEY, useGetOrganizerSampleEmail} from "../../../../../queries/useGetOrganizerSampleEmail.ts";
-import {useCreateEmailTemplateForOrganizer} from "../../../../../mutations/useCreateEmailTemplate.ts";
-import {useUpdateEmailTemplateForOrganizer} from "../../../../../mutations/useUpdateEmailTemplate.ts";
-import {useDeleteEmailTemplateForOrganizer} from "../../../../../mutations/useDeleteEmailTemplate.ts";
-import {usePreviewEmailTemplateForOrganizer} from "../../../../../mutations/usePreviewEmailTemplate.ts";
-import {useSendOrganizerTestEmail} from "../../../../../mutations/useSendOrganizerTestEmail.ts";
-import {useIsCurrentUserAdmin} from "../../../../../hooks/useIsCurrentUserAdmin.ts";
-import {showError, showSuccess} from "../../../../../utilites/notifications.tsx";
-import {confirmationDialog} from "../../../../../utilites/confirmationDialog.tsx";
-import {EmailTemplateEditor} from "../../../../common/EmailTemplateEditor";
-import {StripeConnectButton} from "../../../../common/StripeConnectButton";
-import {SettingsCard, showServerErrors, Tag} from "../SettingsUi.tsx";
-import classes from "../Settings.module.scss";
+import {CreateEmailTemplateRequest, EmailTemplate, EmailTemplateType, IdParam, UpdateEmailTemplateRequest} from "../../../../types.ts";
+import {useGetAccount} from "../../../../queries/useGetAccount.ts";
+import {useGetEmailTemplatesForOrganizer} from "../../../../queries/useGetEmailTemplates.ts";
+import {useGetDefaultEmailTemplates} from "../../../../queries/useGetDefaultEmailTemplates.ts";
+import {GET_ORGANIZER_SAMPLE_EMAIL_QUERY_KEY, useGetOrganizerSampleEmail} from "../../../../queries/useGetOrganizerSampleEmail.ts";
+import {useCreateEmailTemplateForOrganizer} from "../../../../mutations/useCreateEmailTemplate.ts";
+import {useUpdateEmailTemplateForOrganizer} from "../../../../mutations/useUpdateEmailTemplate.ts";
+import {useDeleteEmailTemplateForOrganizer} from "../../../../mutations/useDeleteEmailTemplate.ts";
+import {usePreviewEmailTemplateForOrganizer} from "../../../../mutations/usePreviewEmailTemplate.ts";
+import {useSendOrganizerTestEmail} from "../../../../mutations/useSendOrganizerTestEmail.ts";
+import {useIsCurrentUserAdmin} from "../../../../hooks/useIsCurrentUserAdmin.ts";
+import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
+import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
+import {EmailTemplateEditor} from "../../../common/EmailTemplateEditor";
+import {StripeConnectButton} from "../../../common/StripeConnectButton";
+import {SettingsCard, showServerErrors, Tag} from "../Settings/SettingsUi.tsx";
+import classes from "../Settings/Settings.module.scss";
 
 interface AutomaticEmail {
     type: EmailTemplateType;
@@ -70,7 +70,7 @@ const EmailFrame = ({html, title}: { html: string, title: string }) => {
  * « Courriels »: the automatic emails on the left, the selected one on the right exactly as it is sent
  * (sample buyer, latest event), with « Modifier » and « Envoyer un test » (sent to yourself).
  */
-export const EmailsTab = ({organizerId}: { organizerId: IdParam }) => {
+export const AutomaticEmails = ({organizerId}: { organizerId: IdParam }) => {
     const queryClient = useQueryClient();
     const {data: account, isFetched: isAccountFetched} = useGetAccount();
     const isAdmin = useIsCurrentUserAdmin();

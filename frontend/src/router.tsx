@@ -307,6 +307,13 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                path: "emails",
+                async lazy() {
+                    const Emails = await import("./components/routes/organizer/Emails");
+                    return { Component: Emails.default };
+                }
+            },
+            {
                 path: "events/:eventsState?",
                 async lazy() {
                     const Events = await import("./components/routes/organizer/Events");
