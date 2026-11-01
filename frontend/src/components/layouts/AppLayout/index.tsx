@@ -61,8 +61,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     const location = useLocation();
     const currentNavItem = findCurrentNavItem(navItems, location.pathname);
     // The page may add a detail to its name (« Paramètres / Organisation »).
+    const currentPageName = currentNavItem?.crumbLabel ?? currentNavItem?.label;
     const breadcrumbsWithCurrentPage = (detail: string | null) => currentNavItem
-        ? [...breadcrumbItems, {content: detail ? `${currentNavItem.label} / ${detail}` : currentNavItem.label}]
+        ? [...breadcrumbItems, {content: detail ? `${currentPageName} / ${detail}` : currentPageName}]
         : breadcrumbItems;
     const [collapsed, setCollapsed] = useState(false);
     const [topBarShadow, setTopBarShadow] = useState<boolean>(false);

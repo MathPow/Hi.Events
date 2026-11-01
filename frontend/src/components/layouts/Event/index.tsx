@@ -127,6 +127,7 @@ const EventLayout = () => {
         {
             link: 'settings',
             label: t`Event Settings`,
+            crumbLabel: t`Settings`,
             iconSrc: adminIcon('parametres'),
             tileIconSrc: adminIcon('parametres-22'),
             attention: needsDetails,

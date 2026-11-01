@@ -81,6 +81,26 @@
   }
 }
 
+// Same with « Enregistré » beside them: the buttons keep only their icons sooner.
+@container (max-width: 1000px) {
+  :global([data-save-status]) {
+    .shareButton,
+    .previewButton {
+      width: 3rem;
+      padding: 0 !important;
+
+      :global(.mantine-Button-section[data-position='left']) {
+        margin-inline-end: 0;
+      }
+
+      .longLabel,
+      .shortLabel {
+        display: none;
+      }
+    }
+  }
+}
+
 @container (max-width: 520px) {
   .statusButton :global(.mantine-Button-section[data-position='right']) {
     display: none;

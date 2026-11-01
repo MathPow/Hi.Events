@@ -166,3 +166,14 @@
     display: inline;
   }
 }
+
+// A narrower bar keeps the room for the breadcrumbs: « Enregistré » alone.
+@container (max-width: 1240px) {
+  .saveLabelLong {
+    display: none;
+  }
+
+  .saveLabelShort {
+    display: inline;
+  }
+}

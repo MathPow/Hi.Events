@@ -24,6 +24,8 @@ export interface NavItem {
     mobileTabLabel?: string;
     // Tabs follow the nav order unless given a place here.
     mobileTabOrder?: number;
+    // Shorter name in the breadcrumbs, where the event already says whose page it is.
+    crumbLabel?: string;
 }
 
 // The organizer (or event) at the top of the sidebar and of the phone menu.
