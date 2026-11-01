@@ -8,6 +8,7 @@ class GetOrganizerStatsRequestDTO
         public readonly int $organizerId,
         public readonly int $accountId,
         public ?string      $currencyCode = null,
+        public ?int         $periodDays = null,
     )
     {
     }

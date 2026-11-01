@@ -412,6 +412,13 @@ export interface OrganizerStats {
     total_views: number;
     total_refunded: number;
     all_organizers_currencies: string[];
+    // Set when the totals cover the last period_days days, with the same span just before.
+    period_days?: number | null;
+    previous_total_products_sold?: number | null;
+    previous_total_attendees_registered?: number | null;
+    previous_total_orders?: number | null;
+    previous_total_gross_sales?: number | null;
+    previous_total_tax?: number | null;
 }
 
 export type OrganizerAchievementKey =

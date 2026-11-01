@@ -28,6 +28,7 @@ class GetOrganizerStatsHandler
             organizerId: $statsRequestDTO->organizerId,
             accountId: $statsRequestDTO->accountId,
             currencyCode: $statsRequestDTO->currencyCode ?? $organizer->getCurrency(),
+            periodDays: $statsRequestDTO->periodDays,
         );
     }
 }

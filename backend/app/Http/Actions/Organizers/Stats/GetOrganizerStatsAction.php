@@ -21,10 +21,15 @@ class GetOrganizerStatsAction extends BaseAction
     {
         $this->isActionAuthorized($organizerId, OrganizerDomainObject::class);
 
+        $validated = $request->validate([
+            'period_days' => ['nullable', 'integer', 'min:1', 'max:3650'],
+        ]);
+
         $organizerStats = $this->getOrganizerStatsHandler->handle(new GetOrganizerStatsRequestDTO(
             organizerId: $organizerId,
             accountId: $this->getAuthenticatedAccountId(),
             currencyCode: $request->get('currency_code'),
+            periodDays: isset($validated['period_days']) ? (int)$validated['period_days'] : null,
         ));
 
         return $this->jsonResponse(

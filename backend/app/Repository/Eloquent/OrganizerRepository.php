@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HiEvents\Repository\Eloquent;
 
+use Carbon\Carbon;
 use HiEvents\DomainObjects\Generated\OrganizerDomainObjectAbstract;
 use HiEvents\DomainObjects\Generated\OrganizerSettingDomainObjectAbstract;
 use HiEvents\DomainObjects\OrganizerDomainObject;
@@ -56,8 +57,17 @@ class OrganizerRepository extends BaseRepository implements OrganizerRepositoryI
             ->count();
     }
 
-    public function getOrganizerStats(int $organizerId, int $accountId, string $currencyCode): OrganizerStatsResponseDTO
+    public function getOrganizerStats(
+        int    $organizerId,
+        int    $accountId,
+        string $currencyCode,
+        ?int   $periodDays = null,
+    ): OrganizerStatsResponseDTO
     {
+        if ($periodDays !== null) {
+            return $this->getOrganizerStatsForPeriod($organizerId, $accountId, $currencyCode, $periodDays);
+        }
+
         $totalsQuery = <<<SQL
         SELECT
             SUM(es.products_sold) AS total_products_sold,
@@ -82,18 +92,6 @@ class OrganizerRepository extends BaseRepository implements OrganizerRepositoryI
             'currencyCode' => $currencyCode,
         ]);
 
-        $allOrganizersCurrenciesQuery = <<<SQL
-        SELECT DISTINCT e.currency FROM events e
-        WHERE e.organizer_id = :organizerId
-          AND e.account_id = :accountId
-          AND e.deleted_at IS NULL;
-SQL;
-
-        $allOrganizersCurrencies = $this->db->select($allOrganizersCurrenciesQuery, [
-            'organizerId' => $organizerId,
-            'accountId' => $accountId,
-        ]);
-
         return new OrganizerStatsResponseDTO(
             total_products_sold: (int)($totalsResult->total_products_sold ?? 0),
             total_attendees_registered: (int)($totalsResult->attendees_registered ?? 0),
@@ -104,10 +102,90 @@ SQL;
             total_views: (int)($totalsResult->total_views ?? 0),
             total_refunded: (float)($totalsResult->total_refunded ?? 0),
             currency_code: $currencyCode,
-            all_organizers_currencies: array_map(
-                static fn($currency) => $currency->currency,
-                $allOrganizersCurrencies
-            ),
+            all_organizers_currencies: $this->getOrganizerCurrencies($organizerId, $accountId),
+        );
+    }
+
+    private function getOrganizerStatsForPeriod(
+        int    $organizerId,
+        int    $accountId,
+        string $currencyCode,
+        int    $periodDays,
+    ): OrganizerStatsResponseDTO
+    {
+        $today = Carbon::today();
+        $currentStart = $today->copy()->subDays($periodDays - 1);
+        $previousStart = $currentStart->copy()->subDays($periodDays);
+
+        $query = <<<SQL
+        SELECT
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.products_sold ELSE 0 END) AS products_sold,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.attendees_registered ELSE 0 END) AS attendees_registered,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.orders_created ELSE 0 END) AS orders_created,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.sales_total_gross ELSE 0 END) AS sales_total_gross,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.total_tax ELSE 0 END) AS total_tax,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.total_fee ELSE 0 END) AS total_fee,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.total_views ELSE 0 END) AS total_views,
+            SUM(CASE WHEN eds.date >= :currentStart THEN eds.total_refunded ELSE 0 END) AS total_refunded,
+            SUM(CASE WHEN eds.date < :currentStart THEN eds.products_sold ELSE 0 END) AS previous_products_sold,
+            SUM(CASE WHEN eds.date < :currentStart THEN eds.attendees_registered ELSE 0 END) AS previous_attendees_registered,
+            SUM(CASE WHEN eds.date < :currentStart THEN eds.orders_created ELSE 0 END) AS previous_orders_created,
+            SUM(CASE WHEN eds.date < :currentStart THEN eds.sales_total_gross ELSE 0 END) AS previous_sales_total_gross,
+            SUM(CASE WHEN eds.date < :currentStart THEN eds.total_tax ELSE 0 END) AS previous_total_tax
+        FROM event_daily_statistics eds
+        JOIN events e ON e.id = eds.event_id
+        WHERE e.organizer_id = :organizerId
+          AND e.account_id = :accountId
+          AND e.currency = :currencyCode
+          AND eds.deleted_at IS NULL
+          AND eds.date >= :previousStart
+          AND eds.date <= :today;
+    SQL;
+
+        $result = $this->db->selectOne($query, [
+            'organizerId' => $organizerId,
+            'accountId' => $accountId,
+            'currencyCode' => $currencyCode,
+            'currentStart' => $currentStart->toDateString(),
+            'previousStart' => $previousStart->toDateString(),
+            'today' => $today->toDateString(),
+        ]);
+
+        return new OrganizerStatsResponseDTO(
+            total_products_sold: (int)($result->products_sold ?? 0),
+            total_attendees_registered: (int)($result->attendees_registered ?? 0),
+            total_orders: (int)($result->orders_created ?? 0),
+            total_gross_sales: (float)($result->sales_total_gross ?? 0),
+            total_fees: (float)($result->total_fee ?? 0),
+            total_tax: (float)($result->total_tax ?? 0),
+            total_views: (int)($result->total_views ?? 0),
+            total_refunded: (float)($result->total_refunded ?? 0),
+            currency_code: $currencyCode,
+            all_organizers_currencies: $this->getOrganizerCurrencies($organizerId, $accountId),
+            period_days: $periodDays,
+            previous_total_products_sold: (int)($result->previous_products_sold ?? 0),
+            previous_total_attendees_registered: (int)($result->previous_attendees_registered ?? 0),
+            previous_total_orders: (int)($result->previous_orders_created ?? 0),
+            previous_total_gross_sales: (float)($result->previous_sales_total_gross ?? 0),
+            previous_total_tax: (float)($result->previous_total_tax ?? 0),
+        );
+    }
+
+    private function getOrganizerCurrencies(int $organizerId, int $accountId): array
+    {
+        $query = <<<SQL
+        SELECT DISTINCT e.currency FROM events e
+        WHERE e.organizer_id = :organizerId
+          AND e.account_id = :accountId
+          AND e.deleted_at IS NULL;
+SQL;
+
+        return array_map(
+            static fn($currency) => $currency->currency,
+            $this->db->select($query, [
+                'organizerId' => $organizerId,
+                'accountId' => $accountId,
+            ])
         );
     }
 

@@ -86,8 +86,9 @@ export const organizerClient = {
         return response.data;
     },
 
-    getOrganizerStats: async (organizerId: IdParam, currencyCode: string) => {
-        const response = await api.get<GenericDataResponse<OrganizerStats>>('organizers/' + organizerId + '/stats?currency_code=' + currencyCode);
+    getOrganizerStats: async (organizerId: IdParam, currencyCode: string, periodDays?: number | null) => {
+        const period = periodDays ? '&period_days=' + periodDays : '';
+        const response = await api.get<GenericDataResponse<OrganizerStats>>('organizers/' + organizerId + '/stats?currency_code=' + currencyCode + period);
         return response.data;
     },
 

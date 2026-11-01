@@ -14,7 +14,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 interface OrganizerRepositoryInterface extends RepositoryInterface
 {
-    public function getOrganizerStats(int $organizerId, int $accountId, string $currencyCode): OrganizerStatsResponseDTO;
+    public function getOrganizerStats(
+        int    $organizerId,
+        int    $accountId,
+        string $currencyCode,
+        ?int   $periodDays = null,
+    ): OrganizerStatsResponseDTO;
 
     public function getAchievementMetrics(int $organizerId, string $currencyCode): OrganizerAchievementMetricsDTO;
 

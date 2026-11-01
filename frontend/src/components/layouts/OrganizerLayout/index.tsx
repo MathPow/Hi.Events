@@ -1,9 +1,6 @@
 import {
     IconArrowsHorizontal,
-    IconBrandStripe,
-    IconCalendarPlus,
     IconChevronRight,
-    IconCreditCard,
     IconExternalLink,
     IconEyeOff,
     IconInbox,
@@ -31,8 +28,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { SwitchOrganizerModal } from "../../modals/SwitchOrganizerModal";
 import { CreateOrganizerModal } from "../../modals/CreateOrganizerModal";
 import { useGetOrganizers } from "../../../queries/useGetOrganizers.ts";
-import { useGetAccount } from "../../../queries/useGetAccount.ts";
-import { StripeConnectButton } from "../../common/StripeConnectButton";
+import { useDashboardAttentionCount } from "../../routes/organizer/OrganizerDashboard/dashboardData.ts";
 import { ShareModal } from "../../modals/ShareModal";
 import { organizerHomepageUrl } from "../../../utilites/urlHelper";
 import { useUpdateOrganizerStatus } from "../../../mutations/useUpdateOrganizerStatus.ts";
@@ -63,7 +59,6 @@ const OrganizerLayout = () => {
     }] = useDisclosure(false);
     const { data: organizerResposne } = useGetOrganizers();
     const organizers = organizerResposne?.data;
-    const { data: account } = useGetAccount();
     const resendEmailConfirmationMutation = useResendEmailConfirmation();
     const [emailConfirmationResent, setEmailConfirmationResent] = useState(false);
     const { data: me } = useGetMe();
@@ -74,12 +69,13 @@ const OrganizerLayout = () => {
     const { data: achievements } = useGetOrganizerAchievements(organizerId);
     const earnedAchievements = achievements?.filter((achievement) => achievement.earned_at).length;
     const statusToggleMutation = useUpdateOrganizerStatus();
-    const isDashboard = /^\/manage\/organizer\/[^/]+(\/dashboard)?\/?$/.test(location.pathname);
     const navigate = useNavigate();
 
     // Les messages « Contacter » non lus: la pastille du menu, et une alerte quand un nouveau
     // arrive pendant que le tableau de bord est ouvert (hors de la page des messages).
     const { data: unreadMessages } = useGetOrganizerUnreadMessagesCount(organizerId);
+    // Notifications of the dashboard still to handle: unread messages and payments to confirm.
+    const dashboardAttention = useDashboardAttentionCount(organizerId);
     const previousUnreadMessages = useRef<number | undefined>(undefined);
     const isMessagesPage = location.pathname.endsWith('/messages');
     useEffect(() => {
@@ -120,6 +116,8 @@ const OrganizerLayout = () => {
             link: 'dashboard',
             label: t`Dashboard`,
             iconSrc: adminIcon('accueil'),
+            badge: dashboardAttention > 0 ? String(dashboardAttention) : undefined,
+            attention: dashboardAttention > 0,
             mobileTab: true,
             mobileTabLabel: t`Home`,
             mobileTabOrder: 0,
@@ -154,8 +152,6 @@ const OrganizerLayout = () => {
             label: t`Messages`,
             iconSrc: adminIcon('messages'),
             tileIconSrc: adminIcon('messages-22'),
-            badge: unreadMessages ? String(unreadMessages) : undefined,
-            attention: !!unreadMessages,
         },
 
         { label: t`Customize` },
@@ -296,22 +292,6 @@ const OrganizerLayout = () => {
         },
     ];
 
-    if (account && !account?.stripe_connect_setup_complete) {
-        callouts.unshift({
-            icon: <IconBrandStripe size={20} />,
-            heading: t`Connect Stripe`,
-            description: t`Connect your Stripe account to accept payments for tickets and products.`,
-            storageKey: `stripe-callout-dismissed`,
-            customButton:
-                <StripeConnectButton
-                    fullWidth
-                    variant="white"
-                    buttonIcon={<IconCreditCard size={16} />}
-                    buttonText={t`Connect Stripe`}
-                    className={classes.calloutButton}
-                />
-        });
-    }
 
     return (
         <>
@@ -339,11 +319,6 @@ const OrganizerLayout = () => {
                         {t`Create Event`}
                     </Button>
                 )}
-                mobilePrimaryAction={isDashboard ? {
-                    label: t`Create Event`,
-                    icon: IconCalendarPlus,
-                    onClick: () => setShowCreateEventModal(true),
-                } : undefined}
                 mobileMenuItems={organizer ? [{
                     link: publicPageUrl,
                     external: true,

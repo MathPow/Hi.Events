@@ -18,6 +18,13 @@ class OrganizerStatsResponseDTO
         public string $currency_code,
 
         public array $all_organizers_currencies = [],
+
+        public ?int   $period_days = null,
+        public ?int   $previous_total_products_sold = null,
+        public ?int   $previous_total_attendees_registered = null,
+        public ?int   $previous_total_orders = null,
+        public ?float $previous_total_gross_sales = null,
+        public ?float $previous_total_tax = null,
     )
     {
     }
