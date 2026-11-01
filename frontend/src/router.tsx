@@ -93,10 +93,11 @@ const routes: RouteObject[] = [
                 },
             },
             {
-                path: "account",
+                // Les parametres du compte sont des onglets de « Parametres » de l'organisateur.
+                path: "account/:section?",
                 async lazy() {
-                    const ManageAccount = await import("./components/routes/account/ManageAccount");
-                    return { Component: ManageAccount.default };
+                    const AccountSettingsRedirect = await import("./components/routes/account/AccountSettingsRedirect");
+                    return { Component: AccountSettingsRedirect.default };
                 }
             },
             {
@@ -234,65 +235,13 @@ const routes: RouteObject[] = [
         ]
     },
     {
-        path: "account",
+        // Les anciens « Parametres du compte » (/account/payment...) menent aux onglets de « Parametres ».
+        path: "account/:section?",
         errorElement: <ErrorPage />,
         async lazy() {
-            const DefaultLayout = await import("./components/layouts/DefaultLayout");
-            return { Component: DefaultLayout.default };
+            const AccountSettingsRedirect = await import("./components/routes/account/AccountSettingsRedirect");
+            return { Component: AccountSettingsRedirect.default };
         },
-        children: [
-            {
-                path: "",
-                async lazy() {
-                    const ManageAccount = await import("./components/routes/account/ManageAccount");
-                    return { Component: ManageAccount.default };
-                },
-                children: [
-                    {
-                        path: "settings",
-                        async lazy() {
-                            const AccountSettings = await import("./components/routes/account/ManageAccount/sections/AccountSettings");
-                            return { Component: AccountSettings.default };
-                        }
-                    },
-                    {
-                        path: "taxes-and-fees",
-                        async lazy() {
-                            const TaxSettings = await import("./components/routes/account/ManageAccount/sections/TaxSettings");
-                            return { Component: TaxSettings.default };
-                        }
-                    },
-                    {
-                        path: "event-defaults",
-                        async lazy() {
-                            const EventDefaultsSettings = await import("./components/routes/account/ManageAccount/sections/EventDefaultsSettings");
-                            return { Component: EventDefaultsSettings.default };
-                        }
-                    },
-                    {
-                        path: "api-tokens",
-                        async lazy() {
-                            const ApiTokens = await import("./components/routes/account/ManageAccount/sections/ApiTokens");
-                            return { Component: ApiTokens.default };
-                        }
-                    },
-                    {
-                        path: "users",
-                        async lazy() {
-                            const Users = await import("./components/routes/account/ManageAccount/sections/Users");
-                            return { Component: Users.default };
-                        }
-                    },
-                    {
-                        path: "payment",
-                        async lazy() {
-                            const PaymentSettings = await import("./components/routes/account/ManageAccount/sections/PaymentSettings");
-                            return { Component: PaymentSettings.default };
-                        }
-                    },
-                ]
-            },
-        ]
     },
     {
         path: "/manage/organizer/:organizerId?",
@@ -345,7 +294,7 @@ const routes: RouteObject[] = [
                 }
             },
             {
-                path: "settings",
+                path: "settings/:tab?",
                 async lazy() {
                     const Settings = await import("./components/routes/organizer/Settings");
                     return { Component: Settings.default };

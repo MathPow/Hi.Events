@@ -23,8 +23,8 @@ export const LiquidTokenControl = ({templateType, excludeTokens = []}: LiquidTok
     if (isLoading || !tokensData?.tokens) {
         return (
             <RichTextEditor.Control
-                title={t`Loading tokens...`}
-                aria-label={t`Loading tokens...`}
+                title={t`Loading...`}
+                aria-label={t`Loading...`}
                 disabled
             >
                 <IconBraces size={16}/>
@@ -40,8 +40,8 @@ export const LiquidTokenControl = ({templateType, excludeTokens = []}: LiquidTok
         <Menu shadow="md" width={380} position="bottom-start" withinPortal>
             <Menu.Target>
                 <RichTextEditor.Control
-                    title={t`Insert Liquid Token`}
-                    aria-label={t`Insert Liquid Token`}
+                    title={t`Insert automatic info`}
+                    aria-label={t`Insert automatic info`}
                 >
                     <IconBraces size={16}/>
                 </RichTextEditor.Control>
@@ -49,7 +49,7 @@ export const LiquidTokenControl = ({templateType, excludeTokens = []}: LiquidTok
 
             <Menu.Dropdown>
                 <Menu.Label>
-                    <Trans>Available Tokens</Trans>
+                    <Trans>Info added automatically</Trans>
                 </Menu.Label>
 
                 <ScrollArea h={400}>

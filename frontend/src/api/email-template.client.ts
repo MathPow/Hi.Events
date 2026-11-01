@@ -9,7 +9,8 @@ import {
     GenericDataResponse,
     IdParam,
     EmailTemplateType,
-    DefaultEmailTemplate
+    DefaultEmailTemplate,
+    SampleEmail
 } from "../types";
 
 export const emailTemplateClient = {
@@ -44,6 +45,18 @@ export const emailTemplateClient = {
     previewForOrganizer: async (organizerId: IdParam, previewData: PreviewEmailTemplateRequest) => {
         const response = await api.post<EmailTemplatePreview>(`organizers/${organizerId}/email-templates/preview`, previewData);
         return response.data;
+    },
+
+    // The organizer's automatic email exactly as it is sent (its version or the default one), with sample data.
+    getSampleForOrganizer: async (organizerId: IdParam, templateType: EmailTemplateType) => {
+        const response = await api.get<GenericDataResponse<SampleEmail>>(`organizers/${organizerId}/email-templates/${templateType}/sample`);
+        return response.data.data;
+    },
+
+    // Sends that email to the person asking.
+    sendTestForOrganizer: async (organizerId: IdParam, templateType: EmailTemplateType) => {
+        const response = await api.post<GenericDataResponse<{ sent_to: string }>>(`organizers/${organizerId}/email-templates/${templateType}/test`);
+        return response.data.data;
     },
 
     // Event-level templates

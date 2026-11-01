@@ -26,9 +26,8 @@ const stripe: HelpGuide = {
         {
             ol: [
                 'Connectez-vous à [billets.dehorsqc.com](/auth/login) avec votre compte organisateur.',
-                'Ouvrez **Paramètres du compte** (menu de votre profil).',
-                "Allez dans l'onglet [Paiement et abonnement](/account/payment).",
-                'Cliquez sur **Connectez-vous avec Stripe**. Vous êtes redirigé vers Stripe.',
+                "Ouvrez **Paramètres** (menu de gauche), puis l'onglet [Paiements](/account/payment).",
+                'Dans **Compte Stripe**, cliquez sur **Connecter Stripe**. Vous êtes redirigé vers Stripe.',
             ],
         },
         {p: 'Si vous avez déjà un compte Stripe, connectez-vous avec. Sinon, Stripe en crée un pour vous dans la même démarche.'},
@@ -45,11 +44,11 @@ const stripe: HelpGuide = {
                 '**Libellé de relevé** : le nom que vos clients verront sur leur relevé de carte (ex. le nom de votre festival)',
             ],
         },
-        {p: 'Quand Stripe confirme, vous revenez automatiquement sur Billetterie Dehors. Si vous quittez en cours de route, revenez dans **Paiement et abonnement** et cliquez sur **Terminer la configuration Stripe**.'},
+        {p: 'Quand Stripe confirme, vous revenez automatiquement sur Billetterie Dehors. Si vous quittez en cours de route, revenez dans **Paramètres → Paiements** et cliquez sur **Terminer la configuration Stripe**.'},
         {h2: 'Étape 3 : vérifier que tout fonctionne'},
         {
             ul: [
-                'Dans **Paramètres du compte → Paiement et abonnement**, le statut doit afficher **Connecté à Stripe**.',
+                'Dans **Paramètres → Paiements**, la section **Compte Stripe** doit afficher **Connecté à Stripe**.',
                 "Dans votre événement, ouvrez **Paramètres de l'événement → Paiement et facturation**. Sous **Méthodes de paiement**, la case **Stripe** doit être cochée (elle l'est par défaut). Cliquez sur **Sauvegarder** si vous l'avez modifiée.",
                 'Faites un achat test avec votre propre carte sur un billet à petit prix, puis remboursez-le depuis la commande.',
             ],
@@ -204,7 +203,7 @@ export const fr: HelpContent = {
         {
             category: 'Paiements',
             question: 'Combien coûte Billetterie Dehors ?',
-            answer: "2,5 % par billet vendu, plus les frais de paiement de Stripe (2,9 % + 0,30 $). Pas d'abonnement, pas de frais cachés, et aucuns frais si votre événement est gratuit.\n\nVous préférez que l'acheteur les paie ? Dans **Paramètres de l'événement**, la section **Frais de plateforme** permet de **Répercuter les frais sur l'acheteur**, et **Paiement et facturation** de **Refiler les frais de traitement à l'acheteur**.",
+            answer: "2,5 % par billet vendu, plus les frais de paiement de Stripe (2,9 % + 0,30 $). Pas d'abonnement, pas de frais cachés, et aucuns frais si votre événement est gratuit.\n\nVous préférez que l'acheteur les paie ? Choisissez **Répercuter sur l'acheteur** dans **Paramètres → Paiements** (section **Frais de la billetterie**) : vos nouveaux événements le font d'emblée. Pour un événement déjà créé, dans **Paramètres de l'événement**, la section **Frais de plateforme** permet de **Répercuter les frais sur l'acheteur**, et **Paiement et facturation** de **Refiler les frais de traitement à l'acheteur**.",
         },
         {
             category: 'Paiements',
@@ -249,7 +248,7 @@ export const fr: HelpContent = {
         {
             category: 'Compte',
             question: 'Plusieurs personnes peuvent-elles gérer la billetterie ?',
-            answer: "Oui. Dans le menu de votre profil, ouvrez **Gestion des utilisateurs** et cliquez sur **Inviter un utilisateur**. Un **Administrateur** a accès à tout ; un **Organisateur** gère les événements et les billets.",
+            answer: "Oui. Ouvrez **Paramètres → Équipe** (ou **Équipe** dans le menu de votre profil) et cliquez sur **Inviter un utilisateur**. Un **Administrateur** a accès à tout ; un **Organisateur** gère les événements et les billets.",
         },
         {
             category: 'Compte',

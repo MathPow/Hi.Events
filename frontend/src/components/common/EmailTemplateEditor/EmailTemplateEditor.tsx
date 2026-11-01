@@ -109,7 +109,7 @@ export const EmailTemplateEditor = ({
                                 )}
                             </Text>
                             <Text size="sm" c="dimmed">
-                                <Trans>Customize your email template using Liquid templating</Trans>
+                                <Trans>Change the text of this email. The automatic info is filled in when it is sent.</Trans>
                             </Text>
                         </div>
                         {onClose && (
@@ -147,7 +147,7 @@ export const EmailTemplateEditor = ({
                                     onChange={(value: string) => form.setFieldValue('body', value)}
                                     error={form.errors.body}
                                     label={<Trans>Email Body</Trans>}
-                                    description={<Trans>Use <a href={'https://shopify.github.io/liquid/'} target={'_blank'}>Liquid templating</a> to personalize your emails</Trans>}
+                                    description={t`Add automatic info (first name, event, date…) with the last button of the toolbar.`}
                                     editorType="full"
                                     allowTextStyling
                                     additionalToolbarControls={

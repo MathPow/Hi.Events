@@ -10,7 +10,8 @@ import {
     IconUsers,
 } from "@tabler/icons-react";
 import {useGetMe} from "../../../queries/useGetMe.ts";
-import {NavLink} from "react-router";
+import {NavLink, useParams} from "react-router";
+import {settingsTabPath} from "../../routes/organizer/Settings/settingsTabs.ts";
 import {t} from "@lingui/macro";
 import {authClient} from "../../../api/auth.client.ts";
 import {useDisclosure} from "@mantine/hooks";
@@ -35,6 +36,8 @@ export const logout = async () => {
 // The account links (profile, account, logout…), shared by the avatar menu and the nav's account card.
 export const useAccountMenu = () => {
     const {data: me} = useGetMe();
+    // The settings of the organizer being viewed; elsewhere /account/... opens the last one's.
+    const {organizerId} = useParams();
     const [aboutModalOpen, {open: openAboutModal, close: closeAboutModal}] = useDisclosure(false);
     const [createOrganizerModalOpen, {
         open: openCreateOrganizerModal,
@@ -48,17 +51,17 @@ export const useAccountMenu = () => {
             link: "/manage/profile",
         },
         {
-            label: t`Account Settings`,
+            label: t`Settings`,
             icon: IconSettingsCog,
-            link: `/account/settings`,
+            link: organizerId ? settingsTabPath(organizerId, 'organization') : '/account',
         },
     ];
 
     if (me?.role === 'ADMIN' || me?.role === 'SUPERADMIN') {
         links.push({
-            label: t`User Management`,
+            label: t`Team`,
             icon: IconUsers,
-            link: `/account/users`
+            link: organizerId ? settingsTabPath(organizerId, 'team') : '/account/users',
         })
     }
 

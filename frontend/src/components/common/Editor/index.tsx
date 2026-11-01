@@ -5,7 +5,7 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {InputDescription, InputError, InputLabel, MantineFontSize} from "@mantine/core";
 import classes from "./Editor.module.scss";
 import classNames from "classnames";
@@ -17,6 +17,15 @@ import {Extension} from '@tiptap/core';
 const COLORS = ['#25262b', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6',
     '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14'];
 
+// The icons of the « Paramètres » mockup (public/interface/admin/parametres).
+const minimalIcon = (name: string) => () => <img src={`/interface/admin/parametres/${name}.svg`} alt=""/>;
+const MINIMAL_ICONS = {
+    bold: minimalIcon('gras'),
+    italic: minimalIcon('italique'),
+    link: minimalIcon('lien'),
+    list: minimalIcon('liste'),
+};
+
 interface EditorProps {
     onChange: (value: string) => void;
     value: string;
@@ -25,7 +34,10 @@ interface EditorProps {
     required?: boolean;
     className?: string;
     error?: string | React.ReactNode;
-    editorType?: 'full' | 'simple';
+    // 'minimal': bold, italic, link and list only (organizer description).
+    editorType?: 'full' | 'simple' | 'minimal';
+    // When the text loses the focus (fields that save themselves).
+    onBlur?: () => void;
     maxLength?: number;
     size?: MantineFontSize;
     additionalExtensions?: Extension[];
@@ -50,8 +62,11 @@ export const Editor = ({
                            additionalExtensions = [],
                            additionalToolbarControls,
                            allowTextStyling = false,
+                           onBlur,
                        }: EditorProps) => {
     const [charError, setCharError] = useState<string | null | React.ReactNode>(null);
+    const onBlurRef = useRef(onBlur);
+    onBlurRef.current = onBlur;
 
     const editor = useEditor({
         extensions: [
@@ -73,6 +88,7 @@ export const Editor = ({
             ...(allowTextStyling ? [TextAlign.configure({types: ['heading', 'paragraph']}), TextStyle, Color] : []),
             ...additionalExtensions
         ],
+        onBlur: () => onBlurRef.current?.(),
         onUpdate: ({editor}) => {
             const html = editor.getHTML();
             const htmlLength = html.length;
@@ -152,6 +168,15 @@ export const Editor = ({
                                 <InsertImageControl/>
                             </RichTextEditor.ControlsGroup>
                         </>
+                    )}
+
+                    {editorType === 'minimal' && (
+                        <RichTextEditor.ControlsGroup>
+                            <RichTextEditor.Bold icon={MINIMAL_ICONS.bold}/>
+                            <RichTextEditor.Italic icon={MINIMAL_ICONS.italic}/>
+                            <RichTextEditor.Link icon={MINIMAL_ICONS.link}/>
+                            <RichTextEditor.BulletList icon={MINIMAL_ICONS.list}/>
+                        </RichTextEditor.ControlsGroup>
                     )}
 
                     {editorType === 'simple' && (

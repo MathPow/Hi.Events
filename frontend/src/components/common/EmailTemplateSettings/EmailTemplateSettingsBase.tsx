@@ -141,8 +141,8 @@ export const EmailTemplateSettingsBase = ({
                         // Check if body field has syntax error
                         if (errors.body) {
                             // Set form error for the body field and show specific message
-                            editorForm.setFieldError('body', t`Invalid Liquid syntax. Please correct it and try again.`);
-                            showError(t`The template body contains invalid Liquid syntax. Please correct it and try again.`);
+                            editorForm.setFieldError('body', t`Some automatic info is badly written. Please correct it and try again.`);
+                            showError(t`Some automatic info is badly written. Please correct it and try again.`);
                         } else {
                             // Handle other field errors normally
                             handleFormError(editorForm, error, t`Failed to save template`);
@@ -172,8 +172,8 @@ export const EmailTemplateSettingsBase = ({
                         // Check if body field has syntax error
                         if (errors.body) {
                             // Set form error for the body field and show specific message
-                            editorForm.setFieldError('body', t`Invalid Liquid syntax. Please correct it and try again.`);
-                            showError(t`The template body contains invalid Liquid syntax. Please correct it and try again.`);
+                            editorForm.setFieldError('body', t`Some automatic info is badly written. Please correct it and try again.`);
+                            showError(t`Some automatic info is badly written. Please correct it and try again.`);
                         } else {
                             // Handle other field errors normally
                             handleFormError(editorForm, error, t`Failed to save template`);
@@ -310,7 +310,7 @@ export const EmailTemplateSettingsBase = ({
         if (contextType === 'event') {
             return t`Create custom email templates for this event that override the organizer defaults`;
         }
-        return t`Customize the emails sent to your customers using Liquid templating. These templates will be used as defaults for all events in your organization.`;
+        return t`Customize the emails sent to your customers. These templates will be used as defaults for all events in your organization.`;
     };
 
     const getAlertMessage = () => {

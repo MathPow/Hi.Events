@@ -1,0 +1,1197 @@
+@use "../../../../styles/mixins";
+
+// Figma « Admin · Paramètres » (Organisation, Paiements, Courriels — Desktop 1440 / Mobile 402).
+$card: var(--dehors-carte);
+$ink: var(--dehors-brun);
+$cream-text: #fbf2e3;
+$accent: var(--dehors-orange);
+$accent-dark: #c36a5c;
+$accent-soft: #f7dccd;
+$row: #fff6ed;
+$track: #efe3d6;
+$switch-off: #d9cbbe;
+$shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+$danger: #c8442f;
+$danger-ink: #a63a2b;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 1400px;
+  color: $ink;
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 3.25rem;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 2.125rem;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.125rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+// Onglets collants: une barre-pilule en desktop, des pastilles qui defilent de cote en mobile.
+// Le fond creme autour masque ce qui defile dessous; top negatif: le collage se mesure depuis le
+// padding de la zone qui defile (AppLayout .main).
+.tabsSticky {
+  position: sticky;
+  top: -1rem;
+  z-index: 5;
+  margin: -1rem -0.75rem -0.5rem;
+  padding: 1rem 0.75rem 0.5rem;
+  background: var(--dehors-creme);
+
+  @include mixins.respond-below(md) {
+    top: -0.75rem;
+    margin: -0.75rem -1rem -0.25rem;
+    padding: 0.75rem 0 0.25rem;
+  }
+}
+
+.tabsBar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.375rem;
+  border-radius: 999px;
+  background: $card;
+  box-shadow: $shadow;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 0.375rem;
+    padding: 0 1rem;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+}
+
+.tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: $ink;
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover:not(.tabActive) {
+    background: $row;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 2.5rem;
+    border: 1.5px solid $ink;
+    font-size: 0.9375rem;
+  }
+}
+
+.tabActive {
+  background: $ink;
+  color: $cream-text;
+
+  @include mixins.respond-below(md) {
+    border-color: $ink;
+  }
+}
+
+// Mise en page bento: sections pleine largeur ou demi-largeur.
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 1.5rem;
+  align-items: stretch;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+// Une section
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  min-width: 0;
+  padding: 1.75rem;
+  border-radius: 2rem;
+  background: $card;
+  box-shadow: $shadow;
+
+  @include mixins.respond-below(md) {
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+  }
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.cardHeadText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.cardSubtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Champs
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Nom et courriel a gauche, telephone et site web a droite; dans cet ordre en mobile.
+.fieldsColumns {
+  @include mixins.respond-above(md) {
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+  }
+}
+
+.fieldsSpan {
+  grid-column: 1 / -1;
+}
+
+.field {
+  margin: 0;
+
+  :global(.mantine-InputWrapper-label) {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  :global(.mantine-InputWrapper-description) {
+    margin: -0.25rem 0 0.5rem;
+    color: $ink;
+    font-size: 0.8125rem;
+  }
+
+  :global(.mantine-Input-input:not(textarea)) {
+    height: 3.5rem;
+    padding-inline: 1.125rem;
+    font-size: 1rem;
+  }
+
+  :global(textarea.mantine-Input-input) {
+    padding: 0.875rem 1.125rem;
+    font-size: 1rem;
+  }
+
+  :global(.mantine-Input-section[data-position='right']) {
+    margin-right: 0.5rem;
+  }
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.softHint {
+  margin: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+// La description: l'editeur habille comme un champ, sa barre de 4 boutons dedans.
+.description.description {
+  margin: 0;
+
+  :global(.mantine-InputLabel-root) {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  :global(.mantine-RichTextEditor-root) {
+    border: none;
+    border-radius: 1rem;
+    background: var(--dehors-champ);
+  }
+
+  :global(.mantine-RichTextEditor-toolbar) {
+    position: static;
+    gap: 0.25rem;
+    padding: 1rem 1rem 0;
+    border: none;
+    background: transparent;
+  }
+
+  :global(.mantine-RichTextEditor-controlsGroup) {
+    gap: 0.25rem;
+  }
+
+  :global(.mantine-RichTextEditor-control) {
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    border: none;
+    border-radius: 0.5rem !important;
+    background: $card;
+  }
+
+  :global(.mantine-RichTextEditor-control[data-active]) {
+    background: $accent-soft;
+    outline: 1.5px solid $ink;
+  }
+
+  :global(.mantine-RichTextEditor-content) {
+    min-height: 3.5rem;
+    background: transparent;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  :global(.mantine-RichTextEditor-content .ProseMirror) {
+    padding: 0.625rem 1rem 1rem;
+  }
+}
+
+// Choix en pastilles (« Pour chaque billet » / « Par commande »)
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 2.5rem;
+  padding: 0 1.125rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+  background: none;
+  color: $ink;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &[aria-checked='true'] {
+    background: $ink;
+    color: $cream-text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.separator {
+  height: 1px;
+  margin: 0;
+  border: none;
+  background: $ink;
+}
+
+// Une option a interrupteur
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toggleText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.toggleLabel {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.toggleHint {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.switch {
+  --switch-height: 1.75rem;
+  --switch-width: 3rem;
+  --switch-thumb-size: 1.375rem;
+  --switch-track-label-padding: 0.1875rem;
+  --switch-color: #{$ink};
+  --switch-thumb-bg: #{$card};
+  flex-shrink: 0;
+
+  :global(.mantine-Switch-track) {
+    --switch-bg: #{$switch-off};
+    border: none;
+    cursor: pointer;
+  }
+
+  :global(.mantine-Switch-input:checked + .mantine-Switch-track) {
+    --switch-bg: #{$ink};
+  }
+
+  :global(.mantine-Switch-thumb) {
+    border: none;
+  }
+}
+
+// Etiquettes
+.tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  flex-shrink: 0;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.tagGreen {
+  background: #ddeed8;
+  color: #2f6b3a;
+}
+
+.tagYellow {
+  background: #fbe7b5;
+  color: #7a5200;
+}
+
+.tagNeutral {
+  background: #ede6dd;
+  color: #6e625a;
+}
+
+.tagInk {
+  background: $ink;
+  color: $cream-text;
+}
+
+// Boutons
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: $accent-dark;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+    text-decoration: none;
+  }
+}
+
+.inkButton:global(.mantine-Button-root) {
+  height: 3rem;
+  padding: 0 1.375rem;
+  border: none;
+  border-radius: 1rem;
+  background: $ink;
+  color: $cream-text;
+  font-size: 1.125rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: #4a3a33;
+  }
+}
+
+.outlineButton:global(.mantine-Button-root) {
+  height: 2.75rem;
+  padding: 0 1.375rem;
+  border: 2px solid $ink;
+  border-radius: 1rem;
+  background: none;
+  color: $ink;
+  font-size: 1rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: $row;
+  }
+}
+
+.accentButton:global(.mantine-Button-root) {
+  height: 2.75rem;
+  padding: 0 1.375rem;
+  border: none;
+  border-radius: 1rem;
+  background: $accent;
+  color: $ink;
+  font-size: 1rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: var(--dehors-orange-survol);
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+// Pastille ronde avec une icone
+.pastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: $accent-soft;
+  color: $ink;
+}
+
+.pastilleAccent {
+  background: $accent;
+}
+
+// Reseaux sociaux
+.socialRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .field :global(.mantine-Input-input:not(textarea)) {
+    height: 3rem;
+    padding-inline: 1rem;
+    border-radius: 0.875rem;
+    font-size: 0.9375rem;
+  }
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    background: $row;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 1px;
+  }
+}
+
+.platformMenu {
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+// Apercu Google
+.googlePreview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: $row;
+  overflow-wrap: anywhere;
+}
+
+.googleUrl {
+  font-size: 0.8125rem;
+}
+
+.googleTitle {
+  color: #1a4fbf;
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+.googleText {
+  font-size: 0.875rem;
+}
+
+// Zone de danger
+.danger {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  padding: 1.75rem;
+  border: 2px solid #e7a79c;
+  border-radius: 2rem;
+  background: #fbe6e1;
+
+  @include mixins.respond-below(md) {
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+  }
+
+  .cardTitle {
+    color: $danger-ink;
+  }
+
+  .cardSubtitle {
+    color: rgb(166 58 43 / 0.7);
+  }
+}
+
+.dangerRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.6);
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.dangerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.dangerTitle {
+  color: $danger-ink;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.dangerHint {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.dangerOutline:global(.mantine-Button-root) {
+  flex-shrink: 0;
+  height: 3rem;
+  padding: 0 1.25rem;
+  border: 2px solid $danger;
+  border-radius: 1rem;
+  background: none;
+  color: $danger-ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: rgb(255 255 255 / 0.7);
+  }
+
+  &:disabled {
+    border-color: rgb(200 68 47 / 0.35);
+    background: none;
+    color: rgb(166 58 43 / 0.5);
+  }
+}
+
+.dangerSolid:global(.mantine-Button-root) {
+  flex-shrink: 0;
+  height: 3rem;
+  padding: 0 1.25rem;
+  border: none;
+  border-radius: 1rem;
+  background: $danger;
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: #b03a27;
+  }
+
+  &:disabled {
+    background: rgb(200 68 47 / 0.4);
+    color: #fff;
+  }
+}
+
+// Paiements: l'etat du compte Stripe
+.statusBox {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.125rem;
+  border-radius: 1.25rem;
+  background: $row;
+}
+
+.statusPastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: $accent;
+}
+
+.statusText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.statusText > .tag {
+  align-self: flex-start;
+}
+
+.statusTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.bodyText {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.centered {
+  text-align: center;
+}
+
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+}
+
+// Paiements: qui paie les frais
+.fieldLabel {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.feeOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.feeOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 1.125rem;
+  border: 1.5px solid $ink;
+  border-radius: 1.25rem;
+  background: none;
+  color: $ink;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &[aria-checked='true'] {
+    border-color: $accent-soft;
+    background: $accent-soft;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.radio {
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+
+  [aria-checked='true'] > & {
+    border-width: 7px;
+  }
+}
+
+.feeOptionBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.feeOptionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feeOptionTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.feeOptionText {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.feeExample {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, max-content));
+  gap: 0.5rem 1rem;
+  padding-top: 0.375rem;
+
+  @include mixins.respond-below(md) {
+    gap: 0.5rem 0.75rem;
+  }
+}
+
+.feeFigure {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.125rem;
+}
+
+.feeFigureLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.feeFigureValue {
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.125rem;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    font-size: 1rem;
+  }
+}
+
+// Courriels
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: $accent-soft;
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.bannerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.bannerTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.bannerHint {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.emailsLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.emailList {
+  gap: 0.625rem;
+  padding: 1.25rem;
+
+  .cardHead {
+    padding: 0 0.5rem 0.375rem;
+  }
+
+  .cardTitle {
+    font-size: 1.25rem;
+  }
+
+  .cardSubtitle {
+    font-size: 0.875rem;
+  }
+}
+
+.emailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 1.125rem;
+  background: none;
+  color: $ink;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover:not([aria-current='true']) {
+    background: $row;
+  }
+
+  &[aria-current='true'] {
+    background: $accent-soft;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  .pastille {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: $row;
+  }
+
+  &[aria-current='true'] .pastille {
+    background: $accent;
+  }
+}
+
+.emailItemText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.emailItemTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.emailItemHint {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+.previewCard {
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.previewHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.previewHeadText {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.overline {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.previewTitle {
+  font-size: 1.25rem;
+}
+
+.subjectRow {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  border-radius: 0.875rem;
+  background: $row;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+
+  strong {
+    flex-shrink: 0;
+  }
+}
+
+.emailFrame {
+  position: relative;
+  min-height: 12rem;
+  border-radius: 1.25rem;
+  background: $track;
+  overflow: hidden;
+
+  iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
+}
+
+.tokens {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tokenList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.token {
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+  background: $accent-soft;
+  color: $accent-dark;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+// Taxes et frais, equipe
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border-radius: 1.125rem;
+  background: $row;
+
+  @include mixins.respond-below(sm) {
+    flex-wrap: wrap;
+  }
+}
+
+.listRowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.listRowTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.listRowHint {
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.listValue {
+  flex-shrink: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1rem;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: $accent-soft;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.25rem;
+  border-radius: 1.125rem;
+  background: $row;
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  border-radius: 1.125rem;
+  background: $row;
+  font-size: 0.875rem;
+  line-height: 1.4;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 0.0625rem;
+  }
+}
+
+.noticeWarning {
+  background: #fbe7b5;
+  color: #5c3d00;
+}
+
+.code {
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  background: $card;
+  font-family: monospace;
+  font-size: 0.8125rem;
+  word-break: break-all;
+}
+
+// Les sections de hauteurs tres differentes ne s'etirent pas.
+.gridTop {
+  align-items: start;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
+  }
+}

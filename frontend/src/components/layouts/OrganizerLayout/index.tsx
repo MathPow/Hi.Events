@@ -38,6 +38,7 @@ import { AchievementCelebration } from "../../common/OrganizerAchievements";
 import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 import { notifications } from "@mantine/notifications";
 import { useGetOrganizerUnreadMessagesCount } from "../../../queries/useGetOrganizerMessages.ts";
+import { rememberLastOrganizer } from "../../../utilites/lastOrganizer.ts";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -95,6 +96,13 @@ const OrganizerLayout = () => {
             },
         });
     }, [unreadMessages]);
+
+    // Les liens sans organisateur (/account/payment, le centre d'aide) menent a ses parametres.
+    useEffect(() => {
+        if (organizerId) {
+            rememberLastOrganizer(organizerId);
+        }
+    }, [organizerId]);
 
     // « Creer un evenement » a l'accueil mene ici avec ?create_event: on ouvre la fenetre de creation.
     useEffect(() => {

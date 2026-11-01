@@ -95,3 +95,61 @@
     display: none;
   }
 }
+
+// Figma « Enregistrement automatique »: green check, then the state in muted ink.
+.saveStatus {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 0.375rem;
+  color: rgb(53 41 36 / 0.7);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  white-space: nowrap;
+
+  img {
+    flex-shrink: 0;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 0.375rem;
+    min-height: 2.5rem;
+    padding: 0;
+    font-size: 0.875rem;
+  }
+}
+
+.saveError {
+  border: none;
+  border-radius: 0.75rem;
+  background: none;
+  color: #c0392b;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-orange);
+    outline-offset: 2px;
+  }
+}
+
+.saveLabelShort {
+  display: none;
+}
+
+@include mixins.respond-below(md) {
+  .saveLabelLong {
+    display: none;
+  }
+
+  .saveLabelShort {
+    display: inline;
+  }
+}

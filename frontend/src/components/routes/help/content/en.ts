@@ -26,9 +26,8 @@ const stripe: HelpGuide = {
         {
             ol: [
                 'Sign in to [billets.dehorsqc.com](/auth/login) with your organizer account.',
-                'Open **Account Settings** (your profile menu).',
-                'Go to the [Payment & Plan](/account/payment) tab.',
-                'Click **Connect with Stripe**. You are taken to Stripe.',
+                'Open **Settings** (left menu), then the [Payments](/account/payment) tab.',
+                'In **Stripe account**, click **Connect Stripe**. You are taken to Stripe.',
             ],
         },
         {p: "If you already have a Stripe account, sign in with it. Otherwise, Stripe creates one for you along the way."},
@@ -45,11 +44,11 @@ const stripe: HelpGuide = {
                 '**Statement descriptor**: the name your buyers will see on their card statement (e.g. the name of your festival)',
             ],
         },
-        {p: 'Once Stripe confirms, you are sent back to Billetterie Dehors automatically. If you leave halfway, come back to **Payment & Plan** and click **Finish Stripe setup**.'},
+        {p: 'Once Stripe confirms, you are sent back to Billetterie Dehors automatically. If you leave halfway, come back to **Settings → Payments** and click **Finish Stripe Setup**.'},
         {h2: 'Step 3: check that everything works'},
         {
             ul: [
-                'In **Account Settings → Payment & Plan**, the status should read **Connected to Stripe**.',
+                'In **Settings → Payments**, the **Stripe account** section should read **Connected to Stripe**.',
                 'In your event, open **Event Settings → Payment & Invoicing**. Under **Payment Methods**, the **Stripe** box should be checked (it is by default). Click **Save** if you changed it.',
                 'Make a test purchase with your own card on a low-priced ticket, then refund it from the order.',
             ],
@@ -204,7 +203,7 @@ export const en: HelpContent = {
         {
             category: 'Payments',
             question: 'How much does Billetterie Dehors cost?',
-            answer: "2.5% per ticket sold, plus Stripe's payment fees (2.9% + $0.30). No subscription, no hidden fees, and nothing at all if your event is free.\n\nWould you rather the buyer pays them? In **Event Settings**, the **Platform Fees** section lets you **Pass fee to buyer**, and **Payment & Invoicing** lets you **Pass processing fees to buyer**.",
+            answer: "2.5% per ticket sold, plus Stripe's payment fees (2.9% + $0.30). No subscription, no hidden fees, and nothing at all if your event is free.\n\nWould you rather the buyer pays them? Choose **Pass on to the buyer** in **Settings → Payments** (**Ticketing fees** section): your new events start that way. For an event already created, in **Event Settings**, the **Platform Fees** section lets you **Pass fee to buyer**, and **Payment & Invoicing** lets you **Pass processing fees to buyer**.",
         },
         {
             category: 'Payments',
@@ -249,7 +248,7 @@ export const en: HelpContent = {
         {
             category: 'Account',
             question: 'Can several people manage the box office?',
-            answer: 'Yes. In your profile menu, open **User Management** and click **Invite User**. An **Admin** has access to everything; an **Organizer** manages events and tickets.',
+            answer: 'Yes. Open **Settings → Team** (or **Team** in your profile menu) and click **Invite User**. An **Admin** has access to everything; an **Organizer** manages events and tickets.',
         },
         {
             category: 'Account',

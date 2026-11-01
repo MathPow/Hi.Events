@@ -137,6 +137,11 @@ export interface Account {
     requires_manual_verification?: boolean;
     platform_payments_allowed?: boolean;
     donation_receipts_allowed?: boolean;
+    // What Stripe takes on each card payment (percent, and fixed amount in the account currency).
+    stripe_processing_fees?: {
+        percentage: number;
+        fixed: number;
+    };
     stripe_platform: string;
     stripe_hi_events_primary_platform?: string;
 }
@@ -150,6 +155,7 @@ export interface AccountConfiguration {
         currency: string;
     },
     is_system_default: boolean;
+    bypass_application_fees?: boolean;
 }
 
 export interface StripeConnectDetails {
@@ -1176,6 +1182,11 @@ export interface EmailTemplatePreview {
     subject: string;
     body: string;
     context: Record<string, any>;
+}
+
+export interface SampleEmail {
+    subject: string;
+    html: string;
 }
 
 export interface DefaultEmailTemplate {

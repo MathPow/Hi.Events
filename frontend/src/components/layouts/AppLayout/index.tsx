@@ -12,6 +12,7 @@ import {adminIcon} from "./NavParts";
 import ImpersonationBanner from "../../common/ImpersonationBanner";
 import {InstallAppPrompt} from "../../common/InstallAppPrompt";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
+import {PageStatusProvider} from "./PageStatus.tsx";
 
 interface AppLayoutProps {
     navItems: NavItem[];
@@ -59,8 +60,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     useDehorsAppTheme();
     const location = useLocation();
     const currentNavItem = findCurrentNavItem(navItems, location.pathname);
-    const breadcrumbsWithCurrentPage = currentNavItem
-        ? [...breadcrumbItems, {content: currentNavItem.label}]
+    // The page may add a detail to its name (« Paramètres / Organisation »).
+    const breadcrumbsWithCurrentPage = (detail: string | null) => currentNavItem
+        ? [...breadcrumbItems, {content: detail ? `${currentNavItem.label} / ${detail}` : currentNavItem.label}]
         : breadcrumbItems;
     const [collapsed, setCollapsed] = useState(false);
     const [topBarShadow, setTopBarShadow] = useState<boolean>(false);
@@ -119,16 +121,19 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                      [classes.collapsed]: collapsed,
                      [classes.withPrimaryAction]: !!mobilePrimaryAction,
                  })}>
-                <Topbar
-                    topBarShadow={topBarShadow}
-                    breadcrumbItems={breadcrumbsWithCurrentPage}
-                    topBarContent={topBarContent}
-                    actions={topBarActions}
-                />
-
-                <div className={classes.main} id={'app-manage-main'}>
-                    <Outlet/>
-                </div>
+                <PageStatusProvider render={(status) => (
+                    <Topbar
+                        topBarShadow={topBarShadow}
+                        breadcrumbItems={breadcrumbsWithCurrentPage(status.detail)}
+                        topBarContent={topBarContent}
+                        saveStatus={status.save}
+                        actions={topBarActions}
+                    />
+                )}>
+                    <div className={classes.main} id={'app-manage-main'}>
+                        <Outlet/>
+                    </div>
+                </PageStatusProvider>
 
                 <Sidebar
                     collapsed={collapsed}

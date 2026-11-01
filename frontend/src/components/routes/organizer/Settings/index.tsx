@@ -1,178 +1,89 @@
-import { SeoSettings } from "./Sections/SeoSettings";
-import BasicSettings from "./Sections/BasicSettings";
-import { SocialLinks } from "./Sections/SocialLinks";
-import { AddressSettings } from "./Sections/AddressSettings";
-import EmailTemplateSettings from "./Sections/EmailTemplateSettings";
-import { EventDefaults } from "./Sections/EventDefaults";
-import { PlatformFeesSettings } from "./Sections/PlatformFeesSettings";
-import { DangerZoneSettings } from "./Sections/DangerZoneSettings";
-import { CharitySettings } from "./Sections/CharitySettings";
-import { PageBody } from "../../../common/PageBody";
-import { PageTitle } from "../../../common/PageTitle";
-import { t } from "@lingui/macro";
-import { Box, Group, NavLink as MantineNavLink, Stack } from "@mantine/core";
-import { IconAlertTriangle, IconBrandGoogleAnalytics, IconInfoCircle, IconMapPin, IconShare, IconMail, IconCalendarEvent, IconPercentage, IconReceipt2, IconCreditCard, IconHeartHandshake } from "@tabler/icons-react";
-import { useMediaQuery } from "@mantine/hooks";
-import { SettingsSectionChips } from "../../../common/SettingsSectionChips";
-import { useScrollSpy } from "../../../../hooks/useScrollSpy.ts";
-import { useMemo, useState } from "react";
-import { Card } from "../../../common/Card";
-import { useParams } from "react-router";
-import { PaymentSettings } from "./Sections/PaymentSettings";
-import { PlatformSupportSettings } from "./Sections/PlatformSupportSettings";
-import { platformSupportEnabled } from "../../../common/PlatformSupportInput";
-import { useGetAccount } from "../../../../queries/useGetAccount.ts";
+import {useEffect, useRef} from "react";
+import {Link, Navigate, useLocation, useParams} from "react-router";
+import {t} from "@lingui/macro";
+import classNames from "classnames";
+import {useAutosaveStatus, usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
+import {OrganizationTab} from "./tabs/OrganizationTab.tsx";
+import {PaymentsTab} from "./tabs/PaymentsTab.tsx";
+import {TaxesTab} from "./tabs/TaxesTab.tsx";
+import {EmailsTab} from "./tabs/EmailsTab.tsx";
+import {TeamTab} from "./tabs/TeamTab.tsx";
+import {SETTINGS_TABS, SettingsTab, settingsTabPath} from "./settingsTabs.ts";
+import classes from "./Settings.module.scss";
 
-// Jusqu'a ce taux de frais compris, la contribution des acheteurs est toujours proposee et
-// l'organisateur n'a pas le choix (PlatformSupportService::ALWAYS_ON_UP_TO_FEE_PERCENT).
-const PLATFORM_SUPPORT_ALWAYS_ON_UP_TO_FEE_PERCENT = 1.5;
+const tabLabel = (tab: SettingsTab) => ({
+    organization: t`Organization`,
+    payments: t`Payments`,
+    taxes: t`Taxes and receipts`,
+    emails: t`Emails`,
+    team: t`Team`,
+})[tab];
 
+/**
+ * Figma « Admin · Paramètres »: the organizer's and the account's settings on one page, in sticky
+ * tabs. Every field saves itself when it is left (« Changements enregistrés » in the top bar).
+ */
 const Settings = () => {
-    const { organizerId } = useParams();
-    const { data: account } = useGetAccount();
-    const isSaasMode = account?.is_saas_mode_enabled;
-    const feePercentage = account?.configuration ? Number(account.configuration.application_fees?.percentage ?? 0) : null;
-    const platformSupportChoice = platformSupportEnabled()
-        && feePercentage !== null && feePercentage > PLATFORM_SUPPORT_ALWAYS_ON_UP_TO_FEE_PERCENT;
+    const {organizerId, tab} = useParams();
+    const location = useLocation();
+    const tabsRef = useRef<HTMLDivElement>(null);
+    // Stripe brings the organizer back to /settings?stripe_return=1 at the end of its setup.
+    const backFromStripe = /[?&]stripe_(return|refresh)=1/.test(location.search);
+    const isKnownTab = SETTINGS_TABS.includes(tab as SettingsTab);
+    const active: SettingsTab = isKnownTab ? tab as SettingsTab : (backFromStripe ? 'payments' : 'organization');
 
-    const SECTIONS = useMemo(() => {
-        const baseSections = [
-            {
-                id: 'basic-settings',
-                label: t`Basic Information`,
-                icon: IconInfoCircle,
-                component: BasicSettings
-            },
-            {
-                id: 'event-defaults',
-                label: t`Event Defaults`,
-                icon: IconCalendarEvent,
-                component: EventDefaults
-            },
-            {
-                id: 'address-settings',
-                label: t`Address`,
-                icon: IconMapPin,
-                component: AddressSettings
-            },
-            {
-                id: 'payment-settings',
-                label: t`Payments`,
-                icon: IconCreditCard,
-                component: PaymentSettings
-            },
-            {
-                id: 'charity-settings',
-                label: t`Tax receipts`,
-                icon: IconReceipt2,
-                component: CharitySettings
-            },
-            // {
-            //     id: 'image-assets',
-            //     label: t`Images & Branding`,
-            //     icon: IconPhoto,
-            //     component: ImageAssetSettings
-            // },
-            {
-                id: 'social-links',
-                label: t`Social Links`,
-                icon: IconShare,
-                component: SocialLinks
-            },
-            {
-                id: 'seo-settings',
-                label: t`SEO`,
-                icon: IconBrandGoogleAnalytics,
-                component: SeoSettings
-            },
-            {
-                id: 'email-templates',
-                label: t`Email Templates`,
-                icon: IconMail,
-                component: () => <EmailTemplateSettings organizerId={organizerId!} />
-            },
-            {
-                id: 'danger-zone',
-                label: t`Danger Zone`,
-                icon: IconAlertTriangle,
-                component: DangerZoneSettings,
-                color: 'red',
-            },
-        ];
+    usePageDetail(tabLabel(active));
+    // The whole page saves by itself: « Changements enregistrés » on every tab.
+    useAutosaveStatus();
 
-        if (platformSupportChoice) {
-            baseSections.splice(baseSections.findIndex(section => section.id === 'payment-settings') + 1, 0, {
-                id: 'platform-support',
-                label: t`Platform contribution`,
-                icon: IconHeartHandshake,
-                component: PlatformSupportSettings,
-            });
+    // On phones the tabs scroll sideways: keep the current one in view.
+    useEffect(() => {
+        const list = tabsRef.current;
+        const current = list?.querySelector<HTMLElement>('[aria-current="page"]');
+        if (!list || !current || list.scrollWidth <= list.clientWidth) {
+            return;
         }
+        const offset = current.getBoundingClientRect().left - list.getBoundingClientRect().left;
+        list.scrollTo({left: list.scrollLeft + offset - (list.clientWidth - current.offsetWidth) / 2});
+    }, [active]);
 
-        if (isSaasMode) {
-            baseSections.splice(2, 0, {
-                id: 'platform-fees',
-                label: t`Platform Fees`,
-                icon: IconPercentage,
-                component: PlatformFeesSettings,
-            });
-        }
+    if (!organizerId) {
+        return null;
+    }
 
-        return baseSections;
-    }, [isSaasMode, organizerId, platformSupportChoice]);
-
-    const isLargeScreen = useMediaQuery('(min-width: 1200px)', true);
-    const [activeSection, setActiveSection] = useState('basic-settings');
-
-    const handleClick = (sectionId: string) => {
-        setActiveSection(sectionId);
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    useScrollSpy(SECTIONS.map((section) => section.id), setActiveSection, !isLargeScreen);
-
-    const sideMenu = (
-        <Card style={{ padding: '15px', marginBottom: 0 }}>
-            <Stack gap="xs">
-                {SECTIONS.map((section) => (
-                    <MantineNavLink
-                        key={section.id}
-                        active={activeSection === section.id}
-                        label={section.label}
-                        color={'color' in section ? section.color as string : undefined}
-                        leftSection={<section.icon size={16} stroke={1.5} />}
-                        onClick={() => handleClick(section.id)}
-                    />
-                ))}
-            </Stack>
-        </Card>
-    );
-
-    const content = SECTIONS.map(({ id, component: Component }) => (
-        <div key={id} id={id} style={{ scrollMarginTop: isLargeScreen ? '20px' : '72px' }}>
-            <Component />
-        </div>
-    ));
+    if (tab && !isKnownTab) {
+        return <Navigate to={settingsTabPath(organizerId, 'organization')} replace/>;
+    }
 
     return (
-        <PageBody>
-            <PageTitle>{t`Organizer Settings`}</PageTitle>
+        <div className={classes.page}>
+            <header className={classes.header}>
+                <h1 className={classes.title}>{t`Settings`}</h1>
+                <p className={classes.subtitle}>{t`Your organization's details, your payments, your emails and your team.`}</p>
+            </header>
 
-            {isLargeScreen ? (
-                <Group align="flex-start" gap="md">
-                    <Box w={240} style={{ position: 'sticky', top: 20 }}>
-                        {sideMenu}
-                    </Box>
-                    <Box style={{ flex: 1 }}>{content}</Box>
-                </Group>
-            ) : (
-                <Stack>
-                    <SettingsSectionChips sections={SECTIONS} activeSection={activeSection} onSelect={handleClick} />
-                    {content}
-                </Stack>
-            )}
-        </PageBody>
+            <div className={classes.tabsSticky}>
+                <nav className={classes.tabsBar} ref={tabsRef} aria-label={t`Settings`}>
+                    {SETTINGS_TABS.map(id => (
+                        <Link
+                            key={id}
+                            to={settingsTabPath(organizerId, id)}
+                            className={classNames(classes.tab, {[classes.tabActive]: id === active})}
+                            aria-current={id === active ? 'page' : undefined}
+                        >
+                            {tabLabel(id)}
+                        </Link>
+                    ))}
+                </nav>
+            </div>
+
+            {active === 'organization' && <OrganizationTab key={organizerId} organizerId={organizerId}/>}
+            {active === 'payments' && <PaymentsTab key={organizerId} organizerId={organizerId}/>}
+            {active === 'taxes' && <TaxesTab key={organizerId} organizerId={organizerId}/>}
+            {active === 'emails' && <EmailsTab key={organizerId} organizerId={organizerId}/>}
+            {active === 'team' && <TeamTab/>}
+        </div>
     );
-}
+};
 
 export default Settings;
