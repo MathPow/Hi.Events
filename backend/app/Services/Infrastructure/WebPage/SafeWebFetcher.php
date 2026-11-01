@@ -3,7 +3,6 @@
 namespace HiEvents\Services\Infrastructure\WebPage;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\UriResolver;
 use GuzzleHttp\Psr7\Utils;
@@ -44,31 +43,30 @@ class SafeWebFetcher
         for ($redirects = 0; $redirects <= self::MAX_REDIRECTS; $redirects++) {
             $parts = parse_url($current);
             $host = $parts['host'];
-            $port = (int)($parts['port'] ?? ($parts['scheme'] === 'https' ? 443 : 80));
             $response = null;
             $failure = null;
             foreach ($this->addressesToTry($host) as $ip) {
                 try {
-                    $response = (new Client())->request('GET', $current, [
+                    // Guzzle lit en flux (stream) par PHP, pas par curl : l'IP verifiee va dans l'adresse,
+                    // le nom du site dans Host et dans TLS (certificat verifie pour ce nom, SNI).
+                    $response = (new Client())->request('GET', $this->atAddress($current, $ip), [
                         'allow_redirects' => false,
                         'http_errors' => false,
                         'stream' => true,
                         'connect_timeout' => self::CONNECT_TIMEOUT,
                         'timeout' => self::TIMEOUT,
                         'headers' => [
+                            'Host' => $host . (isset($parts['port']) ? ':' . $parts['port'] : ''),
                             'User-Agent' => self::USER_AGENT,
                             'Accept-Language' => 'fr-CA,fr;q=0.9,en;q=0.6',
                             'Accept' => 'text/html,application/xhtml+xml,image/avif,image/webp,image/*;q=0.9,*/*;q=0.5',
                         ],
-                        // La connexion va a l'adresse verifiee, pas a un nouveau DNS.
-                        'curl' => [CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $host, $port, str_contains($ip, ':') ? "[$ip]" : $ip)]],
+                        'stream_context' => ['ssl' => ['peer_name' => $host, 'SNI_server_name' => $host]],
                     ]);
                     break;
-                } catch (ConnectException $exception) {
-                    // Pas de route vers cette adresse (souvent l'IPv6) : l'autre famille.
-                    $failure = $exception;
                 } catch (GuzzleException $exception) {
-                    throw new WebPageFetchException(__('The address could not be reached.'), previous: $exception);
+                    // Pas de route vers cette adresse (souvent l'IPv6), refus, delai : l'autre famille.
+                    $failure = $exception;
                 }
             }
             if ($response === null) {
@@ -201,6 +199,12 @@ class SafeWebFetcher
         }
 
         return true;
+    }
+
+    /** $url, mais vers l'adresse IP $ip (entre crochets en IPv6). */
+    private function atAddress(string $url, string $ip): string
+    {
+        return (string)Utils::uriFor($url)->withHost(str_contains($ip, ':') ? "[$ip]" : $ip);
     }
 
     /** @return list<string> IPv4 d'abord */
