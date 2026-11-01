@@ -8,6 +8,7 @@ import classes from './MobileNav.module.scss';
 import {MobilePrimaryAction, NavContext, NavItem} from "../types.ts";
 import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
 import {useStopImpersonating} from "../../../common/ImpersonationBanner/useStopImpersonating";
+import {toggleAssistant, useAssistantState} from "../../../../utilites/assistantEvents.ts";
 
 interface MobileNavProps {
     navItems: NavItem[];
@@ -65,6 +66,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                                                         groupedMenu = false,
                                                     }) => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const assistant = useAssistantState();
     const {pathname} = useLocation();
     const closeMenu = () => setMenuOpen(false);
     const impersonation = useStopImpersonating();
@@ -215,6 +217,25 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                         <span className={classes.tabLabel}>{item.mobileTabLabel ?? item.label}</span>
                     </NavLink>
                 ))}
+
+                {/* The assistant (components/common/Assistant): its round button becomes this tab. */}
+                {assistant.available && (
+                    <UnstyledButton
+                        className={classNames(classes.tab, {[classes.tabActive]: assistant.open})}
+                        onClick={() => {
+                            setMenuOpen(false);
+                            toggleAssistant();
+                        }}
+                        aria-expanded={assistant.open}
+                        data-assistant-tab
+                        data-busy={assistant.busy || undefined}
+                    >
+                        <span className={classes.tabIcon}>
+                            <span className={classes.assistantIcon} aria-hidden/>
+                        </span>
+                        <span className={classes.tabLabel}>{t`Assistant`}</span>
+                    </UnstyledButton>
+                )}
 
                 <UnstyledButton
                     className={classNames(classes.tab, {[classes.tabActive]: menuOpen || isMenuPageActive})}

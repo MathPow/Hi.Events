@@ -50,6 +50,13 @@ $above-tab-bar: 6.375rem;
   }
 }
 
+// With the phone's tab bar, the assistant is one of its tabs (MobileNav): no round button.
+@include mixins.respond-below(md) {
+  :global(body:has([data-assistant-tab])) .launcher {
+    display: none;
+  }
+}
+
 // The DEHORS peak, from the favicon, in the button's colour.
 .launcherIcon {
   width: 1.75rem;

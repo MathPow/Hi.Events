@@ -6,6 +6,7 @@ import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {Answer, useAnswerLink} from "./Answer.tsx";
 import {useAssistantConversation} from "./useAssistantConversation.ts";
+import {onAssistantToggle, publishAssistantState} from "../../../utilites/assistantEvents.ts";
 import classes from "./Assistant.module.scss";
 
 /**
@@ -40,6 +41,13 @@ const AssistantPanel = ({userId}: { userId: string }) => {
         t`Which orders are waiting for an offline payment?`,
         t`Create a 15% promo code for my next event.`,
     ];
+
+    // The « Assistant » tab of the phone's tab bar opens and closes it, and shows its state.
+    useEffect(() => onAssistantToggle(() => setOpen((value) => !value)), []);
+    useEffect(() => {
+        publishAssistantState({available: true, open, busy: running});
+    }, [open, running]);
+    useEffect(() => () => publishAssistantState({available: false, open: false, busy: false}), []);
 
     // Key and remaining turns, at each opening.
     useEffect(() => {
