@@ -22,6 +22,8 @@ export interface HelpGuide {
 }
 
 export interface HelpQuestion {
+    // Its tab in the frequent questions (All, then one per subject, in the order they first come).
+    category: string;
     question: string;
     // Paragraphs separated by a blank line.
     answer: string;

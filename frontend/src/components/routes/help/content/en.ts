@@ -202,46 +202,57 @@ export const en: HelpContent = {
     guides: [firstEvent, stripe, checkIn, refund, messages],
     questions: [
         {
+            category: 'Payments',
             question: 'How much does Billetterie Dehors cost?',
             answer: "2.5% per ticket sold, plus Stripe's payment fees (2.9% + $0.30). No subscription, no hidden fees, and nothing at all if your event is free.\n\nWould you rather the buyer pays them? In **Event Settings**, the **Platform Fees** section lets you **Pass fee to buyer**, and **Payment & Invoicing** lets you **Pass processing fees to buyer**.",
         },
         {
+            category: 'Payments',
             question: 'Do I need Stripe?',
             answer: 'To sell tickets by credit card, yes: see [Set up Stripe for Billetterie Dehors](/help/configurer-stripe). To publish an event, offer free tickets or accept **Offline Payments** (transfer, cash), no.',
         },
         {
+            category: 'Payments',
             question: 'When do I get my money?',
             answer: 'Stripe pays your sales straight into your bank account. The first payout can take up to 7 days; after that, usually 2 business days.',
         },
         {
-            question: 'Do my buyers need an account?',
-            answer: "No. After buying, they get an email with their tickets as a PDF (one QR code per ticket) and the event to add to their calendar. They can find their tickets anytime in [My tickets](/my-tickets), with the email they used to buy.",
-        },
-        {
-            question: 'How do I refund an attendee?',
-            answer: "In **Orders**, the order's **⋮** menu, **Refund order**. The refund can be full or partial. It's all in [Refund or cancel an order](/help/rembourser-annuler).",
-        },
-        {
-            question: 'How do I scan tickets at the door?',
-            answer: "With a check-in list and a phone: your volunteers open a link, with no account, and scan the QR codes with the camera. See [Check-in at the door](/help/pointage).",
-        },
-        {
+            category: 'Events',
             question: "Why doesn't my event show on the Events page?",
             answer: "The [Events](/events) page shows live, upcoming events. Check that your event is published (**Live - Click to Unpublish** at the top of its page) and that your organizer page is live too.",
         },
         {
+            category: 'Events',
             question: 'Can I ask attendees questions (T-shirt size, emergency contact)?',
             answer: "Yes: in the event, open **Registration Questions** and click **Add Question**. The answers show in each attendee's details and in the exports.",
         },
         {
+            category: 'Events',
             question: 'Can I create promo codes?',
             answer: 'Yes: in the event, open **Promo Codes** and click **Create Promo Code**. A code can give a discount as a percentage or in dollars, on some tickets only.',
         },
         {
+            category: 'Orders',
+            question: 'Do my buyers need an account?',
+            answer: "No. After buying, they get an email with their tickets as a PDF (one QR code per ticket) and the event to add to their calendar. They can find their tickets anytime in [My tickets](/my-tickets), with the email they used to buy.",
+        },
+        {
+            category: 'Orders',
+            question: 'How do I refund an attendee?',
+            answer: "In **Orders**, the order's **⋮** menu, **Refund order**. The refund can be full or partial. It's all in [Refund or cancel an order](/help/rembourser-annuler).",
+        },
+        {
+            category: 'Event day',
+            question: 'How do I scan tickets at the door?',
+            answer: "With a check-in list and a phone: your volunteers open a link, with no account, and scan the QR codes with the camera. See [Check-in at the door](/help/pointage).",
+        },
+        {
+            category: 'Account',
             question: 'Can several people manage the box office?',
             answer: 'Yes. In your profile menu, open **User Management** and click **Invite User**. An **Admin** has access to everything; an **Organizer** manages events and tickets.',
         },
         {
+            category: 'Account',
             question: 'What can the assistant do?',
             answer: "It knows the box office and reads your account: sales, orders, attendees, settings. It can also make changes for you (a price, a promo code, a ticket), but nothing changes until you approve it. Ask it your question at the top of this page.",
         },

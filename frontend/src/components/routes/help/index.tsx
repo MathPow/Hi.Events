@@ -1,5 +1,6 @@
 import {t} from "@lingui/macro";
 import {useLingui} from "@lingui/react";
+import {useState} from "react";
 import {FaqAccordion} from "../../common/FaqAccordion";
 import {helpContent, SUPPORT_EMAIL} from "./content";
 import {RichParagraphs} from "./RichText.tsx";
@@ -18,6 +19,10 @@ import classes from "./Help.module.scss";
 const HelpCenter = () => {
     const {i18n} = useLingui();
     const {guides, questions} = helpContent(i18n.locale);
+    // The tab of the frequent questions: null for all of them.
+    const [category, setCategory] = useState<string | null>(null);
+    const categories = [...new Set(questions.map((question) => question.category))];
+    const shownQuestions = category ? questions.filter((question) => question.category === category) : questions;
 
     return (
         <HelpPage title={t`Help center · Billetterie Dehors`}
@@ -47,7 +52,16 @@ const HelpCenter = () => {
 
             <section className={`${shell.card} ${shell.section}`} data-rough aria-labelledby="help-questions">
                 <h2 id="help-questions" className={shell.sectionTitle}>{t`Frequently asked questions`}</h2>
-                <FaqAccordion faqs={questions.map(({question, answer}) => ({
+                <div className={classes.faqTabs} role="group" aria-label={t`Categories`}>
+                    {[null, ...categories].map((item) => (
+                        <button key={item ?? 'all'} type="button" className={`${shell.tab} ${classes.faqTab}`}
+                                aria-pressed={item === category} onClick={() => setCategory(item)} data-rough>
+                            {item ?? t({message: 'All', context: 'help questions'})}
+                        </button>
+                    ))}
+                </div>
+                {/* A new list for each tab: the questions opened in another tab close. */}
+                <FaqAccordion key={category ?? 'all'} faqs={shownQuestions.map(({question, answer}) => ({
                     question,
                     answer: <div className={classes.answer}><RichParagraphs text={answer}/></div>,
                 }))}/>

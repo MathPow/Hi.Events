@@ -202,46 +202,57 @@ export const fr: HelpContent = {
     guides: [premierEvenement, stripe, pointage, rembourser, messages],
     questions: [
         {
+            category: 'Paiements',
             question: 'Combien coûte Billetterie Dehors ?',
             answer: "2,5 % par billet vendu, plus les frais de paiement de Stripe (2,9 % + 0,30 $). Pas d'abonnement, pas de frais cachés, et aucuns frais si votre événement est gratuit.\n\nVous préférez que l'acheteur les paie ? Dans **Paramètres de l'événement**, la section **Frais de plateforme** permet de **Répercuter les frais sur l'acheteur**, et **Paiement et facturation** de **Refiler les frais de traitement à l'acheteur**.",
         },
         {
+            category: 'Paiements',
             question: 'Est-ce que j\'ai besoin de Stripe ?',
             answer: "Pour vendre des billets par carte de crédit, oui : voyez [Configurer Stripe pour Billetterie Dehors](/help/configurer-stripe). Pour publier un événement, offrir des billets gratuits ou accepter des **Paiements hors ligne** (virement, argent comptant), non.",
         },
         {
+            category: 'Paiements',
             question: 'Quand est-ce que je reçois mon argent ?',
             answer: "Stripe verse l'argent des ventes directement dans votre compte bancaire. Le premier versement peut prendre jusqu'à 7 jours ; ensuite, c'est en général 2 jours ouvrables.",
         },
         {
-            question: 'Mes acheteurs doivent-ils se créer un compte ?',
-            answer: "Non. Après l'achat, ils reçoivent un courriel avec leurs billets en PDF (un code QR par billet) et l'événement à ajouter à leur calendrier. Ils retrouvent leurs billets en tout temps dans [Mes billets](/my-tickets), avec le courriel utilisé à l'achat.",
-        },
-        {
-            question: 'Comment rembourser un participant ?',
-            answer: "Dans **Commandes**, menu **⋮** de la commande, **Rembourser la commande**. Le remboursement peut être complet ou partiel. Tout est expliqué dans [Rembourser ou annuler une commande](/help/rembourser-annuler).",
-        },
-        {
-            question: 'Comment scanner les billets à l\'entrée ?',
-            answer: "Avec une liste de pointage et un téléphone : vos bénévoles ouvrent un lien, sans compte, et scannent les codes QR avec la caméra. Voyez [Le pointage à l'entrée](/help/pointage).",
-        },
-        {
+            category: 'Événements',
             question: "Pourquoi mon événement n'apparaît pas sur la page Événements ?",
             answer: "La page [Événements](/events) montre les événements en ligne et à venir. Vérifiez que votre événement est publié (**En ligne - Cliquez pour dépublier** en haut de sa page) et que la page de votre organisateur est aussi en ligne.",
         },
         {
+            category: 'Événements',
             question: 'Puis-je poser des questions aux participants (taille de chandail, contact d\'urgence) ?',
             answer: "Oui : dans l'événement, ouvrez **Questions d'inscription** et cliquez sur **Ajouter une question**. Les réponses se retrouvent dans la fiche de chaque participant et dans les exports.",
         },
         {
+            category: 'Événements',
             question: 'Puis-je créer des codes promo ?',
             answer: "Oui : dans l'événement, ouvrez **Codes promo** et cliquez sur **Créer un code promotionnel**. Un code peut donner un rabais en pourcentage ou en dollars, sur certains billets seulement.",
         },
         {
+            category: 'Commandes',
+            question: 'Mes acheteurs doivent-ils se créer un compte ?',
+            answer: "Non. Après l'achat, ils reçoivent un courriel avec leurs billets en PDF (un code QR par billet) et l'événement à ajouter à leur calendrier. Ils retrouvent leurs billets en tout temps dans [Mes billets](/my-tickets), avec le courriel utilisé à l'achat.",
+        },
+        {
+            category: 'Commandes',
+            question: 'Comment rembourser un participant ?',
+            answer: "Dans **Commandes**, menu **⋮** de la commande, **Rembourser la commande**. Le remboursement peut être complet ou partiel. Tout est expliqué dans [Rembourser ou annuler une commande](/help/rembourser-annuler).",
+        },
+        {
+            category: 'Jour J',
+            question: 'Comment scanner les billets à l\'entrée ?',
+            answer: "Avec une liste de pointage et un téléphone : vos bénévoles ouvrent un lien, sans compte, et scannent les codes QR avec la caméra. Voyez [Le pointage à l'entrée](/help/pointage).",
+        },
+        {
+            category: 'Compte',
             question: 'Plusieurs personnes peuvent-elles gérer la billetterie ?',
             answer: "Oui. Dans le menu de votre profil, ouvrez **Gestion des utilisateurs** et cliquez sur **Inviter un utilisateur**. Un **Administrateur** a accès à tout ; un **Organisateur** gère les événements et les billets.",
         },
         {
+            category: 'Compte',
             question: "Que peut faire l'assistant ?",
             answer: "Il connaît la billetterie et lit votre compte : ventes, commandes, participants, réglages. Il peut aussi faire des modifications à votre place (un prix, un code promo, un billet), mais rien ne change avant que vous l'approuviez. Posez-lui votre question en haut de cette page.",
         },

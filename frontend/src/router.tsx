@@ -728,8 +728,8 @@ const routes: RouteObject[] = [
 
 const Assistant = lazy(() => import("./components/common/Assistant"));
 
-// The help center too, for an organizer to ask the assistant from there.
-const BACK_OFFICE = /^\/(manage|account|admin|welcome|help)(\/|$)/;
+// Not the help center: it has its own question box, answered right under it (help/AskAssistant).
+const BACK_OFFICE = /^\/(manage|account|admin|welcome)(\/|$)/;
 
 // Every page shares this root so the organizer assistant stays mounted, and keeps its
 // answer running, when a page moves from one back-office layout to another. It loads

@@ -225,11 +225,12 @@ export function withContext(text: string, locale: string): string {
 
 // --- The conversation, kept for the tab's life
 
-const KEY = "dehors-assistant-conversation";
+/** The panel's conversation; the help center keeps its own (see routes/help/AskAssistant). */
+export const PANEL_CONVERSATION = "dehors-assistant-conversation";
 
-export function load(userId: string): { api: ApiMessage[]; bubbles: Bubble[] } {
+export function load(userId: string, key = PANEL_CONVERSATION): { api: ApiMessage[]; bubbles: Bubble[] } {
     try {
-        const raw = JSON.parse(sessionStorage.getItem(KEY) ?? "null");
+        const raw = JSON.parse(sessionStorage.getItem(key) ?? "null");
         if (!raw || raw.userId !== userId || !Array.isArray(raw.api) || !Array.isArray(raw.bubbles)) {
             return {api: [], bubbles: []};
         }
@@ -253,9 +254,9 @@ export function load(userId: string): { api: ApiMessage[]; bubbles: Bubble[] } {
     }
 }
 
-export function save(userId: string, api: ApiMessage[], bubbles: Bubble[]) {
+export function save(userId: string, api: ApiMessage[], bubbles: Bubble[], key = PANEL_CONVERSATION) {
     try {
-        sessionStorage.setItem(KEY, JSON.stringify({userId, api, bubbles}));
+        sessionStorage.setItem(key, JSON.stringify({userId, api, bubbles}));
     } catch {
         // Too big for the tab: the conversation still lives until the next reload.
     }
@@ -295,4 +296,22 @@ export function addQuestion(api: ApiMessage[], text: string): ApiMessage[] {
         ? [{type: "text", text: last.content}, {type: "text", text}]
         : [...last.content, {type: "text", text}];
     return [...api.slice(0, -1), {role: "user", content}];
+}
+
+/** Adds streamed text to the answer, after its last paragraph. */
+export function addText(pieces: Piece[], text: string): Piece[] {
+    const last = pieces[pieces.length - 1];
+    if (last?.type === "text") {
+        return [...pieces.slice(0, -1), {type: "text", text: last.text + text}];
+    }
+    return [...pieces, {type: "text", text}];
+}
+
+/** Between two turns, the text that follows starts a new paragraph. */
+export function breakText(pieces: Piece[]): Piece[] {
+    const last = pieces[pieces.length - 1];
+    if (last?.type !== "text" || !last.text || last.text.endsWith("\n\n")) {
+        return pieces;
+    }
+    return [...pieces.slice(0, -1), {type: "text", text: `${last.text}\n\n`}];
 }

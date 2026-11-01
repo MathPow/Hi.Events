@@ -126,9 +126,67 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   width: auto;
   height: 56px;
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
   @include mixins.respond-below(md) {
     width: 100%;
     height: 52px;
+  }
+}
+
+// The answer, right under the question, in the box: questions and answers follow each other.
+.askThread {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--dehors-trait);
+  font-size: 16px;
+
+  @include mixins.respond-below(md) {
+    padding-top: 18px;
+  }
+}
+
+.askQuestion {
+  max-width: min(85%, 640px);
+  font-size: 16px;
+  scroll-margin: 24px;
+}
+
+.askFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  font-size: 13px;
+  color: var(--dehors-texte-doux);
+
+  span:first-child {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.askReset {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: var(--dehors-brun);
+  text-decoration: underline;
+  text-decoration-color: var(--dehors-orange);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--dehors-orange);
   }
 }
 
@@ -254,6 +312,45 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 
   p + p {
     margin-top: 0.75em;
+  }
+}
+
+// The frequent questions' categories, over the list: "All" and one per subject. On a phone, a
+// row that scrolls sideways.
+.faqTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  // Edge to edge of the section, its padding inside.
+  @include mixins.respond-below(md) {
+    flex-wrap: nowrap;
+    margin: 0 -14px;
+    padding: 2px 14px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.faqTab {
+  flex-shrink: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
+  }
+
+  @include mixins.respond-below(md) {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 15px;
   }
 }
 
