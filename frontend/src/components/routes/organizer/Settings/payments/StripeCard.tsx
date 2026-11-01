@@ -14,6 +14,7 @@ import {AnalyticsEvents, trackEvent} from "../../../../../utilites/analytics.ts"
 import {StripeConnectButton} from "../../../../common/StripeConnectButton";
 import {SettingsCard, Tag} from "../SettingsUi.tsx";
 import classes from "../Settings.module.scss";
+import {StripeIllustration} from "./StripeIllustration.tsx";
 
 // Stripe sends back here at the end of its setup: ?stripe_return (the organizer's own Stripe) or
 // ?is_return (the account's, through /account/payment). The parameters are removed once read.
@@ -142,15 +143,9 @@ export const StripeCard = ({organizerId, account, isAdmin}: StripeCardProps) => 
 
     return (
         <SettingsCard title={t`Stripe account`} subtitle={t`Where the money from your sales goes.`}>
-            <div className={classes.statusBox}>
-                <span className={classes.statusPastille}>
-                    <img src="/interface/admin/parametres/carte.svg" alt=""/>
-                </span>
-                <div className={classes.statusText}>
-                    <span className={classes.statusTitle}>{title}</span>
-                    {tag}
-                </div>
-            </div>
+            <StripeIllustration status={connected
+                ? <Tag tone="green">{title}</Tag>
+                : (ownStarted || accountStarted) ? <Tag tone="yellow">{title}</Tag> : tag}/>
 
             <p className={classes.bodyText}>
                 {ownComplete

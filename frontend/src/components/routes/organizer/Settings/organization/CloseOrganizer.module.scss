@@ -1,0 +1,305 @@
+@use "../../../../../styles/mixins";
+
+// Figma « Admin · Fermer l'organisateur » (encadré, popup Desktop 1440, feuille Mobile 402).
+$ink: var(--dehors-brun);
+$red: #c8442f;
+$red-ink: #a63a2b;
+$red-line: #e7a79c;
+$red-soft: #fbe6e1;
+$red-pale: #fff7f5;
+$red-disc: #f9d9d3;
+
+// The box at the bottom of « Organisation »
+.box {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  border: 2px solid $red-line;
+  border-radius: 2rem;
+  background: $red-soft;
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: 1.75rem;
+  }
+}
+
+.boxText {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.boxTitle {
+  color: $red-ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.boxHint {
+  color: rgb(55 39 33 / 0.8);
+  font-size: 0.875rem;
+}
+
+.outline:global(.mantine-Button-root) {
+  flex-shrink: 0;
+  height: 3rem;
+  border: 2px solid $red;
+  border-radius: 1rem;
+  background: none;
+  color: $red-ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: rgb(200 68 47 / 0.08);
+  }
+}
+
+// The popup
+.popup {
+  border: 2px solid $red-line;
+  background: $red-pale !important;
+  box-shadow: 0 10px 32px rgb(55 39 33 / 0.12) !important;
+}
+
+.popupInner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2.25rem !important;
+}
+
+.popupHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.heading {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.alert {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  background: $red-disc;
+  color: $red-ink;
+}
+
+.title {
+  margin: 0;
+  color: $red-ink;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.875rem;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.5rem;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  color: rgb(55 39 33 / 0.75);
+  font-size: 1rem;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: $red-disc;
+  color: $ink;
+}
+
+.popupBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  @include mixins.respond-below(md) {
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+}
+
+// A choice: the selected one filled, the other outlined
+.option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.125rem;
+  border: 1.5px solid rgb(231 167 156 / 0.6);
+  border-radius: 1.25rem;
+  color: $ink;
+
+  &[data-selected] {
+    border: 2px solid $red-line;
+    background: $red-soft;
+  }
+
+  &[data-disabled] {
+    opacity: 0.55;
+
+    .optionLabel {
+      cursor: not-allowed;
+    }
+  }
+
+  &:has(.radioInput:focus-visible) {
+    outline: 3px solid $red;
+    outline-offset: 2px;
+  }
+}
+
+.optionLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  cursor: pointer;
+}
+
+// Under the text, lined up with it (after the radio)
+.optionExtra {
+  padding-left: 2.25rem;
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio {
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 1.5px solid $red-ink;
+  border-radius: 999px;
+
+  [data-selected] & {
+    border: 7px solid $red;
+  }
+}
+
+.optionBody {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.optionTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: $red-ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.recommended {
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: $red-ink;
+  color: $red-pale;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.optionText {
+  color: rgb(55 39 33 / 0.8);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.confirmLabel {
+  margin-bottom: 0.5rem;
+  color: $ink;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.confirmInput {
+  height: 3rem;
+  border: 1.5px solid $red-line !important;
+  border-radius: 0.875rem !important;
+  background: var(--dehors-carte) !important;
+  color: $ink;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.25rem;
+}
+
+.solid:global(.mantine-Button-root) {
+  height: 3rem;
+  padding: 0 1.25rem;
+  border: none;
+  border-radius: 1rem;
+  background: $red;
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: $red-ink;
+  }
+
+  &:disabled {
+    background: rgb(200 68 47 / 0.45);
+    color: #fff;
+  }
+
+  @include mixins.respond-below(md) {
+    width: 100%;
+    height: 3.25rem;
+  }
+}
+
+// The sheet on phones
+.sheet {
+  max-height: 92dvh;
+  border-radius: 1.75rem 1.75rem 0 0 !important;
+  background: $red-pale !important;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  &::before {
+    content: '';
+    display: block;
+    width: 2.75rem;
+    height: 5px;
+    margin: 0.75rem auto 0;
+    border-radius: 9px;
+    background: rgb(55 39 33 / 0.2);
+  }
+}
+
+.sheetBody {
+  padding: 1rem 1.25rem 2rem !important;
+}
