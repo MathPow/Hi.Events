@@ -501,16 +501,78 @@ $shadow: 0 10px 16px rgb(55 39 33 / 0.08);
   border-radius: 999px;
 }
 
-// La couleur choisie, au debut du champ du code.
+// Le code HEX (la couleur en pastille au debut), puis R, V, B dans trois petites cases.
+.codeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  margin-bottom: 1.25rem;
+}
+
+.codeField {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-right: 0.25rem;
+}
+
 .codeInput {
+  height: 3.25rem !important;
   padding-inline-start: 3.25rem !important;
+  font-weight: 500;
 }
 
 .codeSwatch {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px rgb(53 41 36 / 0.2);
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  box-shadow: inset 0 0 0 1.5px rgb(53 41 36 / 0.15);
+}
+
+.channel {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3.25rem;
+  border-radius: 0.875rem;
+  background: rgb(228 170 150 / 0.32);
+  color: var(--dehors-brun);
+  cursor: text;
+
+  input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    outline: none;
+
+    &[aria-invalid] {
+      color: #c8442f;
+    }
+  }
+
+  span {
+    color: rgb(55 39 33 / 0.5);
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: 1px;
+  }
+
+  &[data-disabled] {
+    opacity: 0.6;
+  }
 }
 
 // Reseaux sociaux et FAQ: rangees qu'on reordonne par glisser-deposer
