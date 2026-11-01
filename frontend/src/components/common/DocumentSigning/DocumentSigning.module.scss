@@ -1,0 +1,34 @@
+// Les documents de l'organisateur dans la fiche d'un participant.
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 0.75rem;
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  border-radius: 14px;
+  background: var(--checkout-surface-muted, rgb(227 173 146 / 0.16));
+}
+
+.title {
+  font-size: 0.95rem;
+}
+
+.accept {
+  margin-top: 0.25rem;
+
+  label {
+    font-weight: 600;
+  }
+}
+
+.printNote {
+  margin: 0;
+  color: var(--checkout-text-secondary, rgb(53 41 36 / 0.7));
+  font-size: 0.8125rem;
+}

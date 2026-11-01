@@ -40,6 +40,7 @@ use HiEvents\Services\Application\Handlers\Order\DTO\OrderQuestionsDTO;
 use HiEvents\Services\Domain\Payment\Stripe\EventHandlers\PaymentIntentSucceededHandler;
 use HiEvents\Services\Domain\Product\ProductQuantityUpdateService;
 use HiEvents\Services\Domain\Waiver\WaiverService;
+use HiEvents\Services\Domain\Document\OrderDocumentCopyService;
 use HiEvents\Services\Infrastructure\DomainEvents\DomainEventDispatcherService;
 use HiEvents\Services\Infrastructure\Session\CheckoutSessionManagementService;
 use HiEvents\Services\Infrastructure\DomainEvents\Enums\DomainEventType;
@@ -65,6 +66,7 @@ class CompleteOrderHandler
         private readonly EventSettingsRepositoryInterface  $eventSettingsRepository,
         private readonly CheckoutSessionManagementService  $sessionManagementService,
         private readonly WaiverService                     $waiverService,
+        private readonly OrderDocumentCopyService          $orderDocumentCopyService,
     )
     {
     }
@@ -212,6 +214,9 @@ class CompleteOrderHandler
             order: $order,
             productPrices: $productsPrices,
         );
+
+        // Each attendee's copy of the organizer's documents: signed online, or to print.
+        $this->orderDocumentCopyService->createForOrder($order, $createdProductData, $ipAddress);
     }
 
     /**
@@ -338,6 +343,8 @@ class CompleteOrderHandler
         $this->attendeeRepository->deleteWhere([
             'order_id' => $order->getId(),
         ]);
+
+        $this->orderDocumentCopyService->deleteForOrder($order->getId());
     }
 
     /**

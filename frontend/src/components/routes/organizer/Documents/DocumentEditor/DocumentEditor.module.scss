@@ -1,0 +1,702 @@
+@use "../../../../../styles/mixins.scss";
+
+$brun: var(--dehors-brun, #352924);
+$doux: var(--dehors-texte-doux, rgb(53 41 36 / 0.7));
+$orange: var(--dehors-orange, #fa7853);
+$teinte: rgb(250 120 83 / 0.14);
+
+.notFound {
+  margin-bottom: 1rem;
+}
+
+// L'en-tete: retour, nom du document (modifiable) et etat de l'enregistrement, apercu PDF.
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.back {
+  flex-shrink: 0;
+}
+
+.titleArea {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  color: $brun;
+  font: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: left;
+  background: none;
+  cursor: text;
+
+  > span {
+    @include mixins.ellipsis;
+  }
+
+  @include mixins.respond-below(md) {
+    font-size: 1.25rem;
+  }
+}
+
+.titlePencil {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.titleInput {
+  width: 100%;
+  padding: 0.125rem 0.5rem;
+  border: 2px solid $orange;
+  border-radius: 10px;
+  color: $brun;
+  font: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: #fff;
+  outline: none;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.25rem;
+  }
+}
+
+.saveStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: $doux;
+  font-size: 0.875rem;
+}
+
+.saveCheck {
+  color: #2f6b3a;
+}
+
+.saveError {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.25rem;
+  padding: 0;
+  border: none;
+  color: #c0392b;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  background: none;
+  cursor: pointer;
+}
+
+.previewButton {
+  flex-shrink: 0;
+
+  @include mixins.respond-below(sm) {
+    padding-inline: 0.75rem;
+  }
+}
+
+// Trois colonnes: les blocs, la feuille, les reglages. Sous lg, la feuille seule.
+.layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) 260px;
+  align-items: start;
+  gap: 1.25rem;
+
+  @include mixins.respond-below(xl) {
+    grid-template-columns: 184px minmax(0, 1fr) 236px;
+    gap: 1rem;
+  }
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1.25rem 1rem;
+  border-radius: 24px;
+  background: var(--dehors-carte, #fffcf8);
+  box-shadow: var(--dehors-ombre-carte, 0 10px 32px rgb(55 39 33 / 0.08));
+
+  @include mixins.respond-below(lg) {
+    display: none;
+  }
+}
+
+.panelLabel {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.panelHint {
+  margin: 0.25rem 0 0.75rem;
+  color: $doux;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.panelRule {
+  margin: 1rem 0;
+  border: none;
+  border-top: 1.5px solid var(--dehors-trait, rgb(227 173 146 / 0.55));
+}
+
+.blockTypes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.blockType {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: none;
+  border-radius: 12px;
+  color: $brun;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  background: rgb(250 120 83 / 0.07);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgb(250 120 83 / 0.16);
+  }
+}
+
+.blockTypeIcon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.blockTypeName {
+  flex: 1;
+  line-height: 1.25;
+}
+
+.blockTypePlus {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.chip {
+  padding: 0.125rem 0.5rem;
+  border: none;
+  border-radius: 6px;
+  color: var(--dehors-terracotta, #c47762);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: rgb(250 120 83 / 0.16);
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(250 120 83 / 0.28);
+  }
+}
+
+// Le bureau sable et la feuille blanche.
+.desk {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-radius: 28px;
+  background: rgb(227 173 146 / 0.32);
+
+  @include mixins.respond-below(sm) {
+    margin-inline: -0.5rem;
+    padding: 0.75rem 0.5rem 1rem;
+    border-radius: 20px;
+  }
+
+  @include mixins.respond-below(lg) {
+    // La barre d'outils du telephone ne cache pas la fin de la feuille.
+    margin-bottom: 4.5rem;
+  }
+}
+
+.paper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 720px;
+  min-height: 560px;
+  padding: 2.5rem 2.75rem 3rem;
+  border-radius: 4px;
+  color: $brun;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  background: #fff;
+  box-shadow: 0 2px 14px rgb(55 39 33 / 0.08);
+
+  @include mixins.respond-below(md) {
+    min-height: 420px;
+    padding: 1.5rem 1rem 2rem;
+  }
+}
+
+.paperHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+}
+
+.paperInitial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  background: $orange;
+}
+
+.emptyPaper {
+  margin: 2rem 0;
+  color: $doux;
+  text-align: center;
+}
+
+// Un bloc de la feuille: survole, il se devine; choisi, il prend la teinte et sa barre d'outils.
+.block {
+  position: relative;
+  padding: 0.375rem 0.625rem;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: rgb(250 120 83 / 0.04);
+  }
+
+  &[data-selected] {
+    border-color: $orange;
+    background: rgb(250 120 83 / 0.1);
+  }
+
+  &[data-selected]:not([data-type='separator']) {
+    padding-top: 2.75rem;
+  }
+
+  &[data-dragging] {
+    z-index: 2;
+    box-shadow: 0 10px 24px rgb(55 39 33 / 0.18);
+  }
+
+  &[data-type='title'] {
+    margin-top: 0.25rem;
+  }
+}
+
+.toolbar {
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  z-index: 1;
+  display: flex;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  border-radius: 10px;
+  background: $brun;
+  box-shadow: 0 4px 12px rgb(55 39 33 / 0.2);
+
+  [data-type='separator'] > & {
+    top: -2.5rem;
+  }
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  color: var(--dehors-creme, #fff7e9);
+  background: none;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgb(255 247 233 / 0.14);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
+
+  &[aria-label][role='button'],
+  &:first-child {
+    cursor: grab;
+  }
+}
+
+// Le texte des blocs (TipTap).
+.textBlock,
+.titleBlock {
+  flex: 1;
+  min-width: 0;
+
+  :global(.ProseMirror) {
+    outline: none;
+
+    p {
+      margin: 0 0 0.375rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    p.is-empty::before {
+      content: attr(data-placeholder);
+      float: left;
+      height: 0;
+      color: rgb(53 41 36 / 0.38);
+      pointer-events: none;
+    }
+  }
+
+  :global(.doc-field-chip) {
+    display: inline-block;
+    margin: 0 0.0625rem;
+    padding: 0 0.375rem;
+    border-radius: 6px;
+    color: var(--dehors-terracotta, #c47762);
+    font-size: 0.85em;
+    font-weight: 600;
+    line-height: 1.5;
+    background: rgb(250 120 83 / 0.16);
+    cursor: default;
+    user-select: all;
+  }
+
+  :global(.ProseMirror-selectednode.doc-field-chip) {
+    outline: 2px solid $orange;
+  }
+}
+
+.titleBlock :global(.ProseMirror) {
+  font-size: 1.45rem;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.clause,
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.clauseNumber {
+  flex-shrink: 0;
+  min-width: 1.25rem;
+  font-weight: 700;
+}
+
+.checkboxBox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 0.2rem;
+  border: 1.5px solid $brun;
+  border-radius: 3px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fieldLabel {
+  width: 100%;
+  padding: 0;
+  border: none;
+  color: $doux;
+  font: inherit;
+  font-size: 0.8125rem;
+  background: transparent;
+  outline: none;
+
+  &::placeholder {
+    color: rgb(53 41 36 / 0.38);
+  }
+}
+
+.fieldLine,
+.signatureLine {
+  display: block;
+  height: 1.75rem;
+  border-bottom: 1.5px solid $brun;
+}
+
+.signature {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+
+  @include mixins.respond-below(sm) {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+.signatureColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.signatureCaption {
+  color: $doux;
+  font-size: 0.75rem;
+}
+
+.separator {
+  margin: 0.5rem 0;
+  border: none;
+  border-top: 1.5px solid var(--dehors-trait, rgb(227 173 146 / 0.55));
+}
+
+.blockOptions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgb(250 120 83 / 0.4);
+  font-size: 0.8125rem;
+}
+
+.blockOptionsLabel {
+  color: $doux;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.pill {
+  padding: 0.375rem 0.875rem;
+  border: 1.5px solid $brun;
+  border-radius: 999px;
+  color: $brun;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: transparent;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    color: var(--dehors-creme, #fff7e9);
+    background: $brun;
+  }
+}
+
+.addBlock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 999px;
+  color: $brun;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(55 39 33 / 0.1);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dehors-carte, #fffcf8);
+  }
+}
+
+// Les reglages: mode de signature, qui remplit, evenements lies, export.
+.settingsBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsTitle {
+  margin: 0.5rem 0 0.625rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.modes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.mode {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.75rem;
+  border: 1.5px solid var(--dehors-trait, rgb(227 173 146 / 0.55));
+  border-radius: 16px;
+  color: $brun;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+
+  &[aria-checked='true'] {
+    border-color: transparent;
+    background: rgb(250 120 83 / 0.16);
+  }
+}
+
+.modeRadio {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.125rem;
+  border: 1.5px solid $brun;
+  border-radius: 50%;
+
+  [aria-checked='true'] > & {
+    border-width: 5px;
+  }
+}
+
+.modeLabel {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.modeDescription {
+  display: block;
+  margin-top: 0.125rem;
+  color: $doux;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 0.25rem;
+}
+
+.event {
+  :global(.mantine-Switch-body) {
+    justify-content: space-between;
+  }
+
+  :global(.mantine-Switch-label) {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+}
+
+// Telephone: les outils en bas de l'ecran, au-dessus de la barre d'onglets (sous md).
+.mobileBar {
+  position: fixed;
+  right: 0.75rem;
+  bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  left: 0.75rem;
+  z-index: 20;
+  display: none;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 18px;
+  background: var(--dehors-carte, #fffcf8);
+  box-shadow: 0 6px 24px rgb(55 39 33 / 0.18);
+
+  @include mixins.respond-below(lg) {
+    display: flex;
+  }
+}
+
+@include mixins.respond-below(md) {
+  .mobileBar {
+    // Au-dessus de la barre d'onglets (70 px a 20 px du bas).
+    bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+    // Le bouton rond de l'assistant reste a gauche.
+    left: 4.75rem;
+    gap: 0.375rem;
+    padding: 0.375rem;
+
+    :global(.mantine-Button-root) {
+      padding-inline: 0.75rem;
+    }
+  }
+
+  .desk {
+    margin-bottom: 9rem;
+  }
+
+  // Le bouton « Creer un evenement » flottant prendrait la place de ces outils.
+  :global(body:has([data-document-editor]) [data-primary-action]) {
+    display: none !important;
+  }
+}
+
+// Le clavier ouvert: les outils laissent la place au texte.
+:global(body:has(:is(input:not([type='checkbox'], [type='radio']), [contenteditable='true']):focus)) .mobileBar {
+  @include mixins.respond-below(md) {
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+}

@@ -39,6 +39,7 @@ use Mockery\MockInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use HiEvents\DomainObjects\WaiverDomainObject;
 use HiEvents\Services\Domain\Waiver\WaiverService;
+use HiEvents\Services\Domain\Document\OrderDocumentCopyService;
 use Tests\TestCase;
 
 class CompleteOrderHandlerTest extends TestCase
@@ -56,6 +57,7 @@ class CompleteOrderHandlerTest extends TestCase
     private EventSettingsRepositoryInterface $eventSettingsRepository;
     private CheckoutSessionManagementService|MockInterface $sessionManagementService;
     private WaiverService|MockInterface $waiverService;
+    private OrderDocumentCopyService|MockInterface $orderDocumentCopyService;
 
     protected function setUp(): void
     {
@@ -81,6 +83,9 @@ class CompleteOrderHandlerTest extends TestCase
         $this->sessionManagementService = Mockery::mock(CheckoutSessionManagementService::class);
         $this->sessionManagementService->shouldReceive('verifySession')->andReturn(true)->byDefault();
         $this->waiverService = Mockery::mock(WaiverService::class);
+        $this->orderDocumentCopyService = Mockery::mock(OrderDocumentCopyService::class);
+        $this->orderDocumentCopyService->shouldReceive('createForOrder')->byDefault();
+        $this->orderDocumentCopyService->shouldReceive('deleteForOrder')->byDefault();
 
         $this->completeOrderHandler = new CompleteOrderHandler(
             $this->orderRepository,
@@ -93,6 +98,7 @@ class CompleteOrderHandlerTest extends TestCase
             $this->eventSettingsRepository,
             $this->sessionManagementService,
             $this->waiverService,
+            $this->orderDocumentCopyService,
         );
     }
 

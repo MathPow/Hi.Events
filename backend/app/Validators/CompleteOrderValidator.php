@@ -21,6 +21,9 @@ use HiEvents\Validators\Rules\OrderQuestionRule;
 use HiEvents\Services\Domain\Waiver\WaiverService;
 use HiEvents\Validators\Rules\ProductQuestionRule;
 use HiEvents\Validators\Rules\ProductWaiverRule;
+use HiEvents\Validators\Rules\ProductDocumentsRule;
+use HiEvents\Repository\Interfaces\OrganizerDocumentRepositoryInterface;
+use HiEvents\Services\Domain\Document\DocumentSigningService;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 
@@ -33,6 +36,8 @@ class CompleteOrderValidator extends BaseValidator
         private readonly Route                            $route,
         private readonly EventRepositoryInterface         $eventRepository,
         private readonly WaiverService                    $waiverService,
+        private readonly OrganizerDocumentRepositoryInterface $documentRepository,
+        private readonly DocumentSigningService           $documentSigningService,
     )
     {
     }
@@ -91,6 +96,7 @@ class CompleteOrderValidator extends BaseValidator
                     $eventSettings->getAttendeeDetailsCollectionMethod(),
                 ),
                 ...$this->waiverRules($eventSettings, $productQuestions, $products),
+                ...$this->documentRules($productQuestions, $products),
             ],
             ...$addressRules
         ];
@@ -114,6 +120,31 @@ class CompleteOrderValidator extends BaseValidator
             event: $this->eventRepository->findById((int)$this->route->parameter('event_id')),
             dateOfBirthQuestionId: $dateOfBirthQuestion?->getId(),
             waiverService: $this->waiverService,
+        )];
+    }
+
+    /**
+     * The organizer's documents linked to the event: each ticket's attendee signs the online ones.
+     */
+    private function documentRules(Collection $productQuestions, Collection $products): array
+    {
+        $eventId = (int)$this->route->parameter('event_id');
+        $documents = $this->documentRepository->findForEvent($eventId);
+
+        if ($documents->isEmpty()) {
+            return [];
+        }
+
+        $dateOfBirthQuestion = $productQuestions->first(
+            fn(QuestionDomainObject $question) => $question->getPresetKey() === QuestionPresetKey::DATE_OF_BIRTH->value
+        );
+
+        return [new ProductDocumentsRule(
+            documents: $documents,
+            products: $products,
+            event: $this->eventRepository->findById($eventId),
+            dateOfBirthQuestionId: $dateOfBirthQuestion?->getId(),
+            signingService: $this->documentSigningService,
         )];
     }
 

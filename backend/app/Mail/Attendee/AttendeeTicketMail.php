@@ -12,6 +12,9 @@ use HiEvents\Helper\StringHelper;
 use HiEvents\Helper\Url;
 use HiEvents\Mail\BaseMail;
 use HiEvents\Services\Domain\Attendee\GenerateAttendeeTicketPDFService;
+use HiEvents\DomainObjects\DocumentSignatureDomainObject;
+use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
+use HiEvents\Services\Domain\Document\DocumentPdfService;
 use HiEvents\Services\Domain\Email\DTO\RenderedEmailTemplateDTO;
 use HiEvents\Services\Infrastructure\QrCode\QrCodeImageService;
 use Illuminate\Mail\Mailables\Attachment;
@@ -164,8 +167,43 @@ class AttendeeTicketMail extends BaseMail
                 ->withMime('application/pdf'),
 
             Attachment::fromData(static fn() => $calendar, 'event.ics')
-                ->withMime('text/calendar')
+                ->withMime('text/calendar'),
+
+            ...$this->documentAttachments($attendees),
         ];
+    }
+
+    /**
+     * Each attendee's copies of the organizer's documents: signed online, or to print and bring.
+     *
+     * @param Collection<int, AttendeeDomainObject> $attendees
+     * @return Attachment[]
+     */
+    private function documentAttachments(Collection $attendees): array
+    {
+        $copies = app(DocumentSignatureRepositoryInterface::class)->findWhereIn(
+            'attendee_id',
+            $attendees->map(fn(AttendeeDomainObject $attendee) => $attendee->getId())->all(),
+        );
+
+        if ($copies->isEmpty()) {
+            return [];
+        }
+
+        $pdfService = app(DocumentPdfService::class);
+
+        return $copies
+            ->sortBy(fn(DocumentSignatureDomainObject $copy) => $copy->getId())
+            ->map(function (DocumentSignatureDomainObject $copy) use ($pdfService) {
+                $pdf = $pdfService->copy($copy, $this->event->getTimezone());
+
+                return Attachment::fromData(
+                    static fn() => $pdf,
+                    $pdfService->filename($copy->getTitle(), $copy->getAutoValues()['participant_name'] ?? null),
+                )->withMime('application/pdf');
+            })
+            ->values()
+            ->all();
     }
 
     private function ticketPdfFilename(int $ticketCount): string

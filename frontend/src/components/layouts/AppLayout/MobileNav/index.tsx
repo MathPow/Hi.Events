@@ -153,7 +153,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     return (
         <>
             {primaryAction && (
-                <UnstyledButton className={classes.primaryAction} onClick={primaryAction.onClick}>
+                <UnstyledButton className={classes.primaryAction} onClick={primaryAction.onClick} data-primary-action>
                     <primaryAction.icon size={20} stroke={2}/>
                     <span>{primaryAction.label}</span>
                 </UnstyledButton>

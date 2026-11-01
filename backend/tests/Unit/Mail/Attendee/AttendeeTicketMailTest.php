@@ -11,6 +11,10 @@ use HiEvents\DomainObjects\OrderItemDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Mail\Attendee\AttendeeTicketMail;
+use HiEvents\DomainObjects\DocumentSignatureDomainObject;
+use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
+use HiEvents\Services\Domain\Document\DocumentBlocks;
+use Mockery as m;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Support\Collection;
 use Symfony\Component\Mime\Email;
@@ -18,6 +22,47 @@ use Tests\TestCase;
 
 class AttendeeTicketMailTest extends TestCase
 {
+    /** @var DocumentSignatureDomainObject[] The attendees' copies of the organizer's documents. */
+    private array $documentCopies = [];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $repository = m::mock(DocumentSignatureRepositoryInterface::class);
+        $repository->shouldReceive('findWhereIn')->andReturnUsing(fn() => collect($this->documentCopies));
+        $this->app->instance(DocumentSignatureRepositoryInterface::class, $repository);
+    }
+
+    protected function tearDown(): void
+    {
+        m::close();
+        parent::tearDown();
+    }
+
+    public function test_it_attaches_the_attendees_document_copies(): void
+    {
+        $this->documentCopies = [
+            (new DocumentSignatureDomainObject())
+                ->setId(1)
+                ->setTitle('Décharge de responsabilité')
+                ->setBlocks(DocumentBlocks::normalize([['id' => 'me', 'type' => 'signature', 'signer' => 'participant']]))
+                ->setSigningMode('ONLINE')
+                ->setAudience('ALL')
+                ->setAnswers(['me' => 'Alex Tremblay'])
+                ->setAutoValues(['participant_name' => 'Alex Tremblay', 'organizer_name' => 'Sulpace', 'is_minor' => false])
+                ->setSignerName('Alex Tremblay')
+                ->setSignedAt('2026-10-31 14:00:00'),
+        ];
+
+        $email = $this->send($this->buildMail());
+        $pdf = collect($email->getAttachments())
+            ->first(static fn($part) => str_contains($part->asDebugString(), 'decharge-de-responsabilite-alex-tremblay.pdf'));
+
+        $this->assertNotNull($pdf);
+        $this->assertStringStartsWith('%PDF-', $pdf->getBody());
+    }
+
     public function test_it_embeds_a_qr_code_for_the_ticket(): void
     {
         $email = $this->send($this->buildMail());

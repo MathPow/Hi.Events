@@ -324,6 +324,20 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                path: "documents",
+                async lazy() {
+                    const Documents = await import("./components/routes/organizer/Documents");
+                    return { Component: Documents.default };
+                }
+            },
+            {
+                path: "documents/:documentId",
+                async lazy() {
+                    const DocumentEditor = await import("./components/routes/organizer/Documents/DocumentEditor");
+                    return { Component: DocumentEditor.default };
+                }
+            },
+            {
                 path: "events/:eventsState?",
                 async lazy() {
                     const Events = await import("./components/routes/organizer/Events");

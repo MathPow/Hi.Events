@@ -19,6 +19,10 @@ class CompleteOrderProductDataDTO extends BaseDTO
         public readonly ?string     $email = null,
         // The event's waiver as this attendee signed it: accepted, signed_name, guardian_name.
         public readonly ?array      $waiver = null,
+        // The organizer's online documents as this attendee signed them: [{document_id, accepted, answers}].
+        public readonly ?array      $documents = null,
+        // The date of birth asked with the documents when the participant form has none.
+        public readonly ?string     $document_birth_date = null,
     )
     {
     }

@@ -34,7 +34,13 @@ import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.t
 import {useCheckoutPrefill, CheckoutPrefill} from "../../../../hooks/useCheckoutPrefill.ts";
 import {useApplyPromoCodeToOrder} from "../../../../mutations/useApplyPromoCodeToOrder.ts";
 import {WaiverSignature} from "../../../common/WaiverSignature";
+import {DocumentSigning, emptyDocumentEntry} from "../../../common/DocumentSigning";
+import {documentNeedsBirthDate} from "../../../common/OrganizerDocument/blocks.ts";
+import {useGetEventDocumentsPublic} from "../../../../queries/useGetOrganizerDocuments.ts";
+import {PublicOrganizerDocument} from "../../../../api/organizerDocument.client.ts";
 import {isMinorOnEventDay} from "../../../../utilites/dates.ts";
+import dayjs from "dayjs";
+import {getClientLocale} from "../../../../locales.ts";
 import {isEmptyHtml} from "../../../../utilites/helpers.ts";
 import {OrderAddOns} from "./OrderAddOns";
 
@@ -90,6 +96,8 @@ export const CollectInformation = () => {
         isFetched: isQuestionsFetched,
         isError: isQuestionsError
     } = useGetEventQuestionsPublic(eventId);
+    // Les documents de l'organisateur lies a l'evenement (decharge, attestation...).
+    const {data: eventDocuments} = useGetEventDocumentsPublic(eventId);
     const productQuestions = questions?.filter(question => question.belongs_to === "PRODUCT");
     const orderQuestions = questions?.filter(question => question.belongs_to === "ORDER");
     const products = productCategories?.flatMap(category => category.products);
@@ -180,8 +188,19 @@ export const CollectInformation = () => {
         : null;
     const dateOfBirthQuestion = productQuestions?.find(question => question.preset_key === 'date_of_birth');
 
-    /** From the participant form's date of birth, when the attendee answered it. */
+    // Les documents signes en ligne: chaque fiche en garde une entree par document, dans cet ordre.
+    const linkedDocuments: PublicOrganizerDocument[] = eventDocuments ?? [];
+    const onlineDocuments = linkedDocuments.filter(document => document.signing_mode === 'ONLINE');
+    const onlineDocumentsKey = onlineDocuments.map(document => document.id).join(',');
+    // Sans question « date de naissance », les documents qui en ont besoin la demandent.
+    const askDocumentBirthDate = !dateOfBirthQuestion
+        && linkedDocuments.some(document => documentNeedsBirthDate(document.blocks, document.audience));
+
+    /** From the participant form's date of birth, when the attendee answered it (or the one asked with the documents). */
     const isAttendeeMinor = (productIndex: number): boolean => {
+        if (event && !dateOfBirthQuestion) {
+            return isMinorOnEventDay((form.values.products[productIndex] as { document_birth_date?: string } | undefined)?.document_birth_date, event.start_date, event.timezone);
+        }
         if (!event || !dateOfBirthQuestion) {
             return false;
         }
@@ -360,6 +379,8 @@ export const CollectInformation = () => {
                     email: "",
                     email_confirmation: "",
                     waiver: {accepted: false, signed_name: "", guardian_name: ""},
+                    documents: onlineDocuments.map(emptyDocumentEntry),
+                    document_birth_date: "",
                     questions: productIdToQuestionMap.get(orderItem?.product_id)?.map((question: Question) => {
                         return {
                             question_id: question.id,
@@ -406,6 +427,17 @@ export const CollectInformation = () => {
                 ...values,
                 products: values.products.map((product: any, index: number) =>
                     ticketIndices.includes(index) ? {...product, waiver: signature} : product
+                ),
+            };
+        }
+        // Les documents aussi: signes une fois pour la commande, valables pour chaque billet.
+        if (linkedDocuments.length && isPerOrderCollection && firstTicketIndex !== -1) {
+            const {documents, document_birth_date} = values.products[firstTicketIndex];
+            const ticketIndices = getTicketAttendeeIndices();
+            values = {
+                ...values,
+                products: values.products.map((product: any, index: number) =>
+                    ticketIndices.includes(index) ? {...product, documents, document_birth_date} : product
                 ),
             };
         }
@@ -488,6 +520,28 @@ export const CollectInformation = () => {
         .flatMap(item => Array.from({length: item.quantity ?? 0}, () => item.product_price_id))
         .join(',');
     const isFormBuilt = formEntries.some(entry => !!entry.product_price_id);
+    // Les documents arrivent parfois apres le formulaire: chaque fiche recoit ses entrees.
+    useEffect(() => {
+        if (!isFormBuilt || !onlineDocumentsKey) {
+            return;
+        }
+        const entries = form.values.products as { documents?: { document_id: number }[] }[];
+        const upToDate = entries.every(entry =>
+            (entry.documents ?? []).map(document => document.document_id).join(',') === onlineDocumentsKey);
+        if (upToDate) {
+            return;
+        }
+        form.setFieldValue('products', entries.map((entry: any) => ({
+            ...entry,
+            document_birth_date: entry.document_birth_date ?? '',
+            documents: onlineDocuments.map(document =>
+                entry.documents?.find((existing: { document_id: number }) => existing.document_id === document.id)
+                ?? emptyDocumentEntry(document)),
+        })));
+        // Seulement quand les documents ou les fiches changent.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isFormBuilt, onlineDocumentsKey, formEntriesKey]);
+
     // Les coordonnees deja envoyees (on revient du paiement): plus de merch a ajouter.
     const detailsAlreadySent = !!order?.email || order?.payment_status === 'AWAITING_PAYMENT';
 
@@ -604,6 +658,15 @@ export const CollectInformation = () => {
         );
     }
 
+    // Ce que la caisse sait deja des champs automatiques des documents.
+    const documentAutoValues = (participantName?: string, birthDate?: string): Partial<Record<string, string>> => ({
+        participant_name: participantName?.trim() || undefined,
+        date_of_birth: birthDate ? dayjs(birthDate).locale(getClientLocale()).format('D MMMM YYYY') : undefined,
+        event_name: event?.title,
+        event_date: event ? dayjs.utc(event.start_date).tz(event.timezone || 'UTC').locale(getClientLocale()).format('D MMMM YYYY') : undefined,
+        organizer_name: event?.organizer?.name,
+    });
+
     const orderRequiresAttendeeDetails = orderItems?.some(orderItem => {
         const product = products?.find(product => product!.id === orderItem.product_id);
         return product?.product_type === 'TICKET';
@@ -712,6 +775,17 @@ export const CollectInformation = () => {
                             form={form}
                             path={`products.${currentProductIndex}.waiver`}
                             isMinor={isAttendeeMinor(currentProductIndex)}
+                        />
+                    )}
+
+                    {linkedDocuments.length > 0 && productRequiresDetails && (
+                        <DocumentSigning
+                            documents={linkedDocuments}
+                            form={form}
+                            path={`products.${currentProductIndex}`}
+                            isMinor={isAttendeeMinor(currentProductIndex)}
+                            askBirthDate={askDocumentBirthDate}
+                            autoValues={documentAutoValues(form.values.products[currentProductIndex]?.full_name, (form.values.products[currentProductIndex] as { document_birth_date?: string } | undefined)?.document_birth_date)}
                         />
                     )}
                 </div>
@@ -855,6 +929,17 @@ export const CollectInformation = () => {
                                 isMinor={false}
                             />
                         </div>
+                    )}
+
+                    {linkedDocuments.length > 0 && isPerOrderCollection && totalTicketAttendees > 0 && (
+                        <DocumentSigning
+                            documents={linkedDocuments}
+                            form={form}
+                            path={`products.${getFirstTicketAttendeeIndex()}`}
+                            isMinor={isAttendeeMinor(getFirstTicketAttendeeIndex())}
+                            askBirthDate={askDocumentBirthDate}
+                            autoValues={documentAutoValues(form.values.order?.full_name, (form.values.products[getFirstTicketAttendeeIndex()] as { document_birth_date?: string } | undefined)?.document_birth_date)}
+                        />
                     )}
 
                     {event?.settings?.show_marketing_opt_in && (

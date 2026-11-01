@@ -138,6 +138,16 @@ use HiEvents\Http\Actions\Organizers\Orders\GetOrganizerOrdersAction;
 use HiEvents\Http\Actions\Organizers\Public\SendOrganizerContactMessagePublicAction;
 use HiEvents\Http\Actions\Organizers\Messages\DeleteOrganizerMessageAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerMessagesAction;
+use HiEvents\Http\Actions\Organizers\Documents\CreateOrganizerDocumentAction;
+use HiEvents\Http\Actions\Organizers\Documents\DeleteOrganizerDocumentAction;
+use HiEvents\Http\Actions\Organizers\Documents\DuplicateOrganizerDocumentAction;
+use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentAction;
+use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentPdfAction;
+use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentsAction;
+use HiEvents\Http\Actions\Organizers\Documents\UpdateOrganizerDocumentAction;
+use HiEvents\Http\Actions\Events\GetEventDocumentsPublicAction;
+use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentsAction;
+use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerUnreadMessagesCountAction;
 use HiEvents\Http\Actions\Organizers\Messages\MarkAllOrganizerMessagesReadAction;
 use HiEvents\Http\Actions\Organizers\Messages\UpdateOrganizerMessageAction;
@@ -350,6 +360,15 @@ $router->middleware(['auth:api'])->group(
         $router->post('/organizers/{organizer_id}/messages/read-all', MarkAllOrganizerMessagesReadAction::class);
         $router->patch('/organizers/{organizer_id}/messages/{message_id}', UpdateOrganizerMessageAction::class);
         $router->delete('/organizers/{organizer_id}/messages/{message_id}', DeleteOrganizerMessageAction::class);
+
+        // Documents (attestations, decharges, formulaires) de l'organisateur
+        $router->get('/organizers/{organizer_id}/documents', GetOrganizerDocumentsAction::class);
+        $router->post('/organizers/{organizer_id}/documents', CreateOrganizerDocumentAction::class);
+        $router->get('/organizers/{organizer_id}/documents/{document_id}', GetOrganizerDocumentAction::class);
+        $router->patch('/organizers/{organizer_id}/documents/{document_id}', UpdateOrganizerDocumentAction::class);
+        $router->delete('/organizers/{organizer_id}/documents/{document_id}', DeleteOrganizerDocumentAction::class);
+        $router->post('/organizers/{organizer_id}/documents/{document_id}/duplicate', DuplicateOrganizerDocumentAction::class);
+        $router->get('/organizers/{organizer_id}/documents/{document_id}/pdf', GetOrganizerDocumentPdfAction::class);
         $router->get('/push/public-key', GetWebPushPublicKeyAction::class);
         $router->post('/push/subscriptions', CreatePushSubscriptionAction::class);
         $router->delete('/push/subscriptions', DeletePushSubscriptionAction::class);
@@ -421,6 +440,8 @@ $router->middleware(['auth:api'])->group(
         $router->get('/events/{event_id}/attendees/{attendee_id}', GetAttendeeAction::class);
         $router->put('/events/{event_id}/attendees/{attendee_id}', EditAttendeeAction::class);
         $router->patch('/events/{event_id}/attendees/{attendee_id}', PartialEditAttendeeAction::class);
+        $router->get('/events/{event_id}/attendees/{attendee_id}/documents', GetAttendeeDocumentsAction::class);
+        $router->get('/events/{event_id}/attendees/{attendee_id}/documents/{document_id}/pdf', GetAttendeeDocumentPdfAction::class);
         $router->post('/events/{event_id}/attendees/export', ExportAttendeesAction::class);
         $router->post('/events/{event_id}/attendees/{attendee_public_id}/resend-ticket', ResendAttendeeTicketAction::class);
         $router->post('/events/{event_id}/attendees/{attendee_public_id}/check_in', CheckInAttendeeAction::class);
@@ -584,6 +605,7 @@ $router->prefix('/public')->group(
         $router->get('/events/{event_id}', GetEventPublicAction::class);
         $router->get('/events/{event_id}/map-location', GetEventMapLocationPublicAction::class)
             ->middleware('throttle:30,1');
+        $router->get('/events/{event_id}/documents', GetEventDocumentsPublicAction::class);
 
         // Organizers
         $router->get('/organizers/{organizer_id}', GetPublicOrganizerAction::class);

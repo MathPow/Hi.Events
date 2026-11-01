@@ -143,6 +143,13 @@ const OrganizerLayout = () => {
         { label: t`Manage` },
         { link: 'events', label: t`Events`, iconSrc: adminIcon('evenements'), mobileTab: true, mobileTabOrder: 1 },
         {
+            link: 'documents',
+            label: t`Documents`,
+            iconSrc: adminIcon('documents'),
+            tileIconSrc: adminIcon('documents-22'),
+            isActive: (isActive) => isActive || location.pathname.includes('/documents/'),
+        },
+        {
             link: 'messages',
             label: t`Messages`,
             iconSrc: adminIcon('messages'),
