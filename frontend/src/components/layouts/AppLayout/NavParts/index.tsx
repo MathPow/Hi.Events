@@ -62,7 +62,7 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
         <Menu
             position={variant === 'menu' ? 'bottom' : 'right-start'}
             offset={variant === 'menu' ? 8 : 12}
-            width={variant === 'menu' ? 'target' : 260}
+            width={variant === 'menu' ? 'target' : 300}
             shadow="md"
             withinPortal
         >
@@ -111,7 +111,7 @@ export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, on
 
     return (
         <>
-            <Menu position="right-end" offset={12} width={220} shadow="md" withinPortal>
+            <Menu position="right-end" offset={12} width={270} shadow="md" withinPortal>
                 <Menu.Target>
                     <UnstyledButton className={classNames(classes.card, classes.accountCard, classes[variant])}
                                     aria-label={t`Account`} title={variant === 'collapsed' ? name : undefined}>
