@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, UnstyledButton} from "@mantine/core";
-import {IconUserShield} from "@tabler/icons-react";
+import {IconSparkles, IconUserShield} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {NavLink, useLocation} from "react-router";
 import classNames from "classnames";
@@ -27,7 +27,10 @@ interface NavGroup {
     items: NavItem[];
 }
 
-const groupMenuItems = (navItems: NavItem[], grouped: boolean): NavGroup[] => {
+// The bar holds three pages, then the assistant and the menu; other pages go in the menu.
+const MAX_PAGE_TABS = 3;
+
+const groupMenuItems = (navItems: NavItem[], tabs: NavItem[], grouped: boolean): NavGroup[] => {
     const groups: NavGroup[] = [{items: []}];
 
     navItems.forEach((item) => {
@@ -35,7 +38,7 @@ const groupMenuItems = (navItems: NavItem[], grouped: boolean): NavGroup[] => {
             if (grouped) {
                 groups.push({heading: item.label, items: []});
             }
-        } else if (!item.mobileTab && isVisible(item)) {
+        } else if (!tabs.includes(item) && isVisible(item)) {
             groups[groups.length - 1].items.push(item);
         }
     });
@@ -90,13 +93,14 @@ export const MobileNav: React.FC<MobileNavProps> = ({
         .filter((item) => item.mobileTab && !isHeading(item) && isVisible(item))
         .map((item, index) => ({item, order: item.mobileTabOrder ?? index}))
         .sort((a, b) => a.order - b.order)
+        .slice(0, MAX_PAGE_TABS)
         .map(({item}) => item);
-    const groups = groupMenuItems(navItems, groupedMenu);
+    const groups = groupMenuItems(navItems, tabs, groupedMenu);
     if (menuItems.length > 0) {
         groups.push({items: menuItems});
     }
     const menuNeedsAttention = groups.some((group) => group.items.some((item) => item.attention));
-    const isMenuPageActive = !!currentNavItem && !currentNavItem.mobileTab;
+    const isMenuPageActive = !!currentNavItem && !tabs.includes(currentNavItem);
 
     const renderTile = (item: NavItem) => {
         if (item.loading) {
@@ -218,24 +222,23 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                     </NavLink>
                 ))}
 
-                {/* The assistant (components/common/Assistant): its round button becomes this tab. */}
-                {assistant.available && (
-                    <UnstyledButton
-                        className={classNames(classes.tab, {[classes.tabActive]: assistant.open})}
-                        onClick={() => {
-                            setMenuOpen(false);
-                            toggleAssistant();
-                        }}
-                        aria-expanded={assistant.open}
-                        data-assistant-tab
-                        data-busy={assistant.busy || undefined}
-                    >
-                        <span className={classes.tabIcon}>
-                            <span className={classes.assistantIcon} aria-hidden/>
-                        </span>
-                        <span className={classes.tabLabel}>{t`Assistant`}</span>
-                    </UnstyledButton>
-                )}
+                {/* The assistant (components/common/Assistant): its round button becomes this tab. It is
+                    there from the start; a tap before the assistant has loaded opens it once loaded. */}
+                <UnstyledButton
+                    className={classNames(classes.tab, {[classes.tabActive]: assistant.open})}
+                    onClick={() => {
+                        setMenuOpen(false);
+                        toggleAssistant();
+                    }}
+                    aria-expanded={assistant.open}
+                    data-assistant-tab
+                    data-busy={assistant.busy || undefined}
+                >
+                    <span className={classes.tabIcon}>
+                        <IconSparkles size={22} stroke={2} className={classes.assistantIcon} aria-hidden/>
+                    </span>
+                    <span className={classes.tabLabel}>{t`Assistant`}</span>
+                </UnstyledButton>
 
                 <UnstyledButton
                     className={classNames(classes.tab, {[classes.tabActive]: menuOpen || isMenuPageActive})}

@@ -14,8 +14,22 @@ export interface AssistantState {
 }
 
 let current: AssistantState = {available: false, open: false, busy: false};
+// A tap on the tab before the assistant has loaded: it opens once there.
+let openRequested = false;
 
-export const toggleAssistant = () => window.dispatchEvent(new Event(TOGGLE_EVENT));
+export const toggleAssistant = () => {
+    if (!current.available) {
+        openRequested = true;
+        return;
+    }
+    window.dispatchEvent(new Event(TOGGLE_EVENT));
+};
+
+export const takeOpenRequest = () => {
+    const requested = openRequested;
+    openRequested = false;
+    return requested;
+};
 
 export const onAssistantToggle = (listener: () => void) => {
     window.addEventListener(TOGGLE_EVENT, listener);

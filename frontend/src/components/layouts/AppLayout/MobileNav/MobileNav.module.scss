@@ -40,7 +40,7 @@ $z-tab-bar: 170;
   @include hidden-while-typing;
 }
 
-// Each tab as wide as its label, the rest shared: six tabs (with the assistant) keep whole labels.
+// Each tab as wide as its label, the rest shared: three pages, the assistant and the menu.
 .tab {
   display: flex;
   flex: 1 1 auto;
@@ -81,13 +81,10 @@ $z-tab-bar: 170;
   }
 }
 
-// The assistant's peak (the favicon), in the tab's colour; it beats while answering.
+// The assistant's sparkles; they beat while it answers.
 .assistantIcon {
   display: block;
-  width: 1.375rem;
-  height: 1.375rem;
-  background: currentColor;
-  mask: url('/favicon.svg') center / contain no-repeat;
+  flex-shrink: 0;
 
   [data-busy] & {
     animation: assistant-busy 1.2s ease-in-out infinite;

@@ -1,12 +1,12 @@
 import {KeyboardEvent, useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {useLocation} from "react-router";
-import {IconArrowUp, IconPlayerStopFilled, IconRefresh, IconX} from "@tabler/icons-react";
+import {IconArrowUp, IconPlayerStopFilled, IconRefresh, IconSparkles, IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {Answer, useAnswerLink} from "./Answer.tsx";
 import {useAssistantConversation} from "./useAssistantConversation.ts";
-import {onAssistantToggle, publishAssistantState} from "../../../utilites/assistantEvents.ts";
+import {onAssistantToggle, publishAssistantState, takeOpenRequest} from "../../../utilites/assistantEvents.ts";
 import classes from "./Assistant.module.scss";
 
 /**
@@ -27,7 +27,7 @@ const Assistant = () => {
 export default Assistant;
 
 const AssistantPanel = ({userId}: { userId: string }) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(takeOpenRequest);
     const [input, setInput] = useState("");
     const thread = useRef<HTMLDivElement>(null);
     const field = useRef<HTMLTextAreaElement>(null);
@@ -184,7 +184,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                     data-tab-bar={withTabBar} onClick={() => setOpen(!open)} aria-expanded={open}
                     title={open ? t`Close the assistant` : t`Assistant`}
                     aria-label={open ? t`Close the assistant` : t`Open the assistant`}>
-                <span className={classes.launcherIcon} aria-hidden="true"/>
+                <IconSparkles size={28} stroke={2} className={classes.launcherIcon} aria-hidden/>
             </button>
         </>,
         document.body,
