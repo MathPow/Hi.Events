@@ -70,6 +70,37 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
         $this->assertNull($dto->product_info_icon);
     }
 
+    public function test_explicit_null_texts_clear_them(): void
+    {
+        $dto = $this->runPartialUpdate(
+            existingValue: true,
+            settings: [
+                'seo_title' => null,
+                'seo_description' => null,
+                'seo_keywords' => null,
+                'support_email' => null,
+                'email_footer_message' => null,
+                'waitlist_offer_timeout_minutes' => null,
+            ],
+        );
+
+        $this->assertNull($dto->seo_title);
+        $this->assertNull($dto->seo_description);
+        $this->assertNull($dto->seo_keywords);
+        $this->assertNull($dto->support_email);
+        $this->assertNull($dto->email_footer_message);
+        $this->assertNull($dto->waitlist_offer_timeout_minutes);
+    }
+
+    public function test_omitted_texts_keep_existing_values(): void
+    {
+        $dto = $this->runPartialUpdate(existingValue: true, settings: []);
+
+        $this->assertSame('Rando aux couleurs', $dto->seo_title);
+        $this->assertSame('info@dehors.ca', $dto->support_email);
+        $this->assertSame(180, $dto->waitlist_offer_timeout_minutes);
+    }
+
     /**
      * Drives the partial handler and returns the UpdateEventSettingsDTO it forwards
      * to the (mocked) full handler, so we can assert how the field was resolved.
@@ -82,6 +113,9 @@ class PartialUpdateEventSettingsHandlerTest extends TestCase
             ->setProductInfoButtonText('Donate')
             ->setProductInfoButtonUrl('https://example.com/donate')
             ->setProductInfoIcon('gift')
+            ->setSeoTitle('Rando aux couleurs')
+            ->setSupportEmail('info@dehors.ca')
+            ->setWaitlistOfferTimeoutMinutes(180)
             ->setPaymentProviders([]);
 
         $repository = Mockery::mock(EventSettingsRepositoryInterface::class);

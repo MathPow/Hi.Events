@@ -1,196 +1,110 @@
-import {PageBody} from "../../../common/PageBody";
-import {EventDetailsForm} from "./Sections/EventDetailsForm";
-import {LocationSettings} from "./Sections/LocationSettings";
-import {HomepageAndCheckoutSettings} from "./Sections/HomepageAndCheckoutSettings";
-import {EmailSettings} from "./Sections/EmailSettings";
-import {PageTitle} from "../../../common/PageTitle";
+import {useEffect, useRef} from "react";
+import {Link, Navigate, useLocation, useParams} from "react-router";
 import {t} from "@lingui/macro";
-import {SeoSettings} from "./Sections/SeoSettings";
-import {MiscSettings} from "./Sections/MiscSettings";
-import {Box, Group, NavLink as MantineNavLink, Stack} from "@mantine/core";
-import {
-    IconAdjustments,
-    IconAlertTriangle,
-    IconAt,
-    IconBrandGoogleAnalytics,
-    IconBuildingStore,
-    IconCreditCard,
-    IconHome,
-    IconListCheck,
-    IconMapPin,
-    IconNumber,
-    IconPercentage,
-    IconSignature,
-} from "@tabler/icons-react";
-import {useMediaQuery} from "@mantine/hooks";
-import {SettingsSectionChips} from "../../../common/SettingsSectionChips";
-import {useScrollSpy} from "../../../../hooks/useScrollSpy.ts";
-import {useEffect, useMemo, useState} from "react";
-import {Card} from "../../../common/Card";
-import {PaymentAndInvoicingSettings} from "./Sections/PaymentSettings";
-import {PlatformFeesSettings} from "./Sections/PlatformFeesSettings";
-import {WaitlistSettings} from "./Sections/WaitlistSettings";
-import {WaiverSettings} from "./Sections/WaiverSettings";
-import {BibNumberSettings} from "./Sections/BibNumberSettings";
-import {DangerZoneSettings} from "./Sections/DangerZoneSettings";
-import {useGetAccount} from "../../../../queries/useGetAccount.ts";
+import classNames from "classnames";
+import {Skeleton} from "@mantine/core";
+import {useAutosaveStatus, usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
+import {useGetEvent} from "../../../../queries/useGetEvent.ts";
+import {useGetEventSettings} from "../../../../queries/useGetEventSettings.ts";
+import {EventTab} from "./tabs/EventTab.tsx";
+import {RegistrationTab} from "./tabs/RegistrationTab.tsx";
+import {PaymentTab} from "./tabs/PaymentTab.tsx";
+import {EmailsTab} from "./tabs/EmailsTab.tsx";
+import {EVENT_SETTINGS_TABS, EventSettingsTab, eventSettingsTabPath, SECTION_TABS} from "./settingsTabs.ts";
+import classes from "../../organizer/Settings/Settings.module.scss";
 
-export const Settings = () => {
-    const {data: account} = useGetAccount();
-    const isSaasMode = account?.is_saas_mode_enabled;
+const tabLabel = (tab: EventSettingsTab) => ({
+    event: t({message: 'Event', context: 'settings tab'}),
+    registration: t({message: 'Registration', context: 'settings tab'}),
+    payment: t`Payment & Invoicing`,
+    emails: t`Emails`,
+})[tab];
 
-    const SECTIONS = useMemo(() => {
-        const baseSections = [
-            {
-                id: 'event-details',
-                label: t`Event Details`,
-                icon: IconBuildingStore,
-                component: EventDetailsForm
-            },
-            {
-                id: 'location-settings',
-                label: t`Location`,
-                icon: IconMapPin,
-                component: LocationSettings
-            },
-            {
-                id: 'homepage-settings',
-                label: t`Checkout`,
-                icon: IconHome,
-                component: HomepageAndCheckoutSettings
-            },
-            {
-                id: 'seo-settings',
-                label: t`SEO`,
-                icon: IconBrandGoogleAnalytics,
-                component: SeoSettings
-            },
-            {
-                id: 'email-settings',
-                label: t`Email & Templates`,
-                icon: IconAt,
-                component: EmailSettings
-            },
-            {
-                id: 'misc-settings',
-                label: t`Miscellaneous`,
-                icon: IconAdjustments,
-                component: MiscSettings
-            },
-            {
-                id: 'waiver-settings',
-                label: t`Waiver`,
-                icon: IconSignature,
-                component: WaiverSettings,
-            },
-            {
-                id: 'bib-number-settings',
-                label: t`Bib numbers`,
-                icon: IconNumber,
-                component: BibNumberSettings,
-            },
-            {
-                id: 'waitlist-settings',
-                label: t`Waitlist`,
-                icon: IconListCheck,
-                component: WaitlistSettings,
-            },
-            {
-                id: 'payment-settings',
-                label: t`Payment & Invoicing`,
-                icon: IconCreditCard,
-                component: PaymentAndInvoicingSettings,
-            },
-            {
-                id: 'danger-zone',
-                label: t`Danger Zone`,
-                icon: IconAlertTriangle,
-                component: DangerZoneSettings,
-                color: 'red',
-            }
-        ];
+const SettingsSkeleton = () => (
+    <div className={classes.grid}>
+        <Skeleton className={classes.full} height={420} radius={32}/>
+        <Skeleton height={360} radius={32}/>
+        <Skeleton height={360} radius={32}/>
+    </div>
+);
 
-        if (isSaasMode) {
-            baseSections.splice(baseSections.length - 1, 0, {
-                id: 'platform-fees',
-                label: t`Platform Fees`,
-                icon: IconPercentage,
-                component: PlatformFeesSettings,
-            });
-        }
+/**
+ * « Paramètres de l'événement », like the organizer's Paramètres: sticky tabs, sections in a bento
+ * layout, and every field saves itself when it is left (« Changements enregistrés » in the top bar).
+ */
+const Settings = () => {
+    const {eventId, tab} = useParams();
+    const location = useLocation();
+    const tabsRef = useRef<HTMLDivElement>(null);
+    const {data: event} = useGetEvent(eventId);
+    const {data: settings} = useGetEventSettings(eventId);
 
-        return baseSections;
-    }, [isSaasMode]);
+    // The former single page's anchors (…/settings#waitlist-settings) open the tab that holds the section.
+    const anchor = location.hash.replace('#', '');
+    const anchorTab = SECTION_TABS[anchor];
+    const isKnownTab = EVENT_SETTINGS_TABS.includes(tab as EventSettingsTab);
+    const active: EventSettingsTab = isKnownTab ? tab as EventSettingsTab : (anchorTab ?? 'event');
 
-    const isLargeScreen = useMediaQuery('(min-width: 1200px)', true);
-    const [activeSection, setActiveSection] = useState(() => {
-        if (typeof window === 'undefined') return 'event-details';
-        const hash = window.location.hash.replace('#', '');
-        return hash || 'event-details';
-    });
+    usePageDetail(tabLabel(active));
+    useAutosaveStatus();
+
+    const ready = !!event && !!settings;
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
-        const hash = window.location.hash.replace('#', '');
-        if (hash) {
-            setActiveSection(hash);
-            setTimeout(() => {
-                document.getElementById(hash)?.scrollIntoView({behavior: 'smooth'});
-            }, 100);
+        if (!ready || !anchor) {
+            return;
         }
-    }, []);
+        const timer = window.setTimeout(() => document.getElementById(anchor)?.scrollIntoView({behavior: 'smooth', block: 'start'}), 150);
+        return () => window.clearTimeout(timer);
+    }, [ready, anchor, active]);
 
-    const handleClick = (sectionId: string) => {
-        setActiveSection(sectionId);
-        window.history.replaceState(null, '', `#${sectionId}`);
-        document.getElementById(sectionId)?.scrollIntoView({behavior: 'smooth'});
-    };
+    // On phones the tabs scroll sideways: keep the current one in view.
+    useEffect(() => {
+        const list = tabsRef.current;
+        const current = list?.querySelector<HTMLElement>('[aria-current="page"]');
+        if (!list || !current || list.scrollWidth <= list.clientWidth) {
+            return;
+        }
+        const offset = current.getBoundingClientRect().left - list.getBoundingClientRect().left;
+        list.scrollTo({left: list.scrollLeft + offset - (list.clientWidth - current.offsetWidth) / 2});
+    }, [active]);
 
-    useScrollSpy(SECTIONS.map((section) => section.id), setActiveSection, !isLargeScreen);
+    if (!eventId) {
+        return null;
+    }
 
-    const sideMenu = (
-        <Card style={{padding: '15px', marginBottom: 0}}>
-            <Stack gap="xs">
-                {SECTIONS.map((section) => (
-                    <MantineNavLink
-                        key={section.id}
-                        active={activeSection === section.id}
-                        label={section.label}
-                        color={'color' in section ? section.color as string : undefined}
-                        leftSection={<section.icon size={16} stroke={1.5}/>}
-                        onClick={() => handleClick(section.id)}
-                    />
-                ))}
-            </Stack>
-        </Card>
-    );
-
-    const content = SECTIONS.map(({id, component: Component}) => (
-        <div key={id} id={id} style={{scrollMarginTop: isLargeScreen ? '20px' : '72px'}}>
-            <Component/>
-        </div>
-    ));
+    if ((tab && !isKnownTab) || (!tab && anchorTab)) {
+        return <Navigate to={eventSettingsTabPath(eventId, active) + (anchorTab ? location.hash : '')} replace/>;
+    }
 
     return (
-        <PageBody>
-            <PageTitle
-                subheading={t`Configure event details, location, checkout options, and email notifications.`}
-            >{t`Event Settings`}</PageTitle>
+        <div className={classes.page}>
+            <header className={classes.header}>
+                <h1 className={classes.title}>{t`Event Settings`}</h1>
+                <p className={classes.subtitle}>{t`Your event's details, registration, payments and emails.`}</p>
+            </header>
 
-            {isLargeScreen ? (
-                <Group align="flex-start" gap="md">
-                    <Box w={240} style={{position: 'sticky', top: 20}}>
-                        {sideMenu}
-                    </Box>
-                    <Box style={{flex: 1}}>{content}</Box>
-                </Group>
-            ) : (
-                <Stack>
-                    <SettingsSectionChips sections={SECTIONS} activeSection={activeSection} onSelect={handleClick}/>
-                    {content}
-                </Stack>
-            )}
-        </PageBody>
+            <div className={classes.tabsSticky}>
+                <nav className={classes.tabsBar} ref={tabsRef} aria-label={t`Event Settings`}>
+                    {EVENT_SETTINGS_TABS.map(id => (
+                        <Link
+                            key={id}
+                            to={eventSettingsTabPath(eventId, id)}
+                            className={classNames(classes.tab, {[classes.tabActive]: id === active})}
+                            aria-current={id === active ? 'page' : undefined}
+                        >
+                            {tabLabel(id)}
+                        </Link>
+                    ))}
+                </nav>
+            </div>
+
+            {!ready && <SettingsSkeleton/>}
+            {ready && active === 'event' && <EventTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
+            {ready && active === 'registration' && <RegistrationTab key={eventId} eventId={eventId} settings={settings}/>}
+            {ready && active === 'payment' && <PaymentTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
+            {ready && active === 'emails' && <EmailsTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
+        </div>
     );
 };
 

@@ -8,11 +8,11 @@ import {useSectionAutosave} from "../../../../layouts/AppLayout/PageStatus.tsx";
 import {SettingsCard, Tag} from "../SettingsUi.tsx";
 import classes from "../Settings.module.scss";
 
-const SAMPLE_PRICE = 50;
+export const SAMPLE_PRICE = 50;
 
-type FeeChoice = 'pass' | 'absorb';
+export type FeeChoice = 'pass' | 'absorb';
 
-interface Rates {
+export interface Rates {
     platformRate: number;
     platformFixed: number;
     stripeRate: number;
@@ -39,9 +39,84 @@ const percent = (value: number) => new Intl.NumberFormat(intlLocale(), {
     maximumFractionDigits: 2,
 }).format(value / 100);
 
-const feeText = (percentage: number, fixed: number, currency: string) => fixed > 0
+export const feeText = (percentage: number, fixed: number, currency: string) => fixed > 0
     ? `${percent(percentage)} + ${formatCurrency(fixed, currency)}`
     : percent(percentage);
+
+// « Frais de plateforme 2,5 % par billet + frais Stripe (2,9 % + 0,30 $) ».
+export const feesSubtitle = (hasPlatformFee: boolean, platformFees: string, stripeFees: string) => hasPlatformFee
+    ? t`${platformFees} per ticket + Stripe fees (${stripeFees}). Nothing on free events.`
+    : t`Stripe fees only (${stripeFees}). Nothing on free events.`;
+
+interface FeeChoiceGroupProps {
+    choice: FeeChoice | null;
+    onChoose: (choice: FeeChoice) => void;
+    rates: Rates;
+    currency: string;
+    disabled?: boolean;
+}
+
+// « Qui paie les frais? »: passed on or absorbed, each with its example in figures.
+export const FeeChoiceGroup = ({choice, onChoose, rates, currency, disabled}: FeeChoiceGroupProps) => {
+    const options: { value: FeeChoice, title: string, text: string, recommended?: boolean }[] = [
+        {
+            value: 'pass',
+            title: t`Pass on to the buyer`,
+            text: t`The fees are added to the ticket price. You receive the full price.`,
+            recommended: true,
+        },
+        {
+            value: 'absorb',
+            title: t`Absorb the fees`,
+            text: t`The buyer pays the price shown. The fees are taken from your sales.`,
+        },
+    ];
+
+    return (
+        <>
+            <p className={classes.fieldLabel}>{t`Who pays the fees?`}</p>
+            <div className={classes.feeOptions} role="radiogroup" aria-label={t`Who pays the fees?`}>
+                {options.map(option => {
+                    const example = feeExample(SAMPLE_PRICE, option.value, rates);
+                    return (
+                        <button
+                            key={option.value}
+                            type="button"
+                            role="radio"
+                            aria-checked={choice === option.value}
+                            className={classes.feeOption}
+                            disabled={disabled}
+                            onClick={() => onChoose(option.value)}
+                        >
+                            <span className={classes.radio}/>
+                            <span className={classes.feeOptionBody}>
+                                <span className={classes.feeOptionHead}>
+                                    <span className={classes.feeOptionTitle}>{option.title}</span>
+                                    {option.recommended && <Tag tone="ink">{t`Recommended`}</Tag>}
+                                </span>
+                                <span className={classes.feeOptionText}>{option.text}</span>
+                                <span className={classes.feeExample}>
+                                    <span className={classes.feeFigure}>
+                                        <span className={classes.feeFigureLabel}>{t`Ticket`}</span>
+                                        <span className={classes.feeFigureValue}>{formatCurrency(SAMPLE_PRICE, currency)}</span>
+                                    </span>
+                                    <span className={classes.feeFigure}>
+                                        <span className={classes.feeFigureLabel}>{t`Buyer pays`}</span>
+                                        <span className={classes.feeFigureValue}>{formatCurrency(example.buyerPays, currency)}</span>
+                                    </span>
+                                    <span className={classes.feeFigure}>
+                                        <span className={classes.feeFigureLabel}>{t`You receive`}</span>
+                                        <span className={classes.feeFigureValue}>{formatCurrency(example.youReceive, currency)}</span>
+                                    </span>
+                                </span>
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+        </>
+    );
+};
 
 interface FeesCardProps {
     organizerId: IdParam;
@@ -95,65 +170,9 @@ export const FeesCard = ({organizerId, account, settings, currency}: FeesCardPro
 
     const stripeFees = feeText(Number(account.stripe_processing_fees?.percentage ?? 0), rates.stripeFixed, currency);
     const platformFees = feeText(Number(configuration?.application_fees.percentage ?? 0), rates.platformFixed, configuration?.application_fees.currency || currency);
-    const subtitle = hasPlatformFee
-        ? t`${platformFees} per ticket + Stripe fees (${stripeFees}). Nothing on free events.`
-        : t`Stripe fees only (${stripeFees}). Nothing on free events.`;
-
-    const options: { value: FeeChoice, title: string, text: string, recommended?: boolean }[] = [
-        {
-            value: 'pass',
-            title: t`Pass on to the buyer`,
-            text: t`The fees are added to the ticket price. You receive the full price.`,
-            recommended: true,
-        },
-        {
-            value: 'absorb',
-            title: t`Absorb the fees`,
-            text: t`The buyer pays the price shown. The fees are taken from your sales.`,
-        },
-    ];
-
     return (
-        <SettingsCard title={t`Ticketing fees`} subtitle={subtitle}>
-            <p className={classes.fieldLabel}>{t`Who pays the fees?`}</p>
-            <div className={classes.feeOptions} role="radiogroup" aria-label={t`Who pays the fees?`}>
-                {options.map(option => {
-                    const example = feeExample(SAMPLE_PRICE, option.value, rates);
-                    return (
-                        <button
-                            key={option.value}
-                            type="button"
-                            role="radio"
-                            aria-checked={choice === option.value}
-                            className={classes.feeOption}
-                            onClick={() => choose(option.value)}
-                        >
-                            <span className={classes.radio}/>
-                            <span className={classes.feeOptionBody}>
-                                <span className={classes.feeOptionHead}>
-                                    <span className={classes.feeOptionTitle}>{option.title}</span>
-                                    {option.recommended && <Tag tone="ink">{t`Recommended`}</Tag>}
-                                </span>
-                                <span className={classes.feeOptionText}>{option.text}</span>
-                                <span className={classes.feeExample}>
-                                    <span className={classes.feeFigure}>
-                                        <span className={classes.feeFigureLabel}>{t`Ticket`}</span>
-                                        <span className={classes.feeFigureValue}>{formatCurrency(SAMPLE_PRICE, currency)}</span>
-                                    </span>
-                                    <span className={classes.feeFigure}>
-                                        <span className={classes.feeFigureLabel}>{t`Buyer pays`}</span>
-                                        <span className={classes.feeFigureValue}>{formatCurrency(example.buyerPays, currency)}</span>
-                                    </span>
-                                    <span className={classes.feeFigure}>
-                                        <span className={classes.feeFigureLabel}>{t`You receive`}</span>
-                                        <span className={classes.feeFigureValue}>{formatCurrency(example.youReceive, currency)}</span>
-                                    </span>
-                                </span>
-                            </span>
-                        </button>
-                    );
-                })}
-            </div>
+        <SettingsCard title={t`Ticketing fees`} subtitle={feesSubtitle(hasPlatformFee, platformFees, stripeFees)}>
+            <FeeChoiceGroup choice={choice} onChoose={choose} rates={rates} currency={currency}/>
             <p className={classes.softHint}>{t`Default value. Can be changed for each event. Estimated amounts.`}</p>
         </SettingsCard>
     );

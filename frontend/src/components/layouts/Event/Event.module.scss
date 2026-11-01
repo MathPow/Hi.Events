@@ -57,6 +57,13 @@
   }
 }
 
+// With « Changements enregistrés » too (the event's settings), the status keeps only its state sooner.
+@container (max-width: 1240px) {
+  :global([data-save-status]) .statusAction {
+    display: none;
+  }
+}
+
 @container (max-width: 780px) {
   .shareButton,
   .previewButton {

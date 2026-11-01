@@ -1,0 +1,213 @@
+@use "../../../../styles/mixins";
+@use "../../../../styles/admin-ui" as ui;
+
+// What the event's settings add to the organizer's Paramètres (organizer/Settings/Settings.module.scss).
+
+// The sticky tabs stay above a card opened from its address (#waitlist-settings).
+.anchored {
+  scroll-margin-top: 6rem;
+}
+
+// Two editors side by side (before and after the payment).
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.5rem;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// A choice as two radio cards (price display).
+.radioCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+// The information block's icon: round buttons.
+.iconChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.iconChoice {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1.5px solid ui.$ink;
+  border-radius: 999px;
+  background: none;
+  color: ui.$ink;
+  cursor: pointer;
+
+  &[aria-checked='true'] {
+    background: ui.$ink;
+    color: var(--dehors-creme);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ui.$accent;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+// Payment methods: one row each, the offline settings under their row.
+.methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.method {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 1.125rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+}
+
+.methodHead {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+// Under the method's name, past its pastille.
+.methodLink {
+  padding-left: 3.625rem;
+
+  @include mixins.respond-below(md) {
+    padding-left: 0;
+  }
+}
+
+.methodBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(55 39 33 / 0.08);
+}
+
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0;
+  padding-left: 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+// The automatic emails: « Modifier » goes under the text when the card is narrow.
+.emailRow {
+  flex-wrap: wrap;
+
+  > :nth-child(2) {
+    flex: 1 1 11rem;
+  }
+}
+
+// Their state and the way back under the name.
+.emailMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  margin-top: 0.25rem;
+}
+
+// Bib numbers: a ticket option and its first number per row.
+.bibRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.625rem 0.625rem 0.625rem 1rem;
+  border-radius: 1.125rem;
+  background: ui.$row;
+}
+
+.bibLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.bibInput.bibInput {
+  flex-shrink: 0;
+  width: 10.5rem;
+  margin: 0;
+
+  :global(.mantine-Input-input) {
+    height: 2.75rem;
+    min-height: 2.75rem;
+    padding-inline: 0.875rem;
+    border-radius: 0.875rem;
+    background: ui.$card;
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+}
+
+.footerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(55 39 33 / 0.08);
+
+  > p {
+    flex: 1 1 14rem;
+  }
+}
+
+// The editors of these settings, styled as fields (like the organizer's description).
+.editor.editor {
+  :global(.mantine-RichTextEditor-toolbar) {
+    flex-wrap: wrap;
+  }
+
+  :global(.mantine-RichTextEditor-content) {
+    min-height: 6rem;
+  }
+}
+
+.editorSmall.editorSmall.editorSmall {
+  :global(.mantine-RichTextEditor-content) {
+    min-height: 3.5rem;
+  }
+}
+
+.readOnly {
+  :global(.mantine-Input-input:disabled) {
+    opacity: 1;
+    background: ui.$row;
+    color: ui.$ink;
+    cursor: default;
+  }
+}

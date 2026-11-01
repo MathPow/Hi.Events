@@ -7,6 +7,8 @@ import {intlLocale} from "../../../../utilites/intlLocale.ts";
 import classes from "./Settings.module.scss";
 
 interface SettingsCardProps {
+    // An anchor (…/settings/payment#platform-fees).
+    id?: string;
     title: ReactNode;
     subtitle?: ReactNode;
     action?: ReactNode;
@@ -16,8 +18,8 @@ interface SettingsCardProps {
 }
 
 // A section of the bento layout: half width unless `full`.
-export const SettingsCard = ({title, subtitle, action, full, className, children}: SettingsCardProps) => (
-    <section className={classNames(classes.card, {[classes.full]: full}, className)}>
+export const SettingsCard = ({id, title, subtitle, action, full, className, children}: SettingsCardProps) => (
+    <section id={id} className={classNames(classes.card, {[classes.full]: full}, className)}>
         <div className={classes.cardHead}>
             <div className={classes.cardHeadText}>
                 <h2 className={classes.cardTitle}>{title}</h2>

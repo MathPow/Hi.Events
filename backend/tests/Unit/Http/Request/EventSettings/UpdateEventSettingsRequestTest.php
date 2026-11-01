@@ -165,4 +165,45 @@ class UpdateEventSettingsRequestTest extends TestCase
 
         $this->assertTrue($validator->errors()->has('product_info_icon'));
     }
+
+    public function test_a_place_name_alone_is_a_location(): void
+    {
+        $validator = $this->validateLocation(['venue_name' => 'Mont Sainte-Anne']);
+
+        $this->assertFalse($validator->fails());
+    }
+
+    public function test_a_street_address_needs_its_city_postal_code_and_country(): void
+    {
+        $validator = $this->validateLocation(['address_line_1' => '2000 boulevard du Beau-Pré']);
+
+        $this->assertEqualsCanonicalizing([
+            'location_details.city',
+            'location_details.zip_or_postal_code',
+            'location_details.country',
+        ], array_keys($validator->errors()->toArray()));
+    }
+
+    public function test_an_empty_location_needs_a_name_or_an_address(): void
+    {
+        $validator = $this->validateLocation(['venue_name' => '', 'address_line_1' => '']);
+
+        $this->assertTrue($validator->errors()->has('location_details.venue_name'));
+    }
+
+    public function test_settings_without_a_location_need_no_address(): void
+    {
+        $data = ['seo_title' => 'Rando aux couleurs'];
+        $request = UpdateEventSettingsRequest::create('/', 'PATCH', $data);
+
+        $this->assertFalse(Validator::make($data, $request->rules(), $request->messages())->fails());
+    }
+
+    private function validateLocation(array $location): \Illuminate\Validation\Validator
+    {
+        $data = ['location_details' => $location];
+        $request = UpdateEventSettingsRequest::create('/', 'PATCH', $data);
+
+        return Validator::make($data, $request->rules(), $request->messages());
+    }
 }

@@ -49,7 +49,7 @@ const stripe: HelpGuide = {
         {
             ul: [
                 'In **Settings → Payments**, the **Stripe account** section should read **Connected to Stripe**.',
-                'In your event, open **Event Settings → Payment & Invoicing**. Under **Payment Methods**, the **Stripe** box should be checked (it is by default). Click **Save** if you changed it.',
+                'In your event, open **Event Settings → Payment & Invoicing**. Under **Payment Methods**, the **Stripe** switch should be on (it is by default). The change is saved right away.',
                 'Make a test purchase with your own card on a low-priced ticket, then refund it from the order.',
             ],
         },
@@ -58,7 +58,7 @@ const stripe: HelpGuide = {
         {
             ul: [
                 '**The button still says "Finish Stripe setup"**: Stripe is still waiting for some information. Click it and fill in what is marked in red.',
-                "**Buyers don't see card payment**: check that Stripe is checked in the event's **Payment & Invoicing**.",
+                "**Buyers don't see card payment**: check that Stripe is on in the event's **Payment & Invoicing**.",
                 '**Stripe asks for an identity check**: upload the requested ID in your Stripe dashboard.',
                 '**Payouts are paused**: open your Stripe dashboard, an alert shows what is missing.',
             ],
@@ -203,7 +203,7 @@ export const en: HelpContent = {
         {
             category: 'Payments',
             question: 'How much does Billetterie Dehors cost?',
-            answer: "2.5% per ticket sold, plus Stripe's payment fees (2.9% + $0.30). No subscription, no hidden fees, and nothing at all if your event is free.\n\nWould you rather the buyer pays them? Choose **Pass on to the buyer** in **Settings → Payments** (**Ticketing fees** section): your new events start that way. For an event already created, in **Event Settings**, the **Platform Fees** section lets you **Pass fee to buyer**, and **Payment & Invoicing** lets you **Pass processing fees to buyer**.",
+            answer: "2.5% per ticket sold, plus Stripe's payment fees (2.9% + $0.30). No subscription, no hidden fees, and nothing at all if your event is free.\n\nWould you rather the buyer pays them? Choose **Pass on to the buyer** in **Settings → Payments** (**Ticketing fees** section): your new events start that way. For an event already created, open **Event Settings → Payment & Invoicing**: the **Ticketing fees** section offers the same choice, for that event only.",
         },
         {
             category: 'Payments',

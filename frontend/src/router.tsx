@@ -436,7 +436,7 @@ const routes: RouteObject[] = [
                 }
             },
             {
-                path: "settings",
+                path: "settings/:tab?",
                 async lazy() {
                     const Settings = await import("./components/routes/event/Settings");
                     return { Component: Settings.default };

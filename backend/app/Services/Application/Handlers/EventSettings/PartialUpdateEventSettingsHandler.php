@@ -49,8 +49,12 @@ class PartialUpdateEventSettingsHandler
                 'pre_checkout_message' => array_key_exists('pre_checkout_message', $eventSettingsDTO->settings)
                     ? $eventSettingsDTO->settings['pre_checkout_message']
                     : $existingSettings->getPreCheckoutMessage(),
-                'email_footer_message' => $eventSettingsDTO->settings['email_footer_message'] ?? $existingSettings->getEmailFooterMessage(),
-                'support_email' => $eventSettingsDTO->settings['support_email'] ?? $existingSettings->getSupportEmail(),
+                'email_footer_message' => array_key_exists('email_footer_message', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['email_footer_message']
+                    : $existingSettings->getEmailFooterMessage(),
+                'support_email' => array_key_exists('support_email', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['support_email']
+                    : $existingSettings->getSupportEmail(),
                 'require_attendee_details' => $eventSettingsDTO->settings['require_attendee_details'] ?? $existingSettings->getRequireAttendeeDetails(),
                 'attendee_details_collection_method' => $eventSettingsDTO->settings['attendee_details_collection_method'] ?? $existingSettings->getAttendeeDetailsCollectionMethod(),
                 'continue_button_text' => array_key_exists('continue_button_text', $eventSettingsDTO->settings)
@@ -88,9 +92,15 @@ class PartialUpdateEventSettingsHandler
                     ? $eventSettingsDTO->settings['online_event_connection_details']
                     : $existingSettings->getOnlineEventConnectionDetails(),
 
-                'seo_title' => $eventSettingsDTO->settings['seo_title'] ?? $existingSettings->getSeoTitle(),
-                'seo_description' => $eventSettingsDTO->settings['seo_description'] ?? $existingSettings->getSeoDescription(),
-                'seo_keywords' => $eventSettingsDTO->settings['seo_keywords'] ?? $existingSettings->getSeoKeywords(),
+                'seo_title' => array_key_exists('seo_title', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['seo_title']
+                    : $existingSettings->getSeoTitle(),
+                'seo_description' => array_key_exists('seo_description', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['seo_description']
+                    : $existingSettings->getSeoDescription(),
+                'seo_keywords' => array_key_exists('seo_keywords', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['seo_keywords']
+                    : $existingSettings->getSeoKeywords(),
                 'allow_search_engine_indexing' => $eventSettingsDTO->settings['allow_search_engine_indexing'] ?? $existingSettings->getAllowSearchEngineIndexing(),
 
                 'notify_organizer_of_new_orders' => $eventSettingsDTO->settings['notify_organizer_of_new_orders'] ?? $existingSettings->getNotifyOrganizerOfNewOrders(),
@@ -162,7 +172,9 @@ class PartialUpdateEventSettingsHandler
 
                 // Waitlist settings
                 'waitlist_auto_process' => $eventSettingsDTO->settings['waitlist_auto_process'] ?? $existingSettings->getWaitlistAutoProcess(),
-                'waitlist_offer_timeout_minutes' => $eventSettingsDTO->settings['waitlist_offer_timeout_minutes'] ?? $existingSettings->getWaitlistOfferTimeoutMinutes(),
+                'waitlist_offer_timeout_minutes' => array_key_exists('waitlist_offer_timeout_minutes', $eventSettingsDTO->settings)
+                    ? $eventSettingsDTO->settings['waitlist_offer_timeout_minutes']
+                    : $existingSettings->getWaitlistOfferTimeoutMinutes(),
             ]),
         );
     }

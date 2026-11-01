@@ -49,7 +49,8 @@ export const Topbar: React.FC<TopbarProps> = ({
                                                   actions = null,
                                               }) => {
     return (
-        <header className={classNames(classes.topBar, {[classes.withShadow]: topBarShadow})}>
+        <header className={classNames(classes.topBar, {[classes.withShadow]: topBarShadow})}
+                data-save-status={saveStatus?.state}>
             <nav className={classes.breadcrumbs} aria-label={t`Breadcrumb`}>
                 {breadcrumbItems.map((item, index) => {
                     const isLast = index === breadcrumbItems.length - 1;

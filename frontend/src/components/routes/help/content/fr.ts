@@ -49,7 +49,7 @@ const stripe: HelpGuide = {
         {
             ul: [
                 'Dans **Paramètres → Paiements**, la section **Compte Stripe** doit afficher **Connecté à Stripe**.',
-                "Dans votre événement, ouvrez **Paramètres de l'événement → Paiement et facturation**. Sous **Méthodes de paiement**, la case **Stripe** doit être cochée (elle l'est par défaut). Cliquez sur **Sauvegarder** si vous l'avez modifiée.",
+                "Dans votre événement, ouvrez **Paramètres de l'événement → Paiement et facturation**. Sous **Méthodes de paiement**, l'interrupteur **Stripe** doit être activé (il l'est par défaut). Le changement est enregistré tout de suite.",
                 'Faites un achat test avec votre propre carte sur un billet à petit prix, puis remboursez-le depuis la commande.',
             ],
         },
@@ -58,7 +58,7 @@ const stripe: HelpGuide = {
         {
             ul: [
                 "**Le bouton affiche toujours « Terminer la configuration Stripe »** : Stripe attend encore une info. Cliquez dessus et complétez ce qui est marqué en rouge.",
-                "**Le paiement par carte n'apparaît pas aux acheteurs** : vérifiez que Stripe est coché dans **Paiement et facturation** de l'événement.",
+                "**Le paiement par carte n'apparaît pas aux acheteurs** : vérifiez que Stripe est activé dans **Paiement et facturation** de l'événement.",
                 "**Stripe demande une vérification d'identité** : téléversez la pièce d'identité demandée dans le tableau de bord Stripe.",
                 '**Les versements sont en pause** : ouvrez le tableau de bord Stripe, une alerte indique l\'info manquante.',
             ],
@@ -203,7 +203,7 @@ export const fr: HelpContent = {
         {
             category: 'Paiements',
             question: 'Combien coûte Billetterie Dehors ?',
-            answer: "2,5 % par billet vendu, plus les frais de paiement de Stripe (2,9 % + 0,30 $). Pas d'abonnement, pas de frais cachés, et aucuns frais si votre événement est gratuit.\n\nVous préférez que l'acheteur les paie ? Choisissez **Répercuter sur l'acheteur** dans **Paramètres → Paiements** (section **Frais de la billetterie**) : vos nouveaux événements le font d'emblée. Pour un événement déjà créé, dans **Paramètres de l'événement**, la section **Frais de plateforme** permet de **Répercuter les frais sur l'acheteur**, et **Paiement et facturation** de **Refiler les frais de traitement à l'acheteur**.",
+            answer: "2,5 % par billet vendu, plus les frais de paiement de Stripe (2,9 % + 0,30 $). Pas d'abonnement, pas de frais cachés, et aucuns frais si votre événement est gratuit.\n\nVous préférez que l'acheteur les paie ? Choisissez **Répercuter sur l'acheteur** dans **Paramètres → Paiements** (section **Frais de la billetterie**) : vos nouveaux événements le font d'emblée. Pour un événement déjà créé, ouvrez **Paramètres de l'événement → Paiement et facturation** : la section **Frais de la billetterie** offre le même choix, pour cet événement seulement.",
         },
         {
             category: 'Paiements',

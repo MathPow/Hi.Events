@@ -43,22 +43,40 @@ class EventRulesTest extends TestCase
         $this->assertArrayHasKey('location_details.venue_name', $validator->errors()->toArray());
     }
 
+    public function testAnUpdateWithoutALocationKeepsItAsItIs(): void
+    {
+        $this->assertTrue($this->validateData([
+            'title' => 'Rando aux couleurs',
+            'start_date' => '2026-11-15 09:00:00',
+            'organizer_id' => 1,
+        ])->passes());
+    }
+
     private function validate(array $location): \Illuminate\Validation\Validator
     {
-        $rules = new class {
-            use EventRules;
-
-            public function input(string $key): mixed
-            {
-                return null;
-            }
-        };
-
-        return Validator::make([
+        return $this->validateData([
             'title' => 'Rando aux couleurs',
             'start_date' => '2026-11-15 09:00:00',
             'organizer_id' => 1,
             'location_details' => $location,
-        ], $rules->eventRules(), $rules->eventMessages());
+        ]);
+    }
+
+    private function validateData(array $data): \Illuminate\Validation\Validator
+    {
+        $rules = new class($data) {
+            use EventRules;
+
+            public function __construct(private readonly array $data)
+            {
+            }
+
+            public function input(string $key): mixed
+            {
+                return data_get($this->data, $key);
+            }
+        };
+
+        return Validator::make($data, $rules->eventRules(), $rules->eventMessages());
     }
 }

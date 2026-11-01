@@ -90,7 +90,7 @@ export const OfferWaitlistModal = ({onClose, eventId, eventSettings, stats}: Off
                     </p>
                     <Anchor
                         component={NavLink}
-                        to={`/manage/event/${eventId}/settings#waitlist-settings`}
+                        to={`/manage/event/${eventId}/settings/registration#waitlist-settings`}
                         className={classes.settingsLink}
                     >
                         {t`Change waitlist settings`}

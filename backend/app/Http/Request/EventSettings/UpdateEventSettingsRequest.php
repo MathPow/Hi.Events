@@ -10,11 +10,14 @@ use HiEvents\DomainObjects\Enums\PriceDisplayMode;
 use HiEvents\DomainObjects\Enums\ProductInfoIcon;
 use HiEvents\DomainObjects\Enums\TicketDateDisplayMode;
 use HiEvents\Http\Request\BaseRequest;
+use HiEvents\Validators\EventRules;
 use HiEvents\Validators\Rules\RulesHelper;
 use Illuminate\Validation\Rule;
 
 class UpdateEventSettingsRequest extends BaseRequest
 {
+    use EventRules;
+
     // @todo these should all be required for the update request. They should only be nullable for the PATCH request
     public function rules(): array
     {
@@ -45,14 +48,7 @@ class UpdateEventSettingsRequest extends BaseRequest
             'website_url' => ['url', 'nullable'],
             'maps_url' => ['url', 'nullable'],
 
-            'location_details' => ['array'],
-            'location_details.venue_name' => ['string', 'max:255', 'nullable'],
-            'location_details.address_line_1' => ['required_with:location_details', 'string', 'max:255'],
-            'location_details.address_line_2' => ['string', 'max:255', 'nullable'],
-            'location_details.city' => ['required_with:location_details', 'string', 'max:85'],
-            'location_details.state_or_region' => ['string', 'max:85', 'nullable'],
-            'location_details.zip_or_postal_code' => ['required_with:location_details', 'string', 'max:85'],
-            'location_details.country' => ['required_with:location_details', 'string', 'max:2'],
+            ...$this->locationRules(venueNameMaxLength: 255),
 
             'is_online_event' => ['boolean'],
             'online_event_connection_details' => ['string', 'nullable'],
@@ -136,11 +132,7 @@ class UpdateEventSettingsRequest extends BaseRequest
             'homepage_link_color' => $colorMessage,
             'homepage_product_widget_background_color' => $colorMessage,
             'homepage_product_widget_text_color' => $colorMessage,
-            'location_details.address_line_1.required_with' => __('The address line 1 field is required'),
-            'location_details.city.required_with' => __('The city field is required'),
-            'location_details.zip_or_postal_code.required_with' => __('The zip or postal code field is required'),
-            'location_details.country.required_with' => __('The country field is required'),
-            'location_details.country.max' => __('The country field should be a 2 character ISO 3166 code'),
+            ...$this->locationMessages(),
             'price_display_mode.in' => 'The price display mode must be either inclusive or exclusive.',
             'product_info_button_text.required_with' => __('The button text is required when a button link is set.'),
             'product_info_button_url.required_with' => __('The button link is required when a button text is set.'),
