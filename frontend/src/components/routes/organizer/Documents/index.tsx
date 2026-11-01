@@ -7,7 +7,7 @@ import {
     IconDots,
     IconDownload,
     IconFileText,
-    IconHelpCircle,
+    IconAlertTriangle,
     IconPencil,
     IconPlus,
     IconTrash,
@@ -133,11 +133,14 @@ const Documents = () => {
                 <TemplateChoices onPick={create} pendingKey={pendingKey}/>
             </section>
 
-            <div className={classes.legal}>
-                <span className={classes.legalIcon}><IconHelpCircle size={20} stroke={1.75}/></span>
-                <p>
-                    <Trans>The templates are a starting point and do not replace legal advice. Make sure they suit your activity.</Trans>
-                </p>
+            <div className={classes.legal} role="note">
+                <IconAlertTriangle size={22} stroke={1.75} className={classes.legalIcon}/>
+                <div className={classes.legalText}>
+                    <strong>{t`This is not legal advice`}</strong>
+                    <p>
+                        <Trans>The templates are a starting point. Make sure they suit your activity before using them.</Trans>
+                    </p>
+                </div>
             </div>
         </PageBody>
     );

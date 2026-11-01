@@ -248,27 +248,34 @@
   font-weight: 700;
 }
 
+// Figma: a yellow box with a warning sign (no longer looks like an « add » button).
 .legal {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.875rem;
-  padding: 1rem 1.25rem;
-  border: 1.5px solid var(--dehors-trait, rgb(227 173 146 / 0.55));
+  padding: 1.125rem;
   border-radius: 20px;
+  background: #fcefc7;
+  color: #6b4600;
+}
+
+.legalText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+
+  strong {
+    font-size: 0.9375rem;
+  }
 
   p {
     margin: 0;
     font-size: 0.875rem;
+    line-height: 1.4;
   }
 }
 
 .legalIcon {
-  display: flex;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgb(250 120 83 / 0.14);
 }

@@ -2,13 +2,15 @@ import {t, Trans} from "@lingui/macro";
 import {MouseEvent as ReactMouseEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Link, useParams} from "react-router";
 import {Editor} from "@tiptap/core";
-import {ActionIcon, Button, Drawer, Menu, Skeleton, Switch} from "@mantine/core";
+import {ActionIcon, Button, Drawer, Menu, Popover, Skeleton, Switch, UnstyledButton} from "@mantine/core";
+import dayjs from "dayjs";
 import {
     IconAlertTriangle,
     IconArrowDown,
     IconArrowUp,
     IconBold,
     IconCheck,
+    IconChevronDown,
     IconChevronLeft,
     IconCopy,
     IconDownload,
@@ -673,6 +675,76 @@ const SortableBlock = ({
     );
 };
 
+/**
+ * Figma « Documents · Éditeur »: the linked events in a dropdown of checkboxes (like the Types
+ * filter of the directory), upcoming events only; « Appliquer » links the ones ticked. An event
+ * already linked stays in the list after it has passed, so it can be unlinked.
+ */
+const LinkedEventsMenu = ({events, value, onChange}: {
+    events: { id: number, title: string }[],
+    value: number[],
+    onChange: (ids: number[]) => void,
+}) => {
+    const [opened, setOpened] = useState(false);
+    const [picked, setPicked] = useState<number[]>(value);
+    const allIds = events.map(event => event.id);
+    const allPicked = allIds.length > 0 && allIds.every(id => picked.includes(id));
+    const count = value.length;
+
+    const open = (next: boolean) => {
+        if (next) {
+            setPicked(value);
+        }
+        setOpened(next);
+    };
+
+    const toggle = (id: number) =>
+        setPicked(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
+
+    const label = count === 0
+        ? t`No event`
+        : count === allIds.length && count > 1 ? t`All upcoming events` : t`${count} events`;
+
+    return (
+        <Popover opened={opened} onChange={open} position="bottom-start" width="target" offset={6} trapFocus
+                 classNames={{dropdown: classes.eventsDropdown}}>
+            <Popover.Target>
+                <UnstyledButton className={classes.eventsTrigger} aria-expanded={opened} onClick={() => open(!opened)}>
+                    <span>{count === 1 ? (events.find(event => event.id === value[0])?.title ?? label) : label}</span>
+                    <IconChevronDown size={18} stroke={2}/>
+                </UnstyledButton>
+            </Popover.Target>
+            <Popover.Dropdown>
+                <div role="group" aria-label={t`Linked events`} className={classes.eventsOptions}>
+                    <label className={classes.eventsOption} data-checked={allPicked || undefined}>
+                        <input type="checkbox" checked={allPicked} className={classes.eventsInput}
+                               onChange={() => setPicked(allPicked ? [] : allIds)}/>
+                        <span>{t`All upcoming events`}</span>
+                        <span className={classes.eventsBox} aria-hidden>{allPicked && <IconCheck size={14} stroke={3}/>}</span>
+                    </label>
+                    {events.map(event => {
+                        const checked = picked.includes(event.id);
+                        return (
+                            <label key={event.id} className={classes.eventsOption} data-checked={checked || undefined}>
+                                <input type="checkbox" checked={checked} className={classes.eventsInput}
+                                       onChange={() => toggle(event.id)}/>
+                                <span>{event.title}</span>
+                                <span className={classes.eventsBox} aria-hidden>{checked && <IconCheck size={14} stroke={3}/>}</span>
+                            </label>
+                        );
+                    })}
+                </div>
+                <Button className={classes.eventsApply} onClick={() => {
+                    onChange(picked);
+                    setOpened(false);
+                }}>
+                    {t`Apply`}
+                </Button>
+            </Popover.Dropdown>
+        </Popover>
+    );
+};
+
 const DocumentSettings = ({draft, onChange, onExport}: {
     draft: DocumentDraft,
     onChange: (changes: Partial<DocumentDraft>) => void,
@@ -680,15 +752,12 @@ const DocumentSettings = ({draft, onChange, onExport}: {
 }) => {
     const {organizerId} = useParams();
     const eventsQuery = useGetOrganizerEvents(organizerId, {perPage: 100, sortBy: 'start_date', sortDirection: 'desc'});
-    const events = useMemo(() => (eventsQuery.data?.data ?? []).filter(
-        event => event.status !== 'ARCHIVED' || draft.event_ids.includes(Number(event.id))
-    ), [eventsQuery.data, draft.event_ids]);
-
-    const toggleEvent = (eventId: number, linked: boolean) => onChange({
-        event_ids: linked
-            ? [...draft.event_ids.filter(id => id !== eventId), eventId]
-            : draft.event_ids.filter(id => id !== eventId),
-    });
+    // Upcoming (not over, not archived), soonest first; plus those already linked.
+    const events = useMemo(() => (eventsQuery.data?.data ?? [])
+        .filter(event => draft.event_ids.includes(Number(event.id)) || (event.status !== 'ARCHIVED'
+            && dayjs(event.end_date ?? event.start_date).isAfter(dayjs())))
+        .sort((a, b) => (a.start_date ?? '').localeCompare(b.start_date ?? ''))
+        .map(event => ({id: Number(event.id), title: event.title})), [eventsQuery.data, draft.event_ids]);
 
     return (
         <div className={classes.settingsBody}>
@@ -742,18 +811,13 @@ const DocumentSettings = ({draft, onChange, onExport}: {
             {!eventsQuery.isLoading && events.length === 0 && (
                 <p className={classes.panelHint}>{t`No events yet. Link this document once you create one.`}</p>
             )}
-            <div className={classes.events}>
-                {events.map(event => (
-                    <Switch
-                        key={event.id}
-                        labelPosition="left"
-                        className={classes.event}
-                        label={event.title}
-                        checked={draft.event_ids.includes(Number(event.id))}
-                        onChange={(changeEvent) => toggleEvent(Number(event.id), changeEvent.currentTarget.checked)}
-                    />
-                ))}
-            </div>
+            {events.length > 0 && (
+                <>
+                    <LinkedEventsMenu events={events} value={draft.event_ids}
+                                      onChange={(ids) => onChange({event_ids: ids})}/>
+                    <p className={classes.panelHint}>{t`Only upcoming events.`}</p>
+                </>
+            )}
 
             <hr className={classes.panelRule}/>
             <Button variant="outline" fullWidth leftSection={<IconDownload size={18}/>} onClick={onExport}>
