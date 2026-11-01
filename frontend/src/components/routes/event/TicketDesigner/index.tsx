@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {useBlocker, useParams} from "react-router";
+import {useHoldPageRefresh} from "../../../layouts/AppLayout/pageRefresh.ts";
 import {plural, t} from "@lingui/macro";
 import {Button, Select, Skeleton, Text, TextInput} from "@mantine/core";
 import {modals} from "@mantine/modals";
@@ -77,6 +78,9 @@ const TicketDesigner = () => {
 
     const changes = useMemo(() => saved && draft ? draftChanges(saved, draft) : null, [saved, draft]);
     const changeCount = changes?.count ?? 0;
+
+    // The assistant's changes don't restart the page over unpublished work.
+    useHoldPageRefresh(changeCount > 0);
 
     const blocker = useBlocker(({currentLocation, nextLocation}) =>
         changeCount > 0 && !saving && currentLocation.pathname !== nextLocation.pathname);

@@ -1,7 +1,7 @@
 import {MouseEvent, ReactNode} from "react";
 import {useNavigate} from "react-router";
 import {Button, Loader} from "@mantine/core";
-import {IconCheck} from "@tabler/icons-react";
+import {IconCheck, IconRefresh} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {Markdown} from "./Markdown.tsx";
 import {Approval} from "./assistant.ts";
@@ -52,6 +52,7 @@ export const Answer = ({bubble, link, decide}: {
         refused: t`Refused: nothing changed.`,
         cancelled: t`Cancelled: nothing changed.`,
         error: t`The ticketing refused:`,
+        unreachable: t`The ticketing isn't answering right now (it may be restarting). Nothing has changed yet.`,
     };
 
     return (
@@ -100,6 +101,17 @@ export const Answer = ({bubble, link, decide}: {
                                 </Button>
                                 <Button size="xs" variant="default" onClick={() => decide(p.id, false)}>{t`Refuse`}</Button>
                             </div>
+                        ) : p.state === "unreachable" ? (
+                            <>
+                                <p className={classes.error}>{stateText.unreachable}</p>
+                                {p.message && <p className={classes.note}>{p.message}</p>}
+                                <div className={classes.actions}>
+                                    <Button size="xs" leftSection={<IconRefresh size={14}/>} onClick={() => decide(p.id, true)}>
+                                        {t`Retry`}
+                                    </Button>
+                                    <Button size="xs" variant="default" onClick={() => decide(p.id, false)}>{t`Give up`}</Button>
+                                </div>
+                            </>
                         ) : (
                             <p className={p.state === "error" ? classes.error : classes.note}>
                                 {p.state === "sending" && <Loader size={12} color="currentColor"/>}

@@ -24,7 +24,8 @@ export type Approval = {
     method: "POST" | "PUT" | "PATCH" | "DELETE";
     path: string;
     body?: unknown;
-    state: "waiting" | "sending" | "done" | "refused" | "cancelled" | "error";
+    // unreachable: the ticketing didn't answer (restarting, network); the card offers to try again.
+    state: "waiting" | "sending" | "done" | "refused" | "cancelled" | "error" | "unreachable";
     message?: string;
 };
 export type Piece = { type: "text"; text: string } | Approval;
@@ -156,17 +157,35 @@ export async function readApi(path: unknown, signal: AbortSignal): Promise<strin
     return truncate(text);
 }
 
+/**
+ * The change didn't reach the ticketing, or it couldn't answer: no connection, a server error, or the
+ * proxy's plain « 404 page not found » while a new version starts. Trying again later can work, unlike
+ * a refusal from the ticketing itself (validation, rights), which the assistant must read to fix it.
+ */
+export class TicketingUnavailableError extends Error {
+}
+
+const isUnavailable = (response: Response) => response.status >= 500
+    || response.status === 429
+    || (response.status === 404 && !/json/.test(response.headers.get("Content-Type") ?? ""));
+
 export async function changeApi(approval: Approval): Promise<string> {
     const withBody = approval.method !== "DELETE";
-    const response = await fetch(apiUrl(checkPath(approval.path)), {
-        method: approval.method,
-        credentials: "include",
-        headers: {Accept: "application/json", ...(withBody ? {"Content-Type": "application/json"} : {})},
-        body: withBody ? JSON.stringify(approval.body ?? {}) : undefined,
-    });
+    let response: Response;
+    try {
+        response = await fetch(apiUrl(checkPath(approval.path)), {
+            method: approval.method,
+            credentials: "include",
+            headers: {Accept: "application/json", ...(withBody ? {"Content-Type": "application/json"} : {})},
+            body: withBody ? JSON.stringify(approval.body ?? {}) : undefined,
+        });
+    } catch (error) {
+        throw new TicketingUnavailableError(`La billetterie n'a pas pu être jointe : ${error instanceof Error ? error.message : String(error)}`);
+    }
     const text = await readResponse(response);
     if (!response.ok) {
-        throw new Error(`L'API a répondu ${response.status} : ${text.slice(0, 3000)}`);
+        const message = `L'API a répondu ${response.status} : ${text.slice(0, 3000)}`;
+        throw isUnavailable(response) ? new TicketingUnavailableError(message) : new Error(message);
     }
     return truncate(text || `${response.status} OK`);
 }

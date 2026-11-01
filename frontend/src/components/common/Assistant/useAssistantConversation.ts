@@ -22,8 +22,10 @@ import {
     readLabel,
     repair,
     save,
+    TicketingUnavailableError,
     withContext,
 } from "./assistant.ts";
+import {requestPageRefresh} from "../../layouts/AppLayout/pageRefresh.ts";
 
 /**
  * A conversation with the assistant: the model's turns, the tools run in the browser and the
@@ -110,6 +112,8 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
         const ctrl = new AbortController();
         controller.current = ctrl;
         setRunning(true);
+        // A change went through during this answer: the page in view reloads at the end.
+        let changed = false;
 
         const execute = async (call: Block): Promise<Block> => {
             const toolInput = (call.input ?? {}) as Record<string, unknown>;
@@ -155,29 +159,53 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
                     state: "waiting",
                 };
                 update((b) => ({...b, pieces: [...b.pieces, approval]}));
-                const yes = await new Promise<boolean>((resolve) => {
-                    decisions.current.set(approval.id, resolve);
-                    ctrl.signal.addEventListener("abort", () => resolve(false), {once: true});
-                });
-                decisions.current.delete(approval.id);
-                if (ctrl.signal.aborted) {
-                    updateApproval(approval.id, {state: "cancelled"});
+                // The person's answer on the card: approve or refuse, then try again or give up.
+                const decision = async () => {
+                    const yes = await new Promise<boolean>((resolve) => {
+                        decisions.current.set(approval.id, resolve);
+                        ctrl.signal.addEventListener("abort", () => resolve(false), {once: true});
+                    });
+                    decisions.current.delete(approval.id);
+                    return yes;
+                };
+                const cancelled = () => {
+                    updateApproval(approval.id, {state: "cancelled", message: undefined});
                     return result("Annulé : la personne a arrêté la réponse.", true);
+                };
+
+                const yes = await decision();
+                if (ctrl.signal.aborted) {
+                    return cancelled();
                 }
                 if (!yes) {
                     updateApproval(approval.id, {state: "refused"});
                     return result("La personne a refusé cette modification. Rien n'a changé.", true);
                 }
-                updateApproval(approval.id, {state: "sending"});
-                try {
-                    const response = await changeApi(approval);
-                    updateApproval(approval.id, {state: "done"});
-                    // The pages open behind reload their data.
-                    queryClient.invalidateQueries();
-                    return result(response);
-                } catch (error) {
-                    updateApproval(approval.id, {state: "error", message: errorText(error)});
-                    return result(errorText(error), true);
+                for (; ;) {
+                    updateApproval(approval.id, {state: "sending", message: undefined});
+                    try {
+                        const response = await changeApi(approval);
+                        updateApproval(approval.id, {state: "done"});
+                        // The pages open behind reload their data.
+                        queryClient.invalidateQueries();
+                        changed = true;
+                        return result(response);
+                    } catch (error) {
+                        if (!(error instanceof TicketingUnavailableError)) {
+                            updateApproval(approval.id, {state: "error", message: errorText(error)});
+                            return result(errorText(error), true);
+                        }
+                        // Not the ticketing's answer: the person can try again once it's back.
+                        updateApproval(approval.id, {state: "unreachable", message: errorText(error)});
+                        const retry = await decision();
+                        if (ctrl.signal.aborted) {
+                            return cancelled();
+                        }
+                        if (!retry) {
+                            updateApproval(approval.id, {state: "error", message: errorText(error)});
+                            return result(`${errorText(error)}\nLa billetterie ne répondait pas; la personne a abandonné cette modification. Rien n'a changé.`, true);
+                        }
+                    }
                 }
             }
 
@@ -219,6 +247,10 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
             setRunning(false);
             if (controller.current === ctrl) {
                 controller.current = null;
+            }
+            // Once the fresh data is in, so the page doesn't start again from the old one.
+            if (changed) {
+                queryClient.invalidateQueries().then(requestPageRefresh, requestPageRefresh);
             }
         }
     };

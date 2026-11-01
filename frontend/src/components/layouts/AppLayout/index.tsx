@@ -13,6 +13,7 @@ import ImpersonationBanner from "../../common/ImpersonationBanner";
 import {InstallAppPrompt} from "../../common/InstallAppPrompt";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 import {PageStatusProvider} from "./PageStatus.tsx";
+import {isPageRefreshHeld, PAGE_REFRESH_EVENT} from "./pageRefresh.ts";
 
 interface AppLayoutProps {
     navItems: NavItem[];
@@ -72,6 +73,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     const [navAnimating, setNavAnimating] = useState(false);
     const navAnimationTimer = useRef<number | undefined>(undefined);
     const [topBarShadow, setTopBarShadow] = useState<boolean>(false);
+    // Bumped when the assistant changed something: the page starts again from the fresh data.
+    const [pageRevision, setPageRevision] = useState(0);
 
     const helpItem: NavItem = {
         label: t`Help center`,
@@ -90,6 +93,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     }, []);
 
     useEffect(() => () => window.clearTimeout(navAnimationTimer.current), []);
+
+    useEffect(() => {
+        const refresh = () => {
+            if (!isPageRefreshHeld()) {
+                setPageRevision((revision) => revision + 1);
+            }
+        };
+        window.addEventListener(PAGE_REFRESH_EVENT, refresh);
+        return () => window.removeEventListener(PAGE_REFRESH_EVENT, refresh);
+    }, []);
 
     const toggleCollapsed = () => {
         if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
@@ -145,7 +158,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                     />
                 )}>
                     <div className={classes.main} id={'app-manage-main'}>
-                        <Outlet/>
+                        <Outlet key={pageRevision}/>
                     </div>
                 </PageStatusProvider>
 

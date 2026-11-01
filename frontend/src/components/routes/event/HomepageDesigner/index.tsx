@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {useBlocker, useParams} from "react-router";
+import {useHoldPageRefresh} from "../../../layouts/AppLayout/pageRefresh.ts";
 import {plural, t} from "@lingui/macro";
 import {Button, Skeleton, Text, TextInput} from "@mantine/core";
 import {useMediaQuery} from "@mantine/hooks";
@@ -80,6 +81,9 @@ const HomepageDesigner = () => {
 
     const changes = useMemo(() => published && draft ? eventDraftChanges(published, draft) : null, [published, draft]);
     const changeCount = changes?.count ?? 0;
+
+    // The assistant's changes don't restart the page over unpublished work.
+    useHoldPageRefresh(changeCount > 0);
 
     const blocker = useBlocker(({currentLocation, nextLocation}) =>
         changeCount > 0 && !publishing && currentLocation.pathname !== nextLocation.pathname);
