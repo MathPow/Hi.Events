@@ -30,6 +30,11 @@ export const PromoCodes = () => {
             <PageBody>
                 <PageTitle
                     subheading={t`Create discounts, access codes for hidden tickets, and special offers.`}
+                    actions={(
+                        <Button leftSection={<IconPlus size={20}/>} onClick={openCreateModal}>
+                            {t`Create Promo Code`}
+                        </Button>
+                    )}
                 >{t`Promo Codes`}</PageTitle>
                 <ToolBar searchComponent={() => (
                     <SearchBarWrapper
@@ -38,12 +43,7 @@ export const PromoCodes = () => {
                         searchParams={searchParams}
                         pagination={pagination}
                     />
-                )}>
-                    <Button color={'green'} size={'sm'} onClick={openCreateModal} rightSection={<IconPlus/>}>
-                        Create
-                    </Button>
-
-                </ToolBar>
+                )}/>
 
                 <TableSkeleton isVisible={!promoCodes || !event}/>
 

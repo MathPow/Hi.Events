@@ -20,10 +20,15 @@ export const SideDrawer = (props: DrawerProps & SideDrawerProps) => {
             title={props.heading}
             closeOnClickOutside={false}
             classNames={{
+                content: classes.content,
+                header: classes.header,
                 title: classes.sideDrawerTitle,
+                close: classes.close,
             }}
         >
-            <div style={{padding: '15px', paddingTop: 0}}>
+            <div className={classes.body}>
+                {/* Opening focus lands here rather than on the close button (no ring right away). */}
+                <div data-autofocus tabIndex={-1} className={classes.focusStart}/>
                 {props.children}
             </div>
         </Drawer>

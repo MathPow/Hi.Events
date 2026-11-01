@@ -9,9 +9,61 @@
 
 .toolbar {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+}
+
+.toolbarStart {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+// The column toggle floats on the page like the search field.
+.columnToggle {
+  flex-shrink: 0;
+  margin-left: auto;
+
+  :global(.mantine-Button-root) {
+    height: 2.75rem !important;
+    padding: 0 1rem !important;
+    border: none !important;
+    border-radius: 999px !important;
+    background: ui.$card !important;
+    color: ui.$ink !important;
+    font-size: 0.9375rem !important;
+    box-shadow: ui.$shadow;
+
+    &:hover {
+      background: #fff !important;
+    }
+  }
+}
+
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+// Phones: the rows as the lines of one cream card (renderMobileRow).
+.mobileList {
+  @include ui.card(0.25rem 1.25rem);
+  display: none;
+
+  @include mixins.respond-below(md) {
+    display: block;
+    padding: 0.25rem 1rem;
+  }
+}
+
+.mobileRow {
+  padding: 1rem 0;
+  border-bottom: 1px solid ui.$separator;
+  color: ui.$ink;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 // Header row of « Commandes récentes »: pale, rounded, uppercase labels.
@@ -24,7 +76,7 @@
 
   th {
     @include ui.table-head-cell;
-    padding: 0.75rem 1rem !important;
+    padding: 0.75rem !important;
   }
 }
 
@@ -47,7 +99,9 @@
 
 .table {
   --table-border-color: #{ui.$separator};
-  --table-hover-color: #{ui.$row};
+  // !important: styles/dehors-app.scss sets a translucent hover on every table; the sticky cells
+  // need the same opaque color as the row.
+  --table-hover-color: #{ui.$row} !important;
   position: relative;
   color: ui.$ink;
 
@@ -57,7 +111,7 @@
 
   tbody tr {
     td {
-      padding: 1rem !important;
+      padding: 0.875rem 0.75rem !important;
       font-size: 0.9375rem;
       white-space: nowrap;
     }

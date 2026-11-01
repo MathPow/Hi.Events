@@ -4,18 +4,25 @@ import {useMemo, useState} from "react";
 import {
     ActionIcon,
     Alert,
-    Badge,
     Button,
     Checkbox,
     Menu,
     Modal,
     NumberInput,
     Stack,
-    Table,
+    Table as MantineTable,
     Textarea,
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {IconArrowBackUp, IconCheck, IconDots, IconHourglass, IconScale, IconShieldLock} from "@tabler/icons-react";
+import {
+    IconArrowBackUp,
+    IconCheck,
+    IconCircleCheck,
+    IconDotsVertical,
+    IconHourglass,
+    IconScale,
+    IconShieldLock,
+} from "@tabler/icons-react";
 import {PageBody} from "../../../common/PageBody";
 import {PageTitle} from "../../../common/PageTitle";
 import {TableSkeleton} from "../../../common/TableSkeleton";
@@ -28,13 +35,19 @@ import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorRespons
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {Order, OrderDepositStatus} from "../../../../types.ts";
+import {getInitials} from "../../../../utilites/helpers.ts";
+import {StatGrid, StatTile} from "../../../common/StatBoxes";
+import {StatusTag, StatusTone} from "../../../common/StatusTag";
+import {Table, TableHead} from "../../../common/Table";
+import {ToolBar} from "../../../common/ToolBar";
 import classes from "./Deposits.module.scss";
 
-const statusColor: Record<OrderDepositStatus, string> = {
-    PENDING: 'gray',
-    RECEIVED: 'blue',
-    RETURNED: 'green',
-    RETAINED: 'orange',
+// Waiting for the money, held, kept (all or part), given back.
+const statusTone: Record<OrderDepositStatus, StatusTone> = {
+    PENDING: 'waiting',
+    RECEIVED: 'ok',
+    RETURNED: 'neutral',
+    RETAINED: 'problem',
 };
 
 const remaining = (order: Order) => (order.deposit_amount || 0) - (order.deposit_retained_amount || 0);
@@ -237,50 +250,46 @@ const Deposits = () => {
 
     return (
         <PageBody>
-            <PageTitle subheading={t`Deposits are sent separately by participants and are not part of your revenue. Mark them as received, then return or retain them after the event.`}>
+            <PageTitle
+                subheading={t`Deposits are sent separately by participants and are not part of your revenue. Mark them as received, then return or retain them after the event.`}
+                mobileSubheading={t`Deposits are not part of your revenue.`}
+            >
                 {t`Security Deposits`}
             </PageTitle>
 
-            <div className={classes.stats}>
-                <div className={classes.stat}>
-                    <span>{t`Awaiting`}</span>
-                    <strong>{formatCurrency(totals.awaiting, currency)}</strong>
-                </div>
-                <div className={classes.stat}>
-                    <span>{t`Held`}</span>
-                    <strong>{formatCurrency(totals.held, currency)}</strong>
-                </div>
-                <div className={classes.stat}>
-                    <span>{t`Retained`}</span>
-                    <strong>{formatCurrency(totals.retained, currency)}</strong>
-                </div>
-                <div className={classes.stat}>
-                    <span>{t`Left to return`}</span>
-                    <strong>{formatCurrency(totals.toReturn, currency)}</strong>
-                </div>
-                <div className={classes.stat}>
-                    <span>{t`Returned`}</span>
-                    <strong>{formatCurrency(totals.returned, currency)}</strong>
-                </div>
-            </div>
+            <StatGrid loading={!orders} className={classes.stats} compact>
+                <StatTile tone="attendees" icon={<IconHourglass stroke={2}/>} label={t`Awaiting`}
+                          value={formatCurrency(totals.awaiting, currency)}/>
+                <StatTile tone="products" icon={<IconShieldLock stroke={2}/>} label={t`Held`}
+                          value={formatCurrency(totals.held, currency)}/>
+                <StatTile tone="refunds" icon={<IconScale stroke={2}/>} label={t`Retained`}
+                          value={formatCurrency(totals.retained, currency)}/>
+                <StatTile tone="orders" icon={<IconArrowBackUp stroke={2}/>} label={t`Left to return`}
+                          value={formatCurrency(totals.toReturn, currency)}/>
+                <StatTile tone="sales" icon={<IconCircleCheck stroke={2}/>} label={t`Returned`}
+                          value={formatCurrency(totals.returned, currency)}/>
+            </StatGrid>
 
-            <div className={classes.toolbar}>
-                <Button
-                    className={classes.splitButton}
-                    leftSection={<IconScale size={16}/>}
-                    disabled={!splitTargets.length}
-                    onClick={() => setSplitOpen(true)}
-                >
-                    {selected.length
-                        ? t`Share a cost between ${splitTargets.length} selected`
-                        : t`Share a cost between all received deposits`}
-                </Button>
-            </div>
+            {orders && orders.length > 0 && (
+                <ToolBar>
+                    <Button
+                        className={classes.splitButton}
+                        leftSection={<IconScale size={20}/>}
+                        disabled={!splitTargets.length}
+                        onClick={() => setSplitOpen(true)}
+                    >
+                        {selected.length
+                            ? t`Share a cost between ${splitTargets.length} selected`
+                            : t`Share a cost between all received deposits`}
+                    </Button>
+                </ToolBar>
+            )}
 
             <TableSkeleton isVisible={!orders}/>
 
             {orders && orders.length === 0 && (
                 <NoResultsSplash
+                    icon="cadenas"
                     heading={t`No deposits yet`}
                     subHeading={(
                         <p>
@@ -291,57 +300,72 @@ const Deposits = () => {
             )}
 
             {orders && orders.length > 0 && (
-                <div className={classes.tableWrap}>
-                    <Table verticalSpacing="sm" highlightOnHover>
-                        <Table.Thead>
-                            <Table.Tr>
-                                <Table.Th/>
-                                <Table.Th>{t`Order`}</Table.Th>
-                                <Table.Th>{t`Participant`}</Table.Th>
-                                <Table.Th>{t`Deposit`}</Table.Th>
-                                <Table.Th>{t`Status`}</Table.Th>
-                                <Table.Th>{t`Retained`}</Table.Th>
-                                <Table.Th/>
-                            </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>
-                            {orders.map(order => (
-                                <Table.Tr key={order.id}>
-                                    <Table.Td>
-                                        <Checkbox
-                                            aria-label={t`Select`}
-                                            disabled={!isSplittable(order)}
-                                            checked={selected.includes(order.id as number)}
-                                            onChange={() => toggle(order.id as number)}
-                                        />
-                                    </Table.Td>
-                                    <Table.Td className={classes.mono}>{order.public_id}</Table.Td>
-                                    <Table.Td>
-                                        <div>{order.first_name} {order.last_name}</div>
-                                        <div className={classes.muted}>{order.email}</div>
-                                    </Table.Td>
-                                    <Table.Td>{formatCurrency(order.deposit_amount || 0, currency)}</Table.Td>
-                                    <Table.Td>
-                                        <Badge variant="light" color={statusColor[order.deposit_status || 'PENDING']}>
-                                            {statusLabel(order)}
-                                        </Badge>
-                                        {order.status === 'CANCELLED' && (
-                                            <div className={classes.muted}>{t`Order cancelled`}</div>
-                                        )}
-                                    </Table.Td>
-                                    <Table.Td>
-                                        {order.deposit_retained_amount
-                                            ? formatCurrency(order.deposit_retained_amount, currency)
-                                            : '—'}
-                                        {!!order.deposit_note && (
-                                            <div className={classes.muted}>{order.deposit_note}</div>
-                                        )}
-                                    </Table.Td>
-                                    <Table.Td>
-                                        <Menu position="bottom-end" withinPortal>
+                <Table>
+                    <TableHead>
+                        <MantineTable.Tr>
+                            <MantineTable.Th>{t`Participant`}</MantineTable.Th>
+                            <MantineTable.Th>{t`Order`}</MantineTable.Th>
+                            <MantineTable.Th>{t`Deposit`}</MantineTable.Th>
+                            <MantineTable.Th>{t`Status`}</MantineTable.Th>
+                            <MantineTable.Th>{t`Retained`}</MantineTable.Th>
+                            <MantineTable.Th/>
+                        </MantineTable.Tr>
+                    </TableHead>
+                    <MantineTable.Tbody>
+                        {orders.map(order => {
+                            const name = `${order.first_name ?? ''} ${order.last_name ?? ''}`.trim();
+
+                            return (
+                                <MantineTable.Tr key={order.id}>
+                                    <MantineTable.Td>
+                                        <div className={classes.participant}>
+                                            <Checkbox
+                                                aria-label={t`Select`}
+                                                disabled={!isSplittable(order)}
+                                                checked={selected.includes(order.id as number)}
+                                                onChange={() => toggle(order.id as number)}
+                                            />
+                                            <span className={classes.avatar} aria-hidden>{getInitials(name || '?')}</span>
+                                            <span className={classes.participantText}>
+                                                <span className={classes.name}>{name}</span>
+                                                <span className={classes.muted}>{order.email}</span>
+                                            </span>
+                                        </div>
+                                    </MantineTable.Td>
+                                    <MantineTable.Td>
+                                        <span className={classes.reference}>#{order.public_id}</span>
+                                    </MantineTable.Td>
+                                    <MantineTable.Td>
+                                        <span className={classes.amount}>{formatCurrency(order.deposit_amount || 0, currency)}</span>
+                                    </MantineTable.Td>
+                                    <MantineTable.Td>
+                                        <div className={classes.status}>
+                                            <StatusTag tone={statusTone[order.deposit_status || 'PENDING']}>
+                                                {statusLabel(order)}
+                                            </StatusTag>
+                                            {order.status === 'CANCELLED' && (
+                                                <span className={classes.muted}>{t`Order cancelled`}</span>
+                                            )}
+                                        </div>
+                                    </MantineTable.Td>
+                                    <MantineTable.Td>
+                                        <div className={classes.retained}>
+                                            <span className={classes.amount}>
+                                                {order.deposit_retained_amount
+                                                    ? formatCurrency(order.deposit_retained_amount, currency)
+                                                    : '—'}
+                                            </span>
+                                            {!!order.deposit_note && (
+                                                <span className={classes.note}>{order.deposit_note}</span>
+                                            )}
+                                        </div>
+                                    </MantineTable.Td>
+                                    <MantineTable.Td>
+                                        <Menu position="bottom-end" width={270} withinPortal>
                                             <Menu.Target>
-                                                <ActionIcon variant="subtle" aria-label={t`Actions`}>
-                                                    <IconDots size={18}/>
+                                                <ActionIcon className={classes.menuButton} variant="subtle"
+                                                            aria-label={t`Actions`}>
+                                                    <IconDotsVertical size={20}/>
                                                 </ActionIcon>
                                             </Menu.Target>
                                             <Menu.Dropdown>
@@ -369,12 +393,12 @@ const Deposits = () => {
                                                 )}
                                             </Menu.Dropdown>
                                         </Menu>
-                                    </Table.Td>
-                                </Table.Tr>
-                            ))}
-                        </Table.Tbody>
-                    </Table>
-                </div>
+                                    </MantineTable.Td>
+                                </MantineTable.Tr>
+                            );
+                        })}
+                    </MantineTable.Tbody>
+                </Table>
             )}
 
             {retainOrder && (

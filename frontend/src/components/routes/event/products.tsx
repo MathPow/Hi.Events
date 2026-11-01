@@ -1,7 +1,7 @@
 import {useParams} from "react-router";
 import {useDisclosure} from "@mantine/hooks";
-import {Button, Menu} from "@mantine/core";
-import {IconCategory, IconChevronDown, IconPlus, IconShoppingCart} from "@tabler/icons-react";
+import {Button} from "@mantine/core";
+import {IconCategoryPlus, IconPlus} from "@tabler/icons-react";
 import {PageTitle} from "../../common/PageTitle";
 import {PageBody} from "../../common/PageBody";
 import {CreateProductModal} from "../../modals/CreateProductModal";
@@ -29,7 +29,7 @@ export const Products = () => {
     const {eventId} = useParams();
     const {data: event} = useGetEvent(eventId);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategoryId, setSelectedCategoryId] = useState<IdParam>(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<IdParam>();
 
     const productCategoriesQuery = useGetEventProductCategories(eventId);
     const productCategories = productCategoriesQuery?.data?.data;
@@ -45,6 +45,23 @@ export const Products = () => {
         <PageBody>
             <PageTitle
                 subheading={t`Create and configure tickets and merchandise for sale.`}
+                actions={(
+                    <>
+                        <Button
+                            variant="outline"
+                            leftSection={<IconCategoryPlus size={20}/>}
+                            onClick={openCreateProductCategoryModal}
+                        >
+                            {t`Create category`}
+                        </Button>
+                        <Button
+                            leftSection={<IconPlus size={20}/>}
+                            onClick={() => openCreateProduct(undefined)}
+                        >
+                            {t`Add a ticket or product`}
+                        </Button>
+                    </>
+                )}
             >{t`Tickets & Products`}</PageTitle>
 
             <ToolBar
@@ -52,54 +69,11 @@ export const Products = () => {
                     <SearchBar
                         onClear={() => setSearchTerm('')}
                         placeholder={t`Search products`}
-                        rightSection={<IconChevronDown/>}
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.target.value)}
                     />
                 )}
-            >
-                <Menu
-                    transitionProps={{transition: 'pop-top-right'}}
-                    position="bottom"
-                    width={220}
-                    withinPortal
-                >
-                    <Menu.Target>
-                        <Button
-                            leftSection={<IconPlus/>}
-                            color={'green'}
-                            rightSection={
-                                <IconChevronDown stroke={1.5}/>
-                            }
-                            pr={12}
-                        >
-                            {t`Create`}
-                        </Button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Item
-                            leftSection={
-                                <IconShoppingCart
-                                    stroke={1.5}
-                                />
-                            }
-                            onClick={() => openCreateProduct(undefined)}
-                        >
-                            {t`Ticket or Product`}
-                        </Menu.Item>
-                        <Menu.Item
-                            leftSection={
-                                <IconCategory
-                                    stroke={1.5}
-                                />
-                            }
-                            onClick={openCreateProductCategoryModal}
-                        >
-                            {t`Category`}
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
-            </ToolBar>
+            />
 
             <TableSkeleton isVisible={!productCategories || !event}/>
 

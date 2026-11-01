@@ -1,6 +1,7 @@
 import {ColumnDef, flexRender, getCoreRowModel, useReactTable, VisibilityState,} from '@tanstack/react-table';
 import {Table as MantineTable} from '@mantine/core';
 import React, {useEffect, useState} from 'react';
+import classNames from "classnames";
 import classes from './TanStackTable.module.scss';
 
 export interface TanStackTableColumnMeta {
@@ -19,6 +20,11 @@ interface TanStackTableProps<TData> {
     storageKey?: string;
     enableColumnVisibility?: boolean;
     renderColumnVisibilityToggle?: (table: ReturnType<typeof useReactTable<TData>>) => React.ReactNode;
+    // Phones (< 768px): each row drawn as a line of a cream card instead of the table, which would
+    // only show its first columns. Without it the table scrolls sideways.
+    renderMobileRow?: (row: TData) => React.ReactNode;
+    // Shown on the left of the column toggle (filter chips…).
+    toolbarStart?: React.ReactNode;
 }
 
 export function TanStackTable<TData>({
@@ -27,6 +33,8 @@ export function TanStackTable<TData>({
                                          storageKey,
                                          enableColumnVisibility = false,
                                          renderColumnVisibilityToggle,
+                                         renderMobileRow,
+                                         toolbarStart,
                                      }: TanStackTableProps<TData>) {
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
         if (storageKey && enableColumnVisibility) {
@@ -59,14 +67,32 @@ export function TanStackTable<TData>({
         }
     }, [columnVisibility, storageKey, enableColumnVisibility]);
 
+    const columnToggle = enableColumnVisibility && renderColumnVisibilityToggle
+        ? renderColumnVisibilityToggle(table)
+        : null;
+
     return (
         <div className={classes.tableWrapper}>
-            {enableColumnVisibility && renderColumnVisibilityToggle && (
+            {(toolbarStart || columnToggle) && (
                 <div className={classes.toolbar}>
-                    {renderColumnVisibilityToggle(table)}
+                    {toolbarStart && <div className={classes.toolbarStart}>{toolbarStart}</div>}
+                    {columnToggle && (
+                        <div className={classNames(classes.columnToggle, {[classes.desktopOnly]: !!renderMobileRow})}>
+                            {columnToggle}
+                        </div>
+                    )}
                 </div>
             )}
-            <div className={classes.card}>
+            {renderMobileRow && (
+                <div className={classes.mobileList}>
+                    {table.getRowModel().rows.map((row) => (
+                        <div key={row.id} className={classes.mobileRow}>
+                            {renderMobileRow(row.original)}
+                        </div>
+                    ))}
+                </div>
+            )}
+            <div className={classNames(classes.card, {[classes.desktopOnly]: !!renderMobileRow})}>
                 <MantineTable.ScrollContainer minWidth={200} scrollAreaProps={{
                     type: 'hover',
                 }}>

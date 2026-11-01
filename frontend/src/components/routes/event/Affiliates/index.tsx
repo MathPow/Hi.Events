@@ -59,6 +59,11 @@ const Affiliates = () => {
         <PageBody>
             <PageTitle
                 subheading={t`Create trackable links to reward partners who promote your event.`}
+                actions={(
+                    <Button leftSection={<IconPlus size={20}/>} onClick={openCreateModal}>
+                        {t`Create Affiliate`}
+                    </Button>
+                )}
             >
                 {t`Affiliates`}
             </PageTitle>
@@ -73,17 +78,11 @@ const Affiliates = () => {
             )}>
                 <Button
                     onClick={() => handleExport(eventId)}
-                    rightSection={<IconDownload size={14}/>}
-                    color="green"
+                    leftSection={<IconDownload size={18}/>}
+                    variant="default"
                     loading={downloadPending}
-                    size="sm"
                 >
                     {t`Export`}
-                </Button>
-                <Button
-                    leftSection={<IconPlus/>}
-                    color={'green'}
-                    onClick={openCreateModal}>{t`Create Affiliate`}
                 </Button>
             </ToolBar>
 

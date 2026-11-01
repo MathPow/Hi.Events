@@ -1,8 +1,10 @@
 @use "../../../styles/mixins";
 @use "../../../styles/admin-ui" as ui;
 
+// The actions go under the text when both don't fit on one line (narrow windows beside the sidebar).
 .container {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem 1.5rem;
@@ -19,9 +21,14 @@
 
 .text {
   display: flex;
+  flex: 1 1 22rem;
   flex-direction: column;
   gap: 0.375rem;
   min-width: 0;
+
+  @include mixins.respond-below(md) {
+    flex-basis: auto;
+  }
 }
 
 // h1 also takes FatFrank from styles/dehors-app.scss; the size and the case are set here.
@@ -52,9 +59,12 @@
   justify-content: flex-end;
   gap: 0.75rem;
   flex-shrink: 0;
+  margin-left: auto;
 
+  // Phones: full width, the main action (the last one, on the right on desktop) on top.
   @include mixins.respond-below(md) {
-    flex-direction: column;
+    margin-left: 0;
+    flex-direction: column-reverse;
     align-items: stretch;
     gap: 0.625rem;
   }

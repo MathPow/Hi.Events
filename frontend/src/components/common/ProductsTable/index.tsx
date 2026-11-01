@@ -25,10 +25,6 @@ export const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
         setCategories(initialCategories);
     }, [initialCategories]);
 
-    if (!categories || categories.length === 0 || !event) {
-        return <>no categories or event</>;
-    }
-
     useEffect(() => {
         if (searchTerm) {
             const lowercaseSearch = searchTerm.toLowerCase();
@@ -58,12 +54,16 @@ export const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
         }
     }, [searchTerm, categories]);
 
+    if (!categories || categories.length === 0 || !event) {
+        return null;
+    }
+
     return (
         <div>
             {filteredCategories.length > 0 ? (
                 <div className={classes.categories}>
                     {filteredCategories.map((category) => {
-                        if (!category?.products) return <></>;
+                        if (!category?.products) return null;
 
                         return (
                             <SortableCategory
@@ -78,6 +78,7 @@ export const ProductCategoryList: React.FC<ProductCategoryListProps> = ({
                                         productCategories={categories}
                                         searchTerm={searchTerm}
                                         openCreateModal={() => onCreateOpen(category.id)}
+                                        inCategory
                                     />
                                 )}
                                 {category.products.length > 0 && (

@@ -1,11 +1,10 @@
 import {Accordion as MantineAccordion, Group, Text} from '@mantine/core';
-import {TablerIconsProps} from '@tabler/icons-react';
 import classes from './Accordion.module.scss';
 import React from "react";
 
 export interface AccordionItem {
     value: string;
-    icon?: (props: TablerIconsProps) => JSX.Element;
+    icon?: React.ElementType;
     title: string;
     count?: number;
     hidden?: boolean;
@@ -35,12 +34,10 @@ export const Accordion = ({items, defaultValue}: AccordionProps) => {
                     <MantineAccordion.Item key={item.value} value={item.value}>
                         <MantineAccordion.Control>
                             <Group gap="xs">
-                                {item.icon && <item.icon size={18} stroke={1.5}/>}
-                                <Text fw={500}>{item.title}</Text>
+                                {item.icon && <item.icon size={20} stroke={2}/>}
+                                <Text className={classes.accordionTitle}>{item.title}</Text>
                                 {item.count !== undefined && (
-                                    <Text size="xs" c="dimmed">
-                                        ({item.count})
-                                    </Text>
+                                    <span className={classes.accordionCount}>{item.count}</span>
                                 )}
                             </Group>
                         </MantineAccordion.Control>

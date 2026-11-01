@@ -87,7 +87,7 @@ const premierEvenement: HelpGuide = {
         {
             ol: [
                 "Dans le menu de l'événement, sous **Billetterie et ventes**, ouvrez **Billets et produits**.",
-                'Cliquez sur **Créer**, puis sur **Billet ou produit**.',
+                'Cliquez sur **Ajouter un billet ou un produit**, en haut à droite (en haut de la page sur téléphone).',
                 'Choisissez le **Type de produit** : **Billet** pour une entrée, **Général** pour un chandail, un repas ou un stationnement.',
                 'Choisissez le **Type de prix** : payant, gratuit, par paliers (ex. étudiant et adulte) ou avec options (ex. tailles ou distances).',
                 'Donnez-lui un nom et un prix, puis cliquez sur **Créer un produit**. Recommencez pour chaque billet.',

@@ -1,5 +1,8 @@
 import {ActionIcon} from '@mantine/core';
-import {IconCaretDownFilled, IconCaretUpFilled} from '@tabler/icons-react';
+import {IconChevronDown, IconChevronUp} from '@tabler/icons-react';
+import {t} from "@lingui/macro";
+import classNames from "classnames";
+import classes from "./SortArrows.module.scss";
 
 interface SortArrowsProps {
     upArrowEnabled: boolean;
@@ -7,36 +10,39 @@ interface SortArrowsProps {
     onSortUp: () => void;
     onSortDown: () => void;
     flexDirection?: 'row' | 'column';
+    className?: string;
 }
 
+// Move up / move down: two small round buttons, dimmed when the item can't move further.
 export const SortArrows = ({
                                upArrowEnabled,
                                downArrowEnabled,
                                onSortUp,
                                onSortDown,
-                               flexDirection = 'row'
+                               flexDirection = 'row',
+                               className,
                            }: SortArrowsProps) => {
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: flexDirection,
-            alignItems: 'center'
-        }}>
+        <div className={classNames(classes.arrows, className)} data-direction={flexDirection}>
             <ActionIcon
-                onClick={upArrowEnabled ? onSortUp : undefined}
-                variant="transparent"
-                aria-label="Sort Up"
-                color={upArrowEnabled ? 'currentColor' : '#ddd'}
+                className={classes.arrow}
+                onClick={onSortUp}
+                disabled={!upArrowEnabled}
+                variant="subtle"
+                aria-label={t`Move up`}
+                title={t`Move up`}
             >
-                <IconCaretUpFilled size={18}/>
+                <IconChevronUp size={18} stroke={2.25}/>
             </ActionIcon>
             <ActionIcon
-                onClick={downArrowEnabled ? onSortDown : undefined}
-                variant="transparent"
-                aria-label="Sort Down"
-                color={downArrowEnabled ? 'currentColor' : '#ddd'}
+                className={classes.arrow}
+                onClick={onSortDown}
+                disabled={!downArrowEnabled}
+                variant="subtle"
+                aria-label={t`Move down`}
+                title={t`Move down`}
             >
-                <IconCaretDownFilled size={18}/>
+                <IconChevronDown size={18} stroke={2.25}/>
             </ActionIcon>
         </div>
     );

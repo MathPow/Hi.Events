@@ -240,7 +240,8 @@ export const ProductForm = ({form, product}: ProductFormProps) => {
     }, [form, form.values.type]);
 
     useEffect(() => {
-        if (event?.product_categories && event.product_categories.length === 1) {
+        // Keeps the category chosen from the list (the event may not know a category created a moment ago).
+        if (event?.product_categories && event.product_categories.length === 1 && !form.values.product_category_id) {
             form.setFieldValue('product_category_id', String(event.product_categories[0].id));
         }
     }, [event?.product_categories]);

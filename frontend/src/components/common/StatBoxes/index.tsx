@@ -90,13 +90,15 @@ export const StatTile = ({
     </div>
 );
 
-// The grid of tiles: 3 per row (6 on very wide screens), 2 on phones.
-export const StatGrid = ({children, loading = false, className}: {
+// The grid of tiles: 3 per row (6 on very wide screens), 2 on phones. Compact: smaller tiles, as
+// many per row as fit (secondary figures of a page, e.g. the deposits).
+export const StatGrid = ({children, loading = false, className, compact = false}: {
     children: ReactNode,
     loading?: boolean,
-    className?: string
+    className?: string,
+    compact?: boolean,
 }) => (
-    <div className={classNames(classes.statistics, className)}>
+    <div className={classNames(classes.statistics, {[classes.compact]: compact}, className)}>
         <div className={classNames(classes.grid, {[classes.loading]: loading})}>
             {children}
         </div>

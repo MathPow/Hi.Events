@@ -12,20 +12,34 @@ import {SearchBarWrapper} from "../../common/SearchBar";
 import {Pagination} from "../../common/Pagination";
 import {ToolBar} from "../../common/ToolBar";
 import {useFilterQueryParamSync} from "../../../hooks/useFilterQueryParamSync";
-import {IdParam, QueryFilterOperator, QueryFilters} from "../../../types";
+import {IdParam, QueryFilterCondition, QueryFilterOperator, QueryFilters} from "../../../types";
 import {TableSkeleton} from "../../common/TableSkeleton";
 import {orderClient} from "../../../api/order.client";
 import {downloadBinary} from "../../../utilites/download";
 import {FilterModal, FilterOption} from "../../common/FilterModal";
 import {withLoadingNotification} from "../../../utilites/withLoadingNotification.tsx";
+import {FilterChips} from "../../common/FilterChips";
 
-const orderStatuses = [
+type StatusChip = 'ALL' | 'COMPLETED' | 'AWAITING_OFFLINE_PAYMENT' | 'CANCELLED';
+
+const conditionValue = (condition: QueryFilterCondition | QueryFilterCondition[] | undefined) =>
+    Array.isArray(condition) ? condition[0]?.value : condition?.value;
+
+const asList = (value: unknown): string[] => {
+    if (Array.isArray(value)) {
+        return value.map(String);
+    }
+    return value ? String(value).split(',') : [];
+};
+
+// Functions: the labels are translated once the language is active, not when the module loads.
+const orderStatuses = () => [
     {label: t`Completed`, value: 'COMPLETED'},
     {label: t`Cancelled`, value: 'CANCELLED'},
     {label: t`Awaiting Offline Payment`, value: 'AWAITING_OFFLINE_PAYMENT'},
 ];
 
-const refundStatuses = [
+const refundStatuses = () => [
     {label: t`Refunded`, value: 'REFUNDED'},
     {label: t`Partially Refunded`, value: 'PARTIALLY_REFUNDED'},
 ];
@@ -38,19 +52,26 @@ export const Orders: React.FC = () => {
     const orders = ordersQuery?.data?.data;
     const pagination = ordersQuery?.data?.meta;
     const [downloadPending, setDownloadPending] = useState(false);
+    // Offline payments to confirm: the count bubble of their chip.
+    const awaitingQuery = useGetEventOrders(eventId, {
+        pageNumber: 1,
+        perPage: 1,
+        filterFields: {status: {operator: QueryFilterOperator.In, value: 'AWAITING_OFFLINE_PAYMENT'}},
+    });
+    const awaitingCount = Number(awaitingQuery.data?.meta?.total) || 0;
 
     const filterOptions: FilterOption[] = [
         {
             field: 'status',
             label: t`Order Status`,
             type: 'multi-select',
-            options: orderStatuses
+            options: orderStatuses()
         },
         {
             field: 'refund_status',
             label: t`Refund Status`,
             type: 'multi-select',
-            options: refundStatuses
+            options: refundStatuses()
         }
     ];
 
@@ -104,9 +125,41 @@ export const Orders: React.FC = () => {
     };
 
     const currentFilters = {
-        status: searchParams.filterFields?.status?.value || [],
-        refund_status: searchParams.filterFields?.refund_status?.value || []
+        status: conditionValue(searchParams.filterFields?.status) || [],
+        refund_status: conditionValue(searchParams.filterFields?.refund_status) || []
     };
+
+    const selectedStatuses = asList(conditionValue(searchParams.filterFields?.status));
+    const statusChip: StatusChip | null = selectedStatuses.length === 0
+        ? 'ALL'
+        : (selectedStatuses.length === 1 && ['COMPLETED', 'AWAITING_OFFLINE_PAYMENT', 'CANCELLED'].includes(selectedStatuses[0])
+            ? selectedStatuses[0] as StatusChip
+            : null);
+
+    const handleStatusChip = (chip: StatusChip) => {
+        setSearchParams({
+            ...searchParams,
+            pageNumber: 1,
+            filterFields: {
+                ...(searchParams.filterFields || {}),
+                status: chip === 'ALL' ? undefined : {operator: QueryFilterOperator.In, value: [chip]},
+            },
+        } as QueryFilters, true);
+    };
+
+    const statusChips = (
+        <FilterChips<StatusChip>
+            label={t`Order Status`}
+            value={statusChip}
+            onChange={handleStatusChip}
+            chips={[
+                {value: 'ALL', label: t({message: 'All', context: 'orders filter'})},
+                {value: 'COMPLETED', label: t({message: 'Completed', context: 'orders filter'})},
+                {value: 'AWAITING_OFFLINE_PAYMENT', label: t`Awaiting Payment`, count: awaitingCount},
+                {value: 'CANCELLED', label: t({message: 'Cancelled', context: 'orders filter'})},
+            ]}
+        />
+    );
 
     return (
         <PageBody>
@@ -134,10 +187,9 @@ export const Orders: React.FC = () => {
             >
                 <Button
                     onClick={() => handleExport(eventId)}
-                    rightSection={<IconDownload size={14}/>}
-                    color="green"
+                    leftSection={<IconDownload size={18}/>}
+                    variant="default"
                     loading={downloadPending}
-                    size="sm"
                 >
                     {t`Export`}
                 </Button>
@@ -146,7 +198,7 @@ export const Orders: React.FC = () => {
             <TableSkeleton isVisible={!orders || ordersQuery.isFetching}/>
 
             {orders && event && (
-                <OrdersTable event={event} orders={orders}/>
+                <OrdersTable event={event} orders={orders} toolbar={statusChips}/>
             )}
 
             {!!orders?.length && (

@@ -1,6 +1,44 @@
-.sideBarTitle {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 15px;
-    margin-bottom: 5px;
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
+
+// The panels opened from a list (an order, an attendee): cream like the modals, rounded on the page side.
+.content {
+  background: var(--dehors-creme) !important;
+  color: ui.$ink;
+
+  @include mixins.respond-above(md) {
+    border-radius: 1.75rem 0 0 1.75rem !important;
+  }
+}
+
+.header {
+  background: var(--dehors-creme) !important;
+}
+
+.sideDrawerTitle {
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.close {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  min-width: 2.5rem !important;
+  border-radius: 999px !important;
+  background: var(--dehors-champ) !important;
+  color: ui.$ink !important;
+
+  &:hover {
+    background: var(--dehors-champ-survol) !important;
+  }
+}
+
+.body {
+  padding: 0 0.9375rem 1.5rem;
+}
+
+.focusStart {
+  outline: none;
 }

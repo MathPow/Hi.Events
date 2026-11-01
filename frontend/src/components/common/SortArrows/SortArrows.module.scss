@@ -1,0 +1,31 @@
+@use "../../../styles/admin-ui" as ui;
+
+.arrows {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  &[data-direction='column'] {
+    flex-direction: column;
+  }
+}
+
+// !important: Mantine's subtle variant and its disabled state set the colors with stronger selectors.
+.arrow {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  min-width: 2.25rem !important;
+  border: none !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: ui.$ink !important;
+
+  &:hover:where(:not(:disabled, [data-disabled])) {
+    background: ui.$row !important;
+  }
+
+  &:is(:disabled, [data-disabled]) {
+    opacity: 0.25;
+    cursor: default;
+  }
+}

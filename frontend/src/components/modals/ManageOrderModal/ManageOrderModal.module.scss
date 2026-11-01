@@ -1,18 +1,45 @@
 @use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
 .container {
-  padding: 0.5rem;
+  padding: 0 0.25rem;
 }
 
 .header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding: 0 0.5rem;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  color: ui.$ink;
 }
 
 .orderInfo {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.reference {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1;
+  overflow-wrap: anywhere;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.625rem;
+  }
+}
+
+.customer {
+  font-size: 1rem;
+  font-weight: 700;
 }

@@ -1,8 +1,7 @@
 import React from 'react';
 import {IconEyeOff, IconPencil, IconPlus, IconTrash, IconTrashOff} from "@tabler/icons-react";
 import classes from "../ProductsTable.module.scss";
-import classNames from "classnames";
-import {ActionIcon, Popover} from "@mantine/core";
+import {ActionIcon, Tooltip} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import {EditProductCategoryModal} from "../../../modals/EditProductCategoryModal";
 import {ProductCategory} from "../../../../types.ts";
@@ -45,7 +44,7 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
             onSuccess: () => {
                 editModal.close();
             },
-            onError: (error) => {
+            onError: (error: any) => {
                 if (error?.response?.status && error.response.status === 409 && error?.response?.data?.message) {
                     showError(error?.response?.data.message);
                     return;
@@ -77,7 +76,7 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
                 product_category_id: cat.id as number,
                 sorted_products: (cat.products || []).map((product, index) => ({
                     id: product.id as number,
-                    sort_order: index
+                    order: index + 1
                 }))
             }));
 
@@ -99,19 +98,17 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
 
     return (
         <>
-            <div className={classNames(classes.sortableCategory)}>
+            <section className={classes.sortableCategory}>
                 <div className={classes.categoryHeader}>
                     <h2 className={classes.categoryTitle}>
                         {category.name}
                         {category.is_hidden && (
-                            <Popover>
-                                <Popover.Target>
-                                    <IconEyeOff style={{cursor: 'pointer'}} size={14}/>
-                                </Popover.Target>
-                                <Popover.Dropdown>
-                                    {t`This category is hidden from public view`}
-                                </Popover.Dropdown>
-                            </Popover>
+                            <Tooltip label={t`This category is hidden from public view`} withArrow>
+                                <span className={classes.hiddenTag}>
+                                    <IconEyeOff size={14}/>
+                                    {t`Hidden`}
+                                </span>
+                            </Tooltip>
                         )}
                     </h2>
 
@@ -122,12 +119,13 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
                             onSortUp={() => handleSort('up')}
                             onSortDown={() => handleSort('down')}
                         />
+                        <span className={classes.actionsDivider} aria-hidden/>
                         <ActionIcon
                             className={classes.categoryAction}
                             onClick={openCreateModal}
-                            title={t`Create category`}
-                            aria-label={t`Create category`}
-                            variant={'transparent'}
+                            title={t`Add Product to Category`}
+                            aria-label={t`Add Product to Category`}
+                            variant="subtle"
                         >
                             <IconPlus size={20}/>
                         </ActionIcon>
@@ -136,16 +134,17 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
                             onClick={editModal.open}
                             title={t`Edit category`}
                             aria-label={t`Edit category`}
-                            variant={'transparent'}
+                            variant="subtle"
                         >
                             <IconPencil size={20}/>
                         </ActionIcon>
                         <ActionIcon
                             className={classes.categoryAction}
                             onClick={handleDelete}
-                            title={t`Delete category`}
+                            title={isLastCategory ? t`You cannot delete the last category.` : t`Delete category`}
                             aria-label={t`Delete category`}
-                            variant={'transparent'}
+                            variant="subtle"
+                            data-muted={isLastCategory || undefined}
                         >
                             {isLastCategory ? <IconTrashOff size={20}/> : <IconTrash size={20}/>}
                         </ActionIcon>
@@ -154,7 +153,7 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
                 <div className={classes.categoryContent}>
                     {children}
                 </div>
-            </div>
+            </section>
             {isEditModalOpen && (
                 <EditProductCategoryModal
                     productCategoryId={category.id}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Group, Menu} from '@mantine/core';
+import {Button, Menu} from '@mantine/core';
 import {IconDotsVertical} from '@tabler/icons-react';
 
 export interface MenuItem {
@@ -33,7 +33,7 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
                                                       }) => {
     return (
         <>
-            <Menu shadow="md" width={200}>
+            <Menu shadow="md" width={260} position="bottom-end">
                 <Menu.Target>
                     <div style={{cursor: 'pointer'}}>
                         {target}

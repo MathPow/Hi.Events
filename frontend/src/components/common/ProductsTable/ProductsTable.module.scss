@@ -1,518 +1,410 @@
-@use "../../../styles/mixins.scss";
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
-// ==========================================
-// Variables & Design Tokens
-// ==========================================
+// « Billets et produits »: each category is a section (FatFrank title, its actions on the right), each
+// product a cream card like the dashboard tiles. The layout follows the width of the list (container
+// queries): one row on wide screens, two lines in between, stacked on phones.
 
-$card-radius: var(--hi-radius-md, 8px);
-$card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-$card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-$transition-fast: 150ms ease;
-$transition-base: 200ms ease;
+.categories {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  margin-bottom: 1.5rem;
 
-
-$color-text-primary: #1f2937;
-$color-text-secondary: #6b7280;
-$color-text-muted: #9ca3af;
-$color-border: #e5e7eb;
-$color-border-light: #f3f4f6;
-$color-success: #10b981;
-$color-money: #059669;
-
-// ==========================================
-// Category Container Styles
-// ==========================================
-
-.sortableCategory {
-  margin-bottom: 24px;
-  transition: transform $transition-base, box-shadow $transition-base;
-  border-radius: $card-radius;
-  padding: var(--hi-spacing-lg);
-  box-shadow: $card-shadow;
-  border: 1px solid $color-border;
-  background-color: #ffffff;
-
-  &:hover {
-    box-shadow: $card-shadow-hover;
+  @include mixins.respond-below(md) {
+    gap: 1.75rem;
   }
+}
+
+// Category
+.sortableCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .categoryHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  gap: 12px;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+  color: ui.$ink;
+}
+
+.categoryTitle {
+  @include ui.section-title;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.hiddenTag {
+  @include ui.tag(neutral);
+  font-family: Allotrope, Arial, sans-serif;
+  text-transform: none;
+  cursor: help;
 }
 
 .categoryActions {
   display: flex;
-  gap: 8px;
-}
-
-.categoryAction {
+  align-items: center;
+  gap: 0.25rem;
   margin-left: auto;
 }
 
-.categoryTitle {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 600;
-  color: $color-text-primary;
+.actionsDivider {
+  width: 1px;
+  height: 1.5rem;
+  margin-inline: 0.25rem;
+  background: rgb(55 39 33 / 0.15);
 }
 
-.categoryDragHandle {
-  cursor: grab;
-  color: $color-text-muted;
-  transition: color $transition-fast;
+// !important: Mantine's subtle variant sets its colors with stronger selectors.
+.categoryAction,
+.menuButton {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  min-width: 2.5rem !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: ui.$ink !important;
 
   &:hover {
-    color: $color-text-secondary;
+    background: rgb(55 39 33 / 0.06) !important;
   }
 
-  &:active {
-    cursor: grabbing;
+  &[data-muted] {
+    opacity: 0.35;
   }
-}
-
-.dragHandle {
-  touch-action: none;
-  margin-top: 5px;
-}
-
-.dragHandleDisabled {
-  cursor: not-allowed;
-  opacity: 0.4;
 }
 
 .categoryContent {
-  min-height: 50px;
-}
-
-.isOver {
-  background-color: $color-border-light;
-}
-
-.isDragging {
-  opacity: 0.6;
-  z-index: 1000;
-}
-
-.dragOverlay {
-  .sortableCategory,
-  .productCard {
-    transform: scale(1.02);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  }
+  min-height: 3rem;
 }
 
 .cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1rem;
+
+  @include mixins.respond-below(md) {
+    gap: 0.75rem;
+  }
 }
 
-// ==========================================
-// Product Card Styles
-// ==========================================
-
-.productCard {
-  position: relative;
-  box-sizing: border-box;
-  border-radius: $card-radius;
-  border: 1px solid $color-border;
-  background-color: #ffffff;
-  display: grid;
-  padding: 0;
-  overflow: hidden;
-  transition:
-          transform $transition-base,
-          box-shadow $transition-base,
-          border-color $transition-base;
-  grid-template-areas: "sort content action";
-  grid-template-columns: 44px 1fr auto;
+// Empty category: a dashed card, like « Créer un événement » on the events page.
+.emptyCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  padding: 1.75rem 1.25rem;
+  border: 2px dashed ui.$ink;
+  border-radius: 1.75rem;
+  color: ui.$ink;
+  text-align: center;
+  transition: background-color 0.15s ease;
 
   &:hover {
-    box-shadow: $card-shadow-hover;
-    border-color: darken($color-border, 5%);
-
-    .actionButton {
-      background-color: $color-border-light;
-    }
+    background: rgb(55 39 33 / 0.04);
   }
 
-  @include mixins.respond-below(lg) {
-    grid-template-areas:
-      "sort content"
-      "sort action";
-    grid-template-columns: 40px 1fr;
-  }
-
-  @include mixins.respond-below(sm) {
-    grid-template-areas:
-      "content"
-      "action";
-    grid-template-columns: 1fr;
-
-    .sortControls {
-      display: none;
-    }
-  }
-
-  &.soldOut {
-    opacity: 0.7;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-                      -45deg,
-                      transparent,
-                      transparent 10px,
-                      rgba(0, 0, 0, 0.02) 10px,
-                      rgba(0, 0, 0, 0.02) 20px
-      );
-      pointer-events: none;
-    }
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 3px;
   }
 }
 
+.emptyPlus {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.25rem;
+  border-radius: 999px;
+  background: ui.$accent;
+  color: ui.$ink;
+}
 
-// Sort controls
+.emptyTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.emptyText {
+  font-size: 0.9375rem;
+}
+
+// Product card
+.productCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(12rem, 1.15fr) minmax(0, 2fr) auto auto;
+  grid-template-areas: "sort heading details status actions";
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding: 1.125rem 1rem 1.125rem 0.625rem;
+  border-radius: 1.75rem;
+  background: ui.$card;
+  box-shadow: ui.$shadow;
+  color: ui.$ink;
+
+  @container (max-width: 859px) {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "sort heading status actions"
+      "sort details details details";
+    gap: 1rem;
+  }
+
+  @container (max-width: 559px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "heading actions"
+      "details details"
+      "status sort";
+    gap: 0.875rem;
+    padding: 1rem 0.625rem 0.75rem 1rem;
+    border-radius: 1.5rem;
+  }
+
+  &.soldOut .detailsGrid,
+  &.soldOut .productHeading {
+    opacity: 0.7;
+  }
+}
+
 .sortControls {
   grid-area: sort;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 12px 0;
-  border-right: 1px solid $color-border-light;
-  background-color: #fafafa;
-}
+  justify-content: center;
 
-// Main content area
-.productContent {
-  grid-area: content;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 20px;
-  gap: 14px;
-  min-width: 0;
-
-  @include mixins.respond-below(sm) {
-    padding: 14px 16px;
-    gap: 12px;
+  @container (max-width: 559px) {
+    justify-content: flex-end;
   }
 }
 
-// Header section
+.sortArrows {
+  @container (max-width: 559px) {
+    flex-direction: row !important;
+  }
+}
+
+.productHeading {
+  grid-area: heading;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.productPastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+
+  &[data-type='product'] {
+    background: #9cc9e3;
+  }
+
+  img {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  @container (max-width: 559px) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
 .productHeader {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.375rem;
+  min-width: 0;
 }
 
-.badgeRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+.productTitle {
+  margin: 0;
+  font-family: Allotrope, Arial, sans-serif !important;
+  font-size: 1.125rem;
+  font-weight: 700 !important;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .typeBadges {
   display: flex;
   align-items: center;
-  gap: 6px;
   flex-wrap: wrap;
+  gap: 0.375rem;
 }
 
-.productTitle {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: $color-text-primary;
-  line-height: 1.4;
+.typeTag {
+  @include ui.tag(neutral);
+  padding: 0.1875rem 0.5625rem;
+  font-size: 0.75rem;
 
-  @include mixins.respond-below(sm) {
-    font-size: 15px;
+  &[data-tone='highlight'] {
+    background: ui.tone-bg(waiting);
+    color: ui.tone-text(waiting);
   }
 }
 
-.statusBadge {
-  flex-shrink: 0;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-}
-
-// Details grid
+// Price, attendees, sale period
 .detailsGrid {
+  grid-area: details;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  min-width: 0;
 
-  @include mixins.respond-below(lg) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
+  @container (max-width: 559px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0.875rem 0 0;
+    border-top: 1px solid ui.$separator;
 
-  @include mixins.respond-below(md) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-
-  @include mixins.respond-below(xs) {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    .detailItem:last-child {
+      grid-column: 1 / -1;
+    }
   }
 }
 
 .detailItem {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.3125rem;
   min-width: 0;
 }
 
 .detailLabel {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: $color-text-muted;
 }
 
-// Price styling
 .priceValue {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 0.375rem 0.5rem;
 }
 
 .priceAmount {
-  font-size: 16px;
+  font-size: 1.0625rem;
   font-weight: 700;
-  color: $color-money;
   font-variant-numeric: tabular-nums;
-
-  @include mixins.respond-below(sm) {
-    font-size: 15px;
-  }
-}
-
-.freePrice {
-  color: $color-success;
 }
 
 .taxIndicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  background-color: #fef3c7;
-  color: #92400e;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
+  @include ui.tag(neutral);
+  padding: 0.1875rem 0.5rem;
+  font-size: 0.75rem;
   cursor: help;
-  transition: background-color $transition-fast;
-
-  &:hover {
-    background-color: #fde68a;
-  }
-
-  svg {
-    flex-shrink: 0;
-  }
-}
-
-// Sales styling
-.salesValue {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .salesWithProgress {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.4375rem;
 }
 
 .salesCount {
-  font-size: 16px;
-  font-weight: 600;
-  color: $color-text-primary;
   display: flex;
   align-items: baseline;
-  gap: 4px;
-
-  @include mixins.respond-below(sm) {
-    font-size: 15px;
-  }
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
-.salesTotal {
-  font-size: 13px;
+.salesTotal,
+.unlimited {
+  font-size: 0.875rem;
   font-weight: 400;
-  color: $color-text-muted;
 }
 
 .unlimited {
-  font-size: 12px;
-  font-weight: 400;
-  color: $color-text-muted;
-  margin-left: 4px;
-}
-
-.salesProgress {
-  max-width: 120px;
-
-  @include mixins.respond-below(sm) {
-    max-width: 100%;
-  }
+  margin-left: 0.25rem;
 }
 
 .lowStock {
-  font-size: 11px;
-  font-weight: 500;
-  color: #ea580c;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  margin-left: 0.375rem;
+  color: ui.tone-text(waiting);
+  font-size: 0.8125rem;
+}
 
-  &::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #ea580c;
-    animation: pulse 2s infinite;
+// The progress bar of the dashboard: pale track, orange fill.
+.salesProgress {
+  display: block;
+  width: 100%;
+  max-width: 9rem;
+  height: 6px;
+  border-radius: 999px;
+  background: ui.$track;
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: ui.$accent;
+  }
+
+  &[data-level='low'] span {
+    background: #f6c85f;
+  }
+
+  &[data-level='full'] span {
+    background: ui.tone-text(problem);
   }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-// Date styling
 .dateValue {
   display: flex;
-  align-items: center;
-}
-
-.dateRange {
-  display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
 }
 
 .dateItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.9375rem;
+}
+
+.statusArea {
+  grid-area: status;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: $color-text-secondary;
-  cursor: help;
 
-  svg {
-    color: $color-text-muted;
-    flex-shrink: 0;
+  @container (max-width: 559px) {
+    padding-left: 0;
   }
 }
 
-.alwaysAvailable,
-.noEndDate {
-  font-size: 13px;
-  color: $color-text-muted;
-  font-style: italic;
-}
-
-// Action section
 .actionSection {
-  grid-area: action;
+  grid-area: actions;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-  border-left: 1px solid $color-border-light;
-  background-color: #fafafa;
+  justify-content: flex-end;
 
-  @include mixins.respond-below(lg) {
-    border-left: none;
-    border-top: 1px solid $color-border-light;
-    padding: 12px 16px;
-    justify-content: flex-start;
+  @container (max-width: 559px) {
+    align-self: start;
   }
-}
-
-.actionButton {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: background-color $transition-fast;
-
-  @include mixins.respond-below(lg) {
-    padding: 6px 12px;
-  }
-}
-
-.actionButtonText {
-  @include mixins.respond-above(lg) {
-    display: none;
-  }
-}
-
-.actionButtonIcon {
-  @include mixins.respond-below(lg) {
-    display: none;
-  }
-}
-
-
-// ==========================================
-// Drag Preview
-// ==========================================
-
-.dragPreview {
-  background-color: #fff;
-  border: 1px solid $color-border;
-  border-radius: $card-radius;
-  padding: 12px 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-
-  h3 {
-    margin: 0 0 4px;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  p {
-    margin: 0;
-    color: $color-text-secondary;
-    font-size: 13px;
-  }
-}
-
-.moreProducts {
-  background-color: $color-border-light;
-  border-radius: $card-radius;
-  padding: 12px 16px;
-  margin-top: 8px;
-  font-size: 13px;
-  color: $color-text-secondary;
-  text-align: center;
-}
-
-.isDragging {
-  opacity: 0.5;
-  box-shadow: $card-shadow;
 }

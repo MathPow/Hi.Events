@@ -83,7 +83,7 @@ export const ManageOrderModal = ({onClose, orderId}: GenericModalProps & ManageO
         {
             value: 'details',
             icon: IconInfoCircle,
-            title: t`Order Details`,
+            title: t({message: 'Order Details', context: 'order panel'}),
             content: <OrderDetails order={order} event={event} cardVariant="noStyle" style={{padding: 0}}/>
         },
         {
@@ -109,7 +109,7 @@ export const ManageOrderModal = ({onClose, orderId}: GenericModalProps & ManageO
             value: 'questions',
             icon: IconQuestionMark,
             title: t`Questions & Answers`,
-            count: orderHasQuestions ? order.question_answers.length : undefined,
+            count: orderHasQuestions ? order.question_answers?.length : undefined,
             content: orderHasQuestions ? (
                 <QuestionAndAnswerList
                     onEditAnswer={refetchOrder}
@@ -124,7 +124,7 @@ export const ManageOrderModal = ({onClose, orderId}: GenericModalProps & ManageO
             value: 'attendees',
             icon: IconUsers,
             title: t`Attendees`,
-            count: orderHasAttendees ? order.attendees.length : undefined,
+            count: orderHasAttendees ? order.attendees?.length : undefined,
             content: orderHasAttendees ? (
                 <AttendeeList refetchOrder={refetchOrder} order={order} products={products as Product[]} questionAnswers={order.question_answers}/>
             ) : (
@@ -188,13 +188,14 @@ export const ManageOrderModal = ({onClose, orderId}: GenericModalProps & ManageO
             <Stack className={classes.container}>
                 <div className={classes.header}>
                     <div className={classes.orderInfo}>
-                        <Text fz="sm" c="dimmed" mb={4}>Order Reference</Text>
-                        <Text fz="xl" fw={600}>{order.public_id}</Text>
+                        <span className={classes.eyebrow}>{t`Order`}</span>
+                        <h2 className={classes.reference}>#{order.public_id}</h2>
+                        <span className={classes.customer}>{order.first_name} {order.last_name}</span>
                     </div>
                     <OrderStatusBadge order={order} variant="outline"/>
                 </div>
 
-                <Tabs value={activeTab} onChange={setActiveTab as any}>
+                <Tabs value={activeTab} onChange={setActiveTab as any} variant="pills">
                     <Tabs.List>
                         <Tabs.Tab value="view" leftSection={<IconInfoCircle size={16}/>}>
                             {t`View`}

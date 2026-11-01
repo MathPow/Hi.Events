@@ -5,18 +5,17 @@ import {
     IconCopyPlus,
     IconDotsVertical,
     IconEyeOff,
+    IconHeart,
     IconLock,
-    IconPackage,
     IconPencil,
     IconReceipt,
     IconSend,
     IconSparkles,
-    IconTicket,
     IconTrash,
 } from "@tabler/icons-react";
 import classes from "../ProductsTable.module.scss";
 import classNames from "classnames";
-import {Badge, Button, Group, Menu, Progress, Tooltip} from "@mantine/core";
+import {ActionIcon, Menu, Tooltip} from "@mantine/core";
 import Truncate from "../../Truncate";
 import {t, Trans} from "@lingui/macro";
 import {relativeDate} from "../../../../utilites/dates.ts";
@@ -38,6 +37,8 @@ import {SendMessageModal} from "../../../modals/SendMessageModal";
 import {SortArrows} from "../../SortArrows";
 import {useSortProducts} from "../../../../mutations/useSortProducts.ts";
 import {DuplicateProductModal} from "../../../modals/DuplicateProductModal";
+import {StatusTag, StatusTone} from "../../StatusTag";
+import {PublicIcon} from "../../PublicIcon";
 
 interface SortableProductProps {
     product: Product;
@@ -76,22 +77,22 @@ export const SortableProduct = ({product, currencyCode, category, categories}: S
         });
     }
 
-    const getStatusInfo = (product: Product) => {
+    const getStatusInfo = (product: Product): { label: string, tone: StatusTone } => {
         if (product.is_sold_out) {
-            return {label: t`Sold Out`, color: 'red', variant: 'filled' as const};
+            return {label: t`Sold Out`, tone: 'problem'};
         }
         if (product.is_before_sale_start_date) {
-            return {label: t`Scheduled`, color: 'blue', variant: 'light' as const};
+            return {label: t`Scheduled`, tone: 'waiting'};
         }
         if (product.is_after_sale_end_date) {
-            return {label: t`Ended`, color: 'gray', variant: 'light' as const};
+            return {label: t`Ended`, tone: 'neutral'};
         }
         if (product.is_hidden) {
-            return {label: t`Hidden`, color: 'gray', variant: 'outline' as const};
+            return {label: t`Hidden`, tone: 'neutral'};
         }
         return product.is_available
-            ? {label: t`On Sale`, color: 'green', variant: 'light' as const}
-            : {label: t`Paused`, color: 'orange', variant: 'light' as const};
+            ? {label: t`On Sale`, tone: 'ok'}
+            : {label: t`Paused`, tone: 'waiting'};
     }
 
     const getStatusTooltip = (product: Product) => {
@@ -245,11 +246,10 @@ export const SortableProduct = ({product, currencyCode, category, categories}: S
 
     return (
         <>
-            <div className={classNames(
+            <article className={classNames(
                 classes.productCard,
                 {[classes.soldOut]: product.is_sold_out}
             )}>
-                {/* Sort controls */}
                 <div className={classes.sortControls}>
                     <SortArrows
                         upArrowEnabled={canMoveUp}
@@ -257,251 +257,202 @@ export const SortableProduct = ({product, currencyCode, category, categories}: S
                         onSortUp={() => handleSort(product.id, 'up')}
                         onSortDown={() => handleSort(product.id, 'down')}
                         flexDirection={'column'}
+                        className={classes.sortArrows}
                     />
                 </div>
 
-                {/* Main content */}
-                <div className={classes.productContent}>
-                    {/* Header row with badges */}
+                <div className={classes.productHeading}>
+                    <span className={classes.productPastille} data-type={isTicket ? 'ticket' : 'product'}>
+                        {isTicket
+                            ? <PublicIcon name="billet" size={20}/>
+                            : <img src="/interface/admin/tableau/produits.svg" alt=""/>}
+                    </span>
                     <div className={classes.productHeader}>
-                        <div className={classes.badgeRow}>
-                            <div className={classes.typeBadges}>
-                                {isTicket ? (
-                                    <Badge
-                                        leftSection={<IconTicket size={12}/>}
-                                        variant="light"
-                                        color="violet"
-                                        size="sm"
-                                    >
-                                        {t`Ticket`}
-                                    </Badge>
-                                ) : (
-                                    <Badge
-                                        leftSection={<IconPackage size={12}/>}
-                                        variant="light"
-                                        color="cyan"
-                                        size="sm"
-                                    >
-                                        {t`Product`}
-                                    </Badge>
-                                )}
-                                {product.waitlist_enabled && (
-                                    <Badge
-                                        variant="light"
-                                        color="secondary"
-                                        size="sm"
-                                        leftSection={<IconClock size={12}/>}
-                                    >
-                                        {t`Waitlist Enabled`}
-                                    </Badge>
-                                )}
-                                {product.type === ProductPriceType.Donation && (
-                                    <Badge
-                                        variant="outline"
-                                        color="pink"
-                                        size="sm"
-                                    >
-                                        {t`Donation`}
-                                    </Badge>
-                                )}
-                                {(product.is_hidden_without_promo_code || product.is_hidden) && (
-                                    <Tooltip
-                                        label={product.is_hidden
-                                            ? t`Hidden from public view`
-                                            : t`Only visible with promo code`}
-                                        withArrow
-                                    >
-                                        <Badge
-                                            variant="light"
-                                            color="gray"
-                                            size="sm"
-                                            leftSection={product.is_hidden_without_promo_code ? <IconLock size={12}/> :
-                                                <IconEyeOff size={12}/>}
-                                        >
-                                            {product.is_hidden_without_promo_code ? t`Promo Only` : t`Hidden`}
-                                        </Badge>
-                                    </Tooltip>
-                                )}
-                                {product.is_highlighted && (
-                                    <Tooltip
-                                        label={product.highlight_message || t`This product is highlighted on the event page`}
-                                        withArrow
-                                    >
-                                        <Badge
-                                            variant="light"
-                                            color="yellow"
-                                            size="sm"
-                                            leftSection={<IconSparkles size={12}/>}
-                                        >
-                                            {t`Highlighted`}
-                                        </Badge>
-                                    </Tooltip>
-                                )}
-                            </div>
-                            <Tooltip label={getStatusTooltip(product)} withArrow>
-                                <Badge
-                                    color={statusInfo.color}
-                                    variant={statusInfo.variant}
-                                    className={classes.statusBadge}
-                                >
-                                    {statusInfo.label}
-                                </Badge>
-                            </Tooltip>
-                        </div>
                         <h3 className={classes.productTitle}>
                             <Truncate text={product.title} length={80}/>
                         </h3>
-                    </div>
-
-                    {/* Details grid */}
-                    <div className={classes.detailsGrid}>
-                        {/* Price */}
-                        <div className={classes.detailItem}>
-                            <span className={classes.detailLabel}>{t`Price`}</span>
-                            <div className={classes.priceValue}>
-                                <span className={classNames(
-                                    classes.priceAmount,
-                                    {[classes.freePrice]: priceInfo.isFree}
-                                )}>
-                                    {priceInfo.display}
+                        <div className={classes.typeBadges}>
+                            <span className={classes.typeTag}>{isTicket ? t`Ticket` : t`Product`}</span>
+                            {product.waitlist_enabled && (
+                                <span className={classes.typeTag}>
+                                    <IconClock size={13}/>
+                                    {t`Waitlist Enabled`}
                                 </span>
-                                {hasTaxesOrFees() && (
-                                    <Tooltip label={getTaxFeeTooltip()} withArrow>
-                                        <div className={classes.taxIndicator}>
-                                            <IconReceipt size={14}/>
-                                            <span>{t`+Tax/Fees`}</span>
-                                        </div>
-                                    </Tooltip>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Sales / Quantity */}
-                        <div className={classes.detailItem}>
-                            <span className={classes.detailLabel}>
-                                {isTicket ? t`Attendees` : t`Sold`}
-                            </span>
-                            <div className={classes.salesValue}>
-                                {salesProgress ? (
-                                    <div className={classes.salesWithProgress}>
-                                        <span className={classes.salesCount}>
-                                            {salesProgress.sold}
-                                            <span className={classes.salesTotal}>/ {salesProgress.total}</span>
-                                        </span>
-                                        <Progress
-                                            value={salesProgress.percentage}
-                                            size="xs"
-                                            color={salesProgress.percentage >= 100 ? 'red' : salesProgress.isLow ? 'orange' : 'green'}
-                                            className={classes.salesProgress}
-                                        />
-                                        {salesProgress.isLow && salesProgress.remaining > 0 && (
-                                            <span className={classes.lowStock}>
-                                                {t`${salesProgress.remaining} left`}
-                                            </span>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <span className={classes.salesCount}>
-                                        {Number(product.quantity_sold)}
-                                        <span className={classes.unlimited}>{t`Unlimited`}</span>
+                            )}
+                            {product.type === ProductPriceType.Donation && (
+                                <span className={classes.typeTag}>
+                                    <IconHeart size={13}/>
+                                    {t`Donation`}
+                                </span>
+                            )}
+                            {(product.is_hidden_without_promo_code || product.is_hidden) && (
+                                <Tooltip
+                                    label={product.is_hidden
+                                        ? t`Hidden from public view`
+                                        : t`Only visible with promo code`}
+                                    withArrow
+                                >
+                                    <span className={classes.typeTag}>
+                                        {product.is_hidden_without_promo_code ? <IconLock size={13}/> :
+                                            <IconEyeOff size={13}/>}
+                                        {product.is_hidden_without_promo_code ? t`Promo Only` : t`Hidden`}
                                     </span>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Sale period */}
-                        <div className={classes.detailItem}>
-                            <span className={classes.detailLabel}>{t`Sale Period`}</span>
-                            <div className={classes.dateValue}>
-                                {product.sale_start_date || product.sale_end_date ? (
-                                    <div className={classes.dateRange}>
-                                        {product.is_before_sale_start_date && product.sale_start_date && (
-                                            <Tooltip
-                                                label={t`Sale starts ${relativeDate(product.sale_start_date as string)}`}
-                                                withArrow>
-                                                <div className={classes.dateItem}>
-                                                    <IconClock size={14}/>
-                                                    <span>{relativeDate(product.sale_start_date as string)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        )}
-                                        {!product.is_before_sale_start_date && product.sale_end_date && (
-                                            <Tooltip
-                                                label={t`Sale ends ${relativeDate(product.sale_end_date as string)}`}
-                                                withArrow>
-                                                <div className={classes.dateItem}>
-                                                    <IconCalendarEvent size={14}/>
-                                                    <span>{product.is_after_sale_end_date ? t`Ended` : relativeDate(product.sale_end_date as string)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        )}
-                                        {!product.is_before_sale_start_date && !product.sale_end_date && (
-                                            <span className={classes.noEndDate}>{t`No end date`}</span>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <span className={classes.alwaysAvailable}>{t`Always available`}</span>
-                                )}
-                            </div>
+                                </Tooltip>
+                            )}
+                            {product.is_highlighted && (
+                                <Tooltip
+                                    label={product.highlight_message || t`This product is highlighted on the event page`}
+                                    withArrow
+                                >
+                                    <span className={classes.typeTag} data-tone="highlight">
+                                        <IconSparkles size={13}/>
+                                        {t`Highlighted`}
+                                    </span>
+                                </Tooltip>
+                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className={classes.actionSection}>
-                    <Group wrap="nowrap" gap={0}>
-                        <Menu shadow="md" width={200} position="bottom-end">
-                            <Menu.Target>
-                                <div>
-                                    <Button
-                                        size="xs"
-                                        variant="subtle"
-                                        className={classes.actionButton}
-                                    >
-                                        <span className={classes.actionButtonText}>{t`Manage`}</span>
-                                        <IconDotsVertical size={16} className={classes.actionButtonIcon}/>
-                                    </Button>
-                                </div>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Label>{t`Actions`}</Menu.Label>
+                <div className={classes.detailsGrid}>
+                    <div className={classes.detailItem}>
+                        <span className={classes.detailLabel}>{t`Price`}</span>
+                        <div className={classes.priceValue}>
+                            <span className={classes.priceAmount}>
+                                {priceInfo.display}
+                            </span>
+                            {hasTaxesOrFees() && (
+                                <Tooltip label={getTaxFeeTooltip()} withArrow>
+                                    <span className={classes.taxIndicator}>
+                                        <IconReceipt size={13}/>
+                                        {t`+Tax/Fees`}
+                                    </span>
+                                </Tooltip>
+                            )}
+                        </div>
+                    </div>
 
-                                {isTicket && (
-                                    <Menu.Item
-                                        onClick={() => handleModalClick(product.id, messageModal)}
-                                        leftSection={<IconSend size={14}/>}
-                                    >
-                                        {t`Message Attendees`}
-                                    </Menu.Item>
-                                )}
+                    <div className={classes.detailItem}>
+                        <span className={classes.detailLabel}>
+                            {isTicket ? t`Attendees` : t`Sold`}
+                        </span>
+                        {salesProgress ? (
+                            <div className={classes.salesWithProgress}>
+                                <span className={classes.salesCount}>
+                                    {salesProgress.sold}
+                                    <span className={classes.salesTotal}>/ {salesProgress.total}</span>
+                                    {salesProgress.isLow && salesProgress.remaining > 0 && (
+                                        <span className={classes.lowStock}>
+                                            {t`${salesProgress.remaining} left`}
+                                        </span>
+                                    )}
+                                </span>
+                                <span
+                                    className={classes.salesProgress}
+                                    data-level={salesProgress.percentage >= 100 ? 'full' : salesProgress.isLow ? 'low' : undefined}
+                                    role="progressbar"
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    aria-valuenow={Math.round(salesProgress.percentage)}
+                                >
+                                    <span style={{width: `${salesProgress.percentage}%`}}/>
+                                </span>
+                            </div>
+                        ) : (
+                            <span className={classes.salesCount}>
+                                {Number(product.quantity_sold)}
+                                <span className={classes.unlimited}>{t`Unlimited`}</span>
+                            </span>
+                        )}
+                    </div>
 
-                                <Menu.Item
-                                    onClick={() => handleModalClick(product.id, editModal)}
-                                    leftSection={<IconPencil size={14}/>}
-                                >
-                                    <Trans>Edit {isTicket ? t`Ticket` : t`Product`}</Trans>
-                                </Menu.Item>
-                                <Menu.Item
-                                    onClick={() => handleModalClick(product.id, duplicateModal)}
-                                    leftSection={<IconCopyPlus size={14}/>}
-                                >
-                                    {t`Duplicate`}
-                                </Menu.Item>
-
-                                <Menu.Divider/>
-                                <Menu.Label>{t`Danger zone`}</Menu.Label>
-                                <Menu.Item
-                                    onClick={() => handleDeleteProduct(product.id, product.event_id)}
-                                    color="red"
-                                    leftSection={<IconTrash size={14}/>}
-                                >
-                                    {t`Delete`}
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-                    </Group>
+                    <div className={classes.detailItem}>
+                        <span className={classes.detailLabel}>{t`Sale Period`}</span>
+                        <div className={classes.dateValue}>
+                            {product.sale_start_date || product.sale_end_date ? (
+                                <>
+                                    {product.is_before_sale_start_date && product.sale_start_date && (
+                                        <Tooltip
+                                            label={t`Sale starts ${relativeDate(product.sale_start_date as string)}`}
+                                            withArrow>
+                                            <span className={classes.dateItem}>
+                                                <IconClock size={15}/>
+                                                {relativeDate(product.sale_start_date as string)}
+                                            </span>
+                                        </Tooltip>
+                                    )}
+                                    {!product.is_before_sale_start_date && product.sale_end_date && (
+                                        <Tooltip
+                                            label={t`Sale ends ${relativeDate(product.sale_end_date as string)}`}
+                                            withArrow>
+                                            <span className={classes.dateItem}>
+                                                <IconCalendarEvent size={15}/>
+                                                {product.is_after_sale_end_date ? t`Ended` : relativeDate(product.sale_end_date as string)}
+                                            </span>
+                                        </Tooltip>
+                                    )}
+                                    {!product.is_before_sale_start_date && !product.sale_end_date && (
+                                        <span className={classes.dateItem}>{t`No end date`}</span>
+                                    )}
+                                </>
+                            ) : (
+                                <span className={classes.dateItem}>{t`Always available`}</span>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div className={classes.statusArea}>
+                    <Tooltip label={getStatusTooltip(product)} withArrow>
+                        <span><StatusTag tone={statusInfo.tone}>{statusInfo.label}</StatusTag></span>
+                    </Tooltip>
+                </div>
+
+                <div className={classes.actionSection}>
+                    <Menu shadow="md" width={250} position="bottom-end">
+                        <Menu.Target>
+                            <ActionIcon className={classes.menuButton} variant="subtle" aria-label={t`Manage`}>
+                                <IconDotsVertical size={20}/>
+                            </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>{t`Actions`}</Menu.Label>
+
+                            {isTicket && (
+                                <Menu.Item
+                                    onClick={() => handleModalClick(product.id, messageModal)}
+                                    leftSection={<IconSend size={14}/>}
+                                >
+                                    {t`Message Attendees`}
+                                </Menu.Item>
+                            )}
+
+                            <Menu.Item
+                                onClick={() => handleModalClick(product.id, editModal)}
+                                leftSection={<IconPencil size={14}/>}
+                            >
+                                <Trans>Edit {isTicket ? t`Ticket` : t`Product`}</Trans>
+                            </Menu.Item>
+                            <Menu.Item
+                                onClick={() => handleModalClick(product.id, duplicateModal)}
+                                leftSection={<IconCopyPlus size={14}/>}
+                            >
+                                {t`Duplicate`}
+                            </Menu.Item>
+
+                            <Menu.Divider/>
+                            <Menu.Label>{t`Danger zone`}</Menu.Label>
+                            <Menu.Item
+                                onClick={() => handleDeleteProduct(product.id, product.event_id)}
+                                color="red"
+                                leftSection={<IconTrash size={14}/>}
+                            >
+                                {t`Delete`}
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                </div>
+            </article>
 
             {isDuplicateModalOpen &&
                 <DuplicateProductModal originalProductId={productId} onClose={duplicateModal.close}/>}

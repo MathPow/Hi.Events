@@ -87,7 +87,7 @@ const firstEvent: HelpGuide = {
         {
             ol: [
                 "In the event's menu, under **Ticketing & Sales**, open **Tickets & Products**.",
-                'Click **Create**, then **Ticket or Product**.',
+                'Click **Add a ticket or product**, at the top right (at the top of the page on a phone).',
                 'Pick the **Product Type**: **Ticket** for an admission, **General** for a T-shirt, a meal or parking.',
                 'Pick the **Price Type**: paid, free, tiered (e.g. student and adult) or with options (e.g. sizes or distances).',
                 'Give it a name and a price, then click **Create Product**. Repeat for each ticket.',

@@ -1,0 +1,52 @@
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
+
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // The chips scroll to the screen edge on phones.
+  @include mixins.respond-below(md) {
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+  }
+}
+
+.chip {
+  @include ui.chip;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover:not([aria-pressed='true']) {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 2px;
+  }
+}
+
+.count {
+  display: grid;
+  place-items: center;
+  min-width: 1.4375rem;
+  height: 1.375rem;
+  padding: 0 0.4375rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+  font-size: 0.8125rem;
+
+  [aria-pressed='true'] > & {
+    background: ui.$accent;
+  }
+}
