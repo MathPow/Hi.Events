@@ -578,6 +578,35 @@ body.dehors-app {
     }
   }
 
+  // Popups take the buttons of the pages (admin-ui primary-button / outline-button): 48 px high,
+  // 16 px corners, 17 px bold; filled ones orange with brown text (red ones stay red), the others
+  // outlined in brown. Small buttons (size xs/sm or compact, or inside a field) keep their size.
+  .mantine-Modal-content .mantine-Button-root:where(:not([style*='button-height-xs'], [style*='button-height-sm'], [style*='compact'], .mantine-Input-section *))#{$hors-apercu} {
+    height: 3rem;
+    padding-inline: 1.375rem;
+    border-radius: 1rem;
+    font-size: 1.0625rem;
+
+    &:is(:not([data-variant]), [data-variant='filled']):where(:not([style*='color-red'], :disabled, [data-disabled])) {
+      background: var(--dehors-orange);
+      color: var(--dehors-brun);
+
+      &:hover {
+        background: var(--dehors-orange-survol);
+      }
+    }
+
+    &:is([data-variant='light'], [data-variant='default'], [data-variant='outline']):where(:not(:disabled, [data-disabled])) {
+      border: 2px solid var(--dehors-brun);
+      background: transparent;
+      color: var(--dehors-brun);
+
+      &:hover {
+        background: rgb(55 39 33 / 0.05);
+      }
+    }
+  }
+
   // Tables
   .mantine-Table-table {
     --table-border-color: var(--dehors-trait);

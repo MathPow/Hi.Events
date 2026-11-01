@@ -19,6 +19,8 @@
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   overflow: hidden;
+  // Hidden overflow would let a column (the phone menu) squeeze it once it scrolls.
+  flex-shrink: 0;
   transition: background-color 0.2s ease;
   @include nav.focus-ring;
 
