@@ -232,23 +232,28 @@ const EventLayout = () => {
             breadcrumbItems={breadcrumbItems}
             entityType="event"
             navContext={navContext}
-            topBarContent={isEventFetched && (
+            topBarContent={isEventFetched && (event?.status === 'DRAFT' ? (
                 <TopBarButton
                     onClick={handleStatusToggle}
                     size="sm"
                     className={classes.statusButton}
-                    title={event?.status === 'DRAFT' ? t`Draft` + ' ' + t`- Click to Publish` : t`Live` + ' ' + t`- Click to Unpublish`}
-                    leftSection={event?.status === 'DRAFT' ? <IconEyeOff size={16}/> : <IconEye size={16}/>}
+                    title={t`Draft` + ' ' + t`- Click to Publish`}
+                    leftSection={<IconEyeOff size={16}/>}
                     rightSection={<IconChevronRight size={14}/>}
                 >
-                    {event?.status === 'DRAFT'
-                        ? <span>{t`Draft`} <span
-                            className={classes.statusAction}>{t`- Click to Publish`}</span></span>
-                        : <span>{t`Live`} <span
-                            className={classes.statusAction}>{t`- Click to Unpublish`}</span></span>
-                    }
+                    <span>{t`Draft`} <span className={classes.statusAction}>{t`- Click to Publish`}</span></span>
                 </TopBarButton>
-            )}
+            ) : (
+                // Live: the eye only, like the preview beside it; the state and the action in the tooltip.
+                <Button
+                    onClick={handleStatusToggle}
+                    variant="outline"
+                    leftSection={<IconEye size={20} stroke={2}/>}
+                    className={classes.iconButton}
+                    title={t`Live` + ' ' + t`- Click to Unpublish`}
+                    aria-label={t`Live` + ' ' + t`- Click to Unpublish`}
+                />
+            ))}
             topBarActions={event && (
                 <>
                     <Button
@@ -258,7 +263,7 @@ const EventLayout = () => {
                         rel="noopener"
                         variant="outline"
                         leftSection={<IconExternalLink size={20} stroke={2}/>}
-                        className={classes.previewButton}
+                        className={classes.iconButton}
                         title={t`Preview Event page`}
                         aria-label={t`Preview Event page`}
                     />

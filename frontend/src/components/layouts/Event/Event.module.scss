@@ -23,8 +23,8 @@
   }
 }
 
-// The event page's preview: its icon only, the name in the tooltip.
-.previewButton {
+// The event page's preview and « En ligne »: their icon only, the name in the tooltip.
+.iconButton {
   @include ui.outline-button;
   width: 3rem;
   padding: 0 !important;
@@ -35,7 +35,7 @@
 }
 
 .shareButton,
-.previewButton {
+.iconButton {
   :global(.mantine-Button-section[data-position='left']) {
     margin-inline-end: 0.5rem;
   }
@@ -73,7 +73,7 @@
 
 @container (max-width: 780px) {
   .shareButton,
-  .previewButton {
+  .iconButton {
     width: 3rem;
     padding: 0 !important;
 
@@ -92,7 +92,7 @@
 @container (max-width: 1000px) {
   :global([data-save-status]) {
     .shareButton,
-    .previewButton {
+    .iconButton {
       width: 3rem;
       padding: 0 !important;
 
