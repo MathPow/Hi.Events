@@ -304,6 +304,12 @@ body.dehors-app {
   // Buttons
   .mantine-Button-root#{$hors-apercu} {
     --button-radius: 999px;
+    // The rough edge bites into the pill: a little more room keeps the label clear of it
+    // (Mantine: 14 / 18 / 22 / 26 px; the icon side keeps two thirds of it).
+    --button-padding-x-xs: 1.125rem;
+    --button-padding-x-sm: 1.5rem;
+    --button-padding-x-md: 1.75rem;
+    --button-padding-x-lg: 2rem;
     transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease;
 
     // Filled is Mantine's default variant, rendered without a data-variant attribute.

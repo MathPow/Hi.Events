@@ -60,15 +60,15 @@ interface FeeChoiceGroupProps {
 export const FeeChoiceGroup = ({choice, onChoose, rates, currency, disabled}: FeeChoiceGroupProps) => {
     const options: { value: FeeChoice, title: string, text: string, recommended?: boolean }[] = [
         {
-            value: 'pass',
-            title: t`Pass on to the buyer`,
-            text: t`The fees are added to the ticket price. You receive the full price.`,
-            recommended: true,
-        },
-        {
             value: 'absorb',
             title: t`Absorb the fees`,
             text: t`The buyer pays the price shown. The fees are taken from your sales.`,
+            recommended: true,
+        },
+        {
+            value: 'pass',
+            title: t`Pass on to the buyer`,
+            text: t`The fees are added to the ticket price. You receive the full price.`,
         },
     ];
 
