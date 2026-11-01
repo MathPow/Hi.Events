@@ -94,7 +94,7 @@ class PageTextWriter
         return new PageTexts(
             name: trim((string)($json['name'] ?? '')) ?: null,
             descriptionHtml: $paragraphs === [] ? null : implode('', array_map(
-                fn($paragraph) => '<p>' . htmlspecialchars($paragraph, ENT_QUOTES | ENT_HTML5, 'UTF-8') . '</p>',
+                fn($paragraph) => '<p>' . htmlspecialchars($paragraph, ENT_NOQUOTES, 'UTF-8') . '</p>',
                 $paragraphs,
             )),
             faqs: array_slice($faqs, 0, self::MAX_FAQS),

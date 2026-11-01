@@ -121,7 +121,7 @@ class ImportOrganizerPageHandler
             $description = preg_match('/(?:on|sur) Instagram\s*:\s*[«"“]\s*(.+?)\s*[»"”]\s*$/su', $description, $match) ? $match[1] : null;
         }
 
-        return $description !== null ? '<p>' . htmlspecialchars($description, ENT_QUOTES | ENT_HTML5, 'UTF-8') . '</p>' : null;
+        return $description !== null ? '<p>' . htmlspecialchars($description, ENT_NOQUOTES, 'UTF-8') . '</p>' : null;
     }
 
     /** L'image prete pour le brouillon, reduite si elle est plus large que $maxWidth. */
