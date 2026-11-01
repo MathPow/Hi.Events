@@ -20,6 +20,7 @@ import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
 import {FaqAccordion} from "../../common/FaqAccordion";
 import {ShareComponent} from "../../common/ShareIcon";
+import {visibleSocialHandles} from "../../../utilites/socialLinks.ts";
 
 interface OrganizerHomepageProps {
     organizer?: Organizer;
@@ -79,16 +80,14 @@ export const OrganizerHomepage = ({
     const homepagePath = organizerHomepagePath(organizer);
     const pastEventsPath = `${homepagePath}/past-events`;
 
-    const socialHandles = organizer.settings?.social_media_handles ?? {};
-    const instagramHandle = socialHandles.instagram?.trim().replace(/^@/, '');
-    const otherSocialLinks = Object.entries(socialHandles)
-        .filter(([platform, handle]) => platform !== 'instagram' && handle
-            && socialMediaConfig[platform as keyof typeof socialMediaConfig])
-        .map(([platform, handle]) => ({
-            platform,
-            url: socialMediaConfig[platform as keyof typeof socialMediaConfig].baseUrl + handle,
-            Icon: socialMediaConfig[platform as keyof typeof socialMediaConfig].icon,
-        }));
+    // In the order chosen on « Ma page »: Instagram shows its @handle, the others their icon.
+    const socialLinks = visibleSocialHandles(organizer.settings?.social_media_handles, organizer.settings?.social_media_layout)
+        .filter(({platform}) => socialMediaConfig[platform as keyof typeof socialMediaConfig])
+        .map(({platform, handle}) => {
+            const config = socialMediaConfig[platform as keyof typeof socialMediaConfig];
+            const cleanHandle = handle.trim().replace(/^@/, '');
+            return {platform, handle: cleanHandle, url: config.baseUrl + cleanHandle, Icon: config.icon};
+        });
 
     const websiteUrl = organizer.website;
     const donationUrl = organizer.donation_url;
@@ -185,7 +184,7 @@ export const OrganizerHomepage = ({
                                     />
                                 )}
 
-                                {(shortLocation || websiteUrl || instagramHandle || otherSocialLinks.length > 0 || donationUrl) && (
+                                {(shortLocation || websiteUrl || socialLinks.length > 0 || donationUrl) && (
                                     <ul className={classes.meta}>
                                         {shortLocation && locationDetails && (
                                             <li>
@@ -205,21 +204,20 @@ export const OrganizerHomepage = ({
                                                 </a>
                                             </li>
                                         )}
-                                        {instagramHandle && (
-                                            <li>
-                                                <a href={socialMediaConfig.instagram.baseUrl + instagramHandle}
-                                                   target="_blank" rel="noopener noreferrer" className={classes.pill} data-rough>
-                                                    <PublicIcon name={'instagram'} className={classes.pillIcon}/>
-                                                    @{instagramHandle}
-                                                </a>
-                                            </li>
-                                        )}
-                                        {otherSocialLinks.map(({platform, url, Icon}) => (
+                                        {socialLinks.map(({platform, handle, url, Icon}) => (
                                             <li key={platform}>
-                                                <a href={url} target="_blank" rel="noopener noreferrer"
-                                                   className={`${classes.pill} ${classes.iconPill}`} data-rough aria-label={platform}>
-                                                    <Icon size={16} stroke={1.8} className={classes.pillIcon}/>
-                                                </a>
+                                                {platform === 'instagram' ? (
+                                                    <a href={url} target="_blank" rel="noopener noreferrer"
+                                                       className={classes.pill} data-rough>
+                                                        <PublicIcon name={'instagram'} className={classes.pillIcon}/>
+                                                        @{handle}
+                                                    </a>
+                                                ) : (
+                                                    <a href={url} target="_blank" rel="noopener noreferrer"
+                                                       className={`${classes.pill} ${classes.iconPill}`} data-rough aria-label={platform}>
+                                                        <Icon size={16} stroke={1.8} className={classes.pillIcon}/>
+                                                    </a>
+                                                )}
                                             </li>
                                         ))}
                                         {donationUrl && (

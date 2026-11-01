@@ -18,6 +18,7 @@ import {
     IconBrandPinterest,
     IconBrandReddit,
     IconBrandSnapchat,
+    IconBrandStrava,
     IconBrandTelegram,
     IconBrandTiktok,
     IconBrandTwitch,
@@ -68,6 +69,7 @@ const socialPlatforms: SocialPlatform[] = [
 
     // Secondary platforms (collapsible)
     {name: t`TikTok`, field: 'tiktok_handle', icon: IconBrandTiktok, placeholder: 'username', priority: 'primary'},
+    {name: t`Strava`, field: 'strava_handle', icon: IconBrandStrava, placeholder: 'club', priority: 'primary'},
     {name: t`Discord`, field: 'discord_handle', icon: IconBrandDiscord, placeholder: 'user_id', priority: 'secondary'},
     {
         name: t`Snapchat`,

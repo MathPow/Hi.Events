@@ -12,6 +12,42 @@ interface ThemeColorControlsProps {
     disabled?: boolean;
 }
 
+// Sur les pages publiques, seul l'accent suit l'organisateur (le creme et les cartes de
+// Dehors restent): c'est lui qu'on juge, en texte, en icones et en fond de bouton.
+export const AccentReadabilityNote = ({accent}: { accent?: string }) => {
+    const readability = useMemo(
+        () => getAccentReadability(accent || getDefaultThemeSettings().accent),
+        [accent],
+    );
+
+    return (
+        <Group gap={6} style={{ minHeight: 20 }}>
+            {readability === 'unreadable' && (
+                <Tooltip label={t`Text and icons in the accent color barely stand out on the cream page. Pick a darker or more saturated color.`} multiline w={240}>
+                    <Group gap={6} wrap="nowrap" style={{ cursor: 'help' }}>
+                        <IconEyeOff size={30} color="var(--mantine-color-red-7)" />
+                        <Text size="xs" fw={700} c="red.7">{t`Unreadable: text and icons in this color disappear on the page`}</Text>
+                    </Group>
+                </Tooltip>
+            )}
+            {readability === 'poor' && (
+                <Tooltip label={t`Text and icons in the accent color barely stand out on the cream page. Pick a darker or more saturated color.`} multiline w={240}>
+                    <Group gap={6} style={{ cursor: 'help' }}>
+                        <IconEyeExclamation size={30} color="var(--mantine-color-yellow-6)" />
+                        <Text size="xs" c="yellow.7">{t`Text may be hard to read`}</Text>
+                    </Group>
+                </Tooltip>
+            )}
+            {readability === 'good' && (
+                <Group gap={6}>
+                    <IconEyeCheck size={30} color="var(--mantine-color-teal-6)" />
+                    <Text size="xs" c="dimmed">{t`Good readability`}</Text>
+                </Group>
+            )}
+        </Group>
+    );
+};
+
 export const ThemeColorControls = ({
     values,
     onChange,
@@ -38,13 +74,6 @@ export const ThemeColorControls = ({
     }, [values.background]);
 
     const currentMode = values.mode || 'light';
-
-    // Sur les pages publiques, seul l'accent suit l'organisateur (le creme et les cartes de
-    // Dehors restent): c'est lui qu'on juge, en texte, en icones et en fond de bouton.
-    const readability = useMemo(
-        () => getAccentReadability(values.accent || getDefaultThemeSettings().accent),
-        [values.accent],
-    );
 
     return (
         <Stack gap="md">
@@ -101,30 +130,7 @@ export const ThemeColorControls = ({
                 />
             </div>
 
-            <Group gap={6} style={{ minHeight: 20 }}>
-                {readability === 'unreadable' && (
-                    <Tooltip label={t`Text and icons in the accent color barely stand out on the cream page. Pick a darker or more saturated color.`} multiline w={240}>
-                        <Group gap={6} wrap="nowrap" style={{ cursor: 'help' }}>
-                            <IconEyeOff size={30} color="var(--mantine-color-red-7)" />
-                            <Text size="xs" fw={700} c="red.7">{t`Unreadable: text and icons in this color disappear on the page`}</Text>
-                        </Group>
-                    </Tooltip>
-                )}
-                {readability === 'poor' && (
-                    <Tooltip label={t`Text and icons in the accent color barely stand out on the cream page. Pick a darker or more saturated color.`} multiline w={240}>
-                        <Group gap={6} style={{ cursor: 'help' }}>
-                            <IconEyeExclamation size={30} color="var(--mantine-color-yellow-6)" />
-                            <Text size="xs" c="yellow.7">{t`Text may be hard to read`}</Text>
-                        </Group>
-                    </Tooltip>
-                )}
-                {readability === 'good' && (
-                    <Group gap={6}>
-                        <IconEyeCheck size={30} color="var(--mantine-color-teal-6)" />
-                        <Text size="xs" c="dimmed">{t`Good readability`}</Text>
-                    </Group>
-                )}
-            </Group>
+            <AccentReadabilityNote accent={values.accent}/>
         </Stack>
     );
 };

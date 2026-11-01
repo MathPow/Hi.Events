@@ -16,6 +16,7 @@ import {Event, EventLifecycleStatus, Organizer, OrganizerStatus} from "../../../
 import {EventNotAvailable} from "./EventNotAvailable";
 import {ContactOrganizerModal} from "../../common/ContactOrganizerModal";
 import {socialMediaConfig} from "../../../constants/socialMediaConfig";
+import {visibleSocialHandles} from "../../../utilites/socialLinks.ts";
 import {EventCategories} from "../../../constants/eventCategories.ts";
 import {
     formatAddress,
@@ -191,9 +192,9 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
         }
     }
 
-    const socialLinks = Object.entries(organizer?.settings?.social_media_handles || {})
-        .filter(([platform, handle]) => handle && socialMediaConfig[platform as keyof typeof socialMediaConfig])
-        .map(([platform, handle]) => ({
+    const socialLinks = visibleSocialHandles(organizer?.settings?.social_media_handles, organizer?.settings?.social_media_layout)
+        .filter(({platform}) => socialMediaConfig[platform as keyof typeof socialMediaConfig])
+        .map(({platform, handle}) => ({
             platform,
             url: socialMediaConfig[platform as keyof typeof socialMediaConfig].baseUrl + handle,
             Icon: socialMediaConfig[platform as keyof typeof socialMediaConfig].icon,

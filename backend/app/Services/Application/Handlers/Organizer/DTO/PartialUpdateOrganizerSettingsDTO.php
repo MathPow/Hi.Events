@@ -50,6 +50,8 @@ class PartialUpdateOrganizerSettingsDTO extends BaseDataObject
         public readonly string|Optional|null                          $quoraHandle,
         public readonly string|Optional|null                          $vimeoHandle,
         public readonly string|Optional|null                          $githubHandle,
+        public readonly string|Optional|null                          $stravaHandle,
+        public readonly array|Optional|null                           $socialMediaLayout,
 
         // Website
         public readonly string|Optional|null                          $websiteUrl,

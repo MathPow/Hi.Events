@@ -464,6 +464,11 @@ export interface Organizer {
     status?: OrganizerStatus;
 }
 
+export interface SocialMediaLayoutEntry {
+    platform: string;
+    visible: boolean;
+}
+
 export interface OrganizerFaq {
     question: string;
     answer: string;
@@ -499,7 +504,10 @@ export interface OrganizerSettings {
         telegram?: string;
         wechat?: string;
         weibo?: string;
+        strava?: string;
     },
+    // Order of the social links on the public pages; a hidden one keeps its handle.
+    social_media_layout?: SocialMediaLayoutEntry[];
     seo_keywords?: string;
     seo_description?: string;
     seo_title?: string;

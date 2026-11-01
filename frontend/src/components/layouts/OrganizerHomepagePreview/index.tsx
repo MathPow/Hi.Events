@@ -3,7 +3,26 @@ import {useLoaderData, useParams} from "react-router";
 import {useGetOrganizerSettings} from "../../../queries/useGetOrganizerSettings.ts";
 import {LoadingMask} from "../../common/LoadingMask";
 import OrganizerHomepage from "../OrganizerHomepage";
-import {Organizer} from "../../../types.ts";
+import {Image, ImageType, Organizer} from "../../../types.ts";
+import {ORGANIZER_PREVIEW_MESSAGE, ORGANIZER_PREVIEW_READY, OrganizerPreviewDraft} from "./previewMessages.ts";
+
+const previewImages = (images: Image[] = [], draft?: OrganizerPreviewDraft['images']): Image[] => {
+    if (!draft) {
+        return images;
+    }
+    const types = Object.keys(draft) as ImageType[];
+    const kept = images
+        .filter(image => !types.includes(image.type) || draft[image.type as keyof typeof draft])
+        .map(image => {
+            const url = draft[image.type as keyof typeof draft];
+            return url && url !== image.url ? {...image, url, lqip_base64: undefined} : image;
+        });
+    const added = types
+        .filter(type => draft[type as keyof typeof draft] && !images.some(image => image.type === type))
+        .map(type => ({type, url: draft[type as keyof typeof draft] as string} as Image));
+
+    return [...kept, ...added];
+};
 
 const OrganizerHomepagePreview = () => {
     const {organizerId} = useParams();
@@ -15,16 +34,20 @@ const OrganizerHomepagePreview = () => {
     };
 
     const organizerSettingsQuery = useGetOrganizerSettings(organizerId);
-    const [previewSettings, setPreviewSettings] = useState<any>(null);
+    const [draft, setDraft] = useState<OrganizerPreviewDraft | null>(null);
 
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
-            if (event.data?.type === "UPDATE_ORGANIZER_SETTINGS") {
-                setPreviewSettings(event.data.settings);
+            if (event.origin === window.location.origin && event.data?.type === ORGANIZER_PREVIEW_MESSAGE) {
+                setDraft(event.data.draft ?? null);
             }
         };
 
         window.addEventListener("message", handleMessage);
+        // The designer sends the draft again: the iframe's load event may have come before this listener.
+        if (window.parent !== window) {
+            window.parent.postMessage({type: ORGANIZER_PREVIEW_READY}, window.location.origin);
+        }
         return () => window.removeEventListener("message", handleMessage);
     }, []);
 
@@ -36,22 +59,14 @@ const OrganizerHomepagePreview = () => {
         return null;
     }
 
-    // Merge preview settings with actual data
-    const previewOrganizer = {
+    const previewOrganizer: Organizer = {
         ...organizer,
-        images: organizer.images?.map(img => {
-            if (img.type === 'ORGANIZER_LOGO' && previewSettings?.logoUrl) {
-                return {...img, url: previewSettings.logoUrl};
-            }
-            if (img.type === 'ORGANIZER_COVER' && previewSettings?.coverUrl) {
-                return {...img, url: previewSettings.coverUrl};
-            }
-            return img;
-        }),
+        ...draft?.organizer,
+        images: previewImages(organizer.images, draft?.images),
         settings: {
             ...organizerSettingsQuery.data,
-            homepage_theme_settings: previewSettings?.homepage_theme_settings || organizerSettingsQuery.data.homepage_theme_settings,
-        }
+            ...draft?.settings,
+        },
     };
 
     return <OrganizerHomepage

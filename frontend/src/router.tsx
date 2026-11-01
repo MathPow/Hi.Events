@@ -359,11 +359,9 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                // The FAQ is now edited in « Ma page », where it shows.
                 path: "faq",
-                async lazy() {
-                    const Faq = await import("./components/routes/organizer/Faq");
-                    return { Component: Faq.default };
-                }
+                element: <Navigate to="../organizer-homepage-designer?section=faq" replace={true} />,
             },
             {
                 path: "webhooks",

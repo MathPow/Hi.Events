@@ -89,7 +89,12 @@ class PartialUpdateOrganizerSettingsHandler
                 'quora' => $dto->getProvided('quoraHandle', $organizerSettings->getSocialMediaHandle('quora')),
                 'vimeo' => $dto->getProvided('vimeoHandle', $organizerSettings->getSocialMediaHandle('vimeo')),
                 'github' => $dto->getProvided('githubHandle', $organizerSettings->getSocialMediaHandle('github')),
+                'strava' => $dto->getProvided('stravaHandle', $organizerSettings->getSocialMediaHandle('strava')),
             ]),
+
+            'social_media_layout' => $this->sanitizeSocialMediaLayout(
+                $dto->getProvided('socialMediaLayout', $organizerSettings->getSocialMediaLayout())
+            ),
 
             'website_url' => $dto->getProvided('websiteUrl', $organizerSettings->getWebsiteUrl()),
 
@@ -120,6 +125,20 @@ class PartialUpdateOrganizerSettingsHandler
         ]);
 
         return $this->organizerSettingsRepository->findFirst($organizerSettings->getId());
+    }
+
+    private function sanitizeSocialMediaLayout(array|string|null $layout): array
+    {
+        return collect(is_array($layout) ? $layout : [])
+            ->filter(fn($entry) => is_array($entry)
+                && in_array($entry['platform'] ?? null, OrganizerSettingDomainObject::SOCIAL_MEDIA_PLATFORMS, true))
+            ->unique(fn(array $entry) => $entry['platform'])
+            ->map(fn(array $entry) => [
+                'platform' => $entry['platform'],
+                'visible' => (bool) ($entry['visible'] ?? true),
+            ])
+            ->values()
+            ->all();
     }
 
     private function sanitizeFaqs(?array $faqs): array

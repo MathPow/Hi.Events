@@ -8,6 +8,7 @@ import {
     IconBrandPinterest,
     IconBrandReddit,
     IconBrandSnapchat,
+    IconBrandStrava,
     IconBrandTelegram,
     IconBrandTiktok,
     IconBrandTumblr,
@@ -42,4 +43,5 @@ export const socialMediaConfig = {
     tumblr: {icon: IconBrandTumblr, baseUrl: 'https://tumblr.com/blog/'},
     vimeo: {icon: IconBrandVimeo, baseUrl: 'https://vimeo.com/'},
     github: {icon: IconBrandGithub, baseUrl: 'https://github.com/'},
+    strava: {icon: IconBrandStrava, baseUrl: 'https://www.strava.com/clubs/'},
 };

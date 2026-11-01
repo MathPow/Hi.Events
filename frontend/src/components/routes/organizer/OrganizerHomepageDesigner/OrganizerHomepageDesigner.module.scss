@@ -1,258 +1,838 @@
-@use "../../../../styles/mixins.scss";
+@use "../../../../styles/mixins";
 
-@include mixins.respond-below(sm) {
-  :global(#organizer-manage-main) {
-    overflow: auto;
+// Figma « Admin · Ma page » (Desktop 1440 / Mobile 402).
+$card: var(--dehors-carte);
+$ink: var(--dehors-brun);
+$accent: var(--dehors-orange);
+$accent-dark: #c36a5c;
+$accent-soft: #f7dccd;
+$row: #fff6ed;
+$neutral: #ede6dd;
+$switch-off: #d9cbbe;
+$shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 1400px;
+  color: $ink;
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
   }
 }
 
-.container {
+// En-tete: titre a gauche, boutons a droite (dessous en mobile)
+.header {
   display: flex;
-  flex-direction: row;
-  margin: calc(var(--hi-spacing-lg) * -1);
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  flex-wrap: wrap;
 
-  h2 {
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+  max-width: 36.75rem;
+}
+
+.title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 3.25rem;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 2.125rem;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.125rem;
+
+  @include mixins.respond-below(md) {
+    font-size: 1rem;
+  }
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.75rem;
+
+  @include mixins.respond-below(md) {
+    gap: 0.625rem;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}
+
+// Avec l'apercu a droite (a partir de 1200px) / sans (le bouton Apercu l'ouvre en plein ecran)
+.wideOnly {
+  @include mixins.respond-below(xl) {
+    display: none !important;
+  }
+}
+
+.narrowOnly {
+  @include mixins.respond-above(xl) {
+    display: none !important;
+  }
+}
+
+.longLabel {
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.shortLabel {
+  @include mixins.respond-above(md) {
+    display: none;
+  }
+}
+
+.button {
+  height: 3rem !important;
+  padding: 0 1.375rem !important;
+  border-radius: 1rem !important;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: $ink !important;
+
+  :global(.mantine-Button-section[data-position='left']) {
+    margin-inline-end: 0.5rem;
+  }
+
+  :global(.mantine-Button-label) {
+    overflow: visible;
+  }
+
+  img {
+    display: block;
+  }
+}
+
+.buttonOutline {
+  border: 2px solid $ink !important;
+  background: transparent !important;
+
+  &:hover {
+    background: var(--dehors-champ) !important;
+  }
+}
+
+.buttonFilled {
+  border: none !important;
+  background: $accent !important;
+
+  &:hover:not(:disabled) {
+    background: var(--dehors-orange-survol) !important;
+  }
+
+  // Tout est publie: le bouton se grise.
+  &:disabled:not([data-loading]) {
+    background: $neutral !important;
+    color: rgb(53 41 36 / 0.45) !important;
+
+    img {
+      opacity: 0.45;
+    }
+  }
+}
+
+// Deux colonnes: reglages (400px) et apercu en direct
+.designer {
+  display: grid;
+  grid-template-columns: minmax(20rem, 25rem) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+
+  @include mixins.respond-below(xl) {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 40rem;
+  }
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
+  }
+}
+
+// « 3 changements pas encore publies · Annuler »
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.875rem;
+  padding: 0.625rem 0.875rem 0.625rem 1.125rem;
+  border-radius: 1.25rem;
+  background: $accent-soft;
+  font-size: 0.875rem;
+  font-weight: 700;
+
+  &[data-published] {
+    background: $neutral;
+  }
+}
+
+.statusDot {
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: $accent;
+
+  [data-published] > & {
+    background: #5baa6b;
+  }
+}
+
+.statusText {
+  flex: 1;
+  min-width: 0;
+}
+
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: $accent-dark;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.discard {
+  text-decoration: underline;
+}
+
+// Sections depliables
+.section {
+  border-radius: 1.5rem;
+  background: $card;
+  box-shadow: $shadow;
+  scroll-margin-top: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1.25rem;
+  border: none;
+  border-radius: 1.5rem;
+  background: none;
+  color: $ink;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: $accent-soft;
+  transition: background-color 0.15s ease;
+
+  [data-open] > .sectionHeader & {
+    background: $accent;
+  }
+}
+
+.sectionText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.sectionTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.sectionSubtitle {
+  font-size: 0.8125rem;
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition: rotate 0.2s ease;
+
+  [data-open] > .sectionHeader & {
+    rotate: 180deg;
+  }
+}
+
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  padding: 0 1.25rem 1.25rem;
+
+  // The gaps of the section, not the margins of global.scss.
+  :global(.mantine-InputWrapper-root),
+  :global(.mantine-Switch-root) {
     margin-bottom: 0;
   }
+}
 
-  @include mixins.respond-below(sm) {
-    flex-direction: column;
+// Champs (Nom affiche, Description, Code couleur)
+.field {
+  :global(.mantine-InputWrapper-label) {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
   }
 
-  .sidebar {
-    min-width: 380px;
-    max-width: 380px;
-    background-color: #ffffff;
-    padding: var(--hi-spacing-lg);
-    height: calc(100vh - 55px);
-    overflow-y: auto;
-    position: sticky;
-    top: 0;
-    border-right: 1px solid var(--mantine-color-gray-2);
-
-    @include mixins.respond-below(sm) {
-      width: 100%;
-      min-width: unset;
-      max-width: unset;
-      position: relative;
-      overflow: auto;
-      height: auto;
-      border-right: none;
-      border-bottom: 1px solid var(--mantine-color-gray-2);
-    }
-
-    .sticky {
-      position: sticky;
-      top: 0;
-    }
-
-    .header {
-      margin-bottom: var(--hi-spacing-lg);
-      padding-bottom: var(--hi-spacing-md);
-      border-bottom: 1px solid var(--mantine-color-gray-2);
-      
-      h2 {
-        margin: 0 0 var(--hi-spacing-xs) 0;
-        font-size: 1.375rem;
-        font-weight: 600;
-        color: var(--mantine-color-gray-9);
-      }
-    }
-
-    .accordion {
-      margin-bottom: 0;
-      
-      .accordionItem {
-        border: 1px solid var(--mantine-color-gray-3);
-        border-radius: var(--mantine-radius-md);
-        overflow: hidden;
-        
-        &:not(:last-child) {
-          margin-bottom: var(--hi-spacing-md);
-        }
-
-        :global(.mantine-Accordion-control) {
-          padding: var(--hi-spacing-md);
-          background: var(--mantine-color-gray-0);
-          
-          &:hover {
-            background: var(--mantine-color-gray-1);
-          }
-          
-          &[data-active] {
-            border-bottom: 1px solid var(--mantine-color-gray-2);
-          }
-        }
-
-        :global(.mantine-Accordion-panel) {
-          padding: 0;
-          background: white;
-        }
-
-        :global(.mantine-Accordion-content) {
-          padding: var(--hi-spacing-lg);
-        }
-      }
-    }
-
-    .fieldset {
-      border: none;
-      padding: 0;
-      margin: 0;
-
-      // Fix large margins on ColorInput components
-      :global(.mantine-ColorInput-root) {
-        margin-bottom: 0;
-      }
-
-      :global(.mantine-ColorInput-label) {
-        font-weight: 500;
-        font-size: 0.875rem;
-      }
-
-      :global(.mantine-ColorInput-description) {
-        font-size: 0.8125rem;
-        margin-top: 0.25rem;
-      }
-    }
-    
-    .themePresets {
-      .themeButton {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transition: all 0.2s ease;
-        position: relative;
-        padding: var(--hi-spacing-xs);
-        border-radius: var(--mantine-radius-sm);
-        
-        &:hover {
-          transform: translateY(-2px);
-          background: var(--mantine-color-gray-0);
-          
-          .themeCircle {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-          }
-        }
-        
-        &[data-selected="true"] {
-          background: var(--mantine-color-blue-0);
-          
-          .themeCircle {
-            box-shadow: 0 0 0 3px var(--mantine-color-blue-5);
-          }
-        }
-      }
-      
-      .themeCircle {
-        width: 52px;
-        height: 52px;
-        position: relative;
-        border-radius: 50%;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
-        border: 2px solid white;
-      }
-      
-      .themeOuter {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .themeInner {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-      
-      .themeDot {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-      }
-      
-      .themeCheckmark {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 26px;
-        height: 26px;
-        background: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-        color: var(--mantine-color-blue-6);
-        border: 1px solid var(--mantine-color-blue-2);
-      }
-    }
+  :global(.mantine-Input-input:not(textarea)) {
+    height: 3.5rem;
+    padding-inline: 1.125rem;
   }
 
-  .previewContainer {
-    height: calc(100vh - 55px);
-    width: 100%;
+  :global(textarea.mantine-Input-input) {
+    padding: 0.875rem 1.125rem;
+  }
+}
+
+.fieldLabel {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.fieldHint {
+  margin: 0 0 0.5rem;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+}
+
+// La description garde l'editeur (le texte publie est du HTML), habille comme un champ.
+.description.description {
+  margin: 0;
+
+  :global(.mantine-InputLabel-root) {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  :global(.mantine-RichTextEditor-root) {
+    border: none;
+    border-radius: 1rem;
+    background: var(--dehors-champ);
+  }
+
+  :global(.mantine-RichTextEditor-toolbar) {
+    padding: 0.375rem 0.625rem;
+    border-bottom: 1px solid var(--dehors-trait);
+    background: transparent;
+  }
+
+  :global(.mantine-RichTextEditor-content) {
+    min-height: 6.5rem;
+    background: transparent;
+    font-size: 1rem;
+  }
+
+  :global(.mantine-RichTextEditor-content .ProseMirror) {
+    padding: 0.625rem 1.125rem;
+  }
+}
+
+// Images
+.imageBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.imageLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dropzone {
+  padding: 0;
+  border: 2px dashed var(--dehors-trait);
+  border-radius: 1rem;
+  background: var(--dehors-champ);
+  color: $ink;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: var(--dehors-champ-survol);
+  }
+
+  &[data-accept] {
+    border-color: $ink;
+  }
+
+  &[data-reject] {
+    border-color: var(--mantine-color-red-6);
+  }
+}
+
+.dropzoneEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 7.5rem;
+  padding: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.dropzoneHint {
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+.coverPreview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  border-radius: 1rem;
+  object-fit: cover;
+  background: $accent-soft;
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .imageActions {
+    margin-top: 0;
+  }
+}
+
+.logoPreview {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background: $accent-soft;
+}
+
+.logoDropzone {
+  flex: 1;
+  min-width: 0;
+
+  .dropzoneEmpty {
+    min-height: 4.5rem;
+  }
+}
+
+.imageActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.625rem;
+}
+
+.imageError {
+  margin: 0.5rem 0 0;
+  color: var(--mantine-color-red-7);
+  font-size: 0.8125rem;
+}
+
+// Couleur d'accent: 8 choix + code perso
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.swatch {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: scale 0.15s ease;
+
+  &:hover {
+    scale: 1.08;
+  }
+
+  &[data-selected] {
+    box-shadow: inset 0 0 0 3px $ink;
+  }
+
+  &[data-selected][data-dark] {
+    box-shadow: inset 0 0 0 3px $ink, inset 0 0 0 5px var(--dehors-carte);
+  }
+}
+
+.customSwatch {
+  border: 1.5px solid $ink;
+  background: transparent;
+
+  &[data-selected] {
+    border: none;
+  }
+}
+
+// Reseaux sociaux et FAQ: rangees qu'on reordonne par glisser-deposer
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.row {
+  position: relative;
+  border-radius: 1rem;
+  background: $row;
+
+  &[data-dragging] {
+    z-index: 2;
+    box-shadow: 0 10px 24px rgb(55 39 33 / 0.16);
+  }
+}
+
+.rowMain {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 3.5rem;
+  padding: 0.625rem;
+}
+
+.grip {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin: -0.375rem 0 -0.375rem -0.25rem;
+  padding: 0.375rem 0.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.rowPastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: $card;
+}
+
+.rowLabel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: $ink;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rowTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.rowHint {
+  overflow: hidden;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowEdit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 0.75rem 0.875rem;
+}
+
+.rowEditActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.removeButton {
+  color: var(--mantine-color-red-7);
+}
+
+.doneButton {
+  height: 2.25rem !important;
+  padding: 0 1rem !important;
+  border-radius: 0.75rem !important;
+  background: $ink !important;
+  color: var(--dehors-creme) !important;
+}
+
+// Interrupteur 48 x 28 de la maquette
+.switch {
+  --switch-height: 1.75rem;
+  --switch-width: 3rem;
+  --switch-thumb-size: 1.375rem;
+  --switch-track-label-padding: 0.1875rem;
+  --switch-color: #{$ink};
+  --switch-thumb-bg: #{$card};
+  flex-shrink: 0;
+
+  :global(.mantine-Switch-track) {
+    --switch-bg: #{$switch-off};
+    border: none;
+    cursor: pointer;
+  }
+
+  :global(.mantine-Switch-input:checked + .mantine-Switch-track) {
+    --switch-bg: #{$ink};
+  }
+
+  :global(.mantine-Switch-thumb) {
+    border: none;
+  }
+}
+
+.platformMenu {
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+// Questions de la FAQ
+.faqRow .rowMain {
+  gap: 0.625rem;
+  min-height: 0;
+  padding: 0.75rem;
+}
+
+.faqRow {
+  border-radius: 0.875rem;
+}
+
+.faqQuestion {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin: -0.375rem;
+  padding: 0.375rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dehors-champ);
+  }
+}
+
+.empty {
+  margin: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 0.875rem;
+}
+
+// Apercu en direct
+.previewColumn {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background: var(--dehors-creme);
+  box-shadow: $shadow;
+}
+
+.browserBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  background: #f3e8dc;
+
+  > img {
+    flex-shrink: 0;
+  }
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  height: 2rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  background: $card;
+  font-size: 0.8125rem;
+
+  img {
+    flex-shrink: 0;
+  }
+
+  span {
     overflow: hidden;
-    min-width: 400px;
-
-    @include mixins.respond-below(sm) {
-      padding: 20px;
-      height: 500px;
-      min-height: 400px;
-      min-width: unset;
-    }
-
-    .preview {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .iframeContainer {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      min-height: 500px;
-      --scale: 0.75;
-
-      iframe {
-        transform: scale(var(--scale));
-        transform-origin: 0 0;
-        width: calc(100% / var(--scale));
-        height: calc(100% / var(--scale));
-        border: none;
-        position: absolute;
-        inset: 0;
-      }
-    }
-
-    > h2 {
-      display: none;
-    }
-
-    @include mixins.respond-below(sm) {
-      > h2 {
-        display: block;
-        margin-top: 0;
-        margin-bottom: 1rem;
-      }
-
-      width: 100%;
-      position: relative;
-      overflow: auto;
-      height: auto;
-    }
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
+}
+
+.devices {
+  display: flex;
+  gap: 0.125rem;
+  flex-shrink: 0;
+  padding: 0.1875rem;
+  border-radius: 999px;
+  background: $card;
+}
+
+.device {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: $ink;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    background: $ink;
+    color: var(--dehors-creme);
+  }
+}
+
+.viewport {
+  position: relative;
+  height: clamp(30rem, calc(100dvh - 11rem), 43.5rem);
+  overflow: hidden;
+
+  &[data-device='mobile'] {
+    display: grid;
+    place-items: center;
+    background: #f3e8dc;
+  }
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+  transform-origin: 0 0;
+  background: var(--dehors-creme);
+}
+
+.phone {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  box-shadow: 0 10px 32px rgb(55 39 33 / 0.16);
+}
+
+// Apercu en plein ecran (mobile)
+.fullscreen {
+  :global(.mantine-Modal-content) {
+    display: flex;
+    flex-direction: column;
+    background: var(--dehors-creme);
+  }
+
+  :global(.mantine-Modal-header) {
+    padding: 0.75rem 1rem;
+    background: var(--dehors-creme);
+  }
+
+  :global(.mantine-Modal-title) {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  :global(.mantine-Modal-body) {
+    flex: 1;
+    min-height: 0;
+    padding: 0;
+  }
+}
+
+.fullscreenFrame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
 }

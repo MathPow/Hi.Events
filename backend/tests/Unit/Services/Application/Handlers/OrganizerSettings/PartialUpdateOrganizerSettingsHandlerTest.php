@@ -209,4 +209,73 @@ class PartialUpdateOrganizerSettingsHandlerTest extends TestCase
             'seo_title' => 'New Title',
         ]));
     }
+
+    public function testSocialMediaLayoutIsSanitizedAndStravaHandleStored(): void
+    {
+        $organizer = new OrganizerDomainObject();
+        $organizer->setId(1);
+
+        $existingSettings = new OrganizerSettingDomainObject();
+        $existingSettings->setId(10);
+        $existingSettings->setOrganizerId(1);
+        $existingSettings->setSocialMediaHandles(['instagram' => 'dehorsqc']);
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existingSettings);
+
+        $this->settingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->with(
+                Mockery::on(fn(array $attributes) => $attributes['social_media_layout'] === [
+                        ['platform' => 'strava', 'visible' => true],
+                        ['platform' => 'instagram', 'visible' => false],
+                    ]
+                    && $attributes['social_media_handles'] === ['instagram' => 'dehorsqc', 'strava' => 'dehors']),
+                Mockery::any()
+            );
+
+        $this->settingsRepository->shouldReceive('findFirst')->with(10)->once()->andReturn($existingSettings);
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'strava_handle' => 'dehors',
+            'social_media_layout' => [
+                ['platform' => 'strava', 'visible' => true],
+                ['platform' => 'instagram', 'visible' => false],
+                ['platform' => 'strava', 'visible' => false],
+                ['platform' => 'myspace', 'visible' => true],
+            ],
+        ]));
+    }
+
+    public function testSocialMediaLayoutDefaultsToExistingWhenNotProvided(): void
+    {
+        $organizer = new OrganizerDomainObject();
+        $organizer->setId(1);
+
+        $existingLayout = [['platform' => 'facebook', 'visible' => false]];
+
+        $existingSettings = new OrganizerSettingDomainObject();
+        $existingSettings->setId(10);
+        $existingSettings->setOrganizerId(1);
+        $existingSettings->setSocialMediaLayout($existingLayout);
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existingSettings);
+
+        $this->settingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->with(Mockery::on(fn(array $attributes) => $attributes['social_media_layout'] === $existingLayout), Mockery::any());
+
+        $this->settingsRepository->shouldReceive('findFirst')->with(10)->once()->andReturn($existingSettings);
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'facebook_handle' => 'dehors.fb',
+        ]));
+    }
 }

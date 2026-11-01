@@ -39,6 +39,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     final public const DEFAULT_PASS_PROCESSING_FEE_TO_BUYER = 'default_pass_processing_fee_to_buyer';
     final public const FAQS = 'faqs';
     final public const PLATFORM_SUPPORT_ENABLED = 'platform_support_enabled';
+    final public const SOCIAL_MEDIA_LAYOUT = 'social_media_layout';
 
     protected int $id;
     protected int $organizer_id;
@@ -69,6 +70,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     protected bool $default_pass_processing_fee_to_buyer = false;
     protected array|string|null $faqs = null;
     protected bool $platform_support_enabled = true;
+    protected array|string|null $social_media_layout = null;
 
     public function toArray(): array
     {
@@ -102,6 +104,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
                     'default_pass_processing_fee_to_buyer' => $this->default_pass_processing_fee_to_buyer ?? null,
                     'faqs' => $this->faqs ?? null,
                     'platform_support_enabled' => $this->platform_support_enabled ?? null,
+                    'social_media_layout' => $this->social_media_layout ?? null,
                 ];
     }
 
@@ -423,5 +426,16 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     public function getPlatformSupportEnabled(): bool
     {
         return $this->platform_support_enabled;
+    }
+
+    public function setSocialMediaLayout(array|string|null $social_media_layout): self
+    {
+        $this->social_media_layout = $social_media_layout;
+        return $this;
+    }
+
+    public function getSocialMediaLayout(): array|string|null
+    {
+        return $this->social_media_layout;
     }
 }

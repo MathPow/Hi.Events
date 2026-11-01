@@ -4,7 +4,6 @@ import {
     IconExternalLink,
     IconEyeOff,
     IconInbox,
-    IconMessageQuestion,
     IconPlus,
     IconShare,
     IconShield,
@@ -164,8 +163,6 @@ const OrganizerLayout = () => {
             iconSrc: adminIcon('parametres'),
             tileIconSrc: adminIcon('parametres-22'),
         },
-        // Pas encore integree a « Ma page » comme dans la maquette: on la garde a cote.
-        { link: 'faq', label: t`FAQ`, icon: IconMessageQuestion },
 
         ...(canSeeDeveloperPages
             ? [

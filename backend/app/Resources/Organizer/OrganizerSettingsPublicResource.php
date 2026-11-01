@@ -13,6 +13,8 @@ class OrganizerSettingsPublicResource extends OrganizerSettingsResource
     {
         $data = parent::toArray($request);
 
+        $data['social_media_handles'] = $this->getVisibleSocialMediaHandles();
+
         unset(
             $data['tracking_consent_acknowledged'],
             $data['homepage_password'],

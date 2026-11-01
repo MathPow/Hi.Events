@@ -7,6 +7,7 @@ use HiEvents\DomainObjects\Enums\HomepageBackgroundType;
 use HiEvents\DomainObjects\Enums\HomepageFontFamily;
 use HiEvents\DomainObjects\Enums\OrganizerHomepageVisibility;
 use HiEvents\DomainObjects\Enums\TrackingPixelProvider;
+use HiEvents\DomainObjects\OrganizerSettingDomainObject;
 use HiEvents\Http\Request\BaseRequest;
 use HiEvents\Validators\Rules\RulesHelper;
 use Illuminate\Validation\Rule;
@@ -91,6 +92,12 @@ class PartialUpdateOrganizerSettingsRequest extends BaseRequest
             'quora_handle' => ['sometimes', 'nullable', 'string', 'max:255'],
             'vimeo_handle' => ['sometimes', 'nullable', 'string', 'max:255'],
             'github_handle' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'strava_handle' => ['sometimes', 'nullable', 'string', 'max:255'],
+
+            // Order of the social links on the public pages, and the hidden ones
+            'social_media_layout' => ['sometimes', 'nullable', 'array', 'max:50'],
+            'social_media_layout.*.platform' => ['required', 'string', Rule::in(OrganizerSettingDomainObject::SOCIAL_MEDIA_PLATFORMS)],
+            'social_media_layout.*.visible' => ['required', 'boolean'],
 
             'website_url' => ['sometimes', 'nullable', 'url'],
 
