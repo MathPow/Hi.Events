@@ -1,18 +1,23 @@
 import {useParams} from "react-router";
+import {Skeleton} from "@mantine/core";
 import {PageBody} from "../../common/PageBody";
 import {useGetEventQuestions} from "../../../queries/useGetEventQuestions.ts";
 import {QuestionsTable} from "../../common/QuestionsTable";
-import {TableSkeleton} from "../../common/TableSkeleton";
 
 export const Questions = () => {
     const {eventId} = useParams();
     const questionQuery = useGetEventQuestions(eventId);
-    const orderQuestions = questionQuery?.data;
+    const questions = questionQuery?.data;
 
     return (
         <PageBody>
-            <TableSkeleton numRows={5} isVisible={!orderQuestions}/>
-            {orderQuestions && <QuestionsTable questions={orderQuestions}/>}
+            {!questions && (
+                <>
+                    <Skeleton height={110} radius={20} mb="lg"/>
+                    <Skeleton height={320} radius={32}/>
+                </>
+            )}
+            {questions && <QuestionsTable questions={questions}/>}
         </PageBody>
     );
 };

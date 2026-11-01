@@ -1,220 +1,278 @@
-@use "../../../styles/mixins.scss";
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
-@include mixins.respond-below(sm) {
-  :global(#event-manage-main) {
-    overflow: auto;
+// « Intégrer le widget »: the settings beside a website with the widget, then the code to copy.
+.page {
+  display: flex;
+  flex-direction: column;
+  max-width: 1400px;
+  color: ui.$ink;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(20rem, 25rem) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+
+  @include mixins.respond-below(xl) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
   }
 }
 
-.container {
+.settings {
   display: flex;
-  flex-direction: row;
-  margin: calc(var(--hi-spacing-lg) * -1);
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
 
-  h2 {
-    margin-bottom: 0;
+  @include mixins.respond-below(xl) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
   }
 
-  @include mixins.respond-below(sm) {
-    flex-direction: column;
-  }
-
-  // Phones: match the 1rem gutter of the back-office main area.
   @include mixins.respond-below(md) {
-    margin: 0 -1rem;
-  }
-
-  .sidebar {
-    min-width: 380px;
-    max-width: 380px;
-    background-color: #ffffff;
-    padding: var(--hi-spacing-lg);
-    height: calc(100vh - 55px);
-    overflow-y: auto;
-    position: sticky;
-    top: 0;
-    border-right: 1px solid var(--mantine-color-gray-2);
-
-    @include mixins.respond-below(sm) {
-      width: 100%;
-      min-width: unset;
-      max-width: unset;
-      padding: 1rem;
-      position: relative;
-      overflow: auto;
-      height: auto;
-      border-right: none;
-      border-bottom: 1px solid var(--mantine-color-gray-2);
-    }
-
-    .sticky {
-      position: sticky;
-      top: 0;
-    }
-
-    .header {
-      margin-bottom: var(--hi-spacing-lg);
-      padding-bottom: var(--hi-spacing-md);
-      border-bottom: 1px solid var(--mantine-color-gray-2);
-
-      h2 {
-        margin: 0 0 var(--hi-spacing-xs) 0;
-        font-size: 1.375rem;
-        font-weight: 600;
-        color: var(--mantine-color-gray-9);
-      }
-    }
-
-    .accordion {
-      margin-bottom: 0;
-
-      .accordionItem {
-        border: 1px solid var(--mantine-color-gray-3);
-        border-radius: var(--mantine-radius-md);
-        overflow: hidden;
-
-        &:not(:last-child) {
-          margin-bottom: var(--hi-spacing-md);
-        }
-
-        :global(.mantine-Accordion-control) {
-          padding: var(--hi-spacing-md);
-          background: var(--mantine-color-gray-0);
-
-          &:hover {
-            background: var(--mantine-color-gray-1);
-          }
-
-          &[data-active] {
-            border-bottom: 1px solid var(--mantine-color-gray-2);
-          }
-        }
-
-        :global(.mantine-Accordion-panel) {
-          padding: 0;
-          background: white;
-        }
-
-        :global(.mantine-Accordion-content) {
-          padding: var(--hi-spacing-lg);
-
-          :global(.mantine-ColorInput-root),
-          :global(.mantine-TextInput-root),
-          :global(.mantine-NumberInput-root),
-          :global(.mantine-Textarea-root),
-          :global(.mantine-Switch-root) {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-  }
-
-  .previewContainer {
-    flex: 1;
-    padding: var(--hi-spacing-lg);
-    background: var(--mantine-color-gray-1);
-    min-width: 400px;
-
-    @include mixins.respond-below(sm) {
-      padding: 1rem;
-      min-width: unset;
-    }
-
-    > h2 {
-      display: none;
-      margin-bottom: var(--hi-spacing-md);
-
-      @include mixins.respond-below(sm) {
-        display: block;
-      }
-    }
+    display: flex;
+    gap: 1.25rem;
   }
 }
 
-.stickyContainer {
-  position: sticky;
-  top: var(--hi-spacing-lg);
-  min-height: 80vh;
-  background-color: #ffffff;
-  border-radius: var(--hi-radius-lg);
-  border: 1px solid var(--mantine-color-gray-3);
-  overflow: hidden;
-}
-
-.browserChrome {
-  width: 100%;
-  background: #fff;
-  border-radius: var(--hi-radius-lg) var(--hi-radius-lg) 0 0;
-  height: 40px;
+.card {
   display: flex;
-  border-bottom: 1px solid var(--mantine-color-gray-3);
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  @include ui.card(1.5rem);
 }
 
-.browserActionButtons {
-  width: 100px;
-  height: 100%;
+.cardHead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.cardSubtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.field {
+  margin: 0;
+
+  :global(.mantine-InputWrapper-label) {
+    margin-bottom: 0.375rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  :global(.mantine-Input-input) {
+    height: 3rem;
+    min-height: 3rem;
+    font-size: 0.9375rem;
+  }
+}
+
+// The website around the widget, as in a browser.
+.preview {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+  border-radius: 1.75rem;
+  background: ui.$card;
+  box-shadow: ui.$shadow;
+  overflow: hidden;
+
+  @include mixins.respond-below(xl) {
+    position: static;
+  }
+}
+
+.browserBar {
   display: flex;
   align-items: center;
-  padding: 10px;
-
-  div {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: var(--mantine-color-gray-3);
-    display: inline-block;
-    margin-right: 6px;
-  }
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: ui.$row;
 }
 
-.browserAddressBar {
-  flex: 1;
-  align-self: center;
+.dots {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.375rem;
 
-  div {
-    background-color: var(--mantine-color-gray-1);
-    border-radius: var(--mantine-radius-sm);
-    margin-right: 20%;
-    font-size: 0.85em;
-    padding: 4px 12px;
-    color: var(--mantine-color-gray-6);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  span {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 999px;
+    background: #e9a39a;
 
-    span {
-      color: var(--mantine-color-green-6);
+    &:nth-child(2) {
+      background: #f1cf83;
+    }
+
+    &:nth-child(3) {
+      background: #a9cf9a;
     }
   }
 }
 
-.websitePlaceholder {
-  position: absolute;
-  user-select: none;
-  top: auto;
-  left: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 1;
-  padding: var(--hi-spacing-lg);
+.address {
+  flex: 1;
+  min-width: 0;
+  padding: 0.375rem 0.875rem;
+  border-radius: 999px;
+  background: ui.$card;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  @include mixins.ellipsis();
+}
+
+.website {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.75rem;
+  background: #fff;
+
+  @include mixins.respond-below(md) {
+    padding: 1rem;
+  }
+}
+
+.placeholderTitle,
+.placeholderLine {
+  display: block;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: #efe9e2;
+}
+
+.placeholderTitle {
+  width: 40%;
+  height: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.placeholderShort {
+  width: 60%;
+}
+
+.widgetWrapper {
+  margin: 0.75rem 0;
+}
+
+// The embed code: HTML or React, two blocks side by side.
+.codeCard {
+  margin-top: 1.5rem;
+
+  @include mixins.respond-below(md) {
+    margin-top: 1.25rem;
+  }
+}
+
+.codeCardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+
+  > :first-child {
+    flex: 1 1 18rem;
+  }
+}
+
+.codeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.codeBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.codeHead {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.codeText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.codeLabel {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.codeHint {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.copyButton:global(.mantine-Button-root) {
+  flex-shrink: 0;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border: 1.5px solid ui.$ink;
+  border-radius: 999px;
+  background: none;
+  color: ui.$ink;
+  font-size: 0.9375rem;
+  font-weight: 700;
+
+  &:hover {
+    background: ui.$row;
+  }
+
+  &[data-copied] {
+    border-color: ui.tone-bg(ok);
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
+}
+
+.code {
+  max-height: 16rem;
+  margin: 0;
+  padding: 1rem 1.125rem;
+  border-radius: 1rem;
+  background: ui.$ink;
+  color: #fbf2e3;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
   overflow: auto;
-
-  h1 {
-    font-size: 1.25rem;
-    color: var(--mantine-color-gray-7);
-    margin-bottom: var(--hi-spacing-md);
-  }
-
-  .widgetWrapper {
-    padding: var(--hi-spacing-sm);
-    margin: var(--hi-spacing-md) 0;
-  }
-
-  p.lorem {
-    color: var(--mantine-color-gray-4);
-    margin-bottom: var(--hi-spacing-md);
-    font-size: 0.9rem;
-  }
 }

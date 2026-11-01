@@ -1,16 +1,42 @@
 import classes from './WidgetEditor.module.scss';
 import SelectProducts from "../../routes/product-widget/SelectProducts";
-import {Accordion, ColorInput, Group, NumberInput, Stack, Switch, Tabs, Text, Textarea, TextInput} from "@mantine/core";
-import {t, Trans} from "@lingui/macro";
+import {Button, ColorInput, CopyButton, NumberInput, Skeleton, TextInput} from "@mantine/core";
+import {t} from "@lingui/macro";
 import {matches, useForm} from "@mantine/form";
 import {useEffect, useState} from "react";
-import {CopyButton} from "../CopyButton";
 import {useParams} from "react-router";
-import {IconCode, IconPalette, IconSettings} from "@tabler/icons-react";
+import {IconCheck, IconCopy} from "@tabler/icons-react";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
-import {LoadingMask} from '../LoadingMask';
 import {Event} from '../../../types.ts';
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
+import {PageTitle} from "../PageTitle";
+import {PillChoice, ToggleRow} from "../../routes/organizer/Settings/SettingsUi.tsx";
+
+// A piece of code to paste, with its copy button.
+const CodeBlock = ({label, hint, code}: { label: string, hint: string, code: string }) => (
+    <div className={classes.codeBlock}>
+        <div className={classes.codeHead}>
+            <div className={classes.codeText}>
+                <span className={classes.codeLabel}>{label}</span>
+                <span className={classes.codeHint}>{hint}</span>
+            </div>
+            <CopyButton value={code} timeout={2000}>
+                {({copied, copy}) => (
+                    <Button
+                        variant="transparent"
+                        className={classes.copyButton}
+                        data-copied={copied || undefined}
+                        leftSection={copied ? <IconCheck size={16} stroke={2.5}/> : <IconCopy size={16} stroke={2}/>}
+                        onClick={copy}
+                    >
+                        {copied ? t`Copied` : t`Copy the code`}
+                    </Button>
+                )}
+            </CopyButton>
+        </div>
+        <pre className={classes.code}><code>{code.trim()}</code></pre>
+    </div>
+);
 
 export const WidgetEditor = () => {
     const {eventId} = useParams();
@@ -42,7 +68,7 @@ export const WidgetEditor = () => {
     const [htmlEmbedCode, setHtmlEmbedCode] = useState<string>("");
     const [reactComponentCode, setReactComponentCode] = useState<string>("");
     const [reactUsageCode, setReactUsageCode] = useState<string>("");
-    const [accordionValue, setAccordionValue] = useState<string[]>(['colors', 'appearance', 'embedding']);
+    const [codeType, setCodeType] = useState<'html' | 'react'>('html');
     const currentLocation = typeof window !== "undefined" ? window?.location : undefined;
     const embedUrl = `${currentLocation?.protocol}//${currentLocation?.host}/widget.js`;
     const embedScript = `<script async src="${embedUrl}"></script>`;
@@ -142,208 +168,93 @@ export default App;
     useEffect(() => {
         if (eventSettings) {
             form.setValues({
-                background_color: eventSettings.homepage_background_color,
-                primary_color: eventSettings.homepage_primary_color,
-                primary_text_color: eventSettings.homepage_primary_text_color,
-                secondary_color: eventSettings.homepage_secondary_color,
-                secondary_text_color: eventSettings.homepage_secondary_text_color,
-                continue_button_text: eventSettings.continue_button_text,
+                background_color: eventSettings.homepage_background_color || form.values.background_color,
+                primary_color: eventSettings.homepage_primary_color || form.values.primary_color,
+                primary_text_color: eventSettings.homepage_primary_text_color || form.values.primary_text_color,
+                secondary_color: eventSettings.homepage_secondary_color || form.values.secondary_color,
+                secondary_text_color: eventSettings.homepage_secondary_text_color || form.values.secondary_text_color,
+                continue_button_text: eventSettings.continue_button_text || t`Continue`,
             });
         }
     }, [isEventSettingsFetched, eventSettings]);
 
+    const colorField = (field: 'background_color' | 'primary_color' | 'primary_text_color' | 'secondary_color' | 'secondary_text_color', label: string) => (
+        <ColorInput
+            className={classes.field}
+            label={label}
+            placeholder="#RRGGBB"
+            {...form.getInputProps(field)}
+        />
+    );
+
     return (
-        <div className={classes.container}>
-            <div className={classes.sidebar}>
-                <div className={classes.sticky}>
-                    <div className={classes.header}>
-                        <h2>{t`Widget Settings`}</h2>
-                        <Text c="dimmed" size="sm">{t`Create a custom widget to sell tickets on your site.`}</Text>
-                    </div>
+        <div className={classes.page}>
+            <PageTitle subheading={t`Create a custom widget to sell tickets on your site.`}>
+                {t`Widget Embed`}
+            </PageTitle>
 
-                    <Accordion
-                        multiple
-                        value={accordionValue}
-                        onChange={setAccordionValue}
-                        variant="contained"
-                        className={classes.accordion}
-                    >
-                        <Accordion.Item value="colors" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconPalette size={20}/>}>
-                                <Text fw={500}>{t`Colors`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <Stack gap="sm">
-                                    <Text size="xs" c="dimmed">
-                                        {t`These settings apply only to copied embed code and won't be stored.`}
-                                    </Text>
-                                    <ColorInput
-                                        label={t`Background Color`}
-                                        placeholder="#RRGGBB"
-                                        {...form.getInputProps('background_color')}
-                                        size="sm"
-                                    />
-                                    <ColorInput
-                                        label={t`Primary Color`}
-                                        placeholder="#RRGGBB"
-                                        {...form.getInputProps('primary_color')}
-                                        size="sm"
-                                    />
-                                    <ColorInput
-                                        label={t`Primary Text Color`}
-                                        placeholder="#RRGGBB"
-                                        {...form.getInputProps('primary_text_color')}
-                                        size="sm"
-                                    />
-                                    <ColorInput
-                                        label={t`Secondary Color`}
-                                        placeholder="#RRGGBB"
-                                        {...form.getInputProps('secondary_color')}
-                                        size="sm"
-                                    />
-                                    <ColorInput
-                                        label={t`Secondary Text Color`}
-                                        placeholder="#RRGGBB"
-                                        {...form.getInputProps('secondary_text_color')}
-                                        size="sm"
-                                    />
-                                </Stack>
-                            </Accordion.Panel>
-                        </Accordion.Item>
+            <div className={classes.layout}>
+                <div className={classes.settings}>
+                    <section className={classes.card}>
+                        <div className={classes.cardHead}>
+                            <h2 className={classes.cardTitle}>{t`Colors`}</h2>
+                            <p className={classes.cardSubtitle}>{t`These settings apply only to copied embed code and won't be stored.`}</p>
+                        </div>
+                        <div className={classes.fields}>
+                            {colorField('background_color', t`Background Color`)}
+                            {colorField('primary_color', t`Primary Color`)}
+                            {colorField('primary_text_color', t`Primary Text Color`)}
+                            {colorField('secondary_color', t`Secondary Color`)}
+                            {colorField('secondary_text_color', t`Secondary Text Color`)}
+                        </div>
+                    </section>
 
-                        <Accordion.Item value="appearance" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconSettings size={20}/>}>
-                                <Text fw={500}>{t`Appearance`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <Stack gap="sm">
-                                    <TextInput
-                                        label={t`Continue Button Text`}
-                                        placeholder={t`Continue`}
-                                        {...form.getInputProps('continue_button_text')}
-                                        size="sm"
-                                    />
-                                    <NumberInput
-                                        label={t`Padding`}
-                                        min={0}
-                                        max={500}
-                                        placeholder={t`20`}
-                                        rightSection={`px`}
-                                        {...form.getInputProps('padding')}
-                                        size="sm"
-                                    />
-                                    <Switch
-                                        label={t`Auto Resize`}
-                                        {...form.getInputProps('autoResize', {type: 'checkbox'})}
-                                        description={t`Automatically resize the widget height based on the content. When disabled, the widget will fill the height of the container.`}
-                                    />
-                                </Stack>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-
-                        <Accordion.Item value="embedding" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconCode size={20}/>}>
-                                <Text fw={500}>{t`Embed Code`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <Tabs defaultValue="html">
-                                    <Tabs.List>
-                                        <Tabs.Tab value="html">HTML</Tabs.Tab>
-                                        <Tabs.Tab value="react">React</Tabs.Tab>
-                                    </Tabs.List>
-
-                                    <Tabs.Panel value="html" pt="sm">
-                                        <Stack gap="sm">
-                                            <Textarea
-                                                onChange={void 0}
-                                                description={t`Place this in the <head> of your website.`}
-                                                label={(
-                                                    <Group gap="xs">
-                                                        {t`Embed Script`}
-                                                        <CopyButton value={embedScript}/>
-                                                    </Group>)
-                                                }
-                                                rows={3}
-                                                value={embedScript}
-                                                size="sm"
-                                            />
-                                            <Textarea
-                                                onChange={void 0}
-                                                description={t`Paste this where you want the widget to appear.`}
-                                                label={(
-                                                    <Group gap="xs">
-                                                        {t`Embed Code`}
-                                                        <CopyButton value={htmlEmbedCode}/>
-                                                    </Group>)
-                                                }
-                                                rows={6}
-                                                value={htmlEmbedCode}
-                                                size="sm"
-                                            />
-                                        </Stack>
-                                    </Tabs.Panel>
-
-                                    <Tabs.Panel value="react" pt="sm">
-                                        <Stack gap="sm">
-                                            <Textarea
-                                                onChange={void 0}
-                                                description={t`Here is the React component you can use to embed the widget in your application.`}
-                                                label={(
-                                                    <Group gap="xs">
-                                                        {t`Component Code`}
-                                                        <CopyButton value={reactComponentCode}/>
-                                                    </Group>)
-                                                }
-                                                rows={6}
-                                                value={reactComponentCode}
-                                                size="sm"
-                                            />
-                                            <Textarea
-                                                onChange={void 0}
-                                                description={t`Here is an example of how you can use the component in your application.`}
-                                                label={(
-                                                    <Group gap="xs">
-                                                        {t`Usage Example`}
-                                                        <CopyButton value={reactUsageCode}/>
-                                                    </Group>)
-                                                }
-                                                rows={6}
-                                                value={reactUsageCode}
-                                                size="sm"
-                                            />
-                                        </Stack>
-                                    </Tabs.Panel>
-                                </Tabs>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-                    </Accordion>
+                    <section className={classes.card}>
+                        <div className={classes.cardHead}>
+                            <h2 className={classes.cardTitle}>{t`Appearance`}</h2>
+                        </div>
+                        <div className={classes.fields}>
+                            <TextInput
+                                className={classes.field}
+                                label={t`Continue Button Text`}
+                                placeholder={t`Continue`}
+                                {...form.getInputProps('continue_button_text')}
+                            />
+                            <NumberInput
+                                className={classes.field}
+                                label={t`Padding`}
+                                min={0}
+                                max={500}
+                                placeholder="20"
+                                suffix=" px"
+                                {...form.getInputProps('padding')}
+                            />
+                        </div>
+                        <ToggleRow
+                            label={t`Auto Resize`}
+                            hint={t`Automatically resize the widget height based on the content. When disabled, the widget will fill the height of the container.`}
+                            checked={form.values.autoResize}
+                            onChange={(checked) => form.setFieldValue('autoResize', checked)}
+                        />
+                    </section>
                 </div>
-            </div>
 
-            <div className={classes.previewContainer}>
-                <h2>{t`Widget Preview`}</h2>
-                <section className={classes.stickyContainer}>
-                    <div className={classes.browserChrome}>
-                        <div className={classes.browserActionButtons}>
-                            <div/>
-                            <div/>
-                            <div/>
-                        </div>
-                        <div className={classes.browserAddressBar}>
-                            <div>
-                                <Trans><span>https://</span>your-website.com</Trans>
-                            </div>
-                        </div>
+                <section className={classes.preview} aria-label={t`Widget Preview`}>
+                    <div className={classes.browserBar}>
+                        <span className={classes.dots} aria-hidden>
+                            <span/><span/><span/>
+                        </span>
+                        <span className={classes.address}>{t`your-website.com`}</span>
                     </div>
-                    <div className={classes.websitePlaceholder}>
-                        <h1>{t`Your awesome website 🎉`}</h1>
-                        <p className={classes.lorem}>
-                            {t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat elementum...`}
-                        </p>
+                    <div className={classes.website}>
+                        <span className={classes.placeholderTitle} aria-hidden/>
+                        <span className={classes.placeholderLine} aria-hidden/>
+                        <span className={`${classes.placeholderLine} ${classes.placeholderShort}`} aria-hidden/>
 
                         <div className={classes.widgetWrapper} data-dehors-apercu>
-                            {!eventQuery.isFetched ?
-                                <LoadingMask/> :
+                            {!eventQuery.isFetched ? (
+                                <Skeleton height={240} radius={16}/>
+                            ) : (
                                 <SelectProducts
                                     event={eventQuery.data as Event}
                                     widgetMode={'preview'}
@@ -357,15 +268,49 @@ export default App;
                                     continueButtonText={form.values.continue_button_text}
                                     padding={form.values.padding + 'px'}
                                 />
-                            }
+                            )}
                         </div>
 
-                        <p className={classes.lorem}>
-                            {t`Nam placerat elementum...`}
-                        </p>
+                        <span className={classes.placeholderLine} aria-hidden/>
+                        <span className={`${classes.placeholderLine} ${classes.placeholderShort}`} aria-hidden/>
                     </div>
                 </section>
             </div>
+
+            <section className={`${classes.card} ${classes.codeCard}`}>
+                <div className={classes.codeCardHead}>
+                    <div className={classes.cardHead}>
+                        <h2 className={classes.cardTitle}>{t`Embed Code`}</h2>
+                        <p className={classes.cardSubtitle}>{t`Copy it into your website: the widget follows the colors chosen above.`}</p>
+                    </div>
+                    <PillChoice
+                        label={t`Embed Code`}
+                        value={codeType}
+                        // eslint-disable-next-line lingui/no-unlocalized-strings
+                        options={[{value: 'html', label: 'HTML'}, {value: 'react', label: 'React'}]}
+                        onChange={setCodeType}
+                    />
+                </div>
+                {codeType === 'html' ? (
+                    <div className={classes.codeGrid}>
+                        <CodeBlock label={t`Embed Script`} hint={t`Place this in the <head> of your website.`} code={embedScript}/>
+                        <CodeBlock label={t`Embed Code`} hint={t`Paste this where you want the widget to appear.`} code={htmlEmbedCode}/>
+                    </div>
+                ) : (
+                    <div className={classes.codeGrid}>
+                        <CodeBlock
+                            label={t`Component Code`}
+                            hint={t`Here is the React component you can use to embed the widget in your application.`}
+                            code={reactComponentCode}
+                        />
+                        <CodeBlock
+                            label={t`Usage Example`}
+                            hint={t`Here is an example of how you can use the component in your application.`}
+                            code={reactUsageCode}
+                        />
+                    </div>
+                )}
+            </section>
         </div>
     );
 };

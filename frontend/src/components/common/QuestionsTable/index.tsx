@@ -1,19 +1,7 @@
-import {
-    Badge,
-    Button,
-    Collapse,
-    Group,
-    Menu,
-    SegmentedControl,
-    Text,
-    Tooltip,
-    UnstyledButton,
-    ActionIcon,
-} from '@mantine/core';
-import {IdParam, Question} from "../../../types.ts";
+import {ActionIcon, Button, Collapse, Tooltip} from '@mantine/core';
+import {IdParam, Question, QuestionType} from "../../../types.ts";
 import {
     IconChevronDown,
-    IconChevronUp,
     IconDotsVertical,
     IconEye,
     IconEyeOff,
@@ -21,21 +9,16 @@ import {
     IconGripVertical,
     IconPencil,
     IconPlus,
-    IconShoppingCart,
+    IconShieldLock,
     IconTableExport,
     IconTrash,
-    IconShieldLock,
-    IconUser,
-    IconUsers,
 } from "@tabler/icons-react";
-import Truncate from "../Truncate";
 import classes from "./QuestionsTable.module.scss";
 import {QuestionInput} from "../CheckoutQuestion";
 import {useForm} from "@mantine/form";
 import {PageTitle} from "../PageTitle";
 import {CreateQuestionModal} from "../../modals/CreateQuestionModal";
 import {useDisclosure} from "@mantine/hooks";
-import {Card} from "../Card";
 import {t} from "@lingui/macro";
 import {useEffect, useState} from "react";
 import {EditQuestionModal} from "../../modals/EditQuestionModal";
@@ -44,210 +27,162 @@ import {useParams} from "react-router";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {useDragItemsHandler} from "../../../hooks/useDragItemsHandler.ts";
-import {
-    closestCenter,
-    DndContext,
-    PointerSensor,
-    TouchSensor,
-    UniqueIdentifier,
-    useSensor,
-    useSensors
-} from "@dnd-kit/core";
+import {closestCenter, DndContext, PointerSensor, TouchSensor, UniqueIdentifier, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, useSortable, verticalListSortingStrategy} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortQuestions} from "../../../mutations/useSortQuestions.ts";
-import classNames from "classnames";
 import {useExportAnswers} from "../../../mutations/useExportAnswers.ts";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
 import {useUpdateEventSettings} from "../../../mutations/useUpdateEventSettings.ts";
 import {useAddParticipantForm} from "../../../mutations/useAddParticipantForm.ts";
-import {CustomSelect, ItemProps} from "../CustomSelect";
-import {HeadingWithDescription} from "../Card/CardHeading";
+import {ActionMenu} from "../ActionMenu";
+import {FilterChips} from "../FilterChips";
+import {PillChoice} from "../../routes/organizer/Settings/SettingsUi.tsx";
 
 interface QuestionsTableProp {
     questions: Partial<Question>[];
-    isSystemDefault?: boolean;
-    onEditModalOpen?: (id: IdParam) => void;
 }
 
-type QuestionType = 'ORDER' | 'PRODUCT';
+type QuestionBelongsTo = 'ORDER' | 'PRODUCT';
 
-const SortableQuestion = ({
-    question,
-    onEditModalOpen,
-    onDelete,
-}: {
+const typeLabel = (type?: QuestionType | string) => ({
+    [QuestionType.SINGLE_LINE_TEXT]: t`Single line text box`,
+    [QuestionType.MULTI_LINE_TEXT]: t`Multi line text box`,
+    [QuestionType.CHECKBOX]: t`Checkboxes`,
+    [QuestionType.RADIO]: t`Radio Option`,
+    [QuestionType.DROPDOWN]: t`Dropdown selection`,
+    [QuestionType.ADDRESS]: t`Address`,
+    [QuestionType.DATE]: t`Date`,
+} as Record<string, string>)[type ?? ''] ?? '';
+
+const SortableQuestion = ({question, onEdit, onDelete}: {
     question: Partial<Question>;
-    onEditModalOpen?: (id: IdParam) => void;
+    onEdit: (id: IdParam) => void;
     onDelete: (id: IdParam) => void;
 }) => {
-    const uniqueId = question.id as UniqueIdentifier;
     const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
-        id: uniqueId,
+        id: question.id as UniqueIdentifier,
     });
-
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-    };
-
-    const isHidden = question.is_hidden;
+    const optionCount = question.options?.length ?? 0;
 
     return (
         <div
-            style={style}
             ref={setNodeRef}
-            className={classNames(classes.questionCard, {
-                [classes.hidden]: isHidden,
-                [classes.dragging]: isDragging,
-            })}
+            style={{transform: CSS.Transform.toString(transform), transition}}
+            className={classes.question}
+            data-hidden={question.is_hidden || undefined}
+            data-dragging={isDragging || undefined}
         >
-            <div {...attributes} {...listeners} className={classes.dragHandle}>
-                <IconGripVertical size={18} stroke={1.5}/>
+            <button type="button" className={classes.grip} aria-label={t`Move`} {...attributes} {...listeners}>
+                <IconGripVertical size={18} stroke={1.75}/>
+            </button>
+
+            <button type="button" className={classes.questionMain} onClick={() => onEdit(question.id as IdParam)}>
+                <span className={classes.questionTitle}>{question.title}</span>
+                <span className={classes.questionMeta}>
+                    {typeLabel(question.type)}
+                    {optionCount > 0 && ` · ${optionCount} ${t`options`}`}
+                </span>
+            </button>
+
+            <div className={classes.tags}>
+                {question.required && <span className={classes.tag} data-tone="ink">{t`Required`}</span>}
+                {question.is_sensitive && (
+                    <Tooltip label={t`Only the organizers see the answers. They are erased 30 days after the event.`} multiline w={240}>
+                        <span className={classes.tag} data-tone="waiting"><IconShieldLock size={12}/>{t`Sensitive`}</span>
+                    </Tooltip>
+                )}
+                {question.is_hidden && (
+                    <Tooltip label={t`Hidden from attendees - only visible to organizers`}>
+                        <span className={classes.tag} data-tone="neutral"><IconEyeOff size={12}/>{t`Hidden`}</span>
+                    </Tooltip>
+                )}
             </div>
 
-            <div className={classes.questionContent}>
-                <div className={classes.questionHeader}>
-                    <Text fw={500} className={classes.questionTitle}>
-                        <Truncate text={question.title}/>
-                    </Text>
-                    {isHidden && (
-                        <Tooltip label={t`Hidden from attendees - only visible to organizers`}>
-                            <IconEyeOff size={14} className={classes.hiddenIcon}/>
-                        </Tooltip>
-                    )}
-                    {question.required && (
-                        <Badge size="xs" variant="light" color="red">
-                            {t`Required`}
-                        </Badge>
-                    )}
-                    {question.is_sensitive && (
-                        <Tooltip label={t`Only the organizers see the answers. They are erased 30 days after the event.`}>
-                            <Badge size="xs" variant="light" color="orange" leftSection={<IconShieldLock size={10}/>}>
-                                {t`Sensitive`}
-                            </Badge>
-                        </Tooltip>
-                    )}
-                </div>
-                <Text size="xs" c="dimmed" className={classes.questionMeta}>
-                    {question.type?.replace('_', ' ').toLowerCase()}
-                    {question.options && question.options.length > 0 && (
-                        <> · {question.options.length} {t`options`}</>
-                    )}
-                </Text>
-            </div>
-
-            <Menu shadow="md" width={180} position="bottom-end">
-                <Menu.Target>
-                    <ActionIcon variant="subtle" color="gray" size="sm">
-                        <IconDotsVertical size={16}/>
+            <ActionMenu
+                target={(
+                    <ActionIcon variant="subtle" className={classes.roundButton} aria-label={t`Actions`}>
+                        <IconDotsVertical size={20}/>
                     </ActionIcon>
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                    <Menu.Item
-                        leftSection={<IconPencil size={14}/>}
-                        onClick={() => onEditModalOpen?.(question.id)}
-                    >
-                        {t`Edit`}
-                    </Menu.Item>
-                    <Menu.Divider/>
-                    <Menu.Item
-                        color="red"
-                        leftSection={<IconTrash size={14}/>}
-                        onClick={() => onDelete(question.id)}
-                    >
-                        {t`Delete`}
-                    </Menu.Item>
-                </Menu.Dropdown>
-            </Menu>
+                )}
+                itemsGroups={[
+                    {
+                        label: t`Manage`,
+                        items: [{label: t`Edit`, icon: <IconPencil size={14}/>, onClick: () => onEdit(question.id as IdParam)}],
+                    },
+                    {
+                        label: t`Danger zone`,
+                        showDividerAbove: true,
+                        items: [{
+                            label: t`Delete`,
+                            icon: <IconTrash size={14}/>,
+                            color: 'red',
+                            onClick: () => onDelete(question.id as IdParam),
+                        }],
+                    },
+                ]}
+            />
         </div>
     );
 };
 
-interface QuestionsListProps extends QuestionsTableProp {
+const QuestionsList = ({questions, onEdit, onAdd, emptyMessage, emptyHint}: {
+    questions: Partial<Question>[];
+    onEdit: (id: IdParam) => void;
+    onAdd: () => void;
     emptyMessage: string;
     emptyHint: string;
-    onAddQuestion: () => void;
-}
-
-const QuestionsList = ({
-    questions,
-    onEditModalOpen,
-    emptyMessage,
-    emptyHint,
-    onAddQuestion,
-}: QuestionsListProps) => {
+}) => {
     const {eventId} = useParams();
     const deleteQuestionMutation = useDeleteQuestion();
     const sortMutation = useSortQuestions();
     const {items, setItems, handleDragEnd} = useDragItemsHandler({
         initialItemIds: questions.map((question) => Number(question.id)),
-        onSortEnd: (newArray) => {
-            sortMutation.mutate(
-                {
-                    sortedQuestionIds: newArray.map((id, index) => ({id, order: index + 1})),
-                    eventId: eventId,
-                },
-                {
-                    onSuccess: () => showSuccess(t`Questions reordered`),
-                    onError: () => showError(t`Failed to reorder questions`),
-                }
-            );
-        },
+        onSortEnd: (newArray) => sortMutation.mutate({
+            sortedQuestionIds: newArray.map((id, index) => ({id, order: index + 1})),
+            eventId,
+        }, {
+            onSuccess: () => showSuccess(t`Questions reordered`),
+            onError: () => showError(t`Failed to reorder questions`),
+        }),
     });
 
     useEffect(() => {
         setItems(questions.map((question) => Number(question.id)));
     }, [questions]);
 
-    const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
+    const sensors = useSensors(useSensor(PointerSensor, {activationConstraint: {distance: 4}}), useSensor(TouchSensor));
 
-    const onDelete = (id: IdParam) => {
-        confirmationDialog(t`Delete this question? This cannot be undone.`, () => {
-            deleteQuestionMutation.mutate(
-                {eventId, questionId: id},
-                {
-                    onSuccess: () => showSuccess(t`Question deleted`),
-                    onError: (error: any) =>
-                        showError(error?.response?.data?.message || t`Failed to delete question`),
-                }
-            );
+    const onDelete = (id: IdParam) => confirmationDialog(t`Delete this question? This cannot be undone.`, () => {
+        deleteQuestionMutation.mutate({eventId, questionId: id}, {
+            onSuccess: () => showSuccess(t`Question deleted`),
+            onError: (error: any) => showError(error?.response?.data?.message || t`Failed to delete question`),
         });
-    };
+    });
 
     if (questions.length === 0) {
         return (
-            <div className={classes.emptyState}>
-                <Text size="sm" fw={500} mb={4}>
-                    {emptyMessage}
-                </Text>
-                <Text size="xs" c="dimmed" mb="sm">
-                    {emptyHint}
-                </Text>
-                <Button
-                    variant="light"
-                    size="xs"
-                    leftSection={<IconPlus size={14}/>}
-                    onClick={onAddQuestion}
-                >
+            <div className={classes.empty}>
+                <p className={classes.emptyTitle}>{emptyMessage}</p>
+                <p className={classes.emptyHint}>{emptyHint}</p>
+                <Button variant="transparent" className={classes.outlineButton} leftSection={<IconPlus size={18}/>} onClick={onAdd}>
                     {t`Add Question`}
                 </Button>
             </div>
         );
     }
 
+    // In the dragged order right away, without waiting for the server.
+    const ordered = items
+        .map(id => questions.find(question => Number(question.id) === id))
+        .filter((question): question is Partial<Question> => !!question);
+
     return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={items as UniqueIdentifier[]} strategy={verticalListSortingStrategy}>
-                <div className={classes.questionsList}>
-                    {questions.map((question) => (
-                        <SortableQuestion
-                            key={question.id}
-                            question={question}
-                            onEditModalOpen={onEditModalOpen}
-                            onDelete={onDelete}
-                        />
+                <div className={classes.list}>
+                    {ordered.map((question) => (
+                        <SortableQuestion key={question.id} question={question} onEdit={onEdit} onDelete={onDelete}/>
                     ))}
                 </div>
             </SortableContext>
@@ -255,20 +190,15 @@ const QuestionsList = ({
     );
 };
 
-const DefaultFieldsPreview = () => (
+const DefaultFields = () => (
     <div className={classes.defaultFields}>
-        <div className={classes.defaultFieldsGrid}>
-            <span className={classes.fieldPill}>{t`First Name`}</span>
-            <span className={classes.fieldPill}>{t`Last Name`}</span>
-            <span className={classes.fieldPill}>{t`Email`}</span>
-        </div>
+        <span className={classes.fieldPill}>{t`First Name`}</span>
+        <span className={classes.fieldPill}>{t`Last Name`}</span>
+        <span className={classes.fieldPill}>{t`Email`}</span>
     </div>
 );
 
-const LivePreview = ({
-    questions,
-    isPerOrderCollection,
-}: {
+const FormPreview = ({questions, isPerOrderCollection}: {
     questions: Partial<Question>[];
     isPerOrderCollection: boolean;
 }) => {
@@ -285,75 +215,52 @@ const LivePreview = ({
     const productQuestions = questions.filter((q) => q.belongs_to === 'PRODUCT' && !q.is_hidden);
 
     return (
-        <Card className={classes.previewCard}>
-            <UnstyledButton
-                className={classes.previewToggle}
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <Group gap="xs">
-                    <IconEye size={16}/>
-                    <Text size="sm" fw={500}>{t`Preview checkout form`}</Text>
-                </Group>
-                {isOpen ? <IconChevronUp size={16}/> : <IconChevronDown size={16}/>}
-            </UnstyledButton>
+        <section className={classes.card} data-open={isOpen || undefined}>
+            <button type="button" className={classes.previewToggle} aria-expanded={isOpen} onClick={() => setIsOpen(!isOpen)}>
+                <span className={classes.pastille}><IconEye size={20} stroke={1.75}/></span>
+                <span className={classes.previewToggleText}>
+                    <span className={classes.cardTitle}>{t`Preview checkout form`}</span>
+                    <span className={classes.cardSubtitle}>{t`What buyers fill in, question by question.`}</span>
+                </span>
+                <IconChevronDown className={classes.chevron} size={20} stroke={2}/>
+            </button>
 
             <Collapse in={isOpen}>
                 <div className={classes.previewContent} data-dehors-apercu>
                     <div className={classes.previewPane}>
-                        <Text size="xs" fw={600} c="dimmed" tt="uppercase" mb={6}>
-                            {t`Order`}
-                        </Text>
-                        <DefaultFieldsPreview/>
-                        {orderQuestions.length > 0 && (
-                            <div className={classes.previewQuestions}>
-                                {orderQuestions.map((q) => (
-                                    <QuestionInput
-                                        key={q.id}
-                                        question={q}
-                                        name={String(q.id)}
-                                        form={form}
-                                    />
-                                ))}
-                            </div>
-                        )}
+                        <p className={classes.overline}>{t`Order`}</p>
+                        <DefaultFields/>
+                        {orderQuestions.map((q) => (
+                            <QuestionInput key={q.id} question={q} name={String(q.id)} form={form}/>
+                        ))}
                     </div>
-
-                    <div className={classes.previewDivider}/>
-
                     <div className={classes.previewPane}>
-                        <Text size="xs" fw={600} c="dimmed" tt="uppercase" mb={6}>
-                            {t`Per Attendee`}
-                        </Text>
-                        {!isPerOrderCollection && <DefaultFieldsPreview/>}
-                        {productQuestions.length > 0 ? (
-                            <div className={classes.previewQuestions}>
-                                {productQuestions.map((q) => (
-                                    <QuestionInput
-                                        key={q.id}
-                                        question={q}
-                                        name={String(q.id)}
-                                        form={form}
-                                    />
-                                ))}
-                            </div>
-                        ) : isPerOrderCollection ? (
-                            <Text size="xs" c="dimmed" fs="italic">
-                                {t`Attendee details copied from order`}
-                            </Text>
-                        ) : null}
+                        <p className={classes.overline}>{t`Per Attendee`}</p>
+                        {!isPerOrderCollection && <DefaultFields/>}
+                        {productQuestions.map((q) => (
+                            <QuestionInput key={q.id} question={q} name={String(q.id)} form={form}/>
+                        ))}
+                        {productQuestions.length === 0 && isPerOrderCollection && (
+                            <p className={classes.emptyHint}>{t`Attendee details copied from order`}</p>
+                        )}
                     </div>
                 </div>
             </Collapse>
-        </Card>
+        </section>
     );
 };
 
+/**
+ * « Questions d'inscription »: how the attendees' details are collected, the custom questions of the
+ * order and of each attendee (drag to reorder), and a preview of the checkout form.
+ */
 export const QuestionsTable = ({questions}: QuestionsTableProp) => {
     const {eventId} = useParams();
-    const [activeTab, setActiveTab] = useState<QuestionType>('ORDER');
+    const [activeTab, setActiveTab] = useState<QuestionBelongsTo>('ORDER');
     const [createModalOpen, {open: openCreateModal, close: closeCreateModal}] = useDisclosure(false);
     const [editModalOpen, {open: openEditModal, close: closeEditModal}] = useDisclosure(false);
     const [questionId, setQuestionId] = useState<IdParam>();
+    const {startExport, isExporting} = useExportAnswers(eventId);
 
     const eventSettingsQuery = useGetEventSettings(eventId);
     const updateSettingsMutation = useUpdateEventSettings();
@@ -365,187 +272,124 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
     const productQuestions = questions.filter((q) => q.belongs_to === 'PRODUCT');
     const activeQuestions = activeTab === 'ORDER' ? orderQuestions : productQuestions;
 
-    const handleModalOpen = (id: IdParam) => {
+    const edit = (id: IdParam) => {
         setQuestionId(id);
         openEditModal();
     };
 
-    const onCompleted = () => {
-        // Question created successfully
-    };
-
-    /** Date of birth, emergency contact and health, asked of every attendee: shown on the attendee tab. */
-    const addParticipantForm = () => {
-        addParticipantFormMutation.mutate({eventId}, {
-            onSuccess: ({data}) => {
-                setActiveTab('PRODUCT');
-                showSuccess(data.length > 0
-                    ? t`Participant form added`
-                    : t`The participant form is already there`);
-            },
-            onError: (error: any) => showError(error?.response?.data?.message || t`Failed to add the participant form`),
-        });
-    };
-
-    const handleCollectionMethodChange = (value: string | string[]) => {
-        const val = Array.isArray(value) ? value[0] : value;
-        if (!val) return;
-        updateSettingsMutation.mutate({
-            eventSettings: {attendee_details_collection_method: val as 'PER_TICKET' | 'PER_ORDER'},
-            eventId: eventId,
-        }, {
-            onSuccess: () => showSuccess(t`Setting updated`),
-            onError: () => showError(t`Failed to update setting`),
-        });
-    };
-
-    const collectionMethodOptions: ItemProps[] = [
-        {
-            icon: <IconUsers size={20}/>,
-            label: t`Collect details per ticket`,
-            value: 'PER_TICKET',
-            description: t`Ask for name and email for each ticket purchased`,
+    // Date of birth, emergency contact and health, asked of every attendee: shown on the attendee tab.
+    const addParticipantForm = () => addParticipantFormMutation.mutate({eventId}, {
+        onSuccess: ({data}) => {
+            setActiveTab('PRODUCT');
+            showSuccess(data.length > 0 ? t`Participant form added` : t`The participant form is already there`);
         },
-        {
-            icon: <IconUser size={20}/>,
-            label: t`Collect details per order`,
-            value: 'PER_ORDER',
-            description: t`Use the buyer's details for all attendees`,
-        },
-    ];
+        onError: (error: any) => showError(error?.response?.data?.message || t`Failed to add the participant form`),
+    });
 
-    const ExportButton = () => {
-        const {startExport, isExporting} = useExportAnswers(eventId);
-        return (
-            <Button
-                variant="subtle"
-                color="gray"
-                leftSection={<IconTableExport size={16}/>}
-                loading={isExporting}
-                onClick={() => startExport()}
-            >
-                {t`Export Answers`}
-            </Button>
-        );
-    };
+    const changeCollectionMethod = (value: 'PER_TICKET' | 'PER_ORDER') => updateSettingsMutation.mutate({
+        eventSettings: {attendee_details_collection_method: value},
+        eventId,
+    }, {
+        onSuccess: () => showSuccess(t`Setting updated`),
+        onError: () => showError(t`Failed to update setting`),
+    });
 
     return (
         <div className={classes.container}>
             <PageTitle
                 subheading={t`Customize the questions asked during checkout to gather important information from your attendees.`}
-            >{t`Registration Questions`}</PageTitle>
-
-            <Card>
-                <HeadingWithDescription
-                    heading={t`Attendee Information`}
-                    description={t`Configure how attendee details are collected during checkout`}
-                />
-
-                <CustomSelect
-                    optionList={collectionMethodOptions}
-                    name="attendee_details_collection_method"
-                    label={t`Attendee details collection`}
-                    value={collectionMethod}
-                    onChange={handleCollectionMethodChange}
-                    disabled={updateSettingsMutation.isPending}
-                />
-            </Card>
-
-            <Card>
-                <HeadingWithDescription
-                    heading={t`Custom Questions`}
-                    description={t`Add custom questions to collect additional information during checkout`}
-                />
-
-                <div className={classes.actionsRow}>
-                    <SegmentedControl
-                        value={activeTab}
-                        onChange={(value) => setActiveTab(value as QuestionType)}
-                        className={classes.segmentedControl}
-                        data={[
-                            {
-                                value: 'ORDER',
-                                label: (
-                                    <Group gap={6} justify="center" wrap="nowrap">
-                                        <IconShoppingCart size={16}/>
-                                        <span className={classes.tabLabel}>{t`Order`}</span>
-                                        {orderQuestions.length > 0 && (
-                                            <Badge size="xs" variant="light">
-                                                {orderQuestions.length}
-                                            </Badge>
-                                        )}
-                                    </Group>
-                                ),
-                            },
-                            {
-                                value: 'PRODUCT',
-                                label: (
-                                    <Group gap={6} justify="center" wrap="nowrap">
-                                        <IconUser size={16}/>
-                                        <span className={classes.tabLabel}>{t`Attendee`}</span>
-                                        {productQuestions.length > 0 && (
-                                            <Badge size="xs" variant="light">
-                                                {productQuestions.length}
-                                            </Badge>
-                                        )}
-                                    </Group>
-                                ),
-                            },
-                        ]}
-                    />
-                    <Group gap="xs" wrap="wrap" className={classes.actionButtons}>
-                        <ExportButton/>
-                        <Tooltip
-                            multiline
-                            w={260}
-                            label={t`Date of birth, emergency contact and health, asked of each attendee. The answers are erased 30 days after the event.`}
-                        >
-                            <Button
-                                variant="light"
-                                leftSection={<IconFirstAidKit size={16}/>}
-                                loading={addParticipantFormMutation.isPending}
-                                onClick={addParticipantForm}
-                            >
-                                {t`Participant form`}
-                            </Button>
-                        </Tooltip>
-                        <Button
-                            leftSection={<IconPlus size={16}/>}
-                            onClick={openCreateModal}
-                        >
+                actions={(
+                    <>
+                        <Button variant="outline" leftSection={<IconTableExport size={20}/>} loading={isExporting} onClick={() => startExport()}>
+                            {t`Export Answers`}
+                        </Button>
+                        <Button leftSection={<IconPlus size={20}/>} onClick={openCreateModal}>
                             {t`Add Question`}
                         </Button>
-                    </Group>
+                    </>
+                )}
+            >
+                {t`Registration Questions`}
+            </PageTitle>
+
+            <div className={classes.grid}>
+                <section className={classes.card}>
+                    <div className={classes.cardHead}>
+                        <h2 className={classes.cardTitle}>{t`Attendee Information`}</h2>
+                        <p className={classes.cardSubtitle}>{t`Name and email of each attendee, or the buyer's for everyone.`}</p>
+                    </div>
+                    <PillChoice
+                        label={t`Attendee Information`}
+                        value={collectionMethod}
+                        disabled={updateSettingsMutation.isPending || !eventSettingsQuery.data}
+                        options={[
+                            {value: 'PER_TICKET', label: t`Per ticket`},
+                            {value: 'PER_ORDER', label: t`Per order`},
+                        ]}
+                        onChange={changeCollectionMethod}
+                    />
+                    <p className={classes.hint}>
+                        {isPerOrderCollection ? t`Use the buyer's details for all attendees` : t`Ask for name and email for each ticket purchased`}
+                    </p>
+                </section>
+
+                <section className={classes.card}>
+                    <div className={classes.cardHead}>
+                        <h2 className={classes.cardTitle}>{t`Participant form`}</h2>
+                        <p className={classes.cardSubtitle}>
+                            {t`Date of birth, emergency contact and health, asked of each attendee. The answers are erased 30 days after the event.`}
+                        </p>
+                    </div>
+                    <Button
+                        variant="transparent"
+                        className={classes.outlineButton}
+                        leftSection={<IconFirstAidKit size={18}/>}
+                        loading={addParticipantFormMutation.isPending}
+                        onClick={addParticipantForm}
+                    >
+                        {t`Add the participant form`}
+                    </Button>
+                </section>
+            </div>
+
+            <section className={classes.card}>
+                <div className={classes.questionsHead}>
+                    <div className={classes.cardHead}>
+                        <h2 className={classes.cardTitle}>{t`Custom Questions`}</h2>
+                        <p className={classes.cardSubtitle}>{t`Drag the questions to change their order.`}</p>
+                    </div>
+                    <FilterChips<QuestionBelongsTo>
+                        label={t`Custom Questions`}
+                        value={activeTab}
+                        onChange={setActiveTab}
+                        chips={[
+                            {value: 'ORDER', label: t`Order`, count: orderQuestions.length},
+                            {value: 'PRODUCT', label: t`Attendee`, count: productQuestions.length},
+                        ]}
+                    />
                 </div>
+                <p className={classes.hint}>
+                    {activeTab === 'ORDER'
+                        ? t`Asked once, of the buyer.`
+                        : t`Asked of each attendee.`}
+                </p>
 
                 <QuestionsList
+                    key={activeTab}
                     questions={activeQuestions}
-                    onEditModalOpen={handleModalOpen}
-                    onAddQuestion={openCreateModal}
-                    emptyMessage={
-                        activeTab === 'ORDER'
-                            ? t`No order questions yet`
-                            : t`No attendee questions yet`
-                    }
-                    emptyHint={
-                        activeTab === 'ORDER'
-                            ? t`Examples: "How did you hear about us?", "Company name for invoice"`
-                            : t`Examples: "T-shirt size", "Meal preference", "Job title"`
-                    }
+                    onEdit={edit}
+                    onAdd={openCreateModal}
+                    emptyMessage={activeTab === 'ORDER' ? t`No order questions yet` : t`No attendee questions yet`}
+                    emptyHint={activeTab === 'ORDER'
+                        ? t`Examples: "How did you hear about us?", "Company name for invoice"`
+                        : t`Examples: "T-shirt size", "Meal preference", "Job title"`}
                 />
-            </Card>
+            </section>
 
-            <LivePreview
-                questions={questions}
-                isPerOrderCollection={isPerOrderCollection}
-            />
+            <FormPreview questions={questions} isPerOrderCollection={isPerOrderCollection}/>
 
             {createModalOpen && (
-                <CreateQuestionModal
-                    onCompleted={onCompleted}
-                    onClose={closeCreateModal}
-                    defaultBelongsTo={activeTab}
-                />
+                <CreateQuestionModal onCompleted={() => void 0} onClose={closeCreateModal} defaultBelongsTo={activeTab}/>
             )}
             {editModalOpen && questionId && (
                 <EditQuestionModal questionId={questionId} onClose={closeEditModal}/>
