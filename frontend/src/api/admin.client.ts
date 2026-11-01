@@ -263,10 +263,21 @@ export interface AssistantUsageByUser {
     last_used_at: string;
 }
 
+export interface AssistantModelOption {
+    id: string;
+    label: string;
+    // US dollars per million tokens.
+    input: number;
+    output: number;
+    cache_read: number;
+}
+
 export interface AssistantUsage {
     days: number | null;
     since: string;
     model: string;
+    default_model: string;
+    models: AssistantModelOption[];
     daily_limit: number;
     totals: AssistantUsageTotals;
     daily: AssistantUsageDay[];
@@ -554,6 +565,12 @@ export const adminClient = {
     // days: 0 = since the first call.
     getAssistantUsage: async (days: number) => {
         const response = await api.get<AssistantUsage>('admin/assistant-usage', {params: {days}});
+        return response.data;
+    },
+
+    // null: back to the server's configuration.
+    updateAssistantModel: async (model: string | null) => {
+        const response = await api.put<{ model: string }>('admin/assistant-model', {model});
         return response.data;
     },
 

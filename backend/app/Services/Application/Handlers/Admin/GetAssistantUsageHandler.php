@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use HiEvents\Repository\Interfaces\AssistantUsageRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Admin\DTO\AssistantUsageResponseDTO;
-use HiEvents\Services\Application\Handlers\Assistant\AssistantTurnHandler;
+use HiEvents\Services\Domain\Assistant\AssistantModelService;
 use HiEvents\Services\Domain\Assistant\AssistantQuotaService;
 
 /**
@@ -23,7 +23,7 @@ class GetAssistantUsageHandler
     public function __construct(
         private readonly AssistantUsageRepositoryInterface $usageRepository,
         private readonly AssistantQuotaService             $quotaService,
-        private readonly AssistantTurnHandler              $turnHandler,
+        private readonly AssistantModelService             $modelService,
     )
     {
     }
@@ -55,7 +55,9 @@ class GetAssistantUsageHandler
         return new AssistantUsageResponseDTO(
             days: $days,
             since: $since->toIso8601String(),
-            model: $this->turnHandler->model(),
+            model: $this->modelService->current(),
+            default_model: $this->modelService->default(),
+            models: $this->modelService->options(),
             daily_limit: $this->quotaService->limit(),
             totals: [
                 'turns' => $turns,

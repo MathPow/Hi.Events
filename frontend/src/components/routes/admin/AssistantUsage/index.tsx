@@ -6,6 +6,7 @@ import {useState} from "react";
 import dayjs from "dayjs";
 import {useGetAssistantUsage} from "../../../../queries/useGetAssistantUsage";
 import {UsageTables} from "./UsageTables";
+import {ModelPicker} from "./ModelPicker";
 import {formatCompact, formatUsd} from "./format";
 
 // What the organizers' assistant costs the platform: Anthropic bills each call, in US dollars.
@@ -101,6 +102,8 @@ const AssistantUsage = () => {
                         </Paper>
                     ))}
                 </SimpleGrid>
+
+                {usage && <ModelPicker models={usage.models} current={usage.model} totals={totals}/>}
 
                 <Paper shadow="sm" p="md" radius="md" withBorder style={{opacity: isFetching ? 0.6 : 1}}>
                     <Title order={2} size="h4" mb="md">

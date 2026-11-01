@@ -65,8 +65,8 @@ class AssistantPricing
         return $this->match($model) !== null;
     }
 
-    /** @return array{float, float, float} */
-    private function prices(string $model): array
+    /** @return array{float, float, float} dollars par million de jetons : entree, sortie, lecture du cache */
+    public function prices(string $model): array
     {
         return self::PRICES[$this->match($model) ?? self::UNKNOWN_MODEL];
     }

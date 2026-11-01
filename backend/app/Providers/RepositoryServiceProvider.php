@@ -13,6 +13,7 @@ use HiEvents\Repository\Eloquent\AccountStripePlatformRepository;
 use HiEvents\Repository\Eloquent\AccountUserRepository;
 use HiEvents\Repository\Eloquent\AccountVatSettingRepository;
 use HiEvents\Repository\Eloquent\AssistantUsageRepository;
+use HiEvents\Repository\Eloquent\PlatformSettingRepository;
 use HiEvents\Repository\Eloquent\AffiliateRepository;
 use HiEvents\Repository\Eloquent\AttendeeCheckInRepository;
 use HiEvents\Repository\Eloquent\AttendeeRepository;
@@ -70,6 +71,7 @@ use HiEvents\Repository\Interfaces\AccountStripePlatformRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountUserRepositoryInterface;
 use HiEvents\Repository\Interfaces\AccountVatSettingRepositoryInterface;
 use HiEvents\Repository\Interfaces\AssistantUsageRepositoryInterface;
+use HiEvents\Repository\Interfaces\PlatformSettingRepositoryInterface;
 use HiEvents\Repository\Interfaces\AffiliateRepositoryInterface;
 use HiEvents\Repository\Interfaces\AttendeeCheckInRepositoryInterface;
 use HiEvents\Repository\Interfaces\AttendeeRepositoryInterface;
@@ -180,6 +182,7 @@ class RepositoryServiceProvider extends ServiceProvider
         AccountStripePlatformRepositoryInterface::class => AccountStripePlatformRepository::class,
         AccountVatSettingRepositoryInterface::class => AccountVatSettingRepository::class,
         AssistantUsageRepositoryInterface::class => AssistantUsageRepository::class,
+        PlatformSettingRepositoryInterface::class => PlatformSettingRepository::class,
         TicketLookupTokenRepositoryInterface::class => TicketLookupTokenRepository::class,
         AccountMessagingTierRepositoryInterface::class => AccountMessagingTierRepository::class,
         WaitlistEntryRepositoryInterface::class => WaitlistEntryRepository::class,

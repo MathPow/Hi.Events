@@ -14,6 +14,7 @@ use Anthropic\Core\Exceptions\PermissionDeniedException;
 use Anthropic\Core\Exceptions\RateLimitException;
 use Anthropic\Lib\Streaming\MessageAccumulator;
 use HiEvents\Services\Domain\Assistant\AssistantInstructions;
+use HiEvents\Services\Domain\Assistant\AssistantModelService;
 use HiEvents\Services\Domain\Assistant\AssistantUsageService;
 use HiEvents\Services\Infrastructure\Anthropic\AnthropicClientFactory;
 use Illuminate\Config\Repository;
@@ -40,6 +41,7 @@ class AssistantTurnHandler
         private readonly AnthropicClientFactory $clientFactory,
         private readonly AssistantInstructions  $instructions,
         private readonly AssistantUsageService  $usageService,
+        private readonly AssistantModelService  $modelService,
         private readonly Repository             $config,
         private readonly LoggerInterface        $logger,
     )
@@ -64,18 +66,24 @@ class AssistantTurnHandler
         $recorded = false;
 
         try {
-            $stream = $this->clientFactory->create()->beta->messages->createStream(
-                maxTokens: self::MAX_TOKENS,
-                messages: $messages,
-                model: $this->model(),
-                cacheControl: ['type' => 'ephemeral'],
-                fallbacks: 'default',
-                outputConfig: ['effort' => $this->effort()],
-                system: $this->instructions->system(),
-                thinking: ['type' => 'adaptive', 'display' => 'summarized'],
-                tools: $this->instructions->tools(),
-                betas: ['server-side-fallback-2026-07-01'],
-            );
+            $model = $this->model();
+            $request = [
+                'maxTokens' => self::MAX_TOKENS,
+                'messages' => $messages,
+                'model' => $model,
+                'cacheControl' => ['type' => 'ephemeral'],
+                'outputConfig' => ['effort' => $this->effort()],
+                'system' => $this->instructions->system(),
+                'thinking' => ['type' => 'adaptive', 'display' => 'summarized'],
+                'tools' => $this->instructions->tools(),
+            ];
+            // Un refus passe a un autre modele quand celui-ci le permet (pas Haiku).
+            if ($this->modelService->supportsFallback($model)) {
+                $request['fallbacks'] = 'default';
+                $request['betas'] = ['server-side-fallback-2026-07-01'];
+            }
+
+            $stream = $this->clientFactory->create()->beta->messages->createStream(...$request);
 
             try {
                 foreach ($stream as $event) {
@@ -126,7 +134,7 @@ class AssistantTurnHandler
 
     public function model(): string
     {
-        return (string)$this->config->get('services.anthropic.assistant_model') ?: 'claude-sonnet-5-5';
+        return $this->modelService->current();
     }
 
     private function effort(): string

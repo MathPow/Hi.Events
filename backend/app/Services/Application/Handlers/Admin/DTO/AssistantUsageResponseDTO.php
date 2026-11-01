@@ -10,6 +10,8 @@ class AssistantUsageResponseDTO extends BaseDataObject
         public readonly ?int   $days,
         public readonly string $since,
         public readonly string $model,
+        public readonly string $default_model,
+        public readonly array  $models,
         public readonly int    $daily_limit,
         public readonly array  $totals,
         public readonly array  $daily,

@@ -224,6 +224,7 @@ use HiEvents\Http\Actions\Users\UpdateMeAction;
 use HiEvents\Http\Actions\Users\UpdateUserAction;
 use HiEvents\Http\Actions\Admin\Accounts\AssignConfigurationAction;
 use HiEvents\Http\Actions\Admin\Assistant\GetAssistantUsageAction;
+use HiEvents\Http\Actions\Admin\Assistant\UpdateAssistantModelAction;
 use HiEvents\Http\Actions\Admin\Accounts\GetAccountAction as GetAdminAccountAction;
 use HiEvents\Http\Actions\Admin\Accounts\GetAllAccountsAction as GetAllAdminAccountsAction;
 use HiEvents\Http\Actions\Admin\Accounts\UpdateAccountVatSettingAction as UpdateAdminAccountVatSettingAction;
@@ -562,6 +563,7 @@ $router->prefix('/admin')->middleware(['auth:api'])->group(
         $router->get('/dashboard', GetAdminDashboardDataAction::class);
         $router->get('/platform-revenue', GetPlatformRevenueAction::class);
         $router->get('/assistant-usage', GetAssistantUsageAction::class);
+        $router->put('/assistant-model', UpdateAssistantModelAction::class);
         $router->get('/attribution/stats', GetUtmAttributionStatsAction::class);
         $router->get('/accounts', GetAllAdminAccountsAction::class);
         $router->get('/accounts/{account_id}', GetAdminAccountAction::class);

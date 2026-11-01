@@ -209,6 +209,10 @@ msgstr "{gross} brut"
 msgid "{hours} hours, {minutes} minutes, and {seconds} seconds"
 msgstr "{hours} heures, {minutes} minutes, et {seconds} secondes"
 
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:69
+msgid "{input} in · {output} out"
+msgstr "{input} en entrée · {output} en sortie"
+
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:120
 msgid "{itemCount, plural, one {# ticket} other {# tickets}}"
 msgstr "{itemCount, plural, one {# billet} other {# billets}}"
@@ -330,6 +334,10 @@ msgstr "<0>Les webhooks notifient instantanément les services externes lorsqu'u
 #: src/components/common/PlatformFeesSettings/index.tsx:196
 msgid "≈ {0} at current rate"
 msgstr "≈ {0} au taux actuel"
+
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:71
+msgid "≈ {estimate} for this period"
+msgstr "≈ {estimate} pour cette période"
 
 #: src/components/routes/event/GettingStarted/index.tsx:140
 msgid "⚡️ Set up your event"
@@ -1687,6 +1695,10 @@ msgstr "Niveau attribué"
 msgid "Assistant"
 msgstr "Assistant"
 
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:41
+msgid "Assistant model"
+msgstr "Modèle de l'assistant"
+
 #: src/components/routes/admin/AssistantUsage/index.tsx:61
 msgid "Assistant usage"
 msgstr "Utilisation de l'assistant"
@@ -2122,18 +2134,6 @@ msgstr "Gras, italique, lien et liste seulement. Aussi modifiable dans Ma page."
 #: src/components/routes/event/TicketDesigner/index.tsx
 msgid "Borders, highlights and QR code"
 msgstr "Bordures, éléments mis en valeur et code QR"
-
-#: src/components/common/Assistant/Answer.tsx
-msgid "Give up"
-msgstr "Abandonner"
-
-#: src/components/common/Assistant/Answer.tsx
-msgid "The ticketing isn't answering right now (it may be restarting). Nothing has changed yet."
-msgstr "La billetterie ne répond pas pour le moment (elle redémarre peut-être). Rien n’a encore changé."
-
-#: src/components/routes/event/TicketDesigner/index.tsx
-msgid "The top of the ticket"
-msgstr "Le haut du billet"
 
 #: src/components/routes/event/TicketDesigner/index.tsx:112
 msgid "Brand your tickets with a custom logo, colors, and footer message."
@@ -3376,6 +3376,10 @@ msgstr "Coût par jour"
 msgid "Cost shared between the deposits"
 msgstr "Coût réparti entre les dépôts"
 
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:34
+msgid "Could not change the model"
+msgstr "Impossible de changer le modèle"
+
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:38
 msgid "Could not create the token. Please try again."
 msgstr "Impossible de créer le jeton. Veuillez réessayer."
@@ -3686,6 +3690,10 @@ msgstr "Le libellé CTA est requis"
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:126
 msgid "Currency"
 msgstr "Devise"
+
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:66
+msgid "Current"
+msgstr "Actuel"
 
 #: src/components/routes/profile/ManageProfile/index.tsx:229
 msgid "Current Password"
@@ -5874,6 +5882,10 @@ msgstr "Pour tous les courriels de cet événement."
 msgid "For each ticket"
 msgstr "Pour chaque billet"
 
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:44
+msgid "For every account, from their next message. Changing the model empties the prompt cache: the first calls cost a little more. Prices in US dollars per million tokens."
+msgstr "Pour tous les comptes, dès leur prochain message. Changer de modèle vide le cache des requêtes : les premiers appels coûtent un peu plus. Prix en dollars américains par million de jetons."
+
 #: src/components/forms/QuestionForm/index.tsx:225
 msgid "For health or emergency information: the answers are erased 30 days after the event."
 msgstr "Pour les informations de santé ou d'urgence : les réponses sont effacées 30 jours après l'événement."
@@ -6043,6 +6055,10 @@ msgstr "GitHub"
 #: src/components/routes/event/Settings/Sections/BibNumberSettings/index.tsx:75
 msgid "Give a ticket option its first number and each confirmed attendee of that option gets the next one. It shows on their ticket, in the attendee list and at check-in. Leave empty for no bibs."
 msgstr "Donnez un premier numéro à une option de billet : chaque participant confirmé de cette option reçoit le suivant. Il s'affiche sur son billet, dans la liste des participants et à l'enregistrement. Laissez vide pour ne pas avoir de dossards."
+
+#: src/components/common/Assistant/Answer.tsx
+msgid "Give up"
+msgstr "Abandonner"
 
 #: src/components/modals/CreateEventModal/index.tsx:77
 msgid "Give your event a name"
@@ -7568,6 +7584,10 @@ msgstr "Mobile"
 #: src/components/layouts/AuthLayout/index.tsx:18
 msgid "Mobile scanner with offline support and real-time tracking"
 msgstr "Scanner mobile avec support hors ligne et suivi en temps réel"
+
+#: src/components/routes/admin/AssistantUsage/ModelPicker.tsx:33
+msgid "Model changed"
+msgstr "Modèle changé"
 
 #: src/components/routes/organizer/Documents/index.tsx:194
 msgid "modified on {modified}"
@@ -12783,6 +12803,10 @@ msgstr "Le test n'a pas pu être envoyé. Réessayez."
 msgid "The text of the button under the tickets"
 msgstr "Le texte du bouton sous les billets"
 
+#: src/components/common/Assistant/Answer.tsx
+msgid "The ticketing isn't answering right now (it may be restarting). Nothing has changed yet."
+msgstr "La billetterie ne répond pas pour le moment (elle redémarre peut-être). Rien n’a encore changé."
+
 #: src/components/common/Assistant/Answer.tsx:54
 msgid "The ticketing refused:"
 msgstr "La billetterie a refusé :"
@@ -12791,6 +12815,10 @@ msgstr "La billetterie a refusé :"
 #: src/components/routes/organizer/Settings/Sections/SeoSettings/index.tsx:64
 msgid "The title of the event that will be displayed in search engine results and when sharing on social media. By default, the event title will be used"
 msgstr "Le titre de l'événement qui sera affiché dans les résultats des moteurs de recherche et lors du partage sur les réseaux sociaux. Par défaut, le titre de l'événement sera utilisé"
+
+#: src/components/routes/event/TicketDesigner/index.tsx
+msgid "The top of the ticket"
+msgstr "Le haut du billet"
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/VatSettings/VatSettingsForm.tsx:87
 msgid "The VAT number could not be validated. Please check the number and try again."
