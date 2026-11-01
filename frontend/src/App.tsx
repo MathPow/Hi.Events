@@ -87,6 +87,10 @@ export const App: FC<
                     fontFamily: "Allotrope, Arial, sans-serif",
                     headings: {fontFamily: "FatFrank, 'Arial Black', sans-serif", fontWeight: "400"},
                     primaryShade: 8,
+                    // Every popup in the middle of the screen, not near the top.
+                    components: {
+                        Modal: {defaultProps: {centered: true}},
+                    },
                 }}
             >
                 <HelmetProvider context={props.helmetContext}>

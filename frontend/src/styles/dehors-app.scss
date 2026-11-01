@@ -607,6 +607,14 @@ body.dehors-app {
     }
   }
 
+  // A popup's button keeps its own width, like on the pages, even when asked for the full width:
+  // at the end of its line, under the form.
+  .mantine-Modal-content .mantine-Button-root[data-block]#{$hors-apercu} {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline-start: auto;
+  }
+
   // Tables
   .mantine-Table-table {
     --table-border-color: var(--dehors-trait);

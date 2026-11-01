@@ -82,6 +82,12 @@ function createCheckoutTheme(accentColor: string, mode: 'light' | 'dark'): Manti
         },
         primaryShade: mode === 'dark' ? 6 : 7,
         components: {
+            // Popups in the middle of the screen, like the rest of the app (App.tsx).
+            Modal: {
+                defaultProps: {
+                    centered: true,
+                },
+            },
             Button: {
                 defaultProps: {
                     color: 'primary',
