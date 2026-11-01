@@ -95,7 +95,8 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         }
 
         if (!empty($params->filter_fields)) {
-            $this->applyFilterFields($params, OrderDomainObject::getAllowedFilterFields());
+            // Joined with events, which has a status too: the filters name the orders' columns.
+            $this->applyFilterFields($params, OrderDomainObject::getAllowedFilterFields(), 'orders');
         }
 
         $this->model = $this->model
