@@ -3,12 +3,12 @@ import {Modal} from "../../common/Modal";
 import {useOfferWaitlistEntry} from "../../../mutations/useOfferWaitlistEntry.ts";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {t} from "@lingui/macro";
-import {Anchor, Badge, NumberInput, Paper, Table, Text} from "@mantine/core";
-import {IconSend} from "@tabler/icons-react";
+import {Anchor, Badge, NumberInput, Table, Text} from "@mantine/core";
+import {IconBolt, IconSend} from "@tabler/icons-react";
 import {NavLink} from "react-router";
 import {Button} from "../../common/Button";
 import {useState} from "react";
-import {BouncingEmoji} from "../../common/BouncingEmoji";
+import classes from "./OfferWaitlistModal.module.scss";
 
 interface OfferWaitlistModalProps extends GenericModalProps {
     eventId: IdParam;
@@ -81,19 +81,17 @@ export const OfferWaitlistModal = ({onClose, eventId, eventSettings, stats}: Off
                 onClose={onClose}
                 heading={t`Offer Tickets`}
             >
-                <div style={{textAlign: 'center', padding: '20px 0 10px'}}>
-                    <BouncingEmoji emoji="⚡"/>
-                    <Text size="lg" fw={600} mb="xs">
-                        {t`Auto-offer is enabled`}
-                    </Text>
-                    <Text size="sm" c="dimmed" mb="md" maw={380} mx="auto">
+                <div className={classes.auto}>
+                    <span className={classes.pastille} aria-hidden><IconBolt size={24} stroke={2}/></span>
+                    <strong className={classes.autoTitle}>{t`Auto-offer is enabled`}</strong>
+                    <p className={classes.autoText}>
                         {t`Tickets are automatically offered to waitlisted customers when capacity becomes available.`}
                         {!!timeoutHours && ' ' + t`Offers expire after ${timeoutHours} hours.`}
-                    </Text>
+                    </p>
                     <Anchor
                         component={NavLink}
                         to={`/manage/event/${eventId}/settings#waitlist-settings`}
-                        size="xs"
+                        className={classes.settingsLink}
                     >
                         {t`Change waitlist settings`}
                     </Anchor>
@@ -101,10 +99,10 @@ export const OfferWaitlistModal = ({onClose, eventId, eventSettings, stats}: Off
 
                 {productsWithWaiting.length > 0 && (
                     <>
-                        <Text size="sm" fw={500} mb="xs">{t`Manual offer`}</Text>
-                        <Text size="xs" c="dimmed" mb="sm">
+                        <h3 className={classes.sectionTitle}>{t`Manual offer`}</h3>
+                        <p className={classes.sectionText}>
                             {t`You can still manually offer tickets if needed.`}
-                        </Text>
+                        </p>
                         <ProductOfferTable
                             products={productsWithWaiting}
                             quantities={quantities}
@@ -125,10 +123,10 @@ export const OfferWaitlistModal = ({onClose, eventId, eventSettings, stats}: Off
             onClose={onClose}
             heading={t`Offer Tickets`}
         >
-            <Text size="sm" c="dimmed" mb="xs">
+            <p className={classes.sectionText}>
                 {t`Each person will receive an email with a reserved spot to complete their purchase.`}
                 {!!timeoutHours && ' ' + t`Offers expire after ${timeoutHours} hours.`}
-            </Text>
+            </p>
 
             {productsWithWaiting.length === 0 ? (
                 <Text c="dimmed" ta="center" py="xl">{t`No products have waiting entries`}</Text>
@@ -154,8 +152,8 @@ const ProductOfferTable = ({products, quantities, setQuantities, onOffer, loadin
     loadingProductId: number | null;
     isBusy: boolean;
 }) => (
-    <Paper withBorder radius="md" style={{overflow: 'hidden'}}>
-        <Table verticalSpacing="sm" horizontalSpacing="md">
+    <div className={classes.tableCard}>
+        <Table className={classes.table} verticalSpacing="sm" horizontalSpacing="md">
             <Table.Thead>
                 <Table.Tr>
                     <Table.Th>{t`Product`}</Table.Th>
@@ -177,7 +175,7 @@ const ProductOfferTable = ({products, quantities, setQuantities, onOffer, loadin
                             style={noCapacity ? {opacity: 0.5} : undefined}
                         >
                             <Table.Td>
-                                <Text size="sm" fw={500}>{product.product_title}</Text>
+                                <Text className={classes.productTitle}>{product.product_title}</Text>
                             </Table.Td>
                             <Table.Td style={{textAlign: 'center'}}>
                                 {product.waiting}
@@ -212,7 +210,7 @@ const ProductOfferTable = ({products, quantities, setQuantities, onOffer, loadin
                                 {!noCapacity && (
                                     <Button
                                         size="xs"
-                                        variant="light"
+                                        className={classes.offerButton}
                                         leftSection={<IconSend size={14}/>}
                                         onClick={() => onOffer(product)}
                                         disabled={isBusy && !isRowLoading}
@@ -227,5 +225,5 @@ const ProductOfferTable = ({products, quantities, setQuantities, onOffer, loadin
                 })}
             </Table.Tbody>
         </Table>
-    </Paper>
+    </div>
 );

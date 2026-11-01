@@ -3,42 +3,46 @@ import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {useDisclosure} from "@mantine/hooks";
 import {MessageRecipientsModal} from "../../modals/MessageRecipientsModal";
 import {Pagination} from "../../common/Pagination";
-import {ActionIcon, Avatar, Badge, Button, CloseButton, Loader, TextInput, Tooltip} from "@mantine/core";
-import {IconArrowLeft, IconClock, IconMail, IconSearch, IconSend, IconX} from "@tabler/icons-react";
+import {ActionIcon, Button, Tooltip, UnstyledButton} from "@mantine/core";
+import {IconArrowLeft, IconClock, IconPaperclip, IconSend, IconX} from "@tabler/icons-react";
 import {useFilterQueryParamSync} from "../../../hooks/useFilterQueryParamSync.ts";
 import {IdParam, Message, MessageType, QueryFilters} from "../../../types.ts";
 import {useGetEventMessages} from "../../../queries/useGetEventMessages.ts";
-import {MessageList, statusBadgeColor, typeLabel} from "../../common/MessageList";
+import {MessageList, messageStatus, messageTimestamp, senderName, typeLabel} from "../../common/MessageList";
 import {NoResultsSplash} from "../../common/NoResultsSplash";
 import {SendMessageModal} from "../../modals/SendMessageModal";
 import {t} from "@lingui/macro";
-import {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {dateToBrowserTz, relativeDate} from "../../../utilites/dates.ts";
 import {getInitials} from "../../../utilites/helpers.ts";
 import {useCancelMessage} from "../../../mutations/useCancelMessage.ts";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
+import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
+import {PageBody} from "../../common/PageBody";
+import {PageTitle} from "../../common/PageTitle";
+import {ToolBar} from "../../common/ToolBar";
+import {SearchBar} from "../../common/SearchBar";
+import {TableSkeleton} from "../../common/TableSkeleton";
+import {StatusTag} from "../../common/StatusTag";
 import classes from "./messages.module.scss";
 
 const MessagePreview = ({message, eventId, onBack, eventTimezone}: { message: Message; eventId: string; onBack: () => void; eventTimezone: string }) => {
     const [recipientsOpen, {open: openRecipients, close: closeRecipients}] = useDisclosure(false);
     const cancelMutation = useCancelMessage();
-    const senderName = message.sent_by_user
-        ? `${message.sent_by_user.first_name} ${message.sent_by_user.last_name}`
-        : t`Unknown`;
-    const displayTimestamp = (message.status === 'SCHEDULED' || message.status === 'CANCELLED')
-        ? (message.scheduled_at ?? message.sent_at ?? message.created_at)
-        : (message.sent_at ?? message.created_at ?? message.scheduled_at);
+    const sender = senderName(message);
+    const displayTimestamp = messageTimestamp(message);
+    const status = messageStatus(message.status);
+    const recipientsAvailable = message.status === 'SENT' || message.status === 'FAILED';
 
     const handleCancel = () => {
-        if (!window.confirm(t`Are you sure you want to cancel this scheduled message?`)) {
-            return;
-        }
-        cancelMutation.mutate({
-            eventId: eventId as IdParam,
-            messageId: message.id as IdParam,
-        }, {
-            onSuccess: () => showSuccess(t`Message cancelled`),
-            onError: () => showError(t`Failed to cancel message`),
+        confirmationDialog(t`Are you sure you want to cancel this scheduled message?`, () => {
+            cancelMutation.mutate({
+                eventId: eventId as IdParam,
+                messageId: message.id as IdParam,
+            }, {
+                onSuccess: () => showSuccess(t`Message cancelled`),
+                onError: () => showError(t`Failed to cancel message`),
+            });
         });
     };
 
@@ -48,67 +52,73 @@ const MessagePreview = ({message, eventId, onBack, eventTimezone}: { message: Me
                 <div className={classes.previewHeaderTop}>
                     <ActionIcon
                         variant="subtle"
-                        color="gray"
                         className={classes.backButton}
                         onClick={onBack}
+                        aria-label={t`Back to messages`}
                         title={t`Back to messages`}
                     >
-                        <IconArrowLeft size={18}/>
+                        <IconArrowLeft size={20}/>
                     </ActionIcon>
-                    <div className={classes.previewHeaderRight}>
-                        {message.status === 'SCHEDULED' && message.scheduled_at ? (
-                            <div className={classes.scheduledInfo} title={dateToBrowserTz(message.scheduled_at, eventTimezone)}>
-                                <IconClock size={14}/>
-                                {t`Scheduled`} {relativeDate(message.scheduled_at)}
-                            </div>
-                        ) : (
-                            <span className={classes.previewDate} title={displayTimestamp ? dateToBrowserTz(displayTimestamp, eventTimezone) : undefined}>
-                                {displayTimestamp ? relativeDate(displayTimestamp) : t`Unknown`}
-                            </span>
-                        )}
-                        <Badge size="sm" color={statusBadgeColor(message.status)} variant="outline">
-                            {message.status}
-                        </Badge>
-                        {message.status === 'SCHEDULED' && (
-                            <Button
-                                variant="light"
-                                color="red"
-                                size="compact-xs"
-                                onClick={handleCancel}
-                                loading={cancelMutation.isPending}
-                            >
-                                <IconX size={12}/> {t`Cancel`}
-                            </Button>
-                        )}
-                    </div>
+                    <StatusTag tone={status.tone}>{status.label}</StatusTag>
+                    {message.status === 'SCHEDULED' && message.scheduled_at ? (
+                        <span className={classes.previewDate} title={dateToBrowserTz(message.scheduled_at, eventTimezone)}>
+                            <IconClock size={16}/>
+                            {relativeDate(message.scheduled_at)}
+                        </span>
+                    ) : (
+                        <span className={classes.previewDate}
+                              title={displayTimestamp ? dateToBrowserTz(displayTimestamp, eventTimezone) : undefined}>
+                            {displayTimestamp ? relativeDate(displayTimestamp) : t`Unknown`}
+                        </span>
+                    )}
+                    {message.status === 'SCHEDULED' && (
+                        <Button
+                            variant="outline"
+                            className={classes.cancelButton}
+                            onClick={handleCancel}
+                            loading={cancelMutation.isPending}
+                            leftSection={<IconX size={16}/>}
+                        >
+                            {t`Cancel`}
+                        </Button>
+                    )}
                 </div>
-                <div className={classes.previewSubject}>{message.subject}</div>
+                <h2 className={classes.previewSubject}>{message.subject}</h2>
                 <div className={classes.previewMeta}>
-                    <Avatar color="grape" size={36} radius="xl">
-                        {getInitials(senderName)}
-                    </Avatar>
+                    <span className={classes.avatar} aria-hidden>{getInitials(sender)}</span>
                     <div className={classes.previewSenderInfo}>
-                        <div className={classes.previewSenderName}>{senderName}</div>
+                        <div className={classes.previewSenderName}>{sender}</div>
                         <div className={classes.previewRecipientType}>
-                            {t`To`}: {message.status === 'SENT' || message.status === 'FAILED' ? (
-                                <span className={classes.recipientLink} onClick={openRecipients} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openRecipients(); } }}>{typeLabel(message.type)}</span>
+                            {t`To`}:{' '}
+                            {recipientsAvailable ? (
+                                <UnstyledButton className={classes.recipientLink} onClick={openRecipients}>
+                                    {typeLabel(message.type)}
+                                </UnstyledButton>
                             ) : (
                                 <Tooltip label={t`Recipients are available after the message is sent`} withArrow>
-                                    <span className={classes.recipientLinkDisabled}>{typeLabel(message.type)}</span>
+                                    <span className={classes.recipientLinkDisabled} tabIndex={0}>
+                                        {typeLabel(message.type)}
+                                    </span>
                                 </Tooltip>
                             )}
                         </div>
                     </div>
                 </div>
+                {!!message.attachments?.length && (
+                    <div className={classes.attachments} aria-label={t`Attachments`}>
+                        {message.attachments.map((attachment) => (
+                            <span key={attachment.name} className={classes.attachment}>
+                                <IconPaperclip size={14}/>
+                                {attachment.name}
+                            </span>
+                        ))}
+                    </div>
+                )}
             </div>
-            <div className={classes.previewBody}>
-                <div className={classes.previewCard}>
-                    <div
-                        className={classes.previewContent}
-                        dangerouslySetInnerHTML={{__html: message.message}}
-                    />
-                </div>
-            </div>
+            <div
+                className={classes.previewContent}
+                dangerouslySetInnerHTML={{__html: message.message}}
+            />
             {recipientsOpen && (
                 <MessageRecipientsModal
                     eventId={eventId}
@@ -120,6 +130,10 @@ const MessagePreview = ({message, eventId, onBack, eventTimezone}: { message: Me
     );
 };
 
+/**
+ * The emails sent to the attendees of the event: the list on the left (search, status), the open
+ * message on the right as a cream card; on phones one at a time, the message with a back arrow.
+ */
 export const Messages = () => {
     const {eventId} = useParams();
     const {data: event} = useGetEvent(eventId);
@@ -133,6 +147,7 @@ export const Messages = () => {
     const [mobileShowPreview, setMobileShowPreview] = useState(false);
     const prevMessagesRef = useRef<Message[] | undefined>(undefined);
     const listBodyRef = useRef<HTMLDivElement>(null);
+    const previewRef = useRef<HTMLDivElement>(null);
     const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
@@ -163,6 +178,12 @@ export const Messages = () => {
     const handleSelectMessage = useCallback((message: Message) => {
         setSelectedMessage(message);
         setMobileShowPreview(true);
+        // Phones: the message replaces the list, from its top.
+        requestAnimationFrame(() => {
+            if (window.matchMedia('(max-width: 767px)').matches) {
+                previewRef.current?.scrollIntoView({block: 'start'});
+            }
+        });
     }, []);
 
     const handleBackToList = useCallback(() => {
@@ -203,150 +224,104 @@ export const Messages = () => {
             e.preventDefault();
             const nextMessage = messages[nextIndex];
             setSelectedMessage(nextMessage);
-            setMobileShowPreview(true);
 
             const listEl = listBodyRef.current;
             if (listEl) {
-                const items = listEl.querySelectorAll('[role="option"]');
+                const items = listEl.querySelectorAll<HTMLElement>('[role="option"]');
                 items[nextIndex]?.scrollIntoView({block: 'nearest'});
+                items[nextIndex]?.focus();
             }
         }
     }, [messages, selectedMessage]);
 
     const isLoading = !messages || !event;
-    const totalMessages = pagination?.total;
+    const hasSearch = !!searchParams.query;
+    const showToolbar = isLoading || hasSearch || !!messages?.length;
 
     return (
-        <>
-            <div className={`${classes.mailLayout} ${mobileShowPreview ? classes.mobilePreviewActive : ''}`}>
-                <div className={classes.listPanel}>
-                    <div className={classes.listHeader}>
-                        <div className={classes.listHeaderLeft}>
-                            <h1 className={classes.listHeading}>{t`Messages`}</h1>
-                            {!isLoading && totalMessages !== undefined && (
-                                <span className={classes.messageCount}>{totalMessages}</span>
-                            )}
-                        </div>
-                        <Button
-                            variant="filled"
-                            size="compact-sm"
-                            onClick={openSendModal}
-                            leftSection={<IconSend size={14}/>}
-                        >
-                            {t`Compose`}
-                        </Button>
-                    </div>
+        <PageBody>
+            <PageTitle
+                subheading={t`Email your attendees, now or later.`}
+                actions={(
+                    <Button leftSection={<IconSend size={20}/>} onClick={openSendModal}>
+                        {t`Compose`}
+                    </Button>
+                )}
+            >{t`Messages`}</PageTitle>
 
-                    <div className={classes.searchBar}>
-                        <TextInput
+            {showToolbar && (
+                <div className={mobileShowPreview ? classes.hiddenOnPhones : undefined}>
+                    <ToolBar searchComponent={() => (
+                        <SearchBar
                             placeholder={t`Search messages...`}
-                            leftSection={<IconSearch size={16}/>}
-                            rightSection={searchValue ? (
-                                <CloseButton size="sm" onClick={handleClearSearch}/>
-                            ) : null}
-                            size="sm"
                             value={searchValue}
                             onChange={(e) => handleSearch(e.currentTarget.value)}
+                            onClear={handleClearSearch}
                         />
-                    </div>
+                    )}/>
+                </div>
+            )}
 
-                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                    <div className={classes.listBody} ref={listBodyRef} onKeyDown={handleKeyDown}>
-                        {isLoading && (
-                            <div className={classes.loadingState}>
-                                <Loader size="sm"/>
-                            </div>
-                        )}
+            <TableSkeleton isVisible={isLoading}/>
 
-                        {!isLoading && messages.length === 0 && (
-                            <div className={classes.ghostList}>
-                                {[...Array(5)].map((_, i) => (
-                                    <div key={i} className={classes.ghostRow}>
-                                        <div className={classes.ghostAvatar}/>
-                                        <div className={classes.ghostLines}>
-                                            <div className={classes.ghostLineShort}/>
-                                            <div className={classes.ghostLineLong}/>
-                                            <div className={classes.ghostLineMed}/>
-                                        </div>
-                                    </div>
-                                ))}
-                                <div className={classes.ghostCta}>
-                                    <p>{t`Your messages will appear here`}</p>
-                                    <Button
-                                        variant="light"
-                                        size="compact-sm"
-                                        onClick={openSendModal}
-                                        leftSection={<IconSend size={14}/>}
-                                    >
-                                        {t`Compose`}
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
+            {!isLoading && messages.length === 0 && (
+                <NoResultsSplash
+                    heading={t`No messages to show`}
+                    icon="courriel"
+                    subHeading={
+                        <p>{t`Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later.`}</p>
+                    }
+                >
+                    {!hasSearch && (
+                        <Button leftSection={<IconSend size={20}/>} onClick={openSendModal}>
+                            {t`Send your first message`}
+                        </Button>
+                    )}
+                </NoResultsSplash>
+            )}
 
-                        {!isLoading && messages.length > 0 && (
+            {!isLoading && messages.length > 0 && (
+                <div className={`${classes.mailLayout} ${mobileShowPreview ? classes.mobilePreviewActive : ''}`}>
+                    <section className={classes.listPanel}>
+                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                        <div className={classes.listBody} ref={listBodyRef} onKeyDown={handleKeyDown}>
                             <MessageList
                                 messages={messages}
                                 selectedId={selectedMessage?.id}
                                 onSelect={handleSelectMessage}
                             />
+                        </div>
+
+                        {pagination && Number(pagination.last_page) > 1 && (
+                            <div className={classes.listFooter}>
+                                <Pagination
+                                    value={searchParams.pageNumber}
+                                    onChange={(value) => setSearchParam({pageNumber: value})}
+                                    total={Number(pagination.last_page)}
+                                    size="sm"
+                                    marginTop={0}
+                                />
+                            </div>
                         )}
-                    </div>
+                    </section>
 
-                    {!!messages?.length && pagination && Number(pagination.last_page) > 1 && (
-                        <div className={classes.listFooter}>
-                            <Pagination
-                                value={searchParams.pageNumber}
-                                onChange={(value) => setSearchParam({pageNumber: value})}
-                                total={Number(pagination.last_page)}
-                                size="sm"
-                                marginTop={0}
+                    <section className={classes.previewPanel} ref={previewRef}>
+                        {selectedMessage ? (
+                            <MessagePreview
+                                message={selectedMessage}
+                                eventId={eventId as string}
+                                onBack={handleBackToList}
+                                eventTimezone={event?.timezone ?? 'UTC'}
                             />
-                        </div>
-                    )}
+                        ) : (
+                            <p className={classes.previewEmpty}>{t`Select a message to view its contents`}</p>
+                        )}
+                    </section>
                 </div>
-
-                <div className={classes.previewPanel}>
-                    {selectedMessage ? (
-                        <MessagePreview
-                            message={selectedMessage}
-                            eventId={eventId as string}
-                            onBack={handleBackToList}
-                            eventTimezone={event?.timezone ?? 'UTC'}
-                        />
-                    ) : (
-                        <div className={classes.previewEmpty}>
-                            {!isLoading && messages?.length === 0 ? (
-                                <NoResultsSplash
-                                    heading={t`No messages to show`}
-                                    imageHref="/blank-slate/messages.svg"
-                                    subHeading={
-                                        <p>{t`Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later.`}</p>
-                                    }
-                                >
-                                    <Button
-                                        variant="filled"
-                                        size="sm"
-                                        onClick={openSendModal}
-                                        leftSection={<IconSend size={16}/>}
-                                        mt={8}
-                                    >
-                                        {t`Send your first message`}
-                                    </Button>
-                                </NoResultsSplash>
-                            ) : (
-                                <>
-                                    <IconMail size={48} stroke={1.2}/>
-                                    <p>{t`Select a message to view its contents`}</p>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
+            )}
 
             {sendModalOpen && <SendMessageModal messageType={MessageType.OrderOwner} onClose={closeSendModal}/>}
-        </>
+        </PageBody>
     );
 };
 

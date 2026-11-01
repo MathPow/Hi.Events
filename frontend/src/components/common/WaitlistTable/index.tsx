@@ -1,7 +1,7 @@
 import {t} from "@lingui/macro";
-import {Button, Group, Menu, Text} from "@mantine/core";
+import {ActionIcon, Menu, VisuallyHidden} from "@mantine/core";
 import {IconDotsVertical, IconEye, IconSend, IconTrash} from "@tabler/icons-react";
-import {useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {CellContext} from "@tanstack/react-table";
 import {useDisclosure} from "@mantine/hooks";
 import {IdParam, WaitlistEntry, WaitlistEntryStatus} from "../../../types.ts";
@@ -13,19 +13,36 @@ import {useOfferSpecificWaitlistEntry} from "../../../mutations/useOfferSpecific
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {TanStackTable, TanStackTableColumn} from "../TanStackTable";
 import {ManageOrderModal} from "../../modals/ManageOrderModal";
+import {StatusTag, StatusTone} from "../StatusTag";
+import {getInitials} from "../../../utilites/helpers.ts";
 import classes from './WaitlistTable.module.scss';
 
 interface WaitlistTableProps {
     eventId: IdParam;
     entries: WaitlistEntry[];
+    // Above the list (the status chips of the waitlist page).
+    toolbar?: React.ReactNode;
 }
 
-const statusLabelMap: Record<string, () => string> = {
-    [WaitlistEntryStatus.Waiting]: () => t`Waiting`,
-    [WaitlistEntryStatus.Offered]: () => t`Offered`,
-    [WaitlistEntryStatus.Purchased]: () => t`Purchased`,
-    [WaitlistEntryStatus.Cancelled]: () => t`Cancelled`,
-    [WaitlistEntryStatus.OfferExpired]: () => t`Expired`,
+// Waiting: in line; offered: their turn, the offer runs out; purchased: done.
+const statusMap: Record<string, () => { label: string, tone: StatusTone }> = {
+    [WaitlistEntryStatus.Waiting]: () => ({label: t`Waiting`, tone: 'neutral'}),
+    [WaitlistEntryStatus.Offered]: () => ({label: t`Offered`, tone: 'waiting'}),
+    [WaitlistEntryStatus.Purchased]: () => ({label: t`Purchased`, tone: 'ok'}),
+    [WaitlistEntryStatus.Cancelled]: () => ({label: t`Cancelled`, tone: 'neutral'}),
+    [WaitlistEntryStatus.OfferExpired]: () => ({label: t`Expired`, tone: 'problem'}),
+};
+
+const entryStatus = (entry: WaitlistEntry) => entry.status && statusMap[entry.status]
+    ? statusMap[entry.status]()
+    : {label: entry.status ?? '', tone: 'neutral' as StatusTone};
+
+const entryName = (entry: WaitlistEntry) => `${entry.first_name ?? ''} ${entry.last_name ?? ''}`.trim();
+
+const productLabel = (entry: WaitlistEntry) => {
+    const title = entry.product?.title || '';
+    const label = entry.product_price?.label;
+    return label ? `${title} - ${label}` : title;
 };
 
 const ActionMenu = ({entry, onOffer, onRemove, onViewOrder}: {
@@ -41,50 +58,51 @@ const ActionMenu = ({entry, onOffer, onRemove, onViewOrder}: {
     const canOffer = isWaiting || isExpired;
     const canCancel = isWaiting || isOffered;
 
+    if (!(isPurchased && entry.order_id) && !canOffer && !canCancel) {
+        return null;
+    }
+
     return (
-        <Group wrap="nowrap" gap={0} justify="flex-end">
-            <Menu shadow="md" width={200}>
-                <Menu.Target>
-                    <div className={classes.actionsMenu}>
-                        <Button size="xs" variant="transparent">
-                            <IconDotsVertical/>
-                        </Button>
-                    </div>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    <Menu.Label>{t`Actions`}</Menu.Label>
-                    {isPurchased && entry.order_id && (
-                        <Menu.Item
-                            leftSection={<IconEye size={14}/>}
-                            onClick={() => onViewOrder(entry.order_id!)}
-                        >
-                            {t`View Order`}
-                        </Menu.Item>
-                    )}
-                    {canOffer && (
-                        <Menu.Item
-                            leftSection={<IconSend size={14}/>}
-                            onClick={() => onOffer(entry.id)}
-                        >
-                            {isExpired ? t`Re-offer Spot` : t`Offer Spot`}
-                        </Menu.Item>
-                    )}
-                    {canCancel && (
-                        <Menu.Item
-                            color="red"
-                            leftSection={<IconTrash size={14}/>}
-                            onClick={() => onRemove(entry.id as number)}
-                        >
-                            {isOffered ? t`Revoke Offer` : t`Remove`}
-                        </Menu.Item>
-                    )}
-                </Menu.Dropdown>
-            </Menu>
-        </Group>
+        <Menu shadow="md" width={220} position="bottom-end">
+            <Menu.Target>
+                <ActionIcon className={classes.menuButton} variant="subtle" aria-label={t`Actions`}>
+                    <IconDotsVertical size={20}/>
+                </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+                <Menu.Label>{t`Actions`}</Menu.Label>
+                {isPurchased && entry.order_id && (
+                    <Menu.Item
+                        leftSection={<IconEye size={14}/>}
+                        onClick={() => onViewOrder(entry.order_id!)}
+                    >
+                        {t`View Order`}
+                    </Menu.Item>
+                )}
+                {canOffer && (
+                    <Menu.Item
+                        leftSection={<IconSend size={14}/>}
+                        onClick={() => onOffer(entry.id)}
+                    >
+                        {isExpired ? t`Re-offer Spot` : t`Offer Spot`}
+                    </Menu.Item>
+                )}
+                {canCancel && (
+                    <Menu.Item
+                        color="red"
+                        leftSection={<IconTrash size={14}/>}
+                        onClick={() => onRemove(entry.id as number)}
+                    >
+                        {isOffered ? t`Revoke Offer` : t`Remove`}
+                    </Menu.Item>
+                )}
+            </Menu.Dropdown>
+        </Menu>
     );
 };
 
-export const WaitlistTable = ({eventId, entries}: WaitlistTableProps) => {
+// The waitlist in line order, like the orders table; on phones each entry is a line of a cream card.
+export const WaitlistTable = ({eventId, entries, toolbar}: WaitlistTableProps) => {
     const removeMutation = useRemoveWaitlistEntry();
     const offerMutation = useOfferSpecificWaitlistEntry();
     const [isOrderModalOpen, orderModal] = useDisclosure(false);
@@ -133,15 +151,48 @@ export const WaitlistTable = ({eventId, entries}: WaitlistTableProps) => {
         );
     };
 
+    const actionMenu = (entry: WaitlistEntry) => (
+        <ActionMenu
+            entry={entry}
+            onOffer={handleOffer}
+            onRemove={handleRemove}
+            onViewOrder={handleViewOrder}
+        />
+    );
+
+    const renderMobileRow = (entry: WaitlistEntry) => {
+        const status = entryStatus(entry);
+
+        return (
+            <div className={classes.mobileEntry}>
+                <span className={classes.position}>{entry.position}</span>
+                <div className={classes.mobileHead}>
+                    <span className={classes.mobileName}>{entryName(entry)}</span>
+                    <span className={classes.mobileMeta}>{entry.email}</span>
+                </div>
+                <div className={classes.mobileMenu}>{actionMenu(entry)}</div>
+                <div className={classes.mobileFoot}>
+                    <span className={classes.mobileMeta}>
+                        {[productLabel(entry), entry.created_at && relativeDate(String(entry.created_at))]
+                            .filter(Boolean).join(' · ')}
+                    </span>
+                    <StatusTag tone={status.tone}>{status.label}</StatusTag>
+                </div>
+            </div>
+        );
+    };
+
     const columns = useMemo<TanStackTableColumn<WaitlistEntry>[]>(
         () => [
             {
                 id: 'position',
                 header: '#',
                 enableHiding: false,
-                cell: (info: CellContext<WaitlistEntry, unknown>) => info.row.original.position,
+                cell: (info: CellContext<WaitlistEntry, unknown>) => (
+                    <span className={classes.position}>{info.row.original.position}</span>
+                ),
                 meta: {
-                    headerStyle: {width: 60},
+                    headerStyle: {width: 64},
                 },
             },
             {
@@ -151,45 +202,34 @@ export const WaitlistTable = ({eventId, entries}: WaitlistTableProps) => {
                 cell: (info: CellContext<WaitlistEntry, unknown>) => {
                     const entry = info.row.original;
                     return (
-                        <div className={classes.contactDetails}>
-                            <Text className={classes.contactName}>
-                                {entry.first_name} {entry.last_name}
-                            </Text>
-                            <Text className={classes.contactEmail}>
-                                {entry.email}
-                            </Text>
+                        <div className={classes.contact}>
+                            <span className={classes.avatar} aria-hidden>{getInitials(entryName(entry) || '?')}</span>
+                            <div className={classes.contactDetails}>
+                                <span className={classes.contactName}>{entryName(entry)}</span>
+                                <span className={classes.contactEmail}>{entry.email}</span>
+                            </div>
                         </div>
                     );
                 },
                 meta: {
-                    headerStyle: {minWidth: 220},
+                    headerStyle: {minWidth: 240},
                 },
             },
             {
                 id: 'product',
                 header: t`Product`,
                 enableHiding: true,
-                cell: (info: CellContext<WaitlistEntry, unknown>) => {
-                    const entry = info.row.original;
-                    const title = entry.product?.title || '';
-                    const label = entry.product_price?.label;
-                    return label ? `${title} - ${label}` : title;
-                }
+                cell: (info: CellContext<WaitlistEntry, unknown>) => (
+                    <span className={classes.product}>{productLabel(info.row.original)}</span>
+                ),
             },
             {
                 id: 'status',
                 header: t`Status`,
                 enableHiding: true,
                 cell: (info: CellContext<WaitlistEntry, unknown>) => {
-                    const entry = info.row.original;
-                    return (
-                        <div className={classes.statusBadge} data-status={entry.status}>
-                            {entry.status ? statusLabelMap[entry.status]() : ''}
-                        </div>
-                    );
-                },
-                meta: {
-                    headerStyle: {minWidth: 130},
+                    const status = entryStatus(info.row.original);
+                    return <StatusTag tone={status.tone}>{status.label}</StatusTag>;
                 },
             },
             {
@@ -199,29 +239,21 @@ export const WaitlistTable = ({eventId, entries}: WaitlistTableProps) => {
                 cell: (info: CellContext<WaitlistEntry, unknown>) => {
                     const entry = info.row.original;
                     return (
-                        <Text size="sm" c="dimmed">
+                        <span className={classes.joined}>
                             {entry.created_at ? relativeDate(String(entry.created_at)) : ''}
-                        </Text>
+                        </span>
                     );
                 },
             },
             {
                 id: 'actions',
-                header: t`Actions`,
+                header: () => <VisuallyHidden>{t`Actions`}</VisuallyHidden>,
                 enableHiding: false,
-                cell: (info: CellContext<WaitlistEntry, unknown>) => {
-                    const entry = info.row.original;
-                    return (
-                        <div className={classes.actionsMenu}>
-                            <ActionMenu
-                                entry={entry}
-                                onOffer={handleOffer}
-                                onRemove={handleRemove}
-                                onViewOrder={handleViewOrder}
-                            />
-                        </div>
-                    );
-                },
+                cell: (info: CellContext<WaitlistEntry, unknown>) => (
+                    <div className={classes.actionsMenu}>
+                        {actionMenu(info.row.original)}
+                    </div>
+                ),
                 meta: {
                     sticky: 'right',
                 },
@@ -232,15 +264,18 @@ export const WaitlistTable = ({eventId, entries}: WaitlistTableProps) => {
 
     if (entries.length === 0) {
         return (
-            <NoResultsSplash
-                heading={t`No waitlist entries`}
-                imageHref={'/blank-slate/waitlist.svg'}
-                subHeading={(
-                    <p>
-                        {t`Entries will appear here when customers join the waitlist for sold out products.`}
-                    </p>
-                )}
-            />
+            <>
+                {toolbar && <div className={classes.emptyToolbar}>{toolbar}</div>}
+                <NoResultsSplash
+                    heading={t`No waitlist entries`}
+                    icon="horloge"
+                    subHeading={(
+                        <p>
+                            {t`Entries will appear here when customers join the waitlist for sold out products.`}
+                        </p>
+                    )}
+                />
+            </>
         );
     }
 
@@ -249,6 +284,8 @@ export const WaitlistTable = ({eventId, entries}: WaitlistTableProps) => {
             <TanStackTable
                 data={entries}
                 columns={columns}
+                renderMobileRow={renderMobileRow}
+                toolbarStart={toolbar}
             />
             {(selectedOrderId && isOrderModalOpen) && (
                 <ManageOrderModal

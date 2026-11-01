@@ -235,6 +235,8 @@ const EventLayout = () => {
                 <TopBarButton
                     onClick={handleStatusToggle}
                     size="sm"
+                    className={classes.statusButton}
+                    title={event?.status === 'DRAFT' ? t`Draft` + ' ' + t`- Click to Publish` : t`Live` + ' ' + t`- Click to Unpublish`}
                     leftSection={event?.status === 'DRAFT' ? <IconEyeOff size={16}/> : <IconEye size={16}/>}
                     rightSection={<IconChevronRight size={14}/>}
                 >
@@ -257,6 +259,7 @@ const EventLayout = () => {
                         leftSection={<IconExternalLink size={20} stroke={2}/>}
                         className={classes.previewButton}
                         title={t`Preview Event page`}
+                        aria-label={t`Preview Event page`}
                     >
                         <span className={classes.longLabel}>{t`Preview Event page`}</span>
                         <span className={classes.shortLabel}>{t`Preview`}</span>
@@ -265,6 +268,8 @@ const EventLayout = () => {
                         onClick={open}
                         leftSection={<PublicIcon name="partager" size={20}/>}
                         className={classes.shareButton}
+                        title={t`Share Event`}
+                        aria-label={t`Share Event`}
                     >
                         <span className={classes.longLabel}>{t`Share Event`}</span>
                         <span className={classes.shortLabel}>{t`Share`}</span>

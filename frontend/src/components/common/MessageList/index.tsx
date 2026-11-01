@@ -1,10 +1,10 @@
 import {IdParam, Message, MessageType} from "../../../types.ts";
 import classes from './MessageList.module.scss';
 import {relativeDate} from "../../../utilites/dates.ts";
-import {Avatar, Badge} from "@mantine/core";
 import {getInitials} from "../../../utilites/helpers.ts";
 import {t} from "@lingui/macro";
 import {IconPaperclip} from "@tabler/icons-react";
+import {StatusTag, StatusTone} from "../StatusTag";
 
 interface MessageListProps {
     messages: Message[];
@@ -12,14 +12,23 @@ interface MessageListProps {
     onSelect: (message: Message) => void;
 }
 
-export const statusBadgeColor = (status?: string) => {
+// Sent: green; on its way or waiting for its time: yellow; failed: red; cancelled: neutral.
+export const messageStatus = (status?: Message['status']): { label: string, tone: StatusTone } => {
     switch (status) {
-        case 'SENT': return 'green';
-        case 'PROCESSING': return 'orange';
-        case 'SCHEDULED': return 'blue';
-        case 'CANCELLED': return 'gray';
-        case 'FAILED': return 'red';
-        default: return 'orange';
+        case 'SENT':
+            return {label: t({message: 'Sent', context: 'message status'}), tone: 'ok'};
+        case 'PROCESSING':
+            return {label: t({message: 'Sending', context: 'message status'}), tone: 'waiting'};
+        case 'SCHEDULED':
+            return {label: t({message: 'Scheduled', context: 'message status'}), tone: 'waiting'};
+        case 'PENDING_REVIEW':
+            return {label: t`Pending Review`, tone: 'waiting'};
+        case 'CANCELLED':
+            return {label: t({message: 'Cancelled', context: 'message status'}), tone: 'neutral'};
+        case 'FAILED':
+            return {label: t({message: 'Failed', context: 'message status'}), tone: 'problem'};
+        default:
+            return {label: String(status ?? ''), tone: 'neutral'};
     }
 };
 
@@ -34,24 +43,31 @@ export const typeLabel = (type: MessageType) => {
     return map[type] || type;
 };
 
+export const senderName = (message: Message) => message.sent_by_user
+    ? `${message.sent_by_user.first_name} ${message.sent_by_user.last_name}`
+    : t`Unknown`;
+
+// Scheduled and cancelled messages: when they were (or would have been) sent.
+export const messageTimestamp = (message: Message) => (message.status === 'SCHEDULED' || message.status === 'CANCELLED')
+    ? (message.scheduled_at ?? message.sent_at ?? message.created_at)
+    : (message.sent_at ?? message.created_at ?? message.scheduled_at);
+
 const MessageItem = ({message, isSelected, onSelect}: {
     message: Message;
     isSelected: boolean;
     onSelect: () => void;
 }) => {
     const isCancelled = message.status === 'CANCELLED';
-    const senderName = message.sent_by_user
-        ? `${message.sent_by_user.first_name} ${message.sent_by_user.last_name}`
-        : t`Unknown`;
-
-    const displayTimestamp = (message.status === 'SCHEDULED' || message.status === 'CANCELLED')
-        ? (message.scheduled_at ?? message.sent_at ?? message.created_at)
-        : (message.sent_at ?? message.created_at ?? message.scheduled_at);
+    const sender = senderName(message);
+    const displayTimestamp = messageTimestamp(message);
     const displayDate = displayTimestamp ? relativeDate(displayTimestamp) : t`Unknown`;
+    const status = messageStatus(message.status);
 
     return (
         <div
-            className={`${classes.messageItem} ${isSelected ? classes.selected : ''} ${isCancelled ? classes.cancelled : ''}`}
+            className={classes.messageItem}
+            data-selected={isSelected || undefined}
+            data-cancelled={isCancelled || undefined}
             onClick={onSelect}
             role="option"
             aria-selected={isSelected}
@@ -63,24 +79,19 @@ const MessageItem = ({message, isSelected, onSelect}: {
                 }
             }}
         >
-            <Avatar color="grape" size={36} radius="xl">
-                {getInitials(senderName)}
-            </Avatar>
+            <span className={classes.avatar} aria-hidden>{getInitials(sender)}</span>
             <div className={classes.itemContent}>
                 <div className={classes.itemTopRow}>
-                    <span className={classes.sender}>{senderName}</span>
+                    <span className={classes.subject}>{message.subject}</span>
                     <span className={classes.date}>{displayDate}</span>
                 </div>
-                <div className={classes.subject}>{message.subject}</div>
                 <div className={classes.preview}>{message.message_preview}</div>
                 <div className={classes.itemBottomRow}>
-                    <Badge size="xs" color={statusBadgeColor(message.status)} variant="outline">
-                        {message.status}
-                    </Badge>
+                    <StatusTag tone={status.tone} className={classes.status}>{status.label}</StatusTag>
                     <span className={classes.typeLabel}>{typeLabel(message.type)}</span>
                     {!!message.attachments?.length && (
                         <span className={classes.attachmentCount} title={message.attachments.map(a => a.name).join(', ')}>
-                            <IconPaperclip size={12}/>
+                            <IconPaperclip size={14}/>
                             {message.attachments.length}
                         </span>
                     )}
@@ -90,9 +101,10 @@ const MessageItem = ({message, isSelected, onSelect}: {
     );
 };
 
+// The messages of an event, newest first: subject, start of the text, status and recipients.
 export const MessageList = ({messages, selectedId, onSelect}: MessageListProps) => {
     return (
-        <div className={classes.listContainer} role="listbox">
+        <div className={classes.listContainer} role="listbox" aria-label={t`Messages`}>
             {messages.map((message) => (
                 <MessageItem
                     key={message.id}

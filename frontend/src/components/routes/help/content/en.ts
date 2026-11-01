@@ -159,7 +159,7 @@ const checkIn: HelpGuide = {
             ],
         },
         {h2: 'Give your volunteers access'},
-        {p: "Click **Copy Check-In URL** and send the link to your team. Your volunteers don't need an account: they open the link on their phone, and enter the PIN if you set one. To open it yourself, click **Open Check-In Page**."},
+        {p: "On the list's card, click **Copy link** and send it to your team. Your volunteers don't need an account: they open the link on their phone, and enter the PIN if you set one. To open it yourself, click the arrow next to it (**Open check-in page**)."},
         {h2: 'At the door'},
         {
             ul: [

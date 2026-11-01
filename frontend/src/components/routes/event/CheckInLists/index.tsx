@@ -30,6 +30,11 @@ const CheckInLists = () => {
         <PageBody>
             <PageTitle
                 subheading={t`Set up check-in lists for different entrances, sessions, or days.`}
+                actions={(
+                    <Button leftSection={<IconPlus size={20}/>} onClick={openCreateModal}>
+                        {t`Create Check-In List`}
+                    </Button>
+                )}
             >
                 {t`Check-In Lists`}
             </PageTitle>
@@ -41,13 +46,7 @@ const CheckInLists = () => {
                     searchParams={searchParams}
                     pagination={pagination}
                 />
-            )}>
-                <Button
-                    leftSection={<IconPlus/>}
-                    color={'green'}
-                    onClick={openCreateModal}>{t`Create Check-In List`}
-                </Button>
-            </ToolBar>
+            )}/>
 
             <TableSkeleton isVisible={!checkInLists}/>
 

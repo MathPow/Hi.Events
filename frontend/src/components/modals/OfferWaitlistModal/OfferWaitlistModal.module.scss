@@ -1,0 +1,87 @@
+@use "../../../styles/admin-ui" as ui;
+
+// Auto-offer on: a pastille, the explanation and the link to the settings.
+.auto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0 1.25rem;
+  color: ui.$ink;
+  text-align: center;
+}
+
+.pastille {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0.25rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+}
+
+.autoTitle {
+  font-size: 1.125rem;
+}
+
+.autoText {
+  max-width: 24rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.settingsLink {
+  @include ui.accent-link;
+}
+
+.sectionTitle {
+  margin: 0 0 0.25rem;
+  font-family: inherit !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+.sectionText {
+  margin: 0 0 0.875rem;
+  color: ui.$ink;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+// The products like the tables of the back office, in a cream card.
+.tableCard {
+  @include ui.card(0.5rem 0.75rem);
+  border-radius: 1.25rem;
+  overflow-x: auto;
+}
+
+.table {
+  --table-border-color: #{ui.$separator};
+  color: ui.$ink;
+
+  thead tr {
+    border: none !important;
+  }
+
+  th {
+    @include ui.table-head-cell;
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+}
+
+.productTitle {
+  font-size: 0.9375rem !important;
+  font-weight: 700 !important;
+}
+
+.offerButton {
+  @include ui.primary-button;
+  height: 2.25rem !important;
+  padding: 0 0.875rem !important;
+  font-size: 0.875rem !important;
+}

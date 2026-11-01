@@ -1,31 +1,28 @@
-import {ActionIcon, Anchor, Avatar, Button, Group, Popover, Tooltip} from '@mantine/core';
+import {ActionIcon, Anchor, Button, Popover, Tooltip, UnstyledButton, VisuallyHidden} from '@mantine/core';
 import {Attendee, IdParam, MessageType} from "../../../types.ts";
 import {
     IconCheck,
-    IconClock,
-    IconClipboardList,
     IconCopy,
+    IconDotsVertical,
     IconMailForward,
     IconNote,
     IconPlus,
     IconSend,
     IconTrash,
+    IconUserCheck,
     IconUserCog,
-    IconX
 } from "@tabler/icons-react";
 import {getInitials, getProductFromEvent} from "../../../utilites/helpers.ts";
 import {useClipboard, useDisclosure} from "@mantine/hooks";
 import {SendMessageModal} from "../../modals/SendMessageModal";
-import {useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {NoResultsSplash} from "../NoResultsSplash";
 import {useParams} from "react-router";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {useGetEventCheckInLists} from "../../../queries/useGetCheckInLists.ts";
-import Truncate from "../Truncate";
-import {notifications} from "@mantine/notifications";
 import {useModifyAttendee} from "../../../mutations/useModifyAttendee.ts";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
-import {t, Trans} from "@lingui/macro";
+import {t} from "@lingui/macro";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {useResendAttendeeTicket} from "../../../mutations/useResendAttendeeTicket.ts";
 import {ManageAttendeeModal} from "../../modals/ManageAttendeeModal";
@@ -37,14 +34,22 @@ import {prettyDate} from "../../../utilites/dates.ts";
 import {TanStackTable, TanStackTableColumn} from "../TanStackTable";
 import {ColumnVisibilityToggle} from "../ColumnVisibilityToggle";
 import {CellContext} from "@tanstack/react-table";
+import {AttendeeStatusBadge} from "../AttendeeStatusBadge";
+import {PublicIcon} from "../PublicIcon";
 import classes from './AttendeeTable.module.scss';
 
 interface AttendeeTableProps {
     attendees: Attendee[];
     openCreateModal: () => void;
+    // Above the list, on the left of the column toggle (the status chips of the attendees page).
+    toolbar?: React.ReactNode;
 }
 
-export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) => {
+const fullName = (attendee: Attendee) => `${attendee.first_name ?? ''} ${attendee.last_name ?? ''}`.trim();
+
+// The attendees of an event, like the orders: initials, bold names, status tags and the check-in
+// state as a pill that opens the detail per list; on phones each attendee is a line of a cream card.
+export const AttendeeTable = ({attendees, openCreateModal, toolbar}: AttendeeTableProps) => {
     const {eventId} = useParams();
     const [isMessageModalOpen, messageModal] = useDisclosure(false);
     const [isViewModalOpen, viewModalOpen] = useDisclosure(false);
@@ -60,6 +65,7 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
     const clipboard = useClipboard({timeout: 2000});
 
     const hasCheckInLists = checkInLists?.data && checkInLists.data.length > 0;
+    const totalLists = checkInLists?.data?.length || 0;
 
     const handleModalClick = (attendee: Attendee, modal: {
         open: () => void
@@ -79,7 +85,8 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
     }
 
     const handleCancel = (attendee: Attendee) => {
-        const message = attendee.status === 'CANCELLED'
+        const isCancelled = attendee.status === 'CANCELLED';
+        const message = isCancelled
             ? t`Are you sure you want to activate this attendee?`
             : t`Are you sure you want to cancel this attendee? This will void their ticket`
 
@@ -88,30 +95,13 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
                 attendeeId: attendee.id,
                 eventId: eventId,
                 attendeeData: {
-                    status: attendee.status === 'CANCELLED' ? 'ACTIVE' : 'CANCELLED'
+                    status: isCancelled ? 'ACTIVE' : 'CANCELLED'
                 }
             }, {
-                onSuccess: () => {
-                    notifications.show({
-                        message: (
-                            <Trans>
-                                Successfully {attendee.status === 'CANCELLED' ? 'activated' : 'cancelled'} attendee
-                            </Trans>
-                        ),
-                        color: 'green',
-                    });
-                },
+                onSuccess: () => showSuccess(isCancelled ? t`Ticket reactivated` : t`Ticket cancelled`),
                 onError: () => showError(t`Failed to cancel attendee`),
             });
         })
-    };
-
-    const getCheckInCount = (attendee: Attendee) => {
-        return attendee.check_ins?.length || 0;
-    };
-
-    const hasCheckIns = (attendee: Attendee) => {
-        return getCheckInCount(attendee) > 0;
     };
 
     const handleCopyEmail = (email: string) => {
@@ -130,111 +120,192 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
         orderModal.open();
     };
 
+    const ticketTitle = (attendee: Attendee) => getProductFromEvent(attendee.product_id, event)?.title;
+
+    // Checked in on at least one list: green with the count, otherwise an outlined pill.
+    const checkInButton = (attendee: Attendee) => {
+        const checkInCount = attendee.check_ins?.length || 0;
+
+        return (
+            <UnstyledButton
+                className={classes.checkInButton}
+                data-checked-in={checkInCount > 0 || undefined}
+                onClick={() => handleModalClick(attendee, checkInModal)}
+            >
+                {checkInCount > 0 ? (
+                    <>
+                        <IconCheck size={16} stroke={2.5}/>
+                        {t({message: 'Checked in', context: 'attendee check-in'})}
+                        <span className={classes.checkInCount}>{checkInCount}/{totalLists}</span>
+                    </>
+                ) : (
+                    <>
+                        <PublicIcon name="qr" size={16}/>
+                        {t({message: 'Not checked in', context: 'attendee check-in'})}
+                    </>
+                )}
+            </UnstyledButton>
+        );
+    };
+
+    const actionMenu = (attendee: Attendee) => (
+        <ActionMenu
+            target={(
+                <ActionIcon className={classes.menuButton} variant="subtle" aria-label={t`Actions`}>
+                    <IconDotsVertical size={20}/>
+                </ActionIcon>
+            )}
+            itemsGroups={[
+                {
+                    label: t`Actions`,
+                    items: [
+                        {
+                            label: t`Manage attendee`,
+                            icon: <IconUserCog size={14}/>,
+                            onClick: () => handleModalClick(attendee, viewModalOpen),
+                        },
+                        {
+                            label: t`Message attendee`,
+                            icon: <IconSend size={14}/>,
+                            onClick: () => handleModalClick(attendee, messageModal),
+                        },
+                        {
+                            label: t`Resend ticket email`,
+                            icon: <IconMailForward size={14}/>,
+                            onClick: () => handleResendTicket(attendee),
+                            visible: attendee.status === 'ACTIVE',
+                        },
+                    ],
+                },
+                {
+                    label: t`Danger zone`,
+                    items: [
+                        attendee.status === 'CANCELLED' ? {
+                            label: t`Reactivate ticket`,
+                            icon: <IconUserCheck size={14}/>,
+                            onClick: () => handleCancel(attendee),
+                        } : {
+                            label: t`Cancel ticket`,
+                            icon: <IconTrash size={14}/>,
+                            onClick: () => handleCancel(attendee),
+                            color: 'red',
+                        },
+                    ],
+                },
+            ]}
+        />
+    );
+
+    const renderMobileRow = (attendee: Attendee) => {
+        const ticket = ticketTitle(attendee);
+
+        return (
+            <div className={classes.mobileAttendee}>
+                <span className={classes.avatar} aria-hidden>{getInitials(fullName(attendee) || '?')}</span>
+                <UnstyledButton className={classes.mobileHead} onClick={() => handleModalClick(attendee, viewModalOpen)}>
+                    <span className={classes.mobileName}>
+                        {fullName(attendee)}
+                    </span>
+                    <span className={classes.mobileMeta}>
+                        {[ticket, attendee.order?.public_id && `#${attendee.order.public_id}`].filter(Boolean).join(' · ')}
+                    </span>
+                </UnstyledButton>
+                <div className={classes.mobileMenu}>{actionMenu(attendee)}</div>
+                <div className={classes.mobileFoot}>
+                    <AttendeeStatusBadge attendee={attendee}/>
+                    <BibNumber bibNumber={attendee.bib_number} size="sm"/>
+                    {hasCheckInLists && checkInButton(attendee)}
+                </div>
+            </div>
+        );
+    };
+
     const columns = useMemo<TanStackTableColumn<Attendee>[]>(
         () => {
             const allColumns: TanStackTableColumn<Attendee>[] = [
                 {
                     id: 'attendeeDetails',
-                    header: t`Attendee Details`,
+                    header: t`Attendee`,
                     enableHiding: false,
-                    cell: (info: CellContext<Attendee, unknown>) => (
-                        <Group gap="sm" wrap="nowrap">
-                            <Avatar size={44} radius={10} color="primary" variant="light">
-                                {getInitials(info.row.original.first_name + ' ' + info.row.original.last_name)}
-                            </Avatar>
-                            <div className={classes.attendeeDetails}>
-                                <div className={classes.nameRow}>
-                                    <Anchor
-                                        className={classes.attendeeName}
-                                        onClick={() => handleModalClick(info.row.original, viewModalOpen)}
-                                        style={{cursor: 'pointer'}}
-                                    >
-                                        <Truncate
-                                            length={30}
-                                            text={info.row.original.first_name + ' ' + info.row.original.last_name}
-                                        />
-                                    </Anchor>
-                                    <BibNumber bibNumber={info.row.original.bib_number} size="xs"/>
-                                    <div className={classes.attendeeId}>
-                                        {info.row.original.public_id}
+                    cell: (info: CellContext<Attendee, unknown>) => {
+                        const attendee = info.row.original;
+                        return (
+                            <div className={classes.attendee}>
+                                <span className={classes.avatar} aria-hidden>
+                                    {getInitials(fullName(attendee) || '?')}
+                                </span>
+                                <div className={classes.attendeeDetails}>
+                                    <div className={classes.nameRow}>
+                                        <Anchor
+                                            component="button"
+                                            type="button"
+                                            className={classes.attendeeName}
+                                            onClick={() => handleModalClick(attendee, viewModalOpen)}
+                                        >
+                                            {fullName(attendee)}
+                                        </Anchor>
+                                        <BibNumber bibNumber={attendee.bib_number} size="xs"/>
                                     </div>
-                                </div>
-                                <div className={classes.emailRow}>
-                                    <Popover
-                                        opened={emailPopoverId === info.row.original.id}
-                                        onChange={(opened) => {
-                                            if (!opened) setEmailPopoverId(null);
-                                        }}
-                                        width={200}
-                                        position="bottom"
-                                        withArrow
-                                        shadow="md"
-                                    >
-                                        <Popover.Target>
-                                            <Anchor
-                                                onClick={() => setEmailPopoverId(info.row.original.id || null)}
-                                                className={classes.attendeeEmail}
-                                                style={{cursor: 'pointer'}}
-                                            >
-                                                {info.row.original.email}
-                                            </Anchor>
-                                        </Popover.Target>
-                                        <Popover.Dropdown>
-                                            <Group gap="xs" style={{flexDirection: 'column', width: '100%'}}>
-                                                <Button
-                                                    fullWidth
-                                                    variant="light"
-                                                    leftSection={<IconSend size={16}/>}
-                                                    onClick={() => handleMessageFromEmail(info.row.original)}
+                                    <div className={classes.emailRow}>
+                                        <Popover
+                                            opened={emailPopoverId === attendee.id}
+                                            onChange={(opened) => {
+                                                if (!opened) setEmailPopoverId(null);
+                                            }}
+                                            width={200}
+                                            position="bottom"
+                                            withArrow
+                                            shadow="md"
+                                        >
+                                            <Popover.Target>
+                                                <Anchor
+                                                    component="button"
+                                                    type="button"
+                                                    onClick={() => setEmailPopoverId(attendee.id || null)}
+                                                    className={classes.attendeeEmail}
                                                 >
+                                                    {attendee.email}
+                                                </Anchor>
+                                            </Popover.Target>
+                                            <Popover.Dropdown className={classes.emailDropdown}>
+                                                <UnstyledButton className={classes.emailAction}
+                                                                onClick={() => handleMessageFromEmail(attendee)}>
+                                                    <IconSend size={18}/>
                                                     {t`Message`}
-                                                </Button>
-                                                <Button
-                                                    fullWidth
-                                                    variant="light"
-                                                    color="gray"
-                                                    leftSection={<IconCopy size={16}/>}
-                                                    onClick={() => handleCopyEmail(info.row.original.email)}
-                                                >
+                                                </UnstyledButton>
+                                                <UnstyledButton className={classes.emailAction}
+                                                                onClick={() => handleCopyEmail(attendee.email)}>
+                                                    <IconCopy size={18}/>
                                                     {t`Copy Email`}
-                                                </Button>
-                                            </Group>
-                                        </Popover.Dropdown>
-                                    </Popover>
-                                    <div className={classes.emailActions}>
-                                        {info.row.original.notes && (
+                                                </UnstyledButton>
+                                            </Popover.Dropdown>
+                                        </Popover>
+                                        {attendee.notes && (
                                             <Tooltip
-                                                label={
-                                                    info.row.original.notes.length > 100
-                                                        ? t`Click to view notes`
-                                                        : info.row.original.notes
-                                                }
+                                                label={attendee.notes.length > 100 ? t`Click to view notes` : attendee.notes}
                                                 multiline
-                                                w={info.row.original.notes.length > 100 ? 'auto' : 300}
+                                                w={attendee.notes.length > 100 ? 'auto' : 300}
                                                 withArrow
                                             >
                                                 <ActionIcon
-                                                    className={classes.actionIcon}
-                                                    size="xs"
+                                                    className={classes.noteButton}
+                                                    size="sm"
                                                     variant="subtle"
-                                                    color="green"
-                                                    onClick={() => {
-                                                        if (info.row.original.notes && info.row.original.notes.length > 100) {
-                                                            handleModalClick(info.row.original, viewModalOpen);
-                                                        }
-                                                    }}
+                                                    aria-label={t`Notes`}
+                                                    onClick={() => handleModalClick(attendee, viewModalOpen)}
                                                 >
                                                     <IconNote size={16}/>
                                                 </ActionIcon>
                                             </Tooltip>
                                         )}
                                     </div>
+                                    <span className={classes.publicId}>{attendee.public_id}</span>
                                 </div>
                             </div>
-                        </Group>
-                    ),
+                        );
+                    },
                     meta: {
-                        headerStyle: {minWidth: 300},
+                        headerStyle: {minWidth: 280},
                     },
                 },
                 {
@@ -242,178 +313,86 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
                     header: t`Order & Ticket`,
                     enableHiding: true,
                     cell: (info: CellContext<Attendee, unknown>) => {
-                        const ticketTitle = getProductFromEvent(info.row.original.product_id, event)?.title;
+                        const attendee = info.row.original;
                         return (
-                            <div className={classes.orderTicketContainer}>
-                                <div className={classes.ticketName}>
-                                    <Truncate
-                                        text={ticketTitle}
-                                        length={25}
-                                    />
-                                </div>
-                                <div className={classes.orderId}>
+                            <div className={classes.orderTicket}>
+                                <span className={classes.ticketName}>
+                                    <PublicIcon name="billet" size={16}/>
+                                    <span>{ticketTitle(attendee)}</span>
+                                </span>
+                                {attendee.order?.public_id && (
                                     <Anchor
-                                        onClick={() => handleOrderClick(info.row.original.order_id)}
-                                        style={{cursor: 'pointer', color: 'inherit', textDecoration: 'none'}}
+                                        component="button"
+                                        type="button"
+                                        onClick={() => handleOrderClick(attendee.order_id)}
+                                        className={classes.orderId}
                                     >
-                                        {info.row.original.order?.public_id}
+                                        #{attendee.order.public_id}
                                     </Anchor>
-                                </div>
-                                {info.row.original.order?.created_at && event?.timezone && (
-                                    <div className={classes.registrationDate}>
-                                        {prettyDate(info.row.original.order.created_at, event.timezone)}
-                                    </div>
+                                )}
+                                {attendee.order?.created_at && event?.timezone && (
+                                    <span className={classes.registrationDate}>
+                                        {prettyDate(attendee.order.created_at, event.timezone)}
+                                    </span>
                                 )}
                             </div>
                         );
                     },
                     meta: {
-                        headerStyle: {minWidth: 160},
+                        headerStyle: {minWidth: 180},
                     },
                 },
                 {
                     id: 'status',
                     header: t`Status`,
                     enableHiding: true,
-                    cell: (info: CellContext<Attendee, unknown>) => {
-                        const attendee = info.row.original;
-                        return (
-                            <div className={classes.statusBadge} data-status={attendee.status}>
-                                {attendee.status === 'ACTIVE' && (
-                                    <>
-                                        <IconCheck size={14}/>
-                                        {t`Active`}
-                                    </>
-                                )}
-                                {attendee.status === 'AWAITING_PAYMENT' && (
-                                    <>
-                                        <IconClock size={14}/>
-                                        {t`Awaiting Payment`}
-                                    </>
-                                )}
-                                {attendee.status === 'CANCELLED' && (
-                                    <>
-                                        <IconX size={14}/>
-                                        {t`Cancelled`}
-                                    </>
-                                )}
-                            </div>
-                        );
-                    },
-                    meta: {
-                        headerStyle: {minWidth: 120},
-                    },
+                    cell: (info: CellContext<Attendee, unknown>) => <AttendeeStatusBadge attendee={info.row.original}/>,
                 },
                 {
                     id: 'checkIn',
-                    header: t`Check-In Status`,
+                    header: t`Check-in`,
                     enableHiding: true,
-                    cell: (info: CellContext<Attendee, unknown>) => {
-                        const checkInCount = getCheckInCount(info.row.original);
-                        const hasChecked = hasCheckIns(info.row.original);
-                        const totalLists = checkInLists?.data?.length || 0;
-
-                        return (
-                            <button
-                                className={`${classes.checkInButton} ${hasChecked ? classes.checkedIn : classes.notCheckedIn}`}
-                                onClick={() => handleModalClick(info.row.original, checkInModal)}
-                            >
-                                {hasChecked ? (
-                                    <>
-                                        <IconCheck size={16}/>
-                                        {t`Checked In`} ({checkInCount}/{totalLists})
-                                    </>
-                                ) : (
-                                    <>
-                                        <IconClipboardList size={16}/>
-                                        {t`Not Checked In`}
-                                    </>
-                                )}
-                            </button>
-                        );
-                    },
-                    meta: {
-                        headerStyle: {width: 80, textAlign: 'center'},
-                        cellStyle: {textAlign: 'center'},
-                    },
+                    cell: (info: CellContext<Attendee, unknown>) => checkInButton(info.row.original),
                 },
                 {
                     id: 'actions',
-                    header: '',
+                    header: () => <VisuallyHidden>{t`Actions`}</VisuallyHidden>,
                     enableHiding: false,
                     cell: (info: CellContext<Attendee, unknown>) => (
                         <div className={classes.actionsMenu}>
-                            <ActionMenu itemsGroups={[
-                                {
-                                    label: t`Actions`,
-                                    items: [
-                                        {
-                                            label: t`Manage attendee`,
-                                            icon: <IconUserCog size={14}/>,
-                                            onClick: () => handleModalClick(info.row.original, viewModalOpen),
-                                        },
-                                        {
-                                            label: t`Message attendee`,
-                                            icon: <IconSend size={14}/>,
-                                            onClick: () => handleModalClick(info.row.original, messageModal),
-                                        },
-                                        {
-                                            label: t`Resend ticket email`,
-                                            icon: <IconMailForward size={14}/>,
-                                            onClick: () => handleResendTicket(info.row.original),
-                                            visible: info.row.original.status === 'ACTIVE',
-                                        },
-                                    ],
-                                },
-                                {
-                                    label: t`Danger Zone`,
-                                    items: [
-                                        {
-                                            label: info.row.original.status === 'CANCELLED' ? t`Activate` : t`Cancel` + ` ` + t`ticket`,
-                                            icon: <IconTrash size={14}/>,
-                                            onClick: () => handleCancel(info.row.original),
-                                            color: info.row.original.status === 'CANCELLED' ? 'green' : 'red',
-                                        },
-                                    ],
-                                },
-                            ]}/>
+                            {actionMenu(info.row.original)}
                         </div>
                     ),
                     meta: {
                         sticky: 'right',
-                        cellStyle: {paddingRight: 0},
                     },
                 },
             ];
 
-            return allColumns.filter(column => {
-                if (column.id === 'checkIn' && !hasCheckInLists) {
-                    return false;
-                }
-                return true;
-            });
+            return allColumns.filter(column => column.id !== 'checkIn' || hasCheckInLists);
         },
-        [emailPopoverId, event, hasCheckInLists]
+        [emailPopoverId, event, hasCheckInLists, totalLists]
     );
 
     if (attendees.length === 0) {
-        return <NoResultsSplash
-            heading={t`No Attendees to show`}
-            imageHref={'/blank-slate/attendees.svg'}
-            subHeading={(
-                <>
-                    <p>
-                        {t`Your attendees will appear here once they have registered for your event. You can also manually add attendees.`}
-                    </p>
-                    <Button
-                        size={'xs'}
-                        leftSection={<IconPlus/>}
-                        color={'green'}
-                        onClick={() => openCreateModal()}>{t`Manually add an Attendee`}
+        return (
+            <>
+                {toolbar && <div className={classes.emptyToolbar}>{toolbar}</div>}
+                <NoResultsSplash
+                    heading={t`No Attendees to show`}
+                    icon="billet"
+                    subHeading={(
+                        <p>
+                            {t`Your attendees will appear here once they have registered for your event. You can also manually add attendees.`}
+                        </p>
+                    )}
+                >
+                    <Button leftSection={<IconPlus size={20}/>} onClick={() => openCreateModal()}>
+                        {t`Add an attendee`}
                     </Button>
-                </>
-            )}
-        />
+                </NoResultsSplash>
+            </>
+        );
     }
 
     return (
@@ -424,6 +403,8 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
                 storageKey="attendee-table"
                 enableColumnVisibility={true}
                 renderColumnVisibilityToggle={(table) => <ColumnVisibilityToggle table={table}/>}
+                renderMobileRow={renderMobileRow}
+                toolbarStart={toolbar}
             />
             {(selectedAttendee && isMessageModalOpen) && <SendMessageModal
                 onClose={messageModal.close}
@@ -447,6 +428,5 @@ export const AttendeeTable = ({attendees, openCreateModal}: AttendeeTableProps) 
                 onClose={orderModal.close}
             />}
         </>
-
     );
 };

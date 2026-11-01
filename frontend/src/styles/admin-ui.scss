@@ -289,3 +289,34 @@ $tones: (
   font-size: 0.8125rem;
   font-weight: 700;
 }
+
+// The progress bar of the dashboard and the products: pale track, orange fill (a child span sized
+// in %). data-level on the bar: low (yellow), full (red), done (green).
+@mixin progress-bar($height: 6px) {
+  display: block;
+  width: 100%;
+  height: $height;
+  border-radius: 999px;
+  background: $track;
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: $accent;
+    transition: width 0.3s ease;
+  }
+
+  &[data-level='low'] > span {
+    background: #f6c85f;
+  }
+
+  &[data-level='full'] > span {
+    background: tone-text(problem);
+  }
+
+  &[data-level='done'] > span {
+    background: #7fb069;
+  }
+}

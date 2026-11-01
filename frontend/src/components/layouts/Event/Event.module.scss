@@ -47,3 +47,35 @@
     display: none;
   }
 }
+
+// The bar narrows (window around 900–1100px, or the sidebar open): first the status keeps only its
+// state, then the two buttons only their icons, then the status loses its chevron. The breadcrumbs
+// keep their room and never pass under the actions.
+@container (max-width: 860px) {
+  .statusAction {
+    display: none;
+  }
+}
+
+@container (max-width: 780px) {
+  .shareButton,
+  .previewButton {
+    width: 3rem;
+    padding: 0 !important;
+
+    :global(.mantine-Button-section[data-position='left']) {
+      margin-inline-end: 0;
+    }
+
+    .longLabel,
+    .shortLabel {
+      display: none;
+    }
+  }
+}
+
+@container (max-width: 520px) {
+  .statusButton :global(.mantine-Button-section[data-position='right']) {
+    display: none;
+  }
+}

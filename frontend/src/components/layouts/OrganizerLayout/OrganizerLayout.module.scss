@@ -34,4 +34,9 @@
   @include mixins.respond-below(md) {
     display: none;
   }
+
+  // Only when the top bar gets too narrow for the breadcrumbs (window around 900–1050px).
+  @container (max-width: 700px) {
+    display: none;
+  }
 }

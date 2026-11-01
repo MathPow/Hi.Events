@@ -159,7 +159,7 @@ const pointage: HelpGuide = {
             ],
         },
         {h2: 'Donner l\'accès à vos bénévoles'},
-        {p: "Cliquez sur **Copier l'URL de pointage** et envoyez le lien à votre équipe. Vos bénévoles n'ont pas besoin de compte : ils ouvrent le lien sur leur téléphone, et entrent le NIP si vous en avez mis un. Pour l'ouvrir vous-même, cliquez sur **Ouvrir la Page d'Enregistrement**."},
+        {p: "Sur la carte de la liste, cliquez sur **Copier le lien** et envoyez-le à votre équipe. Vos bénévoles n'ont pas besoin de compte : ils ouvrent le lien sur leur téléphone, et entrent le NIP si vous en avez mis un. Pour l'ouvrir vous-même, cliquez sur la flèche à côté (**Ouvrir la page de pointage**)."},
         {h2: 'À la porte'},
         {
             ul: [

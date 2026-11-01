@@ -7,7 +7,7 @@ import {useFormErrorResponseHandler} from "../../../hooks/useFormErrorResponseHa
 import {useForm} from "@mantine/form";
 import {Accordion} from "../../common/Accordion";
 import {Button} from "../../common/Button";
-import {Avatar, Box, Group, Stack, Tabs, Text, Textarea, TextInput} from "@mantine/core";
+import {Box, Stack, Tabs, Text, Textarea, TextInput} from "@mantine/core";
 import {IconEdit, IconNotebook, IconQuestionMark, IconReceipt, IconTicket, IconUser} from "@tabler/icons-react";
 import {LoadingMask} from "../../common/LoadingMask";
 import {AttendeeDetails} from "../../common/AttendeeDetails";
@@ -15,7 +15,6 @@ import {BibNumber} from "../../common/BibNumber";
 import {OrderDetails} from "../../common/OrderDetails";
 import {QuestionList} from "../../common/QuestionAndAnswerList";
 import {AttendeeTicket} from "../../common/AttendeeTicket";
-import {getInitials} from "../../../utilites/helpers.ts";
 import {t} from "@lingui/macro";
 import classes from './ManageAttendeeModal.module.scss';
 import {useEffect, useState} from "react";
@@ -145,7 +144,7 @@ export const ManageAttendeeModal = ({onClose, attendeeId}: ManageAttendeeModalPr
                 {
                     value: "details",
                     icon: IconUser,
-                    title: t`Attendee Details`,
+                    title: t({message: 'Attendee Details', context: 'attendee panel'}),
                     content: <AttendeeDetails attendee={attendee}/>,
                 },
                 {
@@ -164,13 +163,13 @@ export const ManageAttendeeModal = ({onClose, attendeeId}: ManageAttendeeModalPr
                 {
                     value: "order",
                     icon: IconReceipt,
-                    title: t`Order Details`,
+                    title: t({message: 'Order Details', context: 'order panel'}),
                     content: <OrderDetails order={order} event={event} cardVariant="noStyle"/>,
                 },
                 {
                     value: "ticket",
                     icon: IconTicket,
-                    title: t`Attendee Ticket`,
+                    title: t({message: 'Attendee Ticket', context: 'attendee panel'}),
                     content: attendee.product ? (
                         <AttendeeTicket event={event} attendee={attendee} product={attendee.product}/>
                     ) : (
@@ -204,22 +203,18 @@ export const ManageAttendeeModal = ({onClose, attendeeId}: ManageAttendeeModalPr
         <SideDrawer opened onClose={onClose} size="lg" padding="md">
             <Stack className={classes.container}>
                 <div className={classes.header}>
-                    <Group justify="center" align="center">
-                        <Group gap="sm" align="center">
-                            <Avatar size="md" radius="xl">
-                                {getInitials(fullName)}
-                            </Avatar>
-                            <div className={classes.attendeeInfo}>
-                                <Text fz="md" fw={500}>{fullName}</Text>
-                                <Group gap="xs">
-                                    <AttendeeStatusBadge attendee={attendee}/>
-                                    <BibNumber bibNumber={attendee.bib_number}/>
-                                </Group>
-                            </div>
-                        </Group>
-                    </Group>
+                    <div className={classes.attendeeInfo}>
+                        <span className={classes.eyebrow}>{t`Attendee`}</span>
+                        <h2 className={classes.name}>{fullName}</h2>
+                        <div className={classes.meta}>
+                            <BibNumber bibNumber={attendee.bib_number}/>
+                            <span>{attendee.public_id}</span>
+                            {attendee.product?.title && <span>· {attendee.product.title}</span>}
+                        </div>
+                    </div>
+                    <AttendeeStatusBadge attendee={attendee}/>
                 </div>
-                <Tabs value={activeTab} onChange={setActiveTab as any}>
+                <Tabs value={activeTab} onChange={setActiveTab as any} variant="pills">
                     <Tabs.List>
                         <Tabs.Tab value="view" leftSection={<IconUser size={16}/>}>{t`View`}</Tabs.Tab>
                         <Tabs.Tab value="edit" leftSection={<IconEdit size={16}/>}>{t`Edit`}</Tabs.Tab>

@@ -1,0 +1,9 @@
+@use "../../../../styles/mixins";
+
+.stats {
+  margin-bottom: 1.5rem;
+
+  @include mixins.respond-below(md) {
+    margin-bottom: 1.25rem;
+  }
+}

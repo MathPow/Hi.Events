@@ -2,7 +2,7 @@ import { Button, ButtonProps } from '@mantine/core';
 import React, { forwardRef } from 'react';
 import classes from './TopBarButton.module.scss';
 
-interface TopBarButtonProps extends ButtonProps {
+interface TopBarButtonProps extends ButtonProps, Omit<React.ComponentPropsWithoutRef<'button'>, keyof ButtonProps> {
     children: React.ReactNode;
 }
 

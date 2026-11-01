@@ -1,11 +1,9 @@
 import {CapacityAssignment, IdParam} from "../../../types";
-import {Badge, Button, Progress} from "@mantine/core";
+import {ActionIcon, Button, UnstyledButton} from "@mantine/core";
 import {t, Trans} from "@lingui/macro";
-import {IconHelp, IconPencil, IconPlus, IconTrash} from "@tabler/icons-react";
-import Truncate from "../Truncate";
+import {IconDotsVertical, IconHelp, IconPencil, IconPlus, IconTrash, IconUsersGroup} from "@tabler/icons-react";
 import {NoResultsSplash} from "../NoResultsSplash";
 import classes from './CapacityAssignmentList.module.scss';
-import {Card} from "../Card";
 import {Popover} from "../Popover";
 import {useState} from "react";
 import {ActionMenu} from "../ActionMenu";
@@ -14,12 +12,16 @@ import {EditCapacityAssignmentModal} from "../../modals/EditCapacityAssignmentMo
 import {useDeleteCapacityAssignment} from "../../../mutations/useDeleteCapacityAssignment";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
+import {StatusTag} from "../StatusTag";
+import {formatNumber} from "../../../utilites/helpers.ts";
 
 interface CapacityAssignmentListProps {
     capacityAssignments: CapacityAssignment[];
     openCreateModal: () => void;
 }
 
+// The shared capacities as cream cards: name and state, the tickets drawing from it, and how full
+// it is (yellow from 80%, red when full).
 export const CapacityAssignmentList = ({capacityAssignments, openCreateModal}: CapacityAssignmentListProps) => {
     const [editModalOpen, {open: openEditModal, close: closeEditModal}] = useDisclosure(false);
     const [selectedCapacityAssignmentId, setSelectedCapacityAssignmentId] = useState<IdParam>();
@@ -40,28 +42,22 @@ export const CapacityAssignmentList = ({capacityAssignments, openCreateModal}: C
         return (
             <NoResultsSplash
                 heading={t`No Capacity Assignments`}
-                imageHref={'/blank-slate/capacity-assignments.svg'}
+                icon="billet"
                 subHeading={(
-                    <>
+                    <Trans>
                         <p>
-                            <Trans>
-                                <p>
-                                    Set a single total attendance limit that applies to multiple ticket types at once.
-                                </p>
-                                <p>
-                                    For example, if you link a <b>Day Pass</b> and a <b>Full Weekend</b> ticket, they will both draw from the same pool of spots. Once the limit is reached, all linked tickets automatically stop selling.
-                                </p>
-                            </Trans>
+                            Set a single total attendance limit that applies to multiple ticket types at once.
                         </p>
-                        <Button
-                            size={'xs'}
-                            leftSection={<IconPlus/>}
-                            color={'green'}
-                            onClick={() => openCreateModal()}>{t`Create Capacity Assignment`}
-                        </Button>
-                    </>
+                        <p>
+                            For example, if you link a <b>Day Pass</b> and a <b>Full Weekend</b> ticket, they will both draw from the same pool of spots. Once the limit is reached, all linked tickets automatically stop selling.
+                        </p>
+                    </Trans>
                 )}
-            />
+            >
+                <Button leftSection={<IconPlus size={20}/>} onClick={() => openCreateModal()}>
+                    {t({message: 'Create Capacity Assignment', context: 'capacity page'})}
+                </Button>
+            </NoResultsSplash>
         );
     }
 
@@ -69,111 +65,125 @@ export const CapacityAssignmentList = ({capacityAssignments, openCreateModal}: C
         <>
             <div className={classes.capacityAssignmentList}>
                 {capacityAssignments.map((assignment) => {
-                    const capacityPercentage = assignment.capacity
-                        ? (assignment.used_capacity / assignment.capacity) * 100
+                    const percentage = assignment.capacity
+                        ? Math.min(100, (assignment.used_capacity / assignment.capacity) * 100)
                         : 0;
-                    const capacityColor = capacityPercentage > 80 ? 'red' : capacityPercentage > 50 ? 'yellow' : 'green';
+                    const level = percentage >= 100 ? 'full' : percentage >= 80 ? 'low' : undefined;
 
                     return (
-                        <Card className={classes.capacityCard} key={assignment.id}>
-                            <div className={classes.capacityAssignmentHeader}>
-                                <div className={classes.capacityAssignmentAppliesTo}>
-                                    {assignment.products && (
-                                        <Popover
-                                            title={assignment.products.map((product) => (
-                                                <div key={product.id}>
-                                                    {product.title}
-                                                </div>
-                                            ))}
-                                            position={'bottom'}
-                                            withArrow
-                                        >
-                                            <div className={classes.appliesToText}>
-                                                <div>
-                                                    {assignment.products.length > 1 &&
-                                                        <Trans>Applies to {assignment.products.length} products</Trans>}
-                                                    {assignment.products.length === 1 && t`Applies to 1 product`}
-                                                </div>
-                                                &nbsp;
-                                                <IconHelp size={16}/>
-                                            </div>
-                                        </Popover>
-                                    )}
+                        <article className={classes.card} key={assignment.id}>
+                            <div className={classes.head}>
+                                <span className={classes.pastille} aria-hidden>
+                                    <IconUsersGroup size={20} stroke={2}/>
+                                </span>
+                                <div className={classes.titleBlock}>
+                                    <h2 className={classes.name}>{assignment.name}</h2>
+                                    <div className={classes.meta}>
+                                        <StatusTag tone={assignment.status === 'ACTIVE' ? 'ok' : 'neutral'}>
+                                            {assignment.status === 'ACTIVE' ? t`Active` : t`Inactive`}
+                                        </StatusTag>
+                                        {!!assignment.products?.length && (
+                                            <Popover
+                                                title={assignment.products.map((product) => (
+                                                    <div key={product.id}>
+                                                        {product.title}
+                                                    </div>
+                                                ))}
+                                                position={'bottom'}
+                                                withArrow
+                                            >
+                                                <UnstyledButton className={classes.products}>
+                                                    {assignment.products.length > 1
+                                                        ? <Trans>Applies to {assignment.products.length} products</Trans>
+                                                        : t`Applies to 1 product`}
+                                                    <IconHelp size={16}/>
+                                                </UnstyledButton>
+                                            </Popover>
+                                        )}
+                                    </div>
                                 </div>
-
-                                <div className={classes.capacityAssignmentStatus}>
-                                    <Badge variant={'light'} color={assignment.status === 'ACTIVE' ? 'green' : 'gray'}>
-                                        {assignment.status}
-                                    </Badge>
-                                </div>
-                            </div>
-                            <div className={classes.capacityAssignmentName}>
-                                <b>
-                                    <Truncate text={assignment.name} length={30}/>
-                                </b>
                             </div>
 
-                            <div className={classes.capacityAssignmentInfo}>
-                                <div className={classes.capacityAssignmentCapacity}>
-                                    {assignment.capacity ? (
-                                        <div className={classes.capacity}>
-                                            <Progress
-                                                className={classes.capacityBar}
-                                                value={capacityPercentage}
-                                                color={capacityColor}
-                                                size={'md'}
-                                            />
-                                            <div className={classes.capacityText}>
-                                                {assignment.used_capacity}/{assignment.capacity}
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className={classes.capacityText}>
-                                            {assignment.used_capacity}/∞
-                                        </div>
-                                    )}
+                            <div className={classes.capacity}>
+                                <div className={classes.count}>
+                                    <span className={classes.countValue}>{formatNumber(assignment.used_capacity)}</span>
+                                    <span className={classes.countTotal}>
+                                        / {assignment.capacity ? formatNumber(assignment.capacity) : '∞'}
+                                    </span>
+                                    <span className={classes.countLabel}>
+                                        {t({message: 'spots taken', context: 'capacity assignment count'})}
+                                    </span>
                                 </div>
-                                <div className={classes.capacityAssignmentActions}>
-                                    <ActionMenu
-                                        itemsGroups={[
-                                            {
-                                                label: t`Manage`,
-                                                items: [
-                                                    {
-                                                        label: t`Edit Capacity`,
-                                                        icon: <IconPencil size={14}/>,
-                                                        onClick: () => {
-                                                            setSelectedCapacityAssignmentId(assignment.id as IdParam);
-                                                            openEditModal();
-                                                        }
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                label: t`Danger zone`,
-                                                items: [
-                                                    {
-                                                        label: t`Delete Capacity`,
-                                                        icon: <IconTrash size={14}/>,
-                                                        onClick: () => {
-                                                            confirmationDialog(
-                                                                t`Are you sure you would like to delete this Capacity Assignment?`,
-                                                                () => {
-                                                                    handleDeleteProduct(
-                                                                        assignment.id as IdParam,
-                                                                        assignment.event_id as IdParam,
-                                                                    );
-                                                                })
-                                                        },
-                                                        color: 'red',
-                                                    },
-                                                ],
-                                            },
-                                        ]}
-                                    />
-                                </div>
+                                {!!assignment.capacity && (
+                                    <span
+                                        className={classes.bar}
+                                        data-level={level}
+                                        role="progressbar"
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                        aria-valuenow={Math.round(percentage)}
+                                    >
+                                        <span style={{width: `${percentage}%`}}/>
+                                    </span>
+                                )}
                             </div>
-                        </Card>
+
+                            <div className={classes.actions}>
+                                <Button
+                                    variant="outline"
+                                    className={classes.editButton}
+                                    leftSection={<IconPencil size={18}/>}
+                                    onClick={() => {
+                                        setSelectedCapacityAssignmentId(assignment.id as IdParam);
+                                        openEditModal();
+                                    }}
+                                >
+                                    {t({message: 'Edit Capacity', context: 'capacity page'})}
+                                </Button>
+                                <ActionMenu
+                                    target={(
+                                        <ActionIcon variant="subtle" className={classes.roundButton} aria-label={t`Actions`}>
+                                            <IconDotsVertical size={20}/>
+                                        </ActionIcon>
+                                    )}
+                                    itemsGroups={[
+                                        {
+                                            label: t`Manage`,
+                                            items: [
+                                                {
+                                                    label: t`Edit Capacity`,
+                                                    icon: <IconPencil size={14}/>,
+                                                    onClick: () => {
+                                                        setSelectedCapacityAssignmentId(assignment.id as IdParam);
+                                                        openEditModal();
+                                                    }
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            label: t`Danger zone`,
+                                            items: [
+                                                {
+                                                    label: t`Delete Capacity`,
+                                                    icon: <IconTrash size={14}/>,
+                                                    onClick: () => {
+                                                        confirmationDialog(
+                                                            t`Are you sure you would like to delete this Capacity Assignment?`,
+                                                            () => {
+                                                                handleDeleteProduct(
+                                                                    assignment.id as IdParam,
+                                                                    assignment.event_id as IdParam,
+                                                                );
+                                                            })
+                                                    },
+                                                    color: 'red',
+                                                },
+                                            ],
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        </article>
                     );
                 })}
             </div>

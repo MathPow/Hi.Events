@@ -1,10 +1,129 @@
-.listItem {
-    padding: 12px;
-    border-radius: 8px;
-    background-color: var(--mantine-color-gray-0);
-    border: 1px solid var(--mantine-color-gray-2);
+@use "../../../styles/admin-ui" as ui;
 
-    &:hover {
-        background-color: var(--mantine-color-gray-1);
-    }
+.loading {
+  position: relative;
+  min-height: 12rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: ui.$ink;
+}
+
+.attendee {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+}
+
+.attendeeText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.attendeeName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.attendeeMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  color: var(--dehors-texte-doux);
+  text-align: center;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupTitle {
+  margin: 0;
+  font-family: inherit !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// The lists as the lines of a cream card.
+.list {
+  @include ui.card(0.25rem 1rem);
+  border-radius: 1.25rem;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid ui.$separator;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &[data-ineligible] {
+    opacity: 0.6;
+  }
+}
+
+.listIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: ui.tone-bg(neutral);
+  color: ui.tone-text(neutral);
+
+  &[data-checked-in] {
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
+}
+
+.listText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.listName {
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.listMeta {
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  line-height: 1.3;
 }

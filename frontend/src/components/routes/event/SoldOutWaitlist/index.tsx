@@ -6,7 +6,7 @@ import {WaitlistTable} from "../../../common/WaitlistTable";
 import {WaitlistStatsCards} from "../../../common/WaitlistStats";
 import {SearchBarWrapper} from "../../../common/SearchBar";
 import {Pagination} from "../../../common/Pagination";
-import {Button, Select} from "@mantine/core";
+import {Button} from "@mantine/core";
 import {ToolBar} from "../../../common/ToolBar";
 import {useGetEventWaitlistEntries} from "../../../../queries/useGetEventWaitlistEntries.ts";
 import {useGetWaitlistStats} from "../../../../queries/useGetWaitlistStats.ts";
@@ -18,6 +18,10 @@ import {t} from "@lingui/macro";
 import {useDisclosure} from "@mantine/hooks";
 import {OfferWaitlistModal} from "../../../modals/OfferWaitlistModal";
 import {IconSend} from "@tabler/icons-react";
+import {FilterChips} from "../../../common/FilterChips";
+import classes from "./SoldOutWaitlist.module.scss";
+
+type StatusChip = 'ALL' | WaitlistEntryStatus;
 
 export const SoldOutWaitlist = () => {
     const {eventId} = useParams();
@@ -30,25 +34,48 @@ export const SoldOutWaitlist = () => {
     const {data: eventSettings} = useGetEventSettings(eventId);
     const [offerModalOpen, {open: openOfferModal, close: closeOfferModal}] = useDisclosure(false);
 
-    const handleStatusFilter = (value: string | null) => {
+    const statusFilter = (searchParams.filterFields?.status as { value?: string })?.value || null;
+
+    const handleStatusFilter = (value: StatusChip) => {
         setSearchParams({
             pageNumber: 1,
             filterFields: {
                 ...(searchParams.filterFields || {}),
-                status: value
+                status: value !== 'ALL'
                     ? {operator: QueryFilterOperator.Equals, value}
                     : undefined,
             },
         }, true);
     };
 
+    const statusChips = (
+        <FilterChips<StatusChip>
+            label={t`Status`}
+            value={(statusFilter as StatusChip | null) ?? 'ALL'}
+            onChange={handleStatusFilter}
+            chips={[
+                {value: 'ALL', label: t({message: 'All', context: 'waitlist filter'})},
+                {value: WaitlistEntryStatus.Waiting, label: t`Waiting`, count: stats?.waiting},
+                {value: WaitlistEntryStatus.Offered, label: t({message: 'Offered', context: 'waitlist filter'})},
+                {value: WaitlistEntryStatus.Purchased, label: t({message: 'Purchased', context: 'waitlist filter'})},
+                {value: WaitlistEntryStatus.OfferExpired, label: t({message: 'Expired', context: 'waitlist filter'})},
+                {value: WaitlistEntryStatus.Cancelled, label: t({message: 'Cancelled', context: 'waitlist filter'})},
+            ]}
+        />
+    );
+
     return (
         <PageBody>
             <PageTitle
-            subheading={t`Manage your event's waitlist, view stats, and offer tickets to attendees.`}
+                subheading={t`Manage your event's waitlist, view stats, and offer tickets to attendees.`}
+                actions={(
+                    <Button leftSection={<IconSend size={20}/>} onClick={openOfferModal}>
+                        {t`Offer Tickets`}
+                    </Button>
+                )}
             >{t`Waitlist`}</PageTitle>
 
-            {stats && <WaitlistStatsCards stats={stats}/>}
+            {stats && <WaitlistStatsCards stats={stats} className={classes.stats}/>}
 
             <ToolBar
                 searchComponent={() => (
@@ -59,33 +86,7 @@ export const SoldOutWaitlist = () => {
                         pagination={pagination}
                     />
                 )}
-                filterComponent={(
-                    <Select
-                        placeholder={t`All Statuses`}
-                        clearable
-                        size="md"
-                        mb={0}
-                        value={(searchParams.filterFields?.status as {value?: string})?.value || null}
-                        onChange={handleStatusFilter}
-                        data={[
-                            {value: WaitlistEntryStatus.Waiting, label: t`Waiting`},
-                            {value: WaitlistEntryStatus.Offered, label: t`Offered`},
-                            {value: WaitlistEntryStatus.Purchased, label: t`Purchased`},
-                            {value: WaitlistEntryStatus.OfferExpired, label: t`Expired`},
-                            {value: WaitlistEntryStatus.Cancelled, label: t`Cancelled`},
-                        ]}
-                    />
-                )}
-            >
-                <Button
-                    size="sm"
-                    color="green"
-                    leftSection={<IconSend size={16}/>}
-                    onClick={openOfferModal}
-                >
-                    {t`Offer Tickets`}
-                </Button>
-            </ToolBar>
+            />
 
             <TableSkeleton isVisible={!entries || !event}/>
 
@@ -93,6 +94,7 @@ export const SoldOutWaitlist = () => {
                 <WaitlistTable
                     eventId={eventId}
                     entries={entries}
+                    toolbar={statusChips}
                 />
             )}
 

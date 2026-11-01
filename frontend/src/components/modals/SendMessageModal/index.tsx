@@ -41,6 +41,7 @@ import {useGetAccount} from "../../../queries/useGetAccount.ts";
 import {StripeConnectButton} from "../../common/StripeConnectButton";
 import {getConfig} from "../../../utilites/config";
 import {utcToTz} from "../../../utilites/dates.ts";
+import {intlLocale} from "../../../utilites/intlLocale.ts";
 import dayjs from "dayjs";
 import classes from "./SendMessageModal.module.scss";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
@@ -492,10 +493,15 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                                 </div>
                                                 <div className={classes.scheduledConfirmationText}>
                                                     <span className={classes.scheduledConfirmationDate}>
-                                                        {resolvedPreset.utcDate.tz(event.timezone).format('dddd, MMMM D, YYYY')}
+                                                        {new Intl.DateTimeFormat(intlLocale(), {
+                                                            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+                                                            timeZone: event.timezone,
+                                                        }).format(resolvedPreset.utcDate.toDate())}
                                                     </span>
                                                     <span className={classes.scheduledConfirmationTime}>
-                                                        {resolvedPreset.utcDate.tz(event.timezone).format('h:mm A')}
+                                                        {new Intl.DateTimeFormat(intlLocale(), {
+                                                            hour: 'numeric', minute: '2-digit', timeZone: event.timezone,
+                                                        }).format(resolvedPreset.utcDate.toDate())}
                                                         {' '}<span className={classes.scheduledConfirmationTz}>{event.timezone}</span>
                                                     </span>
                                                 </div>

@@ -1,111 +1,137 @@
 @use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
 .listContainer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  gap: 0.25rem;
 }
 
+// One message per row; the open one on the pale row color with an orange mark.
 .messageItem {
+  position: relative;
   display: flex;
-  flex-direction: row;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 0.75rem;
+  padding: 0.875rem 0.875rem 0.875rem 1rem;
+  border-radius: 1.125rem;
+  color: ui.$ink;
   cursor: pointer;
-  border-bottom: 1px solid var(--mantine-color-gray-2);
-  transition: background-color 0.15s ease;
   outline: none;
+  transition: background-color 0.15s ease;
+
+  & + & {
+    &::before {
+      content: '';
+      position: absolute;
+      top: -0.125rem;
+      right: 0.875rem;
+      left: 0.875rem;
+      height: 1px;
+      background: ui.$separator;
+    }
+  }
 
   &:hover {
-    background-color: var(--mantine-color-gray-0);
+    background: rgb(255 246 237 / 0.7);
   }
 
   &:focus-visible {
-    background-color: var(--mantine-color-gray-0);
-    box-shadow: inset 0 0 0 2px var(--mantine-color-primary-4);
+    box-shadow: inset 0 0 0 2px ui.$ink;
   }
 
-  &.selected {
-    background-color: var(--mantine-color-primary-0);
-    border-left: 3px solid var(--mantine-color-primary-6);
-    padding-left: 13px;
+  &[data-selected] {
+    background: ui.$row;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0.875rem;
+      bottom: 0.875rem;
+      left: 0.25rem;
+      width: 4px;
+      border-radius: 999px;
+      background: ui.$accent;
+    }
   }
 
-  &.cancelled {
-    opacity: 0.55;
+  &[data-selected]::before,
+  &[data-selected] + &::before {
+    display: none;
+  }
+
+  &[data-cancelled] {
+    opacity: 0.6;
   }
 }
 
+.avatar {
+  @include ui.avatar;
+}
+
 .itemContent {
-  flex: 1;
-  min-width: 0;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 3px;
+  gap: 0.1875rem;
+  min-width: 0;
 }
 
 .itemTopRow {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 8px;
-}
-
-.sender {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--mantine-color-dark-6);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.date {
-  font-size: 0.72rem;
-  color: var(--mantine-color-gray-6);
-  white-space: nowrap;
-  flex-shrink: 0;
+  gap: 0.5rem;
 }
 
 .subject {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--mantine-color-dark-8);
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  @include mixins.ellipsis;
+}
+
+.date {
+  flex-shrink: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 0.75rem;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .preview {
-  font-size: 0.78rem;
-  color: var(--mantine-color-gray-6);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
   line-height: 1.4;
+  @include mixins.ellipsis;
 }
 
 .itemBottomRow {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 2px;
+  gap: 0.5rem;
+  min-width: 0;
+  margin-top: 0.25rem;
+}
+
+.status {
+  flex-shrink: 0;
+  padding: 0.1875rem 0.5625rem !important;
+  font-size: 0.75rem !important;
+}
+
+.typeLabel {
+  min-width: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 0.75rem;
+  @include mixins.ellipsis;
 }
 
 .attachmentCount {
   display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 0.7rem;
-  color: var(--mantine-color-gray-6);
   flex-shrink: 0;
-}
-
-.typeLabel {
-  font-size: 0.7rem;
-  color: var(--mantine-color-gray-5);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  align-items: center;
+  gap: 0.125rem;
+  color: var(--dehors-texte-doux);
+  font-size: 0.75rem;
 }

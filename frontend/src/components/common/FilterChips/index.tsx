@@ -1,3 +1,4 @@
+import {useEffect, useRef} from "react";
 import classNames from "classnames";
 import classes from "./FilterChips.module.scss";
 
@@ -20,8 +21,26 @@ interface FilterChipsProps<T extends string> {
 // Quick filters of a list, like the tabs of the organizer's events page: outlined chips, the chosen
 // one filled in brown, an optional count bubble.
 export function FilterChips<T extends string>({chips, value, onChange, label, className}: FilterChipsProps<T>) {
+    const rowRef = useRef<HTMLDivElement>(null);
+
+    // Phones: the row scrolls sideways; the chosen chip is brought into view (sideways only).
+    useEffect(() => {
+        const row = rowRef.current;
+        const chip = row?.querySelector<HTMLElement>('[aria-pressed="true"]');
+        if (!row || !chip || row.scrollWidth <= row.clientWidth) {
+            return;
+        }
+        const rowBox = row.getBoundingClientRect();
+        const chipBox = chip.getBoundingClientRect();
+        if (chipBox.right > rowBox.right) {
+            row.scrollLeft += chipBox.right - rowBox.right + 16;
+        } else if (chipBox.left < rowBox.left) {
+            row.scrollLeft -= rowBox.left - chipBox.left + 16;
+        }
+    }, [value]);
+
     return (
-        <div className={classNames(classes.chips, className)} role="group" aria-label={label}>
+        <div ref={rowRef} className={classNames(classes.chips, className)} role="group" aria-label={label}>
             {chips.map((chip) => (
                 <button
                     key={chip.value}

@@ -30,6 +30,11 @@ const CapacityAssignments = () => {
         <PageBody>
             <PageTitle
                 subheading={t`Prevent overselling by sharing inventory across multiple ticket types.`}
+                actions={(
+                    <Button leftSection={<IconPlus size={20}/>} onClick={() => openCreateModal()}>
+                        {t({message: 'Create Capacity Assignment', context: 'capacity page'})}
+                    </Button>
+                )}
             >
                 {t`Shared Capacity Management`}
             </PageTitle>
@@ -41,13 +46,7 @@ const CapacityAssignments = () => {
                     searchParams={searchParams}
                     pagination={pagination}
                 />
-            )}>
-                <Button
-                    leftSection={<IconPlus/>}
-                    color={'green'}
-                    onClick={() => openCreateModal()}>{t`Create Capacity Assignment`}
-                </Button>
-            </ToolBar>
+            )}/>
 
             <TableSkeleton isVisible={!capacityAssignments}/>
 
