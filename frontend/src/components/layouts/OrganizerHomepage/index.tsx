@@ -7,6 +7,7 @@ import {OrganizerDocumentHead} from "../../common/OrganizerDocumentHead";
 import {IconHeart} from '@tabler/icons-react';
 import {t} from "@lingui/macro";
 import {socialMediaConfig} from "../../../constants/socialMediaConfig";
+import {CollapsibleDescription} from "../EventHomepage/CollapsibleDescription";
 import {ContactOrganizerModal} from "../../common/ContactOrganizerModal";
 import {getGoogleMapsUrl, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {organizerHomepagePath, organizerHomepageUrl} from "../../../utilites/urlHelper.ts";
@@ -175,13 +176,15 @@ export const OrganizerHomepage = ({
                             </div>
 
                             <div className={classes.infos}>
-                                <h1 className={classes.name}>{organizer.name}</h1>
+                                {/* Deux lignes au plus; le nom entier au survol. */}
+                                <h1 className={classes.name} title={organizer.name}>{organizer.name}</h1>
 
+                                {/* Quatre lignes au plus, « Lire la suite » pour le reste. */}
                                 {organizer.description && (
-                                    <div
-                                        className={classes.description}
-                                        dangerouslySetInnerHTML={{__html: organizer.description}}
-                                    />
+                                    <div className={classes.descriptionBlock}>
+                                        <CollapsibleDescription html={organizer.description}
+                                                                className={classes.description} compact/>
+                                    </div>
                                 )}
 
                                 {(shortLocation || websiteUrl || socialLinks.length > 0 || donationUrl) && (

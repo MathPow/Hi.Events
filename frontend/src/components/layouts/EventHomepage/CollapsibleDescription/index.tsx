@@ -3,8 +3,13 @@ import {t} from "@lingui/macro";
 import {PublicIcon} from "../../../common/PublicIcon";
 import classes from "./CollapsibleDescription.module.scss";
 
-// La description « A propos »: coupee avec un fondu, « Lire la suite » la deplie.
-export const CollapsibleDescription = ({html}: { html: string }) => {
+// La description « A propos »: coupee avec un fondu, « Lire la suite » la deplie. Compacte (l'en-tete
+// de la page d'un organisateur), elle s'arrete a quatre lignes et garde le style de sa page (className).
+export const CollapsibleDescription = ({html, className, compact = false}: {
+    html: string,
+    className?: string,
+    compact?: boolean,
+}) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const [expanded, setExpanded] = useState(false);
     const [overflowing, setOverflowing] = useState(false);
@@ -24,8 +29,9 @@ export const CollapsibleDescription = ({html}: { html: string }) => {
     }, [html, expanded]);
 
     const classNames = [
-        classes.description,
-        !expanded ? classes.clamped : '',
+        compact ? className : classes.description,
+        compact ? '' : className,
+        !expanded ? (compact ? classes.clampedCompact : classes.clamped) : '',
         !expanded && overflowing ? classes.faded : '',
     ].filter(Boolean).join(' ');
 
