@@ -74,7 +74,7 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
 };
 
 export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, onNavigate?: () => void }) => {
-    const {me, links, modals} = useAccountMenu();
+    const {me, links} = useAccountMenu();
     const name = me ? `${me.first_name} ${me.last_name ?? ''}`.trim() : '…';
     const initials = me ? getInitials(name) : '..';
 
@@ -99,7 +99,6 @@ export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, on
                                 aria-label={t`Logout`} title={t`Logout`}>
                     <img src={adminIcon('deconnexion')} alt=""/>
                 </UnstyledButton>
-                {modals}
             </div>
         );
     }
@@ -118,7 +117,6 @@ export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, on
                     <AccountMenuItems links={links}/>
                 </Menu.Dropdown>
             </Menu>
-            {modals}
         </>
     );
 };

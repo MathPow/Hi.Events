@@ -12,7 +12,6 @@ export const clientBuildEnv: { [K in ConfigKeys]: string } = {
     'VITE_APP_LOGO_LIGHT': import.meta.env.VITE_APP_LOGO_LIGHT,
     'VITE_CHATWOOT_BASE_URL': import.meta.env.VITE_CHATWOOT_BASE_URL,
     'VITE_CHATWOOT_WEBSITE_TOKEN': import.meta.env.VITE_CHATWOOT_WEBSITE_TOKEN,
-    'VITE_HIDE_ABOUT_LINK': import.meta.env.VITE_HIDE_ABOUT_LINK,
     'VITE_TOS_URL': import.meta.env.VITE_TOS_URL,
     'VITE_PRIVACY_URL': import.meta.env.VITE_PRIVACY_URL,
     'VITE_PLATFORM_SUPPORT_EMAIL': import.meta.env.VITE_PLATFORM_SUPPORT_EMAIL,

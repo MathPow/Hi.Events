@@ -1,7 +1,6 @@
 import {Avatar, Menu, UnstyledButton} from "@mantine/core";
 import {getInitials} from "../../../utilites/helpers.ts";
 import {
-    IconLifebuoy,
     IconLogout,
     IconSettingsCog,
     IconShield,
@@ -14,9 +13,6 @@ import {NavLink, useParams} from "react-router";
 import {settingsTabPath} from "../../routes/organizer/Settings/settingsTabs.ts";
 import {t} from "@lingui/macro";
 import {authClient} from "../../../api/auth.client.ts";
-import {useDisclosure} from "@mantine/hooks";
-import {AboutModal} from "../../modals/AboutModal";
-import {getConfig} from "../../../utilites/config.ts";
 import {useStopImpersonating} from "../ImpersonationBanner/useStopImpersonating";
 
 export interface AccountMenuLink {
@@ -39,7 +35,6 @@ export const useAccountMenu = () => {
     // The settings of the organizer being viewed; elsewhere /account/... opens the last one's.
     const {organizerId} = useParams();
     const impersonation = useStopImpersonating();
-    const [aboutModalOpen, {open: openAboutModal, close: closeAboutModal}] = useDisclosure(false);
 
     const links: AccountMenuLink[] = [];
 
@@ -84,14 +79,6 @@ export const useAccountMenu = () => {
         })
     }
 
-    if (!getConfig("VITE_HIDE_ABOUT_LINK")) {
-        links.push({
-            label: `About & Support`,
-            icon: IconLifebuoy,
-            onClick: openAboutModal,
-        });
-    }
-
     // Another organizer is created from the organizer switcher (top of the sidebar), where it reads
     // as what it is: another public page of the same organization.
     links.push({
@@ -103,13 +90,7 @@ export const useAccountMenu = () => {
         },
     });
 
-    const modals = (
-        <>
-            {aboutModalOpen && <AboutModal onClose={closeAboutModal}/>}
-        </>
-    );
-
-    return {me, links, modals};
+    return {me, links};
 };
 
 export const AccountMenuItems = ({links}: { links: AccountMenuLink[] }) => (
@@ -130,7 +111,7 @@ export const AccountMenuItems = ({links}: { links: AccountMenuLink[] }) => (
 );
 
 export const GlobalMenu = () => {
-    const {me, links, modals} = useAccountMenu();
+    const {me, links} = useAccountMenu();
 
     return (
         <>
@@ -147,7 +128,6 @@ export const GlobalMenu = () => {
                     <AccountMenuItems links={links}/>
                 </Menu.Dropdown>
             </Menu>
-            {modals}
         </>
     );
 };
