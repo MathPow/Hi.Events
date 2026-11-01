@@ -452,9 +452,11 @@ abstract class BaseRepository implements RepositoryInterface
 
                 $isNull = $filterField->value === 'null';
 
+                // With a null value Laravel writes IS NULL for « = » only (any other operator, « IS »
+                // included, gives IS NOT NULL): « = » and « != » cover both cases.
                 $operatorMapping = [
-                    'eq' => $isNull ? 'IS' : '=',
-                    'ne' => $isNull ? 'IS NOT' : '!=',
+                    'eq' => '=',
+                    'ne' => '!=',
                     'lt' => '<',
                     'lte' => '<=',
                     'gt' => '>',

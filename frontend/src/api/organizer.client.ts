@@ -128,6 +128,15 @@ export const organizerClient = {
         return response.data;
     },
 
+    // « Exporter (CSV) » of the Commandes page: the same search and filters as the list.
+    exportOrganizerOrders: async (organizerId: IdParam, filters: QueryFilters): Promise<Blob> => {
+        const response = await api.get(
+            `organizers/${organizerId}/orders/export` + queryParamsHelper.buildQueryString(filters),
+            {responseType: 'blob'},
+        );
+        return new Blob([response.data], {type: 'text/csv'});
+    },
+
     getOrganizerReport: async (
         organizerId: IdParam,
         reportType: string,

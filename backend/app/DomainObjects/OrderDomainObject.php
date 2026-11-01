@@ -43,6 +43,8 @@ class OrderDomainObject extends Generated\OrderDomainObjectAbstract implements I
     public static function getAllowedFilterFields(): array
     {
         return [
+            // La page Commandes de l'organisateur filtre par evenement.
+            self::EVENT_ID,
             self::STATUS,
             self::PAYMENT_STATUS,
             self::REFUND_STATUS,

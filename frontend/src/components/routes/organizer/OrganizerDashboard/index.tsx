@@ -537,7 +537,7 @@ export const OrganizerDashboard = () => {
             </div>
 
             <section className={classNames(classes.card, classes.ordersCard)}>
-                <SectionTitle>
+                <SectionTitle link={`/manage/organizer/${organizerId}/orders`}>
                     <span className={classes.desktopOnly}>{t`Recent Orders`}</span>
                     <span className={classes.mobileOnly}>{t`Orders`}</span>
                 </SectionTitle>

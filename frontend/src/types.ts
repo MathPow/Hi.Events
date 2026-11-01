@@ -803,6 +803,8 @@ export interface OrderItem {
     product_id: number;
     product_price_id: number;
     item_name: string;
+    // TICKET or GENERAL (merch): « 1 billet · 1 casquette » in the order lists.
+    product_type?: string;
     total_before_additions: number;
     total_before_discount?: number;
     price_before_discount?: number;

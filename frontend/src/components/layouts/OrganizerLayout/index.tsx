@@ -124,6 +124,8 @@ const OrganizerLayout = () => {
             mobileTab: true,
             mobileTabLabel: t`Home`,
             mobileTabOrder: 0,
+            // « Commandes » opens from the dashboard (« Tout voir »): Tableau de bord / Commandes.
+            isActive: (isActive) => isActive || /\/orders\/?$/.test(location.pathname),
         },
         {
             link: 'reports',

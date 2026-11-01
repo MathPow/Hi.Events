@@ -53,7 +53,7 @@ export const isDuring = (event: Event, [from, to]: [Dayjs, Dayjs]) => {
 };
 
 // Une case du menu deroulant: la vraie case (cochee ou radio) reste au clavier, cachee sous la rangee.
-const MenuOption = ({type, name, checked, onChange, illustration, label}: {
+export const MenuOption = ({type, name, checked, onChange, illustration, label}: {
     type: 'checkbox' | 'radio',
     name: string,
     checked: boolean,
@@ -73,7 +73,7 @@ const MenuOption = ({type, name, checked, onChange, illustration, label}: {
 
 // Le bouton d'un menu deroulant (dates, types), sous son ombre: la decoupe la couperait.
 // Popover.Target lui passe sa ref et ses attributs aria.
-const MenuTrigger = forwardRef<HTMLButtonElement, ComponentPropsWithoutRef<'button'> & {
+export const MenuTrigger = forwardRef<HTMLButtonElement, ComponentPropsWithoutRef<'button'> & {
     opened: boolean,
     active: boolean,
 }>(({opened, active, children, ...others}, ref) => (

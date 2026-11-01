@@ -138,6 +138,7 @@ use HiEvents\Http\Actions\Organizers\Stripe\GetOrganizerStripeConnectionAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizerEventsAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizersAction;
 use HiEvents\Http\Actions\Organizers\GetPublicOrganizerAction;
+use HiEvents\Http\Actions\Organizers\Orders\ExportOrganizerOrdersAction;
 use HiEvents\Http\Actions\Organizers\Orders\GetOrganizerOrdersAction;
 use HiEvents\Http\Actions\Organizers\Public\SendOrganizerContactMessagePublicAction;
 use HiEvents\Http\Actions\Organizers\Messages\DeleteOrganizerMessageAction;
@@ -385,6 +386,7 @@ $router->middleware(['auth:api'])->group(
         $router->post('/push/subscriptions', CreatePushSubscriptionAction::class);
         $router->delete('/push/subscriptions', DeletePushSubscriptionAction::class);
         $router->get('/organizers/{organizer_id}/orders', GetOrganizerOrdersAction::class);
+        $router->get('/organizers/{organizer_id}/orders/export', ExportOrganizerOrdersAction::class);
         $router->get('/organizers/{organizer_id}/settings', GetOrganizerSettingsAction::class);
         $router->patch('/organizers/{organizer_id}/settings', PartialUpdateOrganizerSettingsAction::class);
         $router->get('/organizers/{organizer_id}/reports/{report_type}', GetOrganizerReportAction::class);

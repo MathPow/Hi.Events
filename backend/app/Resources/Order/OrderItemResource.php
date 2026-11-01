@@ -21,6 +21,8 @@ class OrderItemResource extends BaseResource
             'quantity' => $this->getQuantity(),
             'product_id' => $this->getProductId(),
             'item_name' => $this->getItemName(),
+            // Billet ou article (GENERAL) : « 1 billet · 1 casquette » dans les listes de commandes.
+            'product_type' => $this->getProductType(),
             'price_before_discount' => $this->getPriceBeforeDiscount(),
             'taxes_and_fees_rollup' => $this->getTaxesAndFeesRollup(),
         ];
