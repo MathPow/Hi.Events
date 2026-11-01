@@ -42,6 +42,8 @@ api.interceptors.response.use(
         const currentPath = window?.location.pathname;
         const isAllowedUnauthenticatedPath = currentPath === '/'
             || currentPath === '/events'
+            || currentPath === '/help'
+            || currentPath.startsWith('/help/')
             || ALLOWED_UNAUTHENTICATED_PATHS.some(path => currentPath.includes(path));
         const isManageEventPath = currentPath.startsWith('/manage/event/');
         const isAuthError = status === 401 || status === 403;
@@ -59,6 +61,11 @@ api.interceptors.response.use(
 );
 
 axios.defaults.withCredentials = true;
+
+// Where the login sends back to, for a page that asks to sign in (the help center).
+export const returnHereAfterLogin = (url: string) => {
+    window?.localStorage?.setItem(PREVIOUS_URL_KEY, url);
+};
 
 export const redirectToPreviousUrl = () => {
     const previousUrl = window?.localStorage?.getItem(PREVIOUS_URL_KEY) || '/manage/events';

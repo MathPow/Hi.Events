@@ -555,6 +555,22 @@ const routes: RouteObject[] = [
         errorElement: <ErrorPage />,
     },
     {
+        path: "/help",
+        async lazy() {
+            const HelpCenter = await import("./components/routes/help");
+            return { Component: HelpCenter.default };
+        },
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/help/:slug",
+        async lazy() {
+            const HelpGuide = await import("./components/routes/help/HelpGuide");
+            return { Component: HelpGuide.default };
+        },
+        errorElement: <ErrorPage />,
+    },
+    {
         path: "/events/:organizerId/:organizerSlug",
         loader: publicOrganizerRouteLoader,
         async lazy() {
@@ -711,7 +727,8 @@ const routes: RouteObject[] = [
 
 const Assistant = lazy(() => import("./components/common/Assistant"));
 
-const BACK_OFFICE = /^\/(manage|account|admin|welcome)(\/|$)/;
+// The help center too, for an organizer to ask the assistant from there.
+const BACK_OFFICE = /^\/(manage|account|admin|welcome|help)(\/|$)/;
 
 // Every page shares this root so the organizer assistant stays mounted, and keeps its
 // answer running, when a page moves from one back-office layout to another. It loads

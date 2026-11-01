@@ -8,7 +8,7 @@ import {t} from "@lingui/macro";
 import {useLingui} from "@lingui/react";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {Markdown} from "./Markdown.tsx";
-import {OPEN_ASSISTANT_EVENT} from "../../../utilites/assistantEvents.ts";
+import {hasWaitingQuestion, OPEN_ASSISTANT_EVENT, takeWaitingQuestion} from "../../../utilites/assistantEvents.ts";
 import {
     addQuestion,
     ApiMessage,
@@ -94,9 +94,17 @@ const AssistantPanel = ({userId}: { userId: string }) => {
         t`Create a 15% promo code for my next event.`,
     ];
 
-    // "Help center" in the nav.
+    // Opened from the help center, with or without a question.
+    const [asked, setAsked] = useState<string | null>(null);
     useEffect(() => {
-        const openPanel = () => setOpen(true);
+        const openPanel = () => {
+            setOpen(true);
+            setAsked(takeWaitingQuestion());
+        };
+        // Asked before the panel was there.
+        if (hasWaitingQuestion()) {
+            openPanel();
+        }
         window.addEventListener(OPEN_ASSISTANT_EVENT, openPanel);
         return () => window.removeEventListener(OPEN_ASSISTANT_EVENT, openPanel);
     }, []);
@@ -292,6 +300,23 @@ const AssistantPanel = ({userId}: { userId: string }) => {
             }
         }
     };
+
+    // The help center's question goes out once the assistant can answer; if it can't, it
+    // waits in the field.
+    useEffect(() => {
+        if (!asked) {
+            return;
+        }
+        if (ready && !running) {
+            setAsked(null);
+            send(asked);
+        } else if (statusFailed || (status && !ready)) {
+            setAsked(null);
+            setInput(asked);
+        }
+        // `send` is new at each render: the question goes out once, when the state allows it.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [asked, ready, running, status, statusFailed]);
 
     const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Escape") {

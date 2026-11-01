@@ -12,7 +12,6 @@ import {adminIcon} from "./NavParts";
 import ImpersonationBanner from "../../common/ImpersonationBanner";
 import {InstallAppPrompt} from "../../common/InstallAppPrompt";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
-import {openAssistant} from "../../../utilites/assistantEvents.ts";
 
 interface AppLayoutProps {
     navItems: NavItem[];
@@ -70,7 +69,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         label: t`Help center`,
         iconSrc: adminIcon('aide'),
         tileIconSrc: adminIcon('aide-22'),
-        onClick: openAssistant,
+        link: '/help',
     };
 
     // Read after the first render: the server does not know the choice.

@@ -1,5 +1,4 @@
 import {Link, useLocation, useNavigate} from "react-router";
-import {Accordion} from '@mantine/core';
 import {EventCard} from './EventCard';
 import classes from './OrganizerHomepage.module.scss';
 import React, {useEffect, useRef, useState} from 'react';
@@ -19,6 +18,7 @@ import {CookieConsentBanner} from "../../common/CookieConsentBanner";
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
 import {PublicIcon} from "../../common/PublicIcon";
+import {FaqAccordion} from "../../common/FaqAccordion";
 import {ShareComponent} from "../../common/ShareIcon";
 
 interface OrganizerHomepageProps {
@@ -27,14 +27,6 @@ interface OrganizerHomepageProps {
     isPastEvents?: boolean;
     isPreview?: boolean;
 }
-
-// La pastille de la FAQ du site DEHORS: le plus et le moins se croisent a l'ouverture.
-const FaqPastille = () => (
-    <span className={classes.faqPastille} aria-hidden="true">
-        <img className={classes.faqPlus} src={'/interface/faq/plus.svg'} width={16} height={16} alt={''}/>
-        <img className={classes.faqMoins} src={'/interface/faq/moins.svg'} width={16} height={16} alt={''}/>
-    </span>
-);
 
 // En arrivant sur la page, on part du haut. Pas en passant d'« A venir » a « Passes »: l'adresse
 // change, mais on reste ou on etait dans la page (TAB_STATE).
@@ -331,29 +323,7 @@ export const OrganizerHomepage = ({
                             <h2 id="organizer-faq-title" className={classes.sectionTitle}>
                                 {t`Frequently asked questions`}
                             </h2>
-                            <Accordion
-                                multiple
-                                chevronPosition="right"
-                                chevron={<FaqPastille/>}
-                                chevronSize={40}
-                                disableChevronRotation
-                                transitionDuration={300}
-                                classNames={{
-                                    root: classes.faq,
-                                    item: classes.faqItem,
-                                    control: classes.faqControl,
-                                    label: classes.faqQuestion,
-                                    chevron: classes.faqChevron,
-                                    content: classes.faqAnswer,
-                                }}
-                            >
-                                {faqs.map((faq, index) => (
-                                    <Accordion.Item key={index} value={String(index)} data-rough>
-                                        <Accordion.Control>{faq.question}</Accordion.Control>
-                                        <Accordion.Panel>{faq.answer}</Accordion.Panel>
-                                    </Accordion.Item>
-                                ))}
-                            </Accordion>
+                            <FaqAccordion faqs={faqs}/>
                         </section>
                     )}
 
