@@ -34,6 +34,9 @@
 }
 
 .organizer {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
   font-size: 15px;
   font-weight: 700;
@@ -42,6 +45,17 @@
   @include mixins.respond-below(md) {
     font-size: 14px;
   }
+}
+
+// Le logo du concepteur de billets, sur une pastille creme devant l'organisateur.
+.logo {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 4px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: var(--dehors-creme);
 }
 
 .typePill {
@@ -247,6 +261,22 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+}
+
+.email {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+  color: var(--dehors-texte-doux);
+}
+
+// Le texte du bas du concepteur de billets.
+.footerText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+  white-space: pre-line;
+  color: var(--dehors-texte-doux);
 }
 
 .attendeeNumber {

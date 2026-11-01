@@ -176,7 +176,7 @@ const TicketDesigner = () => {
 
     const sections: { id: SectionId, icon: string, title: string, subtitle: string }[] = [
         {id: 'images', icon: 'image', title: t`Logo`, subtitle: t`At the top of the ticket`},
-        {id: 'accent', icon: 'drop', title: t`Accent color`, subtitle: t`Borders, highlights and QR code`},
+        {id: 'accent', icon: 'drop', title: t`Accent color`, subtitle: t`The top of the ticket`},
         {
             id: 'info',
             icon: '/interface/admin/parametres/billet.svg',
