@@ -1,7 +1,6 @@
 import {ColumnDef, flexRender, getCoreRowModel, useReactTable, VisibilityState,} from '@tanstack/react-table';
 import {Table as MantineTable} from '@mantine/core';
 import React, {useEffect, useState} from 'react';
-import {Card} from '../Card';
 import classes from './TanStackTable.module.scss';
 
 export interface TanStackTableColumnMeta {
@@ -67,11 +66,11 @@ export function TanStackTable<TData>({
                     {renderColumnVisibilityToggle(table)}
                 </div>
             )}
-            <Card className={classes.card}>
+            <div className={classes.card}>
                 <MantineTable.ScrollContainer minWidth={200} scrollAreaProps={{
                     type: 'hover',
                 }}>
-                    <MantineTable className={classes.table}>
+                    <MantineTable className={classes.table} highlightOnHover>
                         <MantineTable.Thead className={classes.tableHead}>
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <MantineTable.Tr key={headerGroup.id}>
@@ -131,7 +130,7 @@ export function TanStackTable<TData>({
                         </MantineTable.Tbody>
                     </MantineTable>
                 </MantineTable.ScrollContainer>
-            </Card>
+            </div>
         </div>
     );
 }

@@ -12,12 +12,13 @@ export const DownloadCsvButton = ({
                                       headers,
                                       data,
                                       filename = 'download.csv',
+                                      children,
                                       ...buttonProps
                                   }: DownloadCsvButtonProps) => {
     const handleDownloadCSV = () => {
         const csvData = data.map(row =>
             row.map(cell =>
-                typeof cell === 'string' ? `"${cell}"` : cell
+                typeof cell === 'string' ? `"${cell.replace(/"/g, '""')}"` : cell
             ).join(',')
         );
 
@@ -45,7 +46,7 @@ export const DownloadCsvButton = ({
             variant="light"
             {...buttonProps}
         >
-            {t`Download CSV`}
+            {children ?? t`Download CSV`}
         </Button>
     );
 };

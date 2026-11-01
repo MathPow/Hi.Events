@@ -1,76 +1,97 @@
 @use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
 .card {
   container-type: inline-size;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 
-  .wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    place-content: space-between;
+  @include mixins.respond-below(md) {
+    margin-bottom: 1.25rem;
+  }
+}
 
-    @include mixins.respond-below(sm, true) {
-      flex-direction: column;
-      align-items: flex-start;
-      width: 100%;
-    }
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 
-    .searchBar {
-      margin-bottom: 0 !important;
-      width: 100%;
-      flex: 1;
-      min-width: 0; // Prevents flex item from overflowing
-    }
+  @include mixins.respond-below(md, true) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+}
 
-    .filterAndActions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      place-self: flex-end;
+.searchBar {
+  flex: 1;
+  min-width: 0;
+}
 
-      // Phones: one row of equal buttons under the search.
-      @include mixins.respond-below(sm, true) {
-        width: 100%;
-        gap: 0.5rem;
+.filterAndActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  margin-left: auto;
 
-        .filter,
-        .actions {
-          display: contents;
-        }
+  // Phones: one row of equal buttons under the search.
+  @include mixins.respond-below(md, true) {
+    width: 100%;
+    gap: 0.5rem;
+    margin-left: 0;
 
-        button {
-          flex: 1 1 0;
-          min-width: max-content;
-          padding-inline: 0.875rem;
-        }
-      }
-    }
-
-    .filter {
-      display: flex;
-      align-items: center;
-    }
-
+    .filter,
     .actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      place-self: flex-end;
-      flex-wrap: wrap;
+      display: contents;
+    }
+
+    :global(.mantine-Button-root) {
+      flex: 1 1 0;
+      min-width: max-content;
+      padding-inline: 0.875rem !important;
+    }
+  }
+}
+
+.filter,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+// Secondary buttons (filters, columns…) float like the search field; the main action is orange.
+.card :global(.mantine-Button-root) {
+  height: 3.5rem !important;
+  padding: 0 1.25rem !important;
+  border: none !important;
+  border-radius: 1rem !important;
+  background: ui.$card !important;
+  color: ui.$ink !important;
+  font-size: 1rem !important;
+  box-shadow: ui.$shadow;
+
+  &:hover:where(:not(:disabled, [data-disabled])) {
+    background: #fff !important;
+  }
+
+  &:is(:not([data-variant]), [data-variant='filled']) {
+    background: ui.$accent !important;
+    box-shadow: none;
+
+    &:hover:where(:not(:disabled, [data-disabled])) {
+      background: var(--dehors-orange-survol) !important;
     }
   }
 
-  button {
-    height: 42px !important;
+  :global(.mantine-Button-section) svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    stroke-width: 2;
   }
 
   @include mixins.respond-below(md) {
-    padding: 0.75rem;
-    margin-bottom: 0.75rem;
-
-    .wrapper {
-      gap: 0.5rem;
-    }
+    height: 3rem !important;
   }
 }

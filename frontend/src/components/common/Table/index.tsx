@@ -1,6 +1,5 @@
 import classes from './Table.module.scss'
 import React, {useRef} from "react";
-import {Card} from "../Card";
 import {Table as MantineTable} from "@mantine/core";
 import {useStackedTableLabels} from "../../../hooks/useStackedTableLabels.ts";
 
@@ -20,17 +19,19 @@ export const TableHead = ({children}: TableHeadProps) => {
     children: React.ReactNode;
 }
 
+// A list in a cream card, like « Commandes récentes » on the organizer dashboard: a pale header row,
+// rows separated by a thin line; on phones each row becomes a stacked card (stacked-table mixin).
 export const Table =({children}: TableProps) => {
     const tableRef = useRef<HTMLTableElement>(null);
     useStackedTableLabels(tableRef);
 
     return (
-        <Card className={classes.card}>
+        <div className={classes.card}>
             <MantineTable.ScrollContainer minWidth={200}>
-                <MantineTable className={classes.table} ref={tableRef}>
+                <MantineTable className={classes.table} ref={tableRef} highlightOnHover>
                     {children}
                 </MantineTable>
             </MantineTable.ScrollContainer>
-        </Card>
+        </div>
     );
 }

@@ -1,11 +1,12 @@
-import {TextInput, TextInputProps} from '@mantine/core';
-import {IconSearch, IconX} from '@tabler/icons-react';
+import {TextInput, TextInputProps, UnstyledButton} from '@mantine/core';
+import {IconX} from '@tabler/icons-react';
 import classes from './SearchBar.module.scss';
 import {useEffect, useState} from "react";
 import {SortSelector, SortSelectorProps} from "../SortSelector";
 import {t} from "@lingui/macro";
 import classNames from "classnames";
 import {PaginationData, QueryFilters} from "../../../types.ts";
+import {PublicIcon} from "../PublicIcon";
 
 interface SearchBarProps extends TextInputProps {
     onClear: () => void;
@@ -50,6 +51,7 @@ export const SearchBarWrapper = ({setSearchParams, searchParams, pagination, pla
     );
 }
 
+// The floating search field of the organizer's events page, with the sort menu beside it.
 export const SearchBar = ({sortProps, onClear, value, onChange, ...props}: SearchBarProps) => {
     const [searchValue, setSearchValue] = useState<typeof value>(value);
 
@@ -59,26 +61,30 @@ export const SearchBar = ({sortProps, onClear, value, onChange, ...props}: Searc
 
     return (
         <div className={classNames(classes.searchBarWrapper, props.className)}>
-            <TextInput
-                className={classes.searchBar}
-                leftSection={<IconSearch size="1.1rem" stroke={1.5}/>}
-                radius="sm"
-                size="md"
-                value={searchValue}
-                {...props}
-                onChange={(event) => {
-                    setSearchValue(event.currentTarget.value);
-                    if (onChange) {
-                        onChange(event);
-                    }
-                }}
-                rightSection={<IconX aria-label={t`Clear Search Text`}
-                                     color={'#ddd'}
-                                     style={{cursor: 'pointer'}}
-                                     display={value ? 'block' : 'none'}
-                                     onClick={() => onClear()}
-                />}
-            />
+            <div className={classes.shadow}>
+                <TextInput
+                    className={classes.searchBar}
+                    classNames={{input: classes.input, section: classes.section}}
+                    leftSection={<PublicIcon name={'recherche'} size={20}/>}
+                    leftSectionPointerEvents="none"
+                    size="md"
+                    value={searchValue}
+                    aria-label={typeof props.placeholder === 'string' ? props.placeholder : undefined}
+                    {...props}
+                    onChange={(event) => {
+                        setSearchValue(event.currentTarget.value);
+                        if (onChange) {
+                            onChange(event);
+                        }
+                    }}
+                    rightSection={value ? (
+                        <UnstyledButton className={classes.clear} onClick={() => onClear()}
+                                        aria-label={t`Clear Search Text`}>
+                            <IconX size={18} stroke={2}/>
+                        </UnstyledButton>
+                    ) : null}
+                />
+            </div>
 
             {sortProps
                 && <SortSelector
@@ -89,5 +95,3 @@ export const SearchBar = ({sortProps, onClear, value, onChange, ...props}: Searc
         </div>
     );
 };
-
-

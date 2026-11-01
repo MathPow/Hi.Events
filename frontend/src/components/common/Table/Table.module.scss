@@ -1,37 +1,59 @@
 @use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
 .tableHead {
   white-space: nowrap;
 
+  tr {
+    border: none !important;
+  }
+
   th {
-    background-color: #462e7812;
-    color: var(--hi-secondary-text) !important;
-    padding: 0.75rem 0.625rem !important;
+    @include ui.table-head-cell;
   }
 }
 
 .card {
-  padding: 0 !important;
+  @include ui.card(0.875rem 1rem);
+  margin-bottom: 1.5rem;
   overflow: hidden;
 
-  .mantine-ScrollArea-viewport {
+  :global(.mantine-ScrollArea-viewport) {
     padding-bottom: 0;
+  }
+
+  @include mixins.respond-below(md) {
+    padding: 0.25rem 1rem;
+    margin-bottom: 1.25rem;
   }
 }
 
 .table {
-  tr td,
-  tr,
-  th {
-    padding: 15px !important;
+  --table-border-color: #{ui.$separator};
+  --table-hover-color: #{ui.$row};
+  color: ui.$ink;
+
+  tbody tr td {
+    padding: 0.875rem 0.75rem;
+    font-size: 0.9375rem;
     white-space: nowrap;
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
   }
 
   @include mixins.respond-below(md) {
     @include mixins.stacked-table;
 
     tbody tr {
-      padding: 0.875rem 1rem !important;
+      padding: 0.875rem 0 !important;
+    }
+
+    tbody tr td::before {
+      color: ui.$ink;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
   }
 }

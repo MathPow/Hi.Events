@@ -727,6 +727,11 @@ msgstr "Thêm hình ảnh"
 msgid "Add automatic info (first name, event, date…) with the last button of the toolbar."
 msgstr "Thêm thông tin tự động (tên, sự kiện, ngày…) bằng nút cuối cùng của thanh công cụ."
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "Add tickets"
+msgstr "Thêm vé"
+
 #: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
 msgid "Add your username"
 msgstr "Thêm tên người dùng của bạn"
@@ -2900,6 +2905,11 @@ msgstr "Kết nối với Stripe"
 msgid "Connect with Stripe"
 msgstr "Kết nối với Stripe"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "Connect with Stripe"
+msgstr "Kết nối Stripe"
+
 #: src/components/routes/landing/index.tsx:848
 msgid "Connect your Stripe"
 msgstr "Kết nối Stripe của bạn"
@@ -3503,6 +3513,11 @@ msgstr "Tùy chỉnh bố cục, màu sắc và thương hiệu của trang ch�
 msgid "Customize the miscellaneous settings for this event"
 msgstr "Tùy chỉnh các cài đặt linh tinh cho sự kiện này"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started action"
+msgid "Customize the page"
+msgstr "Tùy chỉnh trang"
+
 #: src/components/common/QuestionsTable/index.tsx:435
 msgid "Customize the questions asked during checkout to gather important information from your attendees."
 msgstr "Tùy chỉnh các câu hỏi được hỏi trong quá trình thanh toán để thu thập thông tin quan trọng từ người tham dự."
@@ -3528,6 +3543,11 @@ msgstr "Tùy chỉnh mẫu email của bạn bằng mẫu Liquid"
 msgid "Customize your event page"
 msgstr "Tùy chỉnh trang sự kiện của bạn"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "Customize your event page"
+msgstr "Tùy chỉnh trang sự kiện"
+
 #: src/components/routes/event/GettingStarted/index.tsx:171
 msgid "Customize your event page to match your brand and style."
 msgstr "Tùy chỉnh trang sự kiện của bạn để phù hợp với thương hiệu và phong cách của bạn."
@@ -3551,6 +3571,10 @@ msgstr ""
 #: src/components/routes/organizer/Reports/index.tsx:18
 #~ msgid "Daily revenue, taxes, fees, and refunds across all events"
 #~ msgstr "Doanh thu hàng ngày, thuế, phí và hoàn tiền cho tất cả sự kiện"
+
+#: src/components/routes/event/Reports/index.tsx
+msgid "Daily sales"
+msgstr "Doanh số hằng ngày"
 
 #: src/components/routes/event/Reports/index.tsx:23
 msgid "Daily Sales Report"
@@ -4872,6 +4896,10 @@ msgstr ""
 msgid "Everything is published"
 msgstr "Tất cả đã được xuất bản"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgid "Everything is ready, your tickets are on sale."
+msgstr "Mọi thứ đã sẵn sàng, vé của bạn đang được bán."
+
 #: src/components/routes/landing/index.tsx:1013
 msgid "Everything you need"
 msgstr "Mọi thứ bạn cần"
@@ -5797,6 +5825,10 @@ msgstr "Đây là component React bạn có thể sử dụng để nhúng widge
 #: src/components/common/AffiliateTable/index.tsx:241
 msgid "Here is your affiliate link"
 msgstr "Đây là liên kết đối tác của bạn"
+
+#: src/components/routes/event/EventDashboard/index.tsx
+msgid "Here's how {eventTitle} is doing."
+msgstr "Đây là tình hình của {eventTitle}."
 
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:84
 msgid "Here's what to expect:"
@@ -7291,6 +7323,10 @@ msgstr ""
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:36
 #~ msgid "Net Revenue"
 #~ msgstr "Doanh thu ròng"
+
+#: src/components/routes/event/Reports/DailySalesReport/index.tsx
+msgid "Net sales"
+msgstr "Doanh số ròng"
 
 #: src/components/common/OrganizerWebhookTable/index.tsx:266
 #: src/components/common/PromoCodeTable/index.tsx:158
@@ -10135,6 +10171,10 @@ msgstr "Bán hàng kết thúc"
 msgid "Sales money goes straight to your account, without waiting for the day of the event."
 msgstr "Tiền bán vé được chuyển thẳng vào tài khoản của bạn, không cần chờ đến ngày sự kiện."
 
+#: src/components/routes/event/EventDashboard/index.tsx
+msgid "Sales over time"
+msgstr "Doanh số theo thời gian"
+
 #: src/components/common/ProductPriceAvailability/index.tsx:30
 #: src/components/common/ProductPriceAvailability/index.tsx:59
 msgid "Sales start"
@@ -10782,6 +10822,10 @@ msgstr ""
 msgid "Service Fee"
 msgstr "Phí dịch vụ"
 
+#: src/components/routes/event/Reports/ProductSalesReport/index.tsx
+msgid "Service fees"
+msgstr "Phí dịch vụ"
+
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:189
 msgid "Set a deposit amount on a product to ask for a security deposit. Participants send it separately; it is not included in the order total. Track, return or retain deposits from the Deposits page."
 msgstr "Đặt số tiền đặt cọc cho một sản phẩm để yêu cầu đặt cọc. Người tham gia gửi riêng; khoản này không bao gồm trong tổng đơn hàng. Theo dõi, hoàn lại hoặc giữ lại tiền đặt cọc từ trang Khoản đặt cọc."
@@ -10814,9 +10858,24 @@ msgstr "Thiết lập danh sách check-in cho các lối vào, phiên hoặc ng�
 msgid "Set up your event"
 msgstr "Thiết lập sự kiện của bạn"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "Set up your event"
+msgstr "Mô tả sự kiện của bạn"
+
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started action"
+msgid "Set up your event"
+msgstr "Thêm chi tiết"
+
 #: src/components/routes/event/GettingStarted/index.tsx:189
 msgid "Set your event live"
 msgstr "Đặt sự kiện của bạn trực tiếp"
+
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "Set your event live"
+msgstr "Công khai sự kiện của bạn"
 
 #: src/components/common/QuestionsTable/index.tsx:397
 msgid "Setting updated"
@@ -11169,6 +11228,10 @@ msgstr "Xin lỗi vì sự bất tiện này."
 msgid "Sorry, this promo code is not recognized"
 msgstr "Xin lỗi, mã khuyến mãi này không được công nhận"
 
+#: src/components/common/SortSelector/index.tsx
+msgid "Sort by"
+msgstr "Sắp xếp theo"
+
 #: src/components/routes/admin/Attribution/index.tsx:106
 msgid "Source"
 msgstr "Nguồn"
@@ -11267,6 +11330,10 @@ msgstr "Trạng thái"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
 msgid "Stay"
 msgstr "Ở lại"
+
+#: src/components/routes/event/GettingStarted/index.tsx
+msgid "Step {0}"
+msgstr "Bước {0}"
 
 #: src/components/routes/welcome/index.tsx:36
 msgid "Step {step} of 2"
@@ -12595,6 +12662,11 @@ msgstr ""
 msgid "To"
 msgstr "Đến"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "To do"
+msgstr "Cần làm"
+
 #: src/components/routes/organizer/Settings/tabs/EmailsTab.tsx
 msgid "To each attendee, with their ticket"
 msgstr "Gửi mỗi người tham dự, kèm vé của họ"
@@ -12923,6 +12995,10 @@ msgstr "Khách hàng duy nhất"
 #: src/components/routes/organizer/Settings/Sections/AddressSettings/index.tsx:111
 msgid "United States"
 msgstr "Hoa Kỳ"
+
+#: src/components/routes/event/Reports/ProductSalesReport/index.tsx
+msgid "Units sold"
+msgstr "Số lượng đã bán"
 
 #: src/components/common/MessageList/index.tsx:45
 #: src/components/common/MessageList/index.tsx:50
@@ -13700,6 +13776,10 @@ msgstr "Chào mừng bạn! Vui lòng đăng nhập để tiếp tục."
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:446
 msgid "Welcome back, {firstName}!"
 msgstr "Chào mừng trở lại, {firstName}!"
+
+#: src/components/routes/event/EventDashboard/index.tsx
+msgid "Welcome back, {firstName}! Here's how {eventTitle} is doing."
+msgstr "Chào mừng trở lại, {firstName}! Đây là tình hình của {eventTitle}."
 
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:444
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
@@ -14495,3 +14575,7 @@ msgstr "{faqCount, plural, =0 {Chưa có câu hỏi nào} other {# câu hỏi ·
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx
 msgid "{platformFees} per ticket + Stripe fees ({stripeFees}). Nothing on free events."
 msgstr "{platformFees} mỗi vé + phí Stripe ({stripeFees}). Không tính phí với sự kiện miễn phí."
+
+#: src/components/routes/event/GettingStarted/index.tsx
+msgid "{doneCount} of {total} steps completed"
+msgstr "Đã hoàn thành {doneCount}/{total} bước"

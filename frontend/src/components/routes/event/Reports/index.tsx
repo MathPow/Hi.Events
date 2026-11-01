@@ -1,62 +1,97 @@
-import {PageTitle} from "../../../common/PageTitle";
+import {useState} from "react";
+import {Navigate, useParams, useSearchParams} from "react-router";
 import {t} from "@lingui/macro";
-import {PageBody} from "../../../common/PageBody";
-import {IconChartBar, IconChevronRight, IconReportMoney} from "@tabler/icons-react";
-import classes from './Reports.module.scss';
-import {Card} from "../../../common/Card";
-import {Avatar, UnstyledButton} from "@mantine/core";
-import {Link, useParams} from "react-router";
 import {ReportTypes} from "../../../../types.ts";
+import {StatBoxes} from "../../../common/StatBoxes";
+import {ReportPanel} from "../../organizer/Reports/ReportPanel.tsx";
+import ProductSalesReport from "./ProductSalesReport";
+import {DailySalesReport} from "./DailySalesReport";
+import PromoCodesReport from "./PromoCodesReport";
+import classes from './Reports.module.scss';
 
+interface ReportDefinition {
+    id: ReportTypes;
+    iconName: string;
+    title: string;
+    description: string;
+    Content: (props: { showTitle?: boolean }) => JSX.Element | null;
+}
+
+/**
+ * The event's reports, like the organizer's (Figma « Admin · Rapports »): the event's figures,
+ * then each report opening in place with its period, its table and its CSV export.
+ */
 const Reports = () => {
-    const {eventId} = useParams();
+    const [searchParams] = useSearchParams();
+    const [openReport, setOpenReport] = useState<string | null>(searchParams.get('open'));
 
-    const reports = [
+    const reports: ReportDefinition[] = [
         {
             id: ReportTypes.ProductSales,
+            iconName: 'merch',
             title: t`Product Sales`,
             description: t`Product sales, revenue, and tax breakdown`,
-            icon: <Avatar size={40} color={'#831781'}><IconReportMoney/></Avatar>
+            Content: ProductSalesReport,
         },
         {
             id: ReportTypes.DailySales,
-            title: t`Daily Sales Report`,
+            iconName: 'calendrier',
+            title: t`Daily sales`,
             description: t`Daily sales, tax, and fee breakdown`,
-            icon: <Avatar size={40} color={'#00a3e0'}><IconChartBar/></Avatar>
+            Content: DailySalesReport,
         },
         {
             id: ReportTypes.PromoCodes,
-            title: t`Promo Codes Report`,
+            iconName: 'promo',
+            title: t`Promo Codes`,
             description: t`Promo code usage and discount breakdown`,
-            icon: <Avatar size={40} color={'#634fc0'}><IconReportMoney/></Avatar>
-        }
+            Content: PromoCodesReport,
+        },
     ];
 
     return (
-        <PageBody>
-            <PageTitle
-                subheading={t`Download sales, attendee, and financial reports for all completed orders.`}>
-                {t`Reports`}
-            </PageTitle>
+        <div className={classes.page}>
+            <header className={classes.header}>
+                <h1 className={classes.title}>{t`Reports`}</h1>
+                <p className={classes.subtitle}>
+                    <span className={classes.desktopOnly}>
+                        {t`Download sales, attendee, and financial reports for all completed orders.`}
+                    </span>
+                    <span className={classes.mobileOnly}>{t`Only completed orders are included.`}</span>
+                </p>
+            </header>
 
-            {reports.map((report) => (
-                <UnstyledButton component={Link} key={report.id} to={`/manage/event/${eventId}/report/${report.id}`}>
-                    <Card className={classes.reportType}>
-                        <div className={classes.icon}>
-                            {report.icon}
-                        </div>
-                        <div className={classes.content}>
-                            <h3>{report.title}</h3>
-                            <p>{report.description}</p>
-                        </div>
-                        <div className={classes.rightCaret}>
-                            <IconChevronRight/>
-                        </div>
-                    </Card>
-                </UnstyledButton>
-            ))}
-        </PageBody>
+            <section className={classes.section}>
+                <h2 className={classes.sectionTitle}>{t({message: 'Overview', context: 'reports section'})}</h2>
+                <StatBoxes/>
+            </section>
+
+            <section className={classes.section}>
+                <h2 className={classes.sectionTitle}>{t`Detailed reports`}</h2>
+                <div className={classes.reports}>
+                    {reports.map(({id, iconName, title, description, Content}) => (
+                        <ReportPanel
+                            key={id}
+                            id={id}
+                            iconName={iconName}
+                            title={title}
+                            description={description}
+                            open={openReport === id}
+                            onToggle={() => setOpenReport((current) => current === id ? null : id)}
+                        >
+                            <Content showTitle={false}/>
+                        </ReportPanel>
+                    ))}
+                </div>
+            </section>
+        </div>
     )
 }
+
+/** The former report pages: the report now opens in place in Reports. */
+export const ReportRedirect = () => {
+    const {eventId, reportType} = useParams();
+    return <Navigate to={`/manage/event/${eventId}/reports?open=${reportType}`} replace/>;
+};
 
 export default Reports;

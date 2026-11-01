@@ -1,9 +1,240 @@
-@use "../../../styles/mixins.scss";
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
-.periodSelect,
-.datePicker,
-.downloadButton {
-  @include mixins.respond-below(sm) {
+// An event report, like the organizer reports (Figma « Admin · Rapports »).
+
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+  color: ui.$ink;
+
+  @include mixins.respond-below(md) {
+    gap: 1rem;
+  }
+}
+
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
+  }
+}
+
+.title {
+  @include ui.section-title;
+}
+
+// Period and export
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 0.5rem;
+  }
+}
+
+.selector {
+  @include ui.pill-selector;
+}
+
+.selectorText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.periodMenu {
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+.menuOption[data-selected] {
+  background: ui.$accent-soft;
+}
+
+.datePicker {
+  margin-bottom: 0 !important;
+}
+
+// !important: styles/dehors-app.scss styles every back-office field with a stronger selector.
+.datePickerInput {
+  height: 2.75rem !important;
+  min-height: 2.75rem !important;
+  border: 1.5px solid ui.$ink !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+  }
+}
+
+.exportButton {
+  @include ui.outline-button;
+  flex-shrink: 0;
+
+  :global(.mantine-Button-section[data-position='left']) {
+    margin-inline-end: 0.5rem;
+  }
+
+  @include mixins.respond-below(md) {
     width: 100%;
+  }
+}
+
+// Table: pale header row, rows separated by a thin line; on phones each row is a block of
+// « label: value » lines (stacked-table).
+.scroll {
+  min-width: 0;
+  overflow-x: auto;
+  @include mixins.barre-defilement;
+
+  &[data-stacked] {
+    @include mixins.respond-below(md) {
+      overflow: visible;
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9375rem;
+
+  th {
+    @include ui.table-head-cell;
+    text-align: left;
+  }
+
+  td {
+    padding: 0.875rem 0.75rem;
+    border-bottom: 1px solid ui.$separator;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover td {
+    background: ui.$row;
+  }
+
+  td:first-child {
+    font-weight: 700;
+  }
+
+  // Wide reports on phones: the first column stays in view while the others scroll.
+  @include mixins.respond-below(md) {
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    td:first-child {
+      background: ui.$card;
+      box-shadow: 8px 0 10px -10px rgb(55 39 33 / 0.25);
+    }
+  }
+
+  [data-stacked] & {
+    @include mixins.respond-below(md) {
+      @include mixins.stacked-table;
+
+      td:first-child {
+        position: static;
+        background: none;
+        box-shadow: none;
+      }
+
+      tbody tr {
+        padding: 0.875rem 0;
+        border-bottom: 1px solid ui.$separator;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      tbody tr:hover td {
+        background: none;
+      }
+
+      tbody tr td::before {
+        color: ui.$ink;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+
+  svg {
+    flex-shrink: 0;
+    opacity: 0.45;
+  }
+
+  &[data-sorted] svg,
+  &:hover svg {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ui.$ink;
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+  text-align: center;
+
+  span {
+    font-size: 0.9375rem;
   }
 }

@@ -4,8 +4,9 @@ import {formatCurrency} from "../../../../../utilites/currency.ts";
 import ReportTable from "../../../../common/ReportTable";
 import {t} from "@lingui/macro";
 import {formatDateWithLocale} from "../../../../../utilites/dates.ts";
+import {ReportTypes} from "../../../../../types.ts";
 
-const PromoCodesReport = () => {
+const PromoCodesReport = ({showTitle = true}: { showTitle?: boolean }) => {
     const {eventId} = useParams();
     const eventQuery = useGetEvent(eventId);
     const event = eventQuery.data;
@@ -93,6 +94,8 @@ const PromoCodesReport = () => {
     return (
         <ReportTable
             title={t`Promo Codes Report`}
+            showTitle={showTitle}
+            reportType={ReportTypes.PromoCodes}
             columns={columns}
             isLoading={eventQuery.isLoading}
             downloadFileName="promo_codes_report.csv"

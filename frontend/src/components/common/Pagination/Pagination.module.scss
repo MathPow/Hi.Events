@@ -1,0 +1,39 @@
+@use "../../../styles/admin-ui" as ui;
+
+// Back office only: the public organizer page styles its own pagination.
+:global(body.dehors-app) {
+  .control {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 999px;
+    background: ui.$card;
+    box-shadow: ui.$shadow;
+    color: ui.$ink;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    transition: background-color 0.15s ease;
+
+    &:where(:not(:disabled, [data-disabled])):hover {
+      background: ui.$accent-soft;
+    }
+
+    &[data-active] {
+      background: ui.$ink;
+      color: var(--dehors-creme);
+
+      &:hover {
+        background: ui.$ink;
+      }
+    }
+
+    &:is(:disabled, [data-disabled]) {
+      opacity: 0.45;
+      box-shadow: none;
+    }
+  }
+
+  .dots {
+    color: ui.$ink;
+  }
+}

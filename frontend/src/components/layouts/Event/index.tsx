@@ -49,6 +49,7 @@ import {useResendEmailConfirmation} from "../../../mutations/useResendEmailConfi
 import {useState} from "react";
 import {eventHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
+import {PublicIcon} from "../../common/PublicIcon";
 
 const EventLayout = () => {
     const location = useLocation();
@@ -248,22 +249,25 @@ const EventLayout = () => {
             topBarActions={event && (
                 <>
                     <Button
-                        component={NavLink}
-                        to={eventPageUrl}
-                        target={'_blank'}
-                        variant={'transparent'}
-                        leftSection={<IconExternalLink size={17}/>}
-                        className={classes.topBarLink}
+                        component="a"
+                        href={eventPageUrl}
+                        target="_blank"
+                        rel="noopener"
+                        variant="outline"
+                        leftSection={<IconExternalLink size={20} stroke={2}/>}
+                        className={classes.previewButton}
+                        title={t`Preview Event page`}
                     >
-                        {t`Preview Event page`}
+                        <span className={classes.longLabel}>{t`Preview Event page`}</span>
+                        <span className={classes.shortLabel}>{t`Preview`}</span>
                     </Button>
                     <Button
                         onClick={open}
-                        variant="transparent"
-                        leftSection={<IconShare size={16}/>}
-                        className={classes.topBarLink}
+                        leftSection={<PublicIcon name="partager" size={20}/>}
+                        className={classes.shareButton}
                     >
-                        {t`Share Event`}
+                        <span className={classes.longLabel}>{t`Share Event`}</span>
+                        <span className={classes.shortLabel}>{t`Share`}</span>
                     </Button>
                 </>
             )}

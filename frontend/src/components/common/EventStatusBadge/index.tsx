@@ -1,6 +1,6 @@
 import {Event} from "../../../types.ts";
-import {Badge} from "@mantine/core";
 import {t} from "@lingui/macro";
+import {StatusTag} from "../StatusTag";
 
 interface EventLifecycleStatusLabelProps {
     event: Event;
@@ -8,7 +8,20 @@ interface EventLifecycleStatusLabelProps {
 }
 
 export const EventStatusBadge = ({event, showLifecycleStatus = true}: EventLifecycleStatusLabelProps) => {
-    const getLifecycleStatus = (() => {
+    const status = (() => {
+        switch (event.status) {
+            case 'LIVE':
+                return t`Live`;
+            case 'DRAFT':
+                return t`Draft`;
+            case 'ARCHIVED':
+                return t`Archived`;
+            default:
+                return event.status;
+        }
+    })();
+
+    const lifecycleStatus = (() => {
         switch (event.lifecycle_status) {
             case 'ENDED':
                 return t`Ended`;
@@ -22,18 +35,8 @@ export const EventStatusBadge = ({event, showLifecycleStatus = true}: EventLifec
     })();
 
     return (
-        <>
-            <Badge
-                variant={'outline'}
-                color={event?.status === 'LIVE' ? 'green' : event?.status === 'DRAFT' ? 'orange' : 'gray'}
-                size="sm"
-            >
-                {event.status} {showLifecycleStatus && (
-                <>
-                    &bull; {getLifecycleStatus}
-                </>
-            )}
-            </Badge>
-        </>
+        <StatusTag tone={event.status === 'LIVE' ? 'ok' : event.status === 'DRAFT' ? 'waiting' : 'neutral'}>
+            {status}{showLifecycleStatus && lifecycleStatus && <> &bull; {lifecycleStatus}</>}
+        </StatusTag>
     );
 }

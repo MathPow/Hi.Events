@@ -1,11 +1,9 @@
-import {ComboboxItem, Group, Select, Skeleton, Table as MantineTable} from '@mantine/core';
+import {Menu, Skeleton, UnstyledButton} from '@mantine/core';
 import {t} from '@lingui/macro';
 import {DatePickerInput} from "@mantine/dates";
-import {IconArrowDown, IconArrowsSort, IconArrowUp, IconCalendar} from "@tabler/icons-react";
-import React, {useMemo, useState} from "react";
-import {PageTitle} from "../PageTitle";
+import {IconArrowDown, IconArrowsSort, IconArrowUp} from "@tabler/icons-react";
+import React, {useMemo, useRef, useState} from "react";
 import {DownloadCsvButton} from "../DownloadCsvButton";
-import {Table, TableHead} from "../Table";
 import '@mantine/dates/styles.css';
 import {useGetEventReport} from "../../../queries/useGetEventReport.ts";
 import {useParams} from "react-router";
@@ -13,11 +11,13 @@ import {Event} from "../../../types.ts";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import {NoResultsSplash} from "../NoResultsSplash";
+import {useStackedTableLabels} from "../../../hooks/useStackedTableLabels.ts";
 import classes from './ReportTable.module.scss';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const reportIcon = (name: string) => `/interface/admin/rapports/${name}.svg`;
 
 interface Column<T> {
     key: keyof T;
@@ -38,21 +38,98 @@ interface ReportProps<T> {
     enableDownload?: boolean;
     downloadFileName?: string;
     showCustomDatePicker?: boolean;
+    // The report of the route (/report/:reportType) unless given, e.g. when it opens in place.
+    reportType?: string;
+    // The report's name above its controls; hidden when the report opens under its own heading.
+    showTitle?: boolean;
 }
 
-const TIME_PERIODS = [
-    {value: '24h', label: t`Last 24 hours`},
-    {value: '48h', label: t`Last 48 hours`},
-    {value: '7d', label: t`Last 7 days`},
-    {value: '14d', label: t`Last 14 days`},
-    {value: '30d', label: t`Last 30 days`},
-    {value: '90d', label: t`Last 90 days`},
-    {value: '6m', label: t`Last 6 months`},
-    {value: 'ytd', label: t`Year to date`},
-    {value: '12m', label: t`Last 12 months`},
-    {value: 'custom', label: t`Custom Range`}
-];
+type Period = '24h' | '48h' | '7d' | '14d' | '30d' | '90d' | '6m' | 'ytd' | '12m' | 'custom';
 
+const PERIODS: Period[] = ['24h', '48h', '7d', '14d', '30d', '90d', '6m', 'ytd', '12m', 'custom'];
+
+const periodLabel = (period: Period) => ({
+    '24h': t`Last 24 hours`,
+    '48h': t`Last 48 hours`,
+    '7d': t`Last 7 days`,
+    '14d': t`Last 14 days`,
+    '30d': t`Last 30 days`,
+    '90d': t`Last 90 days`,
+    '6m': t`Last 6 months`,
+    'ytd': t`Year to date`,
+    '12m': t`Last 12 months`,
+    'custom': t`Custom Range`,
+})[period];
+
+// Up to this many columns, phones show each row as a block of « label: value » lines; wider reports
+// (daily sales, promo codes) scroll sideways with their first column kept in view.
+const MAX_STACKED_COLUMNS = 5;
+
+interface DataTableProps<T> {
+    columns: Column<T>[];
+    rows: T[];
+    sortField: keyof T | null;
+    sortDirection: 'asc' | 'desc' | null;
+    onSort: (field: keyof T) => void;
+}
+
+const DataTable = <T extends Record<string, any>>({columns, rows, sortField, sortDirection, onSort}: DataTableProps<T>) => {
+    const tableRef = useRef<HTMLTableElement>(null);
+    useStackedTableLabels(tableRef);
+
+    const sortIcon = (field: keyof T) => {
+        if (sortField !== field || !sortDirection) return <IconArrowsSort size={14} stroke={2}/>;
+        if (sortDirection === 'asc') return <IconArrowUp size={14} stroke={2}/>;
+        return <IconArrowDown size={14} stroke={2}/>;
+    };
+
+    return (
+        <div className={classes.scroll} data-stacked={columns.length <= MAX_STACKED_COLUMNS || undefined}>
+            <table className={classes.table} ref={tableRef}>
+                <thead>
+                <tr>
+                    {columns.map((column) => (
+                        <th
+                            key={String(column.key)}
+                            aria-sort={sortField === column.key && sortDirection
+                                ? (sortDirection === 'asc' ? 'ascending' : 'descending')
+                                : undefined}
+                        >
+                            {column.sortable ? (
+                                <UnstyledButton className={classes.sortButton}
+                                                onClick={() => onSort(column.key)}
+                                                data-sorted={sortField === column.key && !!sortDirection || undefined}>
+                                    {column.label}
+                                    {sortIcon(column.key)}
+                                </UnstyledButton>
+                            ) : column.label}
+                        </th>
+                    ))}
+                </tr>
+                </thead>
+                <tbody>
+                {rows.map((row, index) => (
+                    <tr key={index}>
+                        {columns.map((column) => (
+                            <td key={String(column.key)}>
+                                {column.render
+                                    ? column.render(row[column.key], row)
+                                    : row[column.key]
+                                }
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+/**
+ * An event report: the period (and its custom dates), the CSV export and a sortable table in the
+ * look of the organizer reports (pale header row, thin separators; stacked rows on phones).
+ */
 const ReportTable = <T extends Record<string, any>>({
                                                         title,
                                                         columns,
@@ -63,21 +140,24 @@ const ReportTable = <T extends Record<string, any>>({
                                                         enableDownload = true,
                                                         downloadFileName = 'report.csv',
                                                         showCustomDatePicker = false,
-                                                        event
+                                                        event,
+                                                        reportType: reportTypeProp,
+                                                        showTitle = true,
                                                     }: ReportProps<T>) => {
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
         dayjs(defaultStartDate).tz(event.timezone).toDate(),
         dayjs(defaultEndDate).tz(event.timezone).toDate()
     ]);
-    const [selectedPeriod, setSelectedPeriod] = useState('90d');
+    const [selectedPeriod, setSelectedPeriod] = useState<Period>('90d');
     const [showDatePickerInput, setShowDatePickerInput] = useState(showCustomDatePicker);
     const [sortField, setSortField] = useState<keyof T | null>(null);
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
-    const {reportType, eventId} = useParams();
-    const reportQuery = useGetEventReport(eventId, reportType, dateRange[0], dateRange[1]);
+    const params = useParams();
+    const reportType = reportTypeProp ?? params.reportType;
+    const reportQuery = useGetEventReport(params.eventId, reportType, dateRange[0], dateRange[1]);
     const data = (reportQuery.data || []) as T[];
 
-    const calculateDateRange = (period: string): [Date | null, Date | null] => {
+    const calculateDateRange = (period: Period): [Date | null, Date | null] => {
         if (period === 'custom') {
             setShowDatePickerInput(true);
             return dateRange;
@@ -124,22 +204,20 @@ const ReportTable = <T extends Record<string, any>>({
         return [start.toDate(), end.toDate()];
     };
 
-    const handlePeriodChange = (value: string | null, _: ComboboxItem) => {
-        if (!value) return;
+    const handlePeriodChange = (value: Period) => {
         setSelectedPeriod(value);
         const newRange = calculateDateRange(value);
         setDateRange(newRange);
         onDateRangeChange?.(newRange);
     };
 
-    const handleDateRangeChange = (newRange: [Date | null, Date | null]) => {
-        const [start, end] = newRange;
-        const tzStart = start ? dayjs(start).tz(event.timezone) : null;
-        const tzEnd = end ? dayjs(end).tz(event.timezone) : null;
-
+    // The picker gives days (« 2026-10-01 »): from the start of the first to the end of the last,
+    // in the event's time zone.
+    const handleDateRangeChange = ([start, end]: [string | Date | null, string | Date | null]) => {
+        const day = (value: string | Date) => dayjs.tz(dayjs(value).format('YYYY-MM-DD'), event.timezone);
         const tzRange: [Date | null, Date | null] = [
-            tzStart?.toDate() || null,
-            tzEnd?.toDate() || null
+            start ? day(start).startOf('day').toDate() : null,
+            end ? day(end).endOf('day').toDate() : null,
         ];
 
         setDateRange(tzRange);
@@ -157,13 +235,6 @@ const ReportTable = <T extends Record<string, any>>({
             setSortField(field);
             setSortDirection('asc');
         }
-    };
-
-    const getSortIcon = (field: keyof T) => {
-        if (sortField !== field) return <IconArrowsSort size={16}/>;
-        if (sortDirection === 'asc') return <IconArrowUp size={16}/>;
-        if (sortDirection === 'desc') return <IconArrowDown size={16}/>;
-        return <IconArrowsSort size={16} className="ml-2 text-gray-400"/>;
     };
 
     const sortedData = useMemo(() => {
@@ -197,133 +268,97 @@ const ReportTable = <T extends Record<string, any>>({
         })
     );
 
-    const loadingMessage = () => {
-        const wrapper = (message: React.ReactNode) => (
-            <MantineTable.Tr>
-                <MantineTable.Td colSpan={columns.length} align="center">
-                    {message}
-                </MantineTable.Td>
-            </MantineTable.Tr>
-        );
+    const hasRange = !showDateFilter || (!!dateRange[0] && !!dateRange[1]);
+    const isEmpty = reportQuery.isFetched && !reportQuery.isLoading && !data.length;
 
-        if (reportQuery.isLoading) {
-            return wrapper(t`Loading...`);
-        }
-
-        if (showDateFilter && (!dateRange[0] || !dateRange[1])) {
-            return wrapper(t`No data to show. Please select a date range`);
-        }
-
-        if (!showDateFilter && dateRange[0] && dateRange[1]) {
-            return wrapper(t`No data available`);
-        }
-    };
-
-    if (reportQuery.isLoading) {
-        return (
-            <>
-                <Group justify="space-between" mb="xl">
-                    <Skeleton height={32} width={200}/>
-                    <Group gap="sm">
-                        <Skeleton height={32} width={200}/>
-                        <Skeleton height={32} width={130}/>
-                    </Group>
-                </Group>
-                <Skeleton height={300} radius="md"/>
-            </>
-        );
-    }
-
-    if (reportQuery.isFetched && !reportQuery.isLoading && !data.length) {
-        return (
-            <NoResultsSplash
-                heading={t`Nothing to show yet`}
-                imageHref={'/blank-slate/reports.svg'}
-                subHeading={(
-                    <>
-                        <p>
-                            {t`Once you start collecting data, you'll see it here.`}
-                        </p>
-                    </>
-                )}
-            />
-        );
-    }
+    const exportButton = (className: string) => enableDownload && (
+        <DownloadCsvButton
+            headers={csvHeaders}
+            data={csvData}
+            filename={downloadFileName}
+            className={`${classes.exportButton} ${className}`}
+            leftSection={<img src={reportIcon('exporter')} alt=""/>}
+            disabled={!data.length}
+        >
+            {t`Export (CSV)`}
+        </DownloadCsvButton>
+    );
 
     return (
-        <>
-            <Group justify="space-between" mb="md">
-                <PageTitle>{title}</PageTitle>
-                <Group justify="flex-end" align="center" gap="sm">
-                    {showDateFilter && (
-                        <Select
-                            style={{minWidth: '200px'}}
-                            placeholder={t`Select time period`}
-                            data={TIME_PERIODS}
-                            value={selectedPeriod}
-                            onChange={handlePeriodChange}
-                            leftSection={<IconCalendar stroke={1.5} size={20}/>}
-                            mb="0"
-                            className={classes.periodSelect}
-                        />
-                    )}
-                    {showDateFilter && showDatePickerInput && (
-                        <DatePickerInput
-                            style={{minWidth: '305px', marginBottom: '0'}}
-                            leftSection={<IconCalendar stroke={1.5} size={20}/>}
-                            type="range"
-                            placeholder="Pick dates range"
-                            value={dateRange}
-                            onChange={handleDateRangeChange}
-                            minDate={dayjs().subtract(1, 'year').tz(event.timezone).toDate()}
-                            maxDate={dayjs().tz(event.timezone).toDate()}
-                            className={classes.datePicker}
-                        />
-                    )}
-                    {enableDownload && (
-                        <DownloadCsvButton
-                            headers={csvHeaders}
-                            data={csvData}
-                            filename={downloadFileName}
-                            className={classes.downloadButton}
-                        />
-                    )}
-                </Group>
-            </Group>
-            <Table>
-                <TableHead>
-                    <MantineTable.Tr>
-                        {columns.map((column) => (
-                            <MantineTable.Th
-                                key={String(column.key)}
-                                onClick={column.sortable ? () => handleSort(column.key) : undefined}
-                                style={{cursor: column.sortable ? 'pointer' : 'default', minWidth: '180px'}}
-                            >
-                                <Group gap="xs" wrap={'nowrap'}>
-                                    {t`${column.label}`}
-                                    {column.sortable && getSortIcon(column.key)}
-                                </Group>
-                            </MantineTable.Th>
-                        ))}
-                    </MantineTable.Tr>
-                </TableHead>
-                <MantineTable.Tbody>
-                    {!sortedData.length && loadingMessage()}
-                    {sortedData.map((row, index) => (
-                        <MantineTable.Tr key={index}>
-                            {columns.map((column) => (
-                                <MantineTable.Td key={String(column.key)}>
-                                    {column.render
-                                        ? column.render(row[column.key], row)
-                                        : row[column.key]
-                                    }
-                                </MantineTable.Td>
-                            ))}
-                        </MantineTable.Tr>
-                    ))}
-                </MantineTable.Tbody>
-            </Table>
-        </>
+        <div className={classes.report}>
+            {showTitle && <h2 className={classes.title}>{title}</h2>}
+
+            {(showDateFilter || enableDownload) && (
+                <div className={classes.controls}>
+                    <div className={classes.filters}>
+                        {showDateFilter && (
+                            <Menu position="bottom-start" width={240} withinPortal>
+                                <Menu.Target>
+                                    <UnstyledButton className={classes.selector}>
+                                        <img src={reportIcon('calendrier')} alt=""/>
+                                        <span className={classes.selectorText}>{periodLabel(selectedPeriod)}</span>
+                                        <img src={reportIcon('chevron-bas')} alt=""/>
+                                    </UnstyledButton>
+                                </Menu.Target>
+                                <Menu.Dropdown className={classes.periodMenu}>
+                                    {PERIODS.map((period) => (
+                                        <Menu.Item
+                                            key={period}
+                                            onClick={() => handlePeriodChange(period)}
+                                            data-selected={period === selectedPeriod || undefined}
+                                            className={classes.menuOption}
+                                        >
+                                            {periodLabel(period)}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Dropdown>
+                            </Menu>
+                        )}
+                        {showDateFilter && showDatePickerInput && (
+                            <DatePickerInput
+                                type="range"
+                                aria-label={t`Custom Range`}
+                                placeholder={t`Custom Range`}
+                                value={dateRange}
+                                onChange={(value) => handleDateRangeChange(value as [string | Date | null, string | Date | null])}
+                                minDate={dayjs().subtract(1, 'year').tz(event.timezone).toDate()}
+                                maxDate={dayjs().tz(event.timezone).toDate()}
+                                valueFormat="D MMM YYYY"
+                                leftSection={<img src={reportIcon('calendrier')} alt=""/>}
+                                classNames={{root: classes.datePicker, input: classes.datePickerInput}}
+                            />
+                        )}
+                    </div>
+                    {exportButton(classes.desktopOnly)}
+                </div>
+            )}
+
+            {reportQuery.isLoading && (
+                <div className={classes.loading}>
+                    <Skeleton height={40} radius={12}/>
+                    {[0, 1, 2, 3].map((index) => <Skeleton key={index} height={18} radius={9}/>)}
+                </div>
+            )}
+
+            {!reportQuery.isLoading && (!hasRange || isEmpty) && (
+                <div className={classes.empty}>
+                    <strong>{hasRange ? t`Nothing to show yet` : t`No data to show. Please select a date range`}</strong>
+                    {hasRange && <span>{t`Once you start collecting data, you'll see it here.`}</span>}
+                </div>
+            )}
+
+            {!reportQuery.isLoading && hasRange && !isEmpty && (
+                <DataTable
+                    columns={columns}
+                    rows={sortedData}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
+                />
+            )}
+
+            {exportButton(classes.mobileOnly)}
+        </div>
     );
 };
 

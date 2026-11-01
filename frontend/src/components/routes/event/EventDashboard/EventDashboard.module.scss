@@ -1,361 +1,499 @@
-.chartCard {
-  margin-top: 20px;
+@use "../../../../styles/mixins";
+@use "../../../../styles/admin-ui" as ui;
 
-  .chartCardTitle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+// The event's dashboard in the look of the organizer's (Figma « Admin · Tableau de bord »).
 
-    h2 {
-      margin: 0;
-    }
-  }
-
-  .dateRange {
-    color: var(--mantine-color-gray-5);
-  }
-
-  h2:first-child {
-    margin-top: 0;
-  }
-}
-
-.dateRangeSelector {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.setupCard {
-  margin-bottom: 28px;
-  margin-top: 24px;
-  position: relative;
-  padding: 32px 28px;
-  background: linear-gradient(to right, rgba(249, 250, 251, 0.6), rgba(243, 244, 246, 0.6));
-  border: 1px solid var(--mantine-color-gray-2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.dismissButton {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  color: var(--mantine-color-gray-5);
-  background-color: rgba(255, 255, 255, 0.7);
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-    color: var(--mantine-color-gray-7);
-  }
-}
-
-.setupCardContent {
+.page {
   display: flex;
   flex-direction: column;
-  position: relative;
+  gap: 1.75rem;
+  max-width: 1400px;
+  color: ui.$ink;
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
+  }
 }
 
-.checklistContainer {
-  width: 100%;
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.title {
+  @include ui.page-title;
+}
+
+.subtitle {
+  @include ui.page-subtitle;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.skeletonTiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+// Notice (Stripe reconnection), like the dashboard's Stripe card.
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 2rem;
+  background: ui.$accent-soft;
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    border-radius: 1.75rem;
+  }
+}
+
+.noticePastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: ui.$accent;
+}
+
+.noticeText {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
 
   h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-    margin-top: 0;
-    color: var(--mantine-color-gray-8);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
-  .setupDescription {
-    margin-bottom: 1.75rem;
-    color: var(--mantine-color-gray-6);
-    font-size: 1rem;
-    line-height: 1.5;
-    max-width: 80%;
-  }
-}
-
-.checklistItems {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -12px;
-}
-
-.checklistItem {
-  width: calc(50% - 24px);
-  margin: 0 12px 24px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  border: 1px solid var(--mantine-color-gray-2);
-  transition: all 0.2s ease;
-
-  h3 {
-    font-size: 1.1rem;
-    margin: 0 0 0.75rem 0;
-    color: var(--mantine-color-gray-8);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-  }
-
-  p {
-    margin: 0 0 1rem 0;
-    color: var(--mantine-color-gray-6);
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-
-  /* Always show a consistent layout with status indicator */
-  .status-section {
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-  }
-}
-
-.checkboxContainer {
-  margin-right: 12px;
-}
-
-.checkbox {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  border: 2px solid var(--mantine-color-gray-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(255, 255, 255, 0.6);
-  transition: all 0.2s ease;
-
-  svg {
-    transform: scale(0.85);
-  }
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.status-complete {
-  background-color: var(--mantine-color-green-0);
-  color: var(--mantine-color-green-6);
-}
-
-.status-pending {
-  background-color: var(--mantine-color-yellow-0);
-  color: var(--mantine-color-yellow-6);
-}
-
-/* Tablet and smaller desktop styles */
-@media (max-width: 1200px) {
-  .setupCard {
-    padding: 24px 20px;
-  }
-
-  .checklistContainer {
-    .setupDescription {
-      max-width: 100%;
-    }
-  }
-}
-
-/* Small tablet styles */
-@media (max-width: 992px) {
-  .checklistItem {
-    width: 100%;
-    margin-bottom: 16px;
-  }
-
-  .setupCard {
-    padding: 20px 18px;
-  }
-
-  .checklistContainer h2 {
-    font-size: 1.4rem;
-  }
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .setupCard {
-    padding: 20px 16px;
-    margin-bottom: 20px;
-  }
-
-  .checklistContainer {
-    h2 {
-      font-size: 1.3rem;
-    }
-
-    .setupDescription {
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
-  }
-
-  .checklistItem {
-    padding: 18px 16px;
-  }
-
-  .dismissButton {
-    top: 12px;
-    right: 12px;
-    width: 28px;
-    height: 28px;
-  }
-}
-
-.stripeUpgradeCard {
-  margin: 24px 0;
-  background: linear-gradient(135deg, var(--mantine-color-primary-0) 0%, var(--mantine-color-secondary-0) 100%);
-  border: 1px solid var(--mantine-color-primary-1);
-  box-shadow: 0 4px 16px var(--mantine-color-primary-1) !important;
-  color: var(--mantine-color-gray-9);
-  padding: 28px 32px;
-  border-radius: 16px;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, var(--mantine-color-primary-0) 0%, transparent 70%);
-    border-radius: 50%;
-    transform: translate(50%, -50%);
-  }
-}
-
-.stripeUpgradeContent {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  position: relative;
-  z-index: 1;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 20px;
-  }
-}
-
-.stripeTextContainer {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  @media (max-width: 768px) {
-    gap: 24px;
-  }
-}
-
-.stripeIcon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, var(--mantine-color-primary-1), var(--mantine-color-secondary-1));
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--mantine-color-secondary-5);
-  border: 1px solid var(--mantine-color-primary-2);
-
-  svg {
-    width: 28px;
-    height: 28px;
-  }
-}
-
-.stripeText {
-  flex: 1;
-
-  h3 {
-    margin: 0 0 8px 0;
+    margin: 0;
+    font-family: inherit !important;
     font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--mantine-color-gray-9);
-    letter-spacing: -0.02em;
+    font-weight: 700 !important;
   }
 
   p {
     margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: var(--mantine-color-gray-7);
-    max-width: 600px;
-  }
-
-  .stripeApology {
-    margin-top: 8px !important;
-    font-size: 0.875rem !important;
-    font-style: italic;
-    color: var(--mantine-color-gray-6) !important;
+    font-size: 1rem;
+    line-height: 1.4;
   }
 }
 
-.stripeButton {
-  align-self: flex-start;
+.noticeButton {
+  @include ui.primary-button;
+  flex-shrink: 0;
+  background: ui.$ink !important;
+  color: var(--dehors-creme) !important;
 
-  background: linear-gradient(135deg, var(--mantine-color-secondary-5) 0%, var(--mantine-color-primary-5) 100%) !important;
-  color: white !important;
-  font-weight: 600;
-  border: none !important;
-  padding: 12px 24px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px var(--mantine-color-secondary-2), 0 2px 4px var(--mantine-color-secondary-1) !important;
-  min-width: 180px;
-  border-radius: 8px !important;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--mantine-color-secondary-3), 0 4px 8px var(--mantine-color-secondary-2) !important;
-    background: linear-gradient(135deg, var(--mantine-color-secondary-6) 0%, var(--mantine-color-primary-6) 100%) !important;
+  &:hover {
+    background: #4a3a33 !important;
   }
+}
 
-  &:disabled {
-    background: linear-gradient(135deg, var(--mantine-color-primary-2) 0%, var(--mantine-color-primary-1) 100%) !important;
-    color: var(--mantine-color-gray-5) !important;
-    transform: none;
-    box-shadow: 0 2px 8px var(--mantine-color-primary-1) !important;
-    opacity: 0.7;
+// Cards
+.card {
+  @include ui.card;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h2 {
+    @include ui.section-title;
   }
+}
 
-  &[data-loading="true"] {
-    background: linear-gradient(135deg, var(--mantine-color-primary-4) 0%, var(--mantine-color-primary-3) 100%) !important;
-    color: white !important;
-    box-shadow: 0 2px 8px var(--mantine-color-primary-2) !important;
+.seeAll {
+  @include ui.accent-link;
+}
+
+.cardText {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.08);
   }
+}
 
-  @media (max-width: 768px) {
-    align-self: stretch;
+// « Préparez votre événement »
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.25rem;
 
-    :global(button) {
+  @media (max-width: 1100px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem 0.875rem;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+}
+
+.stepPastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  font-weight: 700;
+
+  [data-done] & {
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  padding-top: 0.125rem;
+}
+
+.stepTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.stepDescription {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+// Under the text, aligned with it; full width on phones.
+.stepAction {
+  grid-column: 2;
+
+  @include mixins.respond-below(md) {
+    grid-column: 1 / -1;
+
+    > * {
       width: 100%;
-      min-width: unset;
     }
+  }
+
+  :global(.mantine-Button-root) {
+    height: auto !important;
+    min-height: 3rem;
+    padding-block: 0.5rem !important;
+  }
+
+  :global(.mantine-Button-label) {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
+}
+
+.primaryButton {
+  @include ui.primary-button;
+}
+
+.outlineButton {
+  @include ui.outline-button;
+}
+
+// Ventes dans le temps
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.25rem;
+  }
+}
+
+.selector {
+  @include ui.pill-selector;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.periodOption[data-selected] {
+  background: ui.$accent-soft;
+}
+
+.charts {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  transition: opacity 0.2s ease;
+
+  @media (min-width: 1700px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
+  }
+}
+
+.chartsLoading {
+  opacity: 0.6;
+}
+
+.chartCard {
+  gap: 1.25rem;
+}
+
+.dateRange {
+  color: var(--dehors-texte-doux);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    font-size: 0.8125rem;
+  }
+}
+
+.chart {
+  --chart-grid-color: #{ui.$track};
+  --chart-text-color: var(--dehors-texte-doux);
+
+  :global(.recharts-legend-item-text) {
+    color: ui.$ink !important;
+    font-weight: 700;
+  }
+}
+
+// Commandes récentes
+.ordersCard {
+  gap: 0;
+
+  .sectionTitle {
+    padding-bottom: 1rem;
+  }
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHead,
+.orderRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: 0.75rem;
+}
+
+.tableHead {
+  padding-block: 0.625rem;
+  border-radius: 0.75rem;
+  background: ui.$row;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.orderRow {
+  padding-block: 0.875rem;
+  border-bottom: 1px solid ui.$separator;
+  color: ui.$ink;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgb(255 246 237 / 0.7);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: -3px;
+  }
+
+  @include mixins.respond-below(md) {
+    padding-inline: 0;
+  }
+}
+
+.colCustomer {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.colTickets {
+  flex-shrink: 0;
+  width: 5rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.colAmount {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 7.5rem;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    align-items: flex-end;
+    width: auto;
+  }
+}
+
+.colDate {
+  flex-shrink: 0;
+  width: 9rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.colStatus {
+  display: flex;
+  flex-shrink: 0;
+  width: 12.5rem;
+
+  @include mixins.respond-below(lg) {
+    width: 10rem;
+  }
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.avatar {
+  @include ui.avatar;
+}
+
+.customerText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: normal;
+}
+
+.customerName {
+  font-weight: 700;
+  @include mixins.ellipsis();
+}
+
+.orderId {
+  font-size: 0.8125rem;
+}
+
+.orderDateMobile {
+  display: none;
+
+  @include mixins.respond-below(md) {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 0.9375rem;
   }
 }

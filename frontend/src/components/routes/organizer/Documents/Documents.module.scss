@@ -12,6 +12,13 @@
     flex: 1;
     min-width: 0;
   }
+
+  // The big uppercase page title (PageTitle) needs the whole width on phones.
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
 }
 
 .newButton {

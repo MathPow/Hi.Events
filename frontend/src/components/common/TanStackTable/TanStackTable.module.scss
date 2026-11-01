@@ -1,4 +1,5 @@
 @use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
 .tableWrapper {
   display: flex;
@@ -13,18 +14,22 @@
   gap: 0.5rem;
 }
 
+// Header row of « Commandes récentes »: pale, rounded, uppercase labels.
 .tableHead {
   white-space: nowrap;
 
+  tr {
+    border: none !important;
+  }
+
   th {
-    background-color: #f2f0f5;
-    color: var(--hi-secondary-text) !important;
-    padding: 20px !important;
+    @include ui.table-head-cell;
+    padding: 0.75rem 1rem !important;
   }
 }
 
 .card {
-  padding: 0 !important;
+  @include ui.card(0.875rem 1rem);
   overflow: hidden;
 
   :global(.mantine-ScrollArea-viewport) {
@@ -34,69 +39,58 @@
   :global(.mantine-ScrollArea-scrollbar) {
     z-index: 20 !important;
   }
+
+  @include mixins.respond-below(md) {
+    padding: 0.625rem;
+  }
 }
 
 .table {
+  --table-border-color: #{ui.$separator};
+  --table-hover-color: #{ui.$row};
+  position: relative;
+  color: ui.$ink;
+
   th {
     white-space: nowrap;
   }
 
   tbody tr {
-
     td {
-      padding: 20px !important;
+      padding: 1rem !important;
+      font-size: 0.9375rem;
       white-space: nowrap;
     }
-  }
 
-  position: relative;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 }
 
+// Sticky columns keep the card color so the scrolled cells pass under them.
 .stickyLeft {
   position: sticky;
   left: 0;
   z-index: 10;
-  background: var(--mantine-color-body);
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(
-                    to right,
-                    rgba(255, 255, 255, 0.1),
-                    rgba(255, 255, 255, 0)
-    );
-    pointer-events: none;
-  }
+  background: ui.$card;
 }
 
 .stickyRight {
   position: sticky;
   right: 0;
   z-index: 2;
-  background: var(--mantine-color-body);
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(
-                    to left,
-                    rgba(255, 255, 255, 0.1),
-                    rgba(255, 255, 255, 0)
-    );
-    pointer-events: none;
-  }
+  background: ui.$card;
+  box-shadow: -10px 0 12px -10px rgb(55 39 33 / 0.12);
 }
 
 .tableHead .stickyLeft,
 .tableHead .stickyRight {
-  background-color: #f2f0f5;
+  background-color: ui.$row;
+  box-shadow: none;
+}
+
+tr:hover > .stickyLeft,
+tr:hover > .stickyRight {
+  background: ui.$row;
 }

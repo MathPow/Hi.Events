@@ -22,6 +22,8 @@ import {CreateEventModal} from "../../../modals/CreateEventModal";
 import {StripeConnectButton} from "../../../common/StripeConnectButton";
 import {DashboardNotification, useDashboardNotifications} from "./dashboardData.ts";
 import {getEventSaleStatus, getTicketCapacity, saleStatusLabel} from "../../../../utilites/eventSales.ts";
+import {StatTile} from "../../../common/StatBoxes";
+import {useOrderDate} from "../../../../utilites/orderDate.ts";
 import classes from './OrganizerDashboard.module.scss';
 
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
@@ -110,71 +112,8 @@ const ScrollList = ({children, className}: { children: ReactNode, className?: st
     );
 };
 
-interface ChangeTagProps {
-    current: number;
-    previous: number;
-    // Shows the increase itself when there is nothing to compare a percentage with.
-    formatAmount: (amount: number) => string;
-}
-
-const ChangeTag = ({current, previous, formatAmount}: ChangeTagProps) => {
-    const {i18n} = useLingui();
-    const change = current - previous;
-    const label = previous > 0
-        ? new Intl.NumberFormat(intlLocale(i18n.locale), {
-            style: 'percent',
-            signDisplay: 'exceptZero',
-            maximumFractionDigits: 0,
-        }).format(change / previous)
-        : `+${formatAmount(change)}`;
-
-    return (
-        <span className={classNames(classes.tag, change < 0 ? classes.tagDown : classes.tagUp)}>
-            {change > 0 && '↑ '}{change < 0 && '↓ '}{label}
-        </span>
-    );
-};
-
-interface StatTileProps {
-    tone: 'sales' | 'products' | 'attendees' | 'taxes';
-    iconName: string;
-    label: string;
-    value: string;
-    current?: number;
-    previous?: number | null;
-    comparison?: string | null;
-    formatAmount?: (amount: number) => string;
-    note?: string;
-}
-
-export const StatTile = ({
-                      tone,
-                      iconName,
-                      label,
-                      value,
-                      current,
-                      previous,
-                      comparison,
-                      formatAmount = (amount) => String(formatNumber(amount)),
-                      note,
-                  }: StatTileProps) => (
-    <div className={classes.tile} data-tone={tone}>
-        <div className={classes.tileTop}>
-            <span className={classes.tilePastille}><img src={icon(iconName)} alt=""/></span>
-            <span className={classes.tileLabel}>{label}</span>
-        </div>
-        <span className={classes.tileValue}>{value}</span>
-        {note && <span className={classes.tileNote}>{note}</span>}
-        {!note && comparison && current !== undefined && previous !== null && previous !== undefined
-            && (current > 0 || previous > 0) && (
-                <div className={classes.tileCompare}>
-                    <ChangeTag current={current} previous={previous} formatAmount={formatAmount}/>
-                    <span className={classes.compareText}>{comparison}</span>
-                </div>
-            )}
-        <span className={classes.tileBand} aria-hidden/>
-    </div>
-);
+// Les chiffres (tuiles) sont partages avec les pages de l'evenement: components/common/StatBoxes.
+export {StatTile};
 
 const EventRow = ({event}: { event: Event }) => {
     const {i18n} = useLingui();
@@ -287,31 +226,6 @@ const orderStatus = (order: Order): { label: string, tone: 'done' | 'waiting' | 
         return {label: t`Awaiting Payment`, tone: 'waiting'};
     }
     return {label: t`Completed`, tone: 'done'};
-};
-
-const useOrderDate = () => {
-    const {i18n} = useLingui();
-    const locale = intlLocale(i18n.locale);
-
-    return (value: string) => {
-        const date = new Date(value);
-        const now = new Date();
-        const yesterday = new Date(now);
-        yesterday.setDate(now.getDate() - 1);
-        const time = new Intl.DateTimeFormat(locale, {hour: 'numeric', minute: '2-digit'}).format(date);
-
-        if (date.toDateString() === now.toDateString()) {
-            return `${t`Today`}, ${time}`;
-        }
-        if (date.toDateString() === yesterday.toDateString()) {
-            return `${t`Yesterday`}, ${time}`;
-        }
-        return new Intl.DateTimeFormat(locale, {
-            day: 'numeric',
-            month: 'short',
-            ...(date.getFullYear() !== now.getFullYear() ? {year: 'numeric'} : {}),
-        }).format(date);
-    };
 };
 
 const SectionTitle = ({children, link}: { children: ReactNode, link?: string }) => (

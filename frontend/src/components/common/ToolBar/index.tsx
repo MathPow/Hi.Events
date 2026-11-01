@@ -1,7 +1,5 @@
 import React from "react";
-import {Card} from "../Card";
 import classes from './ToolBar.module.scss';
-import {Group} from '@mantine/core';
 
 interface ToolBarProps {
     children?: React.ReactNode[] | React.ReactNode;
@@ -10,6 +8,8 @@ interface ToolBarProps {
     className?: string;
 }
 
+// The search field, the filters and the actions above a list, floating on the page like the
+// filters of the organizer's events page (no card around them).
 export const ToolBar: React.FC<ToolBarProps> = ({
                                                     searchComponent,
                                                     filterComponent,
@@ -17,7 +17,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                                                     className,
                                                 }) => {
     return (
-        <Card className={`${classes.card} ${className || ''}`}>
+        <div className={`${classes.card} ${className || ''}`}>
             <div className={classes.wrapper}>
                 {searchComponent && (
                     <div className={classes.searchBar}>
@@ -25,19 +25,21 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                     </div>
                 )}
 
-                <Group className={classes.filterAndActions} gap="sm">
-                    {filterComponent && (
-                        <div className={classes.filter}>
-                            {filterComponent}
-                        </div>
-                    )}
-                    {children && (
-                        <div className={classes.actions}>
-                            {children}
-                        </div>
-                    )}
-                </Group>
+                {(filterComponent || children) && (
+                    <div className={classes.filterAndActions}>
+                        {filterComponent && (
+                            <div className={classes.filter}>
+                                {filterComponent}
+                            </div>
+                        )}
+                        {children && (
+                            <div className={classes.actions}>
+                                {children}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
-        </Card>
+        </div>
     );
 };

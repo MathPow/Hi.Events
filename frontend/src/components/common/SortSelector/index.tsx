@@ -1,6 +1,8 @@
 import {Select} from "@mantine/core";
+import {t} from "@lingui/macro";
 import classes from "./SortSelector.module.scss";
 import {SortDirectionLabel} from "../../../types.ts";
+import {PublicIcon} from "../PublicIcon";
 
 export interface SortSelectorProps {
     options: Record<string, SortDirectionLabel>,
@@ -8,6 +10,7 @@ export interface SortSelectorProps {
     selected: string,
 }
 
+// The sort order of a list, in the floating dropdown look of the search field beside it.
 export const SortSelector = ({options, onSortSelect, selected}: SortSelectorProps) => {
     const sortOptions = Object.entries(options).flatMap(([key, {asc, desc}]) => {
         const optionsForThisKey = [];
@@ -26,6 +29,12 @@ export const SortSelector = ({options, onSortSelect, selected}: SortSelectorProp
                 size={'md'}
                 data={sortOptions}
                 className={classes.select}
+                classNames={{input: classes.input, section: classes.section}}
+                rightSection={<PublicIcon name={'chevron'} size={18}/>}
+                rightSectionPointerEvents="none"
+                allowDeselect={false}
+                aria-label={t`Sort by`}
+                comboboxProps={{position: 'bottom-end', width: 'max-content', offset: 10}}
                 value={selected}
                 onChange={(value) => {
                     if (value) {

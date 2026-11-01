@@ -1,112 +1,173 @@
-@use "../../../styles/mixins.scss";
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
+
+// Figma « Admin · Tableau de bord »: the figures of the organizer dashboard, reused by the event pages.
 
 .statistics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  color: var(--hi-primary);
-  margin: 0.5rem 0;
+  container-type: inline-size;
+}
 
-  @include mixins.respond-below(lg) {
-    grid-template-columns: repeat(2, 1fr);
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  transition: opacity 0.2s ease;
+
+  @container (min-width: 1300px) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  @container (max-width: 699px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+.loading {
+  opacity: 0.6;
+}
+
+.tile {
+  --tone: #{ui.$track};
+  --tone-ink: #{ui.$ink};
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.875rem;
+  min-width: 0;
+  padding: 1.5rem;
+  border-radius: 1.75rem;
+  background: ui.$card;
+  box-shadow: ui.$shadow;
+  color: ui.$ink;
+
+  &[data-tone='sales'] {
+    --tone: #b9d7a8;
+    --tone-ink: #24451a;
+  }
+
+  &[data-tone='products'] {
+    --tone: #9cc9e3;
+    --tone-ink: #173a52;
+  }
+
+  &[data-tone='attendees'] {
+    --tone: #f6c85f;
+    --tone-ink: #4f3a06;
+  }
+
+  &[data-tone='orders'] {
+    --tone: var(--dehors-sable);
+    --tone-ink: #5b3424;
+  }
+
+  &[data-tone='refunds'] {
+    --tone: #f3b8a8;
+    --tone-ink: #9a3b25;
   }
 
   @include mixins.respond-below(md) {
     gap: 0.625rem;
+    padding: 1rem;
+    border-radius: 1.5rem;
   }
 }
 
-.statistic {
+.tileTop {
   display: flex;
   align-items: center;
-  padding: 1.25rem !important;
-  margin-bottom: 0 !important;
-  height: 100%;
+  gap: 0.625rem;
+  width: 100%;
 
-  .leftPanel {
-    flex: 1;
-    display: grid;
-    grid-template-rows: auto auto;
-    min-height: 65px;
-    gap: 2px;
-
-    .number {
-      font-family: FatFrank, 'Arial Black', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 400;
-      letter-spacing: 0;
-      line-height: 1.2;
-      align-self: end;
-
-      @include mixins.respond-below(md) {
-        font-size: 1.5rem;
-      }
-    }
-
-    .description {
-      font-size: 0.8125rem;
-      color: var(--dehors-texte-doux);
-      font-weight: 700;
-      align-self: start;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-  }
-
-  .rightPanel {
-    margin-left: 1rem;
-    align-self: flex-start;
-
-    // Overrides the per-stat colors passed inline: the DEHORS palette keeps every icon orange.
-    .icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--dehors-orange) !important;
-      color: var(--dehors-creme);
-
-      @include mixins.respond-below(md) {
-        width: 36px;
-        height: 36px;
-      }
-    }
-  }
-
-  // Two per row on phones: icon on top, so long amounts get the full width.
   @include mixins.respond-below(md) {
-    flex-direction: column-reverse;
-    align-items: stretch;
-    padding: 0.875rem 1rem !important;
-
-    .leftPanel {
-      min-height: 0;
-      margin-top: 0.625rem;
-
-      .number {
-        font-size: 1.25rem;
-        overflow-wrap: anywhere;
-      }
-
-      .description {
-        font-size: 0.6875rem;
-      }
-    }
-
-    .rightPanel {
-      margin-left: 0;
-
-      .icon {
-        width: 2rem;
-        height: 2rem;
-
-        svg {
-          width: 1rem;
-          height: 1rem;
-        }
-      }
-    }
+    flex-direction: column;
+    align-items: flex-start;
   }
+}
+
+.tilePastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: var(--tone);
+  color: ui.$ink;
+
+  [data-tone='taxes'] & {
+    background: ui.$accent-soft;
+  }
+
+  img,
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  @include mixins.respond-below(md) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.tileLabel {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tileValue {
+  max-width: 100%;
+  color: var(--tone-ink);
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 2.375rem;
+  line-height: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.625rem;
+  }
+}
+
+.tileNote {
+  font-size: 0.8125rem;
+}
+
+.tileCompare {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.changeTag {
+  @include ui.tag(ok);
+}
+
+.changeDown {
+  background: ui.tone-bg(problem);
+  color: ui.tone-text(problem);
+}
+
+.compareText {
+  font-size: 0.8125rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.tileBand {
+  width: 100%;
+  height: 6px;
+  margin-top: auto;
+  border-radius: 999px;
+  background: var(--tone);
 }

@@ -1,17 +1,45 @@
 @use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
 
 .selectWrapper {
-  width: 100%;
-  container-type: inline-size;
+  flex-shrink: 0;
+  width: 15rem;
+  @include ui.floating-shadow;
 
-  .select {
-    margin-bottom: 0 !important;
-    @include mixins.respond-above(lg) {
-      max-width: 180px;
-    }
-
-    input {
-      font-size: 0.9em;
-    }
+  @include mixins.respond-below(sm, true) {
+    width: 100%;
   }
+}
+
+.select {
+  margin-bottom: 0 !important;
+}
+
+// !important: styles/dehors-app.scss styles every back-office field with a stronger selector.
+.input {
+  height: 3.5rem !important;
+  min-height: 3.5rem !important;
+  padding-left: 1.25rem !important;
+  border: none !important;
+  border-radius: 1rem !important;
+  background: ui.$card !important;
+  color: ui.$ink !important;
+  font-size: 1rem !important;
+  font-weight: 700;
+  cursor: pointer;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background: #fff !important;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 3rem !important;
+    min-height: 3rem !important;
+  }
+}
+
+.section {
+  width: 3rem;
+  color: ui.$ink;
 }

@@ -1,0 +1,291 @@
+@use "sass:list";
+@use "sass:map";
+@use "mixins";
+
+// The back-office look of the organizer pages rebuilt from Figma « Admin » (dashboard, events,
+// reports), shared by the common components (PageTitle, ToolBar, SearchBar, tables, StatBoxes…)
+// and the event pages: `@use "<path>/styles/admin-ui" as ui;` then `@include ui.card;`.
+
+$ink: var(--dehors-brun);
+$card: var(--dehors-carte);
+$row: #fff6ed;
+$accent: var(--dehors-orange);
+$accent-dark: #c36a5c;
+$accent-soft: #f7dccd;
+$track: #efe3d6;
+$shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+$separator: rgb(55 39 33 / 0.05);
+
+// Status tags: ok (completed, on sale), waiting (awaiting payment, almost full), neutral (draft,
+// cancelled, ended), problem (failed, refund issues).
+$tones: (
+        ok: (#ddeed8, #2f6b3a),
+        waiting: (#fbe7b5, #7a5200),
+        neutral: (#ede6dd, #6e625a),
+        problem: (#f8ddd6, #9a3b25),
+);
+
+@function tone-bg($tone) {
+  @return list.nth(map.get($tones, $tone), 1);
+}
+
+@function tone-text($tone) {
+  @return list.nth(map.get($tones, $tone), 2);
+}
+
+// FatFrank 52px uppercase title (34px on phones).
+@mixin page-title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 3.25rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+
+  @include mixins.respond-below(md) {
+    font-size: 2.125rem;
+  }
+}
+
+@mixin page-subtitle {
+  margin: 0;
+  color: $ink;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.4;
+
+  @include mixins.respond-below(md) {
+    font-size: 1rem;
+  }
+}
+
+// Section title of a card: FatFrank 24 uppercase.
+@mixin section-title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.375rem;
+  }
+}
+
+// « Tout voir → » links.
+@mixin accent-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: $accent-dark;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Cream card: the containers of the dashboard.
+@mixin card($padding: 1.75rem) {
+  padding: $padding;
+  border-radius: 2rem;
+  background: $card;
+  box-shadow: $shadow;
+
+  @include mixins.respond-below(md) {
+    padding: 1.25rem;
+    border-radius: 1.75rem;
+  }
+}
+
+// Orange call to action with dark text (« Créer un événement »). !important: Mantine buttons get their
+// colors from styles/dehors-app.scss with a stronger selector.
+@mixin primary-button {
+  height: 3rem !important;
+  padding: 0 1.375rem !important;
+  border: none !important;
+  border-radius: 1rem !important;
+  background: $accent !important;
+  color: $ink !important;
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+
+  &:hover:where(:not(:disabled, [data-disabled])) {
+    background: var(--dehors-orange-survol) !important;
+  }
+
+  &:is(:disabled, [data-disabled]) {
+    opacity: 0.55;
+  }
+}
+
+// Outlined secondary action (« Exporter (CSV) »).
+@mixin outline-button {
+  height: 3rem !important;
+  padding: 0 1.375rem !important;
+  border: 2px solid $ink !important;
+  border-radius: 1rem !important;
+  background: transparent !important;
+  color: $ink !important;
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+
+  &:hover:where(:not(:disabled, [data-disabled])) {
+    background: rgb(55 39 33 / 0.05) !important;
+  }
+
+  &:is(:disabled, [data-disabled]) {
+    opacity: 0.55;
+  }
+}
+
+// Pill selector (period, currency): 1.5px brown outline.
+@mixin pill-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+  color: $ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 2px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: 1rem;
+  }
+}
+
+// Filter chips / tabs: outlined, dark when active.
+@mixin chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+  color: $ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &[data-active],
+  &[aria-pressed='true'],
+  &[aria-current='page'] {
+    background: $ink;
+    color: var(--dehors-creme);
+  }
+
+  @include mixins.respond-below(md) {
+    height: 2.5rem;
+    padding: 0 0.875rem;
+    font-size: 1rem;
+  }
+}
+
+// The floating field of the events directory: cream, no border, the card shadow on its parent.
+@mixin floating-field {
+  height: 3.5rem;
+  min-height: 3.5rem;
+  border: none;
+  border-radius: 1rem;
+  background: $card;
+  color: $ink;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    height: 3.25rem;
+    min-height: 3.25rem;
+  }
+}
+
+@mixin floating-shadow {
+  filter: drop-shadow(0 10px 16px rgb(55 39 33 / 0.08));
+}
+
+// A status tag of the given tone.
+@mixin tag($tone: neutral) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 999px;
+  background: tone-bg($tone);
+  color: tone-text($tone);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+// Table header row of « Commandes récentes »: pale row, uppercase 12px labels. !important: Mantine
+// table cells are styled in styles/dehors-app.scss with a stronger selector.
+@mixin table-head-cell {
+  padding: 0.625rem 0.75rem !important;
+  border: none;
+  background: $row;
+  color: $ink !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em;
+  line-height: normal;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &:first-child {
+    border-radius: 0.75rem 0 0 0.75rem;
+  }
+
+  &:last-child {
+    border-radius: 0 0.75rem 0.75rem 0;
+  }
+
+  &:only-child {
+    border-radius: 0.75rem;
+  }
+}
+
+@mixin table-cell {
+  padding: 0.875rem 0.75rem;
+  border-bottom: 1px solid $separator;
+  color: $ink;
+  font-size: 0.9375rem;
+}
+
+// Round initials on pale orange.
+@mixin avatar($size: 2.25rem) {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: $size;
+  height: $size;
+  border-radius: 999px;
+  background: $accent-soft;
+  color: $ink;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}

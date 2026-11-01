@@ -1,7 +1,7 @@
-import {Badge, BadgeVariant} from "@mantine/core";
+import {BadgeVariant} from "@mantine/core";
 import {Order} from "../../../types.ts";
-import {getStatusColor} from "../../../utilites/helpers.ts";
 import {t} from "@lingui/macro";
+import {StatusTag, StatusTone} from "../StatusTag";
 
 const getStatusLabel = (status: string): string => {
     const labels: Record<string, string> = {
@@ -19,27 +19,39 @@ const getStatusLabel = (status: string): string => {
     return labels[status] || status.replace('_', ' ');
 };
 
-export const OrderStatusBadge = ({order, variant = 'outline'}: { order: Order, variant?: BadgeVariant }) => {
-    let color;
-    let title;
+// Same colors as « Commandes récentes » on the organizer dashboard.
+export const getOrderStatusTone = (status: string): StatusTone => {
+    switch (status) {
+        case 'AWAITING_PAYMENT':
+        case 'AWAITING_OFFLINE_PAYMENT':
+        case 'REFUND_PENDING':
+        case 'PARTIALLY_REFUNDED':
+            return 'waiting';
+        case 'PAYMENT_FAILED':
+        case 'REFUND_FAILED':
+            return 'problem';
+        case 'CANCELLED':
+        case 'REFUNDED':
+            return 'neutral';
+        default:
+            return 'ok';
+    }
+};
 
-    if (order.status === 'CANCELLED') {
-        color = getStatusColor(order.status);
-        title = getStatusLabel(order.status);
-    } else if (order.status === 'AWAITING_OFFLINE_PAYMENT') {
-        color = getStatusColor('AWAITING_PAYMENT');
-        title = getStatusLabel(order.status);
+// The variant is kept for older callers: every status is now a tag.
+export const OrderStatusBadge = ({order}: { order: Order, variant?: BadgeVariant }) => {
+    let status: string;
+
+    if (order.status === 'CANCELLED' || order.status === 'AWAITING_OFFLINE_PAYMENT') {
+        status = order.status;
     } else if (order.refund_status) {
-        color = getStatusColor(order.refund_status);
-        title = getStatusLabel(order.refund_status);
+        status = order.refund_status;
     } else if (order.payment_status && order.payment_status !== 'PAYMENT_RECEIVED'
         && order.payment_status !== 'NO_PAYMENT_REQUIRED') {
-        color = getStatusColor(order.payment_status);
-        title = getStatusLabel(order.payment_status);
+        status = order.payment_status;
     } else {
-        color = getStatusColor(order.status);
-        title = getStatusLabel(order.status);
+        status = order.status;
     }
 
-    return <Badge color={color} variant={variant}>{title}</Badge>
+    return <StatusTag tone={getOrderStatusTone(status)}>{getStatusLabel(status)}</StatusTag>;
 };

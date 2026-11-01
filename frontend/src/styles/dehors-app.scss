@@ -597,6 +597,39 @@ body.dehors-app {
     font-weight: 700;
   }
 
+  // Light status badges take the colors of the dashboard tags (StatusTag): green when done,
+  // yellow while waiting, red for problems, neutral for the rest (no more blue or purple).
+  .mantine-Badge-root[data-variant='light']#{$hors-apercu} {
+    --mantine-color-green-light: #ddeed8;
+    --mantine-color-green-light-color: #2f6b3a;
+    --mantine-color-teal-light: #ddeed8;
+    --mantine-color-teal-light-color: #2f6b3a;
+    --mantine-color-lime-light: #ddeed8;
+    --mantine-color-lime-light-color: #2f6b3a;
+    --mantine-color-orange-light: #fbe7b5;
+    --mantine-color-orange-light-color: #7a5200;
+    --mantine-color-yellow-light: #fbe7b5;
+    --mantine-color-yellow-light-color: #7a5200;
+    --mantine-color-red-light: #f8ddd6;
+    --mantine-color-red-light-color: #9a3b25;
+    --mantine-color-pink-light: #f8ddd6;
+    --mantine-color-pink-light-color: #9a3b25;
+    --mantine-color-gray-light: #ede6dd;
+    --mantine-color-gray-light-color: #6e625a;
+    --mantine-color-blue-light: #ede6dd;
+    --mantine-color-blue-light-color: #6e625a;
+    --mantine-color-cyan-light: #ede6dd;
+    --mantine-color-cyan-light-color: #6e625a;
+    --mantine-color-indigo-light: #ede6dd;
+    --mantine-color-indigo-light-color: #6e625a;
+    --mantine-color-violet-light: #ede6dd;
+    --mantine-color-violet-light-color: #6e625a;
+    --mantine-color-grape-light: #ede6dd;
+    --mantine-color-grape-light-color: #6e625a;
+    --mantine-color-primary-light: #f7dccd;
+    --mantine-color-primary-light-color: var(--dehors-brun);
+  }
+
   .mantine-Avatar-placeholder {
     font-family: FatFrank, 'Arial Black', sans-serif;
     font-weight: 400;

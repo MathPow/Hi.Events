@@ -1,0 +1,20 @@
+@use "../../../styles/admin-ui" as ui;
+
+.tag {
+  @include ui.tag(neutral);
+
+  &[data-tone='ok'] {
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
+
+  &[data-tone='waiting'] {
+    background: ui.tone-bg(waiting);
+    color: ui.tone-text(waiting);
+  }
+
+  &[data-tone='problem'] {
+    background: ui.tone-bg(problem);
+    color: ui.tone-text(problem);
+  }
+}
