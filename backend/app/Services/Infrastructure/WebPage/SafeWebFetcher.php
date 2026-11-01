@@ -3,6 +3,7 @@
 namespace HiEvents\Services\Infrastructure\WebPage;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\UriResolver;
 use GuzzleHttp\Psr7\Utils;
@@ -13,6 +14,7 @@ use GuzzleHttp\Psr7\Utils;
  * permises (ni localhost, ni 10/8, 192.168/16, 169.254/16, ni 100.64/10 de
  * Tailscale), l'adresse IP verifiee est celle qui est contactee (pas de
  * second DNS), et chaque redirection est reverifiee. Taille et duree bornees.
+ * Si l'adresse IPv4 ne repond pas, l'IPv6 est essayee (et l'inverse).
  */
 class SafeWebFetcher
 {
@@ -23,6 +25,12 @@ class SafeWebFetcher
     private const TIMEOUT = 10;
 
     private const USER_AGENT = 'Mozilla/5.0 (compatible; BilletterieDehors/1.0; +https://billets.dehorsqc.com)';
+
+    /**
+     * Instagram renvoie l'IPv4 du serveur (une adresse de centre de donnees) vers sa
+     * page de connexion, mais montre le compte a son IPv6 : l'IPv6 passe d'abord.
+     */
+    private const IPV6_FIRST = '/(^|\.)(instagram\.com|cdninstagram\.com)$/i';
 
     /**
      * @param bool $truncate une page trop longue est coupee (son debut suffit) ; une image trop lourde est refusee
@@ -37,25 +45,34 @@ class SafeWebFetcher
             $parts = parse_url($current);
             $host = $parts['host'];
             $port = (int)($parts['port'] ?? ($parts['scheme'] === 'https' ? 443 : 80));
-            $ip = $this->publicAddress($host);
-
-            try {
-                $response = (new Client())->request('GET', $current, [
-                    'allow_redirects' => false,
-                    'http_errors' => false,
-                    'stream' => true,
-                    'connect_timeout' => self::CONNECT_TIMEOUT,
-                    'timeout' => self::TIMEOUT,
-                    'headers' => [
-                        'User-Agent' => self::USER_AGENT,
-                        'Accept-Language' => 'fr-CA,fr;q=0.9,en;q=0.6',
-                        'Accept' => 'text/html,application/xhtml+xml,image/avif,image/webp,image/*;q=0.9,*/*;q=0.5',
-                    ],
-                    // La connexion va a l'adresse verifiee ci-dessus, pas a un nouveau DNS.
-                    'curl' => [CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $host, $port, str_contains($ip, ':') ? "[$ip]" : $ip)]],
-                ]);
-            } catch (GuzzleException $exception) {
-                throw new WebPageFetchException(__('The address could not be reached.'), previous: $exception);
+            $response = null;
+            $failure = null;
+            foreach ($this->addressesToTry($host) as $ip) {
+                try {
+                    $response = (new Client())->request('GET', $current, [
+                        'allow_redirects' => false,
+                        'http_errors' => false,
+                        'stream' => true,
+                        'connect_timeout' => self::CONNECT_TIMEOUT,
+                        'timeout' => self::TIMEOUT,
+                        'headers' => [
+                            'User-Agent' => self::USER_AGENT,
+                            'Accept-Language' => 'fr-CA,fr;q=0.9,en;q=0.6',
+                            'Accept' => 'text/html,application/xhtml+xml,image/avif,image/webp,image/*;q=0.9,*/*;q=0.5',
+                        ],
+                        // La connexion va a l'adresse verifiee, pas a un nouveau DNS.
+                        'curl' => [CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $host, $port, str_contains($ip, ':') ? "[$ip]" : $ip)]],
+                    ]);
+                    break;
+                } catch (ConnectException $exception) {
+                    // Pas de route vers cette adresse (souvent l'IPv6) : l'autre famille.
+                    $failure = $exception;
+                } catch (GuzzleException $exception) {
+                    throw new WebPageFetchException(__('The address could not be reached.'), previous: $exception);
+                }
+            }
+            if ($response === null) {
+                throw new WebPageFetchException(__('The address could not be reached.'), previous: $failure);
             }
 
             $status = $response->getStatusCode();
@@ -129,6 +146,31 @@ class SafeWebFetcher
      */
     public function publicAddress(string $host): string
     {
+        return $this->publicAddresses($host)[0];
+    }
+
+    /**
+     * La premiere adresse de chaque famille, toutes verifiees : IPv4 d'abord, sauf pour IPV6_FIRST.
+     *
+     * @return list<string>
+     * @throws UnsafeUrlException
+     */
+    public function addressesToTry(string $host): array
+    {
+        $addresses = $this->publicAddresses($host);
+        $v4 = array_values(array_filter($addresses, fn(string $ip) => !str_contains($ip, ':')));
+        $v6 = array_values(array_filter($addresses, fn(string $ip) => str_contains($ip, ':')));
+        $order = preg_match(self::IPV6_FIRST, trim($host, '[]')) ? [$v6, $v4] : [$v4, $v6];
+
+        return array_values(array_filter([$order[0][0] ?? null, $order[1][0] ?? null]));
+    }
+
+    /**
+     * @return non-empty-list<string>
+     * @throws UnsafeUrlException
+     */
+    private function publicAddresses(string $host): array
+    {
         $host = trim($host, '[]');
         $addresses = filter_var($host, FILTER_VALIDATE_IP) ? [$host] : $this->resolve($host);
 
@@ -142,7 +184,7 @@ class SafeWebFetcher
             }
         }
 
-        return $addresses[0];
+        return $addresses;
     }
 
     public function isPublic(string $ip): bool

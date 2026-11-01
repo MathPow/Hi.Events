@@ -52,6 +52,10 @@ class ImportOrganizerPageHandler
         $isInstagram = $instagram !== null && $instagram[0] === 'instagram';
 
         $page = $this->fetcher->fetch($url, self::MAX_PAGE_BYTES, truncate: true);
+        // Instagram qui refuse de montrer le compte redirige vers sa connexion : son logo et son nom a lui.
+        if ($isInstagram && preg_match('#^/(accounts/login|challenge)(/|$)#', (string)parse_url($page->url, PHP_URL_PATH))) {
+            throw new WebPageFetchException(__('Instagram is not showing this account right now. Try again in a few minutes, or paste the address of your website.'));
+        }
         if (!$page->isHtml()) {
             throw new WebPageFetchException(__('This address is not a web page.'));
         }
