@@ -1,0 +1,572 @@
+@use "../../../../styles/mixins";
+
+// Figma « Admin · Événements » (Desktop 1440 / Mobile 402).
+$card: var(--dehors-carte);
+$ink: var(--dehors-brun);
+$accent-dark: #c36a5c;
+$accent-soft: #f7dccd;
+$track: #efe3d6;
+$shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 1400px;
+  color: $ink;
+
+  @include mixins.respond-below(md) {
+    gap: 1.25rem;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 3.25rem;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 2.125rem;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.125rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.mobileCreateButton {
+  display: none !important;
+
+  @include mixins.respond-below(md) {
+    display: inline-flex !important;
+    height: 3rem !important;
+    border: none !important;
+    border-radius: 1rem !important;
+    background: var(--dehors-orange) !important;
+    color: $ink !important;
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+  }
+}
+
+// Recherche et menus flottants
+.filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.625rem;
+  }
+}
+
+.search {
+  position: relative;
+  min-width: 0;
+}
+
+.filterToggle {
+  display: none;
+
+  @include mixins.respond-below(md) {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.625rem;
+    background: $accent-soft;
+    color: $ink;
+  }
+}
+
+.filterToggleActive {
+  background: $ink;
+  color: var(--dehors-creme);
+}
+
+.menus {
+  display: grid;
+  grid-template-columns: 14.375rem 14.375rem;
+  gap: 0.75rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+}
+
+.menusOpen {
+  @include mixins.respond-below(md) {
+    display: grid;
+  }
+}
+
+// Onglets et vue
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mixins.respond-below(md) {
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+  }
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+  color: $ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 2px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 2.5rem;
+    padding: 0 0.875rem;
+    font-size: 1rem;
+  }
+}
+
+.tabActive,
+.tabActive:hover {
+  background: $ink;
+  color: var(--dehors-creme);
+}
+
+.tabCount {
+  display: grid;
+  place-items: center;
+  min-width: 1.4375rem;
+  height: 1.375rem;
+  padding: 0 0.4375rem;
+  border-radius: 999px;
+  background: $accent-soft;
+  color: $ink;
+  font-size: 0.8125rem;
+
+  .tabActive & {
+    background: var(--dehors-orange);
+  }
+}
+
+.viewToggle {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding: 0.3125rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.viewButton {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: $ink;
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 2px;
+  }
+}
+
+.viewButtonActive {
+  background: $ink;
+  color: var(--dehors-creme);
+}
+
+// Grille de cartes
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1.5rem;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.625rem;
+  border-radius: 1.75rem;
+  background: $card;
+  box-shadow: $shadow;
+  transition: translate 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    translate: 0 -2px;
+    box-shadow: 0 14px 24px rgb(55 39 33 / 0.12);
+  }
+
+  &:has(.cardLink:focus-visible) {
+    outline: 3px solid $ink;
+    outline-offset: 3px;
+  }
+}
+
+.cardImage {
+  display: flex;
+  flex-direction: column;
+  height: 11.875rem;
+  padding: 0.75rem;
+  border-radius: 1.25rem;
+  background: $accent-soft center / cover no-repeat;
+
+  &[data-empty] {
+    background-image: linear-gradient(135deg, #f7dccd, #efe3d6);
+  }
+}
+
+.cardImageBar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.datePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.75rem;
+  border-radius: 999px;
+  background: $card;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.moreButton {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 999px;
+  background: $card;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: #fff;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 2px;
+  }
+
+  .row & {
+    background: #fff6ed;
+
+    &:hover {
+      background: $accent-soft;
+    }
+  }
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1rem 0.875rem 0.875rem;
+}
+
+// The title links to the event; its ::after covers the card, under the menu button.
+.cardLink {
+  color: $ink;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  .row & {
+    font-size: 1.0625rem;
+  }
+}
+
+.location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.875rem;
+
+  > span:last-child {
+    @include mixins.ellipsis();
+  }
+}
+
+.tickets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.625rem;
+
+  .rowTickets & {
+    gap: 0.5rem;
+    padding-top: 0;
+  }
+}
+
+.ticketsLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.progress {
+  display: block;
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: $track;
+
+  > span {
+    display: block;
+    min-width: 8px;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--dehors-orange);
+  }
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 999px;
+  background: #ede6dd;
+  color: #6e625a;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+
+  &[data-status='on_sale'] {
+    background: #ddeed8;
+    color: #2f6b3a;
+  }
+
+  &[data-status='almost_full'],
+  &[data-status='sold_out'] {
+    background: #fbe7b5;
+    color: #7a5200;
+  }
+}
+
+// « Créer un événement » en pointillé, au bout de la grille
+.createCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 22.5rem;
+  padding: 1.5rem;
+  border: 2px dashed $ink;
+  border-radius: 1.75rem;
+  color: $ink;
+  text-align: center;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(255 252 248 / 0.7);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 3px;
+  }
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.createPastille {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 999px;
+  background: var(--dehors-orange);
+  color: $ink;
+}
+
+.createTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.createText {
+  max-width: 15.5rem;
+  font-size: 0.875rem;
+}
+
+// Vue liste
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 1.25rem;
+  background: $card;
+  box-shadow: $shadow;
+
+  &:has(.cardLink:focus-visible) {
+    outline: 3px solid $ink;
+    outline-offset: 2px;
+  }
+}
+
+.rowImage {
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1rem;
+  background: $accent-soft center / cover no-repeat;
+
+  &[data-empty] {
+    background-image: linear-gradient(135deg, #f7dccd, #efe3d6);
+  }
+}
+
+.rowInfo {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  line-height: normal;
+}
+
+.rowDate {
+  color: $accent-dark;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.rowLocation {
+  font-size: 0.875rem;
+  @include mixins.ellipsis();
+}
+
+.rowTickets {
+  flex-shrink: 0;
+  width: 16rem;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1.5rem;
+  border-radius: 1.75rem;
+  background: $card;
+  box-shadow: $shadow;
+  text-align: center;
+
+  p {
+    margin: 0;
+    max-width: 28rem;
+    font-size: 1rem;
+  }
+}
+
+.emptyCreate {
+  border: none !important;
+  border-radius: 1rem !important;
+  background: var(--dehors-orange) !important;
+  color: $ink !important;
+  font-weight: 700 !important;
+}

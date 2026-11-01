@@ -171,7 +171,8 @@ class CreateEventServiceTest extends TestCase
             ->with(Mockery::on(function ($arg) use ($eventData, $organizer) {
                 return $arg['event_id'] === $eventData->getId() &&
                     $arg['homepage_background_type'] === HomepageBackgroundType::COLOR->name &&
-                    $arg['support_email'] === $organizer->getEmail();
+                    $arg['support_email'] === $organizer->getEmail() &&
+                    $arg['location_details'] === $eventData->getLocationDetails();
             }));
 
         $this->eventStatisticsRepository->shouldReceive('create');

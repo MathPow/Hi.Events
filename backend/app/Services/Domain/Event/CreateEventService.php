@@ -237,6 +237,9 @@ class CreateEventService
 
             'waitlist_auto_process' => true,
             'waitlist_offer_timeout_minutes' => 120,
+
+            // The place given at creation (« Lieu » of the create popup), where the event's pages read it.
+            'location_details' => $event->getLocationDetails(),
         ]);
     }
 }

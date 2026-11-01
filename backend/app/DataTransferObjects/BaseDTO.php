@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use ReflectionClass;
 use ReflectionProperty;
 use RuntimeException;
+use Spatie\LaravelData\Data;
 use Throwable;
 
 /**
@@ -125,6 +126,8 @@ abstract class BaseDTO
             // Check if the property type is a subclass of BaseDTO
             if (is_subclass_of($propertyTypeName, self::class)) {
                 $data[$propertyName] = $propertyTypeName::fromArray($data[$propertyName]);
+            } elseif (is_subclass_of($propertyTypeName, Data::class)) {
+                $data[$propertyName] = $propertyTypeName::from($data[$propertyName]);
             }
         }
 

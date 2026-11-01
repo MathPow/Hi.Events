@@ -20,13 +20,8 @@ import {Event, Order, QueryFilters} from '../../../../types';
 import {currenciesMap} from "../../../../../data/currencies.ts";
 import {CreateEventModal} from "../../../modals/CreateEventModal";
 import {StripeConnectButton} from "../../../common/StripeConnectButton";
-import {
-    DashboardNotification,
-    EventSaleStatus,
-    getEventSaleStatus,
-    getTicketCapacity,
-    useDashboardNotifications,
-} from "./dashboardData.ts";
+import {DashboardNotification, useDashboardNotifications} from "./dashboardData.ts";
+import {getEventSaleStatus, getTicketCapacity, saleStatusLabel} from "../../../../utilites/eventSales.ts";
 import classes from './OrganizerDashboard.module.scss';
 
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
@@ -180,21 +175,6 @@ export const StatTile = ({
         <span className={classes.tileBand} aria-hidden/>
     </div>
 );
-
-const saleStatusLabel = (status: EventSaleStatus) => {
-    switch (status) {
-        case 'draft':
-            return t`Draft`;
-        case 'almost_full':
-            return t`Almost full`;
-        case 'sold_out':
-            return t`Sold out`;
-        case 'ended':
-            return t`Ended`;
-        default:
-            return t`On Sale`;
-    }
-};
 
 const EventRow = ({event}: { event: Event }) => {
     const {i18n} = useLingui();
