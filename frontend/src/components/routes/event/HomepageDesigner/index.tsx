@@ -1,315 +1,417 @@
-import {useEffect, useRef, useState} from "react";
-import classes from './HomepageDesigner.module.scss';
-import {useParams} from "react-router";
+import {useEffect, useMemo, useState} from "react";
+import {useBlocker, useParams} from "react-router";
+import {plural, t} from "@lingui/macro";
+import {Button, Skeleton, Text, TextInput} from "@mantine/core";
+import {useMediaQuery} from "@mantine/hooks";
+import {modals} from "@mantine/modals";
+import {useGetEvent} from "../../../../queries/useGetEvent.ts";
 import {useGetEventSettings} from "../../../../queries/useGetEventSettings.ts";
-import {useUpdateEventSettings} from "../../../../mutations/useUpdateEventSettings.ts";
-import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorResponseHandler.tsx";
-import {EventSettings, HomepageThemeSettings, IdParam} from "../../../../types.ts";
-import {showSuccess} from "../../../../utilites/notifications.tsx";
-import {t} from "@lingui/macro";
-import {useForm} from "@mantine/form";
-import {Button, Group, TextInput, Accordion, Stack, Text} from "@mantine/core";
-import {IconColorPicker, IconHelp, IconPhoto, IconPalette, IconTypography} from "@tabler/icons-react";
-import {Tooltip} from "../../../common/Tooltip";
-import {CustomSelect} from "../../../common/CustomSelect";
-import {GET_EVENT_IMAGES_QUERY_KEY, useGetEventImages} from "../../../../queries/useGetEventImages.ts";
-import {eventPreviewPath} from "../../../../utilites/urlHelper.ts";
-import {LoadingMask} from "../../../common/LoadingMask";
-import {ImageUploadDropzone} from "../../../common/ImageUploadDropzone";
-import {queryClient} from "../../../../utilites/queryClient.ts";
+import {useGetEventImages} from "../../../../queries/useGetEventImages.ts";
 import {GET_EVENT_PUBLIC_QUERY_KEY} from "../../../../queries/useGetEventPublic.ts";
-import {ThemeColorControls} from "../../../common/ThemeColorControls";
-import {ThemeFontControl} from "../../../common/ThemeFontControl";
-import {validateThemeSettings} from "../../../../utilites/themeUtils.ts";
-import {DEFAULT_HOMEPAGE_FONT} from "../../../../constants/homepageFonts.ts";
+import {useUpdateEvent} from "../../../../mutations/useUpdateEvent.ts";
+import {useUpdateEventSettings} from "../../../../mutations/useUpdateEventSettings.ts";
+import {useUploadImage} from "../../../../mutations/useUploadImage.ts";
+import {useDeleteImage} from "../../../../mutations/useDeleteImage.ts";
+import {Event, HomepageThemeSettings} from "../../../../types.ts";
+import {eventHomepagePath, eventHomepageUrl, eventPreviewPath} from "../../../../utilites/urlHelper.ts";
+import {utcToTz} from "../../../../utilites/dates.ts";
+import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
+import {queryClient} from "../../../../utilites/queryClient.ts";
+import {Editor} from "../../../common/Editor";
+import {
+    EVENT_PREVIEW_MESSAGE,
+    EVENT_PREVIEW_READY,
+    EventPreviewDraft,
+} from "../../../layouts/EventHomepagePreview/previewMessages.ts";
+import {cleanDescription, DraftImage} from "../../organizer/OrganizerHomepageDesigner/homepageDraft.ts";
+import {DesignerSection, SectionId} from "../../organizer/OrganizerHomepageDesigner/DesignerSection.tsx";
+import {ImagePicker} from "../../organizer/OrganizerHomepageDesigner/ImagesSection.tsx";
+import {AccentSection} from "../../organizer/OrganizerHomepageDesigner/AccentSection.tsx";
+import {PreviewMessages, PreviewModal, PreviewPanel} from "../../organizer/OrganizerHomepageDesigner/PreviewPanel.tsx";
+import {eventDraftChanges, EventPageDraft, publishedEventDraft} from "./eventPageDraft.ts";
+import classes from "../../organizer/OrganizerHomepageDesigner/OrganizerHomepageDesigner.module.scss";
 
-interface FormValues {
-    homepage_theme_settings: Partial<HomepageThemeSettings>;
-    continue_button_text: string;
-}
+const PREVIEW_MESSAGES: PreviewMessages = {update: EVENT_PREVIEW_MESSAGE, ready: EVENT_PREVIEW_READY};
 
+const errorMessage = (error: any): string | null => {
+    const errors = error?.response?.data?.errors;
+    const first = errors && Object.values(errors).flat()[0];
+    return (typeof first === 'string' ? first : null) ?? error?.response?.data?.message ?? null;
+};
+
+/**
+ * The homepage designer, like the organizer's « Ma page »: the event's public page edited as a draft
+ * with a live preview, then published at once. The public page only follows the accent (the cream
+ * background and the dark text are fixed): the former mode, background and font settings are kept
+ * as they were saved but no longer offered.
+ */
 const HomepageDesigner = () => {
     const {eventId} = useParams();
-    const eventSettingsQuery = useGetEventSettings(eventId);
-    const eventImagesQuery = useGetEventImages(eventId);
-    const updateMutation = useUpdateEventSettings();
+    const eventQuery = useGetEvent(eventId);
+    const settingsQuery = useGetEventSettings(eventId);
+    const imagesQuery = useGetEventImages(eventId);
+    const event = eventQuery.data;
+    const settings = settingsQuery.data;
+    const images = imagesQuery.data;
 
-    const iframeRef = useRef<HTMLIFrameElement>(null);
-    const lastSentSettings = useRef<string | null>(null);
+    const updateEvent = useUpdateEvent();
+    const updateSettings = useUpdateEventSettings();
+    const uploadImage = useUploadImage();
+    const deleteImage = useDeleteImage();
 
-    const [iframeSrc, setIframeSrc] = useState<string | null>(null);
-    const [iframeLoaded, setIframeLoaded] = useState(false);
-    const [lastCoverId, setLastCoverId] = useState<IdParam | null>(null);
-    const [accordionValue, setAccordionValue] = useState<string[]>(['images', 'colors', 'typography', 'button']);
+    const published = useMemo(
+        () => event && settings && images ? publishedEventDraft(event, settings, images) : null,
+        [event, settings, images],
+    );
+    const [draft, setDraft] = useState<EventPageDraft | null>(null);
+    // Remounts the description editor when the draft is replaced.
+    const [resetKey, setResetKey] = useState(0);
+    const [openSections, setOpenSections] = useState<SectionId[]>([]);
+    const [publishing, setPublishing] = useState(false);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    const isWide = useMediaQuery('(min-width: 75em)', false, {getInitialValueInEffect: true});
 
-    const existingCover = eventImagesQuery.data?.find((image) => image.type === 'EVENT_COVER');
-
-    const form = useForm<FormValues>({
-        initialValues: {
-            homepage_theme_settings: {
-                accent: '#8b5cf6',
-                background: '#f5f3ff',
-                mode: 'light',
-                background_type: 'COLOR',
-                font_family: DEFAULT_HOMEPAGE_FONT,
-            },
-            continue_button_text: '',
+    useEffect(() => {
+        if (published && !draft) {
+            setDraft(published);
         }
+    }, [published]);
+
+    const changes = useMemo(() => published && draft ? eventDraftChanges(published, draft) : null, [published, draft]);
+    const changeCount = changes?.count ?? 0;
+
+    const blocker = useBlocker(({currentLocation, nextLocation}) =>
+        changeCount > 0 && !publishing && currentLocation.pathname !== nextLocation.pathname);
+
+    useEffect(() => {
+        if (blocker.state !== 'blocked') {
+            return;
+        }
+        let leaving = false;
+        modals.openConfirmModal({
+            title: t`Leave without publishing?`,
+            children: <Text size="sm">{t`Your unpublished changes will be lost.`}</Text>,
+            labels: {confirm: t`Leave`, cancel: t`Stay`},
+            onConfirm: () => {
+                leaving = true;
+                blocker.proceed?.();
+            },
+            onClose: () => !leaving && blocker.reset?.(),
+        });
+    }, [blocker.state]);
+
+    useEffect(() => {
+        if (changeCount === 0) {
+            return;
+        }
+        const warn = (beforeUnload: BeforeUnloadEvent) => beforeUnload.preventDefault();
+        window.addEventListener('beforeunload', warn);
+        return () => window.removeEventListener('beforeunload', warn);
+    }, [changeCount > 0]);
+
+    const previewDraft = useMemo<EventPreviewDraft>(() => draft ? {
+        event: {title: draft.title, description: cleanDescription(draft.description)},
+        accent: draft.accent,
+        cover: draft.cover?.url ?? null,
+        continue_button_text: draft.buttonText,
+    } : {}, [draft]);
+
+    const edit = (values: Partial<EventPageDraft>) => setDraft(current => current && {...current, ...values});
+
+    const setCover = (cover: DraftImage) => setDraft(current => {
+        const previous = current?.cover;
+        if (previous?.kind === 'new' && previous.url !== cover?.url) {
+            URL.revokeObjectURL(previous.url);
+        }
+        return current && {...current, cover};
     });
 
-    const formErrorHandle = useFormErrorResponseHandler();
+    const toggleSection = (id: SectionId) => setOpenSections(current =>
+        current.includes(id) ? current.filter(section => section !== id) : [...current, id]);
 
-    useEffect(() => {
-        if (eventSettingsQuery?.isFetched && eventSettingsQuery?.data) {
-            const settings = eventSettingsQuery.data;
-            const themeSettings = validateThemeSettings(settings.homepage_theme_settings);
+    const openSection = (id: SectionId) => {
+        setOpenSections(current => current.includes(id) ? current : [...current, id]);
+        setTimeout(() => document.getElementById(`ma-page-${id}`)?.scrollIntoView({behavior: 'smooth', block: 'start'}), 220);
+    };
 
-            form.setValues({
-                homepage_theme_settings: themeSettings,
-                continue_button_text: settings.continue_button_text,
-            });
+    const replaceDraft = (next: EventPageDraft | null) => {
+        if (draft?.cover?.kind === 'new') {
+            URL.revokeObjectURL(draft.cover.url);
         }
-    }, [eventSettingsQuery.isFetched]);
+        setDraft(next);
+        setResetKey(key => key + 1);
+    };
 
-    useEffect(() => {
-        if (eventSettingsQuery.isFetched && eventImagesQuery.isFetched && !iframeSrc) {
-            setIframeSrc(eventPreviewPath(eventId));
+    const discard = () => published && replaceDraft(published);
+
+    const publish = async () => {
+        if (!draft || !published || !changes || !event || !settings || !eventId) {
+            return;
         }
-    }, [eventSettingsQuery.isFetched, eventImagesQuery.isFetched]);
-
-    useEffect(() => {
-        if (existingCover?.id !== lastCoverId && iframeSrc) {
-            setLastCoverId(existingCover?.id);
-            setIframeSrc(eventPreviewPath(eventId) + `?cover_image_id=${existingCover?.id}`);
-            setIframeLoaded(false);
+        if (!draft.title.trim()) {
+            openSection('info');
+            showError(t`Name is required`);
+            return;
         }
-    }, [existingCover?.id]);
 
-    const handleSubmit = (values: FormValues) => {
-        const validatedTheme = validateThemeSettings(values.homepage_theme_settings);
-
-        const eventSettings: Partial<EventSettings> = {
-            homepage_theme_settings: validatedTheme,
-            continue_button_text: values.continue_button_text,
-            // Also update legacy fields for backward compatibility during transition
-            homepage_primary_color: validatedTheme.accent,
-            homepage_body_background_color: validatedTheme.background,
-            homepage_background_type: validatedTheme.background_type,
-        };
-
-        updateMutation.mutate(
-            {eventSettings, eventId: eventId},
-            {
-                onSuccess: () => {
-                    showSuccess(t`Successfully Updated Homepage Design`);
-                },
-                onError: (error) => {
-                    formErrorHandle(form, error);
-                },
+        setPublishing(true);
+        try {
+            if (changes.cover) {
+                if (draft.cover?.kind === 'new') {
+                    // Replaces the previous cover (one per event).
+                    const {data} = await uploadImage.mutateAsync({image: draft.cover.file, imageType: 'EVENT_COVER', entityId: eventId});
+                    setCover({kind: 'saved', id: data.id, url: data.url});
+                } else if (!draft.cover && published.cover?.kind === 'saved') {
+                    await deleteImage.mutateAsync({imageId: published.cover.id});
+                }
             }
-        );
+
+            if (changes.event) {
+                // The event is saved whole, as in its settings.
+                await updateEvent.mutateAsync({
+                    eventId,
+                    eventData: {
+                        title: draft.title.trim(),
+                        description: cleanDescription(draft.description) || null,
+                        start_date: utcToTz(event.start_date, event.timezone),
+                        end_date: utcToTz(event.end_date, event.timezone) ?? null,
+                        timezone: event.timezone,
+                        currency: event.currency,
+                        category: event.category || null,
+                    } as Partial<Event>,
+                });
+            }
+
+            if (changes.accent || changes.buttonText) {
+                await updateSettings.mutateAsync({
+                    eventId,
+                    eventSettings: {
+                        ...(changes.accent && {
+                            homepage_theme_settings: {
+                                ...settings.homepage_theme_settings,
+                                accent: draft.accent,
+                            } as HomepageThemeSettings,
+                            // The former color field, still read by the widget's defaults.
+                            homepage_primary_color: draft.accent,
+                        }),
+                        ...(changes.buttonText && {
+                            continue_button_text: (draft.buttonText.trim() || null) as string,
+                        }),
+                    },
+                });
+            }
+
+            const [freshEvent, freshSettings, freshImages] = await Promise.all([
+                eventQuery.refetch(),
+                settingsQuery.refetch(),
+                imagesQuery.refetch(),
+            ]);
+            if (freshEvent.data && freshSettings.data && freshImages.data) {
+                replaceDraft(publishedEventDraft(freshEvent.data, freshSettings.data, freshImages.data));
+            }
+            showSuccess(t`The event page is published`);
+        } catch (error) {
+            showError(errorMessage(error) ?? t`Some changes could not be published. Please try again.`);
+            await Promise.all([eventQuery.refetch(), settingsQuery.refetch(), imagesQuery.refetch()]);
+        } finally {
+            setPublishing(false);
+            queryClient.invalidateQueries({queryKey: [GET_EVENT_PUBLIC_QUERY_KEY, eventId]});
+        }
     };
 
-    const handleImageChange = () => {
-        queryClient.invalidateQueries({
-            queryKey: [GET_EVENT_IMAGES_QUERY_KEY, eventId]
-        });
-        queryClient.invalidateQueries({
-            queryKey: [GET_EVENT_PUBLIC_QUERY_KEY, eventId]
-        });
-    };
+    const displayUrl = event ? eventHomepageUrl(event).replace(/^https?:\/\//, '') : '';
+    const previewSrc = eventPreviewPath(eventId);
+    const loading = !draft;
 
-    const sendSettingsToIframe = () => {
-        if (iframeRef.current?.contentWindow && iframeLoaded) {
-            const themeSettings = validateThemeSettings(form.values.homepage_theme_settings);
+    const sections: { id: SectionId, icon: string, title: string, long: string, short: string }[] = [
+        {id: 'images', icon: 'image', title: t`Images`, long: t`Cover image at the top of the page`, short: t`Cover Image`},
+        {
+            id: 'accent',
+            icon: 'drop',
+            title: t`Accent color`,
+            long: t`Buttons and highlighted elements`,
+            short: t`Buttons and highlighted elements`,
+        },
+        {
+            id: 'info',
+            icon: 'pen',
+            title: t`Info and description`,
+            long: t`Name and introduction text`,
+            short: t`Name and introduction`,
+        },
+        {
+            id: 'button',
+            icon: '/interface/admin/parametres/billet.svg',
+            title: t`Ticket button`,
+            long: t`The text of the button under the tickets`,
+            short: t`Text of the button`,
+        },
+    ];
 
-            const settingsToSend = {
-                homepage_theme_settings: themeSettings,
-                continue_button_text: form.values.continue_button_text,
-            };
-
-            const settingsJson = JSON.stringify(settingsToSend);
-            if (settingsJson !== lastSentSettings.current) {
-                iframeRef.current.contentWindow.postMessage(
-                    {type: "UPDATE_SETTINGS", settings: settingsToSend},
-                    "*"
+    const sectionContent = (id: SectionId) => {
+        if (!draft) {
+            return null;
+        }
+        switch (id) {
+            case 'images':
+                return (
+                    <ImagePicker
+                        kind="cover"
+                        label={t`Cover Image`}
+                        recommendation={t`We recommend dimensions of 1950px by 650px, a ratio of 3:1, and a maximum file size of 30MB`}
+                        image={draft.cover}
+                        onChange={setCover}
+                        disabled={publishing}
+                    />
                 );
-                lastSentSettings.current = settingsJson;
-            }
+            case 'accent':
+                return <AccentSection accent={draft.accent} onChange={(accent) => edit({accent})} disabled={publishing}/>;
+            case 'info':
+                return (
+                    <>
+                        <TextInput
+                            className={classes.field}
+                            label={t`Name`}
+                            value={draft.title}
+                            maxLength={150}
+                            disabled={publishing}
+                            error={draft.title.trim() === '' ? t`Name is required` : undefined}
+                            onChange={(changeEvent) => edit({title: changeEvent.currentTarget.value})}
+                        />
+                        <Editor
+                            key={resetKey}
+                            className={classes.description}
+                            label={t`Description`}
+                            value={draft.description}
+                            onChange={(value) => edit({description: value})}
+                        />
+                    </>
+                );
+            case 'button':
+                return (
+                    <TextInput
+                        className={classes.field}
+                        label={t`Continue Button Text`}
+                        description={t`Leave empty for « Continue ».`}
+                        placeholder={t`e.g., Get Tickets, Register Now`}
+                        maxLength={100}
+                        value={draft.buttonText}
+                        disabled={publishing}
+                        onChange={(changeEvent) => edit({buttonText: changeEvent.currentTarget.value})}
+                    />
+                );
+            default:
+                return null;
         }
-    };
-
-    useEffect(() => {
-        sendSettingsToIframe();
-    }, [iframeLoaded, form.values]);
-
-    const handleThemeChange = (themeSettings: Partial<HomepageThemeSettings>) => {
-        form.setFieldValue('homepage_theme_settings', themeSettings);
-    };
-
-    const handleBackgroundTypeChange = (backgroundType: string | string[]) => {
-        const value = Array.isArray(backgroundType) ? backgroundType[0] : backgroundType;
-        form.setFieldValue('homepage_theme_settings', {
-            ...form.values.homepage_theme_settings,
-            background_type: value as 'COLOR' | 'MIRROR_COVER_IMAGE',
-        });
     };
 
     return (
-        <div className={classes.container}>
-            <div className={classes.sidebar}>
-                <div className={classes.sticky}>
-                    <div className={classes.header}>
-                        <h2>{t`Homepage Design`}</h2>
-                        <Text c="dimmed" size="sm">{t`Customize the layout, colors, and branding of your event homepage.`}</Text>
-                    </div>
-
-                    <Accordion
-                        multiple
-                        value={accordionValue}
-                        onChange={setAccordionValue}
-                        variant="contained"
-                        className={classes.accordion}
-                    >
-                        <Accordion.Item value="images" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconPhoto size={20} />}>
-                                <Text fw={500}>{t`Images`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <Stack gap="lg">
-                                    <div>
-                                        <Group justify={'space-between'} mb="xs">
-                                            <Text fw={500} size="sm">{t`Cover Image`}</Text>
-                                            <Tooltip
-                                                label={t`We recommend dimensions of 1950px by 650px, a ratio of 3:1, and a maximum file size of 30MB`}>
-                                                <IconHelp size={16} style={{ color: 'var(--mantine-color-gray-6)' }}/>
-                                            </Tooltip>
-                                        </Group>
-                                        <ImageUploadDropzone
-                                            imageType="EVENT_COVER"
-                                            entityId={eventId}
-                                            onUploadSuccess={handleImageChange}
-                                            onDeleteSuccess={handleImageChange}
-                                            existingImageData={{
-                                                url: existingCover?.url,
-                                                id: existingCover?.id,
-                                            }}
-                                            helpText={t`Cover image will be displayed at the top of your event page`}
-                                            displayMode="compact"
-                                        />
-                                    </div>
-                                </Stack>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-
-                        <Accordion.Item value="colors" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconPalette size={20} />}>
-                                <Text fw={500}>{t`Theme & Colors`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <form onSubmit={form.onSubmit(handleSubmit)}>
-                                    <fieldset disabled={eventSettingsQuery.isLoading || updateMutation.isPending} className={classes.fieldset}>
-                                        <Stack gap="md">
-                                            <CustomSelect
-                                                optionList={[
-                                                    {
-                                                        icon: <IconColorPicker/>,
-                                                        label: t`Color`,
-                                                        value: 'COLOR',
-                                                        description: t`Choose a color for your background`,
-                                                    },
-                                                    {
-                                                        icon: <IconPhoto/>,
-                                                        label: t`Use cover image`,
-                                                        value: 'MIRROR_COVER_IMAGE',
-                                                        description: t`Use a blurred version of the cover image as the background`,
-                                                        disabled: !existingCover,
-                                                    },
-                                                ]}
-                                                label={t`Background Type`}
-                                                name={'homepage_theme_settings.background_type'}
-                                                value={form.values.homepage_theme_settings.background_type || 'COLOR'}
-                                                onChange={handleBackgroundTypeChange}
-                                            />
-
-                                            <ThemeColorControls
-                                                values={form.values.homepage_theme_settings}
-                                                onChange={handleThemeChange}
-                                                disabled={eventSettingsQuery.isLoading || updateMutation.isPending}
-                                            />
-                                        </Stack>
-                                    </fieldset>
-                                </form>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-
-                        <Accordion.Item value="typography" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconTypography size={20} />}>
-                                <Text fw={500}>{t`Typography`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <fieldset disabled={eventSettingsQuery.isLoading || updateMutation.isPending} className={classes.fieldset}>
-                                    <ThemeFontControl
-                                        value={form.values.homepage_theme_settings.font_family}
-                                        onChange={(fontFamily) => form.setFieldValue('homepage_theme_settings', {
-                                            ...form.values.homepage_theme_settings,
-                                            font_family: fontFamily,
-                                        })}
-                                        disabled={eventSettingsQuery.isLoading || updateMutation.isPending}
-                                    />
-                                </fieldset>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-
-                        <Accordion.Item value="button" className={classes.accordionItem}>
-                            <Accordion.Control icon={<IconTypography size={20} />}>
-                                <Text fw={500}>{t`Button Text`}</Text>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <form onSubmit={form.onSubmit(handleSubmit)}>
-                                    <fieldset disabled={eventSettingsQuery.isLoading || updateMutation.isPending} className={classes.fieldset}>
-                                        <Stack gap="md">
-                                            <TextInput
-                                                label={t`Continue Button Text`}
-                                                description={t`Customize the text shown on the continue button`}
-                                                placeholder={t`e.g., Get Tickets, Register Now`}
-                                                size="sm"
-                                                {...form.getInputProps('continue_button_text')}
-                                            />
-                                        </Stack>
-                                    </fieldset>
-                                </form>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-                    </Accordion>
-
+        <div className={classes.page}>
+            <header className={classes.header}>
+                <div className={classes.heading}>
+                    <h1 className={classes.title}>{t`Event Page`}</h1>
+                    <p className={classes.subtitle}>
+                        {t`Customize the event's public page.`}
+                        <span className={classes.wideOnly}> {t`Changes appear on the right.`}</span>
+                    </p>
+                </div>
+                <div className={classes.headerActions}>
                     <Button
-                        loading={updateMutation.isPending}
-                        type="submit"
-                        fullWidth
-                        mt="md"
-                        onClick={() => form.onSubmit(handleSubmit)()}
+                        component="a"
+                        href={event ? eventHomepagePath(event) : '#'}
+                        target="_blank"
+                        rel="noopener"
+                        className={`${classes.button} ${classes.buttonOutline} ${classes.wideOnly}`}
+                        leftSection={<img src="/interface/admin/ma-page/eye.svg" alt=""/>}
                     >
-                        {t`Save Changes`}
+                        {t`View the page`}
+                    </Button>
+                    <Button
+                        className={`${classes.button} ${classes.buttonOutline} ${classes.narrowOnly}`}
+                        leftSection={<img src="/interface/admin/ma-page/eye.svg" alt=""/>}
+                        onClick={() => setPreviewOpen(true)}
+                        disabled={loading}
+                    >
+                        {t`Preview`}
+                    </Button>
+                    <Button
+                        className={`${classes.button} ${classes.buttonFilled}`}
+                        leftSection={<img src="/interface/admin/ma-page/globe.svg" alt=""/>}
+                        onClick={publish}
+                        loading={publishing}
+                        disabled={changeCount === 0}
+                    >
+                        <span className={classes.longLabel}>{t`Publish changes`}</span>
+                        <span className={classes.shortLabel}>{t`Publish`}</span>
                     </Button>
                 </div>
+            </header>
+
+            <div className={classes.designer}>
+                <div className={classes.settings}>
+                    {loading ? (
+                        <Skeleton height={46} radius={20}/>
+                    ) : (
+                        <div className={classes.status} data-published={changeCount === 0 || undefined} role="status">
+                            <span className={classes.statusDot}/>
+                            <span className={classes.statusText}>
+                                {changeCount > 0
+                                    ? plural(changeCount, {
+                                        one: '# change not yet published',
+                                        other: '# changes not yet published',
+                                    })
+                                    : t`Everything is published`}
+                            </span>
+                            {changeCount > 0 && (
+                                <button type="button" className={`${classes.textButton} ${classes.discard}`}
+                                        onClick={discard} disabled={publishing}>
+                                    {t`Cancel`}
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {sections.map(section => loading ? (
+                        <Skeleton key={section.id} height={81} radius={24}/>
+                    ) : (
+                        <DesignerSection
+                            key={section.id}
+                            id={section.id}
+                            icon={section.icon}
+                            title={section.title}
+                            subtitle={(
+                                <>
+                                    <span className={classes.longLabel}>{section.long}</span>
+                                    <span className={classes.shortLabel}>{section.short}</span>
+                                </>
+                            )}
+                            open={openSections.includes(section.id)}
+                            onToggle={toggleSection}
+                        >
+                            {sectionContent(section.id)}
+                        </DesignerSection>
+                    ))}
+                </div>
+
+                {isWide && (
+                    <div className={classes.previewColumn}>
+                        {loading
+                            ? <Skeleton height={600} radius={28}/>
+                            : <PreviewPanel src={previewSrc} url={displayUrl} draft={previewDraft} messages={PREVIEW_MESSAGES}/>}
+                    </div>
+                )}
             </div>
 
-            <div className={classes.previewContainer}>
-                <h2>{t`Homepage Preview`}</h2>
-                <div className={classes.iframeContainer}>
-                    {iframeSrc ? (
-                        <iframe
-                            ref={iframeRef}
-                            src={iframeSrc}
-                            title="Event Preview"
-                            onLoad={() => setIframeLoaded(true)}
-                        />
-                    ) : (
-                        <LoadingMask/>
-                    )}
-                </div>
-            </div>
+            {!isWide && !loading && (
+                <PreviewModal
+                    opened={previewOpen}
+                    onClose={() => setPreviewOpen(false)}
+                    src={previewSrc}
+                    draft={previewDraft}
+                    messages={PREVIEW_MESSAGES}
+                />
+            )}
         </div>
     );
 };

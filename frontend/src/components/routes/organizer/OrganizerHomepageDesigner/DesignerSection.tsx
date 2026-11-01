@@ -3,10 +3,11 @@ import {Collapse} from "@mantine/core";
 import {IconChevronDown} from "@tabler/icons-react";
 import classes from "./OrganizerHomepageDesigner.module.scss";
 
-export type SectionId = 'images' | 'accent' | 'info' | 'social' | 'faq';
+export type SectionId = 'images' | 'accent' | 'info' | 'social' | 'faq' | 'button';
 
 interface DesignerSectionProps {
     id: SectionId;
+    // A Ma page icon's name, or an image's address.
     icon: string;
     title: string;
     subtitle: ReactNode;
@@ -26,7 +27,7 @@ export const DesignerSection = ({id, icon, title, subtitle, open, onToggle, chil
             onClick={() => onToggle(id)}
         >
             <span className={classes.pastille}>
-                <img src={`/interface/admin/ma-page/${icon}.svg`} alt=""/>
+                <img src={icon.startsWith('/') ? icon : `/interface/admin/ma-page/${icon}.svg`} alt=""/>
             </span>
             <span className={classes.sectionText}>
                 <span className={classes.sectionTitle}>{title}</span>

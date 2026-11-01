@@ -14,21 +14,30 @@ import classes from "./OrganizerHomepageDesigner.module.scss";
 const DESKTOP_WIDTH = 1440;
 const PHONE = {width: 402, height: 874};
 
+// The messages the public page listens to: « Ma page » by default, the event's page in its designer.
+export interface PreviewMessages {
+    update: string;
+    ready: string;
+}
+
+const ORGANIZER_MESSAGES: PreviewMessages = {update: ORGANIZER_PREVIEW_MESSAGE, ready: ORGANIZER_PREVIEW_READY};
+
 interface PreviewFrameProps {
     src: string;
-    draft: OrganizerPreviewDraft;
+    draft: OrganizerPreviewDraft | object;
     className: string;
     style?: CSSProperties;
+    messages?: PreviewMessages;
 }
 
 // The public page in an iframe, which shows the draft: it is sent again on every change.
-const PreviewFrame = ({src, draft, className, style}: PreviewFrameProps) => {
+const PreviewFrame = ({src, draft, className, style, messages = ORGANIZER_MESSAGES}: PreviewFrameProps) => {
     const frame = useRef<HTMLIFrameElement>(null);
     const latest = useRef(draft);
     latest.current = draft;
 
     const send = () => frame.current?.contentWindow?.postMessage(
-        {type: ORGANIZER_PREVIEW_MESSAGE, draft: latest.current},
+        {type: messages.update, draft: latest.current},
         window.location.origin,
     );
 
@@ -49,7 +58,7 @@ const PreviewFrame = ({src, draft, className, style}: PreviewFrameProps) => {
     // The page listens once it is displayed, which can come after the iframe's load event.
     useEffect(() => {
         const onReady = (event: MessageEvent) => {
-            if (event.source === frame.current?.contentWindow && event.data?.type === ORGANIZER_PREVIEW_READY) {
+            if (event.source === frame.current?.contentWindow && event.data?.type === messages.ready) {
                 send();
             }
         };
@@ -74,10 +83,11 @@ export type PreviewDevice = 'desktop' | 'mobile';
 interface PreviewPanelProps {
     src: string;
     url: string;
-    draft: OrganizerPreviewDraft;
+    draft: OrganizerPreviewDraft | object;
+    messages?: PreviewMessages;
 }
 
-export const PreviewPanel = ({src, url, draft}: PreviewPanelProps) => {
+export const PreviewPanel = ({src, url, draft, messages}: PreviewPanelProps) => {
     const [device, setDevice] = useState<PreviewDevice>('desktop');
     const {ref, width, height} = useElementSize();
 
@@ -113,6 +123,7 @@ export const PreviewPanel = ({src, url, draft}: PreviewPanelProps) => {
                     <PreviewFrame
                         src={src}
                         draft={draft}
+                        messages={messages}
                         className={classes.frame}
                         style={{
                             width: DESKTOP_WIDTH,
@@ -127,6 +138,7 @@ export const PreviewPanel = ({src, url, draft}: PreviewPanelProps) => {
                         <PreviewFrame
                             src={src}
                             draft={draft}
+                            messages={messages}
                             className={classes.frame}
                             style={{
                                 width: PHONE.width,
@@ -145,11 +157,12 @@ interface PreviewModalProps {
     opened: boolean;
     onClose: () => void;
     src: string;
-    draft: OrganizerPreviewDraft;
+    draft: OrganizerPreviewDraft | object;
+    messages?: PreviewMessages;
 }
 
 // Mobile: the « Aperçu » button opens the page full screen.
-export const PreviewModal = ({opened, onClose, src, draft}: PreviewModalProps) => (
+export const PreviewModal = ({opened, onClose, src, draft, messages}: PreviewModalProps) => (
     <Modal
         opened={opened}
         onClose={onClose}
@@ -160,6 +173,6 @@ export const PreviewModal = ({opened, onClose, src, draft}: PreviewModalProps) =
         closeButtonProps={{'aria-label': t`Close`}}
         className={classes.fullscreen}
     >
-        {opened && <PreviewFrame src={src} draft={draft} className={classes.fullscreenFrame}/>}
+        {opened && <PreviewFrame src={src} draft={draft} messages={messages} className={classes.fullscreenFrame}/>}
     </Modal>
 );

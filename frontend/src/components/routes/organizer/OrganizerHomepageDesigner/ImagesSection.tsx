@@ -22,7 +22,7 @@ const imageSize = (url: string) => new Promise<{ width: number, height: number }
     image.src = url;
 });
 
-interface ImagePickerProps {
+export interface ImagePickerProps {
     kind: 'cover' | 'logo';
     label: string;
     recommendation: string;
@@ -31,7 +31,7 @@ interface ImagePickerProps {
     disabled?: boolean;
 }
 
-const ImagePicker = ({kind, label, recommendation, image, onChange, disabled}: ImagePickerProps) => {
+export const ImagePicker = ({kind, label, recommendation, image, onChange, disabled}: ImagePickerProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [error, setError] = useState<string | null>(null);
 

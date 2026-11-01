@@ -1,53 +1,67 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router";
 import {LoadingOverlay} from "@mantine/core";
-import {Event, HomepageThemeSettings} from "../../../types.ts";
+import {Event, HomepageThemeSettings, Image} from "../../../types.ts";
 import {useGetEventPublic} from "../../../queries/useGetEventPublic.ts";
 import {EventNotAvailable} from "../EventHomepage/EventNotAvailable";
 import EventHomepage from "../EventHomepage";
+import {EVENT_PREVIEW_MESSAGE, EVENT_PREVIEW_READY, EventPreviewDraft} from "./previewMessages.ts";
 
-interface PreviewSettings {
-    homepage_theme_settings?: Partial<HomepageThemeSettings>;
-    continue_button_text?: string;
-}
+// The cover as it will be published: replaced, removed or added.
+const previewImages = (images: Image[] = [], cover: EventPreviewDraft['cover']): Image[] => {
+    if (cover === undefined) {
+        return images;
+    }
+    const others = images.filter(image => image.type !== 'EVENT_COVER');
+    if (cover === null) {
+        return others;
+    }
+    const current = images.find(image => image.type === 'EVENT_COVER');
+    return [...others, current?.url === cover ? current : {...current, type: 'EVENT_COVER', url: cover, lqip_base64: undefined} as Image];
+};
 
+// The event's page inside the homepage designer, showing the draft it sends.
 const EventHomepagePreview = () => {
     const {eventId} = useParams();
     const {data: event, isFetched, isLoading} = useGetEventPublic(eventId);
-    const [previewSettings, setPreviewSettings] = useState<PreviewSettings | null>(null);
+    const [draft, setDraft] = useState<EventPreviewDraft | null>(null);
 
     useEffect(() => {
         const handleMessage = (messageEvent: MessageEvent) => {
-            if (messageEvent.data.type === "UPDATE_SETTINGS") {
-                setPreviewSettings(messageEvent.data.settings);
+            if (messageEvent.origin === window.location.origin && messageEvent.data?.type === EVENT_PREVIEW_MESSAGE) {
+                setDraft(messageEvent.data.draft ?? null);
             }
         };
 
         window.addEventListener("message", handleMessage);
+        // The designer sends the draft again: the iframe's load event may have come before this listener.
+        if (window.parent !== window) {
+            window.parent.postMessage({type: EVENT_PREVIEW_READY}, window.location.origin);
+        }
         return () => window.removeEventListener("message", handleMessage);
     }, []);
 
     if (!isFetched || isLoading) {
-        return <LoadingOverlay visible />;
+        return <LoadingOverlay visible/>;
     }
 
     if (!event) {
-        return <EventNotAvailable />;
+        return <EventNotAvailable/>;
     }
 
-    // Create a modified event with preview settings merged in
-    let previewEvent: Event | undefined = event;
-
-    if (previewSettings && event.settings) {
-        previewEvent = {
-            ...event,
-            settings: {
-                ...event.settings,
-                homepage_theme_settings: previewSettings.homepage_theme_settings as HomepageThemeSettings || event.settings.homepage_theme_settings,
-                continue_button_text: previewSettings.continue_button_text ?? event.settings.continue_button_text,
-            }
-        };
-    }
+    const previewEvent: Event = draft ? {
+        ...event,
+        ...draft.event,
+        images: previewImages(event.images, draft.cover),
+        settings: event.settings && {
+            ...event.settings,
+            homepage_theme_settings: {
+                ...event.settings.homepage_theme_settings,
+                ...(draft.accent && {accent: draft.accent}),
+            } as HomepageThemeSettings,
+            continue_button_text: draft.continue_button_text ?? event.settings.continue_button_text,
+        },
+    } : event;
 
     return (
         <EventHomepage

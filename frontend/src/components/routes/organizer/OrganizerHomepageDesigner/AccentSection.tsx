@@ -19,9 +19,11 @@ interface AccentSectionProps {
     accent: string;
     onChange: (accent: string) => void;
     disabled?: boolean;
+    // The readability on the cream public pages (not on the white tickets).
+    readability?: boolean;
 }
 
-export const AccentSection = ({accent, onChange, disabled}: AccentSectionProps) => {
+export const AccentSection = ({accent, onChange, disabled, readability = true}: AccentSectionProps) => {
     const [code, setCode] = useState(accent.toUpperCase());
     const [pickerOpen, setPickerOpen] = useState(false);
     const isCustom = !ACCENT_CHOICES.some(choice => sameColor(choice, accent));
@@ -106,7 +108,7 @@ export const AccentSection = ({accent, onChange, disabled}: AccentSectionProps) 
                 error={code && !HEX_PATTERN.test(code.startsWith('#') ? code : `#${code}`) ? t`Use a code like #FA7853` : undefined}
             />
 
-            <AccentReadabilityNote accent={accent}/>
+            {readability && <AccentReadabilityNote accent={accent}/>}
         </>
     );
 };
