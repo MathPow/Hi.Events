@@ -382,8 +382,9 @@ const routes: RouteObject[] = [
             {
                 path: "report/:reportType",
                 async lazy() {
-                    const OrganizerReportLayout = await import("./components/routes/organizer/Reports/ReportLayout");
-                    return { Component: OrganizerReportLayout.default };
+                    // Les rapports s'ouvrent maintenant sur place dans Rapports.
+                    const OrganizerReports = await import("./components/routes/organizer/Reports");
+                    return { Component: OrganizerReports.ReportRedirect };
                 }
             }
         ],

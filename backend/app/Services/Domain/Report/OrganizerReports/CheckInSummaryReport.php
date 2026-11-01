@@ -11,6 +11,7 @@ class CheckInSummaryReport extends AbstractOrganizerReportService
     protected function getSqlQuery(Carbon $startDate, Carbon $endDate, ?string $currency = null): string
     {
         $activeStatus = AttendeeStatus::ACTIVE->name;
+        $eventFilter = $this->buildEventFilter('e.id');
 
         return <<<SQL
             WITH organizer_events AS (
@@ -61,6 +62,7 @@ class CheckInSummaryReport extends AbstractOrganizerReportService
             ) list_counts ON e.id = list_counts.event_id
             WHERE e.organizer_id = :organizer_id
                 AND e.deleted_at IS NULL
+                $eventFilter
             ORDER BY e.start_date DESC NULLS LAST
 SQL;
     }

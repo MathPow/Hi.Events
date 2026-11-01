@@ -4,6 +4,7 @@ namespace HiEvents\Services\Domain\Report\OrganizerReports;
 
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
+use HiEvents\DomainObjects\Enums\ProductType;
 use HiEvents\Services\Domain\Report\AbstractOrganizerReportService;
 use Illuminate\Support\Carbon;
 
@@ -15,6 +16,8 @@ class EventsPerformanceReport extends AbstractOrganizerReportService
         $defaultDurationHours = EventDomainObject::DEFAULT_DURATION_HOURS;
         $orderCurrencyFilter = $this->buildCurrencyFilter('o.currency', $currency);
         $eventCurrencyFilter = $this->buildCurrencyFilter('e.currency', $currency);
+        $eventFilter = $this->buildEventFilter('e.id');
+        $ticketType = ProductType::TICKET->name;
 
         return <<<SQL
             WITH organizer_events AS (
@@ -50,6 +53,23 @@ class EventsPerformanceReport extends AbstractOrganizerReportService
                     AND oi.deleted_at IS NULL
                     $orderCurrencyFilter
                 GROUP BY o.event_id
+            ),
+            -- Billets vendus sur billets mis en vente (taux de remplissage); sans limite: pas de capacite.
+            ticket_stats AS (
+                SELECT
+                    p.event_id,
+                    SUM(pp.quantity_sold) AS tickets_sold,
+                    CASE
+                        WHEN BOOL_OR(pp.initial_quantity_available IS NULL) THEN NULL
+                        ELSE SUM(pp.initial_quantity_available)
+                    END AS ticket_capacity
+                FROM products p
+                INNER JOIN product_prices pp ON pp.product_id = p.id
+                WHERE p.event_id IN (SELECT id FROM organizer_events)
+                    AND p.product_type = '$ticketType'
+                    AND p.deleted_at IS NULL
+                    AND pp.deleted_at IS NULL
+                GROUP BY p.event_id
             )
             SELECT
                 e.id AS event_id,
@@ -72,14 +92,18 @@ class EventsPerformanceReport extends AbstractOrganizerReportService
                 COALESCE(es.total_fee, 0.00) AS total_fee,
                 COALESCE(os.total_orders, 0) AS total_orders,
                 COALESCE(os.unique_customers, 0) AS unique_customers,
-                COALESCE(es.total_views, 0) AS page_views
+                COALESCE(es.total_views, 0) AS page_views,
+                COALESCE(ts.tickets_sold, 0) AS tickets_sold,
+                ts.ticket_capacity
             FROM events e
             LEFT JOIN order_stats os ON e.id = os.event_id
             LEFT JOIN product_stats ps ON e.id = ps.event_id
             LEFT JOIN event_statistics es ON e.id = es.event_id
+            LEFT JOIN ticket_stats ts ON e.id = ts.event_id
             WHERE e.organizer_id = :organizer_id
                 AND e.deleted_at IS NULL
                 $eventCurrencyFilter
+                $eventFilter
             ORDER BY
                 CASE
                     WHEN e.start_date IS NULL THEN 1

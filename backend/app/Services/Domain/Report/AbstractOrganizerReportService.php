@@ -12,6 +12,9 @@ abstract class AbstractOrganizerReportService
 {
     private const CACHE_TTL_SECONDS = 30;
 
+    // One event of the organizer, or all of them (buildEventFilter).
+    protected ?int $eventId = null;
+
     public function __construct(
         private readonly Repository                    $cache,
         private readonly DatabaseManager               $queryBuilder,
@@ -25,8 +28,10 @@ abstract class AbstractOrganizerReportService
         ?string $currency = null,
         ?Carbon $startDate = null,
         ?Carbon $endDate = null,
+        ?int    $eventId = null,
     ): Collection
     {
+        $this->eventId = $eventId;
         $organizer = $this->organizerRepository->findById($organizerId);
         $timezone = $organizer->getTimezone();
 
@@ -38,7 +43,7 @@ abstract class AbstractOrganizerReportService
             : $endDate->copy()->subDays(30)->startOfDay();
 
         $reportResults = $this->cache->remember(
-            key: $this->getCacheKey($organizerId, $currency, $startDate, $endDate),
+            key: $this->getCacheKey($organizerId, $currency, $startDate, $endDate) . ".$eventId",
             ttl: Carbon::now()->addSeconds(self::CACHE_TTL_SECONDS),
             callback: fn() => $this->queryBuilder->select(
                 $this->getSqlQuery($startDate, $endDate, $currency),
@@ -60,6 +65,14 @@ abstract class AbstractOrganizerReportService
         }
         $escapedCurrency = addslashes($currency);
         return "AND $column = '$escapedCurrency'";
+    }
+
+    /**
+     * Narrows a report to the chosen event; the id is an integer, safe in the SQL.
+     */
+    protected function buildEventFilter(string $column): string
+    {
+        return $this->eventId === null ? '' : "AND $column = " . (int)$this->eventId;
     }
 
     protected function getCacheKey(int $organizerId, ?string $currency, ?Carbon $startDate, ?Carbon $endDate): string

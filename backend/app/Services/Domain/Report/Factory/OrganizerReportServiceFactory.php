@@ -6,6 +6,7 @@ use HiEvents\DomainObjects\Enums\OrganizerReportTypes;
 use HiEvents\Services\Domain\Report\AbstractOrganizerReportService;
 use HiEvents\Services\Domain\Report\OrganizerReports\CheckInSummaryReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\EventsPerformanceReport;
+use HiEvents\Services\Domain\Report\OrganizerReports\MerchSalesReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\PlatformFeesReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\RevenueSummaryReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\TaxSummaryReport;
@@ -21,6 +22,7 @@ class OrganizerReportServiceFactory
             OrganizerReportTypes::TAX_SUMMARY => App::make(TaxSummaryReport::class),
             OrganizerReportTypes::CHECK_IN_SUMMARY => App::make(CheckInSummaryReport::class),
             OrganizerReportTypes::PLATFORM_FEES => App::make(PlatformFeesReport::class),
+            OrganizerReportTypes::MERCH_SALES => App::make(MerchSalesReport::class),
         };
     }
 }

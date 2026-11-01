@@ -139,6 +139,14 @@ class ExportOrganizerReportAction extends BaseAction
                 'Check-in Rate (%)',
                 'Check-in Lists Count',
             ],
+            OrganizerReportTypes::MERCH_SALES->value => [
+                __('Event'),
+                __('Product'),
+                __('Quantity sold'),
+                __('Gross sales'),
+                __('Orders'),
+                __('Currency'),
+            ],
             default => [],
         };
     }
@@ -202,6 +210,14 @@ class ExportOrganizerReportAction extends BaseAction
                 $row->total_checked_in ?? 0,
                 $row->check_in_rate ?? 0,
                 $row->check_in_lists_count ?? 0,
+            ],
+            OrganizerReportTypes::MERCH_SALES->value => [
+                $row->event_name ?? '',
+                $row->product_name ?? '',
+                $row->quantity_sold ?? 0,
+                $row->gross_sales ?? 0,
+                $row->order_count ?? 0,
+                $row->event_currency ?? '',
             ],
             default => [],
         };

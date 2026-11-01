@@ -14,6 +14,7 @@ class TaxSummaryReport extends AbstractOrganizerReportService
         $endDateStr = $endDate->toDateString();
         $completedStatus = OrderStatus::COMPLETED->name;
         $currencyFilter = $this->buildCurrencyFilter('o.currency', $currency);
+        $eventFilter = $this->buildEventFilter('e.id');
 
         return <<<SQL
             WITH tax_data AS (
@@ -34,6 +35,7 @@ class TaxSummaryReport extends AbstractOrganizerReportService
                     AND o.deleted_at IS NULL
                     AND e.deleted_at IS NULL
                     $currencyFilter
+                    $eventFilter
                     AND DATE(o.created_at) BETWEEN '$startDateStr' AND '$endDateStr'
             )
             SELECT

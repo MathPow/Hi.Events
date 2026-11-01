@@ -38,6 +38,7 @@ class GetOrganizerReportHandler
             currency: $reportData->currency,
             startDate: $reportData->startDate ? Carbon::parse($reportData->startDate) : null,
             endDate: $reportData->endDate ? Carbon::parse($reportData->endDate) : null,
+            eventId: $reportData->eventId,
         );
     }
 }

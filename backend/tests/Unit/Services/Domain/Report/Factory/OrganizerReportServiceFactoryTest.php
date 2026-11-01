@@ -8,6 +8,7 @@ use HiEvents\Services\Domain\Report\OrganizerReports\EventsPerformanceReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\RevenueSummaryReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\TaxSummaryReport;
 use HiEvents\Services\Domain\Report\OrganizerReports\CheckInSummaryReport;
+use HiEvents\Services\Domain\Report\OrganizerReports\MerchSalesReport;
 use Tests\TestCase;
 
 class OrganizerReportServiceFactoryTest extends TestCase
@@ -39,6 +40,13 @@ class OrganizerReportServiceFactoryTest extends TestCase
         $reportService = $this->factory->create(OrganizerReportTypes::TAX_SUMMARY);
 
         $this->assertInstanceOf(TaxSummaryReport::class, $reportService);
+    }
+
+    public function testCreateReturnsMerchSalesReport(): void
+    {
+        $reportService = $this->factory->create(OrganizerReportTypes::MERCH_SALES);
+
+        $this->assertInstanceOf(MerchSalesReport::class, $reportService);
     }
 
     public function testCreateReturnsCheckInSummaryReport(): void

@@ -1,33 +1,596 @@
-.reportType {
+@use "../../../../styles/mixins";
+
+// Figma « Admin · Rapports » (Desktop 1440 / Mobile 402).
+$card: var(--dehors-carte);
+$ink: var(--dehors-brun);
+$fond: #fff6ed;
+$accent: var(--dehors-orange, #fa7853);
+$accent-light: #ffaa8d;
+$accent-soft: #f7dccd;
+$track: #efe3d6;
+$shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+$green-bg: #ddeed8;
+$green-text: #2f6b3a;
+
+.page {
   display: flex;
-  gap: 20px;
-  padding: 20px !important;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 1400px;
+  color: $ink;
+
+  @include mixins.respond-below(md) {
+    gap: 1.5rem;
+  }
+}
+
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
 
-  .icon {
+.sectionTitle {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.25rem;
+  }
+}
+
+.statsSkeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1.25rem;
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+.reports {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Un rapport: l'en-tete cliquable, puis (ouvert) les controles, le graphique et le tableau.
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 2rem;
+  background: $card;
+  box-shadow: $shadow;
+
+  @include mixins.respond-below(md) {
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1.5rem;
+  }
+}
+
+.reportHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  color: $ink;
+  text-align: left;
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 4px;
+    border-radius: 1rem;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 0.75rem;
+  }
+}
+
+.reportPastille {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: $accent-soft;
+  transition: background-color 0.2s ease;
+
+  img {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  [data-open] & {
+    background: $accent;
+  }
+
+  @include mixins.respond-below(md) {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    img {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+}
+
+.reportHeading {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.reportTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.0625rem;
+  }
+}
+
+.reportDescription {
+  font-size: 0.9375rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.reportDescriptionMobile {
+  margin: 0;
+  font-size: 0.9375rem;
+
+  @include mixins.respond-above(md) {
+    display: none;
+  }
+}
+
+.reportToggle {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+  transition: background-color 0.15s ease;
+
+  [data-open] & {
+    background: $ink;
+  }
+
+  .reportHeader:hover & {
+    background: rgb(55 39 33 / 0.06);
+  }
+
+  [data-open] .reportHeader:hover & {
+    background: $ink;
+  }
+
+  @include mixins.respond-below(md) {
+    width: 2rem;
+    height: 2rem;
+    border: none;
+
+    [data-open] & {
+      background: none;
+
+      img {
+        filter: brightness(0.2);
+      }
+    }
+  }
+}
+
+.reportBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @include mixins.respond-below(md) {
+    gap: 1rem;
+  }
+}
+
+// Periode, evenement et export.
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    gap: 0.5rem;
+  }
+}
+
+.selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1.5px solid $ink;
+  border-radius: 999px;
+  color: $ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 2px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: 1rem;
+  }
+}
+
+.selectorCalendar {
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.selectorText {
+  min-width: 0;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventMenu {
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.menuOption[data-selected] {
+  background: $accent-soft;
+}
+
+.exportButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  height: 3rem;
+  padding: 0 1.375rem;
+  border: 2px solid $ink;
+  border-radius: 1rem;
+  color: $ink;
+  font-size: 1.125rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  &:disabled {
+    cursor: progress;
+    opacity: 0.7;
+  }
+
+  @include mixins.respond-below(md) {
+    width: 100%;
+  }
+}
+
+// Le graphique: le net par periode, la plus recente en orange.
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: $fond;
+
+  @include mixins.respond-below(md) {
+    padding: 1rem;
+    border-radius: 1.25rem;
+  }
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chartTotal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  span {
+    font-size: 0.875rem;
+  }
+
+  strong {
+    font-family: FatFrank, 'Arial Black', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.15;
+  }
+}
+
+.changeBadge {
+  flex-shrink: 0;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 999px;
+  color: $green-text;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: $green-bg;
+
+  &[data-down] {
+    color: #8a3324;
+    background: #f6d9d2;
+  }
+}
+
+.bars {
+  display: flex;
+  align-items: stretch;
+  gap: 0.625rem;
+  height: 13.75rem;
+  transition: opacity 0.2s ease;
+
+  &[data-loading] {
+    opacity: 0.6;
+  }
+
+  @include mixins.respond-below(md) {
+    gap: 0.5rem;
+    height: 10rem;
+  }
+}
+
+.bar {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.barTrack {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  width: 100%;
+  min-height: 0;
+}
+
+.barFill {
+  width: 100%;
+  border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
+  background: $accent-light;
+  transition: height 0.3s ease;
+
+  &[data-latest] {
+    background: $accent;
+  }
+}
+
+.barLabel {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.75rem;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+// Les tableaux: en-tete pale, lignes separees d'un trait, total en accent doux.
+.table {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHead {
+  display: grid;
+  gap: 1rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: $fond;
+
+  [data-align='right'] {
+    text-align: right;
+  }
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.tableRow {
+  border-bottom: 1px solid $ink;
+
+  &:last-child,
+  &:has(+ [data-total]) {
+    border-bottom: none;
+  }
+
+  &[data-total] {
+    border-radius: 0.75rem;
+    font-weight: 700;
+    background: $accent-soft;
+  }
+}
+
+.tableCells {
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 0.75rem;
+  font-size: 0.9375rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.tableCell {
+  min-width: 0;
+
+  &[data-align='right'] {
+    text-align: right;
+  }
+
+  &[data-strong] {
+    font-weight: 700;
+  }
+}
+
+.tableMobile {
+  display: none;
+
+  @include mixins.respond-below(md) {
     display: flex;
     align-items: center;
-    font-size: 1.5em;
-    color: var(--hi-primary);
-    flex-shrink: 0;
-  }
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.875rem 0;
+    font-size: 0.9375rem;
 
-  .content {
-    flex-grow: 1;
-    p, h3 {
-      margin: 0;
-      padding: 0;
-    }
-    h3 {
-      margin-bottom: 5px;
+    [data-total] & {
+      padding: 0.875rem 0.75rem;
     }
   }
+}
 
-  .rightCaret {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    flex-shrink: 0;
-    color: var(--mantine-color-gray-5);
+.tableMobileLabel {
+  min-width: 0;
+}
+
+.tableMobileValue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  text-align: right;
+
+  span {
+    font-size: 0.75rem;
   }
+}
+
+.eventCell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  small {
+    color: rgb(55 39 33 / 0.7);
+    font-size: 0.8125rem;
+  }
+}
+
+.ticketsCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.rateCell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.meter {
+  display: block;
+  width: 100%;
+  max-width: 9rem;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: $track;
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: $accent;
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  text-align: center;
+  background: $fond;
 }

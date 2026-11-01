@@ -31,12 +31,13 @@ import classes from './OrganizerDashboard.module.scss';
 
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
 
-const PERIODS: (number | null)[] = [7, 30, 90, 365, null];
+// Repris par la page Rapports (meme periode, gardee dans PERIOD_STORAGE_KEY).
+export const PERIODS: (number | null)[] = [7, 30, 90, 365, null];
 // All time until the organizer picks a period (then remembered).
 const DEFAULT_PERIOD: number | null = null;
-const PERIOD_STORAGE_KEY = 'dehors-dashboard-period';
+export const PERIOD_STORAGE_KEY = 'dehors-dashboard-period';
 
-const periodLabel = (days: number | null) => {
+export const periodLabel = (days: number | null) => {
     switch (days) {
         case 7:
             return t`Last 7 days`;
@@ -51,7 +52,7 @@ const periodLabel = (days: number | null) => {
     }
 };
 
-const comparisonLabel = (days: number) => {
+export const comparisonLabel = (days: number) => {
     switch (days) {
         case 7:
             return t`vs the 7 days before`;
@@ -70,7 +71,7 @@ const intlLocale = (locale: string) => locale.startsWith('fr') ? 'fr-CA' : local
 const ticketCount = (order: Order) =>
     (order.order_items ?? []).reduce((total, item) => total + (item.quantity ?? 0), 0);
 
-const readPeriod = (): number | null => {
+export const readPeriod = (): number | null => {
     try {
         const stored = localStorage.getItem(PERIOD_STORAGE_KEY);
         if (stored === null) {
@@ -151,7 +152,7 @@ interface StatTileProps {
     note?: string;
 }
 
-const StatTile = ({
+export const StatTile = ({
                       tone,
                       iconName,
                       label,

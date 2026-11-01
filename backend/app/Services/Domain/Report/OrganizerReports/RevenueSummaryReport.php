@@ -12,6 +12,7 @@ class RevenueSummaryReport extends AbstractOrganizerReportService
         $startDateStr = $startDate->toDateString();
         $endDateStr = $endDate->toDateString();
         $currencyFilter = $this->buildCurrencyFilter('e.currency', $currency);
+        $eventFilter = $this->buildEventFilter('e.id');
 
         return <<<SQL
             WITH date_range AS (
@@ -32,6 +33,7 @@ class RevenueSummaryReport extends AbstractOrganizerReportService
                     AND e.deleted_at IS NULL
                     AND eds.deleted_at IS NULL
                     $currencyFilter
+                    $eventFilter
                     AND eds.date BETWEEN '$startDateStr' AND '$endDateStr'
                 GROUP BY eds.date
             )

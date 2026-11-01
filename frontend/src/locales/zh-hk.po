@@ -50,7 +50,7 @@ msgstr "{0} {1}"
 msgid "{0} {1} is already checked in"
 msgstr "{0} {1} 已簽到"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:242
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:243
 msgid "{0} / {1} tickets"
 msgstr "{0} / {1} 張門票"
 
@@ -111,8 +111,8 @@ msgid "{0} steps"
 msgstr ""
 
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:123
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:235
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:243
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:236
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:244
 #: src/components/routes/product-widget/SelectProducts/index.tsx:419
 msgid "{0} tickets"
 msgstr "{0}張門票"
@@ -149,6 +149,10 @@ msgstr "{athletes}+ 名運動愛好者"
 msgid "{availableCount} of {totalCount} available"
 msgstr "{totalCount} 中有 {availableCount} 可用"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:369
+msgid "{checkedIn} of {attendees} checked in"
+msgstr ""
+
 #: src/components/routes/my-tickets/index.tsx:82
 msgid "{count} tickets"
 msgstr ""
@@ -165,6 +169,10 @@ msgstr "{count} 個即將舉行的活動"
 msgid "{count} upcoming tickets"
 msgstr ""
 
+#: src/components/routes/organizer/Reports/reportData.ts:12
+msgid "{days} days"
+msgstr ""
+
 #: src/components/common/Countdown/index.tsx:68
 msgid "{days} days, {hours} hours, {minutes} minutes, and {seconds} seconds"
 msgstr "{days} 天, {hours} 小時, {minutes} 分鐘, 和 {seconds} 秒"
@@ -177,6 +185,10 @@ msgstr ""
 #: src/components/common/WebhookTable/index.tsx:79
 msgid "{eventCount} events"
 msgstr "{eventCount} 個事件"
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:170
+msgid "{gross} gross"
+msgstr ""
 
 #: src/components/common/Countdown/index.tsx:70
 msgid "{hours} hours, {minutes} minutes, and {seconds} seconds"
@@ -195,9 +207,21 @@ msgstr "閱讀約 {minutes} 分鐘"
 msgid "{minutes} minutes and {seconds} seconds"
 msgstr "{分}分鐘和{秒}秒鐘"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:435
+msgid "{quantity} sold"
+msgstr ""
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:170
+msgid "{refunded} refunded"
+msgstr ""
+
 #: src/components/forms/ProductForm/SizedProductForm.tsx:151
 msgid "{sold} sold"
 msgstr "已售 {sold}"
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:249
+msgid "{sold} tickets"
+msgstr ""
 
 #: src/components/routes/my-tickets/index.tsx:399
 msgid "{thisYear} outings this year"
@@ -350,6 +374,10 @@ msgstr "1 年"
 
 #: src/components/common/OrganizerAchievements/achievements.ts:86
 msgid "10 participants come back for another one of your events."
+msgstr ""
+
+#: src/components/routes/organizer/Reports/reportData.ts:12
+msgid "12 months"
 msgstr ""
 
 #: src/components/routes/event/Settings/Sections/LocationSettings/index.tsx:123
@@ -945,7 +973,8 @@ msgid "All"
 msgstr "全部"
 
 #: src/components/routes/organizer/Messages/index.tsx:213
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:604
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:605
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:111
 msgid "All"
 msgstr ""
 
@@ -982,9 +1011,14 @@ msgstr "全部完成！您現在正在使用我們升級的付款系統。"
 msgid "All Ended Events"
 msgstr "所有已結束活動"
 
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:110
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:121
+msgid "All events"
+msgstr ""
+
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:33
-msgid "All Events"
-msgstr "所有活動"
+#~ msgid "All Events"
+#~ msgstr "所有活動"
 
 #: src/components/layouts/EventHomepage/index.tsx:234
 msgid "All events by {0}"
@@ -1006,7 +1040,7 @@ msgstr "所有主辦方"
 msgid "All Products"
 msgstr "所有產品"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:617
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:618
 msgid "All read"
 msgstr "全部已讀"
 
@@ -1019,7 +1053,7 @@ msgid "All the event's details"
 msgstr "活動全部詳情"
 
 #: src/components/routes/admin/PlatformRevenue/index.tsx:125
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:50
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:51
 msgid "All time"
 msgstr "全部時間"
 
@@ -1056,7 +1090,7 @@ msgid "Allow selling tickets at the door"
 msgstr "允許在入口現場售票"
 
 #: src/components/routes/organizer/OrganizerDashboard/dashboardData.ts:155
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:188
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:189
 msgid "Almost full"
 msgstr "即將售罄"
 
@@ -1101,14 +1135,14 @@ msgstr "令人驚歎, 活動, 關鍵詞..."
 #: src/components/common/OrdersTable/index.tsx:397
 #: src/components/common/PlatformSupportInput/index.tsx:126
 #: src/components/forms/TaxAndFeeForm/index.tsx:71
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:655
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:656
 #: src/components/routes/product-widget/SelectProducts/Prices/Tiered/index.tsx:36
 msgid "Amount"
 msgstr "金額"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:69
-msgid "Amount Paid"
-msgstr "支付金額"
+#~ msgid "Amount Paid"
+#~ msgstr "支付金額"
 
 #: src/components/modals/CreateAttendeeModal/index.tsx:176
 msgid "Amount paid ({0})"
@@ -1493,9 +1527,17 @@ msgstr "附件總大小不能超過 {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 msgid "Attempts"
 msgstr "嘗試次數"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:343
+msgid "Attendance"
+msgstr ""
+
 #: src/components/routes/organizer/Reports/index.tsx:36
-msgid "Attendance and check-in rates across all events"
-msgstr "所有活動的出席率和簽到率"
+#~ msgid "Attendance and check-in rates across all events"
+#~ msgstr "所有活動的出席率和簽到率"
+
+#: src/components/routes/organizer/Reports/index.tsx:103
+msgid "Attendance and check-ins"
+msgstr ""
 
 #: src/components/common/AttendeeTicket/index.tsx:114
 #: src/components/common/QuestionsTable/index.tsx:485
@@ -1574,11 +1616,17 @@ msgstr ""
 #: src/components/routes/admin/Messages/index.tsx:90
 #: src/components/routes/admin/Messages/index.tsx:139
 #: src/components/routes/event/attendees.tsx:174
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:557
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:558
+#: src/components/routes/organizer/Reports/index.tsx:188
+#: src/components/routes/organizer/Reports/reportPanels.tsx:340
 #: src/components/routes/product-widget/CollectInformation/index.tsx:956
 #: src/components/routes/product-widget/Payment/index.tsx:160
 msgid "Attendees"
 msgstr "參與者"
+
+#: src/components/routes/organizer/Reports/index.tsx:104
+msgid "Attendees checked in at the entrance and attendance rate."
+msgstr ""
 
 #: src/components/routes/event/attendees.tsx:132
 msgid "Attendees Exported"
@@ -1693,7 +1741,7 @@ msgstr "等待付款"
 #: src/components/common/OrdersTable/index.tsx:481
 #: src/components/common/OrderStatusBadge/index.tsx:10
 #: src/components/routes/event/attendees.tsx:29
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:306
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:307
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:45
 msgid "Awaiting Payment"
 msgstr "等待付款"
@@ -1743,8 +1791,8 @@ msgid "Back to messages"
 msgstr "返回訊息"
 
 #: src/components/routes/organizer/Reports/ReportLayout/index.tsx:42
-msgid "Back to Reports"
-msgstr "返回報告"
+#~ msgid "Back to Reports"
+#~ msgstr "返回報告"
 
 #: src/components/common/ThemeColorControls/index.tsx:63
 #: src/components/common/WidgetEditor/index.tsx:181
@@ -2020,7 +2068,7 @@ msgstr "取消將取消與此訂單關聯的所有參與者，並將門票釋放
 #: src/components/routes/event/attendees.tsx:28
 #: src/components/routes/event/orders.tsx:24
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:75
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:297
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:298
 #: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:61
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:67
 msgid "Cancelled"
@@ -2196,8 +2244,8 @@ msgid "check-in lists"
 msgstr ""
 
 #: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:51
-msgid "Check-in Lists"
-msgstr "簽到列表"
+#~ msgid "Check-in Lists"
+#~ msgstr "簽到列表"
 
 #: src/components/layouts/Event/index.tsx:148
 #: src/components/modals/DuplicateEventModal/index.tsx:29
@@ -2215,8 +2263,8 @@ msgid "Check-in PIN"
 msgstr "簽到 PIN 碼"
 
 #: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:45
-msgid "Check-in Rate"
-msgstr "簽到率"
+#~ msgid "Check-in Rate"
+#~ msgstr "簽到率"
 
 #: src/components/forms/CheckInListForm/index.tsx:87
 msgid "Check-in staff can sell any remaining tickets from this list. Take the payment on your own card terminal or in cash — the ticket is issued and checked in on the spot."
@@ -2230,8 +2278,8 @@ msgstr "簽到狀態"
 
 #: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:58
 #: src/components/routes/organizer/Reports/index.tsx:35
-msgid "Check-in Summary"
-msgstr "簽到摘要"
+#~ msgid "Check-in Summary"
+#~ msgstr "簽到摘要"
 
 #: src/components/common/CheckInListList/index.tsx:160
 msgid "Check-In URL copied to clipboard"
@@ -2253,9 +2301,12 @@ msgstr "複選框選項允許多重選擇"
 msgid "Checkboxes"
 msgstr "複選框"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:341
+msgid "Checked in"
+msgstr ""
+
 #: src/components/common/AttendeeTable/index.tsx:324
 #: src/components/common/CheckInStatusModal/index.tsx:111
-#: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:40
 msgid "Checked In"
 msgstr "已簽到"
 
@@ -2442,6 +2493,10 @@ msgstr "按訂單收集資料"
 msgid "Collect details per ticket"
 msgstr "按門票收集資料"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:285
+msgid "Collected"
+msgstr ""
+
 #: src/components/routes/event/HomepageDesigner/index.tsx:217
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
 msgid "Color"
@@ -2525,7 +2580,7 @@ msgstr "完成您的個人資料以加入團隊。"
 #: src/components/modals/SendMessageModal/index.tsx:378
 #: src/components/routes/event/GettingStarted/index.tsx:76
 #: src/components/routes/event/orders.tsx:23
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:308
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:309
 msgid "Completed"
 msgstr "已完成"
 
@@ -2671,7 +2726,7 @@ msgstr "連接文檔"
 msgid "Connect payment processing"
 msgstr "連接支付處理"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:526
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:527
 #: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:117
 #: src/components/routes/welcome/index.tsx:286
 msgid "Connect Stripe"
@@ -2685,7 +2740,7 @@ msgstr "連接 Stripe 以啟用電子郵件範本編輯"
 msgid "Connect Stripe to enable messaging"
 msgstr "連接 Stripe 以啟用消息功能"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:523
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:524
 msgid "Connect Stripe to receive your payments"
 msgstr "連接 Stripe 以收取付款"
 
@@ -3075,8 +3130,8 @@ msgstr "建立折扣、隱藏門票的存取碼和特別優惠。"
 #: src/components/common/NoEventsBlankSlate/index.tsx:27
 #: src/components/layouts/OrganizerLayout/index.tsx:302
 #: src/components/routes/organizer/Events/index.tsx:62
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:474
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:585
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:475
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:586
 msgid "Create Event"
 msgstr "創建活動"
 
@@ -3197,9 +3252,6 @@ msgstr "CTA標籤是必需的"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:168
 #: src/components/routes/admin/PlatformRevenue/index.tsx:158
 #: src/components/routes/event/Settings/Sections/EventDetailsForm/index.tsx:115
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:51
-#: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:99
-#: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:33
 #: src/components/routes/organizer/Settings/Sections/BasicSettings/index.tsx:126
 msgid "Currency"
 msgstr "貨幣"
@@ -3251,7 +3303,7 @@ msgstr "自定義範本"
 
 #: src/components/common/AdminOrdersTable/index.tsx:71
 #: src/components/common/OrdersTable/index.tsx:256
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:652
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:653
 msgid "Customer"
 msgstr "客户"
 
@@ -3264,8 +3316,8 @@ msgid "Customer will receive an email confirming the refund"
 msgstr "客戶將收到確認退款的電子郵件"
 
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:108
-msgid "Customers"
-msgstr "客戶"
+#~ msgid "Customers"
+#~ msgstr "客戶"
 
 #: src/components/common/CookieConsentBanner/index.tsx:182
 #: src/components/layouts/OrganizerLayout/index.tsx:153
@@ -3326,9 +3378,13 @@ msgstr "定製您的活動頁面，以符合您的品牌和風格。"
 msgid "Customize your organizer page appearance"
 msgstr "自訂主辦單位頁面外觀"
 
+#: src/components/routes/organizer/Reports/index.tsx:83
+msgid "Daily revenue, taxes and refunds for all events."
+msgstr ""
+
 #: src/components/routes/organizer/Reports/index.tsx:18
-msgid "Daily revenue, taxes, fees, and refunds across all events"
-msgstr "所有活動的每日收入、稅費和退款"
+#~ msgid "Daily revenue, taxes, fees, and refunds across all events"
+#~ msgstr "所有活動的每日收入、稅費和退款"
 
 #: src/components/routes/event/Reports/index.tsx:23
 msgid "Daily Sales Report"
@@ -3363,7 +3419,7 @@ msgstr "深色"
 #: src/components/layouts/DefaultLayout/index.tsx:19
 #: src/components/layouts/Event/index.tsx:116
 #: src/components/layouts/OrganizerLayout/index.tsx:113
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:460
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:461
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -3371,9 +3427,7 @@ msgstr "Dashboard"
 #: src/components/common/OrderDetails/index.tsx:39
 #: src/components/forms/QuestionForm/index.tsx:136
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:633
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:656
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:56
-#: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:24
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:657
 msgid "Date"
 msgstr "日期"
 
@@ -3393,6 +3447,10 @@ msgstr "出生日期、緊急聯絡人及健康資料，向每位參加者查詢
 #: src/components/routes/events-directory/index.tsx:131
 msgid "Dates"
 msgstr "日期"
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:104
+msgid "Day"
+msgstr ""
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:38
 msgid "Day one capacity"
@@ -3571,6 +3629,10 @@ msgstr "設計元素"
 #: src/components/routes/landing/index.tsx:1082
 msgid "Designed with the help of <0>MelonStudio</0>"
 msgstr "由 <0>MelonStudio</0> 協助設計"
+
+#: src/components/routes/organizer/Reports/index.tsx:208
+msgid "Detailed reports"
+msgstr ""
 
 #: src/components/common/ProgressStepper/index.tsx:18
 #: src/components/common/ProgressStepper/index.tsx:23
@@ -3761,7 +3823,7 @@ msgstr "正在下載收據"
 #: src/components/common/EventCard/index.tsx:81
 #: src/components/layouts/Event/index.tsx:241
 #: src/components/layouts/OrganizerLayout/index.tsx:293
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:186
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:187
 msgid "Draft"
 msgstr "草稿"
 
@@ -4202,7 +4264,7 @@ msgstr "結束日期必須在開始日期之後"
 #: src/components/common/EventStatusBadge/index.tsx:14
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:87
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:434
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:192
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:193
 msgid "Ended"
 msgstr "完工"
 
@@ -4355,11 +4417,10 @@ msgstr "歐元"
 #: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:139
 #: src/components/routes/event/EventDashboard/index.tsx:300
 #: src/components/routes/events/Dashboard/index.tsx:184
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:653
-#: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:19
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:41
-#: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:43
-#: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:23
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:654
+#: src/components/routes/organizer/Reports/reportPanels.tsx:211
+#: src/components/routes/organizer/Reports/reportPanels.tsx:282
+#: src/components/routes/organizer/Reports/reportPanels.tsx:332
 msgid "Event"
 msgstr "活動"
 
@@ -4392,8 +4453,8 @@ msgid "Event date"
 msgstr ""
 
 #: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:29
-msgid "Event Date"
-msgstr "活動日期"
+#~ msgid "Event Date"
+#~ msgstr "活動日期"
 
 #: src/components/routes/event/TicketDesigner/index.tsx:187
 msgid "Event date display"
@@ -4521,7 +4582,7 @@ msgstr ""
 #: src/components/routes/landing/index.tsx:899
 #: src/components/routes/landing/index.tsx:1066
 #: src/components/routes/organizer/Events/index.tsx:43
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:576
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:577
 msgid "Events"
 msgstr "活動"
 
@@ -4529,10 +4590,14 @@ msgstr "活動"
 msgid "Events · Billetterie Dehors"
 msgstr "活動 · Billetterie Dehors"
 
+#: src/components/routes/organizer/Reports/index.tsx:89
+msgid "Events performance"
+msgstr ""
+
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:120
 #: src/components/routes/organizer/Reports/index.tsx:23
-msgid "Events Performance"
-msgstr "活動表現"
+#~ msgid "Events Performance"
+#~ msgstr "活動表現"
 
 #: src/components/routes/admin/Dashboard/index.tsx:569
 msgid "Events Starting in Next 24 Hours"
@@ -4609,6 +4674,10 @@ msgstr "請說明該金額的用途。"
 msgid "Export"
 msgstr "出口"
 
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:183
+msgid "Export (CSV)"
+msgstr ""
+
 #: src/components/common/QuestionsTable/index.tsx:427
 msgid "Export Answers"
 msgstr "匯出答案"
@@ -4649,6 +4718,10 @@ msgstr "導出完成。正在下載文件..."
 #: src/components/routes/event/orders.tsx:90
 msgid "Exporting Orders"
 msgstr "正在導出訂單"
+
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:183
+msgid "Exporting…"
+msgstr ""
 
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:46
 msgid "Facebook"
@@ -4951,7 +5024,7 @@ msgstr "費用處理"
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:168
 #: src/components/routes/landing/index.tsx:109
 #: src/components/routes/landing/index.tsx:1068
-#: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:54
+#: src/components/routes/organizer/Reports/reportPanels.tsx:109
 msgid "Fees"
 msgstr "費用"
 
@@ -5004,8 +5077,8 @@ msgid "Filter Attendees"
 msgstr "篩選參與者"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:123
-msgid "Filter by Event"
-msgstr "按活動篩選"
+#~ msgid "Filter by Event"
+#~ msgstr "按活動篩選"
 
 #: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:131
 msgid "Filter by organizer"
@@ -5359,16 +5432,17 @@ msgid "Gross revenue"
 msgstr "總收入"
 
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:73
-msgid "Gross Revenue"
-msgstr "總收入"
+#~ msgid "Gross Revenue"
+#~ msgstr "總收入"
 
 #: src/components/common/StatBoxes/index.tsx:63
+#: src/components/routes/organizer/Reports/reportPanels.tsx:107
+#: src/components/routes/organizer/Reports/reportPanels.tsx:232
 msgid "Gross sales"
 msgstr "銷售總額"
 
 #: src/components/routes/admin/Dashboard/index.tsx:371
 #: src/components/routes/event/EventDashboard/index.tsx:371
-#: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:30
 msgid "Gross Sales"
 msgstr "總銷售額"
 
@@ -5456,12 +5530,12 @@ msgid "Hi!"
 msgstr "你好！"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:75
-msgid "Hi.Events Fee"
-msgstr "Hi.Events 費用"
+#~ msgid "Hi.Events Fee"
+#~ msgstr "Hi.Events 費用"
 
 #: src/components/routes/organizer/Reports/index.tsx:42
-msgid "Hi.Events platform fees and VAT breakdown by transaction"
-msgstr "Hi.Events 平台費用及每筆交易的增值稅明細"
+#~ msgid "Hi.Events platform fees and VAT breakdown by transaction"
+#~ msgstr "Hi.Events 平台費用及每筆交易的增值稅明細"
 
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:90
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:321
@@ -5481,8 +5555,8 @@ msgstr "隱藏於公眾視線之外"
 msgid "Hidden questions are only visible to the event organizer and not to the customer."
 msgstr "隱藏問題只有活動組織者可以看到，客户看不到。"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:527
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:528
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:529
 #: src/components/routes/product-widget/SelectProducts/index.tsx:556
 #: src/components/routes/product-widget/SelectProducts/index.tsx:647
 msgid "Hide"
@@ -5765,8 +5839,8 @@ msgid "Impersonation stopped"
 msgstr "模擬已停止"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:114
-msgid "Important Notice"
-msgstr "重要通知"
+#~ msgid "Important Notice"
+#~ msgstr "重要通知"
 
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:76
 msgid "Important: Changing your email address will update the link to access this order. You will be redirected to the new order link after saving."
@@ -5788,7 +5862,8 @@ msgstr "{diffHours} 小時後"
 msgid "In {diffMinutes} minutes"
 msgstr "{diffMinutes} 分鐘後"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:449
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:450
+#: src/components/routes/organizer/Reports/index.tsx:76
 msgid "in the last 30 days"
 msgstr "最近 30 天"
 
@@ -6105,7 +6180,8 @@ msgstr "語言"
 
 #: src/components/common/OrganizerReportTable/index.tsx:60
 #: src/components/common/ReportTable/index.tsx:52
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:48
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:49
+#: src/components/routes/organizer/Reports/reportData.ts:20
 msgid "Last 12 months"
 msgstr "過去 12 個月"
 
@@ -6126,7 +6202,8 @@ msgstr "過去 24 小時"
 #: src/components/common/OrganizerReportTable/index.tsx:56
 #: src/components/common/ReportTable/index.tsx:48
 #: src/components/routes/event/EventDashboard/index.tsx:267
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:44
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:45
+#: src/components/routes/organizer/Reports/reportData.ts:18
 msgid "Last 30 days"
 msgstr "過去 30 天"
 
@@ -6142,13 +6219,15 @@ msgstr "過去 6 個月"
 
 #: src/components/common/OrganizerReportTable/index.tsx:54
 #: src/components/common/ReportTable/index.tsx:46
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:42
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:43
+#: src/components/routes/organizer/Reports/reportData.ts:16
 msgid "Last 7 days"
 msgstr "過去 7 天"
 
 #: src/components/common/OrganizerReportTable/index.tsx:57
 #: src/components/common/ReportTable/index.tsx:49
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:46
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:47
+#: src/components/routes/organizer/Reports/reportData.ts:22
 msgid "Last 90 days"
 msgstr "過去 90 天"
 
@@ -6546,6 +6625,10 @@ msgstr "集合地點"
 msgid "Menu"
 msgstr "選單"
 
+#: src/components/routes/organizer/Reports/index.tsx:110
+msgid "Merch sales"
+msgstr ""
+
 #: src/components/routes/product-widget/CollectInformation/OrderAddOns/index.tsx:88
 msgid "Merch to pick up on site, on the day of the event."
 msgstr ""
@@ -6693,6 +6776,7 @@ msgstr "監控和管理失敗的後台任務"
 
 #: src/components/routes/admin/PlatformRevenue/index.tsx:257
 #: src/components/routes/event/EventDashboard/index.tsx:284
+#: src/components/routes/organizer/Reports/reportPanels.tsx:104
 msgid "Month"
 msgstr "月"
 
@@ -6825,10 +6909,19 @@ msgstr "name@example.com"
 msgid "Navigate to Attendee"
 msgstr "導航至與會者"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:111
+#: src/components/routes/organizer/Reports/reportPanels.tsx:233
+msgid "Net"
+msgstr ""
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:132
+msgid "Net revenue"
+msgstr ""
+
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:85
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:36
-msgid "Net Revenue"
-msgstr "淨收入"
+#~ msgid "Net Revenue"
+#~ msgstr "淨收入"
 
 #: src/components/common/OrganizerWebhookTable/index.tsx:266
 #: src/components/common/PromoCodeTable/index.tsx:158
@@ -7017,6 +7110,11 @@ msgstr "無事件顯示"
 #~ msgid "No events yet"
 #~ msgstr "尚無活動"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:241
+#: src/components/routes/organizer/Reports/reportPanels.tsx:360
+msgid "No events yet."
+msgstr ""
+
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:743
 msgid "No events yet. Link this document once you create one."
 msgstr ""
@@ -7049,6 +7147,10 @@ msgstr "未找到日誌"
 #: src/components/common/ThemeFontControl/index.tsx:74
 msgid "No matching fonts"
 msgstr "沒有匹配的字體"
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:426
+msgid "No merch sold during this period."
+msgstr ""
 
 #: src/components/routes/admin/Messages/index.tsx:154
 msgid "No messages found"
@@ -7181,6 +7283,10 @@ msgstr "尚無響應"
 msgid "No results"
 msgstr "無結果"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:175
+msgid "No sales during this period."
+msgstr ""
+
 #: src/components/common/ProductsTable/ProductsBlankSlate/index.tsx:20
 msgid "No Search Results"
 msgstr "沒有搜索結果"
@@ -7192,6 +7298,10 @@ msgstr "沒有搜索結果。"
 #: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:108
 msgid "No Stripe account is connected. Sales are paid to the platform account until one is."
 msgstr "尚未連接 Stripe 帳戶。在連接之前，銷售款項會轉入平台帳戶。"
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:294
+msgid "No taxes collected during this period."
+msgstr ""
 
 #: src/components/common/TaxAndFeeList/index.tsx:105
 msgid "No Taxes or Fees have been added."
@@ -7211,7 +7321,7 @@ msgstr ""
 msgid "No upcoming events"
 msgstr "沒有即將舉行的活動"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:583
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:584
 msgid "No upcoming events. Create your first one to start selling tickets."
 msgstr "暫無即將舉行的活動。建立第一個活動即可開始售票。"
 
@@ -7289,7 +7399,7 @@ msgstr "備註"
 msgid "Nothing collected yet"
 msgstr "暫無收入"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:638
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:639
 msgid "Nothing to handle for now."
 msgstr "暫時沒有待處理的事項。"
 
@@ -7301,7 +7411,7 @@ msgstr "暫無顯示內容"
 msgid "Notification Settings"
 msgstr "通知設置"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:594
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:595
 msgid "Notifications"
 msgstr "通知"
 
@@ -7431,8 +7541,7 @@ msgstr "按需提供"
 
 #: src/components/common/EventCard/index.tsx:86
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:93
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:194
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:32
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:195
 msgid "On Sale"
 msgstr "銷售中"
 
@@ -7469,7 +7578,6 @@ msgid "One price, a choice of options with their own stock: sizes, distances, ca
 msgstr "一個價格，多個各有存貨的選項：尺碼、距離、組別。"
 
 #: src/components/common/EventStatusBadge/index.tsx:18
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:31
 msgid "Ongoing"
 msgstr "持續進行"
 
@@ -7481,7 +7589,7 @@ msgstr "線上"
 #: src/components/layouts/EventHomepage/index.tsx:184
 #: src/components/layouts/EventHomepage/index.tsx:357
 #: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:147
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:204
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:205
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:323
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:43
 msgid "Online Event"
@@ -7521,6 +7629,10 @@ msgstr "只有帳戶管理員可以刪除或封存活動。請聯絡您的帳戶
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:80
 msgid "Only account administrators can delete or archive organizers. Contact your account admin for assistance."
 msgstr "只有帳戶管理員可以刪除或封存主辦方。請聯絡您的帳戶管理員尋求協助。"
+
+#: src/components/routes/organizer/Reports/index.tsx:130
+msgid "Only completed orders are included."
+msgstr ""
 
 #: src/components/modals/SendMessageModal/index.tsx:375
 msgid "Only send to orders with these statuses"
@@ -7756,8 +7868,8 @@ msgid "Order recap"
 msgstr "摘要"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:59
-msgid "Order Ref"
-msgstr "訂單參考"
+#~ msgid "Order Ref"
+#~ msgstr "訂單參考"
 
 #: src/components/forms/WebhookForm/index.tsx:91
 msgid "Order Refunded"
@@ -7807,10 +7919,10 @@ msgstr ""
 #: src/components/routes/admin/PlatformRevenue/index.tsx:160
 #: src/components/routes/admin/PlatformRevenue/index.tsx:211
 #: src/components/routes/event/orders.tsx:115
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:647
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:103
-#: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:60
-#: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:55
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:648
+#: src/components/routes/organizer/Reports/reportPanels.tsx:231
+#: src/components/routes/organizer/Reports/reportPanels.tsx:284
+#: src/components/routes/organizer/Reports/reportPanels.tsx:416
 #: src/components/routes/partner/index.tsx:210
 msgid "Orders"
 msgstr "訂單"
@@ -7961,6 +8073,11 @@ msgstr "發出的訊息"
 msgid "Outings calendar"
 msgstr "戶外活動日曆"
 
+#: src/components/routes/organizer/Reports/index.tsx:136
+msgctxt "reports section"
+msgid "Overview"
+msgstr ""
+
 #: src/components/layouts/Admin/index.tsx:20
 #: src/components/layouts/Event/index.tsx:107
 #: src/components/layouts/Event/index.tsx:116
@@ -7993,8 +8110,8 @@ msgid "Page views"
 msgstr "頁面瀏覽量"
 
 #: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:113
-msgid "Page Views"
-msgstr "頁面瀏覽量"
+#~ msgid "Page Views"
+#~ msgstr "頁面瀏覽量"
 
 #: src/components/modals/CreateAttendeeModal/index.tsx:191
 msgid "paid"
@@ -8047,7 +8164,7 @@ msgstr "部分退款"
 
 #: src/components/common/OrderStatusBadge/index.tsx:16
 #: src/components/routes/event/orders.tsx:30
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:303
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:304
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:59
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:69
 msgid "Partially Refunded"
@@ -8134,7 +8251,6 @@ msgstr "密碼不一樣"
 
 #: src/components/layouts/OrganizerHomepage/index.tsx:267
 #: src/components/layouts/OrganizerHomepage/index.tsx:282
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:30
 msgid "Past"
 msgstr "過去"
 
@@ -8196,8 +8312,8 @@ msgid "Payment & Plan"
 msgstr "付款與計劃"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:53
-msgid "Payment Date"
-msgstr "付款日期"
+#~ msgid "Payment Date"
+#~ msgstr "付款日期"
 
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:261
 msgid "Payment Due Period"
@@ -8424,15 +8540,14 @@ msgstr "從您的付款中扣除 {0} 的平台費用"
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:248
 #: src/components/routes/event/Settings/index.tsx:116
 #: src/components/routes/event/Settings/Sections/PlatformFeesSettings/index.tsx:46
-#: src/components/routes/organizer/Reports/index.tsx:41
 #: src/components/routes/organizer/Settings/index.tsx:115
 #: src/components/routes/organizer/Settings/Sections/PlatformFeesSettings/index.tsx:42
 msgid "Platform Fees"
 msgstr "平台費用"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:134
-msgid "Platform Fees Report"
-msgstr "平台費用報告"
+#~ msgid "Platform Fees Report"
+#~ msgstr "平台費用報告"
 
 #: src/components/routes/admin/Dashboard/index.tsx:191
 msgid "Platform Revenue"
@@ -8702,6 +8817,7 @@ msgstr "處理中..."
 #: src/components/common/WaitlistTable/index.tsx:170
 #: src/components/modals/ManageAttendeeModal/index.tsx:120
 #: src/components/modals/OfferWaitlistModal/index.tsx:161
+#: src/components/routes/organizer/Reports/reportPanels.tsx:407
 msgid "Product"
 msgstr "產品"
 
@@ -8771,10 +8887,14 @@ msgstr "已售產品"
 #: src/components/routes/admin/Dashboard/index.tsx:370
 #: src/components/routes/admin/Dashboard/index.tsx:471
 #: src/components/routes/event/EventDashboard/index.tsx:333
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:548
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:68
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:549
+#: src/components/routes/organizer/Reports/index.tsx:179
 msgid "Products Sold"
 msgstr "已售產品"
+
+#: src/components/routes/organizer/Reports/index.tsx:111
+msgid "Products sold with the tickets, to pick up on site."
+msgstr ""
 
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:228
 msgid "Products sorted successfully"
@@ -8897,6 +9017,10 @@ msgstr ""
 msgid "Qty"
 msgstr "數量"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:415
+msgid "Quantity"
+msgstr ""
+
 #: src/components/forms/ProductForm/index.tsx:97
 #: src/components/forms/ProductForm/index.tsx:362
 #: src/components/forms/ProductForm/SizedProductForm.tsx:148
@@ -8966,8 +9090,8 @@ msgid "Radio Option"
 msgstr "無線電選項"
 
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:43
-msgid "Rate"
-msgstr "費率"
+#~ msgid "Rate"
+#~ msgstr "費率"
 
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:375
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:410
@@ -9070,7 +9194,7 @@ msgstr "最近"
 msgid "Recent Account Signups"
 msgstr "最近帳戶註冊"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:646
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:647
 msgid "Recent Orders"
 msgstr "最近訂單"
 
@@ -9168,7 +9292,7 @@ msgstr "退款狀態"
 #: src/components/common/OrderSummary/index.tsx:80
 #: src/components/common/StatBoxes/index.tsx:57
 #: src/components/routes/event/orders.tsx:29
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:300
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:301
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:58
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:68
 msgid "Refunded"
@@ -9178,8 +9302,7 @@ msgstr "退款"
 msgid "Refunded: {0}"
 msgstr "已退款：{0}"
 
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:79
-#: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:42
+#: src/components/routes/organizer/Reports/reportPanels.tsx:110
 msgid "Refunds"
 msgstr "退款"
 
@@ -9260,13 +9383,13 @@ msgid "Reply"
 msgstr ""
 
 #: src/components/routes/organizer/Reports/ReportLayout/index.tsx:26
-msgid "Report not found"
-msgstr "未找到報告"
+#~ msgid "Report not found"
+#~ msgstr "未找到報告"
 
 #: src/components/layouts/Event/index.tsx:119
 #: src/components/layouts/OrganizerLayout/index.tsx:123
 #: src/components/routes/event/Reports/index.tsx:39
-#: src/components/routes/organizer/Reports/index.tsx:51
+#: src/components/routes/organizer/Reports/index.tsx:125
 msgid "Reports"
 msgstr "報告"
 
@@ -9457,10 +9580,14 @@ msgstr "已退還"
 msgid "Revenue"
 msgstr "收入"
 
+#: src/components/routes/organizer/Reports/index.tsx:82
+msgid "Revenue summary"
+msgstr ""
+
 #: src/components/routes/organizer/Reports/index.tsx:17
 #: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:67
-msgid "Revenue Summary"
-msgstr "收入摘要"
+#~ msgid "Revenue Summary"
+#~ msgstr "收入摘要"
 
 #: src/components/routes/account/ManageAccount/sections/ApiTokens/index.tsx:124
 msgid "Revoke"
@@ -9529,7 +9656,9 @@ msgid "Sale starts {0}"
 msgstr "銷售於 {0} 開始"
 
 #: src/components/common/AffiliateTable/index.tsx:152
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:538
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:539
+#: src/components/routes/organizer/Reports/index.tsx:169
+#: src/components/routes/organizer/Reports/reportPanels.tsx:417
 #: src/components/routes/partner/index.tsx:213
 msgid "Sales"
 msgstr "銷售"
@@ -9543,7 +9672,7 @@ msgstr "銷售已暫停"
 msgid "Sales ended"
 msgstr "銷售結束"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:524
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:525
 msgid "Sales money goes straight to your account, without waiting for the day of the event."
 msgstr "銷售款項直接存入你的帳戶，無需等到活動當天。"
 
@@ -9552,9 +9681,13 @@ msgstr "銷售款項直接存入你的帳戶，無需等到活動當天。"
 msgid "Sales start"
 msgstr "銷售開始"
 
+#: src/components/routes/organizer/Reports/index.tsx:90
+msgid "Sales, orders and fill rate per event."
+msgstr ""
+
 #: src/components/routes/organizer/Reports/index.tsx:24
-msgid "Sales, orders, and performance metrics for all events"
-msgstr "所有活動的銷售、訂單和表現指標"
+#~ msgid "Sales, orders, and performance metrics for all events"
+#~ msgstr "所有活動的銷售、訂單和表現指標"
 
 #: src/components/common/AdminEventsTable/index.tsx:134
 msgid "Sales:"
@@ -9826,7 +9959,7 @@ msgstr ""
 msgid "See all events"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:632
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:633
 msgid "See all notifications"
 msgstr "查看所有通知"
 
@@ -9892,8 +10025,8 @@ msgid "Select All"
 msgstr "全選"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:124
-msgid "Select an event"
-msgstr "選擇活動"
+#~ msgid "Select an event"
+#~ msgstr "選擇活動"
 
 #: src/components/modals/SendMessageModal/index.tsx:344
 msgid "Select attendee group"
@@ -10452,7 +10585,7 @@ msgstr "已售出"
 #: src/components/common/ProductPriceAvailability/index.tsx:51
 #: src/components/layouts/OrganizerHomepage/EventCard/index.tsx:87
 #: src/components/routes/organizer/OrganizerDashboard/dashboardData.ts:155
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:190
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:191
 msgid "Sold out"
 msgstr "售罄"
 
@@ -10598,8 +10731,7 @@ msgstr "統計數據基於帳戶創建日期"
 #: src/components/routes/admin/Messages/index.tsx:293
 #: src/components/routes/event/Deposits/index.tsx:302
 #: src/components/routes/event/Reports/PromoCodesReport/index.tsx:88
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:657
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:62
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:658
 msgid "Status"
 msgstr "狀態"
 
@@ -10669,8 +10801,8 @@ msgid "Stripe Not Connected"
 msgstr "Stripe未連接"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:104
-msgid "Stripe Payment ID"
-msgstr "Stripe 付款 ID"
+#~ msgid "Stripe Payment ID"
+#~ msgstr "Stripe 付款 ID"
 
 #: src/components/routes/product-widget/Payment/PaymentMethods/Stripe/index.tsx:113
 msgid "Stripe payments are not enabled for this event."
@@ -10961,6 +11093,7 @@ msgstr "點一下<0>分享</0>。在較新 iPhone 的 Safari 中，它位於<1>�
 #: src/components/modals/EditTaxOrFeeModal/index.tsx:42
 #: src/components/modals/EditTaxOrFeeModal/index.tsx:52
 #: src/components/modals/EditTaxOrFeeModal/index.tsx:59
+#: src/components/routes/organizer/Reports/reportPanels.tsx:283
 msgid "Tax"
 msgstr "税收"
 
@@ -10970,8 +11103,8 @@ msgid "Tax & Fees"
 msgstr "税費"
 
 #: src/components/routes/organizer/Reports/index.tsx:30
-msgid "Tax collected grouped by tax type and event"
-msgstr "按稅種和活動分組的已收稅款"
+#~ msgid "Tax collected grouped by tax type and event"
+#~ msgstr "按稅種和活動分組的已收稅款"
 
 #: src/components/routes/event/Settings/Sections/PaymentSettings/index.tsx:288
 msgid "Tax Details"
@@ -10982,8 +11115,8 @@ msgid "Tax information to appear at the bottom of all invoices (e.g., VAT number
 msgstr "所有發票底部顯示的税務信息（例如，增值税號、税務註冊號）"
 
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:38
-msgid "Tax Name"
-msgstr "稅種名稱"
+#~ msgid "Tax Name"
+#~ msgstr "稅種名稱"
 
 #: src/components/common/TaxAndFeeList/index.tsx:36
 msgid "Tax or Fee deleted successfully"
@@ -10998,15 +11131,19 @@ msgstr "稅務收據已下載"
 msgid "Tax receipts"
 msgstr "稅務收據"
 
+#: src/components/routes/organizer/Reports/index.tsx:96
+msgid "Tax summary"
+msgstr ""
+
 #: src/components/routes/organizer/Reports/index.tsx:29
 #: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:62
-msgid "Tax Summary"
-msgstr "稅務摘要"
+#~ msgid "Tax Summary"
+#~ msgstr "稅務摘要"
 
 #: src/components/common/InlineOrderSummary/index.tsx:244
 #: src/components/forms/ProductForm/index.tsx:463
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:179
-#: src/components/routes/organizer/Reports/RevenueSummaryReport/index.tsx:48
+#: src/components/routes/organizer/Reports/reportPanels.tsx:108
 msgid "Taxes"
 msgstr "税收"
 
@@ -11023,9 +11160,14 @@ msgstr ""
 msgid "Taxes and Fees"
 msgstr "税費"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:567
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:568
+#: src/components/routes/organizer/Reports/index.tsx:198
 msgid "Taxes collected"
 msgstr "已收稅款"
+
+#: src/components/routes/organizer/Reports/index.tsx:97
+msgid "Taxes collected, grouped by type and by event."
+msgstr ""
 
 #: src/components/forms/ProductForm/index.tsx:440
 msgid "Taxes configured"
@@ -11201,6 +11343,10 @@ msgstr "活動"
 #: src/components/layouts/EventHomepage/EventNotAvailable/index.tsx:12
 msgid "The event you're looking for is not available at the moment. It may have been removed, expired, or the URL might be incorrect."
 msgstr "您查找的活動目前不可用。它可能已被刪除、過期或 URL 不正確。"
+
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:174
+msgid "The export failed. Please try again."
+msgstr ""
 
 #: src/components/modals/CancelOrderModal/index.tsx:77
 msgid "The full order amount will be refunded to the customer's original payment method."
@@ -11570,8 +11716,8 @@ msgid "This product is sold out"
 msgstr "此產品已售罄"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:118
-msgid "This report is for informational purposes only. Always consult with a tax professional before using this data for accounting or tax purposes. Please cross-reference with your Stripe dashboard as Hi.Events may be missing historical data."
-msgstr "此報告僅供參考。在將此數據用於會計或稅務目的之前，請務必諮詢稅務專業人士。請與您的Stripe儀表板進行交叉驗證，因為Hi.Events可能缺少歷史數據。"
+#~ msgid "This report is for informational purposes only. Always consult with a tax professional before using this data for accounting or tax purposes. Please cross-reference with your Stripe dashboard as Hi.Events may be missing historical data."
+#~ msgstr "此報告僅供參考。在將此數據用於會計或稅務目的之前，請務必諮詢稅務專業人士。請與您的Stripe儀表板進行交叉驗證，因為Hi.Events可能缺少歷史數據。"
 
 #: src/components/routes/auth/ResetPassword/index.tsx:28
 msgid "This reset password link is invalid or expired."
@@ -11710,7 +11856,8 @@ msgid "Ticketing & Sales"
 msgstr "票務與銷售"
 
 #: src/components/layouts/EventHomepage/TicketsCard/index.tsx:108
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:654
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:655
+#: src/components/routes/organizer/Reports/reportPanels.tsx:220
 msgid "Tickets"
 msgstr "門票"
 
@@ -11810,7 +11957,7 @@ msgstr "收件人"
 msgid "To edit configurations, go to the Configurations section in the admin menu."
 msgstr "要編輯配置，請前往管理選單中的配置部分。"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:611
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:612
 msgid "To handle"
 msgstr "待處理"
 
@@ -11836,7 +11983,7 @@ msgstr "要接受信用卡付款，您需要連接您的 Stripe 賬户。Stripe 
 
 #: src/components/routes/events-directory/index.tsx:29
 #: src/components/routes/my-tickets/index.tsx:105
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:323
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:324
 msgid "Today"
 msgstr ""
 
@@ -11885,13 +12032,21 @@ msgstr "頂級主辦方（過去14天）"
 msgid "Total"
 msgstr "總計"
 
+#: src/components/routes/organizer/Reports/reportPanels.tsx:42
+msgid "Total · {period} days"
+msgstr ""
+
+#: src/components/routes/organizer/Reports/reportPanels.tsx:42
+msgid "Total · 12 months"
+msgstr ""
+
 #: src/components/routes/admin/Dashboard/index.tsx:124
 msgid "Total Accounts"
 msgstr "總賬戶數"
 
 #: src/components/routes/organizer/Reports/CheckInSummaryReport/index.tsx:35
-msgid "Total Attendees"
-msgstr "總參與人數"
+#~ msgid "Total Attendees"
+#~ msgstr "總參與人數"
 
 #: src/components/routes/event/Reports/PromoCodesReport/index.tsx:52
 msgid "Total Before Discounts"
@@ -11899,7 +12054,6 @@ msgstr "折扣前總計"
 
 #: src/components/routes/admin/Dashboard/index.tsx:325
 #: src/components/routes/admin/PlatformRevenue/index.tsx:51
-#: src/components/routes/organizer/Reports/TaxSummaryReport/index.tsx:49
 msgid "Total Collected"
 msgstr "總收款"
 
@@ -11916,11 +12070,10 @@ msgid "Total Entries"
 msgstr "總條目"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:93
-msgid "Total Fee"
-msgstr "總費用"
+#~ msgid "Total Fee"
+#~ msgstr "總費用"
 
 #: src/components/routes/event/EventDashboard/index.tsx:370
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:97
 msgid "Total Fees"
 msgstr "總費用"
 
@@ -11949,7 +12102,6 @@ msgid "Total stock: {totalStock}"
 msgstr "總庫存：{totalStock}"
 
 #: src/components/routes/event/EventDashboard/index.tsx:372
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:91
 msgid "Total Tax"
 msgstr "總税額"
 
@@ -12154,7 +12306,7 @@ msgstr "取消發佈活動"
 
 #: src/components/routes/organizer/Messages/index.tsx:123
 #: src/components/routes/organizer/Messages/index.tsx:214
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:279
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:280
 msgid "Unread"
 msgstr ""
 
@@ -12177,7 +12329,6 @@ msgstr "不受信任"
 #: src/components/layouts/OrganizerHomepage/index.tsx:278
 #: src/components/routes/my-tickets/index.tsx:245
 #: src/components/routes/my-tickets/index.tsx:275
-#: src/components/routes/organizer/Reports/EventsPerformanceReport/index.tsx:33
 msgid "Upcoming"
 msgstr "即將推出"
 
@@ -12413,12 +12564,12 @@ msgid "VAT number validation failed. Please check your VAT number."
 msgstr "增值稅號碼驗證失敗。請檢查您的增值稅號碼。"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:87
-msgid "VAT on Fee"
-msgstr "費用增值稅"
+#~ msgid "VAT on Fee"
+#~ msgstr "費用增值稅"
 
 #: src/components/routes/organizer/Reports/PlatformFeesReport/index.tsx:81
-msgid "VAT Rate"
-msgstr "增值稅率"
+#~ msgid "VAT Rate"
+#~ msgstr "增值稅率"
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:115
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:330
@@ -12494,7 +12645,7 @@ msgid "View"
 msgstr "查看"
 
 #: src/components/common/OrganizerAchievements/index.tsx:109
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:341
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:342
 #: src/components/routes/product-widget/OrderSummaryAndProducts/OtherEvents/index.tsx:97
 msgid "View all"
 msgstr ""
@@ -12504,8 +12655,12 @@ msgid "View all messages sent across the platform"
 msgstr "查看平台上發送的所有訊息"
 
 #: src/components/routes/organizer/Reports/index.tsx:50
-msgid "View and download reports across all your events. Only completed orders are included."
-msgstr "查看和下載所有活動的報告。僅包含已完成的訂單。"
+#~ msgid "View and download reports across all your events. Only completed orders are included."
+#~ msgstr "查看和下載所有活動的報告。僅包含已完成的訂單。"
+
+#: src/components/routes/organizer/Reports/index.tsx:128
+msgid "View and export the figures of all your events. Only completed orders are included."
+msgstr ""
 
 #: src/components/common/AttendeeList/index.tsx:84
 msgid "View Answers"
@@ -12625,19 +12780,23 @@ msgstr "瀏覽統計，以及主辦方量度廣告成效的工具。"
 msgid "VK"
 msgstr "VK"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:61
+#: src/components/routes/organizer/Reports/reportPanels.tsx:54
+msgid "vs previous period"
+msgstr ""
+
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:62
 msgid "vs the 12 months before"
 msgstr "對比前 12 個月"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:63
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:64
 msgid "vs the 30 days before"
 msgstr "對比前 30 天"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:57
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:58
 msgid "vs the 7 days before"
 msgstr "對比前 7 天"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:59
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:60
 msgid "vs the 90 days before"
 msgstr "對比前 90 天"
 
@@ -12839,6 +12998,7 @@ msgid "Website"
 msgstr "網站"
 
 #: src/components/routes/event/EventDashboard/index.tsx:276
+#: src/components/routes/organizer/Reports/reportPanels.tsx:104
 msgid "Week"
 msgstr "週"
 
@@ -12850,11 +13010,11 @@ msgstr "微博"
 msgid "Welcome aboard! Please login to continue."
 msgstr "歡迎加入！請登錄以繼續。"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:465
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:466
 msgid "Welcome back, {firstName}!"
 msgstr "歡迎回來，{firstName}！"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:463
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:464
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
 msgstr "歡迎回來，{firstName}！這是 {0} 的最新動態。"
 
@@ -12999,7 +13159,7 @@ msgstr "簽到何時關閉"
 msgid "When check-in opens"
 msgstr "簽到何時開放"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:693
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:694
 msgid "When customers purchase tickets, their orders will appear here."
 msgstr "當顧客購買門票時，他們的訂單將會顯示在這裡。"
 
@@ -13176,7 +13336,7 @@ msgstr "有，入口旁邊有免費停車場。"
 msgid "Yes, remove them"
 msgstr "是的，移除它們"
 
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:326
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:327
 msgid "Yesterday"
 msgstr "昨天"
 
