@@ -24,8 +24,11 @@ import {
     draftSocialHandles,
     draftSocialLayout,
     HomepageDraft,
+    newFaqKey,
     publishedDraft,
 } from "./homepageDraft.ts";
+import {ImportFromUrl, ImportPart} from "./ImportFromUrl.tsx";
+import {OrganizerPageSuggestion} from "../../../../api/organizer.client.ts";
 import {DesignerSection, SectionId} from "./DesignerSection.tsx";
 import {ImagesSection} from "./ImagesSection.tsx";
 import {AccentSection} from "./AccentSection.tsx";
@@ -149,6 +152,64 @@ const OrganizerHomepageDesigner = () => {
         }
         return current && {...current, [key]: image};
     });
+
+    // « Remplir depuis votre site » : ce que l'organisateur garde va dans le brouillon, sans rien publier.
+    // Les images arrivent en data: URL et deviennent des fichiers, comme celles qu'on depose.
+    const applyImport = async (suggestion: OrganizerPageSuggestion, parts: ImportPart[]) => {
+        const asFile = async (dataUrl: string, name: string) => {
+            const blob = await (await fetch(dataUrl)).blob();
+            const file = new File([blob], `${name}.${blob.type.split('/')[1] ?? 'png'}`, {type: blob.type});
+            return {kind: 'new' as const, file, url: URL.createObjectURL(file)};
+        };
+
+        if (parts.includes('logo') && suggestion.logo) {
+            setImage('logo', await asFile(suggestion.logo, 'logo'));
+        }
+        if (parts.includes('cover') && suggestion.cover) {
+            setImage('cover', await asFile(suggestion.cover, 'couverture'));
+        }
+
+        setDraft(current => {
+            if (!current) {
+                return current;
+            }
+            const next = {...current};
+            if (parts.includes('name') && suggestion.name) {
+                next.name = suggestion.name;
+            }
+            if (parts.includes('description') && suggestion.description) {
+                next.description = suggestion.description;
+            }
+            if (parts.includes('accent') && suggestion.accent) {
+                next.accent = suggestion.accent;
+            }
+            if (parts.includes('social')) {
+                // Les comptes deja remplis restent ; les autres s'ajoutent, visibles.
+                const links = current.socialLinks.map(link => {
+                    const found = suggestion.social_links.find(s => s.platform === link.platform);
+                    return !link.handle.trim() && found ? {...link, handle: found.handle, visible: true} : link;
+                });
+                suggestion.social_links
+                    .filter(found => !links.some(link => link.platform === found.platform))
+                    .forEach(found => links.push({platform: found.platform, handle: found.handle, visible: true}));
+                next.socialLinks = links;
+            }
+            if (parts.includes('faqs')) {
+                const asked = new Set(current.faqs.map(faq => faq.question.trim().toLowerCase()));
+                next.faqs = [
+                    ...current.faqs,
+                    ...suggestion.faqs
+                        .filter(faq => !asked.has(faq.question.trim().toLowerCase()))
+                        .map(faq => ({key: newFaqKey(), question: faq.question, answer: faq.answer})),
+                ];
+            }
+            return next;
+        });
+
+        // Les editeurs de texte reprennent le nom et la presentation.
+        setResetKey(key => key + 1);
+        showSuccess(t`Added to your draft. Check the preview, then publish.`);
+    };
 
     const toggleSection = (id: SectionId) => setOpenSections(current =>
         current.includes(id) ? current.filter(section => section !== id) : [...current, id]);
@@ -410,6 +471,10 @@ const OrganizerHomepageDesigner = () => {
                                 </button>
                             )}
                         </div>
+                    )}
+
+                    {!loading && organizerId && (
+                        <ImportFromUrl organizerId={organizerId} onApply={applyImport} disabled={publishing}/>
                     )}
 
                     {sections.map(section => loading ? (

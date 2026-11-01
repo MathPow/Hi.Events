@@ -130,6 +130,7 @@ use HiEvents\Http\Actions\SelfService\ResendAttendeeTicketPublicAction;
 use HiEvents\Http\Actions\SelfService\ResendOrderConfirmationPublicAction;
 use HiEvents\Http\Actions\Organizers\EditOrganizerAction;
 use HiEvents\Http\Actions\Organizers\GetOrganizerAction;
+use HiEvents\Http\Actions\Organizers\PageImport\ImportOrganizerPageAction;
 use HiEvents\Http\Actions\Organizers\Stripe\ConnectOrganizerStripeAction;
 use HiEvents\Http\Actions\Organizers\Stripe\DisconnectOrganizerStripeAction;
 use HiEvents\Http\Actions\Organizers\Stripe\GetOrganizerStripeConnectionAction;
@@ -348,6 +349,9 @@ $router->middleware(['auth:api'])->group(
         $router->get('/organizers', GetOrganizersAction::class);
         $router->get('/organizers/{organizer_id}', GetOrganizerAction::class);
         $router->get('/organizers/{organizer_id}/events', GetOrganizerEventsAction::class);
+        // « Remplir depuis votre site ou votre Instagram » de « Ma page ».
+        $router->post('/organizers/{organizer_id}/page-import', ImportOrganizerPageAction::class)
+            ->middleware('throttle:10,1');
 
         // Stripe propre a l'organisateur: il encaisse chez lui, le compte de la
         // billetterie ne servant que de repli

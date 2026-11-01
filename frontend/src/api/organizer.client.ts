@@ -22,7 +22,27 @@ export interface OrganizerStripeConnection {
 }
 
 
+// What « Ma page » could take from a website or an Instagram profile (images as data: URLs).
+export interface OrganizerPageSuggestion {
+    source_url: string;
+    source: 'website' | 'instagram';
+    name: string | null;
+    description: string | null;
+    accent: string | null;
+    logo: string | null;
+    cover: string | null;
+    social_links: { platform: string, handle: string }[];
+    faqs: { question: string, answer: string }[];
+    written_by_assistant: boolean;
+    limited: boolean;
+}
+
 export const organizerClient = {
+    importPage: async (organizerId: IdParam, url: string) => {
+        const response = await api.post<OrganizerPageSuggestion>(`organizers/${organizerId}/page-import`, {url});
+        return response.data;
+    },
+
     getStripeConnection: async (organizerId: IdParam, refresh: boolean = false) => {
         const response = await api.get<GenericDataResponse<OrganizerStripeConnection>>(
             `organizers/${organizerId}/stripe${refresh ? '?refresh=1' : ''}`

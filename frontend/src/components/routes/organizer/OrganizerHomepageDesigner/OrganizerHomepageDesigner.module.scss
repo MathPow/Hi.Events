@@ -829,3 +829,108 @@ $shadow: 0 10px 16px rgb(55 39 33 / 0.08);
   height: 100%;
   border: none;
 }
+
+// --- « Remplir depuis votre site ou votre Instagram » ---
+
+.importHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.importForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.importInput {
+  align-self: stretch;
+}
+
+.importRows {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  background: $row;
+  overflow: hidden;
+}
+
+.importRow {
+  display: grid;
+  grid-template-columns: auto 9rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+
+  & + & {
+    border-top: 1px solid $neutral;
+  }
+
+  @include mixins.respond-below(md) {
+    grid-template-columns: auto minmax(0, 1fr);
+
+    > :last-child {
+      grid-column: 2;
+    }
+  }
+}
+
+.importLabel {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.importValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  font-size: 0.9375rem;
+
+  &[data-clamp] {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
+.importSwatch {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(53 41 36 / 0.15);
+}
+
+.importLogo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  object-fit: contain;
+  background: #fff;
+}
+
+.importCover {
+  width: 100%;
+  max-width: 16rem;
+  height: 4.5rem;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+
+.importActions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.importNote {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--dehors-texte-doux);
+}
