@@ -278,3 +278,9 @@ $z-tab-bar: 170;
     transform: translateY(0.75rem) scale(0.98);
   }
 }
+
+// A super admin in someone else's account: the bar and the menu in orange, never taken for their own.
+:global(html[data-impersonating]) .tabBar,
+:global(html[data-impersonating]) .menu {
+  background: var(--dehors-orange);
+}

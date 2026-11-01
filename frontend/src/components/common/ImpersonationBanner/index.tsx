@@ -1,59 +1,17 @@
-import {Button} from "@mantine/core";
-import {t} from "@lingui/macro";
-import {Trans} from "@lingui/macro";
-import {IconUserShield} from "@tabler/icons-react";
-import {useStopImpersonation} from "../../../mutations/useStopImpersonation";
-import {showError, showSuccess} from "../../../utilites/notifications";
+import {useEffect} from "react";
 import {useGetMe} from "../../../queries/useGetMe";
-import classes from "./ImpersonationBanner.module.scss";
-import {useNavigate} from "react-router";
 
-const ImpersonationBanner = () => {
+// No banner: while a super admin acts as someone else, the page is marked (html[data-impersonating])
+// and the navigation turns orange (Sidebar, MobileNav), so it is never taken for their own account.
+const ImpersonationMarker = () => {
     const {data: user} = useGetMe();
-    const stopImpersonationMutation = useStopImpersonation();
-    const navigate = useNavigate();
+    const isImpersonating = !!user?.is_impersonating;
 
-    if (!user?.is_impersonating) {
-        return null;
-    }
+    useEffect(() => {
+        document.documentElement.toggleAttribute('data-impersonating', isImpersonating);
+    }, [isImpersonating]);
 
-    const handleStopImpersonation = () => {
-        stopImpersonationMutation.mutate(undefined, {
-            onSuccess: (response) => {
-                showSuccess(response.message || t`Impersonation stopped`);
-                navigate(response.redirect_url || '/admin/users');
-            },
-            onError: (error: any) => {
-                showError(
-                    error?.response?.data?.message ||
-                    t`Failed to stop impersonation. Please try again.`
-                );
-            }
-        });
-    };
-
-    return (
-        <div className={classes.banner}>
-            <div className={classes.content}>
-                <IconUserShield size={24} className={classes.icon} />
-                <span className={classes.text}>
-                    <Trans>
-                        You are impersonating <span className={classes.userName}>{user.full_name}</span> ({user.email})
-                    </Trans>
-                </span>
-            </div>
-            <Button
-                variant="white"
-                color="orange"
-                size="sm"
-                onClick={handleStopImpersonation}
-                loading={stopImpersonationMutation.isPending}
-                className={classes.button}
-            >
-                {t`Stop Impersonating`}
-            </Button>
-        </div>
-    );
+    return null;
 };
 
-export default ImpersonationBanner;
+export default ImpersonationMarker;

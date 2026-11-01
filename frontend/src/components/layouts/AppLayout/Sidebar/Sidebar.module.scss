@@ -350,3 +350,8 @@
     opacity: 0.3;
   }
 }
+
+// A super admin in someone else's account: the sidebar in orange, never taken for their own.
+:global(html[data-impersonating]) .sidebar {
+  background: var(--dehors-orange);
+}

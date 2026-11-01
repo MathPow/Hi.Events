@@ -7,6 +7,7 @@ import {
     IconSettingsCog,
     IconShield,
     IconUser,
+    IconUserShield,
     IconUsers,
 } from "@tabler/icons-react";
 import {useGetMe} from "../../../queries/useGetMe.ts";
@@ -18,6 +19,7 @@ import {useDisclosure} from "@mantine/hooks";
 import {AboutModal} from "../../modals/AboutModal";
 import {getConfig} from "../../../utilites/config.ts";
 import {CreateOrganizerModal} from "../../modals/CreateOrganizerModal";
+import {useStopImpersonating} from "../ImpersonationBanner/useStopImpersonating";
 
 export interface AccountMenuLink {
     label: string;
@@ -38,13 +40,28 @@ export const useAccountMenu = () => {
     const {data: me} = useGetMe();
     // The settings of the organizer being viewed; elsewhere /account/... opens the last one's.
     const {organizerId} = useParams();
+    const impersonation = useStopImpersonating();
     const [aboutModalOpen, {open: openAboutModal, close: closeAboutModal}] = useDisclosure(false);
     const [createOrganizerModalOpen, {
         open: openCreateOrganizerModal,
         close: closeCreateOrganizerModal
     }] = useDisclosure(false);
 
-    const links: AccountMenuLink[] = [
+    const links: AccountMenuLink[] = [];
+
+    // A super admin in someone else's account: the way back first.
+    if (impersonation.isImpersonating) {
+        links.push({
+            label: t`Stop Impersonating`,
+            icon: IconUserShield,
+            onClick: (event: any) => {
+                event.preventDefault();
+                impersonation.stop();
+            },
+        });
+    }
+
+    links.push(
         {
             label: t`My Profile`,
             icon: IconUser,
@@ -55,7 +72,7 @@ export const useAccountMenu = () => {
             icon: IconSettingsCog,
             link: organizerId ? settingsTabPath(organizerId, 'organization') : '/account',
         },
-    ];
+    );
 
     if (me?.role === 'ADMIN' || me?.role === 'SUPERADMIN') {
         links.push({

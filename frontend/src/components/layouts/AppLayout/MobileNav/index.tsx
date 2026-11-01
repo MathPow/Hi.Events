@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {UnstyledButton} from "@mantine/core";
+import {Button, UnstyledButton} from "@mantine/core";
+import {IconUserShield} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {NavLink, useLocation} from "react-router";
 import classNames from "classnames";
 import classes from './MobileNav.module.scss';
 import {MobilePrimaryAction, NavContext, NavItem} from "../types.ts";
 import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
+import {useStopImpersonating} from "../../../common/ImpersonationBanner/useStopImpersonating";
 
 interface MobileNavProps {
     navItems: NavItem[];
@@ -65,6 +67,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     const [menuOpen, setMenuOpen] = useState(false);
     const {pathname} = useLocation();
     const closeMenu = () => setMenuOpen(false);
+    const impersonation = useStopImpersonating();
 
     useEffect(closeMenu, [pathname]);
 
@@ -178,6 +181,14 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                         ))}
 
                         {menuFooter && <div className={classes.menuFooter}>{menuFooter}</div>}
+
+                        {impersonation.isImpersonating && (
+                            <Button variant="white" color="orange" fullWidth loading={impersonation.isPending}
+                                    leftSection={<IconUserShield size={18}/>} onClick={impersonation.stop}
+                                    style={{flexShrink: 0}}>
+                                {t`Stop Impersonating`}
+                            </Button>
+                        )}
 
                         <AccountCard variant="menu" onNavigate={closeMenu}/>
                     </div>
