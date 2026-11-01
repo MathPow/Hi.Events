@@ -23,8 +23,15 @@
   }
 }
 
+// The event page's preview: its icon only, the name in the tooltip.
 .previewButton {
   @include ui.outline-button;
+  width: 3rem;
+  padding: 0 !important;
+
+  :global(.mantine-Button-section[data-position='left']) {
+    margin-inline-end: 0 !important;
+  }
 }
 
 .shareButton,

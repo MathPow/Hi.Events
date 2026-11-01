@@ -261,10 +261,7 @@ const EventLayout = () => {
                         className={classes.previewButton}
                         title={t`Preview Event page`}
                         aria-label={t`Preview Event page`}
-                    >
-                        <span className={classes.longLabel}>{t`Preview Event page`}</span>
-                        <span className={classes.shortLabel}>{t`Preview`}</span>
-                    </Button>
+                    />
                     <Button
                         onClick={open}
                         leftSection={<PublicIcon name="partager" size={20}/>}
