@@ -9,6 +9,8 @@ class GeocodedLocationDTO extends BaseDataObject
     public function __construct(
         public float $latitude,
         public float $longitude,
+        // Au Quebec, la region administrative du lieu (« Estrie »)
+        public ?string $region = null,
     )
     {
     }

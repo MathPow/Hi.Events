@@ -31,6 +31,22 @@
   height: calc(var(--badge-size) * 0.3636);
 }
 
+// « Club des 100 »: its number in place of the icon, smaller as it gets longer.
+.badgeLabel {
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: calc(var(--badge-size) * 0.26);
+  line-height: 1;
+  letter-spacing: -0.02em;
+
+  &[data-length='4'] {
+    font-size: calc(var(--badge-size) * 0.2);
+  }
+
+  &[data-length='5'] {
+    font-size: calc(var(--badge-size) * 0.16);
+  }
+}
+
 // Window that announces newly earned achievements
 
 .celebration {

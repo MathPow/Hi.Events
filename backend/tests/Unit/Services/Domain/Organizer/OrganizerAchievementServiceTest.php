@@ -40,15 +40,13 @@ class OrganizerAchievementServiceTest extends TestCase
     {
         return new OrganizerAchievementMetricsDTO(...array_merge([
             'events_created' => 0,
-            'organizer_page_images' => 0,
-            'payments_connected' => false,
-            'live_events' => 0,
-            'has_participant_order' => false,
-            'has_check_in' => false,
+            'merchandise_sold' => false,
             'active_attendees' => 0,
-            'regular_attendees' => 0,
-            'net_sales' => 0.0,
+            'returning_attendees' => 0,
             'events_held' => 0,
+            'promo_code_orders' => 0,
+            'regions_held' => 0,
+            'first_time_attendees' => 0,
         ], $overrides));
     }
 
@@ -75,16 +73,18 @@ class OrganizerAchievementServiceTest extends TestCase
         return collect($achievements)->keyBy('key')->all();
     }
 
-    public function testTheTenAchievementsComeInDisplayOrder(): void
+    public function testTheThirteenAchievementsComeInDisplayOrder(): void
     {
-        $this->organizerRepository->shouldReceive('getAchievementMetrics')->with(7, 'CAD')->andReturn($this->metrics());
+        $this->organizerRepository->shouldReceive('getAchievementMetrics')->with(7)->andReturn($this->metrics());
         $this->achievementRepository->shouldReceive('findWhere')->andReturn(collect());
         $this->achievementRepository->shouldNotReceive('create');
 
         $achievements = $this->service->getAchievements($this->organizer());
 
-        $this->assertCount(10, $achievements);
+        $this->assertCount(13, $achievements);
         $this->assertSame(OrganizerAchievement::valuesArray(), array_column($achievements, 'key'));
+        $this->assertSame('first_event', $achievements[0]->key);
+        $this->assertSame('first_time_attendees', $achievements[12]->key);
         $this->assertNull($achievements[0]->earned_at);
         $this->assertFalse($achievements[0]->is_new);
     }
@@ -145,16 +145,37 @@ class OrganizerAchievementServiceTest extends TestCase
         $this->assertSame('2026-10-01 12:00:00', $achievements['first_event']->earned_at);
     }
 
-    public function testSalesCountInWholeDollarsTowardTheSummit(): void
+    public function testTheClubsAllCountRegisteredParticipants(): void
     {
-        $this->assertSame(9_999, OrganizerAchievement::SalesSummit->progress($this->metrics(['net_sales' => 9_999.99])));
-        $this->assertSame(10_000, OrganizerAchievement::SalesSummit->target());
+        $metrics = $this->metrics(['active_attendees' => 300]);
+        $targets = [];
+
+        foreach ([OrganizerAchievement::Club100, OrganizerAchievement::Club250, OrganizerAchievement::Club500,
+                     OrganizerAchievement::Club1000, OrganizerAchievement::Club5000, OrganizerAchievement::Club69420] as $club) {
+            $this->assertSame(300, $club->progress($metrics));
+            $targets[] = $club->target();
+        }
+
+        $this->assertSame([100, 250, 500, 1_000, 5_000, 69_420], $targets);
     }
 
-    public function testTheOrganizerPageNeedsBothALogoAndACover(): void
+    public function testEachAchievementFollowsItsOwnMeasure(): void
     {
-        $this->assertSame(1, OrganizerAchievement::OrganizerPage->progress($this->metrics(['organizer_page_images' => 1])));
-        $this->assertSame(2, OrganizerAchievement::OrganizerPage->target());
+        $metrics = $this->metrics([
+            'merchandise_sold' => true,
+            'returning_attendees' => 12,
+            'events_held' => 2,
+            'promo_code_orders' => 7,
+            'regions_held' => 3,
+            'first_time_attendees' => 49,
+        ]);
+
+        $this->assertSame([1, 1], [OrganizerAchievement::FirstMerchandiseSale->progress($metrics), OrganizerAchievement::FirstMerchandiseSale->target()]);
+        $this->assertSame([12, 25], [OrganizerAchievement::ReturningAttendees->progress($metrics), OrganizerAchievement::ReturningAttendees->target()]);
+        $this->assertSame([2, 3], [OrganizerAchievement::HatTrick->progress($metrics), OrganizerAchievement::HatTrick->target()]);
+        $this->assertSame([7, 10], [OrganizerAchievement::SecretCode->progress($metrics), OrganizerAchievement::SecretCode->target()]);
+        $this->assertSame([3, 3], [OrganizerAchievement::QuebecTour->progress($metrics), OrganizerAchievement::QuebecTour->target()]);
+        $this->assertSame([49, 50], [OrganizerAchievement::Rookies->progress($metrics), OrganizerAchievement::Rookies->target()]);
     }
 
     public function testMarkingSeenOnlyTouchesUnseenAchievementsOfTheOrganizer(): void

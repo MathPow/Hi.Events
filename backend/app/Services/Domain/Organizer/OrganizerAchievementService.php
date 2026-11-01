@@ -31,7 +31,7 @@ class OrganizerAchievementService
      */
     public function getAchievements(OrganizerDomainObject $organizer): array
     {
-        $metrics = $this->organizerRepository->getAchievementMetrics($organizer->getId(), $organizer->getCurrency());
+        $metrics = $this->organizerRepository->getAchievementMetrics($organizer->getId());
 
         $earned = $this->achievementRepository
             ->findWhere([OrganizerAchievementDomainObjectAbstract::ORGANIZER_ID => $organizer->getId()])

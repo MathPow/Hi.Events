@@ -78,6 +78,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const LOCATION_LATITUDE = 'location_latitude';
     final public const LOCATION_LONGITUDE = 'location_longitude';
     final public const LOCATION_GEOCODED_FOR = 'location_geocoded_for';
+    final public const LOCATION_REGION = 'location_region';
 
     protected int $id;
     protected int $event_id;
@@ -147,6 +148,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?float $location_latitude = null;
     protected ?float $location_longitude = null;
     protected ?string $location_geocoded_for = null;
+    protected ?string $location_region = null;
 
     public function toArray(): array
     {
@@ -219,6 +221,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'location_latitude' => $this->location_latitude ?? null,
                     'location_longitude' => $this->location_longitude ?? null,
                     'location_geocoded_for' => $this->location_geocoded_for ?? null,
+                    'location_region' => $this->location_region ?? null,
                 ];
     }
 
@@ -969,5 +972,16 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getLocationGeocodedFor(): ?string
     {
         return $this->location_geocoded_for;
+    }
+
+    public function setLocationRegion(?string $location_region): self
+    {
+        $this->location_region = $location_region;
+        return $this;
+    }
+
+    public function getLocationRegion(): ?string
+    {
+        return $this->location_region;
     }
 }

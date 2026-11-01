@@ -33,13 +33,12 @@ const ProgressBar = ({value, label, className}: { value: number, label: string, 
     </div>
 );
 
-const AchievementCard = ({achievement, currency, timezone}: {
+const AchievementCard = ({achievement, timezone}: {
     achievement: OrganizerAchievementProgress,
-    currency: string,
     timezone: string,
 }) => {
-    const definition = achievementDefinition(achievement.key, currency);
-    const label = progressLabel(achievement, currency);
+    const definition = achievementDefinition(achievement.key);
+    const label = progressLabel(achievement);
     const earned = !!achievement.earned_at;
 
     return (
@@ -90,7 +89,7 @@ const Achievements = () => {
         <header className={classes.header}>
             <h1 className={classes.title}>{t`Achievements`}</h1>
             <p className={`${classes.subtitle} ${classes.desktopOnly}`}>
-                {t`Each achievement marks a step in your journey as an organizer, from your first event to a full season.`}
+                {t`Each achievement marks a step in your journey as an organizer, from your first event to the biggest crowds.`}
             </p>
             <p className={`${classes.subtitle} ${classes.mobileOnly}`}>
                 {t`The milestones of your journey as an organizer.`}
@@ -110,11 +109,10 @@ const Achievements = () => {
         );
     }
 
-    const currency = organizer.currency ?? 'CAD';
     const earnedCount = achievements.filter((achievement) => achievement.earned_at).length;
     const total = achievements.length;
     const next = nextAchievement(achievements);
-    const nextDefinition = next && achievementDefinition(next.key, currency);
+    const nextDefinition = next && achievementDefinition(next.key);
 
     return (
         <div className={classes.page}>
@@ -148,7 +146,6 @@ const Achievements = () => {
                     <AchievementCard
                         key={achievement.key}
                         achievement={achievement}
-                        currency={currency}
                         timezone={organizer.timezone ?? 'America/Montreal'}
                     />
                 ))}

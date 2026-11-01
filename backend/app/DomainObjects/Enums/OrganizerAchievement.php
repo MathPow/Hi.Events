@@ -5,34 +5,43 @@ namespace HiEvents\DomainObjects\Enums;
 use HiEvents\Repository\DTO\Organizer\OrganizerAchievementMetricsDTO;
 
 /**
- * The ten achievements an organizer can earn, in the order they are shown: getting
- * set up first, then the first sales, then the milestones.
- * Kept in sync with frontend/src/components/common/OrganizerAchievements/achievements.tsx
+ * The achievements an organizer can earn, in the order they are shown.
+ * Kept in sync with frontend/src/components/common/OrganizerAchievements/achievements.ts
  * (icon, title, description) — update both when adding/removing achievements.
+ * An earned achievement is saved under its value: a new rule needs a new value.
  */
 enum OrganizerAchievement: string
 {
     use BaseEnum;
 
     case FirstEvent = 'first_event';
-    case OrganizerPage = 'organizer_page';
-    case PaymentsConnected = 'payments_connected';
-    case EventPublished = 'event_published';
-    case FirstOrder = 'first_order';
-    case FirstCheckIn = 'first_check_in';
-    case HundredAttendees = 'hundred_attendees';
-    case RegularAttendees = 'regular_attendees';
-    case SalesSummit = 'sales_summit';
-    case FullSeason = 'full_season';
+    case FirstMerchandiseSale = 'first_merchandise_sale';
+    case Club100 = 'hundred_attendees';
+    case Club250 = 'attendees_250';
+    case Club500 = 'attendees_500';
+    case Club1000 = 'attendees_1000';
+    case Club5000 = 'attendees_5000';
+    case Club69420 = 'attendees_69420';
+    case ReturningAttendees = 'returning_attendees';
+    case HatTrick = 'hat_trick';
+    case SecretCode = 'promo_code_uses';
+    case QuebecTour = 'quebec_tour';
+    case Rookies = 'first_time_attendees';
 
     public function target(): int
     {
         return match ($this) {
-            self::OrganizerPage => 2,
-            self::HundredAttendees => 100,
-            self::RegularAttendees => 10,
-            self::SalesSummit => 10_000,
-            self::FullSeason => 5,
+            self::Club100 => 100,
+            self::Club250 => 250,
+            self::Club500 => 500,
+            self::Club1000 => 1_000,
+            self::Club5000 => 5_000,
+            self::Club69420 => 69_420,
+            self::ReturningAttendees => 25,
+            self::HatTrick => 3,
+            self::SecretCode => 10,
+            self::QuebecTour => 3,
+            self::Rookies => 50,
             default => 1,
         };
     }
@@ -44,15 +53,18 @@ enum OrganizerAchievement: string
     {
         return match ($this) {
             self::FirstEvent => $metrics->events_created,
-            self::OrganizerPage => $metrics->organizer_page_images,
-            self::PaymentsConnected => (int)$metrics->payments_connected,
-            self::EventPublished => $metrics->live_events,
-            self::FirstOrder => (int)$metrics->has_participant_order,
-            self::FirstCheckIn => (int)$metrics->has_check_in,
-            self::HundredAttendees => $metrics->active_attendees,
-            self::RegularAttendees => $metrics->regular_attendees,
-            self::SalesSummit => (int)floor($metrics->net_sales),
-            self::FullSeason => $metrics->events_held,
+            self::FirstMerchandiseSale => (int)$metrics->merchandise_sold,
+            self::Club100,
+            self::Club250,
+            self::Club500,
+            self::Club1000,
+            self::Club5000,
+            self::Club69420 => $metrics->active_attendees,
+            self::ReturningAttendees => $metrics->returning_attendees,
+            self::HatTrick => $metrics->events_held,
+            self::SecretCode => $metrics->promo_code_orders,
+            self::QuebecTour => $metrics->regions_held,
+            self::Rookies => $metrics->first_time_attendees,
         };
     }
 }

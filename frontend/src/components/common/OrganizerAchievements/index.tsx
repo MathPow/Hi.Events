@@ -14,7 +14,7 @@ export const achievementColors = (definition: AchievementDefinition) => ({
 } as CSSProperties);
 
 /**
- * The badge of an achievement: its icon on a disc of its colour, in a pale ring.
+ * The badge of an achievement: its icon (or its number) on a disc of its colour, in a pale ring.
  * A placeholder until the real illustrations are drawn. Its size comes from --badge-size.
  */
 export const AchievementBadge = ({definition, className}: {
@@ -30,7 +30,10 @@ export const AchievementBadge = ({definition, className}: {
             aria-hidden
         >
             <span className={classes.badgeDisc}>
-                <Icon stroke={1.1} className={classes.badgeIcon}/>
+                {Icon && <Icon stroke={1.1} className={classes.badgeIcon}/>}
+                {definition.label && (
+                    <span className={classes.badgeLabel} data-length={definition.label.length}>{definition.label}</span>
+                )}
             </span>
         </span>
     );
@@ -40,7 +43,7 @@ export const AchievementBadge = ({definition, className}: {
  * Announces achievements earned since the organizer last looked, once, on whichever
  * organizer page they open next. They are marked as seen as soon as the window opens.
  */
-export const AchievementCelebration = ({organizerId, currency}: { organizerId: IdParam, currency: string }) => {
+export const AchievementCelebration = ({organizerId}: { organizerId: IdParam }) => {
     const {data: achievements} = useGetOrganizerAchievements(organizerId);
     const markSeen = useMarkOrganizerAchievementsSeen();
     const navigate = useNavigate();
@@ -62,7 +65,7 @@ export const AchievementCelebration = ({organizerId, currency}: { organizerId: I
     }, [achievements, organizerId]);
 
     const close = () => setShown([]);
-    const single = shown.length === 1 ? achievementDefinition(shown[0].key, currency) : null;
+    const single = shown.length === 1 ? achievementDefinition(shown[0].key) : null;
 
     return (
         <Modal
@@ -89,7 +92,7 @@ export const AchievementCelebration = ({organizerId, currency}: { organizerId: I
                     <p className={classes.celebrationEyebrow}>{t`${shown.length} achievements unlocked!`}</p>
                     <div className={classes.celebrationGrid}>
                         {shown.map((achievement) => {
-                            const definition = achievementDefinition(achievement.key, currency);
+                            const definition = achievementDefinition(achievement.key);
                             return (
                                 <div key={achievement.key} className={classes.celebrationItem}>
                                     <AchievementBadge definition={definition}/>

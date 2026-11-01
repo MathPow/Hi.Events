@@ -21,7 +21,7 @@ interface OrganizerRepositoryInterface extends RepositoryInterface
         ?int   $periodDays = null,
     ): OrganizerStatsResponseDTO;
 
-    public function getAchievementMetrics(int $organizerId, string $currencyCode): OrganizerAchievementMetricsDTO;
+    public function getAchievementMetrics(int $organizerId): OrganizerAchievementMetricsDTO;
 
     public function getSitemapOrganizers(int $page, int $perPage): LengthAwarePaginator;
 

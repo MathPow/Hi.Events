@@ -12,13 +12,18 @@ use HiEvents\Services\Infrastructure\Geocoding\DTO\GeocodedLocationDTO;
 use HiEvents\Services\Infrastructure\Geocoding\NominatimGeocodingService;
 
 /**
- * Les coordonnees du lieu d'un evenement, pour la carte de sa page. Cherchees une fois par
- * adresse (le lien de carte de l'organisateur d'abord, puis l'adresse, le lieu, la ville) et
- * gardees avec l'empreinte de l'adresse: une adresse modifiee est cherchee de nouveau. Une
- * adresse introuvable est aussi gardee (sans coordonnees); un geocodeur injoignable, non.
+ * Les coordonnees du lieu d'un evenement, pour la carte de sa page, et sa region (le succes
+ * « Tour du Québec »). Cherchees une fois par adresse (le lien de carte de l'organisateur
+ * d'abord, puis l'adresse, le lieu, la ville) et gardees avec l'empreinte de l'adresse: une
+ * adresse modifiee est cherchee de nouveau. Une adresse introuvable est aussi gardee (sans
+ * coordonnees); un geocodeur injoignable, non.
  */
 class EventLocationCoordinatesService
 {
+    // Le debut de l'empreinte: les lieux trouves avant la recherche de leur region (empreintes
+    // sans ce prefixe) sont cherches de nouveau (LocateEventsJob).
+    public const FINGERPRINT_VERSION = 'v3:';
+
     public function __construct(
         private readonly NominatimGeocodingService        $geocodingService,
         private readonly EventSettingsRepositoryInterface $eventSettingsRepository,
@@ -36,20 +41,34 @@ class EventLocationCoordinatesService
         $fingerprint = $this->fingerprint($details, $settings->getMapsUrl());
         if ($settings->getLocationGeocodedFor() === $fingerprint) {
             return $settings->getLocationLatitude() !== null && $settings->getLocationLongitude() !== null
-                ? new GeocodedLocationDTO((float)$settings->getLocationLatitude(), (float)$settings->getLocationLongitude())
+                ? new GeocodedLocationDTO(
+                    latitude: (float)$settings->getLocationLatitude(),
+                    longitude: (float)$settings->getLocationLongitude(),
+                    region: $settings->getLocationRegion(),
+                )
                 : null;
         }
 
+        $fromMapsUrl = $this->coordinatesFromMapsUrl($settings->getMapsUrl());
+
         try {
-            $location = $this->coordinatesFromMapsUrl($settings->getMapsUrl()) ?? $this->geocode($details);
+            $location = $fromMapsUrl === null
+                ? $this->geocode($details)
+                : new GeocodedLocationDTO(
+                    latitude: $fromMapsUrl->latitude,
+                    longitude: $fromMapsUrl->longitude,
+                    region: $this->geocodingService->region($fromMapsUrl->latitude, $fromMapsUrl->longitude),
+                );
         } catch (GeocodingUnavailableException) {
-            return null;
+            // The link's coordinates still show the map; the region is looked up next time.
+            return $fromMapsUrl;
         }
 
         $this->eventSettingsRepository->updateWhere(
             attributes: [
                 EventSettingDomainObjectAbstract::LOCATION_LATITUDE => $location?->latitude,
                 EventSettingDomainObjectAbstract::LOCATION_LONGITUDE => $location?->longitude,
+                EventSettingDomainObjectAbstract::LOCATION_REGION => $location?->region,
                 EventSettingDomainObjectAbstract::LOCATION_GEOCODED_FOR => $fingerprint,
             ],
             where: [EventSettingDomainObjectAbstract::ID => $settings->getId()],
@@ -175,10 +194,8 @@ class EventLocationCoordinatesService
         return implode(', ', $this->clean($details, $keys));
     }
 
-    // Le numero de la recherche: les coordonnees trouvees avant qu'un resultat doive etre dans
-    // la ville de l'adresse sont cherchees de nouveau.
     private function fingerprint(array $details, ?string $mapsUrl): string
     {
-        return sha1(json_encode([$details, trim((string)$mapsUrl), 2]));
+        return self::FINGERPRINT_VERSION . sha1(json_encode([$details, trim((string)$mapsUrl)]));
     }
 }

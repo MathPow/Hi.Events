@@ -433,15 +433,18 @@ export interface OrganizerStats {
 
 export type OrganizerAchievementKey =
     | 'first_event'
-    | 'organizer_page'
-    | 'payments_connected'
-    | 'event_published'
-    | 'first_order'
-    | 'first_check_in'
+    | 'first_merchandise_sale'
     | 'hundred_attendees'
-    | 'regular_attendees'
-    | 'sales_summit'
-    | 'full_season';
+    | 'attendees_250'
+    | 'attendees_500'
+    | 'attendees_1000'
+    | 'attendees_5000'
+    | 'attendees_69420'
+    | 'returning_attendees'
+    | 'hat_trick'
+    | 'promo_code_uses'
+    | 'quebec_tour'
+    | 'first_time_attendees';
 
 export interface OrganizerAchievementProgress {
     key: OrganizerAchievementKey;

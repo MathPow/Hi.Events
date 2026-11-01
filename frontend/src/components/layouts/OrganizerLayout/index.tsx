@@ -316,7 +316,7 @@ const OrganizerLayout = () => {
             />
 
             {organizer && (
-                <AchievementCelebration organizerId={organizerId} currency={organizer.currency ?? 'CAD'} />
+                <AchievementCelebration organizerId={organizerId} />
             )}
             {switchOrganizerModalOpen &&
                 <SwitchOrganizerModal

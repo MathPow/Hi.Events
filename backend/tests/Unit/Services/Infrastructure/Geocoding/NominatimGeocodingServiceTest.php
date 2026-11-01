@@ -67,6 +67,48 @@ class NominatimGeocodingServiceTest extends TestCase
         $this->assertNull($this->service($httpClient)->search(['street' => '3180 rue Laberge', 'city' => 'Québec'], 'ca', 'Québec'));
     }
 
+    public function testAPlaceInQuebecGivesItsAdministrativeRegion(): void
+    {
+        $httpClient = new HttpClient();
+        $httpClient->fake(['*' => $httpClient->response([
+            ['lat' => '45.4042', 'lon' => '-71.8929', 'address' => ['city' => 'Sherbrooke', 'state_district' => 'Estrie', 'state' => 'Québec']],
+        ])]);
+
+        $this->assertSame('Estrie', $this->service($httpClient)->search(['q' => 'Sherbrooke'], 'ca')->region);
+        $httpClient->assertSent(fn(Request $request) => $request['addressdetails'] === 1 && $request['limit'] === 1);
+    }
+
+    public function testElsewhereTheProvinceIsTheRegion(): void
+    {
+        $httpClient = new HttpClient();
+        $httpClient->fake(['*' => $httpClient->response([
+            ['lat' => '45.4215', 'lon' => '-75.6972', 'address' => ['city' => 'Ottawa', 'state' => 'Ontario']],
+        ])]);
+
+        $this->assertSame('Ontario', $this->service($httpClient)->search(['q' => 'Ottawa'])->region);
+    }
+
+    public function testTheRegionOfKnownCoordinates(): void
+    {
+        $httpClient = new HttpClient();
+        $httpClient->fake(['*' => $httpClient->response(
+            ['lat' => '45.7756', 'lon' => '-71.6189', 'address' => ['state_district' => 'Estrie', 'state' => 'Québec']],
+        )]);
+
+        $this->assertSame('Estrie', $this->service($httpClient)->region(45.7756, -71.6189));
+        $httpClient->assertSent(fn(Request $request) => str_starts_with($request->url(), 'https://nominatim.openstreetmap.org/reverse')
+            && $request['lat'] === 45.7756
+            && $request['lon'] === -71.6189);
+    }
+
+    public function testCoordinatesNobodyKnowsHaveNoRegion(): void
+    {
+        $httpClient = new HttpClient();
+        $httpClient->fake(['*' => $httpClient->response(['error' => 'Unable to geocode'])]);
+
+        $this->assertNull($this->service($httpClient)->region(0.0, 0.0));
+    }
+
     public function testNoResultGivesNull(): void
     {
         $httpClient = new HttpClient();

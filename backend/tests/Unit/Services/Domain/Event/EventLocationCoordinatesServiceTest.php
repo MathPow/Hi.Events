@@ -14,6 +14,8 @@ use Tests\TestCase;
 
 class EventLocationCoordinatesServiceTest extends TestCase
 {
+    private const MAPS_URL = 'https://www.google.com/maps/place/Mont+Ham/@45.7712,-71.6211,15z/data=!3m1!4b1!4m6!3m5!1s0x0:0x0!8m2!3d45.7756!4d-71.6189';
+
     private NominatimGeocodingService&MockInterface $geocodingService;
 
     private EventSettingsRepositoryInterface&MockInterface $eventSettingsRepository;
@@ -46,15 +48,31 @@ class EventLocationCoordinatesServiceTest extends TestCase
                 'state' => 'QC',
                 'postalcode' => 'J1H 1A1',
             ], 'ca', 'Sherbrooke')
-            ->andReturn(new GeocodedLocationDTO(45.4, -71.89));
+            ->andReturn(new GeocodedLocationDTO(45.4, -71.89, 'Estrie'));
         $this->eventSettingsRepository->shouldReceive('updateWhere')->once()
             ->with(Mockery::on(fn(array $attributes) => $attributes['location_latitude'] === 45.4
                 && $attributes['location_longitude'] === -71.89
-                && strlen($attributes['location_geocoded_for']) === 40), ['id' => 7]);
+                && $attributes['location_region'] === 'Estrie'
+                && str_starts_with($attributes['location_geocoded_for'], EventLocationCoordinatesService::FINGERPRINT_VERSION)), ['id' => 7]);
 
         $location = $this->service->getCoordinates($this->settings());
 
         $this->assertSame(45.4, $location->latitude);
+        $this->assertSame('Estrie', $location->region);
+    }
+
+    public function testAPlaceFoundBeforeRegionsIsSearchedAgain(): void
+    {
+        $settings = $this->settings()
+            ->setLocationLatitude(45.4)
+            ->setLocationLongitude(-71.89)
+            ->setLocationGeocodedFor(sha1(json_encode([$this->settings()->getLocationDetails(), '', 2])));
+
+        $this->geocodingService->shouldReceive('search')->once()->andReturn(new GeocodedLocationDTO(45.4, -71.89, 'Estrie'));
+        $this->eventSettingsRepository->shouldReceive('updateWhere')->once()
+            ->with(Mockery::on(fn(array $attributes) => $attributes['location_region'] === 'Estrie'), ['id' => 7]);
+
+        $this->assertSame('Estrie', $this->service->getCoordinates($settings)->region);
     }
 
     public function testTheVenueIsSearchedWhenTheAddressIsNotFound(): void
@@ -116,14 +134,26 @@ class EventLocationCoordinatesServiceTest extends TestCase
     public function testCoordinatesInTheMapLinkAreUsedWithoutSearching(): void
     {
         $this->geocodingService->shouldNotReceive('search');
-        $this->eventSettingsRepository->shouldReceive('updateWhere')->once();
+        $this->geocodingService->shouldReceive('region')->once()->with(45.7756, -71.6189)->andReturn('Estrie');
+        $this->eventSettingsRepository->shouldReceive('updateWhere')->once()
+            ->with(Mockery::on(fn(array $attributes) => $attributes['location_region'] === 'Estrie'), ['id' => 7]);
 
-        $location = $this->service->getCoordinates($this->settings(
-            mapsUrl: 'https://www.google.com/maps/place/Mont+Ham/@45.7712,-71.6211,15z/data=!3m1!4b1!4m6!3m5!1s0x0:0x0!8m2!3d45.7756!4d-71.6189',
-        ));
+        $location = $this->service->getCoordinates($this->settings(mapsUrl: self::MAPS_URL));
 
         $this->assertSame(45.7756, $location->latitude);
         $this->assertSame(-71.6189, $location->longitude);
+    }
+
+    public function testTheMapLinkStillShowsTheMapWhenTheRegionCannotBeFound(): void
+    {
+        $this->geocodingService->shouldReceive('region')->once()->andThrow(new GeocodingUnavailableException('timeout'));
+        // Not kept: the region is looked up again next time.
+        $this->eventSettingsRepository->shouldNotReceive('updateWhere');
+
+        $location = $this->service->getCoordinates($this->settings(mapsUrl: self::MAPS_URL));
+
+        $this->assertSame(45.7756, $location->latitude);
+        $this->assertNull($location->region);
     }
 
     public function testAnAddressNobodyFindsIsKeptWithoutCoordinates(): void

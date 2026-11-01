@@ -14,13 +14,15 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
- * Cherche des coordonnees dans Nominatim, le geocodeur d'OpenStreetMap. Sa politique d'usage
+ * Cherche des coordonnees (et leur region) dans Nominatim, le geocodeur d'OpenStreetMap. Sa politique d'usage
  * demande une application identifiee et au plus une requete par seconde: les appels passent un
  * a un, espaces d'au moins MIN_INTERVAL_SECONDS. Les resultats sont gardes par l'appelant.
  */
 class NominatimGeocodingService
 {
     private const SEARCH_URL = 'https://nominatim.openstreetmap.org/search';
+
+    private const REVERSE_URL = 'https://nominatim.openstreetmap.org/reverse';
 
     private const LOCK_KEY = 'nominatim-geocoding';
 
@@ -51,21 +53,77 @@ class NominatimGeocodingService
      */
     public function search(array $query, ?string $countryCode = null, ?string $city = null): ?GeocodedLocationDTO
     {
+        $results = $this->request(self::SEARCH_URL, array_filter([
+            ...$query,
+            'format' => 'jsonv2',
+            'limit' => $city === null ? 1 : 5,
+            'addressdetails' => 1,
+            'countrycodes' => $countryCode,
+        ]));
+
+        $result = collect(is_array($results) ? $results : [])->first(fn($result) => is_array($result)
+            && is_numeric($result['lat'] ?? null)
+            && is_numeric($result['lon'] ?? null)
+            && ($city === null || $this->isInCity($result, $city)));
+        if ($result === null) {
+            return null;
+        }
+
+        return new GeocodedLocationDTO(
+            latitude: (float)$result['lat'],
+            longitude: (float)$result['lon'],
+            region: $this->regionOf($result),
+        );
+    }
+
+    /**
+     * La region d'un point deja connu (les coordonnees du lien de carte de l'organisateur).
+     *
+     * @throws GeocodingUnavailableException
+     */
+    public function region(float $latitude, float $longitude): ?string
+    {
+        $result = $this->request(self::REVERSE_URL, [
+            'lat' => $latitude,
+            'lon' => $longitude,
+            'format' => 'jsonv2',
+            'zoom' => 10,
+            'addressdetails' => 1,
+        ]);
+
+        return is_array($result) ? $this->regionOf($result) : null;
+    }
+
+    /**
+     * Au Quebec, la region administrative (« Estrie », « Capitale-Nationale »); ailleurs, la
+     * province ou l'etat quand le lieu n'a pas de region plus precise.
+     */
+    private function regionOf(array $result): ?string
+    {
+        foreach (['state_district', 'state'] as $key) {
+            $region = $result['address'][$key] ?? null;
+            if (is_string($region) && trim($region) !== '') {
+                return mb_substr(trim($region), 0, 100);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws GeocodingUnavailableException
+     */
+    private function request(string $url, array $parameters): mixed
+    {
         try {
-            $response = $this->cache->lock(self::LOCK_KEY, 15)->block(10, function () use ($query, $countryCode, $city) {
+            $response = $this->cache->lock(self::LOCK_KEY, 15)->block(10, function () use ($url, $parameters) {
                 $this->waitForRateLimit();
 
                 try {
                     return $this->httpClient
                         ->withHeaders(['User-Agent' => $this->userAgent()])
                         ->timeout(5)
-                        ->get(self::SEARCH_URL, array_filter([
-                            ...$query,
-                            'format' => 'jsonv2',
-                            'limit' => $city === null ? 1 : 5,
-                            'addressdetails' => $city === null ? null : 1,
-                            'countrycodes' => $countryCode,
-                        ]));
+                        ->get($url, $parameters);
                 } finally {
                     $this->cache->put(self::LAST_CALL_KEY, microtime(true), 60);
                 }
@@ -84,19 +142,7 @@ class NominatimGeocodingService
             throw new GeocodingUnavailableException('Nominatim responded with status ' . $response->status());
         }
 
-        $results = $response->json();
-        $result = collect(is_array($results) ? $results : [])->first(fn($result) => is_array($result)
-            && is_numeric($result['lat'] ?? null)
-            && is_numeric($result['lon'] ?? null)
-            && ($city === null || $this->isInCity($result, $city)));
-        if ($result === null) {
-            return null;
-        }
-
-        return new GeocodedLocationDTO(
-            latitude: (float)$result['lat'],
-            longitude: (float)$result['lon'],
-        );
+        return $response->json();
     }
 
     private function isInCity(array $result, string $city): bool
