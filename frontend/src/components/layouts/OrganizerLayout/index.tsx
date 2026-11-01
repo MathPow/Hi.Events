@@ -7,7 +7,6 @@ import {
     IconMessageQuestion,
     IconPlus,
     IconShare,
-    IconUsersGroup,
     IconShield,
     IconWebhook
 } from "@tabler/icons-react";
@@ -22,8 +21,6 @@ import { useEffect, useRef, useState } from "react";
 import { CreateEventModal } from "../../modals/CreateEventModal";
 import { TopBarButton } from "../../common/TopBarButton";
 import classes from "./OrganizerLayout.module.scss";
-import { CalloutConfig, SidebarCalloutQueue } from "../../common/SidebarCallout/SidebarCalloutQueue";
-import { InviteUserModal } from "../../modals/InviteUserModal";
 import { useDisclosure } from "@mantine/hooks";
 import { SwitchOrganizerModal } from "../../modals/SwitchOrganizerModal";
 import { CreateOrganizerModal } from "../../modals/CreateOrganizerModal";
@@ -50,7 +47,6 @@ const OrganizerLayout = () => {
     const [showCreateEventModal, setShowCreateEventModal] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const [showCreateOrganizerModal, setShowCreateOrganizerModal] = useState(false);
-    const [createModalOpen, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false);
     const [switchOrganizerModalOpen, { open: openSwitchModal, close: closeSwitchModal }] = useDisclosure(false);
     const [shareModalOpen, { open: openShareModal, close: closeShareModal }] = useDisclosure(false);
     const [emailVerificationModalOpen, {
@@ -278,19 +274,6 @@ const OrganizerLayout = () => {
         },
     ];
 
-    const callouts: CalloutConfig[] = [
-        {
-            icon: <IconUsersGroup size={20} />,
-            heading: t`Invite Your Team`,
-            description: t`Collaborate with your team to create amazing events together.`,
-            buttonIcon: <IconUsersGroup size={16} />,
-            buttonText: t`Invite Team Members`,
-            onClick: () => {
-                openCreateModal();
-            },
-            storageKey: `organizer-${organizerId}-team-callout-dismissed`
-        },
-    ];
 
 
     return (
@@ -325,13 +308,11 @@ const OrganizerLayout = () => {
                     label: t`View my page`,
                     tileIconSrc: adminIcon('voir-22'),
                 }] : []}
-                sidebarFooter={<SidebarCalloutQueue callouts={callouts} />}
             />
 
             {organizer && (
                 <AchievementCelebration organizerId={organizerId} currency={organizer.currency ?? 'CAD'} />
             )}
-            {createModalOpen && <InviteUserModal onClose={closeCreateModal} />}
             {switchOrganizerModalOpen &&
                 <SwitchOrganizerModal
                     opened={switchOrganizerModalOpen}

@@ -25,6 +25,11 @@ class OrganizerStatsResponseDTO
         public ?int   $previous_total_orders = null,
         public ?float $previous_total_gross_sales = null,
         public ?float $previous_total_tax = null,
+
+        public array  $tax_names = [],
+
+        // Days the previous_* totals go back: the period before, or, for all-time totals, 30 days ago.
+        public ?int   $comparison_days = null,
     )
     {
     }

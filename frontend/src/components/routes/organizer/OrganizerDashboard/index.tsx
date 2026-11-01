@@ -12,12 +12,11 @@ import {useGetOrganizerOrders} from "../../../../queries/useGetOrganizerOrders.t
 import {useGetOrganizer} from "../../../../queries/useGetOrganizer.ts";
 import {useGetAccount} from "../../../../queries/useGetAccount.ts";
 import {useGetMe} from "../../../../queries/useGetMe.ts";
-import {useGetTaxesAndFees} from "../../../../queries/useGetTaxesAndFees.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {relativeDate} from "../../../../utilites/dates.ts";
 import {formatNumber, getInitials} from "../../../../utilites/helpers.ts";
 import {getEventQueryFilters} from "../../../../utilites/eventsPageFiltersHelper.ts";
-import {Event, Order, QueryFilters, TaxAndFeeType} from '../../../../types';
+import {Event, Order, QueryFilters} from '../../../../types';
 import {currenciesMap} from "../../../../../data/currencies.ts";
 import {CreateEventModal} from "../../../modals/CreateEventModal";
 import {StripeConnectButton} from "../../../common/StripeConnectButton";
@@ -115,21 +114,27 @@ const ScrollList = ({children, className}: { children: ReactNode, className?: st
     );
 };
 
-const ChangeTag = ({current, previous}: { current: number, previous?: number | null }) => {
+interface ChangeTagProps {
+    current: number;
+    previous: number;
+    // Shows the increase itself when there is nothing to compare a percentage with.
+    formatAmount: (amount: number) => string;
+}
+
+const ChangeTag = ({current, previous, formatAmount}: ChangeTagProps) => {
     const {i18n} = useLingui();
-    if (!previous) {
-        return null;
-    }
-    const ratio = (current - previous) / previous;
-    const percent = new Intl.NumberFormat(intlLocale(i18n.locale), {
-        style: 'percent',
-        signDisplay: 'exceptZero',
-        maximumFractionDigits: 0,
-    }).format(ratio);
+    const change = current - previous;
+    const label = previous > 0
+        ? new Intl.NumberFormat(intlLocale(i18n.locale), {
+            style: 'percent',
+            signDisplay: 'exceptZero',
+            maximumFractionDigits: 0,
+        }).format(change / previous)
+        : `+${formatAmount(change)}`;
 
     return (
-        <span className={classNames(classes.tag, ratio < 0 ? classes.tagDown : classes.tagUp)}>
-            {ratio < 0 ? '↓' : '↑'} {percent}
+        <span className={classNames(classes.tag, change < 0 ? classes.tagDown : classes.tagUp)}>
+            {change > 0 && '↑ '}{change < 0 && '↓ '}{label}
         </span>
     );
 };
@@ -141,11 +146,22 @@ interface StatTileProps {
     value: string;
     current?: number;
     previous?: number | null;
-    periodDays?: number | null;
+    comparison?: string | null;
+    formatAmount?: (amount: number) => string;
     note?: string;
 }
 
-const StatTile = ({tone, iconName, label, value, current, previous, periodDays, note}: StatTileProps) => (
+const StatTile = ({
+                      tone,
+                      iconName,
+                      label,
+                      value,
+                      current,
+                      previous,
+                      comparison,
+                      formatAmount = (amount) => String(formatNumber(amount)),
+                      note,
+                  }: StatTileProps) => (
     <div className={classes.tile} data-tone={tone}>
         <div className={classes.tileTop}>
             <span className={classes.tilePastille}><img src={icon(iconName)} alt=""/></span>
@@ -153,12 +169,13 @@ const StatTile = ({tone, iconName, label, value, current, previous, periodDays, 
         </div>
         <span className={classes.tileValue}>{value}</span>
         {note && <span className={classes.tileNote}>{note}</span>}
-        {!note && periodDays && !!previous && current !== undefined && (
-            <div className={classes.tileCompare}>
-                <ChangeTag current={current} previous={previous}/>
-                <span className={classes.compareText}>{comparisonLabel(periodDays)}</span>
-            </div>
-        )}
+        {!note && comparison && current !== undefined && previous !== null && previous !== undefined
+            && (current > 0 || previous > 0) && (
+                <div className={classes.tileCompare}>
+                    <ChangeTag current={current} previous={previous} formatAmount={formatAmount}/>
+                    <span className={classes.compareText}>{comparison}</span>
+                </div>
+            )}
         <span className={classes.tileBand} aria-hidden/>
     </div>
 );
@@ -346,7 +363,6 @@ export const OrganizerDashboard = () => {
     const {data: organizer} = useGetOrganizer(organizerId);
     const {data: me} = useGetMe();
     const {data: account} = useGetAccount();
-    const {data: taxesAndFees} = useGetTaxesAndFees();
     const [showCreateEventModal, setShowCreateEventModal] = useState(false);
     const [periodDays, setPeriodDays] = useState<number | null>(DEFAULT_PERIOD);
     const [notificationsTab, setNotificationsTab] = useState<'all' | 'to_handle'>('all');
@@ -424,9 +440,13 @@ export const OrganizerDashboard = () => {
     }
 
     const currency = selectedCurrency ?? organizer.currency ?? 'CAD';
-    const taxes = (taxesAndFees?.data ?? []).filter((item) => item.type === TaxAndFeeType.Tax && item.is_active);
-    const taxNames = new Intl.ListFormat(intlLocale(i18n.locale), {style: 'long', type: 'conjunction'})
-        .format(taxes.map((tax) => tax.name));
+    // Only when a tax is applied to a ticket (or taxes were already collected).
+    const taxNames = stats.tax_names ?? [];
+    const showTaxes = taxNames.length > 0 || stats.total_tax > 0;
+    const taxNote = new Intl.ListFormat(intlLocale(i18n.locale), {style: 'long', type: 'conjunction'}).format(taxNames);
+    const comparison = stats.period_days
+        ? comparisonLabel(stats.period_days)
+        : (stats.comparison_days ? t`in the last 30 days` : null);
     const showStripeCard = !!account && !account.stripe_connect_setup_complete && !stripeCardDismissed;
     const visibleNotifications = notificationsTab === 'to_handle'
         ? notifications.filter((item) => item.toHandle)
@@ -519,7 +539,8 @@ export const OrganizerDashboard = () => {
                     value={formatCurrency(stats.total_gross_sales, currency)}
                     current={stats.total_gross_sales}
                     previous={stats.previous_total_gross_sales}
-                    periodDays={stats.period_days}
+                    comparison={comparison}
+                    formatAmount={(amount) => formatCurrency(amount, currency)}
                 />
                 <StatTile
                     tone="products"
@@ -528,7 +549,7 @@ export const OrganizerDashboard = () => {
                     value={String(formatNumber(stats.total_products_sold))}
                     current={stats.total_products_sold}
                     previous={stats.previous_total_products_sold}
-                    periodDays={stats.period_days}
+                    comparison={comparison}
                 />
                 <StatTile
                     tone="attendees"
@@ -537,15 +558,15 @@ export const OrganizerDashboard = () => {
                     value={String(formatNumber(stats.total_attendees_registered))}
                     current={stats.total_attendees_registered}
                     previous={stats.previous_total_attendees_registered}
-                    periodDays={stats.period_days}
+                    comparison={comparison}
                 />
-                {taxes.length > 0 && (
+                {showTaxes && (
                     <StatTile
                         tone="taxes"
                         iconName="taxes"
                         label={t`Taxes collected`}
                         value={formatCurrency(stats.total_tax, currency)}
-                        note={taxNames}
+                        note={taxNote || undefined}
                     />
                 )}
             </section>

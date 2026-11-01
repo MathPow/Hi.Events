@@ -20,6 +20,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class OrganizerRepository extends BaseRepository implements OrganizerRepositoryInterface
 {
+    private const ALL_TIME_COMPARISON_DAYS = 30;
+
     protected function getModel(): string
     {
         return Organizer::class;
@@ -92,6 +94,16 @@ class OrganizerRepository extends BaseRepository implements OrganizerRepositoryI
             'currencyCode' => $currencyCode,
         ]);
 
+        $today = Carbon::today();
+        $lastDays = $this->sumDailyStatistics(
+            $organizerId,
+            $accountId,
+            $currencyCode,
+            $today->copy()->subDays(self::ALL_TIME_COMPARISON_DAYS - 1),
+            $today,
+        );
+        $before = static fn($total, $recent): float => max(0, (float)($total ?? 0) - (float)($recent ?? 0));
+
         return new OrganizerStatsResponseDTO(
             total_products_sold: (int)($totalsResult->total_products_sold ?? 0),
             total_attendees_registered: (int)($totalsResult->attendees_registered ?? 0),
@@ -103,7 +115,48 @@ class OrganizerRepository extends BaseRepository implements OrganizerRepositoryI
             total_refunded: (float)($totalsResult->total_refunded ?? 0),
             currency_code: $currencyCode,
             all_organizers_currencies: $this->getOrganizerCurrencies($organizerId, $accountId),
+            previous_total_products_sold: (int)$before($totalsResult->total_products_sold, $lastDays->products_sold),
+            previous_total_attendees_registered: (int)$before($totalsResult->attendees_registered, $lastDays->attendees_registered),
+            previous_total_orders: (int)$before($totalsResult->total_orders, $lastDays->orders_created),
+            previous_total_gross_sales: (float)$before($totalsResult->total_gross_sales, $lastDays->sales_total_gross),
+            previous_total_tax: (float)$before($totalsResult->total_tax, $lastDays->total_tax),
+            tax_names: $this->getAppliedTaxNames($organizerId, $accountId),
+            comparison_days: self::ALL_TIME_COMPARISON_DAYS,
         );
+    }
+
+    private function sumDailyStatistics(
+        int    $organizerId,
+        int    $accountId,
+        string $currencyCode,
+        Carbon $from,
+        Carbon $to,
+    ): object
+    {
+        $query = <<<SQL
+        SELECT
+            COALESCE(SUM(eds.products_sold), 0) AS products_sold,
+            COALESCE(SUM(eds.attendees_registered), 0) AS attendees_registered,
+            COALESCE(SUM(eds.orders_created), 0) AS orders_created,
+            COALESCE(SUM(eds.sales_total_gross), 0) AS sales_total_gross,
+            COALESCE(SUM(eds.total_tax), 0) AS total_tax
+        FROM event_daily_statistics eds
+        JOIN events e ON e.id = eds.event_id
+        WHERE e.organizer_id = :organizerId
+          AND e.account_id = :accountId
+          AND e.currency = :currencyCode
+          AND eds.deleted_at IS NULL
+          AND eds.date >= :from
+          AND eds.date <= :to;
+    SQL;
+
+        return $this->db->selectOne($query, [
+            'organizerId' => $organizerId,
+            'accountId' => $accountId,
+            'currencyCode' => $currencyCode,
+            'from' => $from->toDateString(),
+            'to' => $to->toDateString(),
+        ]);
     }
 
     private function getOrganizerStatsForPeriod(
@@ -168,6 +221,34 @@ class OrganizerRepository extends BaseRepository implements OrganizerRepositoryI
             previous_total_orders: (int)($result->previous_orders_created ?? 0),
             previous_total_gross_sales: (float)($result->previous_sales_total_gross ?? 0),
             previous_total_tax: (float)($result->previous_total_tax ?? 0),
+            tax_names: $this->getAppliedTaxNames($organizerId, $accountId),
+            comparison_days: $periodDays,
+        );
+    }
+
+    private function getAppliedTaxNames(int $organizerId, int $accountId): array
+    {
+        $query = <<<SQL
+        SELECT DISTINCT tf.name
+        FROM taxes_and_fees tf
+        JOIN product_taxes_and_fees ptf ON ptf.tax_and_fee_id = tf.id
+        JOIN products p ON p.id = ptf.product_id
+        JOIN events e ON e.id = p.event_id
+        WHERE e.organizer_id = :organizerId
+          AND e.account_id = :accountId
+          AND tf.type = 'TAX'
+          AND tf.deleted_at IS NULL
+          AND p.deleted_at IS NULL
+          AND e.deleted_at IS NULL
+        ORDER BY tf.name;
+SQL;
+
+        return array_map(
+            static fn($tax) => $tax->name,
+            $this->db->select($query, [
+                'organizerId' => $organizerId,
+                'accountId' => $accountId,
+            ])
         );
     }
 

@@ -419,6 +419,10 @@ export interface OrganizerStats {
     previous_total_orders?: number | null;
     previous_total_gross_sales?: number | null;
     previous_total_tax?: number | null;
+    // Taxes applied to at least one of the organizer's tickets.
+    tax_names?: string[];
+    // How far back previous_* goes: the period before, or 30 days for all-time totals.
+    comparison_days?: number | null;
 }
 
 export type OrganizerAchievementKey =
