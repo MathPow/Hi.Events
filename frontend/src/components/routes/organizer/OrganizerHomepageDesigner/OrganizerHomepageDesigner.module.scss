@@ -480,44 +480,37 @@ $shadow: 0 10px 16px rgb(55 39 33 / 0.08);
   font-size: 0.8125rem;
 }
 
-// Couleur d'accent: 8 choix + code perso
-.swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+// Couleur d'accent: le selecteur de couleur (sans couleurs proposees), puis son code.
+.picker {
+  margin-bottom: 1.25rem;
+
+  &[data-disabled] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 }
 
-.swatch {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0;
-  border: none;
+.pickerSaturation {
+  height: 10rem;
+  margin-inline: 0 !important;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.pickerSlider {
+  border-radius: 999px;
+}
+
+// La couleur choisie, au debut du champ du code.
+.codeInput {
+  padding-inline-start: 3.25rem !important;
+}
+
+.codeSwatch {
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
-  cursor: pointer;
-  transition: scale 0.15s ease;
-
-  &:hover {
-    scale: 1.08;
-  }
-
-  &[data-selected] {
-    box-shadow: inset 0 0 0 3px $ink;
-  }
-
-  &[data-selected][data-dark] {
-    box-shadow: inset 0 0 0 3px $ink, inset 0 0 0 5px var(--dehors-carte);
-  }
-}
-
-.customSwatch {
-  border: 1.5px solid $ink;
-  background: transparent;
-
-  &[data-selected] {
-    border: none;
-  }
+  box-shadow: inset 0 0 0 1.5px rgb(53 41 36 / 0.2);
 }
 
 // Reseaux sociaux et FAQ: rangees qu'on reordonne par glisser-deposer
