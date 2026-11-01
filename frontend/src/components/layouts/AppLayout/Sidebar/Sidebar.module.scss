@@ -16,7 +16,6 @@
   color: var(--dehors-creme);
   box-shadow: 0 10px 16px rgb(55 39 33 / 0.08);
   overflow: hidden;
-  transition: width 0.25s nav.$ease;
 
   // Phones get the tab bar and the menu card instead (see MobileNav).
   @include mixins.respond-below(md) {
@@ -32,19 +31,28 @@
 }
 
 .brand {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  // The wordmark's height, open or folded: nothing below moves.
+  min-height: 2.5rem;
   padding-left: 0.5rem;
 
   .collapsed & {
-    justify-content: center;
     padding-left: 0;
+  }
+
+  :global([data-nav-animating]) & {
+    transition: padding nav.$fold-duration nav.$fold-ease;
   }
 }
 
+// Laid over the bar's left side, so the button can slide from the right edge to the middle.
 .wordmark {
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  translate: 0 -50%;
   display: flex;
   flex-direction: column;
   font-family: FatFrank, 'Arial Black', sans-serif;
@@ -56,14 +64,17 @@
   text-decoration: none;
   border-radius: 0.5rem;
   @include nav.focus-ring;
+  @include nav.fold-fade('.collapsed &');
 }
 
+// At the right edge open, in the middle folded (margins in % of the bar follow its width).
 .collapseButton {
   display: grid;
   place-items: center;
   flex-shrink: 0;
   width: 2.125rem;
   height: 2.125rem;
+  margin-left: calc(100% - 2.125rem);
   border-radius: 0.625rem;
   background: nav.$creme-10;
   transition: background-color 0.2s ease;
@@ -73,12 +84,20 @@
     background: rgb(255 247 233 / 0.16);
   }
 
-  img {
-    transition: transform 0.25s nav.$ease;
+  .collapsed & {
+    margin-left: calc(50% - 1.0625rem);
+  }
+
+  :global([data-nav-animating]) & {
+    transition: background-color 0.2s ease, margin-left nav.$fold-duration nav.$fold-ease;
   }
 
   .collapsed & img {
     transform: scaleX(-1);
+  }
+
+  :global([data-nav-animating]) & img {
+    transition: transform nav.$fold-duration nav.$fold-ease;
   }
 }
 
@@ -98,6 +117,15 @@
   &:hover {
     scrollbar-color: rgb(255 247 233 / 0.2) transparent;
   }
+
+  // Folded, the icons scroll without a bar: it would take its width from the 56 px of the links.
+  .collapsed & {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 
 .group {
@@ -106,48 +134,107 @@
   gap: 2px;
 }
 
+// Folded, the headings close up and the icons below slide up to them.
 .groupHeading {
   @include nav.group-heading;
-  padding: 0 0 0.375rem 0.75rem;
+  display: grid;
+  grid-template-rows: 1fr;
+  padding-left: 0.75rem;
   color: var(--dehors-creme);
+  white-space: nowrap;
+  @include nav.fold-fade('.collapsed &');
+
+  > span {
+    min-height: 0;
+    padding-bottom: 0.375rem;
+    overflow: hidden;
+  }
+
+  .collapsed & {
+    grid-template-rows: 0fr;
+  }
+
+  :global([data-nav-animating]) & {
+    transition: opacity nav.$fold-fade-in ease nav.$fold-fade-in-delay, visibility 0s,
+    grid-template-rows nav.$fold-duration nav.$fold-ease;
+  }
+
+  :global([data-nav-animating]) .collapsed & {
+    transition: opacity nav.$fold-fade-out ease, visibility 0s nav.$fold-fade-out,
+    grid-template-rows nav.$fold-duration nav.$fold-ease;
+  }
 }
 
 .link {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
   width: 100%;
   min-height: 2.75rem;
+  // Two- or three-line labels (open), one icon row (folded): the height eases between the two.
+  max-height: 5rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 0.875rem;
+  overflow: hidden;
   color: var(--dehors-creme);
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.2;
   text-align: left;
   text-decoration: none;
-  transition: background-color 0.2s ease;
-  @include nav.focus-ring;
+
+  // The background (and focus ring) follows the sidebar's width, even while the link keeps its open
+  // width as the sidebar moves.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    // Never wider than the link either (a scroll bar can take some of the nav's width).
+    width: min(100%, calc(var(--sidebar-width) - 2rem));
+    border-radius: 0.875rem;
+    transition: background-color 0.2s ease;
+  }
 
   &:hover {
-    background: nav.$creme-06;
     color: var(--dehors-creme);
   }
 
+  &:hover::before {
+    background: nav.$creme-06;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::before {
+    box-shadow: inset 0 0 0 2px var(--dehors-orange);
+  }
+
+  // Folded, the icon stays where it is (20 px icon, centred in 56 px); the label keeps its width.
   .collapsed & {
-    justify-content: center;
-    height: 2.75rem;
-    padding: 0;
+    max-height: 2.75rem;
+    padding: 0.5rem 0.375rem 0.5rem 1.125rem;
+  }
+
+  // While the sidebar moves, the link keeps its open width: the labels don't rewrap at each step.
+  :global([data-nav-animating]) & {
+    width: calc(16rem - 2rem);
+    transition: padding nav.$fold-duration nav.$fold-ease, max-height nav.$fold-duration nav.$fold-ease;
   }
 }
 
-.linkActive,
-.linkActive:hover {
+.linkActive::before,
+.linkActive:hover::before {
   background: nav.$brun-actif;
 }
 
-.loading {
+.loading::before {
   background: nav.$creme-08;
   animation: pulse 1.5s infinite;
 }
@@ -164,11 +251,29 @@
   }
 }
 
+// The dot on the icon is for the folded sidebar only.
+.iconDot {
+  @include nav.fold-fade('&:not(.collapsed *)');
+}
+
 // Long event labels wrap on two lines rather than being cut.
 .label {
   flex: 1 1 0;
   min-width: 0;
   overflow-wrap: break-word;
+  @include nav.fold-fade('.collapsed &');
+}
+
+.marker {
+  display: flex;
+  flex-shrink: 0;
+  margin-left: auto;
+
+  &:empty {
+    display: none;
+  }
+
+  @include nav.fold-fade('.collapsed &');
 }
 
 .badge {
@@ -205,8 +310,36 @@
   flex-shrink: 0;
 }
 
+// Folded, the callout closes up like the headings.
 .footer {
-  margin-bottom: 0.5rem;
+  display: grid;
+  grid-template-rows: 1fr;
+  @include nav.fold-fade('.collapsed &');
+
+  .collapsed & {
+    grid-template-rows: 0fr;
+  }
+
+  :global([data-nav-animating]) & {
+    transition: opacity nav.$fold-fade-in ease nav.$fold-fade-in-delay, visibility 0s,
+    grid-template-rows nav.$fold-duration nav.$fold-ease;
+  }
+
+  :global([data-nav-animating]) .collapsed & {
+    transition: opacity nav.$fold-fade-out ease, visibility 0s nav.$fold-fade-out,
+    grid-template-rows nav.$fold-duration nav.$fold-ease;
+  }
+}
+
+.footerInner {
+  min-height: 0;
+  // The callout keeps its open width while the sidebar folds over it.
+  min-width: calc(16rem - 2rem);
+  overflow: hidden;
+
+  > * {
+    margin-bottom: 0.5rem;
+  }
 }
 
 @keyframes pulse {

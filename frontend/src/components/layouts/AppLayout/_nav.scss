@@ -8,6 +8,31 @@ $creme-55: rgb(255 247 233 / 0.55);
 $badge-pale: #f7dccd;
 $ease: cubic-bezier(0.4, 0, 0.2, 1);
 
+// Opening and folding the sidebar (data-nav-animating on the layout while it moves).
+$fold-duration: 0.32s;
+$fold-ease: cubic-bezier(0.32, 0.72, 0, 1);
+// Texts leave quickly when it folds, and come back once there is room when it opens.
+$fold-fade-out: 0.12s;
+$fold-fade-in: 0.2s;
+$fold-fade-in-delay: 0.14s;
+
+// A part of the sidebar that only shows open (labels, headings, card texts): hidden folded, without
+// leaving the layout. Fades only while the sidebar moves. $folded is the selector of the folded state.
+@mixin fold-fade($folded) {
+  #{$folded} {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  :global([data-nav-animating]) & {
+    transition: opacity $fold-fade-in ease $fold-fade-in-delay, visibility 0s;
+  }
+
+  :global([data-nav-animating]) #{$folded} {
+    transition: opacity $fold-fade-out ease, visibility 0s $fold-fade-out;
+  }
+}
+
 @mixin group-heading {
   font-size: 0.75rem;
   font-weight: 700;

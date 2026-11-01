@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Outlet, useLocation} from "react-router";
 import {t} from "@lingui/macro";
 import {Helmet} from "react-helmet-async";
@@ -31,6 +31,8 @@ interface AppLayoutProps {
 }
 
 const COLLAPSED_STORAGE_KEY = 'dehors-nav-collapsed';
+// A bit longer than the sidebar's folding (Sidebar.module.scss, nav.$fold-duration).
+const FOLD_ANIMATION_MS = 400;
 
 // The sidebar entry for the current page, so the breadcrumbs can end with where the user is.
 const findCurrentNavItem = (navItems: NavItem[], pathname: string): NavItem | undefined => {
@@ -66,6 +68,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         ? [...breadcrumbItems, {content: detail ? `${currentPageName} / ${detail}` : currentPageName}]
         : breadcrumbItems;
     const [collapsed, setCollapsed] = useState(false);
+    // Only a click animates the sidebar: the choice read at load applies at once.
+    const [navAnimating, setNavAnimating] = useState(false);
+    const navAnimationTimer = useRef<number | undefined>(undefined);
     const [topBarShadow, setTopBarShadow] = useState<boolean>(false);
 
     const helpItem: NavItem = {
@@ -84,7 +89,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         }
     }, []);
 
+    useEffect(() => () => window.clearTimeout(navAnimationTimer.current), []);
+
     const toggleCollapsed = () => {
+        if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            setNavAnimating(true);
+            window.clearTimeout(navAnimationTimer.current);
+            navAnimationTimer.current = window.setTimeout(() => setNavAnimating(false), FOLD_ANIMATION_MS);
+        }
         setCollapsed((current) => {
             try {
                 localStorage.setItem(COLLAPSED_STORAGE_KEY, current ? '0' : '1');
@@ -121,7 +133,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                  className={classNames(classes.container, {
                      [classes.collapsed]: collapsed,
                      [classes.withPrimaryAction]: !!mobilePrimaryAction,
-                 })}>
+                 })}
+                 data-nav-animating={navAnimating || undefined}>
                 <PageStatusProvider render={(status) => (
                     <Topbar
                         topBarShadow={topBarShadow}

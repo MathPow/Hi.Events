@@ -1,4 +1,14 @@
 @use "../../../styles/mixins";
+@use "nav";
+
+// Registered so it can be animated: the sidebar, the page's column and the nav backgrounds all
+// follow it as the sidebar opens or folds.
+@property --sidebar-width {
+  syntax: '<length>';
+  inherits: true;
+  // Must not depend on the font size (no rem), or the browser ignores the rule.
+  initial-value: 256px;
+}
 
 .container {
   --sidebar-width: 16rem;
@@ -17,7 +27,10 @@
       "sidebar topbar"
       "sidebar main";
     grid-template-columns: calc(var(--sidebar-width) + 1.5rem) minmax(0, 1fr);
-    transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &[data-nav-animating] {
+    transition: --sidebar-width nav.$fold-duration nav.$fold-ease;
   }
 
   &.collapsed {

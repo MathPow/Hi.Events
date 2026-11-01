@@ -40,15 +40,12 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
     const body = (
         <>
             <span className={classes.contextAvatar}>{context.initial}</span>
-            {variant !== 'collapsed' && (
-                <span className={classes.cardText}>
-                    <span className={classes.cardTitle}>{context.title}</span>
-                    {subtitle && <span className={classes.cardSubtitle}>{subtitle}</span>}
-                </span>
-            )}
-            {context.menu && variant !== 'collapsed' && (
-                <img src={adminIcon('changer')} alt="" className={classes.cardTrailing}/>
-            )}
+            {/* Folded, the texts stay (hidden) so the sidebar can open and fold smoothly. */}
+            <span className={classes.cardText}>
+                <span className={classes.cardTitle}>{context.title}</span>
+                {subtitle && <span className={classes.cardSubtitle}>{subtitle}</span>}
+            </span>
+            {context.menu && <img src={adminIcon('changer')} alt="" className={classes.cardTrailing}/>}
         </>
     );
 
@@ -84,12 +81,10 @@ export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, on
     const identity = (
         <>
             <span className={classes.accountAvatar}>{initials}</span>
-            {variant !== 'collapsed' && (
-                <span className={classes.cardText}>
-                    <span className={classes.cardTitle}>{name}</span>
-                    <span className={classes.cardSubtitle}>{t`My Profile`}</span>
-                </span>
-            )}
+            <span className={classes.cardText}>
+                <span className={classes.cardTitle}>{name}</span>
+                <span className={classes.cardSubtitle}>{t`My Profile`}</span>
+            </span>
         </>
     );
 
@@ -116,9 +111,7 @@ export const AccountCard = ({variant, onNavigate}: { variant: NavPartVariant, on
                     <UnstyledButton className={classNames(classes.card, classes.accountCard, classes[variant])}
                                     aria-label={t`Account`} title={variant === 'collapsed' ? name : undefined}>
                         {identity}
-                        {variant !== 'collapsed' && (
-                            <img src={adminIcon('plus')} alt="" className={classes.cardTrailing}/>
-                        )}
+                        <img src={adminIcon('plus')} alt="" className={classes.cardTrailing}/>
                     </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>

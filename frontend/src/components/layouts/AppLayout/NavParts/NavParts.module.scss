@@ -18,12 +18,17 @@
   text-align: left;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
   transition: background-color 0.2s ease;
   @include nav.focus-ring;
 
+  // Folded, the avatar stays where it is (40 px in 56 px) and the card narrows around it.
   &.collapsed {
-    justify-content: center;
     padding: 0.5rem;
+  }
+
+  :global([data-nav-animating]) & {
+    transition: background-color 0.2s ease, padding nav.$fold-duration nav.$fold-ease;
   }
 }
 
@@ -84,6 +89,7 @@
   gap: 1px;
   min-width: 0;
   line-height: normal;
+  @include nav.fold-fade('.collapsed &');
 }
 
 .cardTitle {
@@ -107,6 +113,7 @@
 
 .cardTrailing {
   flex-shrink: 0;
+  @include nav.fold-fade('.collapsed &');
 }
 
 .cardLink {

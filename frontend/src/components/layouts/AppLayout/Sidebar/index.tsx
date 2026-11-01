@@ -40,7 +40,7 @@ const Marker = ({item, collapsed}: { item: NavItem, collapsed: boolean }) => {
 
     // Folded, only what still needs doing stays visible, as a dot on the icon.
     if (collapsed) {
-        return item.attention ? <span className={classes.dot} aria-hidden/> : null;
+        return item.attention ? <span className={classNames(classes.dot, classes.iconDot)} aria-hidden/> : null;
     }
 
     if (hasBadge) {
@@ -67,14 +67,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             return <span key={item.label} className={classNames(classes.link, classes.loading)}/>;
         }
 
+        // Everything stays in place both ways, the styles show what fits: the sidebar can then
+        // open and fold smoothly.
         const content = (
             <>
                 <span className={classes.iconSlot}>
                     <NavIcon item={item}/>
-                    {collapsed && <Marker item={item} collapsed/>}
+                    <Marker item={item} collapsed/>
                 </span>
-                {!collapsed && <span className={classes.label}>{item.label}</span>}
-                {!collapsed && <Marker item={item} collapsed={false}/>}
+                <span className={classes.label}>{item.label}</span>
+                <span className={classes.marker}><Marker item={item} collapsed={false}/></span>
             </>
         );
 
@@ -120,12 +122,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <aside className={classNames(classes.sidebar, {[classes.collapsed]: collapsed})}>
             <div className={classes.top}>
                 <div className={classes.brand}>
-                    {!collapsed && (
-                        <NavLink to="/manage/events" className={classes.wordmark}>
-                            <span>{'Billetterie'}</span>
-                            <span>{'Dehors'}</span>
-                        </NavLink>
-                    )}
+                    <NavLink to="/manage/events" className={classes.wordmark} tabIndex={collapsed ? -1 : undefined}
+                             aria-hidden={collapsed || undefined}>
+                        <span>{'Billetterie'}</span>
+                        <span>{'Dehors'}</span>
+                    </NavLink>
                     <UnstyledButton
                         className={classes.collapseButton}
                         onClick={onToggleCollapsed}
@@ -143,14 +144,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className={classes.nav}>
                 {groupItems(navItems).map((group, index) => (
                     <div key={group.heading ?? index} className={classes.group}>
-                        {group.heading && !collapsed && <div className={classes.groupHeading}>{group.heading}</div>}
+                        {group.heading && (
+                            <div className={classes.groupHeading} aria-hidden={collapsed || undefined}>
+                                <span>{group.heading}</span>
+                            </div>
+                        )}
                         {group.items.map(renderItem)}
                     </div>
                 ))}
             </nav>
 
             <div className={classes.bottom}>
-                {sidebarFooter && !collapsed && <div className={classes.footer}>{sidebarFooter}</div>}
+                {sidebarFooter && (
+                    <div className={classes.footer}>
+                        <div className={classes.footerInner}>{sidebarFooter}</div>
+                    </div>
+                )}
                 {bottomItems.map(renderItem)}
                 <AccountCard variant={collapsed ? 'collapsed' : 'sidebar'}/>
             </div>
