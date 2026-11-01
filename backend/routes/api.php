@@ -32,6 +32,7 @@ use HiEvents\Http\Actions\Auth\GetRegistrationInviteAction;
 use HiEvents\Http\Actions\Auth\GetUserInvitationAction;
 use HiEvents\Http\Actions\Auth\LoginAction;
 use HiEvents\Http\Actions\Auth\LogoutAction;
+use HiEvents\Http\Actions\Auth\SwitchAccountAction;
 use HiEvents\Http\Actions\Auth\RefreshTokenAction;
 use HiEvents\Http\Actions\Auth\ResetPasswordAction;
 use HiEvents\Http\Actions\Auth\ValidateResetPasswordTokenAction;
@@ -217,6 +218,7 @@ use HiEvents\Http\Actions\Users\ConfirmEmailWithCodeAction;
 use HiEvents\Http\Actions\Users\CreateUserAction;
 use HiEvents\Http\Actions\Users\DeleteInvitationAction;
 use HiEvents\Http\Actions\Users\GetMeAction;
+use HiEvents\Http\Actions\Users\GetMyAccountsAction;
 use HiEvents\Http\Actions\Users\GetUserAction;
 use HiEvents\Http\Actions\Users\GetUsersAction;
 use HiEvents\Http\Actions\Users\ResendEmailConfirmationAction;
@@ -305,6 +307,7 @@ $router->middleware(['auth:api'])->group(
     function (Router $router): void {
         // Auth
         $router->get('/auth/logout', LogoutAction::class);
+        $router->post('/auth/switch-account', SwitchAccountAction::class);
         $router->post('/auth/refresh', RefreshTokenAction::class);
 
         // Users
@@ -315,6 +318,7 @@ $router->middleware(['auth:api'])->group(
         $router->delete('/api-tokens/{token_id}', DeleteApiTokenAction::class);
 
         $router->get('/users/me', GetMeAction::class);
+        $router->get('/users/me/accounts', GetMyAccountsAction::class);
         $router->put('/users/me', UpdateMeAction::class);
         $router->post('/users', CreateUserAction::class);
         $router->get('/users', GetUsersAction::class);

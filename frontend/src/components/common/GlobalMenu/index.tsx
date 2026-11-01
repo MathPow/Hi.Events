@@ -3,7 +3,6 @@ import {getInitials} from "../../../utilites/helpers.ts";
 import {
     IconLifebuoy,
     IconLogout,
-    IconPlus,
     IconSettingsCog,
     IconShield,
     IconUser,
@@ -18,7 +17,6 @@ import {authClient} from "../../../api/auth.client.ts";
 import {useDisclosure} from "@mantine/hooks";
 import {AboutModal} from "../../modals/AboutModal";
 import {getConfig} from "../../../utilites/config.ts";
-import {CreateOrganizerModal} from "../../modals/CreateOrganizerModal";
 import {useStopImpersonating} from "../ImpersonationBanner/useStopImpersonating";
 
 export interface AccountMenuLink {
@@ -42,10 +40,6 @@ export const useAccountMenu = () => {
     const {organizerId} = useParams();
     const impersonation = useStopImpersonating();
     const [aboutModalOpen, {open: openAboutModal, close: closeAboutModal}] = useDisclosure(false);
-    const [createOrganizerModalOpen, {
-        open: openCreateOrganizerModal,
-        close: closeCreateOrganizerModal
-    }] = useDisclosure(false);
 
     const links: AccountMenuLink[] = [];
 
@@ -98,15 +92,8 @@ export const useAccountMenu = () => {
         });
     }
 
-    links.push({
-        label: t`Create Organizer`,
-        icon: IconPlus,
-        onClick: (event: any) => {
-            event.preventDefault();
-            openCreateOrganizerModal();
-        }
-    });
-
+    // Another organizer is created from the organizer switcher (top of the sidebar), where it reads
+    // as what it is: another public page of the same organization.
     links.push({
         label: t`Logout`,
         icon: IconLogout,
@@ -119,7 +106,6 @@ export const useAccountMenu = () => {
     const modals = (
         <>
             {aboutModalOpen && <AboutModal onClose={closeAboutModal}/>}
-            {createOrganizerModalOpen && <CreateOrganizerModal onClose={closeCreateOrganizerModal}/>}
         </>
     );
 

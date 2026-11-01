@@ -1,5 +1,4 @@
 import {
-    IconArrowsHorizontal,
     IconChevronRight,
     IconExternalLink,
     IconEyeOff,
@@ -39,6 +38,7 @@ import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 import { notifications } from "@mantine/notifications";
 import { useGetOrganizerUnreadMessagesCount } from "../../../queries/useGetOrganizerMessages.ts";
 import { rememberLastOrganizer } from "../../../utilites/lastOrganizer.ts";
+import { OrganizerSwitcherMenu } from "./OrganizerSwitcherMenu.tsx";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -251,15 +251,12 @@ const OrganizerLayout = () => {
         mobileSubtitle: hasSeveralOrganizers ? t`Switch Organizer` : t`Organizer`,
         menu: organizer && (
             <>
-                {hasSeveralOrganizers ? (
-                    <Menu.Item leftSection={<IconArrowsHorizontal size={16} />} onClick={openSwitchModal}>
-                        {t`Switch Organizer`}
-                    </Menu.Item>
-                ) : (
-                    <Menu.Item leftSection={<IconPlus size={16} />} onClick={() => setShowCreateOrganizerModal(true)}>
-                        {t`Create Organizer`}
-                    </Menu.Item>
-                )}
+                <OrganizerSwitcherMenu
+                    organizerId={organizerId as string}
+                    organizers={organizers ?? []}
+                    onCreateOrganizer={() => setShowCreateOrganizerModal(true)}
+                    onShowArchived={openSwitchModal}
+                />
                 <Menu.Divider />
                 <Menu.Item component="a" href={publicPageUrl} target="_blank" rel="noopener"
                            leftSection={<IconExternalLink size={16} />}>

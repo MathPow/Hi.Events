@@ -8,12 +8,28 @@ import {
 } from "../types.ts";
 import {api} from './client.ts';
 
+// An account the signed-in person belongs to (the organizer switcher lists the others).
+export interface UserAccount {
+    id: number;
+    name: string;
+    is_current: boolean;
+}
+
 export interface RegistrationInviteDetails {
     email: string | null;
     expires_at: string | null;
 }
 
 export const authClient = {
+    myAccounts: async () => {
+        const response = await api.get<{ data: UserAccount[] }>('users/me/accounts');
+        return response.data.data;
+    },
+    // A new session for another account the person belongs to, without signing in again.
+    switchAccount: async (accountId: number) => {
+        const response = await api.post<{ token: string }>('auth/switch-account', {account_id: accountId});
+        return response.data;
+    },
     refreshAccessTokenFn: async () => {
         const response = await api.get<LoginResponse>('auth/refresh');
         return response.data;
