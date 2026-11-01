@@ -1,7 +1,7 @@
 import {KeyboardEvent, useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {useLocation} from "react-router";
-import {IconArrowUp, IconMaximize, IconMinimize, IconPlayerStopFilled, IconRefresh, IconX} from "@tabler/icons-react";
+import {IconArrowUp, IconPlayerStopFilled, IconRefresh, IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {Answer, useAnswerLink} from "./Answer.tsx";
@@ -12,25 +12,9 @@ import classes from "./Assistant.module.scss";
  * The organizer assistant, like the one in the DEHORS console: a chat with
  * Claude, at the bottom right of every back-office page, that reads the
  * ticketing API and proposes changes. Each change shows up as a card to
- * approve and goes out only on a click. The panel can go full screen; the
- * conversation lasts as long as the tab. Conversation in useAssistantConversation.ts,
+ * approve and goes out only on a click. The conversation lasts as long as the tab. Conversation in useAssistantConversation.ts,
  * calls and tools in assistant.ts, backend in AssistantTurnAction.
  */
-
-const readLocal = (key: string) => {
-    try {
-        return localStorage.getItem(key);
-    } catch {
-        return null;
-    }
-};
-const writeLocal = (key: string, value: string) => {
-    try {
-        localStorage.setItem(key, value);
-    } catch {
-        // localStorage unavailable
-    }
-};
 
 // Mounted once for every back-office page, in the browser only (see router.tsx).
 const Assistant = () => {
@@ -43,7 +27,6 @@ export default Assistant;
 
 const AssistantPanel = ({userId}: { userId: string }) => {
     const [open, setOpen] = useState(false);
-    const [full, setFull] = useState(() => readLocal("dehors-assistant-full") === "1");
     const [input, setInput] = useState("");
     const thread = useRef<HTMLDivElement>(null);
     const field = useRef<HTMLTextAreaElement>(null);
@@ -77,7 +60,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
         if (open) {
             field.current?.focus();
         }
-    }, [open, full]);
+    }, [open]);
 
     // The input grows with the text.
     useEffect(() => {
@@ -88,11 +71,6 @@ const AssistantPanel = ({userId}: { userId: string }) => {
         el.style.height = "auto";
         el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
     }, [input]);
-
-    const toggleFull = () => {
-        setFull(!full);
-        writeLocal("dehors-assistant-full", full ? "0" : "1");
-    };
 
     const newConversation = () => {
         reset();
@@ -118,7 +96,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
     const withTabBar = /^\/(manage\/(event|organizer)|admin)(\/|$)/.test(pathname);
 
     const panel = open && (
-        <div className={classes.panel} data-full={full} role="dialog" aria-label={t`Assistant`} onKeyDown={onKeyDown}>
+        <div className={classes.panel} role="dialog" aria-label={t`Assistant`} onKeyDown={onKeyDown}>
             <div className={classes.header}>
                 <strong className={classes.title}>{t`Assistant`}</strong>
                 {status && status.remaining <= 20 && (
@@ -130,10 +108,6 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                         <IconRefresh size={18}/>
                     </button>
                 )}
-                <button type="button" className={`${classes.iconButton} ${classes.fullToggle}`} onClick={toggleFull}
-                        title={full ? t`Reduce` : t`Full screen`} aria-label={full ? t`Reduce` : t`Full screen`}>
-                    {full ? <IconMinimize size={18}/> : <IconMaximize size={18}/>}
-                </button>
                 <button type="button" className={classes.iconButton} onClick={() => setOpen(false)}
                         title={t`Close`} aria-label={t`Close`}>
                     <IconX size={18}/>
