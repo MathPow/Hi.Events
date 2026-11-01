@@ -1,7 +1,7 @@
 import {t} from "@lingui/macro";
 
-// The sections of « Paramètres », by their address (/manage/organizer/1/settings/payments). They are
-// opened from the account menu (the profile button at the bottom of the sidebar).
+// The tabs of « Paramètres », by their address (/manage/organizer/1/settings/payments). They are also
+// listed in the account menu (the profile button at the bottom of the sidebar).
 export const SETTINGS_TABS = ['organization', 'payments', 'taxes', 'emails', 'team'] as const;
 export type SettingsTab = typeof SETTINGS_TABS[number];
 
