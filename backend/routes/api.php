@@ -85,6 +85,8 @@ use HiEvents\Http\Actions\EmailTemplates\PreviewOrganizerEmailTemplateAction;
 use HiEvents\Http\Actions\EmailTemplates\PreviewEventEmailTemplateAction;
 use HiEvents\Http\Actions\EmailTemplates\GetAvailableTokensAction;
 use HiEvents\Http\Actions\EmailTemplates\GetDefaultEmailTemplateAction;
+use HiEvents\Http\Actions\EmailTemplates\GetOrganizerSampleEmailAction;
+use HiEvents\Http\Actions\EmailTemplates\SendOrganizerTestEmailAction;
 use HiEvents\Http\Actions\EventSettings\PartialEditEventSettingsAction;
 use HiEvents\Http\Actions\Images\CreateImageAction;
 use HiEvents\Http\Actions\Images\DeleteImageAction;
@@ -391,6 +393,8 @@ $router->middleware(['auth:api'])->group(
         $router->put('/organizers/{organizerId}/email-templates/{templateId}', UpdateOrganizerEmailTemplateAction::class);
         $router->delete('/organizers/{organizerId}/email-templates/{templateId}', DeleteOrganizerEmailTemplateAction::class);
         $router->post('/organizers/{organizerId}/email-templates/preview', PreviewOrganizerEmailTemplateAction::class);
+        $router->get('/organizers/{organizerId}/email-templates/{templateType}/sample', GetOrganizerSampleEmailAction::class);
+        $router->post('/organizers/{organizerId}/email-templates/{templateType}/test', SendOrganizerTestEmailAction::class)->middleware('throttle:10,10');
         $router->get('/email-templates/tokens/{templateType}', GetAvailableTokensAction::class);
 
         // Taxes and Fees

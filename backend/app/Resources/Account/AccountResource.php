@@ -43,6 +43,11 @@ class AccountResource extends JsonResource
             'requires_manual_verification' => config('app.saas_mode_enabled') && !$this->getIsManuallyVerified(),
             'platform_payments_allowed' => $this->getPlatformPaymentsAllowed(),
             'donation_receipts_allowed' => $this->getDonationReceiptsAllowed(),
+            // What Stripe takes on each card payment, for the fee examples of Settings → Payments.
+            'stripe_processing_fees' => [
+                'percentage' => (float)config('services.stripe.processing_fee_percentage', 0),
+                'fixed' => (float)config('services.stripe.processing_fee_fixed', 0),
+            ],
         ];
     }
 }
