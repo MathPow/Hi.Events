@@ -19,6 +19,8 @@ export interface AchievementDefinition {
     // Figma « Admin · Succès »: the solid background of its card, and the disc of the badge
     background: string;
     badge: string;
+    // The card of the Succès page when it is a dark colour (cream text); else `background`.
+    card?: string;
     title: string;
     description: string;
 }
@@ -37,6 +39,15 @@ const COLORS = {
     terracotta: {background: '#d98c7a', badge: '#a24e3b'},
     periwinkle: {background: '#a7b8f4', badge: '#5a6fc2'},
     sand: {background: '#e3c08f', badge: '#a9803e'},
+};
+
+// The dark cards of the collection (Figma « Admin · Succès »: pale and dark colours, all around
+// the wheel); their badge and the other places keep the pale colour.
+const DARK = {
+    blue: '#2f5d7c',
+    pink: '#b5546f',
+    green: '#3e7f6e',
+    purple: '#5b4a8a',
 };
 
 // « Club des 100 » to « Club des 69420 »: the same measure, a bigger crowd each time.
@@ -61,7 +72,7 @@ export const achievementDefinition = (key: OrganizerAchievementKey): Achievement
             };
         case 'first_merchandise_sale':
             return {
-                icon: IconBottle, ...COLORS.teal,
+                icon: IconBottle, ...COLORS.teal, card: DARK.green,
                 title: t`Aid Station`,
                 description: t`Sell an item other than a ticket.`,
             };
@@ -70,11 +81,11 @@ export const achievementDefinition = (key: OrganizerAchievementKey): Achievement
         case 'attendees_250':
             return club('250', COLORS.orange);
         case 'attendees_500':
-            return club('500', COLORS.pink);
+            return {...club('500', COLORS.pink), card: DARK.pink};
         case 'attendees_1000':
             return club('1000', COLORS.purple);
         case 'attendees_5000':
-            return club('5000', COLORS.blue);
+            return {...club('5000', COLORS.blue), card: DARK.blue};
         case 'attendees_69420':
             return club('69420', COLORS.terracotta);
         case 'returning_attendees':
@@ -91,7 +102,7 @@ export const achievementDefinition = (key: OrganizerAchievementKey): Achievement
             };
         case 'promo_code_uses':
             return {
-                icon: IconKey, ...COLORS.purple,
+                icon: IconKey, ...COLORS.purple, card: DARK.purple,
                 title: t`Secret Code`,
                 description: t`Have your participants use 10 promo codes.`,
             };

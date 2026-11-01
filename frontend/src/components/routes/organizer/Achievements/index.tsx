@@ -1,8 +1,9 @@
+import {CSSProperties} from "react";
 import {t} from "@lingui/macro";
 import {Skeleton} from "@mantine/core";
+import {IconCheck, IconLock} from "@tabler/icons-react";
 import {useParams} from "react-router";
 import dayjs from "dayjs";
-import {AchievementBadge, achievementColors} from "../../../common/OrganizerAchievements";
 import {
     achievementDefinition,
     nextAchievement,
@@ -33,48 +34,70 @@ const ProgressBar = ({value, label, className}: { value: number, label: string, 
     </div>
 );
 
-const AchievementCard = ({achievement, timezone}: {
+// Cards barely crooked (between -0.8° and +0.8°), always the same for the same place: only the
+// look turns, each card keeps its place in the grid.
+const TILTS = [0.8, -0.6, 0.5, -0.7, 0.6, -0.5, 0.7, -0.8, 0.4, -0.6, 0.3, -0.4, 0.6];
+
+/**
+ * Figma « Admin · Succès »: one card per achievement, like a collection. Earned, a solid colour
+ * with its badge (a placeholder until Jules draws them), « Obtenu le … » at the top; not yet, a
+ * dashed outline with an orange padlock and the progress.
+ */
+const AchievementCard = ({achievement, timezone, index}: {
     achievement: OrganizerAchievementProgress,
     timezone: string,
+    index: number,
 }) => {
     const definition = achievementDefinition(achievement.key);
     const label = progressLabel(achievement);
     const earned = !!achievement.earned_at;
+    const Icon = definition.icon;
+    const title = definition.title;
+    const earnedDate = earned ? earnedOn(achievement.earned_at as string, timezone) : '';
+    const style = {
+        '--card-tilt': `${TILTS[index % TILTS.length]}deg`,
+        '--card-color': definition.card ?? definition.background,
+    } as CSSProperties;
 
     return (
-        <article className={classes.card} data-earned={earned} style={achievementColors(definition)}>
-            <div className={classes.cardArt}>
-                <AchievementBadge definition={definition} className={classes.cardBadge}/>
-                {!earned && (
-                    <span className={classes.lock} title={t`${definition.title} (locked)`}>
-                        <img src="/interface/admin/succes/verrou.svg" alt=""/>
+        <article className={classes.card} data-earned={earned || undefined}
+                 data-dark={(earned && !!definition.card) || undefined} style={style}>
+            <span className={classes.status}>
+                {earned ? (
+                    <>
+                        <IconCheck size={14} stroke={2.5}/>
+                        {t`Earned on ${earnedDate}`}
+                    </>
+                ) : (
+                    <>
+                        <IconLock size={14} stroke={2.25}/>
+                        {label ?? t({message: 'Locked', context: 'achievement'})}
+                    </>
+                )}
+            </span>
+
+            <div className={classes.art}>
+                {earned ? (
+                    <span className={classes.badge} aria-hidden>
+                        <span className={classes.badgeInner}>
+                            {Icon && <Icon size={52} stroke={1.5}/>}
+                            {definition.label && (
+                                <span className={classes.badgeLabel} data-length={definition.label.length}>
+                                    {definition.label}
+                                </span>
+                            )}
+                        </span>
+                    </span>
+                ) : (
+                    <span className={classes.lock} title={t`${title} (locked)`}>
+                        <IconLock size={46} stroke={1.5}/>
                     </span>
                 )}
             </div>
-            <div className={classes.cardBody}>
+
+            <div className={classes.text}>
                 <h2 className={classes.cardTitle}>{definition.title}</h2>
                 <p className={classes.cardDescription}>{definition.description}</p>
-                <div className={classes.cardFooter}>
-                    {earned && (
-                        <span className={classes.tag} data-tone="earned">
-                            <span aria-hidden>✓ </span>
-                            {t`Earned on ${earnedOn(achievement.earned_at as string, timezone)}`}
-                        </span>
-                    )}
-                    {!earned && label && (
-                        <>
-                            <ProgressBar
-                                className={classes.cardProgress}
-                                value={achievement.current / achievement.target * 100}
-                                label={label}
-                            />
-                            <span className={classes.cardProgressLabel}>{label}</span>
-                        </>
-                    )}
-                    {!earned && !label && (
-                        <span className={classes.tag}>{t({message: 'Locked', context: 'achievement'})}</span>
-                    )}
-                </div>
             </div>
         </article>
     );
@@ -103,7 +126,7 @@ const Achievements = () => {
                 {header}
                 <Skeleton height={130} radius={32}/>
                 <div className={classes.grid}>
-                    {[...Array(6)].map((_, index) => <Skeleton key={index} height={366} radius={28}/>)}
+                    {[...Array(6)].map((_, index) => <Skeleton key={index} height={464} radius={28}/>)}
                 </div>
             </div>
         );
@@ -142,10 +165,11 @@ const Achievements = () => {
             </section>
 
             <div className={classes.grid}>
-                {achievements.map((achievement) => (
+                {achievements.map((achievement, index) => (
                     <AchievementCard
                         key={achievement.key}
                         achievement={achievement}
+                        index={index}
                         timezone={organizer.timezone ?? 'America/Montreal'}
                     />
                 ))}
