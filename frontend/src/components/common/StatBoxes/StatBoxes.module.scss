@@ -27,6 +27,32 @@
   opacity: 0.6;
 }
 
+// The event's five totals (StatBoxes): one row when wide; otherwise three, then two wider; on
+// phones, the gross sales the full width, then two by two.
+.five .grid {
+  @container (min-width: 1300px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  @container (min-width: 700px) and (max-width: 1299px) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+
+    > * {
+      grid-column: span 2;
+    }
+
+    > :nth-child(n + 4) {
+      grid-column: span 3;
+    }
+  }
+
+  @container (max-width: 699px) {
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
 .tile {
   --tone: #{ui.$track};
   --tone-ink: #{ui.$ink};

@@ -128,18 +128,12 @@ export const StatBoxes = () => {
     const currency = event?.currency;
 
     return (
-        <StatGrid loading={!eventStats}>
+        <StatGrid loading={!eventStats} className={classes.five}>
             <StatTile
                 tone="sales"
                 iconName="ventes"
                 label={t`Gross sales`}
                 value={formatCurrency(eventStats?.total_gross_sales || 0, currency)}
-            />
-            <StatTile
-                tone="orders"
-                iconSrc={eventIcon('commandes')}
-                label={t`Completed orders`}
-                value={formatNumber(eventStats?.total_orders as number)}
             />
             <StatTile
                 tone="products"
