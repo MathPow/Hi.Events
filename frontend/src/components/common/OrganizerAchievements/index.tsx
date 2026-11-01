@@ -1,136 +1,38 @@
 import {CSSProperties, useEffect, useRef, useState} from "react";
-import {NavLink, useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import {t} from "@lingui/macro";
-import {Button, Modal, Progress, Tooltip} from "@mantine/core";
-import {IconChevronRight, IconLock} from "@tabler/icons-react";
+import {Button, Modal} from "@mantine/core";
 import {IdParam, OrganizerAchievementProgress} from "../../../types.ts";
 import {useGetOrganizerAchievements} from "../../../queries/useGetOrganizerAchievements.ts";
 import {useMarkOrganizerAchievementsSeen} from "../../../mutations/useMarkOrganizerAchievementsSeen.ts";
-import {formatDateWithLocale} from "../../../utilites/dates.ts";
-import {Card} from "../Card";
-import {AchievementDefinition, achievementDefinition, nextAchievement, progressLabel} from "./achievements.ts";
+import {AchievementDefinition, achievementDefinition} from "./achievements.ts";
 import classes from "./OrganizerAchievements.module.scss";
 
-type MedalSize = 'sm' | 'md' | 'lg' | 'xl';
-
-const ICON_SIZES: Record<MedalSize, number> = {sm: 17, md: 26, lg: 36, xl: 50};
-
-const medalStyle = (definition: AchievementDefinition) => ({
-    '--medal-color': definition.color,
-    '--medal-ink': definition.ink,
+export const achievementColors = (definition: AchievementDefinition) => ({
+    '--achievement-background': definition.background,
+    '--achievement-badge': definition.badge,
 } as CSSProperties);
 
-export const AchievementMedal = ({definition, earned, size = 'md'}: {
+/**
+ * The badge of an achievement: its icon on a disc of its colour, in a pale ring.
+ * A placeholder until the real illustrations are drawn. Its size comes from --badge-size.
+ */
+export const AchievementBadge = ({definition, className}: {
     definition: AchievementDefinition,
-    earned: boolean,
-    size?: MedalSize,
+    className?: string,
 }) => {
     const Icon = definition.icon;
 
     return (
         <span
-            className={classes.medal}
-            data-size={size}
-            data-earned={earned}
-            style={medalStyle(definition)}
-            role="img"
-            aria-label={earned ? definition.title : t`${definition.title} (locked)`}
+            className={className ? `${classes.badge} ${className}` : classes.badge}
+            style={achievementColors(definition)}
+            aria-hidden
         >
-            <Icon size={ICON_SIZES[size]} stroke={1.6} className={classes.medalIcon}/>
-            {!earned && size !== 'sm' && (
-                <span className={classes.medalLock}>
-                    <IconLock size={size === 'md' ? 10 : 12} stroke={2.2}/>
-                </span>
-            )}
+            <span className={classes.badgeDisc}>
+                <Icon stroke={1.1} className={classes.badgeIcon}/>
+            </span>
         </span>
-    );
-};
-
-const earnedOn = (date: string, timezone: string) => formatDateWithLocale(date, 'shortDate', timezone);
-
-export const AchievementCard = ({achievement, currency, timezone}: {
-    achievement: OrganizerAchievementProgress,
-    currency: string,
-    timezone: string,
-}) => {
-    const definition = achievementDefinition(achievement.key, currency);
-    const label = progressLabel(achievement, currency);
-    const earned = !!achievement.earned_at;
-
-    return (
-        <div className={classes.card} data-earned={earned}>
-            <AchievementMedal definition={definition} earned={earned} size="lg"/>
-            <div className={classes.cardBody}>
-                <h3 className={classes.cardTitle}>{definition.title}</h3>
-                <p className={classes.cardDescription}>{definition.description}</p>
-                {earned && (
-                    <p className={classes.earnedOn}>{t`Earned on ${earnedOn(achievement.earned_at as string, timezone)}`}</p>
-                )}
-                {!earned && label && (
-                    <div className={classes.progress}>
-                        <Progress
-                            value={Math.min(100, achievement.current / achievement.target * 100)}
-                            color={definition.color}
-                            size="sm"
-                            radius="xl"
-                            aria-label={label}
-                        />
-                        <span className={classes.progressLabel}>{label}</span>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
-/**
- * The organizer dashboard's card: the ten patches in a row, and the next one to get.
- */
-export const AchievementsSummary = ({organizerId, currency}: { organizerId: IdParam, currency: string }) => {
-    const {data: achievements} = useGetOrganizerAchievements(organizerId);
-
-    if (!achievements) {
-        return null;
-    }
-
-    const earnedCount = achievements.filter((achievement) => achievement.earned_at).length;
-    const next = nextAchievement(achievements);
-    const nextDefinition = next && achievementDefinition(next.key, currency);
-    const nextLabel = next && progressLabel(next, currency);
-
-    return (
-        <Card className={classes.summary}>
-            <div className={classes.summaryHeader}>
-                <h3 className={classes.summaryTitle}>
-                    {t`Achievements`}
-                    <span className={classes.summaryCount}>{earnedCount}/{achievements.length}</span>
-                </h3>
-                <NavLink to={`/manage/organizer/${organizerId}/achievements`} className={classes.summaryLink}>
-                    {t`View all`} <IconChevronRight size={14}/>
-                </NavLink>
-            </div>
-            <div className={classes.summaryMedals}>
-                {achievements.map((achievement) => {
-                    const definition = achievementDefinition(achievement.key, currency);
-                    return (
-                        <Tooltip key={achievement.key} label={definition.title} withArrow>
-                            <span>
-                                <AchievementMedal definition={definition} earned={!!achievement.earned_at} size="sm"/>
-                            </span>
-                        </Tooltip>
-                    );
-                })}
-            </div>
-            {next && nextDefinition ? (
-                <p className={classes.summaryNext}>
-                    <span className={classes.summaryNextLabel}>{t`Next up:`}</span>{' '}
-                    <strong>{nextDefinition.title}</strong>{' '}
-                    {nextLabel ? `(${nextLabel})` : `— ${nextDefinition.description}`}
-                </p>
-            ) : (
-                <p className={classes.summaryNext}>{t`Every achievement earned. Well done!`}</p>
-            )}
-        </Card>
     );
 };
 
@@ -174,9 +76,9 @@ export const AchievementCelebration = ({organizerId, currency}: { organizerId: I
         >
             {single ? (
                 <>
-                    <div className={classes.celebrationMedal}>
-                        <span className={classes.burst} style={medalStyle(single)}/>
-                        <AchievementMedal definition={single} earned size="xl"/>
+                    <div className={classes.celebrationBadge} style={achievementColors(single)}>
+                        <span className={classes.burst}/>
+                        <AchievementBadge definition={single}/>
                     </div>
                     <p className={classes.celebrationEyebrow}>{t`Achievement unlocked!`}</p>
                     <h2 className={classes.celebrationTitle}>{single.title}</h2>
@@ -190,7 +92,7 @@ export const AchievementCelebration = ({organizerId, currency}: { organizerId: I
                             const definition = achievementDefinition(achievement.key, currency);
                             return (
                                 <div key={achievement.key} className={classes.celebrationItem}>
-                                    <AchievementMedal definition={definition} earned size="lg"/>
+                                    <AchievementBadge definition={definition}/>
                                     <span className={classes.celebrationItemTitle}>{definition.title}</span>
                                 </div>
                             );

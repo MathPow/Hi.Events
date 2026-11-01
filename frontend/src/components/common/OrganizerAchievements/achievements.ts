@@ -1,4 +1,5 @@
 import {t} from "@lingui/macro";
+import {i18n} from "@lingui/core";
 import {
     IconCreditCard,
     IconFlag,
@@ -16,18 +17,18 @@ import {OrganizerAchievementKey, OrganizerAchievementProgress} from "../../../ty
 
 export interface AchievementDefinition {
     icon: Icon;
-    // Patch colours once earned: background, then the icon drawn on it
-    color: string;
-    ink: string;
+    // Figma « Admin · Succès »: the solid background of its card, and the disc of the badge
+    background: string;
+    badge: string;
     title: string;
     description: string;
 }
 
-const CREME = '#fff7e9';
-const BRUN = '#352924';
+// In the page's language, « 10 000 $ » in French
+const numberLocale = () => i18n.locale?.startsWith('fr') ? 'fr-CA' : (i18n.locale || 'fr-CA');
 
 const formatAmount = (amount: number, currency: string) => new Intl.NumberFormat(
-    typeof window !== 'undefined' ? navigator.language : 'fr-CA',
+    numberLocale(),
     {style: 'currency', currency, maximumFractionDigits: 0},
 ).format(amount);
 
@@ -39,63 +40,63 @@ export const achievementDefinition = (key: OrganizerAchievementKey, currency: st
     switch (key) {
         case 'first_event':
             return {
-                icon: IconTent, color: '#4f7a5a', ink: CREME,
+                icon: IconTent, background: '#b9d7a8', badge: '#6e9e5a',
                 title: t`Base Camp`,
                 description: t`Create your first event.`,
             };
         case 'organizer_page':
             return {
-                icon: IconPhoto, color: '#c47762', ink: CREME,
+                icon: IconPhoto, background: '#9cc9e3', badge: '#4e8db3',
                 title: t`Storefront`,
                 description: t`Add a logo and a cover image to your organizer page.`,
             };
         case 'payments_connected':
             return {
-                icon: IconCreditCard, color: '#3f7090', ink: CREME,
+                icon: IconCreditCard, background: '#f4a7b9', badge: '#c9627d',
                 title: t`Open for Business`,
                 description: t`Connect Stripe to receive your payments.`,
             };
         case 'event_published':
             return {
-                icon: IconFlag, color: '#fa7853', ink: BRUN,
+                icon: IconFlag, background: '#f6c85f', badge: '#c4911e',
                 title: t`Trailhead`,
                 description: t`Publish an event.`,
             };
         case 'first_order':
             return {
-                icon: IconTicket, color: '#e0a83e', ink: BRUN,
+                icon: IconTicket, background: '#c5b4e3', badge: '#8268b5',
                 title: t`First Ticket`,
                 description: t`Receive a first order from a participant.`,
             };
         case 'first_check_in':
             return {
-                icon: IconScan, color: '#3e8a85', ink: CREME,
+                icon: IconScan, background: '#8fd3c1', badge: '#3e9c85',
                 title: t`Welcome!`,
                 description: t`Check in your first participant at the event.`,
             };
         case 'hundred_attendees':
             return {
-                icon: IconUsersGroup, color: '#b5553c', ink: CREME,
+                icon: IconUsersGroup, background: '#f9a66c', badge: '#c9662a',
                 title: t`Peloton`,
                 description: t`Reach 100 registered participants.`,
             };
         case 'regular_attendees':
             return {
-                icon: IconHeartHandshake, color: '#9b4f6e', ink: CREME,
+                icon: IconHeartHandshake, background: '#a7b8f4', badge: '#5a6fc2',
                 title: t`Regulars`,
                 description: t`10 participants come back for another one of your events.`,
             };
         case 'sales_summit': {
             const amount = formatAmount(10_000, currency);
             return {
-                icon: IconMountain, color: '#4d5d78', ink: CREME,
+                icon: IconMountain, background: '#e3c08f', badge: '#a9803e',
                 title: t`Summit`,
                 description: t`Reach ${amount} in sales.`,
             };
         }
         case 'full_season':
             return {
-                icon: IconTrophy, color: BRUN, ink: '#f0c060',
+                icon: IconTrophy, background: '#d98c7a', badge: '#a24e3b',
                 title: t`Full Season`,
                 description: t`Hold 5 events with participants.`,
             };
@@ -112,7 +113,7 @@ export const progressLabel = (achievement: OrganizerAchievementProgress, currenc
 
     const format = achievement.key === 'sales_summit'
         ? (value: number) => formatAmount(value, currency)
-        : (value: number) => new Intl.NumberFormat().format(value);
+        : (value: number) => new Intl.NumberFormat(numberLocale()).format(value);
 
     return `${format(Math.min(achievement.current, achievement.target))} / ${format(achievement.target)}`;
 };
