@@ -207,6 +207,73 @@ export interface AdminDashboardData {
     recent_signups_count: number;
 }
 
+export interface AssistantUsageTotals {
+    turns: number;
+    accounts: number;
+    users: number;
+    input_tokens: number;
+    cache_creation_input_tokens: number;
+    cache_read_input_tokens: number;
+    output_tokens: number;
+    cost_usd: number;
+    cost_per_turn: number;
+    monthly_rate: number;
+}
+
+export interface AssistantUsageDay {
+    day: string;
+    turns: number;
+    accounts: number;
+    cost_usd: number;
+}
+
+export interface AssistantUsageByAccount {
+    account_id: number;
+    account_name: string;
+    account_email: string;
+    organizers: string | null;
+    turns: number;
+    users: number;
+    active_days: number;
+    busiest_day_turns: number;
+    input_tokens: number;
+    cache_creation_input_tokens: number;
+    cache_read_input_tokens: number;
+    output_tokens: number;
+    cost_usd: number;
+    cost_per_turn: number;
+    share: number;
+    monthly_rate: number;
+    first_used_at: string;
+    last_used_at: string;
+}
+
+export interface AssistantUsageByUser {
+    user_id: number | null;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+    account_id: number;
+    account_name: string;
+    turns: number;
+    active_days: number;
+    output_tokens: number;
+    cost_usd: number;
+    cost_per_turn: number;
+    last_used_at: string;
+}
+
+export interface AssistantUsage {
+    days: number | null;
+    since: string;
+    model: string;
+    daily_limit: number;
+    totals: AssistantUsageTotals;
+    daily: AssistantUsageDay[];
+    accounts: AssistantUsageByAccount[];
+    users: AssistantUsageByUser[];
+}
+
 export interface PlatformRevenueByCurrency {
     currency: string;
     contributions: number;
@@ -481,6 +548,12 @@ export const adminClient = {
                 limit: params.limit || 10,
             }
         });
+        return response.data;
+    },
+
+    // days: 0 = since the first call.
+    getAssistantUsage: async (days: number) => {
+        const response = await api.get<AssistantUsage>('admin/assistant-usage', {params: {days}});
         return response.data;
     },
 

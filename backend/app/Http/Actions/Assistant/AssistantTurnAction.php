@@ -38,6 +38,7 @@ class AssistantTurnAction extends BaseAction
         }
 
         $accountId = $this->getAuthenticatedAccountId();
+        $userId = $this->getAuthenticatedUser()->getId();
         if (!$this->quotaService->consume($accountId)) {
             return $this->errorResponse(
                 __('The assistant has reached its daily limit for this account. It will be back tomorrow.'),
@@ -45,7 +46,7 @@ class AssistantTurnAction extends BaseAction
             );
         }
 
-        return new StreamedResponse(function () use ($accountId, $messages): void {
+        return new StreamedResponse(function () use ($accountId, $userId, $messages): void {
             // Un tour peut durer quelques minutes (reflexion, longs corps).
             @set_time_limit(300);
             ignore_user_abort(true);
@@ -55,6 +56,7 @@ class AssistantTurnAction extends BaseAction
 
             $this->turnHandler->handle(
                 accountId: $accountId,
+                userId: $userId,
                 messages: $messages,
                 write: static function (array $event): void {
                     echo json_encode($event, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE) . "\n";

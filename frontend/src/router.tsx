@@ -205,6 +205,13 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                path: "assistant",
+                async lazy() {
+                    const AssistantUsage = await import("./components/routes/admin/AssistantUsage");
+                    return { Component: AssistantUsage.default };
+                }
+            },
+            {
                 path: "attribution",
                 async lazy() {
                     const Attribution = await import("./components/routes/admin/Attribution");

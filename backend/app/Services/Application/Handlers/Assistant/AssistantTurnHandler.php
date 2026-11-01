@@ -14,6 +14,7 @@ use Anthropic\Core\Exceptions\PermissionDeniedException;
 use Anthropic\Core\Exceptions\RateLimitException;
 use Anthropic\Lib\Streaming\MessageAccumulator;
 use HiEvents\Services\Domain\Assistant\AssistantInstructions;
+use HiEvents\Services\Domain\Assistant\AssistantUsageService;
 use HiEvents\Services\Infrastructure\Anthropic\AnthropicClientFactory;
 use Illuminate\Config\Repository;
 use Psr\Log\LoggerInterface;
@@ -38,6 +39,7 @@ class AssistantTurnHandler
     public function __construct(
         private readonly AnthropicClientFactory $clientFactory,
         private readonly AssistantInstructions  $instructions,
+        private readonly AssistantUsageService  $usageService,
         private readonly Repository             $config,
         private readonly LoggerInterface        $logger,
     )
@@ -55,10 +57,11 @@ class AssistantTurnHandler
      * @param callable(array<string, mixed>): void $write
      * @param callable(): bool $stopped vrai quand la personne a ferme la connexion
      */
-    public function handle(int $accountId, array $messages, callable $write, callable $stopped): void
+    public function handle(int $accountId, ?int $userId, array $messages, callable $write, callable $stopped): void
     {
         $accumulator = MessageAccumulator::forBetaMessages();
         $lastWrite = microtime(true);
+        $recorded = false;
 
         try {
             $stream = $this->clientFactory->create()->beta->messages->createStream(
@@ -86,6 +89,8 @@ class AssistantTurnHandler
                         $lastWrite = microtime(true);
                     }
                     if ($stopped()) {
+                        // Anthropic facture ce qui a deja ete ecrit.
+                        $recorded = $this->recordPartial($accountId, $userId, $accumulator, 'interrompu');
                         return;
                     }
                 }
@@ -96,6 +101,8 @@ class AssistantTurnHandler
             /** @var BetaMessage $message */
             $message = $accumulator->message();
             $this->logUsage($accountId, $message);
+            $this->usageService->record($accountId, $userId, $message, $message->stopReason);
+            $recorded = true;
 
             if ($message->stopReason === 'refusal') {
                 $write(['type' => 'erreur', 'texte' => 'Je ne peux pas répondre à cette demande.']);
@@ -108,6 +115,9 @@ class AssistantTurnHandler
                 'arret' => $message->stopReason,
             ]);
         } catch (Throwable $exception) {
+            if (!$recorded) {
+                $this->recordPartial($accountId, $userId, $accumulator, 'erreur');
+            }
             if (!$stopped()) {
                 $write(['type' => 'erreur', 'texte' => $this->reason($exception, $accountId)]);
             }
@@ -138,6 +148,22 @@ class AssistantTurnHandler
             $event->delta instanceof BetaThinkingDelta => ['type' => 'reflexion', 'texte' => $event->delta->thinking],
             default => null,
         };
+    }
+
+    /** Un appel coupe en route : ce que le flux en a dit jusque-la. */
+    private function recordPartial(int $accountId, ?int $userId, MessageAccumulator $accumulator, string $stopReason): bool
+    {
+        try {
+            $message = $accumulator->message();
+        } catch (Throwable) {
+            // Rien n'est arrive d'Anthropic : rien a payer.
+            return false;
+        }
+
+        /** @var BetaMessage $message */
+        $this->usageService->record($accountId, $userId, $message, $stopReason);
+
+        return true;
     }
 
     private function logUsage(int $accountId, BetaMessage $message): void

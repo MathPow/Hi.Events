@@ -1,17 +1,10 @@
+#: src/components/forms/QuestionForm/index.tsx:189
 msgid ""
+"Provide additional context or instructions for this question. Use this field to add terms\n"
+"and conditions, guidelines, or any important information that attendees need to know before answering."
 msgstr ""
-"POT-Creation-Date: 2023-11-17 13:53-0800\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: sk\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
+"Poskytnite ďalší kontext alebo pokyny pre túto otázku. Toto pole použite na pridanie podmienok,\n"
+"usmernení alebo dôležitých informácií, ktoré účastníci potrebujú vedieť pred zodpovedaním."
 
 #: src/components/layouts/Event/index.tsx:242
 #: src/components/layouts/OrganizerLayout/index.tsx:293
@@ -151,9 +144,21 @@ msgstr "Viac ako {athletes} športovcov"
 msgid "{availableCount} of {totalCount} available"
 msgstr "{availableCount} z {totalCount} dostupných"
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
+msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
+msgstr "{changeCount, plural, one {# zmena ešte nie je zverejnená} few {# zmeny ešte nie sú zverejnené} other {# zmien ešte nie je zverejnených}}"
+
+#: src/components/routes/event/TicketDesigner/index.tsx
+msgid "{changeCount, plural, one {# change not yet saved} other {# changes not yet saved}}"
+msgstr "{changeCount, plural, one {# zmena ešte nie je uložená} few {# zmeny ešte nie sú uložené} other {# zmien ešte nie je uložených}}"
+
 #: src/components/routes/organizer/Reports/reportPanels.tsx:369
 msgid "{checkedIn} of {attendees} checked in"
 msgstr ""
+
+#: src/components/common/OrganizerAchievements/achievements.ts
+msgid "{count} Club"
+msgstr "Klub {count}"
 
 #: src/components/routes/my-tickets/index.tsx:82
 msgid "{count} tickets"
@@ -179,6 +184,10 @@ msgstr ""
 msgid "{days} days, {hours} hours, {minutes} minutes, and {seconds} seconds"
 msgstr "{days} dní, {hours} hodín, {minutes} minút a {seconds} sekúnd"
 
+#: src/components/routes/event/GettingStarted/index.tsx
+msgid "{doneCount} of {total} steps completed"
+msgstr "Dokončené kroky: {doneCount} z {total}"
+
 #: src/components/routes/organizer/Achievements/index.tsx:42
 #~ msgid "{earnedCount} of {total} earned"
 #~ msgstr ""
@@ -187,6 +196,10 @@ msgstr "{days} dní, {hours} hodín, {minutes} minút a {seconds} sekúnd"
 #: src/components/common/WebhookTable/index.tsx:79
 msgid "{eventCount} events"
 msgstr "{eventCount} udalostí"
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
+msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
+msgstr "{faqCount, plural, =0 {Zatiaľ žiadne otázky} one {# otázka · zobrazená v spodnej časti stránky} few {# otázky · zobrazené v spodnej časti stránky} other {# otázok · zobrazených v spodnej časti stránky}}"
 
 #: src/components/routes/organizer/Reports/reportPanels.tsx:170
 msgid "{gross} gross"
@@ -208,6 +221,18 @@ msgstr "{minutes} min čítania"
 #: src/components/common/Countdown/index.tsx:72
 msgid "{minutes} minutes and {seconds} seconds"
 msgstr "{minutes} minút a {seconds} sekúnd"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:45
+msgid "{people} people"
+msgstr "{people} ľudí"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:39
+msgid "{perCall} per call on average"
+msgstr "{perCall} za volanie v priemere"
+
+#: src/components/routes/organizer/Settings/payments/FeesCard.tsx
+msgid "{platformFees} per ticket + Stripe fees ({stripeFees}). Nothing on free events."
+msgstr "{platformFees} za lístok + poplatky Stripe ({stripeFees}). Nič pri bezplatných podujatiach."
 
 #: src/components/routes/organizer/Reports/reportPanels.tsx:435
 msgid "{quantity} sold"
@@ -245,9 +270,17 @@ msgstr "{title} je o týždeň. Tu je všetko, čo potrebujete vedieť na prípr
 msgid "{totalCount} ticket types"
 msgstr "{totalCount} typov lístkov"
 
+#: src/components/routes/admin/AssistantUsage/index.tsx:51
+msgid "{written} written · {cacheShare} % of input read from cache"
+msgstr "{written} vygenerovaných · {cacheShare} % vstupu z vyrovnávacej pamäte"
+
 #: src/components/routes/admin/PlatformRevenue/RevenueBreakdown.tsx:59
 msgid "% of revenue"
 msgstr "% príjmov"
+
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:81
+msgid "% of total"
+msgstr "% z celku"
 
 #: src/components/routes/product-widget/SelectProducts/index.tsx:620
 msgid "+ Security deposit of {0} per unit, sent separately and returned after the event"
@@ -553,6 +586,10 @@ msgstr "Opustené"
 msgid "About"
 msgstr "O udalosti"
 
+#: src/components/routes/admin/AssistantUsage/index.tsx:33
+msgid "About {monthly} per month at this pace"
+msgstr "Približne {monthly} mesačne pri tomto tempe"
+
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:434
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:463
 #: src/components/routes/account/ManageAccount/sections/PaymentSettings/index.tsx:681
@@ -571,14 +608,14 @@ msgstr "Absorbovať poplatok"
 msgid "Absorb the fees"
 msgstr "Uhradiť poplatky"
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
+msgid "Accent color"
+msgstr "Farba zvýraznenia"
+
 #: src/components/common/ThemeColorControls/index.tsx:53
 #: src/components/routes/event/TicketDesigner/index.tsx:133
 msgid "Accent Color"
 msgstr "Zvýraznená farba"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
-msgid "Accent color"
-msgstr "Farba zvýraznenia"
 
 #: src/components/common/CookieConsentBanner/index.tsx:178
 msgid "Accept"
@@ -732,42 +769,14 @@ msgctxt "attendees filter"
 msgid "Active"
 msgstr "Aktívni"
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:76
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:140
+msgid "Active days"
+msgstr "Aktívne dni"
+
 #: src/components/routes/admin/Dashboard/index.tsx:470
 msgid "Active Events"
 msgstr "Aktívne udalosti"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
-msgid "Add a network"
-msgstr "Pridať sieť"
-
-#: src/components/routes/event/products.tsx
-msgid "Add a ticket or product"
-msgstr "Pridať lístok alebo produkt"
-
-#: src/components/routes/event/attendees.tsx
-msgid "Add an attendee"
-msgstr "Pridať účastníka"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx
-msgid "Add an image"
-msgstr "Pridať obrázok"
-
-#: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx
-msgid "Add automatic info (first name, event, date…) with the last button of the toolbar."
-msgstr "Automatické údaje (meno, podujatie, dátum…) pridáte posledným tlačidlom panela nástrojov."
-
-#: src/components/common/QuestionsTable/index.tsx
-msgid "Add the participant form"
-msgstr "Pridať formulár účastníka"
-
-#: src/components/routes/event/GettingStarted/index.tsx
-msgctxt "getting started step"
-msgid "Add tickets"
-msgstr "Pridajte vstupenky"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
-msgid "Add your username"
-msgstr "Pridajte svoje používateľské meno"
 
 #: src/components/routes/product-widget/CollectInformation/OrderAddOns/index.tsx:137
 #: src/components/routes/product-widget/CollectInformation/OrderAddOns/index.tsx:146
@@ -795,13 +804,29 @@ msgstr ""
 msgid "Add a logo and colors that match the organization."
 msgstr "Pridajte logo a farby, ktoré zodpovedajú organizácii."
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
+msgid "Add a network"
+msgstr "Pridať sieť"
+
 #: src/components/routes/organizer/Faq/index.tsx:142
 msgid "Add a question"
 msgstr "Pridať otázku"
 
+#: src/components/routes/event/products.tsx
+msgid "Add a ticket or product"
+msgstr "Pridať lístok alebo produkt"
+
 #: src/components/routes/event/Settings/Sections/BibNumberSettings/index.tsx:79
 msgid "Add a ticket to give bib numbers."
 msgstr "Pridajte vstupenku, aby ste mohli prideľovať štartové čísla."
+
+#: src/components/routes/event/attendees.tsx
+msgid "Add an attendee"
+msgstr "Pridať účastníka"
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx
+msgid "Add an image"
+msgstr "Pridať obrázok"
 
 #: src/components/modals/ManageAttendeeModal/index.tsx:132
 msgid "Add any notes about the attendee. These will not be visible to the attendee."
@@ -818,6 +843,10 @@ msgstr "Pridajte poznámky k objednávke. Tieto nebudú viditeľné pre zákazn�
 #: src/components/modals/ManageOrderModal/index.tsx:169
 msgid "Add any notes about the order..."
 msgstr "Pridajte poznámky k objednávke..."
+
+#: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx
+msgid "Add automatic info (first name, event, date…) with the last button of the toolbar."
+msgstr "Automatické údaje (meno, podujatie, dátum…) pridáte posledným tlačidlom panela nástrojov."
 
 #: src/components/common/QuestionsTable/index.tsx:457
 msgid "Add custom questions to collect additional information during checkout"
@@ -877,9 +906,18 @@ msgstr "Pridať otázku"
 msgid "Add Tax or Fee"
 msgstr "Pridať daň alebo poplatok"
 
+#: src/components/common/QuestionsTable/index.tsx
+msgid "Add the participant form"
+msgstr "Pridať formulár účastníka"
+
 #: src/components/common/AddToCalendarCTA/index.tsx:20
 msgid "Add this event to your calendar"
 msgstr "Pridajte túto udalosť do kalendára"
+
+#: src/components/routes/event/GettingStarted/index.tsx
+msgctxt "getting started step"
+msgid "Add tickets"
+msgstr "Pridajte vstupenky"
 
 #: src/components/routes/event/GettingStarted/index.tsx:133
 #: src/components/routes/organizer/OrganizerDashboard/dashboardData.ts:108
@@ -915,6 +953,10 @@ msgstr "Pridaj svoje farby"
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:185
 msgid "Add your social media handles and website URL. These will be displayed on your public organizer page."
 msgstr "Pridajte svoje sociálne médiá a URL webstránky. Tieto sa zobrazia na vašej verejnej stránke organizátora."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
+msgid "Add your username"
+msgstr "Pridajte svoje používateľské meno"
 
 #: src/components/routes/event/Settings/cards/EmailSettingsCard.tsx
 msgid "Added at the bottom of every email of this event."
@@ -1049,21 +1091,15 @@ msgstr "Občerstvovacia stanica"
 msgid "Alex"
 msgstr "Alex"
 
-#: src/components/routes/help/index.tsx:59
-msgctxt "help questions"
-msgid "All"
-msgstr ""
-
 #: src/components/common/EventFilters/index.tsx:172
 msgctxt "event types"
 msgid "All"
 msgstr "Všetky"
 
-#: src/components/routes/organizer/Messages/index.tsx:213
-#: src/components/routes/organizer/OrganizerDashboard/index.tsx:585
-#: src/components/routes/organizer/Reports/ReportPanel.tsx:111
+#: src/components/routes/event/attendees.tsx
+msgctxt "attendees filter"
 msgid "All"
-msgstr ""
+msgstr "Všetci"
 
 #: src/components/routes/event/orders.tsx
 msgctxt "orders filter"
@@ -1075,10 +1111,16 @@ msgctxt "waitlist filter"
 msgid "All"
 msgstr "Všetky"
 
-#: src/components/routes/event/attendees.tsx
-msgctxt "attendees filter"
+#: src/components/routes/help/index.tsx:59
+msgctxt "help questions"
 msgid "All"
-msgstr "Všetci"
+msgstr ""
+
+#: src/components/routes/organizer/Messages/index.tsx:213
+#: src/components/routes/organizer/OrganizerDashboard/index.tsx:585
+#: src/components/routes/organizer/Reports/ReportPanel.tsx:111
+msgid "All"
+msgstr ""
 
 #: src/components/routes/events/Dashboard/index.tsx:77
 msgid "All Archived Events"
@@ -1645,6 +1687,10 @@ msgstr "Priradená úroveň"
 msgid "Assistant"
 msgstr ""
 
+#: src/components/routes/admin/AssistantUsage/index.tsx:61
+msgid "Assistant usage"
+msgstr "Využitie asistenta"
+
 #: src/components/routes/organizer/Settings/Sections/PlatformSupportSettings/index.tsx:43
 msgid "At checkout, buyers can add an optional contribution to support the ticketing platform. Turn it off to remove it from your events' checkout."
 msgstr "Pri platbe môžu kupujúci pridať dobrovoľný príspevok na podporu predajnej platformy. Vypnite ho, ak ho chcete odstrániť z platby za vaše podujatia."
@@ -1704,17 +1750,17 @@ msgstr "Účastník zrušený"
 msgid "Attendee Created"
 msgstr "Účastník vytvorený"
 
-#: src/components/common/AttendeeTable/index.tsx:138
-#: src/components/modals/ManageAttendeeModal/index.tsx:148
-msgid "Attendee Details"
-msgstr "Údaje účastníka"
-
 #: src/components/routes/organizer/Settings/organization/EventDefaultsCard.tsx
 msgid "Attendee details"
 msgstr "Údaje účastníkov"
 
 #: src/components/modals/ManageAttendeeModal/index.tsx
 msgctxt "attendee panel"
+msgid "Attendee Details"
+msgstr "Údaje účastníka"
+
+#: src/components/common/AttendeeTable/index.tsx:138
+#: src/components/modals/ManageAttendeeModal/index.tsx:148
 msgid "Attendee Details"
 msgstr "Údaje účastníka"
 
@@ -2097,6 +2143,10 @@ msgstr "Priveďte 25 účastníkov späť na ďalšie z vašich podujatí."
 msgid "Bulleted list"
 msgstr ""
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:77
+msgid "Busiest day"
+msgstr "Najrušnejší deň"
+
 #: src/constants/eventCategories.ts:17
 msgid "Business"
 msgstr "Firma"
@@ -2154,6 +2204,10 @@ msgstr "Kupujúci vidia čistú cenu. Poplatok platformy sa odpočíta z vašej 
 msgid "Buyers' replies and questions arrive at this address."
 msgstr "Odpovede a otázky kupujúcich prichádzajú na túto adresu."
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:60
+msgid "By account"
+msgstr "Podľa účtu"
+
 #: src/components/routes/product-widget/CollectInformation/index.tsx:1005
 #: src/components/routes/product-widget/Payment/index.tsx:241
 msgid "By continuing, you agree to the <0>{0} Terms of Service</0>"
@@ -2179,6 +2233,10 @@ msgstr "Podľa organizátora"
 msgid "By organizer and event"
 msgstr "Podľa organizátora a podujatia"
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:63
+msgid "By person"
+msgstr "Podľa osoby"
+
 #: src/components/routes/auth/Register/index.tsx:221
 msgid "By registering you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Registráciou súhlasíte s našimi <0>Podmienkami služby</0> a <1>Zásadami ochrany osobných údajov</1>."
@@ -2203,6 +2261,12 @@ msgstr "Kalifornia"
 #: src/components/common/EmailTemplateEditor/CTAConfiguration.tsx:20
 msgid "Call-to-Action Button"
 msgstr "Tlačidlo výzvy na akciu"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:36
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:74
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:139
+msgid "Calls"
+msgstr "Volania"
 
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:16
 msgid "Camera permission was denied. <0>Request Permission</0> again, or if this doesn't work, you will need to <1>grant this page</1> access to your camera in your browser settings."
@@ -2283,18 +2347,8 @@ msgstr "Zrušením sa zrušia všetci účastníci spojení s touto objednávkou
 msgid "Cancelled"
 msgstr "Zrušené"
 
-#: src/components/routes/event/orders.tsx
-msgctxt "orders filter"
-msgid "Cancelled"
-msgstr "Zrušené"
-
 #: src/components/common/MessageList/index.tsx
 msgctxt "message status"
-msgid "Cancelled"
-msgstr "Zrušené"
-
-#: src/components/routes/event/SoldOutWaitlist/index.tsx
-msgctxt "waitlist filter"
 msgid "Cancelled"
 msgstr "Zrušené"
 
@@ -2302,6 +2356,16 @@ msgstr "Zrušené"
 msgctxt "attendees filter"
 msgid "Cancelled"
 msgstr "Zrušení"
+
+#: src/components/routes/event/orders.tsx
+msgctxt "orders filter"
+msgid "Cancelled"
+msgstr "Zrušené"
+
+#: src/components/routes/event/SoldOutWaitlist/index.tsx
+msgctxt "waitlist filter"
+msgid "Cancelled"
+msgstr "Zrušené"
 
 #: src/components/common/Assistant/Answer.tsx:53
 msgid "Cancelled: nothing changed."
@@ -2519,6 +2583,11 @@ msgstr "PIN na odbavenie"
 msgid "Check-in staff can sell any remaining tickets from this list. Take the payment on your own card terminal or in cash — the ticket is issued and checked in on the spot."
 msgstr "Personál odbavenia môže predať zvyšné lístky z tohto zoznamu. Platbu prijmite na vlastnom platobnom termináli alebo v hotovosti — lístok sa vystaví a odbaví na mieste."
 
+#: src/components/common/CheckInStatusModal/index.tsx
+msgctxt "attendee check-in"
+msgid "Check-In Status"
+msgstr "Odbavenie účastníka"
+
 #: src/components/common/AttendeeTable/index.tsx:309
 #: src/components/common/CheckInStatusModal/index.tsx:37
 #: src/components/common/CheckInStatusModal/index.tsx:135
@@ -2529,11 +2598,6 @@ msgstr "Stav odbavenia"
 #: src/components/routes/organizer/Reports/index.tsx:35
 #~ msgid "Check-in Summary"
 #~ msgstr "Súhrn odbavení"
-
-#: src/components/common/CheckInStatusModal/index.tsx
-msgctxt "attendee check-in"
-msgid "Check-In Status"
-msgstr "Odbavenie účastníka"
 
 #: src/components/common/CheckInListList/index.tsx:160
 msgid "Check-In URL copied to clipboard"
@@ -2555,6 +2619,16 @@ msgstr "Možnosti zaškrtávacieho políčka umožňujú viacnásobný výber"
 msgid "Checkboxes"
 msgstr "Zaškrtávacie políčka"
 
+#: src/components/common/CheckInListList/index.tsx
+msgctxt "check-in list count"
+msgid "checked in"
+msgstr "odbavených"
+
+#: src/components/common/AttendeeTable/index.tsx
+msgctxt "attendee check-in"
+msgid "Checked in"
+msgstr "Odbavený"
+
 #: src/components/routes/organizer/Reports/reportPanels.tsx:341
 msgid "Checked in"
 msgstr ""
@@ -2563,16 +2637,6 @@ msgstr ""
 #: src/components/common/CheckInStatusModal/index.tsx:111
 msgid "Checked In"
 msgstr "Odbavený"
-
-#: src/components/common/AttendeeTable/index.tsx
-msgctxt "attendee check-in"
-msgid "Checked in"
-msgstr "Odbavený"
-
-#: src/components/common/CheckInListList/index.tsx
-msgctxt "check-in list count"
-msgid "checked in"
-msgstr "odbavených"
 
 #: src/components/layouts/Checkout/CheckoutColumns/index.tsx:14
 msgctxt "checkout page title"
@@ -3113,13 +3177,13 @@ msgstr "Podrobnosti pripojenia"
 msgid "Contact"
 msgstr "Kontakt"
 
-#: src/components/routes/organizer/Settings/organization/BasicInfoCard.tsx
-msgid "Contact email"
-msgstr "Kontaktný e-mail"
-
 #: src/components/common/ContactOrganizerModal/index.tsx:68
 msgid "Contact {0}"
 msgstr "Kontakt {0}"
+
+#: src/components/routes/organizer/Settings/organization/BasicInfoCard.tsx
+msgid "Contact email"
+msgstr "Kontaktný e-mail"
 
 #: src/components/forms/OrganizerForm/index.tsx:35
 msgid "Contact Email"
@@ -3239,6 +3303,11 @@ msgstr "Kopírovať e-mail"
 msgid "Copy it into your website: the widget follows the colors chosen above."
 msgstr "Skopírujte ho na svoju stránku: widget preberie farby zvolené vyššie."
 
+#: src/components/common/CheckInListList/index.tsx
+msgctxt "check-in list"
+msgid "Copy link"
+msgstr "Kopírovať odkaz"
+
 #: src/components/common/ShareIcon/index.tsx:126
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:67
 #: src/components/routes/admin/RegistrationInvites/index.tsx:277
@@ -3249,11 +3318,6 @@ msgstr "Kopírovať odkaz"
 #: src/components/common/AttendeeTicket/index.tsx:220
 #: src/components/modals/ShareModal/index.tsx:171
 msgid "Copy Link"
-msgstr "Kopírovať odkaz"
-
-#: src/components/common/CheckInListList/index.tsx
-msgctxt "check-in list"
-msgid "Copy link"
 msgstr "Kopírovať odkaz"
 
 #: src/components/common/AffiliateTable/index.tsx:195
@@ -3284,6 +3348,17 @@ msgstr "Kopírovať do schránky"
 #: src/components/common/PromoCodeTable/index.tsx:177
 msgid "Copy URL"
 msgstr "Kopírovať URL"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:30
+#: src/components/routes/admin/AssistantUsage/index.tsx:120
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:80
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:142
+msgid "Cost"
+msgstr "Náklady"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:107
+msgid "Cost per day"
+msgstr "Náklady za deň"
 
 #: src/components/routes/event/Deposits/index.tsx:149
 msgid "Cost shared between the deposits"
@@ -3349,11 +3424,6 @@ msgstr "Obrázok obalu sa zobrazí v hornej časti stránky organizátora"
 #: src/components/routes/event/products.tsx:76
 msgid "Create"
 msgstr "Vytvoriť"
-
-#: src/components/common/CapacityAssignmentList/index.tsx
-msgctxt "capacity page"
-msgid "Create Capacity Assignment"
-msgstr "Vytvoriť spoločnú kapacitu"
 
 #: src/components/modals/CreateTaxOrFeeModal/index.tsx:59
 msgid "Create {0}"
@@ -3423,6 +3493,11 @@ msgstr "Vytvorte a nakonfigurujte lístky a tovar na predaj."
 #: src/components/modals/CreateAttendeeModal/index.tsx:207
 msgid "Create Attendee"
 msgstr "Vytvoriť účastníka"
+
+#: src/components/common/CapacityAssignmentList/index.tsx
+msgctxt "capacity page"
+msgid "Create Capacity Assignment"
+msgstr "Vytvoriť spoločnú kapacitu"
 
 #: src/components/common/CapacityAssignmentList/index.tsx:60
 #: src/components/modals/CreateCapacityAssignmentModal/index.tsx:68
@@ -3727,14 +3802,14 @@ msgstr "Prispôsobiť predaj vstupeniek"
 msgid "Customize your email template using Liquid templating"
 msgstr "Prispôsobte svoju e-mailovú šablónu pomocou Liquid šablonovania"
 
-#: src/components/routes/event/GettingStarted/index.tsx:175
-msgid "Customize your event page"
-msgstr "Prispôsobte stránku svojej udalosti"
-
 #: src/components/routes/event/GettingStarted/index.tsx
 msgctxt "getting started step"
 msgid "Customize your event page"
 msgstr "Prispôsobte stránku podujatia"
+
+#: src/components/routes/event/GettingStarted/index.tsx:175
+msgid "Customize your event page"
+msgstr "Prispôsobte stránku svojej udalosti"
 
 #: src/components/routes/event/GettingStarted/index.tsx:171
 msgid "Customize your event page to match your brand and style."
@@ -3782,16 +3857,16 @@ msgstr "Denný rozklad predajov, daní a poplatkov"
 msgid "Danger zone"
 msgstr "Nebezpečná zóna"
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgctxt "settings"
+msgid "Danger zone"
+msgstr "Nebezpečná zóna"
+
 #: src/components/common/AttendeeTable/index.tsx:369
 #: src/components/common/DangerZone/index.tsx:30
 #: src/components/routes/event/Settings/index.tsx:106
 #: src/components/routes/organizer/Settings/index.tsx:96
 msgid "Danger Zone"
-msgstr "Nebezpečná zóna"
-
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgctxt "settings"
-msgid "Danger zone"
 msgstr "Nebezpečná zóna"
 
 #: src/components/common/ThemeColorControls/index.tsx:95
@@ -3899,17 +3974,13 @@ msgstr "odstrániť"
 msgid "Delete"
 msgstr "Vymazať"
 
-#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
-msgid "Delete the organizer"
-msgstr "Odstrániť organizátora"
+#: src/components/routes/organizer/Documents/index.tsx:182
+msgid "Delete « {title} »? Copies already signed stay with their participants."
+msgstr ""
 
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx
 msgid "Delete {name}?"
 msgstr "Odstrániť {name}?"
-
-#: src/components/routes/organizer/Documents/index.tsx:182
-msgid "Delete « {title} »? Copies already signed stay with their participants."
-msgstr ""
 
 #: src/components/common/AffiliateTable/index.tsx:209
 msgid "Delete Affiliate"
@@ -3958,6 +4029,10 @@ msgstr "Odstrániť organizátora"
 msgid "Delete Template"
 msgstr "Odstrániť šablónu"
 
+#: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx
+msgid "Delete the organizer"
+msgstr "Odstrániť organizátora"
+
 #: src/components/routes/organizer/Messages/index.tsx:96
 msgid "Delete this message?"
 msgstr ""
@@ -3970,6 +4045,10 @@ msgstr "Odstrániť túto otázku? Túto akciu nie je možné vrátiť späť."
 #: src/components/common/WebhookTable/index.tsx:127
 msgid "Delete webhook"
 msgstr "Odstrániť webhook"
+
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:152
+msgid "Deleted user"
+msgstr "Odstránený používateľ"
 
 #: src/components/routes/event/Settings/cards/DangerZoneCard.tsx
 msgid "Deletes the event, its tickets and its history. This cannot be undone."
@@ -4074,12 +4153,12 @@ msgstr "Trasa"
 msgid "Disabling this capacity will track sales but not stop them when the limit is reached"
 msgstr "Zakázanie tejto kapacity bude sledovať predaje, ale nezastaví ich po dosiahnutí limitu"
 
-#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
+#: src/components/routes/organizer/Settings/payments/StripeCard.tsx
+msgctxt "settings"
 msgid "Disconnect Stripe"
 msgstr "Odpojiť Stripe"
 
-#: src/components/routes/organizer/Settings/payments/StripeCard.tsx
-msgctxt "settings"
+#: src/components/routes/organizer/Settings/Sections/PaymentSettings/index.tsx:98
 msgid "Disconnect Stripe"
 msgstr "Odpojiť Stripe"
 
@@ -4280,13 +4359,13 @@ msgstr "Rozbaľovací zoznam"
 msgid "Due to the high risk of spam, you must connect a Stripe account before you can modify email templates. This is to ensure that all event organizers are verified and accountable."
 msgstr "Kvôli vysokému riziku spamu musíte pripojiť účet Stripe pred úpravou e-mailových šablón. Je to na zabezpečenie, že všetci organizátori udalostí sú overení a zodpovední."
 
-#: src/components/modals/SendMessageModal/index.tsx:286
+#: src/components/forms/QuestionForm/index.tsx:189
 msgid ""
-"Due to the high risk of spam, you must connect a Stripe account before you can send messages to attendees.\n"
-"This is to ensure that all event organizers are verified and accountable."
+"Provide additional context or instructions for this question. Use this field to add terms\n"
+"and conditions, guidelines, or any important information that attendees need to know before answering."
 msgstr ""
-"Kvôli vysokému riziku spamu musíte pripojiť účet Stripe pred odosielaním správ účastníkom.\n"
-"Je to na zabezpečenie, že všetci organizátori udalostí sú overení a zodpovední."
+"Poskytnite ďalší kontext alebo pokyny pre túto otázku. Toto pole použite na pridanie podmienok,\n"
+"usmernení alebo dôležitých informácií, ktoré účastníci potrebujú vedieť pred zodpovedaním."
 
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:488
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:592
@@ -4396,11 +4475,6 @@ msgstr ""
 msgid "Edit"
 msgstr "Upraviť"
 
-#: src/components/common/CapacityAssignmentList/index.tsx
-msgctxt "capacity page"
-msgid "Edit Capacity"
-msgstr "Upraviť kapacitu"
-
 #: src/components/common/ProductsTable/SortableProduct/index.tsx:482
 #: src/components/modals/EditTaxOrFeeModal/index.tsx:52
 msgid "Edit {0}"
@@ -4435,6 +4509,11 @@ msgstr "Upraviť poplatky aplikácie"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:44
 msgid "Edit Attendee Details"
 msgstr "Upraviť údaje účastníka"
+
+#: src/components/common/CapacityAssignmentList/index.tsx
+msgctxt "capacity page"
+msgid "Edit Capacity"
+msgstr "Upraviť kapacitu"
 
 #: src/components/common/CapacityAssignmentList/index.tsx:143
 msgid "Edit Capacity"
@@ -4538,14 +4617,14 @@ msgstr "napr. 23.5 pre 23.5%"
 msgid "Eligibility Failures"
 msgstr "Zlyhania oprávnenosti"
 
-#: src/components/common/CheckInStatusModal/index.tsx:166
-msgid "Eligible Check-In Lists"
-msgstr "Oprávnené zoznamy odbavení"
-
 #: src/components/common/CheckInStatusModal/index.tsx
 msgctxt "attendee check-in"
 msgid "Eligible Check-In Lists"
 msgstr "Zoznamy odbavenia pre jeho lístok"
+
+#: src/components/common/CheckInStatusModal/index.tsx:166
+msgid "Eligible Check-In Lists"
+msgstr "Oprávnené zoznamy odbavení"
 
 #: src/components/forms/ProductForm/CharitySplitInput.tsx:59
 msgid "Eligible for an official tax receipt."
@@ -5173,16 +5252,16 @@ msgstr "Očakávané počasie a odporúčané oblečenie"
 msgid "Expiration date"
 msgstr "Dátum vypršania"
 
+#: src/components/common/CheckInListList/index.tsx
+msgctxt "check-in list"
+msgid "Expired"
+msgstr "Vypršal"
+
 #: src/components/common/WaitlistTable/index.tsx:28
 #: src/components/routes/admin/RegistrationInvites/index.tsx:49
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:74
 msgid "Expired"
 msgstr "Vypršané"
-
-#: src/components/common/CheckInListList/index.tsx
-msgctxt "check-in list"
-msgid "Expired"
-msgstr "Vypršal"
 
 #: src/components/routes/event/SoldOutWaitlist/index.tsx
 msgctxt "waitlist filter"
@@ -5265,14 +5344,14 @@ msgstr ""
 msgid "Facebook"
 msgstr "Facebook"
 
-#: src/components/routes/admin/Messages/index.tsx:127
-msgid "Failed"
-msgstr "Neúspešné"
-
 #: src/components/common/MessageList/index.tsx
 msgctxt "message status"
 msgid "Failed"
 msgstr "Zlyhalo"
+
+#: src/components/routes/admin/Messages/index.tsx:127
+msgid "Failed"
+msgstr "Neúspešné"
 
 #: src/components/routes/admin/FailedJobs/index.tsx:165
 #: src/components/routes/admin/FailedJobs/index.tsx:261
@@ -6871,6 +6950,11 @@ msgstr "Posledných 7 dní"
 msgid "Last 90 days"
 msgstr "Posledných 90 dní"
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:83
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:143
+msgid "Last call"
+msgstr "Posledné volanie"
+
 #: src/components/routes/admin/PlatformRevenue/index.tsx:212
 msgid "Last contribution"
 msgstr "Posledný príspevok"
@@ -6944,13 +7028,13 @@ msgstr "Odísť"
 msgid "Leave blank to use the default word \"Invoice\""
 msgstr "Nechajte prázdne pre použitie predvoleného slova \"Faktúra\""
 
-#: src/components/routes/admin/RegistrationInvites/index.tsx:237
-msgid "Leave empty for a link that never expires."
-msgstr "Nechajte prázdne pre odkaz bez expirácie."
-
 #: src/components/routes/event/HomepageDesigner/index.tsx
 msgid "Leave empty for « Continue »."
 msgstr "Nechajte prázdne pre „Pokračovať“."
+
+#: src/components/routes/admin/RegistrationInvites/index.tsx:237
+msgid "Leave empty for a link that never expires."
+msgstr "Nechajte prázdne pre odkaz bez expirácie."
 
 #: src/components/forms/ProductForm/SizedProductForm.tsx:187
 msgid "Leave quantity empty for unlimited stock"
@@ -7491,6 +7575,14 @@ msgstr "Monitorovať a spravovať neúspešné úlohy na pozadí"
 msgid "Month"
 msgstr "Mesiac"
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:82
+msgid "Monthly pace"
+msgstr "Mesačné tempo"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:133
+msgid "Monthly pace: the cost over 30 days at the same rhythm, counted from the first call of the period. Busiest day: the most calls in one day, next to the daily limit. Click a column to sort."
+msgstr "Mesačné tempo: náklady za 30 dní v rovnakom rytme, počítané od prvého volania v období. Najrušnejší deň: najviac volaní za jeden deň, vedľa denného limitu. Kliknutím na stĺpec zoradíte."
+
 #: src/components/routes/organizer/Documents/index.tsx:159
 msgid "More actions"
 msgstr ""
@@ -7806,14 +7898,14 @@ msgstr "Žiadne priradenia kapacity"
 msgid "No Check-In Lists"
 msgstr "Žiadne zoznamy odbavení"
 
-#: src/components/common/CheckInStatusModal/index.tsx:158
-msgid "No check-in lists available for this event."
-msgstr "Pre túto udalosť nie sú dostupné žiadne zoznamy odbavení."
-
 #: src/components/common/CheckInStatusModal/index.tsx
 msgctxt "attendee check-in"
 msgid "No check-in lists available for this event."
 msgstr "Pre toto podujatie nie sú žiadne zoznamy odbavenia."
+
+#: src/components/common/CheckInStatusModal/index.tsx:158
+msgid "No check-in lists available for this event."
+msgstr "Pre túto udalosť nie sú dostupné žiadne zoznamy odbavení."
 
 #: src/components/routes/admin/Configurations/index.tsx:126
 msgid "No configurations found"
@@ -8141,24 +8233,24 @@ msgstr "Ešte neaktívny"
 msgid "Not available"
 msgstr "Nie je dostupné"
 
-#: src/components/common/AttendeeTable/index.tsx:329
-#: src/components/common/CheckInStatusModal/index.tsx:111
-msgid "Not Checked In"
-msgstr "Neodbavený"
-
 #: src/components/common/AttendeeTable/index.tsx
 msgctxt "attendee check-in"
 msgid "Not checked in"
 msgstr "Neodbavený"
 
-#: src/components/common/CheckInStatusModal/index.tsx:119
-msgid "Not Eligible"
-msgstr "Neoprávnený"
+#: src/components/common/AttendeeTable/index.tsx:329
+#: src/components/common/CheckInStatusModal/index.tsx:111
+msgid "Not Checked In"
+msgstr "Neodbavený"
 
 #: src/components/common/CheckInStatusModal/index.tsx
 msgctxt "attendee check-in"
 msgid "Not Eligible"
 msgstr "Nezahrnutý"
+
+#: src/components/common/CheckInStatusModal/index.tsx:119
+msgid "Not Eligible"
+msgstr "Neoprávnený"
 
 #: src/components/common/InstallAppPrompt/index.tsx:130
 msgid "Not now"
@@ -8397,18 +8489,6 @@ msgstr "Podrobnosti online udalosti"
 msgid "Online signature"
 msgstr ""
 
-#: src/components/routes/organizer/Settings/tabs/TeamTab.tsx
-msgid "Only account administrators can invite people and change their roles."
-msgstr "Len správcovia účtu môžu pozývať ľudí a meniť ich roly."
-
-#: src/components/routes/organizer/Settings/payments/StripeCard.tsx
-msgid "Only an account administrator can connect Stripe."
-msgstr "Stripe môže pripojiť len správca účtu."
-
-#: src/components/routes/organizer/Settings/payments/StripeCard.tsx
-msgid "Only free events? No need for Stripe."
-msgstr "Len bezplatné podujatia? Stripe netreba."
-
 #: src/components/routes/admin/RegistrationInvites/index.tsx:288
 msgid "Only {0} can use this link."
 msgstr "Tento odkaz môže použiť len {0}."
@@ -8434,9 +8514,21 @@ msgstr "Iba správcovia účtu môžu odstrániť alebo archivovať udalosti. Ko
 msgid "Only account administrators can delete or archive organizers. Contact your account admin for assistance."
 msgstr "Iba správcovia účtu môžu odstrániť alebo archivovať organizátorov. Kontaktujte správcu účtu."
 
+#: src/components/routes/organizer/Settings/tabs/TeamTab.tsx
+msgid "Only account administrators can invite people and change their roles."
+msgstr "Len správcovia účtu môžu pozývať ľudí a meniť ich roly."
+
+#: src/components/routes/organizer/Settings/payments/StripeCard.tsx
+msgid "Only an account administrator can connect Stripe."
+msgstr "Stripe môže pripojiť len správca účtu."
+
 #: src/components/routes/organizer/Reports/index.tsx:130
 msgid "Only completed orders are included."
 msgstr ""
+
+#: src/components/routes/organizer/Settings/payments/StripeCard.tsx
+msgid "Only free events? No need for Stripe."
+msgstr "Len bezplatné podujatia? Stripe netreba."
 
 #: src/components/modals/SendMessageModal/index.tsx:375
 msgid "Only send to orders with these statuses"
@@ -8454,13 +8546,13 @@ msgstr "Odpovede vidia iba organizátori. Vymažú sa 30 dní po podujatí."
 msgid "Only visible with promo code"
 msgstr "Viditeľné iba s promo kódom"
 
-#: src/components/common/CheckInListList/index.tsx:165
-#: src/components/modals/CheckInListSuccessModal/index.tsx:56
+#: src/components/common/CheckInListList/index.tsx
+msgctxt "check-in list"
 msgid "Open Check-In Page"
 msgstr "Otvoriť stránku odbavenia"
 
-#: src/components/common/CheckInListList/index.tsx
-msgctxt "check-in list"
+#: src/components/common/CheckInListList/index.tsx:165
+#: src/components/modals/CheckInListSuccessModal/index.tsx:56
 msgid "Open Check-In Page"
 msgstr "Otvoriť stránku odbavenia"
 
@@ -8490,13 +8582,13 @@ msgstr "Otvoriť menu"
 msgid "Opening {path}"
 msgstr ""
 
-#: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:172
-msgid "Opens in a new tab."
-msgstr "Otvorí sa na novej karte."
-
 #: src/components/common/CheckInListList/index.tsx
 msgid "Opens {0}"
 msgstr "Otvára sa {0}"
+
+#: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:172
+msgid "Opens in a new tab."
+msgstr "Otvorí sa na novej karte."
 
 #: src/components/forms/ProductForm/SizedProductForm.tsx:139
 #: src/components/forms/ProductForm/SizedProductForm.tsx:140
@@ -8575,11 +8667,6 @@ msgstr "Možnosti"
 msgid "Order"
 msgstr "Objednávka"
 
-#: src/components/modals/ManageOrderModal/index.tsx
-msgctxt "order panel"
-msgid "Order Details"
-msgstr "Podrobnosti objednávky"
-
 #: src/components/routes/my-tickets/index.tsx:87
 msgid "Order {id}"
 msgstr ""
@@ -8621,6 +8708,11 @@ msgstr "Objednávka vytvorená"
 #: src/components/common/OrdersTable/index.tsx:326
 #: src/components/modals/ManageAttendeeModal/index.tsx:167
 #: src/components/modals/ManageOrderModal/index.tsx:86
+msgid "Order Details"
+msgstr "Podrobnosti objednávky"
+
+#: src/components/modals/ManageOrderModal/index.tsx
+msgctxt "order panel"
 msgid "Order Details"
 msgstr "Podrobnosti objednávky"
 
@@ -8884,14 +8976,14 @@ msgstr "Iné"
 msgid "Other guides"
 msgstr "Ďalšie návody"
 
-#: src/components/common/CheckInStatusModal/index.tsx:175
-msgid "Other Lists (Ticket Not Included)"
-msgstr "Iné zoznamy (lístok nie je zahrnutý)"
-
 #: src/components/common/CheckInStatusModal/index.tsx
 msgctxt "attendee check-in"
 msgid "Other Lists (Ticket Not Included)"
 msgstr "Ostatné zoznamy (lístok nie je zahrnutý)"
+
+#: src/components/common/CheckInStatusModal/index.tsx:175
+msgid "Other Lists (Ticket Not Included)"
+msgstr "Iné zoznamy (lístok nie je zahrnutý)"
 
 #: src/components/routes/product-widget/OrderSummaryAndProducts/OtherEvents/index.tsx:94
 msgid "Other outings by {organizerName}"
@@ -9164,14 +9256,14 @@ msgstr "Lehota splatnosti"
 msgid "Payment Failed"
 msgstr "Platba zlyhala"
 
+#: src/components/routes/event/Settings/cards/PaymentMethodsCard.tsx
+msgid "Payment instructions"
+msgstr "Pokyny na platbu"
+
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:665
 #: src/components/routes/product-widget/Payment/PaymentMethods/Offline/index.tsx:14
 msgid "Payment Instructions"
 msgstr "Pokyny k platbe"
-
-#: src/components/routes/event/Settings/cards/PaymentMethodsCard.tsx
-msgid "Payment instructions"
-msgstr "Pokyny na platbu"
 
 #: src/components/routes/product-widget/Payment/index.tsx:172
 msgid "Payment method"
@@ -9267,9 +9359,18 @@ msgstr ""
 msgid "Pending Review"
 msgstr "Čaká na kontrolu"
 
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:75
+msgid "People"
+msgstr "Ľudia"
+
 #: src/components/common/QuestionsTable/index.tsx:325
 msgid "Per Attendee"
 msgstr "Na účastníka"
+
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:79
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:141
+msgid "Per call"
+msgstr "Za volanie"
 
 #: src/components/routes/event/Settings/Sections/HomepageAndCheckoutSettings/index.tsx:60
 #: src/components/routes/organizer/Settings/Sections/EventDefaults/index.tsx:39
@@ -9324,6 +9425,10 @@ msgstr "Natrvalo odstrániť túto udalosť a všetky jej súvisiace dáta."
 #: src/components/routes/organizer/Settings/Sections/DangerZoneSettings/index.tsx:93
 msgid "Permanently delete this organizer and all its events."
 msgstr "Natrvalo odstrániť tohto organizátora a všetky jeho udalosti."
+
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:137
+msgid "Person"
+msgstr "Osoba"
 
 #: src/components/routes/profile/ManageProfile/index.tsx:146
 msgid "Personal Information"
@@ -9624,13 +9729,13 @@ msgstr "Primárna farba textu"
 msgid "Print"
 msgstr ""
 
-#: src/components/routes/event/TicketDesigner/index.tsx:223
-msgid "Print Preview"
-msgstr "Náhľad tlače"
-
 #: src/components/routes/event/TicketDesigner/index.tsx
 msgid "Print preview"
 msgstr "Ukážka pred tlačou"
+
+#: src/components/routes/event/TicketDesigner/index.tsx:223
+msgid "Print Preview"
+msgstr "Náhľad tlače"
 
 #: src/components/layouts/Checkout/index.tsx:311
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:581
@@ -9839,13 +9944,13 @@ msgstr ""
 "Poskytnite ďalší kontext alebo pokyny pre túto otázku. Toto pole použite na pridanie podmienok,\n"
 "usmernení alebo dôležitých informácií, ktoré účastníci potrebujú vedieť pred zodpovedaním."
 
-#: src/components/layouts/OrganizerLayout/index.tsx:316
-#~ msgid "Public page"
-#~ msgstr "Verejná stránka"
-
 #: src/components/routes/organizer/Settings/organization/AddressCard.tsx
 msgid "Province"
 msgstr "Kraj"
+
+#: src/components/layouts/OrganizerLayout/index.tsx:316
+#~ msgid "Public page"
+#~ msgstr "Verejná stránka"
 
 #: src/components/common/StatusToggle/index.tsx:96
 msgid "Publish"
@@ -9985,13 +10090,13 @@ msgstr "Znovu ponúknuť miesto"
 msgid "Reach {amount} in sales."
 msgstr ""
 
-#: src/components/common/OrganizerAchievements/achievements.ts:81
-msgid "Reach 100 registered participants."
-msgstr ""
-
 #: src/components/common/OrganizerAchievements/achievements.ts
 msgid "Reach {count} registered participants."
 msgstr "Dosiahnite {count} registrovaných účastníkov."
+
+#: src/components/common/OrganizerAchievements/achievements.ts:81
+msgid "Reach 100 registered participants."
+msgstr ""
 
 #: src/components/common/AttendeeTable/index.tsx
 msgid "Reactivate ticket"
@@ -10249,6 +10354,10 @@ msgstr "odstrániť"
 msgid "Remove"
 msgstr "Odstrániť"
 
+#: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx
+msgid "Remove {label}"
+msgstr "Odstrániť {label}"
+
 #: src/components/routes/product-widget/CollectInformation/OrderAddOns/index.tsx:129
 msgid "Remove one {title}"
 msgstr ""
@@ -10263,10 +10372,6 @@ msgstr "Odstrániť možnosť"
 #: src/components/layouts/Checkout/CheckoutOrderPanel/index.tsx:204
 msgid "Remove promo code"
 msgstr "Odstrániť promo kód"
-
-#: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx
-msgid "Remove {label}"
-msgstr "Odstrániť {label}"
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx
 msgid "Replace"
@@ -10500,6 +10605,10 @@ msgstr "Zrušiť"
 msgid "Revoke {0}? Any application using it will stop working immediately."
 msgstr "Zrušiť {0}? Každá aplikácia, ktorá ho používa, okamžite prestane fungovať."
 
+#: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx
+msgid "Revoke {tokenName}? Any application using it will stop working immediately."
+msgstr "Zrušiť {tokenName}? Každá aplikácia, ktorá ho používa, okamžite prestane fungovať."
+
 #: src/components/routes/account/ManageAccount/sections/Users/index.tsx:133
 #: src/components/routes/admin/RegistrationInvites/index.tsx:151
 msgid "Revoke invitation"
@@ -10512,10 +10621,6 @@ msgstr "Odvolať ponuku"
 #: src/components/routes/admin/RegistrationInvites/index.tsx:66
 msgid "Revoke this invitation? The link will stop working immediately."
 msgstr "Zrušiť túto pozvánku? Odkaz okamžite prestane fungovať."
-
-#: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx
-msgid "Revoke {tokenName}? Any application using it will stop working immediately."
-msgstr "Zrušiť {tokenName}? Každá aplikácia, ktorá ho používa, okamžite prestane fungovať."
 
 #: src/components/routes/admin/RegistrationInvites/index.tsx:51
 msgid "Revoked"
@@ -10657,16 +10762,16 @@ msgstr "San Francisco"
 msgid "Save"
 msgstr "Uložiť"
 
+#: src/components/routes/event/TicketDesigner/index.tsx
+msgid "Save changes"
+msgstr "Uložiť zmeny"
+
 #: src/components/modals/ManageAttendeeModal/index.tsx:235
 #: src/components/modals/ManageOrderModal/index.tsx:175
 #: src/components/routes/admin/Configurations/index.tsx:268
 #: src/components/routes/event/HomepageDesigner/index.tsx:293
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:305
 msgid "Save Changes"
-msgstr "Uložiť zmeny"
-
-#: src/components/routes/event/TicketDesigner/index.tsx
-msgid "Save changes"
 msgstr "Uložiť zmeny"
 
 #: src/components/modals/EditAccountConfigurationModal/index.tsx:115
@@ -10736,14 +10841,14 @@ msgstr "Naplánovať na neskôr"
 msgid "Schedule Message"
 msgstr "Naplánovať správu"
 
-#: src/components/common/ProductsTable/SortableProduct/index.tsx:84
-#: src/components/routes/admin/Messages/index.tsx:125
-#: src/components/routes/event/messages.tsx:62
+#: src/components/common/MessageList/index.tsx
+msgctxt "message status"
 msgid "Scheduled"
 msgstr "Naplánované"
 
-#: src/components/common/MessageList/index.tsx
-msgctxt "message status"
+#: src/components/common/ProductsTable/SortableProduct/index.tsx:84
+#: src/components/routes/admin/Messages/index.tsx:125
+#: src/components/routes/event/messages.tsx:62
 msgid "Scheduled"
 msgstr "Naplánované"
 
@@ -11203,12 +11308,12 @@ msgstr "Citlivé"
 msgid "Sensitive information"
 msgstr "Citlivý údaj"
 
-#: src/components/routes/admin/Messages/index.tsx:123
+#: src/components/common/MessageList/index.tsx
+msgctxt "message status"
 msgid "Sent"
 msgstr "Odoslané"
 
-#: src/components/common/MessageList/index.tsx
-msgctxt "message status"
+#: src/components/routes/admin/Messages/index.tsx:123
 msgid "Sent"
 msgstr "Odoslané"
 
@@ -11309,10 +11414,6 @@ msgstr "Nastavte počiatočné číslo pre číslovanie faktúr. Toto nie je mo�
 msgid "Set up check-in lists for different entrances, sessions, or days."
 msgstr "Nastavte zoznamy odbavení pre rôzne vchody, relácie alebo dni."
 
-#: src/components/routes/event/GettingStarted/index.tsx:146
-msgid "Set up your event"
-msgstr "Nastavte svoju udalosť"
-
 #: src/components/routes/event/GettingStarted/index.tsx
 msgctxt "getting started step"
 msgid "Set up your event"
@@ -11323,18 +11424,22 @@ msgctxt "getting started action"
 msgid "Set up your event"
 msgstr "Pridať podrobnosti"
 
+#: src/components/routes/event/GettingStarted/index.tsx:146
+msgid "Set up your event"
+msgstr "Nastavte svoju udalosť"
+
 #: src/components/routes/event/Settings/cards/DetailsCard.tsx
 msgid "Set when the event is created."
 msgstr "Určuje sa pri vytvorení podujatia."
-
-#: src/components/routes/event/GettingStarted/index.tsx:189
-msgid "Set your event live"
-msgstr "Zverejnite svoju udalosť"
 
 #: src/components/routes/event/GettingStarted/index.tsx
 msgctxt "getting started step"
 msgid "Set your event live"
 msgstr "Zverejnite svoje podujatie"
+
+#: src/components/routes/event/GettingStarted/index.tsx:189
+msgid "Set your event live"
+msgstr "Zverejnite svoju udalosť"
 
 #: src/components/common/QuestionsTable/index.tsx:397
 msgid "Setting updated"
@@ -11408,6 +11513,10 @@ msgstr "Rozdeliť náklad"
 msgid "Shared Capacity Management"
 msgstr "Správa zdieľanej kapacity"
 
+#: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
+msgid "Show {label} on my page"
+msgstr "Zobraziť {label} na mojej stránke"
+
 #: src/components/routes/organizer/Settings/Sections/SocialLinks/index.tsx:232
 msgid "Show all platforms ({0} more with values)"
 msgstr "Zobraziť všetky platformy ({0} ďalších s hodnotami)"
@@ -11456,10 +11565,6 @@ msgstr ""
 #: src/components/forms/ProductForm/SizedProductForm.tsx:156
 msgid "Show this option to buyers"
 msgstr "Zobraziť túto možnosť kupujúcim"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/SocialLinksSection.tsx
-msgid "Show {label} on my page"
-msgstr "Zobraziť {label} na mojej stránke"
 
 #: src/components/common/OrganizerReportTable/index.tsx:355
 msgid "Showing {0} of {totalRows} records"
@@ -11944,12 +12049,12 @@ msgstr "Predmet je povinný"
 msgid "Subject will appear here"
 msgstr "Predmet sa zobrazí tu"
 
-#: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:255
+#: src/components/routes/organizer/Settings/tabs/EmailsTab.tsx
+msgctxt "email"
 msgid "Subject:"
 msgstr "Predmet:"
 
-#: src/components/routes/organizer/Settings/tabs/EmailsTab.tsx
-msgctxt "email"
+#: src/components/common/EmailTemplateSettings/EmailTemplateSettingsBase.tsx:255
 msgid "Subject:"
 msgstr "Predmet:"
 
@@ -12272,13 +12377,13 @@ msgstr "Dane a ďalšie poplatky"
 msgid "taxes and fees"
 msgstr ""
 
+#: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx
+msgid "Taxes and fees"
+msgstr "Dane a poplatky"
+
 #: src/components/forms/ProductForm/index.tsx:455
 #: src/components/forms/ProductForm/index.tsx:460
 msgid "Taxes and Fees"
-msgstr "Dane a poplatky"
-
-#: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx
-msgid "Taxes and fees"
 msgstr "Dane a poplatky"
 
 #: src/components/routes/organizer/Settings/index.tsx
@@ -12428,6 +12533,10 @@ msgstr ""
 #: src/components/routes/help/AskAssistant.tsx:104
 msgid "The assistant is not available yet."
 msgstr ""
+
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:52
+msgid "The assistant was not used over this period"
+msgstr "Asistent sa v tomto období nepoužil"
 
 #: src/components/common/ThemeColorControls/index.tsx:64
 msgid "The background color of the page. When using cover image, this is applied as an overlay."
@@ -12993,12 +13102,12 @@ msgstr "Suma vstupenky"
 msgid "Ticket button"
 msgstr "Tlačidlo vstupeniek"
 
-#: src/components/common/CheckIn/AttendeeList.tsx:85
-msgid "Ticket Cancelled"
-msgstr "Lístok zrušený"
-
 #: src/components/common/AttendeeTable/index.tsx
 msgid "Ticket cancelled"
+msgstr "Lístok zrušený"
+
+#: src/components/common/CheckIn/AttendeeList.tsx:85
+msgid "Ticket Cancelled"
 msgstr "Lístok zrušený"
 
 #: src/components/common/Assistant/assistant.ts:187
@@ -13021,13 +13130,13 @@ msgstr "Návrhár lístka"
 msgid "Ticket email has been resent to attendee"
 msgstr "E-mail s lístkom bol znovu odoslaný účastníkovi"
 
-#: src/components/routes/product-widget/PrintProduct/index.tsx:42
-#~ msgid "Ticket for"
-#~ msgstr "Lístok pre"
-
 #: src/components/routes/event/TicketDesigner/index.tsx
 msgid "Ticket footer"
 msgstr "Päta vstupenky"
+
+#: src/components/routes/product-widget/PrintProduct/index.tsx:42
+#~ msgid "Ticket for"
+#~ msgstr "Lístok pre"
 
 #: src/components/common/MessageList/index.tsx:31
 msgid "Ticket holders"
@@ -13265,6 +13374,11 @@ msgstr "Názov tokenu"
 msgid "Token revoked"
 msgstr "Token zrušený"
 
+#: src/components/routes/admin/AssistantUsage/index.tsx:48
+#: src/components/routes/admin/AssistantUsage/UsageTables.tsx:78
+msgid "Tokens"
+msgstr "Tokeny"
+
 #: src/components/routes/my-tickets/index.tsx:108
 msgid "Tomorrow"
 msgstr ""
@@ -13273,13 +13387,13 @@ msgstr ""
 msgid "Tomorrow: {0}"
 msgstr "Zajtra: {0}"
 
-#: src/components/layouts/OrganizerLayout/index.tsx:158
-#~ msgid "Tools"
-#~ msgstr "Nástroje"
-
 #: src/components/routes/organizer/Settings/tabs/EmailsTab.tsx
 msgid "Too many tests in a row. Please try again in a few minutes."
 msgstr "Príliš veľa testov za sebou. Skúste to znova o niekoľko minút."
+
+#: src/components/layouts/OrganizerLayout/index.tsx:158
+#~ msgid "Tools"
+#~ msgstr "Nástroje"
 
 #: src/components/routes/admin/PlatformRevenue/index.tsx:202
 msgid "Top contributors"
@@ -14390,6 +14504,10 @@ msgstr "Na ktoré produkty sa tento kód vzťahuje? (Predvolene sa vzťahuje na 
 msgid "What products should this capacity apply to?"
 msgstr "Na ktoré produkty sa má táto kapacita vzťahovať?"
 
+#: src/components/routes/admin/AssistantUsage/index.tsx:75
+msgid "What the assistant costs the platform, estimated from Anthropic's public prices in US dollars. A call is one answer from the model: a question that reads the event first takes two or more. Model: {model} · limit of {limit} calls per account per day."
+msgstr "Koľko asistent stojí platformu, odhadované podľa verejných cien Anthropic v amerických dolároch. Volanie je jedna odpoveď modelu: otázka, ktorá najprv načíta podujatie, potrebuje dve alebo viac. Model: {model} · limit {limit} volaní na účet za deň."
+
 #: src/components/routes/admin/Dashboard/index.tsx:269
 #: src/components/routes/admin/PlatformRevenue/index.tsx:79
 msgid "What the platform actually collected: voluntary Dehors contributions and sales commissions. Approximate totals across all currencies."
@@ -14559,6 +14677,10 @@ msgstr ""
 #: src/components/forms/CheckInListForm/index.tsx:42
 msgid "Which tickets should be associated with this check-in list?"
 msgstr "Ktoré lístky majú byť spojené s týmto zoznamom odbavení?"
+
+#: src/components/routes/admin/AssistantUsage/index.tsx:130
+msgid "Who costs the most"
+msgstr "Kto stojí najviac"
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:720
 msgid "Who has to fill it in?"
@@ -15151,28 +15273,3 @@ msgstr "PSČ"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:904
 msgid "ZIP or Postal Code"
 msgstr "PSČ"
-
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
-msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
-msgstr "{changeCount, plural, one {# zmena ešte nie je zverejnená} few {# zmeny ešte nie sú zverejnené} other {# zmien ešte nie je zverejnených}}"
-
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx
-msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
-msgstr "{faqCount, plural, =0 {Zatiaľ žiadne otázky} one {# otázka · zobrazená v spodnej časti stránky} few {# otázky · zobrazené v spodnej časti stránky} other {# otázok · zobrazených v spodnej časti stránky}}"
-
-#: src/components/routes/organizer/Settings/payments/FeesCard.tsx
-msgid "{platformFees} per ticket + Stripe fees ({stripeFees}). Nothing on free events."
-msgstr "{platformFees} za lístok + poplatky Stripe ({stripeFees}). Nič pri bezplatných podujatiach."
-
-#: src/components/routes/event/GettingStarted/index.tsx
-msgid "{doneCount} of {total} steps completed"
-msgstr "Dokončené kroky: {doneCount} z {total}"
-
-#: src/components/routes/event/TicketDesigner/index.tsx
-msgid "{changeCount, plural, one {# change not yet saved} other {# changes not yet saved}}"
-msgstr "{changeCount, plural, one {# zmena ešte nie je uložená} few {# zmeny ešte nie sú uložené} other {# zmien ešte nie je uložených}}"
-
-#: src/components/common/OrganizerAchievements/achievements.ts
-msgid "{count} Club"
-msgstr "Klub {count}"
