@@ -1,30 +1,25 @@
 import {
     IconArrowsHorizontal,
     IconBrandStripe,
-    IconCalendar,
     IconCalendarPlus,
-    IconChartPie,
     IconChevronRight,
     IconCreditCard,
-    IconDashboard,
     IconExternalLink,
-    IconEye,
     IconEyeOff,
-    IconHelpCircle,
     IconInbox,
-    IconPaint,
-    IconSettings,
-    IconTrophy,
+    IconMessageQuestion,
+    IconPlus,
     IconShare,
     IconUsersGroup,
     IconShield,
     IconWebhook
 } from "@tabler/icons-react";
 import { t } from "@lingui/macro";
-import { BreadcrumbItem, NavItem } from "../AppLayout/types.ts";
+import { BreadcrumbItem, NavContext, NavItem } from "../AppLayout/types.ts";
+import { adminIcon } from "../AppLayout/NavParts";
 import AppLayout from "../AppLayout";
-import { NavLink, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
-import { Button, Modal, Stack, Text } from "@mantine/core";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import { Button, Menu, Modal, Stack, Text } from "@mantine/core";
 import { useGetOrganizer } from "../../../queries/useGetOrganizer.ts";
 import { useEffect, useRef, useState } from "react";
 import { CreateEventModal } from "../../modals/CreateEventModal";
@@ -32,7 +27,7 @@ import { TopBarButton } from "../../common/TopBarButton";
 import classes from "./OrganizerLayout.module.scss";
 import { CalloutConfig, SidebarCalloutQueue } from "../../common/SidebarCallout/SidebarCalloutQueue";
 import { InviteUserModal } from "../../modals/InviteUserModal";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { SwitchOrganizerModal } from "../../modals/SwitchOrganizerModal";
 import { CreateOrganizerModal } from "../../modals/CreateOrganizerModal";
 import { useGetOrganizers } from "../../../queries/useGetOrganizers.ts";
@@ -75,7 +70,6 @@ const OrganizerLayout = () => {
     const isSuperAdmin = useIsCurrentUserSuperAdmin();
     const canSeeDeveloperPages = useCanSeeDeveloperPages();
     const isUserEmailVerfied = me?.is_email_verified;
-    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const { data: achievements } = useGetOrganizerAchievements(organizerId);
     const earnedAchievements = achievements?.filter((achievement) => achievement.earned_at).length;
@@ -121,43 +115,58 @@ const OrganizerLayout = () => {
     }, [searchParams]);
 
     const navItems: NavItem[] = [
+        { label: t`Overview` },
         {
-            label: t`Switch Organizer`,
-            icon: IconArrowsHorizontal,
-            onClick: openSwitchModal,
-            isActive: () => false,
-            showWhen: () => organizers && organizers.length > 1,
+            link: 'dashboard',
+            label: t`Dashboard`,
+            iconSrc: adminIcon('accueil'),
+            mobileTab: true,
+            mobileTabLabel: t`Home`,
+            mobileTabOrder: 0,
         },
-        { label: 'Overview' },
-        { link: 'dashboard', label: t`Organizer Dashboard`, icon: IconDashboard, mobileTab: true, mobileTabLabel: t`Overview` },
         {
             link: 'reports',
             label: t`Reports`,
-            icon: IconChartPie,
+            iconSrc: adminIcon('rapports'),
             isActive: (isActive) => isActive || location.pathname.includes('/report/'),
             mobileTab: true,
+            mobileTabOrder: 2,
         },
         {
             link: 'achievements',
             label: t`Achievements`,
-            icon: IconTrophy,
+            iconSrc: adminIcon('succes'),
+            tileIconSrc: adminIcon('succes-22'),
             badge: achievements ? `${earnedAchievements}/${achievements.length}` : null,
         },
 
         { label: t`Manage` },
-        { link: 'events', label: t`Events`, icon: IconCalendar, mobileTab: true },
+        { link: 'events', label: t`Events`, iconSrc: adminIcon('evenements'), mobileTab: true, mobileTabOrder: 1 },
         {
             link: 'messages',
             label: t`Messages`,
-            icon: IconInbox,
+            iconSrc: adminIcon('messages'),
+            tileIconSrc: adminIcon('messages-22'),
             badge: unreadMessages ? String(unreadMessages) : undefined,
             attention: !!unreadMessages,
         },
-        { link: 'settings', label: t`Settings`, icon: IconSettings, mobileTab: true },
 
-        { label: t`Tools` },
-        { link: 'organizer-homepage-designer', label: t`Homepage Designer`, icon: IconPaint },
-        { link: 'faq', label: t`FAQ`, icon: IconHelpCircle },
+        { label: t`Customize` },
+        {
+            link: 'organizer-homepage-designer',
+            label: t`My page`,
+            iconSrc: adminIcon('ma-page'),
+            mobileTab: true,
+            mobileTabOrder: 3,
+        },
+        {
+            link: 'settings',
+            label: t`Settings`,
+            iconSrc: adminIcon('parametres'),
+            tileIconSrc: adminIcon('parametres-22'),
+        },
+        // Pas encore integree a « Ma page » comme dans la maquette: on la garde a cote.
+        { link: 'faq', label: t`FAQ`, icon: IconMessageQuestion },
 
         ...(canSeeDeveloperPages
             ? [
@@ -228,6 +237,37 @@ const OrganizerLayout = () => {
         });
     };
 
+    const publicPageUrl = `/events/${organizerId}/${organizer?.slug || ''}`;
+    const hasSeveralOrganizers = !!organizers && organizers.length > 1;
+
+    const navContext: NavContext = {
+        initial: organizer?.name?.trim().charAt(0).toUpperCase() || '…',
+        title: organizer?.name ?? '…',
+        subtitle: t`Organizer`,
+        mobileSubtitle: hasSeveralOrganizers ? t`Switch Organizer` : t`Organizer`,
+        menu: organizer && (
+            <>
+                {hasSeveralOrganizers ? (
+                    <Menu.Item leftSection={<IconArrowsHorizontal size={16} />} onClick={openSwitchModal}>
+                        {t`Switch Organizer`}
+                    </Menu.Item>
+                ) : (
+                    <Menu.Item leftSection={<IconPlus size={16} />} onClick={() => setShowCreateOrganizerModal(true)}>
+                        {t`Create Organizer`}
+                    </Menu.Item>
+                )}
+                <Menu.Divider />
+                <Menu.Item component="a" href={publicPageUrl} target="_blank" rel="noopener"
+                           leftSection={<IconExternalLink size={16} />}>
+                    {t`View my page`}
+                </Menu.Item>
+                <Menu.Item leftSection={<IconShare size={16} />} onClick={openShareModal}>
+                    {t`Share Organizer Page`}
+                </Menu.Item>
+            </>
+        ),
+    };
+
     const breadcrumbItems: BreadcrumbItem[] = [
         {
             link: `/manage/organizer/${organizerId}`,
@@ -272,91 +312,37 @@ const OrganizerLayout = () => {
                 navItems={navItemsWithLoading}
                 breadcrumbItems={breadcrumbItems}
                 entityType="organizer"
-                topBarContent={(
-                    <div className={classes.statusToggleContainer}>
-                        {organizer && (
-                            <TopBarButton
-                                onClick={handleStatusToggle}
-                                size="sm"
-                                leftSection={organizer?.status === 'DRAFT' ? <IconEyeOff size={16} /> :
-                                    <IconEye size={16} />}
-                                rightSection={<IconChevronRight size={14} />}
-                            >
-                                {organizer?.status === 'DRAFT'
-                                    ? <span>{t`Draft`} <span
-                                        className={classes.statusAction}>{t`- Click to Publish`}</span></span>
-                                    : <span>{t`Live`} <span
-                                        className={classes.statusAction}>{t`- Click to Unpublish`}</span></span>
-                                }
-                            </TopBarButton>
-                        )}
-                    </div>
+                navContext={navContext}
+                topBarContent={organizer?.status === 'DRAFT' && (
+                    <TopBarButton
+                        onClick={handleStatusToggle}
+                        size="sm"
+                        leftSection={<IconEyeOff size={16} />}
+                        rightSection={<IconChevronRight size={14} />}
+                    >
+                        <span>{t`Draft`} <span className={classes.statusAction}>{t`- Click to Publish`}</span></span>
+                    </TopBarButton>
                 )}
-                mobileContext={{
-                    title: organizer?.name ?? '…',
-                    subtitle: t`Organizer`,
-                }}
+                topBarActions={(
+                    <Button
+                        className={classes.createEventButton}
+                        onClick={() => setShowCreateEventModal(true)}
+                        leftSection={<IconPlus size={20} stroke={2.25} />}
+                    >
+                        {t`Create Event`}
+                    </Button>
+                )}
                 mobilePrimaryAction={isDashboard ? {
                     label: t`Create Event`,
                     icon: IconCalendarPlus,
                     onClick: () => setShowCreateEventModal(true),
                 } : undefined}
-                mobileSheetActions={organizer && (
-                    <>
-                        <Button variant="light" leftSection={<IconShare size={16} />} onClick={openShareModal}>
-                            {t`Share`}
-                        </Button>
-                        <Button
-                            component={NavLink}
-                            to={`/events/${organizerId}/${organizer.slug || ''}`}
-                            target={'_blank'}
-                            variant="light"
-                            leftSection={<IconExternalLink size={16} />}
-                        >
-                            {t`Public page`}
-                        </Button>
-                    </>
-                )}
-                breadcrumbContentRight={(
-                    <div className={classes.breadcrumbActions}>
-                        {organizer && !isMobile && (
-                            <Button
-                                onClick={openShareModal}
-                                variant="transparent"
-                                leftSection={<IconShare size={16} />}
-                            >
-                                <span className={classes.shareButtonTextDesktop}>
-                                    {t`Share Organizer Page`}
-                                </span>
-                                <span className={classes.shareButtonTextMobile}>
-                                    {t`Share`}
-                                </span>
-                            </Button>
-                        )}
-                        <Button
-                            size={'sm'}
-                            onClick={() => setShowCreateEventModal(true)}
-                            leftSection={<IconCalendarPlus size={16} />}
-                        >
-                            {t`Create Event`}
-                        </Button>
-                    </div>
-                )}
-                actionGroupContent={(
-                    <Button
-                        component={NavLink}
-                        to={`/events/${organizerId}/${organizer?.slug || ''}`}
-                        target={'_blank'}
-                        variant={'transparent'}
-                        className={classes.viewHomepageButton}
-                        leftSection={<IconExternalLink size={17} />}
-                        title={t`View Organizer Homepage`}
-                    >
-                        <span className={classes.viewHomepageButtonTextDesktop}>
-                            {t`View Organizer Homepage`}
-                        </span>
-                    </Button>
-                )}
+                mobileMenuItems={organizer ? [{
+                    link: publicPageUrl,
+                    external: true,
+                    label: t`View my page`,
+                    tileIconSrc: adminIcon('voir-22'),
+                }] : []}
                 sidebarFooter={<SidebarCalloutQueue callouts={callouts} />}
             />
 

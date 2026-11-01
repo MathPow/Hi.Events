@@ -1,0 +1,24 @@
+// Shared by the sidebar and the phone nav (Figma « Admin · Barre latérale », « Navigation mobile »).
+$brun-actif: #634a40;
+$creme-10: rgb(255 247 233 / 0.1);
+$creme-08: rgb(255 247 233 / 0.08);
+$creme-06: rgb(255 247 233 / 0.06);
+$creme-65: rgb(255 247 233 / 0.65);
+$creme-55: rgb(255 247 233 / 0.55);
+$badge-pale: #f7dccd;
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin group-heading {
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--dehors-orange);
+  }
+}

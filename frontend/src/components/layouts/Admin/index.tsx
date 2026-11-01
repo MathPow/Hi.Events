@@ -48,7 +48,7 @@ const AdminLayout = () => {
             navItems={navItems}
             breadcrumbItems={breadcrumbItems}
             entityType="organizer"
-            mobileContext={{title: t`Admin Dashboard`}}
+            mobileMenuGrouped
         />
     );
 };

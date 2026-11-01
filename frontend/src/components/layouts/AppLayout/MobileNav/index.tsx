@@ -1,19 +1,22 @@
-import React from "react";
-import {Drawer, UnstyledButton} from "@mantine/core";
-import {useDisclosure} from "@mantine/hooks";
-import {IconLayoutGrid} from "@tabler/icons-react";
+import React, {useEffect, useState} from "react";
+import {UnstyledButton} from "@mantine/core";
 import {t} from "@lingui/macro";
-import {NavLink} from "react-router";
+import {NavLink, useLocation} from "react-router";
 import classNames from "classnames";
 import classes from './MobileNav.module.scss';
-import {MobilePrimaryAction, NavItem} from "../types.ts";
+import {MobilePrimaryAction, NavContext, NavItem} from "../types.ts";
+import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
 
 interface MobileNavProps {
     navItems: NavItem[];
+    // Tiles added after the pages: help center, public page…
+    menuItems: NavItem[];
     currentNavItem?: NavItem;
-    sheetHeader?: React.ReactNode;
-    sheetFooter?: React.ReactNode;
+    context?: NavContext;
+    menuFooter?: React.ReactNode;
     primaryAction?: MobilePrimaryAction;
+    // Keeps the section headings in the menu (event pages, which have many).
+    groupedMenu?: boolean;
 }
 
 interface NavGroup {
@@ -21,16 +24,14 @@ interface NavGroup {
     items: NavItem[];
 }
 
-const isHeading = (item: NavItem) => !item.link && item.link !== "" && item.onClick === undefined;
-
-const isVisible = (item: NavItem) => !item.showWhen || item.showWhen();
-
-const groupSheetItems = (navItems: NavItem[]): NavGroup[] => {
+const groupMenuItems = (navItems: NavItem[], grouped: boolean): NavGroup[] => {
     const groups: NavGroup[] = [{items: []}];
 
     navItems.forEach((item) => {
         if (isHeading(item)) {
-            groups.push({heading: item.label, items: []});
+            if (grouped) {
+                groups.push({heading: item.label, items: []});
+            }
         } else if (!item.mobileTab && isVisible(item)) {
             groups[groups.length - 1].items.push(item);
         }
@@ -39,11 +40,8 @@ const groupSheetItems = (navItems: NavItem[]): NavGroup[] => {
     return groups.filter((group) => group.items.length > 0);
 };
 
-const isItemActive = (item: NavItem, isActive: boolean) =>
-    (item.isActive ? item.isActive(isActive) : isActive) && !item.comingSoon;
-
-const ItemMarker = ({item}: { item: NavItem }) => {
-    if (item.badge !== undefined && item.badge !== null) {
+const TileMarker = ({item}: { item: NavItem }) => {
+    if (item.badge !== undefined && item.badge !== null && item.badge !== '') {
         return (
             <span className={classNames(classes.badge, {[classes.badgeAttention]: item.attention})}>
                 {item.badge}
@@ -54,34 +52,61 @@ const ItemMarker = ({item}: { item: NavItem }) => {
     return item.attention ? <span className={classes.dot} aria-hidden/> : null;
 };
 
+// Figma « Admin · Navigation mobile » and « Menu ouvert »: a tab bar at the bottom, the rest in a brown card above it.
 export const MobileNav: React.FC<MobileNavProps> = ({
                                                         navItems,
+                                                        menuItems,
                                                         currentNavItem,
-                                                        sheetHeader,
-                                                        sheetFooter,
+                                                        context,
+                                                        menuFooter,
                                                         primaryAction,
+                                                        groupedMenu = false,
                                                     }) => {
-    const [sheetOpen, {open: openSheet, close: closeSheet}] = useDisclosure(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const {pathname} = useLocation();
+    const closeMenu = () => setMenuOpen(false);
 
-    const tabs = navItems.filter((item) => item.mobileTab && !isHeading(item) && isVisible(item));
-    const groups = groupSheetItems(navItems);
-    const sheetNeedsAttention = groups.some((group) => group.items.some((item) => item.attention));
-    const isSheetPageActive = !!currentNavItem && !currentNavItem.mobileTab;
+    useEffect(closeMenu, [pathname]);
+
+    useEffect(() => {
+        if (!menuOpen) {
+            return;
+        }
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closeMenu();
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [menuOpen]);
+
+    const tabs = navItems
+        .filter((item) => item.mobileTab && !isHeading(item) && isVisible(item))
+        .map((item, index) => ({item, order: item.mobileTabOrder ?? index}))
+        .sort((a, b) => a.order - b.order)
+        .map(({item}) => item);
+    const groups = groupMenuItems(navItems, groupedMenu);
+    if (menuItems.length > 0) {
+        groups.push({items: menuItems});
+    }
+    const menuNeedsAttention = groups.some((group) => group.items.some((item) => item.attention));
+    const isMenuPageActive = !!currentNavItem && !currentNavItem.mobileTab;
 
     const renderTile = (item: NavItem) => {
+        if (item.loading) {
+            return <span key={item.label} className={classNames(classes.tile, classes.tileLoading)}/>;
+        }
+
         const content = (
             <>
-                <span className={classes.tileIcon}>
-                    {item.icon && <item.icon size={22} stroke={1.6}/>}
-                    <ItemMarker item={item}/>
+                <span className={classes.tileTop}>
+                    <NavIcon item={item} tile/>
+                    <TileMarker item={item}/>
                 </span>
                 <span className={classes.tileLabel}>{item.label}</span>
             </>
         );
-
-        if (item.loading) {
-            return <span key={item.label} className={classNames(classes.tile, classes.tileLoading)}/>;
-        }
 
         if (!item.link && item.link !== "") {
             return (
@@ -89,7 +114,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                     key={item.label}
                     className={classes.tile}
                     onClick={() => {
-                        closeSheet();
+                        closeMenu();
                         item.onClick?.();
                     }}
                 >
@@ -98,13 +123,22 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             );
         }
 
+        if (item.external) {
+            return (
+                <a key={item.label} href={item.link} target="_blank" rel="noopener" className={classes.tile}
+                   onClick={closeMenu}>
+                    {content}
+                </a>
+            );
+        }
+
         return (
             <NavLink
                 key={item.label}
-                to={item.comingSoon ? '#' : item.link}
+                to={item.comingSoon ? '#' : item.link!}
                 end={item.link === ''}
                 onClick={() => {
-                    closeSheet();
+                    closeMenu();
                     item.onClick?.();
                 }}
                 className={({isActive}) => classNames(classes.tile, {
@@ -125,6 +159,31 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 </UnstyledButton>
             )}
 
+            {menuOpen && (
+                <>
+                    <div className={classes.veil} onClick={closeMenu} aria-hidden/>
+                    <div className={classes.menu} id="mobile-nav-menu" role="dialog" aria-modal="true"
+                         aria-label={t`Menu`}>
+                        <div className={classes.menuHeading}>{t`Menu`}</div>
+
+                        {context && <ContextCard context={context} variant="menu"/>}
+
+                        {groups.map((group, index) => (
+                            <section key={group.heading ?? index} className={classes.group}>
+                                {group.heading && <h3 className={classes.menuHeading}>{group.heading}</h3>}
+                                <div className={classes.grid}>
+                                    {group.items.map(renderTile)}
+                                </div>
+                            </section>
+                        ))}
+
+                        {menuFooter && <div className={classes.menuFooter}>{menuFooter}</div>}
+
+                        <AccountCard variant="menu" onNavigate={closeMenu}/>
+                    </div>
+                </>
+            )}
+
             <nav className={classes.tabBar} aria-label={t`Menu`}>
                 {tabs.map((item) => item.loading ? (
                     <span key={item.label} className={classNames(classes.tab, classes.tabLoading)}/>
@@ -135,11 +194,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                         end={item.link === ''}
                         onClick={item.onClick}
                         className={({isActive}) => classNames(classes.tab, {
-                            [classes.tabActive]: !sheetOpen && isItemActive(item, isActive),
+                            [classes.tabActive]: !menuOpen && isItemActive(item, isActive),
                         })}
                     >
                         <span className={classes.tabIcon}>
-                            {item.icon && <item.icon size={22} stroke={1.6}/>}
+                            <NavIcon item={item}/>
                             {item.attention && <span className={classes.dot} aria-hidden/>}
                         </span>
                         <span className={classes.tabLabel}>{item.mobileTabLabel ?? item.label}</span>
@@ -147,44 +206,18 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 ))}
 
                 <UnstyledButton
-                    className={classNames(classes.tab, {[classes.tabActive]: sheetOpen || isSheetPageActive})}
-                    onClick={openSheet}
-                    aria-expanded={sheetOpen}
+                    className={classNames(classes.tab, {[classes.tabActive]: menuOpen || isMenuPageActive})}
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-expanded={menuOpen}
+                    aria-controls="mobile-nav-menu"
                 >
                     <span className={classes.tabIcon}>
-                        <IconLayoutGrid size={22} stroke={1.6}/>
-                        {sheetNeedsAttention && <span className={classes.dot} aria-hidden/>}
+                        <img src={adminIcon('menu')} alt=""/>
+                        {menuNeedsAttention && <span className={classes.dot} aria-hidden/>}
                     </span>
                     <span className={classes.tabLabel}>{t`Menu`}</span>
                 </UnstyledButton>
             </nav>
-
-            <Drawer
-                opened={sheetOpen}
-                onClose={closeSheet}
-                position="bottom"
-                title={t`Menu`}
-                classNames={{
-                    content: classes.sheet,
-                    header: classes.sheetHeader,
-                    title: classes.sheetTitle,
-                    body: classes.sheetBody,
-                }}
-                overlayProps={{backgroundOpacity: 0.45, blur: 2}}
-            >
-                {sheetHeader && <div className={classes.sheetActions} onClick={closeSheet}>{sheetHeader}</div>}
-
-                {groups.map((group, index) => (
-                    <section key={group.heading ?? index} className={classes.group}>
-                        {group.heading && <h3 className={classes.groupHeading}>{group.heading}</h3>}
-                        <div className={classes.grid}>
-                            {group.items.map(renderTile)}
-                        </div>
-                    </section>
-                ))}
-
-                {sheetFooter && <div className={classes.sheetFooter}>{sheetFooter}</div>}
-            </Drawer>
         </>
     );
 };

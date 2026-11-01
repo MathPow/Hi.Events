@@ -8,6 +8,7 @@ import {t} from "@lingui/macro";
 import {useLingui} from "@lingui/react";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {Markdown} from "./Markdown.tsx";
+import {OPEN_ASSISTANT_EVENT} from "../../../utilites/assistantEvents.ts";
 import {
     addQuestion,
     ApiMessage,
@@ -92,6 +93,13 @@ const AssistantPanel = ({userId}: { userId: string }) => {
         t`Which orders are waiting for an offline payment?`,
         t`Create a 15% promo code for my next event.`,
     ];
+
+    // "Help center" in the nav.
+    useEffect(() => {
+        const openPanel = () => setOpen(true);
+        window.addEventListener(OPEN_ASSISTANT_EVENT, openPanel);
+        return () => window.removeEventListener(OPEN_ASSISTANT_EVENT, openPanel);
+    }, []);
 
     // Key and remaining turns, at each opening.
     useEffect(() => {

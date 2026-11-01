@@ -1,57 +1,43 @@
 import React, {useEffect, useState} from "react";
 import {Outlet, useLocation} from "react-router";
+import {t} from "@lingui/macro";
+import {Helmet} from "react-helmet-async";
+import classNames from "classnames";
 import classes from './AppLayout.module.scss';
 import {Topbar} from "./Topbar";
 import {Sidebar} from "./Sidebar";
-import {BreadcrumbItem, MobileContext, MobilePrimaryAction, NavItem} from "./types.ts";
+import {BreadcrumbItem, MobilePrimaryAction, NavContext, NavItem} from "./types.ts";
 import {MobileNav} from "./MobileNav";
-import {IconLayoutSidebar} from "@tabler/icons-react";
-import {UnstyledButton, VisuallyHidden} from "@mantine/core";
-import {t} from "@lingui/macro";
-import {Helmet} from "react-helmet-async";
+import {adminIcon} from "./NavParts";
 import ImpersonationBanner from "../../common/ImpersonationBanner";
 import {InstallAppPrompt} from "../../common/InstallAppPrompt";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
+import {openAssistant} from "../../../utilites/assistantEvents.ts";
 
 interface AppLayoutProps {
     navItems: NavItem[];
     breadcrumbItems: BreadcrumbItem[];
     entityType: 'event' | 'organizer';
+    navContext?: NavContext;
+    // Next to the breadcrumbs, on phones too (the draft status).
     topBarContent?: React.ReactNode;
-    breadcrumbContentRight?: React.ReactNode;
-    actionGroupContent?: React.ReactNode;
+    // Right of the top bar, desktop only (create, share…).
+    topBarActions?: React.ReactNode;
     sidebarFooter?: React.ReactNode;
-    mobileContext?: MobileContext;
+    // Extra tiles of the phone menu, after the pages.
+    mobileMenuItems?: NavItem[];
+    mobileMenuGrouped?: boolean;
     mobilePrimaryAction?: MobilePrimaryAction;
-    mobileSheetActions?: React.ReactNode;
 }
 
-interface SidebarToggleButtonProps {
-    open: boolean;
-    onClick: () => void;
-}
-
-const SidebarToggleButton: React.FC<SidebarToggleButtonProps> = ({open, onClick}) => {
-    const Icon = IconLayoutSidebar;
-    const label = t`Open sidebar`;
-
-    return (
-        <UnstyledButton
-            className={open ? classes.sidebarOpen : classes.sidebarClose}
-            onClick={onClick}
-        >
-            <Icon size={16}/>
-            <VisuallyHidden>{label}</VisuallyHidden>
-        </UnstyledButton>
-    );
-};
+const COLLAPSED_STORAGE_KEY = 'dehors-nav-collapsed';
 
 // The sidebar entry for the current page, so the breadcrumbs can end with where the user is.
 const findCurrentNavItem = (navItems: NavItem[], pathname: string): NavItem | undefined => {
     const segments = pathname.split('/');
 
     return navItems.find((item) => {
-        if (!item.link || item.link.startsWith('/')) {
+        if (!item.link || item.link.startsWith('/') || item.external) {
             return false;
         }
         const isInPath = segments.includes(item.link);
@@ -63,13 +49,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                                                  navItems,
                                                  breadcrumbItems,
                                                  entityType,
+                                                 navContext,
                                                  topBarContent = null,
-                                                 breadcrumbContentRight = null,
-                                                 actionGroupContent = null,
+                                                 topBarActions = null,
                                                  sidebarFooter = null,
-                                                 mobileContext,
+                                                 mobileMenuItems = [],
+                                                 mobileMenuGrouped = false,
                                                  mobilePrimaryAction,
-                                                 mobileSheetActions,
                                              }) => {
     useDehorsAppTheme();
     const location = useLocation();
@@ -77,11 +63,35 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     const breadcrumbsWithCurrentPage = currentNavItem
         ? [...breadcrumbItems, {content: currentNavItem.label}]
         : breadcrumbItems;
-    const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
-        if (typeof window === 'undefined') return true; // SSR default
-        return window.innerWidth >= 768; // Desktop open, mobile closed
-    });
+    const [collapsed, setCollapsed] = useState(false);
     const [topBarShadow, setTopBarShadow] = useState<boolean>(false);
+
+    const helpItem: NavItem = {
+        label: t`Help center`,
+        iconSrc: adminIcon('aide'),
+        tileIconSrc: adminIcon('aide-22'),
+        onClick: openAssistant,
+    };
+
+    // Read after the first render: the server does not know the choice.
+    useEffect(() => {
+        try {
+            setCollapsed(localStorage.getItem(COLLAPSED_STORAGE_KEY) === '1');
+        } catch {
+            // localStorage unavailable
+        }
+    }, []);
+
+    const toggleCollapsed = () => {
+        setCollapsed((current) => {
+            try {
+                localStorage.setItem(COLLAPSED_STORAGE_KEY, current ? '0' : '1');
+            } catch {
+                // localStorage unavailable
+            }
+            return !current;
+        });
+    };
 
     useEffect(() => {
         const mainElement = document.getElementById('app-manage-main');
@@ -94,19 +104,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         }
     }, []);
 
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 768) {
-                setSidebarOpen(true);
-            } else {
-                setSidebarOpen(false);
-            }
-        };
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
     return (
         <>
             {/* Only the back office is installable: an attendee saving an event page keeps a plain bookmark. */}
@@ -117,45 +114,43 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                 <meta name="apple-mobile-web-app-title" content="DEHORS"/>
                 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
             </Helmet>
-            <ImpersonationBanner />
+            <ImpersonationBanner/>
             <div id={`${entityType}-manage-container`}
-                 className={`${classes.container} ${sidebarOpen ? classes.open : classes.closed} ${mobilePrimaryAction ? classes.withPrimaryAction : ''}`}>
+                 className={classNames(classes.container, {
+                     [classes.collapsed]: collapsed,
+                     [classes.withPrimaryAction]: !!mobilePrimaryAction,
+                 })}>
                 <Topbar
                     topBarShadow={topBarShadow}
                     breadcrumbItems={breadcrumbsWithCurrentPage}
                     topBarContent={topBarContent}
-                    breadcrumbContentRight={breadcrumbContentRight}
-                    actionGroupContent={actionGroupContent}
-                    mobileContext={mobileContext}
+                    actions={topBarActions}
                 />
 
-            <div className={classes.main} id={'app-manage-main'}>
-                <Outlet/>
-            </div>
+                <div className={classes.main} id={'app-manage-main'}>
+                    <Outlet/>
+                </div>
 
-            <Sidebar
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-                navItems={navItems}
-                sidebarFooter={sidebarFooter}
-            />
-
-            <MobileNav
-                navItems={navItems}
-                currentNavItem={currentNavItem}
-                sheetHeader={mobileSheetActions}
-                sheetFooter={sidebarFooter}
-                primaryAction={mobilePrimaryAction}
-            />
-
-            <InstallAppPrompt/>
-
-            {!sidebarOpen && (
-                <SidebarToggleButton
-                    open={false}
-                    onClick={() => setSidebarOpen(true)}
+                <Sidebar
+                    collapsed={collapsed}
+                    onToggleCollapsed={toggleCollapsed}
+                    navItems={navItems}
+                    bottomItems={[helpItem]}
+                    context={navContext}
+                    sidebarFooter={sidebarFooter}
                 />
-            )}
+
+                <MobileNav
+                    navItems={navItems}
+                    menuItems={[helpItem, ...mobileMenuItems]}
+                    currentNavItem={currentNavItem}
+                    context={navContext}
+                    menuFooter={sidebarFooter}
+                    primaryAction={mobilePrimaryAction}
+                    groupedMenu={mobileMenuGrouped}
+                />
+
+                <InstallAppPrompt/>
             </div>
         </>
     );

@@ -18,7 +18,7 @@ import {AboutModal} from "../../modals/AboutModal";
 import {getConfig} from "../../../utilites/config.ts";
 import {CreateOrganizerModal} from "../../modals/CreateOrganizerModal";
 
-interface Link {
+export interface AccountMenuLink {
     label: string;
     icon: any;
     link?: string;
@@ -26,7 +26,14 @@ interface Link {
     onClick?: (event: any) => void;
 }
 
-export const GlobalMenu = () => {
+export const logout = async () => {
+    await authClient.logout();
+    localStorage.removeItem("token");
+    window.location.href = "/auth/login";
+};
+
+// The account links (profile, account, logout…), shared by the avatar menu and the nav's account card.
+export const useAccountMenu = () => {
     const {data: me} = useGetMe();
     const [aboutModalOpen, {open: openAboutModal, close: closeAboutModal}] = useDisclosure(false);
     const [createOrganizerModalOpen, {
@@ -34,8 +41,7 @@ export const GlobalMenu = () => {
         close: closeCreateOrganizerModal
     }] = useDisclosure(false);
 
-
-    const links: Link[] = [
+    const links: AccountMenuLink[] = [
         {
             label: t`My Profile`,
             icon: IconUser,
@@ -86,11 +92,39 @@ export const GlobalMenu = () => {
         icon: IconLogout,
         onClick: async (event: any) => {
             event.preventDefault();
-            await authClient.logout();
-            localStorage.removeItem("token");
-            window.location.href = "/auth/login";
+            await logout();
         },
     });
+
+    const modals = (
+        <>
+            {aboutModalOpen && <AboutModal onClose={closeAboutModal}/>}
+            {createOrganizerModalOpen && <CreateOrganizerModal onClose={closeCreateOrganizerModal}/>}
+        </>
+    );
+
+    return {me, links, modals};
+};
+
+export const AccountMenuItems = ({links}: { links: AccountMenuLink[] }) => (
+    <>
+        {links.map((link) => (
+            <NavLink
+                onClick={link.onClick}
+                to={link.link ?? "#"}
+                key={link.label}
+                target={link.target ?? ""}
+            >
+                <Menu.Item component={"div"} leftSection={<link.icon/>}>
+                    {link.label}
+                </Menu.Item>
+            </NavLink>
+        ))}
+    </>
+);
+
+export const GlobalMenu = () => {
+    const {me, links, modals} = useAccountMenu();
 
     return (
         <>
@@ -104,22 +138,10 @@ export const GlobalMenu = () => {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    {links.map((link) => (
-                        <NavLink
-                            onClick={link.onClick}
-                            to={link.link ?? "#"}
-                            key={link.label}
-                            target={link.target ?? ""}
-                        >
-                            <Menu.Item component={"div"} leftSection={<link.icon/>}>
-                                {link.label}
-                            </Menu.Item>
-                        </NavLink>
-                    ))}
+                    <AccountMenuItems links={links}/>
                 </Menu.Dropdown>
             </Menu>
-            {aboutModalOpen && <AboutModal onClose={closeAboutModal}/>}
-            {createOrganizerModalOpen && <CreateOrganizerModal onClose={closeCreateOrganizerModal}/>}
+            {modals}
         </>
     );
 };

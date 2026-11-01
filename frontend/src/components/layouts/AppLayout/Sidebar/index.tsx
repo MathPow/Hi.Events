@@ -1,107 +1,159 @@
 import React from "react";
-import {Badge, UnstyledButton, VisuallyHidden} from '@mantine/core';
-import {IconChevronLeft} from "@tabler/icons-react";
+import {Tooltip, UnstyledButton} from '@mantine/core';
 import {t} from "@lingui/macro";
-import classes from './Sidebar.module.scss';
-import {NavItem} from "../types";
 import {NavLink} from "react-router";
 import classNames from "classnames";
-import {getConfig} from "../../../../utilites/config.ts";
+import classes from './Sidebar.module.scss';
+import {NavContext, NavItem} from "../types";
+import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
 
 interface SidebarProps {
-    sidebarOpen: boolean;
-    setSidebarOpen: (open: boolean) => void;
+    collapsed: boolean;
+    onToggleCollapsed: () => void;
     navItems: NavItem[];
+    bottomItems: NavItem[];
+    context?: NavContext;
     sidebarFooter?: React.ReactNode;
 }
 
+interface NavGroup {
+    heading?: string;
+    items: NavItem[];
+}
+
+const groupItems = (navItems: NavItem[]): NavGroup[] => {
+    const groups: NavGroup[] = [{items: []}];
+
+    navItems.forEach((item) => {
+        if (isHeading(item)) {
+            groups.push({heading: item.label, items: []});
+        } else if (isVisible(item)) {
+            groups[groups.length - 1].items.push(item);
+        }
+    });
+
+    return groups.filter((group) => group.items.length > 0);
+};
+
+const Marker = ({item, collapsed}: { item: NavItem, collapsed: boolean }) => {
+    const hasBadge = item.badge !== undefined && item.badge !== null && item.badge !== '';
+
+    // Folded, only what still needs doing stays visible, as a dot on the icon.
+    if (collapsed) {
+        return item.attention ? <span className={classes.dot} aria-hidden/> : null;
+    }
+
+    if (hasBadge) {
+        return (
+            <span className={classNames(classes.badge, {[classes.badgeAttention]: item.attention})}>
+                {item.badge}
+            </span>
+        );
+    }
+
+    return item.attention ? <span className={classes.dot} aria-hidden/> : null;
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({
-                                                    sidebarOpen,
-                                                    setSidebarOpen,
+                                                    collapsed,
+                                                    onToggleCollapsed,
                                                     navItems,
+                                                    bottomItems,
+                                                    context,
                                                     sidebarFooter,
                                                 }) => {
-    const renderLinks = () => {
-        return navItems.map((item) => {
+    const renderItem = (item: NavItem) => {
+        if (item.loading) {
+            return <span key={item.label} className={classNames(classes.link, classes.loading)}/>;
+        }
 
-            if (!item.link && item.link !== "" && item.onClick === undefined) {
-                return (
-                    <div className={classes.sectionHeading} key={item.label}>
-                        {item.label}
-                    </div>
-                );
-            }
+        const content = (
+            <>
+                <span className={classes.iconSlot}>
+                    <NavIcon item={item}/>
+                    {collapsed && <Marker item={item} collapsed/>}
+                </span>
+                {!collapsed && <span className={classes.label}>{item.label}</span>}
+                {!collapsed && <Marker item={item} collapsed={false}/>}
+            </>
+        );
 
-            if (item.showWhen && !item.showWhen()) {
-                return null;
-            }
+        let link: React.ReactElement;
 
-            if (item.loading) {
-                return <a key={item.label} className={classNames(classes.loading, classes.link)}>&nbsp;</a>;
-            }
-
-
-            return (
+        if (!item.link && item.link !== "") {
+            link = (
+                <UnstyledButton className={classes.link} onClick={item.onClick} aria-label={collapsed ? item.label : undefined}>
+                    {content}
+                </UnstyledButton>
+            );
+        } else if (item.external) {
+            link = (
+                <a href={item.link} target="_blank" rel="noopener" className={classes.link}
+                   aria-label={collapsed ? item.label : undefined}>
+                    {content}
+                </a>
+            );
+        } else {
+            link = (
                 <NavLink
-                    to={item.comingSoon ? '#' : (item.link ?? '#')}
-                    key={item.label}
-                    onClick={() => {
-                        if (item.onClick) item.onClick();
-                    }}
-                    className={({isActive}) =>
-                        `${((item.isActive ? item.isActive(isActive) : isActive) && !item.comingSoon)
-                            ? classes.linkActive
-                            : ""} ${classes.link}`
-                    }
+                    to={item.comingSoon ? '#' : item.link!}
+                    end={item.link === ''}
+                    onClick={item.onClick}
+                    aria-label={collapsed ? item.label : undefined}
+                    className={({isActive}) => classNames(classes.link, {
+                        [classes.linkActive]: isItemActive(item, isActive),
+                    })}
                 >
-                    {item.icon && <item.icon size={20} className={classes.linkIcon} stroke={1.5}/>}
-                    <span>{item.label}</span>
-                    {item.badge !== undefined && (
-                        <Badge
-                            size="xs"
-                            radius="xl"
-                            className={classNames(classes.navBadge, {[classes.navBadgeAttention]: item.attention})}
-                        >
-                            {item.badge}
-                        </Badge>
-                    )}
-                    {item.attention && item.badge === undefined && (
-                        <span className={classes.attentionDot} aria-hidden/>
-                    )}
-                    {item.comingSoon &&
-                        <Badge ml={'4px'} size={'xs'} className={classes.comingSoonBadge}>{t`Coming Soon`}</Badge>}
+                    {content}
                 </NavLink>
             );
-        });
+        }
+
+        return (
+            <Tooltip key={item.label} label={item.label} position="right" offset={14} disabled={!collapsed} withinPortal>
+                {link}
+            </Tooltip>
+        );
     };
 
     return (
-        <div className={classNames(`${classes.sidebar} ${sidebarOpen ? classes.open : classes.closed}`)}>
-            <div className={classes.logo}>
-                <NavLink to={`/manage/events`}>
-                    <img
-                        style={{maxWidth: '160px', margin: "10px auto"}}
-                        src={getConfig("VITE_APP_LOGO_LIGHT", "/logos/hi-events-text-dark.svg")}
-                        alt={t`${getConfig("VITE_APP_NAME", "Hi.Events")} logo`}
-                    />
-                </NavLink>
-            </div>
-            <div className={classes.nav}>
-                {renderLinks()}
-            </div>
-            {sidebarFooter && (
-                <div className={classes.sidebarFooter}>
-                    {sidebarFooter}
+        <aside className={classNames(classes.sidebar, {[classes.collapsed]: collapsed})}>
+            <div className={classes.top}>
+                <div className={classes.brand}>
+                    {!collapsed && (
+                        <NavLink to="/manage/events" className={classes.wordmark}>
+                            <span>{'Billetterie'}</span>
+                            <span>{'Dehors'}</span>
+                        </NavLink>
+                    )}
+                    <UnstyledButton
+                        className={classes.collapseButton}
+                        onClick={onToggleCollapsed}
+                        aria-label={collapsed ? t`Expand sidebar` : t`Collapse sidebar`}
+                        aria-expanded={!collapsed}
+                        title={collapsed ? t`Expand sidebar` : t`Collapse sidebar`}
+                    >
+                        <img src={adminIcon('replier')} alt=""/>
+                    </UnstyledButton>
                 </div>
-            )}
-            {sidebarOpen && (
-                <UnstyledButton
-                    className={classes.sidebarClose}
-                    onClick={() => setSidebarOpen(!sidebarOpen)}>
-                    <IconChevronLeft size={20}/>
-                    <VisuallyHidden>{t`Close sidebar`}</VisuallyHidden>
-                </UnstyledButton>
-            )}
-        </div>
+
+                {context && <ContextCard context={context} variant={collapsed ? 'collapsed' : 'sidebar'}/>}
+            </div>
+
+            <nav className={classes.nav}>
+                {groupItems(navItems).map((group, index) => (
+                    <div key={group.heading ?? index} className={classes.group}>
+                        {group.heading && !collapsed && <div className={classes.groupHeading}>{group.heading}</div>}
+                        {group.items.map(renderItem)}
+                    </div>
+                ))}
+            </nav>
+
+            <div className={classes.bottom}>
+                {sidebarFooter && !collapsed && <div className={classes.footer}>{sidebarFooter}</div>}
+                {bottomItems.map(renderItem)}
+                <AccountCard variant={collapsed ? 'collapsed' : 'sidebar'}/>
+            </div>
+        </aside>
     );
 };

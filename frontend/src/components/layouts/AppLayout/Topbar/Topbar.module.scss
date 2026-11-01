@@ -1,313 +1,97 @@
 @use "../../../../styles/mixins";
 
 .topBar {
-  --topbar-height: 3.75rem;
   grid-area: topbar;
-  background: var(--dehors-creme);
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.3s ease;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 10;
-  padding: 0.75rem 1.25rem 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+  min-height: calc(3rem + 2.25rem);
+  padding: 1.5rem 2.5rem 0.75rem;
+  background: var(--dehors-creme);
+  transition: box-shadow 0.3s ease;
 
   @include mixins.respond-below(md) {
-    --topbar-height: 3.5rem;
-    padding: 0.5rem 0.5rem 0;
-  }
-
-  .topBarShell {
-    filter: drop-shadow(0 0.5rem 1.25rem rgb(53 41 36 / 0.12));
-  }
-
-  .topBarMain {
-    @include mixins.etiquette(var(--topbar-height));
-    display: flex;
-    align-items: center;
     gap: 0.5rem;
-    padding: 0 1.25rem 0 1.5rem;
-    height: var(--topbar-height);
-    background: var(--dehors-orange-clair);
-    color: var(--dehors-brun);
-
-    @include mixins.respond-below(md) {
-      gap: 0.25rem;
-      padding: 0 0.625rem 0 0.875rem;
-    }
-  }
-
-  .breadcrumbsRow {
-    padding: 0.875rem 0.75rem 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    position: relative;
-    z-index: 5;
-    min-height: 44px;
-
-    @include mixins.respond-below(md) {
-      display: none;
-    }
-  }
-
-  .separator {
-    margin: 0 4px;
-    color: var(--dehors-sable);
-  }
-
-  .breadcrumbContentRight {
-    flex-shrink: 0;
-
-    @include mixins.respond-below(sm) {
-      // Hide text in buttons, show only icons on very small screens
-      :global(.mantine-Button-label) {
-        display: none;
-      }
-
-      :global(.mantine-Button-section) {
-        margin: 0;
-      }
-    }
-  }
-
-  .breadcrumbs {
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: var(--dehors-texte-doux);
-    flex: 1;
-    min-width: 0;
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    // Mantine Breadcrumbs container
-    :global(.mantine-Breadcrumbs-root) {
-      flex-wrap: nowrap;
-      min-width: 0;
-    }
-
-    :global(.mantine-Breadcrumbs-breadcrumb) {
-      @include mixins.ellipsis();
-      max-width: 200px;
-
-      @include mixins.respond-below(md) {
-        max-width: 120px;
-      }
-
-      @include mixins.respond-below(sm) {
-        max-width: 80px;
-      }
-
-      // Don't truncate the last breadcrumb (often an action like "Create Event")
-      &:last-child {
-        max-width: none;
-        flex-shrink: 0;
-      }
-    }
-
-    a {
-      color: var(--dehors-texte-doux);
-      transition: color 0.2s ease;
-      position: relative;
-      @include mixins.ellipsis();
-
-      &:hover {
-        color: var(--dehors-brun);
-      }
-
-      &:last-child {
-        color: var(--dehors-brun);
-        font-weight: 700;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        border-radius: 2px;
-        background-color: var(--dehors-orange);
-        transition: width 0.2s ease;
-      }
-
-      &:hover::after {
-        width: 100%;
-      }
-    }
-
-    .currentPage {
-      color: var(--dehors-brun);
-      font-weight: 700;
-      @include mixins.ellipsis();
-    }
-  }
-
-  .actionGroup {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-  }
-
-  .statusToggleContainer {
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin-left: 16px;
-    margin-right: auto;
-
-    @include mixins.respond-below(md) {
-      margin-left: 16px;
-    }
+    min-height: calc(2.5rem + 1.5rem);
+    padding: 1rem 1rem 0.5rem;
   }
 
   &.withShadow {
     box-shadow: 0 1px 0 var(--dehors-trait);
   }
+}
 
-  // On phones the event or organizer name replaces the breadcrumbs.
-  .mobileContext {
+.breadcrumbs {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+  font-size: 1rem;
+  line-height: normal;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    gap: 0.375rem;
+    font-size: 0.875rem;
+  }
+}
+
+// Earlier levels give way first, the current page keeps as much as it can.
+.crumb {
+  flex: 0 3 auto;
+  min-width: 2.5rem;
+  max-width: 16rem;
+  color: rgb(53 41 36 / 0.6);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  @include mixins.ellipsis();
+
+  @include mixins.respond-below(md) {
+    max-width: 8rem;
+  }
+
+  &:is(a):hover {
+    color: var(--dehors-brun);
+  }
+
+  &:is(a):focus-visible {
+    outline: 2px solid var(--dehors-orange);
+    outline-offset: 2px;
+  }
+}
+
+.current {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: none;
+  color: var(--dehors-brun);
+  font-weight: 700;
+}
+
+.separator {
+  flex-shrink: 0;
+  color: rgb(53 41 36 / 0.35);
+}
+
+.topBarContent {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+
+  // On phones the page's own buttons (and the menu) take over.
+  @include mixins.respond-below(md) {
     display: none;
-
-    @include mixins.respond-below(md) {
-      display: flex;
-      align-items: center;
-      gap: 0.125rem;
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-  }
-
-  .backLink {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
-    margin-left: -0.25rem;
-    border-radius: 50%;
-    color: var(--dehors-brun);
-    -webkit-tap-highlight-color: transparent;
-
-    &:active {
-      background: rgb(53 41 36 / 0.1);
-    }
-  }
-
-  .mobileTitles {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    line-height: 1.15;
-  }
-
-  .mobileSubtitle {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgb(53 41 36 / 0.65);
-    @include mixins.ellipsis();
-  }
-
-  .mobileTitle {
-    font-size: 0.9375rem;
-    font-weight: 800;
-    color: var(--dehors-brun);
-    @include mixins.ellipsis();
-  }
-
-  .logo {
-    display: flex;
-    justify-content: center;
-    padding-inline: 0.25rem;
-
-    a {
-      display: flex;
-    }
-
-    // The orange logo, darkened to brown to stand out on the light orange bar.
-    img {
-      height: 2.25rem;
-      width: auto;
-      filter: brightness(0.22);
-
-      @include mixins.respond-below(sm) {
-        height: 1.75rem;
-      }
-    }
-
-    @include mixins.respond-above(md) {
-      display: none;
-    }
-  }
-
-  .menu {
-    display: flex;
-    align-items: center;
-    margin-left: 0.25rem;
-
-    :global(.mantine-Avatar-root) {
-      transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    :global(.mantine-Avatar-placeholder) {
-      background: var(--dehors-brun);
-      color: var(--dehors-creme);
-    }
-
-    button:hover :global(.mantine-Avatar-root) {
-      scale: 1.06;
-    }
-  }
-
-  .entityPageButton {
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-    transition: transform 0.2s ease;
-    color: var(--dehors-brun);
-
-    &:hover {
-      transform: translateY(-1px);
-    }
-
-    .entityPageButtonText {
-      // Default: hide both
-      .mobile,
-      .desktop {
-        display: none;
-      }
-
-      // Show mobile text from sm and up
-      @include mixins.respond-above(sm) {
-        .mobile {
-          display: block;
-        }
-      }
-
-      // Switch to desktop text at md and up
-      @include mixins.respond-above(md) {
-        .mobile {
-          display: none;
-        }
-
-        .desktop {
-          display: block;
-        }
-      }
-    }
   }
 }

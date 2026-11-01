@@ -1,8 +1,6 @@
 import {
     IconArrowLeft,
-    IconChartPie,
     IconChevronRight,
-    IconDashboard,
     IconDeviceTabletCode,
     IconDiscount2,
     IconExternalLink,
@@ -13,8 +11,6 @@ import {
     IconPaint,
     IconQrcode,
     IconReceipt,
-    IconSend,
-    IconSettings,
     IconShare,
     IconStar,
     IconTicket,
@@ -34,12 +30,12 @@ import {useGetEventStats} from "../../../queries/useGetEventStats";
 import {useGetEventImages} from "../../../queries/useGetEventImages.ts";
 import {useGetAccount} from "../../../queries/useGetAccount.ts";
 import {useCanSeeDeveloperPages} from "../../../hooks/useIsCurrentUserAdmin.ts";
-import Truncate from "../../common/Truncate";
-import {BreadcrumbItem, NavItem} from "../AppLayout/types.ts";
+import {BreadcrumbItem, NavContext, NavItem} from "../AppLayout/types.ts";
+import {adminIcon} from "../AppLayout/NavParts";
 import AppLayout from "../AppLayout";
 import {NavLink, useLocation, useParams} from "react-router";
 import classes from './Event.module.scss';
-import {Button} from "@mantine/core";
+import {Button, Menu} from "@mantine/core";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {useUpdateEventStatus} from "../../../mutations/useUpdateEventStatus.ts";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
@@ -47,7 +43,6 @@ import {ShareModal} from "../../modals/ShareModal";
 import {EventLiveCelebrationModal} from "../../modals/EventLiveCelebrationModal";
 import {useDisclosure} from "@mantine/hooks";
 import {TopBarButton} from "../../common/TopBarButton";
-import {useWindowWidth} from "../../../hooks/useWindowWidth.ts";
 import {SidebarCallout} from "../../common/SidebarCallout";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {useResendEmailConfirmation} from "../../../mutations/useResendEmailConfirmation.ts";
@@ -118,17 +113,23 @@ const EventLayout = () => {
             badge: remainingSetupSteps > 0 ? remainingSetupSteps : undefined,
             attention: remainingSetupSteps > 0,
         },
-        {link: 'dashboard', label: t`Dashboard`, icon: IconDashboard, mobileTab: true, mobileTabLabel: t`Overview`},
+        {link: 'dashboard', label: t`Dashboard`, iconSrc: adminIcon('accueil'), mobileTab: true, mobileTabLabel: t`Overview`},
         {
             link: 'reports',
             label: t`Reports`,
-            icon: IconChartPie,
+            iconSrc: adminIcon('rapports'),
             isActive: (isActive) => isActive || location.pathname.includes('/report/')
         },
 
         // 2. EVENT SETUP
         {label: t`Setup & Design`},
-        {link: 'settings', label: t`Event Settings`, icon: IconSettings, attention: needsDetails},
+        {
+            link: 'settings',
+            label: t`Event Settings`,
+            iconSrc: adminIcon('parametres'),
+            tileIconSrc: adminIcon('parametres-22'),
+            attention: needsDetails,
+        },
         {link: 'homepage-designer', label: t`Homepage Designer`, icon: IconPaint, attention: needsImages},
         {link: 'ticket-designer', label: t`Ticket Designer`, icon: IconTicket},
         {link: 'questions', label: t`Registration Questions`, icon: IconUserQuestion},
@@ -145,7 +146,7 @@ const EventLayout = () => {
         {label: t`Guest Management`},
         {link: 'attendees', label: t`Attendees`, icon: IconUsers, badge: eventStats?.total_attendees_registered, mobileTab: true},
         {link: 'check-in', label: t`Check-In Lists`, icon: IconQrcode, mobileTab: true, mobileTabLabel: t`Check-in`},
-        {link: 'messages', label: t`Messages`, icon: IconSend},
+        {link: 'messages', label: t`Messages`, iconSrc: adminIcon('messages'), tileIconSrc: adminIcon('messages-22')},
         {link: 'sold-out-waitlist', label: t`Waitlist`, icon: IconListCheck},
         {link: 'capacity-assignments', label: t`Capacity Management`, icon: IconUsersGroup},
 
@@ -160,17 +161,14 @@ const EventLayout = () => {
         ? navItems.map(item => item.link ? {...item, loading: true} : item)
         : navItems;
 
-    const screenWidth = useWindowWidth();
-    const breadcrumbItemsWidth = screenWidth > 1100 ? 60 : 23;
-
     const breadcrumbItems: BreadcrumbItem[] = isEventFetched ? [
         {
             link: `/manage/organizer/${event?.organizer?.id}`,
-            content: <Truncate length={breadcrumbItemsWidth} text={event?.organizer?.name} showTooltip={false}/>
+            content: event?.organizer?.name
         },
         {
             link: `/manage/event/${event?.id}`,
-            content: <Truncate length={breadcrumbItemsWidth} text={event?.title} showTooltip={false}/>
+            content: event?.title
         }
     ] : [
         {link: '#', content: '...'}
@@ -201,103 +199,81 @@ const EventLayout = () => {
         });
     };
 
+    const eventPageUrl = `/event/${eventId}/${event?.slug}`;
+
+    const navContext: NavContext = {
+        initial: event?.title?.trim().charAt(0).toUpperCase() || '…',
+        title: isEventFetched ? event?.title : '…',
+        subtitle: event?.organizer?.name,
+        menu: event && (
+            <>
+                <Menu.Item component={NavLink} to={`/manage/organizer/${event.organizer?.id}`}
+                           leftSection={<IconArrowLeft size={16}/>}>
+                    {t`Organizer Dashboard`}
+                </Menu.Item>
+                <Menu.Divider/>
+                <Menu.Item component="a" href={eventPageUrl} target="_blank" rel="noopener"
+                           leftSection={<IconExternalLink size={16}/>}>
+                    {t`Event Page`}
+                </Menu.Item>
+                <Menu.Item leftSection={<IconShare size={16}/>} onClick={open}>
+                    {t`Share Event`}
+                </Menu.Item>
+            </>
+        ),
+    };
+
     return (
+        <>
         <AppLayout
             navItems={navItemsWithLoading}
             breadcrumbItems={breadcrumbItems}
             entityType="event"
-            topBarContent={(
-                <div className={classes.statusToggleContainer}>
-                    {isEventFetched && (
-                        <TopBarButton
-                            onClick={handleStatusToggle}
-                            size="sm"
-                            leftSection={event?.status === 'DRAFT' ? <IconEyeOff size={16}/> : <IconEye size={16}/>}
-                            rightSection={<IconChevronRight size={14}/>}
-                        >
-                            {event?.status === 'DRAFT'
-                                ? <span>{t`Draft`} <span
-                                    className={classes.statusAction}>{t`- Click to Publish`}</span></span>
-                                : <span>{t`Live`} <span
-                                    className={classes.statusAction}>{t`- Click to Unpublish`}</span></span>
-                            }
-                        </TopBarButton>
-                    )}
-                </div>
+            navContext={navContext}
+            topBarContent={isEventFetched && (
+                <TopBarButton
+                    onClick={handleStatusToggle}
+                    size="sm"
+                    leftSection={event?.status === 'DRAFT' ? <IconEyeOff size={16}/> : <IconEye size={16}/>}
+                    rightSection={<IconChevronRight size={14}/>}
+                >
+                    {event?.status === 'DRAFT'
+                        ? <span>{t`Draft`} <span
+                            className={classes.statusAction}>{t`- Click to Publish`}</span></span>
+                        : <span>{t`Live`} <span
+                            className={classes.statusAction}>{t`- Click to Unpublish`}</span></span>
+                    }
+                </TopBarButton>
             )}
-            mobileContext={{
-                title: isEventFetched ? event?.title : '…',
-                subtitle: event?.organizer?.name,
-                backLink: event?.organizer?.id ? `/manage/organizer/${event.organizer.id}` : undefined,
-            }}
-            mobileSheetActions={event && (
+            topBarActions={event && (
                 <>
-                    <Button variant="light" leftSection={<IconShare size={16}/>} onClick={open}>
-                        {t`Share`}
-                    </Button>
                     <Button
                         component={NavLink}
-                        to={`/event/${eventId}/${event.slug}`}
+                        to={eventPageUrl}
                         target={'_blank'}
-                        variant="light"
-                        leftSection={<IconExternalLink size={16}/>}
+                        variant={'transparent'}
+                        leftSection={<IconExternalLink size={17}/>}
+                        className={classes.topBarLink}
                     >
-                        {t`Event Page`}
+                        {t`Preview Event page`}
+                    </Button>
+                    <Button
+                        onClick={open}
+                        variant="transparent"
+                        leftSection={<IconShare size={16}/>}
+                        className={classes.topBarLink}
+                    >
+                        {t`Share Event`}
                     </Button>
                 </>
             )}
-            breadcrumbContentRight={(
-                <div className={classes.shareButton}>
-                    {event && (
-                        <>
-                            <Button
-                                onClick={open}
-                                variant="transparent"
-                                leftSection={<IconShare size={16}/>}
-                            >
-                                {t`Share Event`}
-                            </Button>
-
-                            <ShareModal
-                                url={eventHomepageUrl(event)}
-                                title={event.title}
-                                modalTitle={t`Share Event`}
-                                opened={opened}
-                                onClose={close}
-                            />
-
-                            <EventLiveCelebrationModal
-                                opened={celebrationOpened}
-                                onClose={closeCelebration}
-                                url={eventHomepageUrl(event)}
-                                eventTitle={event.title}
-                                eventId={String(event.id)}
-                            />
-                        </>
-                    )}
-                </div>
-            )}
-            actionGroupContent={(
-                <Button
-                    component={NavLink}
-                    to={`/event/${eventId}/${event?.slug}`}
-                    target={'_blank'}
-                    variant={'transparent'}
-                    leftSection={<IconExternalLink size={17}/>}
-                    className={classes.eventPageButton}
-                    title={t`Preview Event page`}
-                >
-                    <div className={classes.eventPageButtonText}>
-                                <span className={classes.desktop}>
-                                    {t`Preview Event page`}
-                                </span>
-                        <span className={classes.mobile}>
-                                    {t`Event Page`}
-                                </span>
-                    </div>
-
-                </Button>
-            )}
+            mobileMenuItems={event ? [{
+                link: eventPageUrl,
+                external: true,
+                label: t`Event Page`,
+                tileIconSrc: adminIcon('voir-22'),
+            }] : []}
+            mobileMenuGrouped
             sidebarFooter={
                 (me && !me.is_email_verified && !emailConfirmationResent ? (
                     <SidebarCallout
@@ -311,6 +287,27 @@ const EventLayout = () => {
                 ) : null)
             }
         />
+
+        {event && (
+            <>
+                <ShareModal
+                    url={eventHomepageUrl(event)}
+                    title={event.title}
+                    modalTitle={t`Share Event`}
+                    opened={opened}
+                    onClose={close}
+                />
+
+                <EventLiveCelebrationModal
+                    opened={celebrationOpened}
+                    onClose={closeCelebration}
+                    url={eventHomepageUrl(event)}
+                    eventTitle={event.title}
+                    eventId={String(event.id)}
+                />
+            </>
+        )}
+        </>
     );
 };
 

@@ -5,6 +5,12 @@ export interface NavItem {
     link?: string;
     label: string;
     icon?: React.ComponentType<TablerIconsProps>;
+    // The DEHORS icons drawn for the nav (public/interface/admin), used instead of `icon` when set.
+    iconSrc?: string;
+    // Larger version for the tiles of the phone menu.
+    tileIconSrc?: string;
+    // Opens in a new tab (public pages).
+    external?: boolean;
     comingSoon?: boolean;
     isActive?: (isActive: boolean) => boolean;
     badge?: string | number | null | undefined;
@@ -13,15 +19,22 @@ export interface NavItem {
     onClick?: () => void;
     showWhen?: () => boolean | undefined;
     loading?: boolean;
-    // Shown in the bottom tab bar on phones; everything else goes in the "More" sheet.
+    // Shown in the bottom tab bar on phones; everything else goes in the menu card.
     mobileTab?: boolean;
     mobileTabLabel?: string;
+    // Tabs follow the nav order unless given a place here.
+    mobileTabOrder?: number;
 }
 
-export interface MobileContext {
+// The organizer (or event) at the top of the sidebar and of the phone menu.
+export interface NavContext {
+    initial: string;
     title: ReactNode;
     subtitle?: ReactNode;
-    backLink?: string;
+    // Subtitle in the phone menu, where the card is the way to switch organizer.
+    mobileSubtitle?: ReactNode;
+    // Menu.Item entries opened by the card; without them the card is a plain label.
+    menu?: ReactNode;
 }
 
 export interface MobilePrimaryAction {

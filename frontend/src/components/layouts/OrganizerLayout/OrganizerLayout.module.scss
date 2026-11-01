@@ -1,48 +1,27 @@
 @use "../../../styles/mixins.scss";
 
-.viewHomepageButton {
+// Figma « Bouton · Créer un événement » of the top bar.
+.createEventButton {
+  height: 3rem !important;
+  padding: 0 1.375rem !important;
+  border: none !important;
+  border-radius: 1rem !important;
+  background: var(--dehors-orange) !important;
   color: var(--dehors-brun) !important;
-
-  // Moved to the menu sheet on phones, to leave room for the organizer name.
-  @include mixins.respond-below(md) {
-    display: none !important;
-  }
-
-  font-weight: 600;
-  transition: opacity 0.2s ease;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  transition: background-color 0.15s ease, scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &:hover {
-    opacity: 0.75;
+    background: var(--dehors-orange-survol) !important;
   }
 
-  .viewHomepageButtonTextDesktop {
-    display: inline;
-
-    @include mixins.respond-below(md) {
-      display: none;
-    }
-  }
-}
-
-.createEventButton {
-  @include mixins.respond-below(md) {
-    margin-left: 5px;
+  &:active {
+    scale: 0.97;
   }
 
-  .createEventButtonTextDesktop {
-    display: inline;
-
-    @include mixins.respond-below(md) {
-      display: none;
-    }
-  }
-
-  .createEventButtonTextMobile {
-    display: none;
-
-    @include mixins.respond-below(md) {
-      display: inline;
-    }
+  :global(.mantine-Button-section[data-position='left']) {
+    margin-inline-end: 0.5rem;
   }
 }
 
@@ -60,47 +39,13 @@
   }
 }
 
-.statusToggleContainer {
-  display: flex;
-  align-items: center;
-  position: relative;
-  margin-left: 0px;
-  margin-right: auto;
+.statusAction {
+  margin-left: 4px;
+  font-weight: 400;
+  font-size: 0.85em;
+  opacity: 0.9;
 
   @include mixins.respond-below(md) {
-    margin-left: 0.25rem;
-  }
-
-  .statusAction {
-    margin-left: 4px;
-    font-weight: 400;
-    font-size: 0.85em;
-    opacity: 0.9;
-
-    @include mixins.respond-below(md) {
-      display: none;
-    }
-  }
-}
-
-.breadcrumbActions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.shareButtonTextDesktop {
-    display: inline;
-
-    @include mixins.respond-below(md) {
-        display: none;
-    }
-}
-
-.shareButtonTextMobile {
     display: none;
-
-    @include mixins.respond-below(md) {
-        display: inline;
-    }
+  }
 }
