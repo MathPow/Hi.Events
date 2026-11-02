@@ -77,9 +77,13 @@ class ExportAttendeesAction extends BaseAction
             'belongs_to' => QuestionBelongsTo::ORDER->name,
         ]);
 
+        // « Exporter (CSV) » of the event's Participants page asks for CSV; Excel otherwise.
+        $csv = request()->input('format') === 'csv';
+
         return Excel::download(
             $this->export->withData($attendees, $productQuestions, $orderQuestions),
-            'attendees.xlsx'
+            $csv ? 'participants.csv' : 'attendees.xlsx',
+            $csv ? \Maatwebsite\Excel\Excel::CSV : null,
         );
     }
 }

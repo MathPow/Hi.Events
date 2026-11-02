@@ -56,8 +56,9 @@ export const attendeesClient = {
         });
         return response.data;
     },
-    export: async (eventId: IdParam): Promise<Blob> => {
-        const response = await api.post(`events/${eventId}/attendees/export`, {}, {
+    // format « csv » for « Exporter (CSV) » of the Participants page, Excel otherwise.
+    export: async (eventId: IdParam, format?: 'csv'): Promise<Blob> => {
+        const response = await api.post(`events/${eventId}/attendees/export${format ? `?format=${format}` : ''}`, {}, {
             responseType: 'blob',
         });
 

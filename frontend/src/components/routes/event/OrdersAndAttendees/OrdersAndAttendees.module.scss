@@ -1,0 +1,939 @@
+@use "../../../../styles/mixins";
+@use "../../../../styles/admin-ui" as ui;
+
+// Figma « Admin · Événement · Commandes et participants » (546:2372, 546:2726; phone 546:3115, 546:3259;
+// filters 549:3024, 549:3405, 549:3851; sheets 549:3882, 549:4135).
+
+$pale: rgb(247 220 205 / 0.45);
+$field: rgb(228 170 150 / 0.32);
+$cream-text: #fbf2e3;
+
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+.phoneOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
+  }
+}
+
+// ── Capsule Commandes / Participants ──────────────────────────────────────────────────────────
+
+.capsule {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+  padding: 0.375rem;
+  border-radius: 999px;
+  background: ui.$card;
+  box-shadow: ui.$shadow;
+
+  @include mixins.respond-below(md) {
+    display: flex;
+    margin-bottom: 1.25rem;
+  }
+}
+
+.capsuleLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border-radius: 999px;
+  color: ui.$ink;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &[aria-current='page'] {
+    background: ui.$ink;
+    color: $cream-text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ui.$ink;
+    outline-offset: 2px;
+  }
+
+  @include mixins.respond-below(md) {
+    flex: 1;
+    gap: 0.375rem;
+    padding: 0 0.625rem;
+    font-size: 0.9375rem;
+  }
+}
+
+.capsuleIcon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+.capsuleCount {
+  display: grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.4375rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+  font-size: 0.8125rem;
+
+  [aria-current='page'] > & {
+    background: ui.$accent;
+  }
+}
+
+// ── Infos ──────────────────────────────────────────────────────────────────────────────────────
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+
+  // Phone: one card, the numbers side by side.
+  @include mixins.respond-below(md) {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: ui.$card;
+    box-shadow: ui.$shadow;
+  }
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: ui.$card;
+  box-shadow: ui.$shadow;
+  color: ui.$ink;
+
+  @include mixins.respond-below(md) {
+    align-items: flex-start;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+}
+
+.tileIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+
+  &[data-tone='green'] {
+    background: ui.tone-bg(ok);
+  }
+
+  &[data-tone='neutral'] {
+    background: ui.tone-bg(neutral);
+  }
+
+  &[data-tone='blue'] {
+    background: #9cc9e3;
+  }
+
+  &[data-tone='yellow'] {
+    background: ui.tone-bg(waiting);
+  }
+
+  img {
+    display: block;
+  }
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.tileText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.tileValue {
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.625rem;
+  line-height: normal;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.125rem;
+  }
+}
+
+.tileLabel {
+  font-size: 0.875rem;
+
+  @include mixins.respond-below(md) {
+    font-size: 0.75rem;
+  }
+}
+
+.tileDetail {
+  color: ui.$accent-dark;
+  font-size: 0.8125rem;
+  font-weight: 700;
+
+  @include mixins.respond-below(md) {
+    font-size: 0.6875rem;
+  }
+}
+
+// ── Search and filters ─────────────────────────────────────────────────────────────────────────
+
+.toolbar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+
+  @include mixins.respond-below(md) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.searchLine {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+
+  > :first-child {
+    flex: 1;
+  }
+
+  // Phone: the filter button sits inside the search pill, on the right.
+  @include mixins.respond-below(md) {
+    position: relative;
+
+    > .phoneOnly {
+      position: absolute;
+      right: 0.5rem;
+    }
+  }
+}
+
+.desktopMenus {
+  display: flex;
+  gap: 0.75rem;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.triggerIcon {
+  display: block;
+  flex-shrink: 0;
+}
+
+.triggerLabel {
+  overflow: hidden;
+  max-width: 14rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filterButton {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+
+  &[data-active] {
+    background: ui.$ink;
+    color: $cream-text;
+
+    img {
+      filter: invert(1);
+    }
+  }
+}
+
+// ── Menus ──────────────────────────────────────────────────────────────────────────────────────
+
+.dropdown {
+  padding: 1rem !important;
+  border-radius: 1.5rem !important;
+}
+
+.menuHeading {
+  padding: 0 0.75rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.checkOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkOption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.625rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.875rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &[data-checked] {
+    background: $pale;
+  }
+
+  &:hover {
+    background: $pale;
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid ui.$ink;
+    outline-offset: -2px;
+  }
+}
+
+.checkInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checkBox {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 2px solid ui.$ink;
+  border-radius: 0.375rem;
+  color: $cream-text;
+
+  [data-checked] > & {
+    background: ui.$ink;
+  }
+}
+
+.checkLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.checkCount {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.clear {
+  align-self: flex-start;
+  height: 2.5rem;
+  margin: 0.25rem 0 0 0.5rem;
+  padding: 0 1rem;
+  border: 2px solid ui.$ink;
+  border-radius: 0.875rem;
+  background: none;
+  color: ui.$ink;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+}
+
+// Dates: shortcuts on a pale panel, the period and the calendar beside.
+.datesDropdown {
+  padding: 1.25rem !important;
+}
+
+.datesMenu {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.shortcuts {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-shrink: 0;
+  width: 13.5rem;
+  padding: 0.875rem 0.5rem;
+  border-radius: 1.125rem;
+  background: $pale;
+
+  .clear {
+    margin-left: 0.25rem;
+  }
+}
+
+.shortcutList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.shortcut {
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.875rem;
+  color: ui.$ink;
+  font-size: 0.9375rem;
+  font-weight: 700;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.06);
+  }
+
+  &[data-selected] {
+    background: ui.$ink;
+    color: $cream-text;
+  }
+}
+
+.datesSide {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.dateFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+}
+
+.dateField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dateFieldLabel {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.dateFieldValue {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 0.875rem;
+  border-radius: 0.875rem;
+  background: $field;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  white-space: nowrap;
+
+  img {
+    display: block;
+  }
+}
+
+// « Calendrier maison »
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  color: ui.$ink;
+}
+
+.calendarHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.375rem;
+}
+
+.monthButton {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1.5px solid ui.$ink;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+
+  img {
+    display: block;
+  }
+}
+
+.monthLabel {
+  font-size: 1.0625rem;
+  font-weight: 700;
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays {
+  height: 1.5rem;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.days {
+  row-gap: 0.375rem;
+}
+
+// The band of the period: pale orange behind the days, rounded off at both ends.
+.dayCell {
+  display: grid;
+  place-items: center;
+
+  &[data-in-range] {
+    background: ui.$accent-soft;
+  }
+
+  &[data-range-start] {
+    background: linear-gradient(to right, transparent 50%, ui.$accent-soft 50%);
+  }
+
+  &[data-range-end][data-in-range] {
+    background: linear-gradient(to left, transparent 50%, ui.$accent-soft 50%);
+  }
+}
+
+.day {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: ui.$ink;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover:not([data-edge]) {
+    background: rgb(55 39 33 / 0.08);
+  }
+
+  &[data-today]:not([data-edge]) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  &[data-edge] {
+    background: ui.$ink;
+    color: $cream-text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ui.$ink;
+    outline-offset: 2px;
+  }
+}
+
+// ── Table ──────────────────────────────────────────────────────────────────────────────────────
+
+.card {
+  @include ui.card(1.25rem);
+  display: flex;
+  flex-direction: column;
+  color: ui.$ink;
+
+  @include mixins.respond-below(md) {
+    padding: 0.5rem 1rem;
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 2.5rem 1rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.orderGrid,
+.attendeeGrid {
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: 0.75rem;
+}
+
+.orderGrid {
+  grid-template-columns: 8.125rem minmax(0, 1fr) minmax(0, 15.625rem) 5.5rem 9.375rem 1.25rem;
+
+  @media (max-width: 1180px) {
+    grid-template-columns: 7rem minmax(0, 1fr) minmax(0, 12rem) 5.5rem 8.5rem 1.25rem;
+  }
+}
+
+.attendeeGrid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 12.5rem) 7.5rem 5rem 1.5rem;
+}
+
+.tableHead {
+  padding-block: 0.75rem;
+  border-radius: 0.75rem;
+  background: ui.$row;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  width: 100%;
+  padding-block: 0.875rem;
+  border-bottom: 1px solid rgb(55 39 33 / 0.08);
+  color: ui.$ink;
+  font-size: 0.9375rem;
+  text-align: left;
+  transition: background-color 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:is(button):hover {
+    background: rgb(255 246 237 / 0.7);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: -3px;
+  }
+
+  // Phone: a line of a card; the order's amount and date on the right.
+  @include mixins.respond-below(md) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.75rem;
+    padding: 1rem 0;
+
+    .orderCell,
+    .contentsCell,
+    .statusCell,
+    .chevronCell {
+      display: none;
+    }
+  }
+}
+
+.orderCell,
+.personText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.personText {
+  gap: 0.25rem;
+}
+
+.strong {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.personCell {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+
+  @include mixins.respond-below(md) {
+    align-items: flex-start;
+  }
+}
+
+.avatar {
+  @include ui.avatar;
+}
+
+.nameLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nameButton {
+  color: ui.$ink;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.contentsCell,
+.ticketCell {
+  min-width: 0;
+  font-size: 0.875rem;
+}
+
+.amountCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  @include mixins.respond-below(md) {
+    font-size: 1rem;
+  }
+}
+
+.statusCell {
+  min-width: 0;
+}
+
+.chevronCell {
+  display: block;
+}
+
+.orderLink {
+  color: ui.$ink;
+  white-space: nowrap;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tag {
+  @include ui.tag;
+
+  &[data-tone='done'] {
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
+
+  &[data-tone='waiting'] {
+    background: ui.tone-bg(waiting);
+    color: ui.tone-text(waiting);
+  }
+}
+
+.more {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  min-width: 0 !important;
+  justify-self: end;
+
+  img {
+    display: block;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.125rem 0.5rem 0;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.range {
+  font-size: 0.875rem;
+}
+
+.loadMore:global(.mantine-Button-root) {
+  @include ui.outline-button;
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+.addPhone:global(.mantine-Button-root) {
+  @include ui.primary-button;
+  margin-bottom: 1.25rem;
+}
+
+// ── Phone sheet ────────────────────────────────────────────────────────────────────────────────
+
+.sheet {
+  border-radius: 1.75rem 1.75rem 0 0 !important;
+  background: ui.$card !important;
+  color: ui.$ink;
+}
+
+.sheetBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom)) !important;
+}
+
+.sheetHandle {
+  align-self: center;
+  width: 2.5rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: ui.$ink;
+}
+
+.sheetHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.sheetTitle {
+  @include ui.section-title;
+}
+
+.sheetClose {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+}
+
+.sheetSection {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 0.875rem;
+  border: 1.5px solid ui.$ink;
+  border-radius: 999px;
+  color: ui.$ink;
+  font-size: 0.9375rem;
+  font-weight: 700;
+
+  &[data-checked] {
+    background: ui.$ink;
+    color: $cream-text;
+  }
+}
+
+.chipCount {
+  display: grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+  font-size: 0.75rem;
+
+  [data-checked] > & {
+    background: ui.$accent;
+  }
+}
+
+.sheetActions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.sheetClear,
+.sheetApply {
+  height: 3rem;
+  padding: 0 1.25rem;
+  border-radius: 1rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sheetClear {
+  border: 2px solid ui.$ink;
+  color: ui.$ink;
+}
+
+.sheetApply {
+  background: ui.$ink;
+  color: $cream-text;
+}

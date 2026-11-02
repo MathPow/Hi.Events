@@ -71,6 +71,8 @@ class AttendeeDomainObject extends Generated\AttendeeDomainObjectAbstract implem
             self::STATUS,
             self::PRODUCT_ID,
             self::PRODUCT_PRICE_ID,
+            // « Dossards attribués » on the Participants page counts the bibs given (ne null).
+            self::BIB_NUMBER,
         ];
     }
 

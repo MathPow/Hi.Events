@@ -22,6 +22,7 @@ import {InputLabelWithHelp} from "../../common/InputLabelWithHelp";
 import classes from './ManageOrderModal.module.scss';
 import {EditOrderPayload} from "../../../api/order.client.ts";
 import {SideDrawer} from "../../common/SideDrawer";
+import {OrderActionsMenu} from "../../common/OrderActionsMenu";
 
 interface ManageOrderModalProps {
     orderId: IdParam;
@@ -192,7 +193,10 @@ export const ManageOrderModal = ({onClose, orderId}: GenericModalProps & ManageO
                         <h2 className={classes.reference}>#{order.public_id}</h2>
                         <span className={classes.customer}>{order.first_name} {order.last_name}</span>
                     </div>
-                    <OrderStatusBadge order={order} variant="outline"/>
+                    <div className={classes.headerSide}>
+                        <OrderStatusBadge order={order} variant="outline"/>
+                        <OrderActionsMenu order={order} event={event}/>
+                    </div>
                 </div>
 
                 <Tabs value={activeTab} onChange={setActiveTab as any} variant="pills">

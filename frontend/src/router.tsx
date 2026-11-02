@@ -412,10 +412,11 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                // « Commandes et participants »: one page, its capsule on /orders and /attendees.
                 path: "attendees",
                 async lazy() {
-                    const Attendees = await import("./components/routes/event/attendees");
-                    return { Component: Attendees.default };
+                    const OrdersAndAttendees = await import("./components/routes/event/OrdersAndAttendees");
+                    return { Component: OrdersAndAttendees.default };
                 }
             },
             {
@@ -428,8 +429,8 @@ const routes: RouteObject[] = [
             {
                 path: "orders",
                 async lazy() {
-                    const Orders = await import("./components/routes/event/orders");
-                    return { Component: Orders.default };
+                    const OrdersAndAttendees = await import("./components/routes/event/OrdersAndAttendees");
+                    return { Component: OrdersAndAttendees.default };
                 }
             },
             {

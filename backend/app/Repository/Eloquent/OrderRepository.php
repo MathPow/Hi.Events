@@ -56,6 +56,11 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
         if (!empty($params->filter_fields)) {
             $this->applyFilterFields($params, OrderDomainObject::getAllowedFilterFields());
+
+            $displayStatuses = $this->displayStatusesFilter($params);
+            if ($displayStatuses !== []) {
+                $where[] = static fn(Builder $builder) => self::whereDisplayStatusIn($builder, $displayStatuses);
+            }
         }
 
         $this->model = $this->model->orderBy(
@@ -68,6 +73,39 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             limit: $params->per_page,
             page: $params->page,
         );
+    }
+
+    /**
+     * The « Statut » filter of the event's Commandes page: several of Complétée, En attente,
+     * Remboursée and Annulée at once (filter_fields[display_status][in]). A refunded order counts as
+     * Remboursée whatever its status; the others are the orders with that status and no refund.
+     *
+     * @return string[]
+     */
+    private function displayStatusesFilter(QueryParamsDTO $params): array
+    {
+        return $params->filter_fields
+            ?->filter(static fn($field) => $field->field === 'display_status')
+            ->flatMap(static fn($field) => explode(',', (string)$field->value))
+            ->map(static fn($status) => trim($status))
+            ->intersect(['COMPLETED', 'AWAITING_OFFLINE_PAYMENT', 'REFUNDED', 'CANCELLED'])
+            ->unique()
+            ->values()
+            ->all() ?? [];
+    }
+
+    private static function whereDisplayStatusIn(Builder $builder, array $statuses, string $prefix = ''): void
+    {
+        foreach ($statuses as $status) {
+            if ($status === 'REFUNDED') {
+                $builder->orWhereNotNull($prefix . OrderDomainObjectAbstract::REFUND_STATUS);
+                continue;
+            }
+
+            $builder->orWhere(static fn(Builder $query) => $query
+                ->where($prefix . OrderDomainObjectAbstract::STATUS, $status)
+                ->whereNull($prefix . OrderDomainObjectAbstract::REFUND_STATUS));
+        }
     }
 
     public function findByOrganizerId(int $organizerId, int $accountId, QueryParamsDTO $params): LengthAwarePaginator
@@ -97,6 +135,12 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         if (!empty($params->filter_fields)) {
             // Joined with events, which has a status too: the filters name the orders' columns.
             $this->applyFilterFields($params, OrderDomainObject::getAllowedFilterFields(), 'orders');
+
+            // The CSV of an event's Commandes page, with its « Statut » filter.
+            $displayStatuses = $this->displayStatusesFilter($params);
+            if ($displayStatuses !== []) {
+                $where[] = static fn(Builder $builder) => self::whereDisplayStatusIn($builder, $displayStatuses, 'orders.');
+            }
         }
 
         $this->model = $this->model

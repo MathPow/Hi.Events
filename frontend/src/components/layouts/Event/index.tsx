@@ -15,7 +15,6 @@ import {
     IconTicket,
     IconTrendingUp,
     IconUserQuestion,
-    IconUsers,
     IconUsersGroup,
     IconWebhook,
     IconListCheck,
@@ -124,14 +123,21 @@ const EventLayout = () => {
         // 3. Ticketing & Sales
         {label: t`Ticketing & Sales`},
         {link: 'products', label: t`Tickets & Products`, icon: IconTicket, attention: needsProducts},
-        {link: 'orders', label: t`Orders`, icon: IconReceipt, badge: eventStats?.total_orders, mobileTab: true},
+        // « Commandes » holds the participants too (Figma « Commandes et participants »): one entry for both.
+        {
+            link: 'orders',
+            label: t`Orders`,
+            icon: IconReceipt,
+            badge: eventStats?.total_orders,
+            mobileTab: true,
+            isActive: (isActive) => isActive || /\/attendees\/?$/.test(location.pathname),
+        },
         ...(hasDeposits ? [{link: 'deposits', label: t`Deposits`, icon: IconShieldLock}] : []),
         {link: 'promo-codes', label: t`Promo Codes`, icon: IconDiscount2},
         {link: 'affiliates', label: t`Affiliates`, icon: IconTrendingUp},
 
         // 4. GUESTS
         {label: t`Guest Management`},
-        {link: 'attendees', label: t`Attendees`, icon: IconUsers, badge: eventStats?.total_attendees_registered, mobileTab: true},
         {link: 'check-in', label: t`Check-in and scanning`, icon: IconQrcode, mobileTab: true, mobileTabLabel: t`Check-in`},
         {link: 'messages', label: t`Messages`, iconSrc: adminIcon('messages'), tileIconSrc: adminIcon('messages-22')},
         {link: 'sold-out-waitlist', label: t`Waitlist`, icon: IconListCheck},

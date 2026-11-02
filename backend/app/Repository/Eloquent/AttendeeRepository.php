@@ -73,7 +73,9 @@ class AttendeeRepository extends BaseRepository implements AttendeeRepositoryInt
                     ->orWhere('attendees.' . AttendeeDomainObjectAbstract::LAST_NAME, 'ilike', '%' . $params->query . '%')
                     ->orWhere('attendees.' . AttendeeDomainObjectAbstract::FIRST_NAME, 'ilike', '%' . $params->query . '%')
                     ->orWhere('attendees.' . AttendeeDomainObjectAbstract::PUBLIC_ID, 'ilike', '%' . $params->query . '%')
-                    ->orWhere('attendees.' . AttendeeDomainObjectAbstract::EMAIL, 'ilike', '%' . $params->query . '%');
+                    ->orWhere('attendees.' . AttendeeDomainObjectAbstract::EMAIL, 'ilike', '%' . $params->query . '%')
+                    // The order number, as shown in the « Commande » column of Participants.
+                    ->orWhere('orders.public_id', 'ilike', '%' . $params->query . '%');
 
                 // A bib number typed alone finds its runner.
                 if (ctype_digit(trim($params->query))) {
