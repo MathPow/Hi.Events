@@ -12,9 +12,15 @@ import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 
 interface CreateProductModalProps extends GenericModalProps {
     selectedCategoryId?: IdParam;
+    // « Ajouter un billet » or « Ajouter un produit »: the type chosen before opening.
+    productType?: ProductType;
 }
 
-export const CreateProductModal = ({onClose, selectedCategoryId = undefined}: CreateProductModalProps) => {
+export const CreateProductModal = ({
+                                       onClose,
+                                       selectedCategoryId = undefined,
+                                       productType = ProductType.Ticket,
+                                   }: CreateProductModalProps) => {
     const {eventId} = useParams();
     const {data: taxesAndFees, isFetched: taxesAndFeesLoaded} = useGetTaxesAndFees();
     const createProductMutation = useCreateProduct();
@@ -37,7 +43,7 @@ export const CreateProductModal = ({onClose, selectedCategoryId = undefined}: Cr
             waitlist_enabled: null,
             option_heading: null,
             type: ProductPriceType.Paid,
-            product_type: ProductType.Ticket,
+            product_type: productType,
             tax_and_fee_ids: undefined,
             product_category_id: selectedCategoryId ? String(selectedCategoryId) : undefined,
             prices: [{

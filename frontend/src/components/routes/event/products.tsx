@@ -1,96 +1,132 @@
+import {useEffect, useState} from "react";
 import {useParams} from "react-router";
-import {useDisclosure} from "@mantine/hooks";
-import {Button} from "@mantine/core";
-import {IconCategoryPlus, IconPlus} from "@tabler/icons-react";
+import {Button, Menu} from "@mantine/core";
+import {t} from "@lingui/macro";
 import {PageTitle} from "../../common/PageTitle";
 import {PageBody} from "../../common/PageBody";
 import {CreateProductModal} from "../../modals/CreateProductModal";
-import {ProductCategoryList} from "../../common/ProductsTable";
-import {ToolBar} from "../../common/ToolBar";
+import {ProductKind, ProductSections} from "../../common/ProductsTable";
 import {TableSkeleton} from "../../common/TableSkeleton";
-import {t} from "@lingui/macro";
 import {useUrlHash} from "../../../hooks/useUrlHash.ts";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {useGetEventProductCategories} from "../../../queries/useGetProductCategories.ts";
-import {SearchBar} from "../../common/SearchBar";
-import {useState} from "react";
-import {CreateProductCategoryModal} from "../../modals/CreateProductCategoryModal";
-import {IdParam} from "../../../types.ts";
+import {ProductType} from "../../../types.ts";
+import classes from "./products.module.scss";
 
+const ICONS = '/interface/admin/produits';
+// Per viewer: once closed, the explanation stays closed in this browser.
+// eslint-disable-next-line lingui/no-unlocalized-strings
+const EXPLAINER_KEY = 'dehors.produits.explication-masquee';
+
+const plusIcon = <img src={`${ICONS}/plus.svg`} width={20} height={20} alt=""/>;
+
+// « Billets, forfaits et extras »: what a ticket and a product are, until closed with its X.
+const Explainer = () => {
+    const [hidden, setHidden] = useState(true);
+
+    useEffect(() => {
+        try {
+            setHidden(window.localStorage.getItem(EXPLAINER_KEY) === '1');
+        } catch {
+            setHidden(false);
+        }
+    }, []);
+
+    if (hidden) {
+        return null;
+    }
+
+    const close = () => {
+        setHidden(true);
+        try {
+            window.localStorage.setItem(EXPLAINER_KEY, '1');
+        } catch {
+            // Closed for this visit only.
+        }
+    };
+
+    return (
+        <div className={classes.explainer} role="note">
+            <span className={classes.explainerIcon} aria-hidden>
+                <img src={`${ICONS}/aide.svg`} width={20} height={20} alt=""/>
+            </span>
+            <div className={classes.explainerText}>
+                <strong>{t`Tickets and extras`}</strong>
+                <p>{t`A ticket gives access to the event. A product (e.g. a t-shirt) is sold on its own, as an extra, at checkout.`}</p>
+            </div>
+            <button type="button" className={classes.explainerClose} onClick={close}
+                    aria-label={t`Hide this explanation`}>
+                <img src={`${ICONS}/fermer.svg`} width={18} height={18} alt=""/>
+            </button>
+        </div>
+    );
+};
+
+/**
+ * Figma « Admin · Événement · Billets et produits » (542:2074, phone 542:2720): the tickets and the
+ * products of the event. On phones, one « Ajouter » button asks which one to add.
+ */
 export const Products = () => {
-    const [createProductModalOpen, {
-        open: openCreateProductModal,
-        close: closeCreateProductModal
-    }] = useDisclosure(false);
-    const [createProductCategoryModalOpen, {
-        open: openCreateProductCategoryModal,
-        close: closeCreateProductCategoryModal
-    }] = useDisclosure(false);
     const {eventId} = useParams();
     const {data: event} = useGetEvent(eventId);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategoryId, setSelectedCategoryId] = useState<IdParam>();
-
     const productCategoriesQuery = useGetEventProductCategories(eventId);
     const productCategories = productCategoriesQuery?.data?.data;
+    const [creating, setCreating] = useState<ProductKind | null>(null);
 
-    useUrlHash('create-product', () => openCreateProductModal());
+    useUrlHash('create-product', () => setCreating('ticket'));
 
-    const openCreateProduct = (categoryId: IdParam) => {
-        setSelectedCategoryId(() => categoryId);
-        openCreateProductModal();
-    }
+    const add = (kind: ProductKind) => setCreating(kind);
 
     return (
         <PageBody>
             <PageTitle
-                subheading={t`Create and configure tickets and merchandise for sale.`}
+                subheading={t`What participants can buy for this event.`}
+                mobileSubheading={null}
                 actions={(
                     <>
-                        <Button
-                            variant="outline"
-                            leftSection={<IconCategoryPlus size={20}/>}
-                            onClick={openCreateProductCategoryModal}
-                        >
-                            {t`Create category`}
+                        <Button variant="outline" leftSection={plusIcon} className={classes.desktopOnly}
+                                onClick={() => add('product')}>
+                            {t`Add a product`}
                         </Button>
-                        <Button
-                            leftSection={<IconPlus size={20}/>}
-                            onClick={() => openCreateProduct(undefined)}
-                        >
-                            {t`Add a ticket or product`}
+                        <Button leftSection={plusIcon} className={classes.desktopOnly} onClick={() => add('ticket')}>
+                            {t`Add a ticket`}
                         </Button>
+                        <Menu position="bottom" width="target" shadow="md">
+                            <Menu.Target>
+                                <Button leftSection={plusIcon} className={classes.phoneOnly} fullWidth>
+                                    {t`Add`}
+                                </Button>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Item onClick={() => add('ticket')} className={classes.addChoice}
+                                           leftSection={<img src={`${ICONS}/billet.svg`} width={20} height={20} alt=""/>}>
+                                    {t`Ticket`}
+                                </Menu.Item>
+                                <Menu.Item onClick={() => add('product')} className={classes.addChoice}
+                                           leftSection={<img src={`${ICONS}/sac.svg`} width={20} height={20} alt=""/>}>
+                                    {t`Product`}
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
                     </>
                 )}
             >{t`Tickets & Products`}</PageTitle>
 
-            <ToolBar
-                searchComponent={() => (
-                    <SearchBar
-                        onClear={() => setSearchTerm('')}
-                        placeholder={t`Search products`}
-                        value={searchTerm}
-                        onChange={(event) => setSearchTerm(event.target.value)}
-                    />
-                )}
-            />
+            <Explainer/>
 
             <TableSkeleton isVisible={!productCategories || !event}/>
 
-            {(event && productCategories)
-                && (<ProductCategoryList
-                        initialCategories={productCategories}
-                        event={event}
-                        searchTerm={searchTerm}
-                        onCreateOpen={openCreateProduct}
-                    />
-                )}
+            {event && productCategories && (
+                <ProductSections initialCategories={productCategories} event={event} onAdd={add}/>
+            )}
 
-            {createProductModalOpen &&
-                <CreateProductModal selectedCategoryId={selectedCategoryId} onClose={closeCreateProductModal}
-                                    isOpen={createProductModalOpen}/>}
-            {createProductCategoryModalOpen && <CreateProductCategoryModal onClose={closeCreateProductCategoryModal}
-                                                                           isOpen={createProductCategoryModalOpen}/>}
+            {creating && (
+                <CreateProductModal
+                    productType={creating === 'ticket' ? ProductType.Ticket : ProductType.General}
+                    onClose={() => setCreating(null)}
+                    isOpen
+                />
+            )}
         </PageBody>
     );
 };

@@ -1,0 +1,90 @@
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
+
+// Figma « Billets et produits » (542:2074): the two buttons on computers, one « Ajouter » on phones.
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+.phoneOnly {
+  @include mixins.respond-above(md) {
+    display: none !important;
+  }
+}
+
+.addChoice {
+  padding: 0.75rem 0.875rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+// « Billets, forfaits et extras » (542:2210): pale orange, round help icon, X to close.
+.explainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+
+  @include mixins.respond-below(md) {
+    display: none;
+  }
+}
+
+.explainerIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: ui.$accent;
+
+  img {
+    display: block;
+  }
+}
+
+.explainerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+
+  strong {
+    font-size: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}
+
+.explainerClose {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.06);
+  }
+
+  img {
+    display: block;
+  }
+}
