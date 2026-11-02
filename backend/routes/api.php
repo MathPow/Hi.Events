@@ -67,6 +67,7 @@ use HiEvents\Http\Actions\Events\Images\CreateEventImageAction;
 use HiEvents\Http\Actions\Events\Images\DeleteEventImageAction;
 use HiEvents\Http\Actions\Events\Images\GetEventImagesAction;
 use HiEvents\Http\Actions\Events\Stats\GetEventStatsAction;
+use HiEvents\Http\Actions\Events\Stats\GetEventCheckInStatsAction;
 use HiEvents\Http\Actions\Events\UpdateEventAction;
 use HiEvents\Http\Actions\Events\DeleteEventAction;
 use HiEvents\Http\Actions\Events\GetEventDeletionStatusAction;
@@ -448,6 +449,7 @@ $router->middleware(['auth:api'])->group(
 
         // Stats
         $router->get('/events/{event_id}/stats', GetEventStatsAction::class);
+        $router->get('/events/{event_id}/check_in_stats', GetEventCheckInStatsAction::class);
 
         // Email Templates - Event level
         $router->get('/events/{eventId}/email-templates', GetEventEmailTemplatesAction::class);

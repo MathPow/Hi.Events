@@ -870,6 +870,8 @@ export interface CheckInList {
     activates_at?: string;  // ISO 8601 string
     total_attendees: number;
     checked_in_attendees: number;
+    // The latest arrival on the list (manage API only).
+    last_check_in?: { checked_in_at: string; attendee_name: string } | null;
     is_expired: boolean;
     is_active: boolean;
     event_id: number;
@@ -877,11 +879,12 @@ export interface CheckInList {
     products: {
         id: number;
         title: string;
+        product_type?: string;
     }[];
 }
 
 export type CheckInListRequest =
-    Omit<CheckInList, 'event_id' | 'short_id' | 'id' | 'products' | 'total_attendees' | 'checked_in_attendees' | 'is_expired' | 'is_active' | 'requires_pin'>
+    Omit<CheckInList, 'event_id' | 'short_id' | 'id' | 'products' | 'total_attendees' | 'checked_in_attendees' | 'last_check_in' | 'is_expired' | 'is_active' | 'requires_pin'>
     & {
     product_ids: IdParam[];
 };

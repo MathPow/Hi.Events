@@ -189,20 +189,29 @@ readonly class EventStatsFetchService
         ];
     }
 
+    /**
+     * The event's attendees, and how many of them have arrived (checked in on at least one list).
+     */
     public function getCheckedInStats(int $eventId): EventCheckInStatsResponseDTO
     {
         $query = <<<SQL
             SELECT
                 COUNT(*) AS total_count,
-                SUM(CASE WHEN attendees.checked_in_at IS NOT NULL THEN 1 ELSE 0 END) AS checked_in_count
+                COUNT(*) FILTER (WHERE EXISTS (
+                    SELECT 1
+                    FROM attendee_check_ins aci
+                    WHERE aci.attendee_id = attendees.id
+                      AND aci.deleted_at IS NULL
+                )) AS checked_in_count
             FROM attendees
             INNER JOIN orders ON orders.id = attendees.order_id
-            WHERE orders.event_id = {$eventId}
+            WHERE orders.event_id = :eventId
               AND orders.status = 'COMPLETED'
-              AND attendees.status = 'ACTIVE';
+              AND attendees.status = 'ACTIVE'
+              AND attendees.deleted_at IS NULL;
         SQL;
 
-        $result = $this->db->select($query)[0];
+        $result = $this->db->selectOne($query, ['eventId' => $eventId]);
 
         return new EventCheckInStatsResponseDTO(
             total_checked_in_attendees: $result->checked_in_count ?? 0,

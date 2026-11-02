@@ -8,7 +8,6 @@ export const eventStartLabel = (event: Pick<Event, 'start_date' | 'timezone'>, w
     }
     const date = new Date(event.start_date);
     const timeZone = event.timezone || undefined;
-    const minutes = Number(new Intl.DateTimeFormat('en', {minute: 'numeric', timeZone}).format(date));
     const day = new Intl.DateTimeFormat(intlLocale(), {
         weekday: 'short',
         day: 'numeric',
@@ -17,12 +16,13 @@ export const eventStartLabel = (event: Pick<Event, 'start_date' | 'timezone'>, w
         timeZone,
     }).format(date);
 
-    return `${day} · ${startTime(date, timeZone, minutes === 0)}`;
+    return `${day} · ${clockTime(date, timeZone)}`;
 };
 
 // « 9 h » on the hour, « 9 h 30 » otherwise (« 9 a.m. », « 9:30 a.m. » in English). The hour alone
 // would come out « 09 h » in fr-CA, so the minutes are formatted then left out.
-const startTime = (date: Date, timeZone: string | undefined, onTheHour: boolean) => {
+export const clockTime = (date: Date, timeZone: string | undefined) => {
+    const onTheHour = Number(new Intl.DateTimeFormat('en', {minute: 'numeric', timeZone}).format(date)) === 0;
     const parts = new Intl.DateTimeFormat(intlLocale(), {hour: 'numeric', minute: '2-digit', timeZone}).formatToParts(date);
     if (!onTheHour) {
         return parts.map((part) => part.value).join('');

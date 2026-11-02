@@ -132,7 +132,7 @@ const EventLayout = () => {
         // 4. GUESTS
         {label: t`Guest Management`},
         {link: 'attendees', label: t`Attendees`, icon: IconUsers, badge: eventStats?.total_attendees_registered, mobileTab: true},
-        {link: 'check-in', label: t`Check-In Lists`, icon: IconQrcode, mobileTab: true, mobileTabLabel: t`Check-in`},
+        {link: 'check-in', label: t`Check-in and scanning`, icon: IconQrcode, mobileTab: true, mobileTabLabel: t`Check-in`},
         {link: 'messages', label: t`Messages`, iconSrc: adminIcon('messages'), tileIconSrc: adminIcon('messages-22')},
         {link: 'sold-out-waitlist', label: t`Waitlist`, icon: IconListCheck},
         {link: 'capacity-assignments', label: t`Capacity Management`, icon: IconUsersGroup},

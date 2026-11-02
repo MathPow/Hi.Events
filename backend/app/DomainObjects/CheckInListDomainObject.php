@@ -5,6 +5,7 @@ namespace HiEvents\DomainObjects;
 use Carbon\Carbon;
 use HiEvents\DomainObjects\Interfaces\IsSortable;
 use HiEvents\DomainObjects\SortingAndFiltering\AllowedSorts;
+use HiEvents\Repository\DTO\LastCheckInDTO;
 use Illuminate\Support\Collection;
 
 class CheckInListDomainObject extends Generated\CheckInListDomainObjectAbstract implements IsSortable
@@ -16,6 +17,8 @@ class CheckInListDomainObject extends Generated\CheckInListDomainObjectAbstract 
     private ?int $checkedInCount = null;
 
     private ?int $totalAttendeesCount = null;
+
+    private ?LastCheckInDTO $lastCheckIn = null;
 
     private ?string $timezone = null;
 
@@ -51,6 +54,18 @@ class CheckInListDomainObject extends Generated\CheckInListDomainObjectAbstract 
                 ],
             ]
         );
+    }
+
+    public function getLastCheckIn(): ?LastCheckInDTO
+    {
+        return $this->lastCheckIn;
+    }
+
+    public function setLastCheckIn(?LastCheckInDTO $lastCheckIn): static
+    {
+        $this->lastCheckIn = $lastCheckIn;
+
+        return $this;
     }
 
     public function getProducts(): ?Collection

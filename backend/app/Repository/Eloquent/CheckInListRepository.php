@@ -8,6 +8,7 @@ use HiEvents\DomainObjects\Generated\CheckInListDomainObjectAbstract;
 use HiEvents\Http\DTO\QueryParamsDTO;
 use HiEvents\Models\CheckInList;
 use HiEvents\Repository\DTO\CheckedInAttendeesCountDTO;
+use HiEvents\Repository\DTO\LastCheckInDTO;
 use HiEvents\Repository\Interfaces\CheckInListRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -122,6 +123,36 @@ class CheckInListRepository extends BaseRepository implements CheckInListReposit
                 checkInListId: $item->check_in_list_id,
                 checkedInCount: $item->checked_in_attendees,
                 totalAttendeesCount: $item->total_attendees,
+            )
+        );
+    }
+
+    public function getLastCheckInsByIds(array $checkInListIds): Collection
+    {
+        if ($checkInListIds === []) {
+            return collect();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($checkInListIds), '?'));
+
+        $sql = <<<SQL
+            SELECT DISTINCT ON (aci.check_in_list_id)
+                aci.check_in_list_id,
+                aci.created_at,
+                a.first_name,
+                a.last_name
+            FROM attendee_check_ins aci
+                     JOIN attendees a ON a.id = aci.attendee_id
+            WHERE aci.deleted_at IS NULL
+              AND aci.check_in_list_id IN ($placeholders)
+            ORDER BY aci.check_in_list_id, aci.created_at DESC;
+        SQL;
+
+        return collect($this->db->select($sql, $checkInListIds))->map(
+            static fn($item) => new LastCheckInDTO(
+                checkInListId: $item->check_in_list_id,
+                checkedInAt: (string)$item->created_at,
+                attendeeName: trim($item->first_name . ' ' . $item->last_name),
             )
         );
     }

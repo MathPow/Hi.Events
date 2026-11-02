@@ -32,19 +32,17 @@ class GetCheckInListsHandler
             return $checkInLists;
         }
 
-        $attendeeCheckInCounts = $this->checkInListRepository->getCheckedInAttendeeCountByIds(
-            $checkInLists->map(fn($checkInList) => $checkInList->getId())->toArray(),
-        );
+        $checkInListIds = $checkInLists->map(fn($checkInList) => $checkInList->getId())->toArray();
+        $attendeeCheckInCounts = $this->checkInListRepository->getCheckedInAttendeeCountByIds($checkInListIds);
+        // The latest arrival of each list (« Dernière arrivée » on the Accueil et scan page).
+        $lastCheckIns = $this->checkInListRepository->getLastCheckInsByIds($checkInListIds);
 
-        if ($attendeeCheckInCounts->isEmpty()) {
-            return $checkInLists;
-        }
-
-        $checkInLists->each(function (CheckInListDomainObject $checkInList) use ($attendeeCheckInCounts) {
+        $checkInLists->each(function (CheckInListDomainObject $checkInList) use ($attendeeCheckInCounts, $lastCheckIns) {
             $attendeeCheckInCount = $attendeeCheckInCounts->firstWhere('checkInListId', $checkInList->getId());
 
             $checkInList->setCheckedInCount($attendeeCheckInCount->checkedInCount ?? 0);
             $checkInList->setTotalAttendeesCount($attendeeCheckInCount->totalAttendeesCount ?? 0);
+            $checkInList->setLastCheckIn($lastCheckIns->firstWhere('checkInListId', $checkInList->getId()));
         });
 
         return $checkInLists;

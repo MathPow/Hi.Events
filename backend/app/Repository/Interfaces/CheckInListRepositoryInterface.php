@@ -5,6 +5,7 @@ namespace HiEvents\Repository\Interfaces;
 use HiEvents\DomainObjects\CheckInListDomainObject;
 use HiEvents\Http\DTO\QueryParamsDTO;
 use HiEvents\Repository\DTO\CheckedInAttendeesCountDTO;
+use HiEvents\Repository\DTO\LastCheckInDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -23,4 +24,9 @@ interface CheckInListRepositoryInterface extends RepositoryInterface
      * @return Collection<CheckedInAttendeesCountDTO>
      */
     public function getCheckedInAttendeeCountByIds(array $checkInListIds): Collection;
+
+    /**
+     * @return Collection<LastCheckInDTO> the latest check-in of each list that has one
+     */
+    public function getLastCheckInsByIds(array $checkInListIds): Collection;
 }
