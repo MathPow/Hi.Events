@@ -1,5 +1,5 @@
 import {t} from "@lingui/macro";
-import {CSSProperties} from "react";
+import {CSSProperties, useEffect, useRef, useState} from "react";
 import QRCode from "react-qr-code";
 import {IconX} from "@tabler/icons-react";
 import {Attendee, Event, Product} from "../../../../../types.ts";
@@ -7,7 +7,7 @@ import {getAttendeeProductTitle} from "../../../../../utilites/products.ts";
 import {getShortLocationDisplay} from "../../../../../utilites/addressUtilities.ts";
 import {PublicIcon} from "../../../../common/PublicIcon";
 import {shortDayLabel, shortTimeLabel} from "../confirmationDates.ts";
-import {downloadQrCode} from "../../../../../utilites/download.ts";
+import {canSaveImageToPhotos, downloadQrCode, qrCodePng, shareImage} from "../../../../../utilites/download.ts";
 import {isLightColor, toHexColor} from "../../../../../utilites/themeUtils.ts";
 import {EventDateRange} from "../../../../common/EventDateRange";
 import classes from "./ConfirmationTicket.module.scss";
@@ -52,6 +52,39 @@ export const ConfirmationTicket = ({attendee, event, compact = false, details}: 
     const place = details?.location ?? (compact ? getShortLocationDisplay(event.settings?.location_details) : null);
     const dateMode = details?.dateMode ?? 'START_DATE_TIME';
     const ticketPath = `/product/${event.id}/${attendee.short_id}`;
+    const showQr = !isCancelled && !isAwaitingPayment;
+    const qrFileName = `qr-${attendee.public_id}.png`;
+    const qrButton = useRef<HTMLButtonElement>(null);
+    // Sur iPhone, l'image est prete avant le toucher: Safari n'ouvre le partage que dans le toucher meme.
+    const [qrPhoto, setQrPhoto] = useState<File | null>(null);
+
+    useEffect(() => {
+        const svg = qrButton.current?.querySelector('svg');
+        if (!showQr || !svg || !canSaveImageToPhotos()) {
+            return;
+        }
+        let current = true;
+        qrCodePng(svg).then((png) => {
+            if (current && png) {
+                setQrPhoto(new File([png], qrFileName, {type: 'image/png'}));
+            }
+        });
+        return () => {
+            current = false;
+        };
+    }, [showQr, qrFileName]);
+
+    // Touche ou clic: le code en image, dans Photos sur iPhone (feuille de partage), telecharge ailleurs.
+    const saveQrCode = async () => {
+        if (qrPhoto && await shareImage(qrPhoto)) {
+            return;
+        }
+        const svg = qrButton.current?.querySelector('svg');
+        if (svg) {
+            await downloadQrCode(svg, qrFileName);
+        }
+    };
+    const qrLabel = qrPhoto ? t`Save the QR code to Photos` : t`Download the QR code`;
 
     return (
         <article className={compact ? `${classes.ticket} ${classes.compact}` : classes.ticket}
@@ -105,7 +138,7 @@ export const ConfirmationTicket = ({attendee, event, compact = false, details}: 
             <div className={classes.perforation} aria-hidden/>
 
             <div className={classes.bottom}>
-                {(isCancelled || isAwaitingPayment) ? (
+                {!showQr ? (
                     <div className={classes.qrPlaceholder} data-rough>
                         <span className={classes.qrPlaceholderIcon}>
                             {isCancelled ? <IconX size={20} stroke={2}/> : <PublicIcon name={'cadenas'} size={20}/>}
@@ -114,13 +147,8 @@ export const ConfirmationTicket = ({attendee, event, compact = false, details}: 
                     </div>
                 ) : (
                     <>
-                        {/* Touche ou clic: le code enregistre en image (downloadQrCode). */}
-                        <button type="button" className={classes.qr} data-rough title={t`Download the QR code`}
-                                aria-label={t`Download the QR code`}
-                                onClick={(clickEvent) => {
-                                    const svg = clickEvent.currentTarget.querySelector('svg');
-                                    svg && downloadQrCode(svg, `qr-${attendee.public_id}.png`);
-                                }}>
+                        <button type="button" ref={qrButton} className={classes.qr} data-rough title={qrLabel}
+                                aria-label={qrLabel} onClick={saveQrCode}>
                             <QRCode
                                 value={String(attendee.public_id)}
                                 size={180}
