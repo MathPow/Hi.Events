@@ -48,6 +48,10 @@ import {useState} from "react";
 import {eventHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 import {PublicIcon} from "../../common/PublicIcon";
+import {eventStartLabel} from "../../../utilites/eventStartLabel.ts";
+import {getEventSaleStatus, getTicketCapacity, saleStatusLabel} from "../../../utilites/eventSales.ts";
+import navClasses from "../AppLayout/NavParts/NavParts.module.scss";
+import {EventSwitcherMenu} from "./EventSwitcherMenu.tsx";
 
 const EventLayout = () => {
     const location = useLocation();
@@ -186,12 +190,32 @@ const EventLayout = () => {
 
     const eventPageUrl = `/event/${eventId}/${event?.slug}`;
 
+    // The event card (Figma « Événement actif »): cover, title, date, then its sale status.
+    const cover = eventImages?.find((image) => image.type === 'EVENT_COVER');
+    const capacity = event ? getTicketCapacity({...event, products: products ?? []}) : null;
+    const saleStatus = event && capacity ? getEventSaleStatus(event, capacity) : null;
+    const organizerId = event?.organizer?.id ?? event?.organizer_id;
+
     const navContext: NavContext = {
         initial: event?.title?.trim().charAt(0).toUpperCase() || '…',
         title: isEventFetched ? event?.title : '…',
-        subtitle: event?.organizer?.name,
+        subtitle: event ? eventStartLabel(event) : undefined,
+        overline: t`Event`,
+        imageUrl: cover?.url,
+        footer: saleStatus && capacity && (
+            <>
+                <span className={navClasses.statusTag} data-status={saleStatus}>{saleStatusLabel(saleStatus)}</span>
+                <span>
+                    {capacity.capacity
+                        ? t`${capacity.sold} / ${capacity.capacity} tickets`
+                        : t`${capacity.sold} tickets`}
+                </span>
+            </>
+        ),
         menu: event && (
             <>
+                {organizerId && <EventSwitcherMenu eventId={eventId as string} organizerId={organizerId}/>}
+                <Menu.Divider/>
                 <Menu.Item component={NavLink} to={`/manage/organizer/${event.organizer?.id}`}
                            leftSection={<IconArrowLeft size={16}/>}>
                     {t`Organizer Dashboard`}

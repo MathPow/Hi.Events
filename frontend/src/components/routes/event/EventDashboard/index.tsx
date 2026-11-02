@@ -9,7 +9,7 @@ import {useGetEventOrders} from "../../../../queries/useGetEventOrders.ts";
 import {Event, EventDailyStats, QueryFilters} from "../../../../types.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {formatNumber, getInitials} from "../../../../utilites/helpers.ts";
-import {intlLocale} from "../../../../utilites/intlLocale.ts";
+import {eventStartLabel} from "../../../../utilites/eventStartLabel.ts";
 import {eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
 import {orderContents, orderStatus} from "../../../../utilites/orderSummary.ts";
 import {StatTile} from "../../../common/StatBoxes";
@@ -33,23 +33,11 @@ const RECENT_ORDERS: QueryFilters = {
 
 // « sam. 7 nov. 2026 · 9 h · Parc de la Chute-Montmorency », in the event's time zone.
 const eventWhenAndWhere = (event: Event) => {
-    const parts: string[] = [];
-    if (event.start_date) {
-        const date = new Date(event.start_date);
-        const timeZone = event.timezone || undefined;
-        const minutes = Number(new Intl.DateTimeFormat('en', {minute: 'numeric', timeZone}).format(date));
-        parts.push(new Intl.DateTimeFormat(intlLocale(), {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone})
-            .format(date));
-        parts.push(new Intl.DateTimeFormat(intlLocale(), {hour: 'numeric', ...(minutes ? {minute: '2-digit'} : {}), timeZone})
-            .format(date));
-    }
     const place = event.settings?.is_online_event
         ? t`Online Event`
         : (event.settings?.location_details?.venue_name || event.settings?.location_details?.city);
-    if (place) {
-        parts.push(place);
-    }
-    return parts.join(' · ');
+
+    return [eventStartLabel(event, true), place].filter(Boolean).join(' · ');
 };
 
 // This week against the one before, from the last 14 days.

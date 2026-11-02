@@ -36,19 +36,32 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
     const subtitle = variant === 'menu' ? (context.mobileSubtitle ?? context.subtitle) : context.subtitle;
     const label = typeof context.title === 'string' ? context.title : undefined;
 
-    const body = (
+    const isEvent = !!(context.overline || context.imageUrl || context.footer);
+
+    const row = (
         <>
-            <span className={classes.contextAvatar}>{context.initial}</span>
+            {context.imageUrl
+                ? <span className={classes.contextImage} style={{backgroundImage: `url(${context.imageUrl})`}}/>
+                : <span className={classes.contextAvatar}>{context.initial}</span>}
             {/* Folded, the texts stay (hidden) so the sidebar can open and fold smoothly. */}
             <span className={classes.cardText}>
                 <span className={classes.cardTitle}>{context.title}</span>
                 {subtitle && <span className={classes.cardSubtitle}>{subtitle}</span>}
             </span>
-            {context.menu && <img src={adminIcon('changer')} alt="" className={classes.cardTrailing}/>}
+            {context.menu && <img src={adminIcon(isEvent ? 'changer-petit' : 'changer')} alt="" className={classes.cardTrailing}/>}
         </>
     );
 
-    const className = classNames(classes.card, classes.contextCard, classes[variant]);
+    // An event: the label, the row, then its status, each part folding away with the sidebar.
+    const body = isEvent ? (
+        <>
+            {context.overline && <span className={classes.foldable}><span className={classes.overline}>{context.overline}</span></span>}
+            <span className={classes.eventRow}>{row}</span>
+            {context.footer && <span className={classes.foldable}><span className={classes.eventFooter}>{context.footer}</span></span>}
+        </>
+    ) : row;
+
+    const className = classNames(classes.card, classes.contextCard, classes[variant], {[classes.eventCard]: isEvent});
 
     if (!context.menu) {
         return <div className={className} title={variant === 'collapsed' ? label : undefined}>{body}</div>;

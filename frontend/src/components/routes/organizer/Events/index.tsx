@@ -5,6 +5,7 @@ import {useDisclosure, useMediaQuery} from "@mantine/hooks";
 import {IconArchive, IconArchiveOff, IconCopy, IconExternalLink, IconLayoutGrid, IconList, IconPencil, IconPlus} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {useLingui} from "@lingui/react";
+import {eventStartLabel} from "../../../../utilites/eventStartLabel.ts";
 import classNames from "classnames";
 import {Event, EventStatus, IdParam, QueryFilters} from "../../../../types.ts";
 import {useGetEvents} from "../../../../queries/useGetEvents.ts";
@@ -46,30 +47,11 @@ const searchableText = (event: Event) => {
         .filter(Boolean).join(' '));
 };
 
-const intlLocale = (locale: string) => locale.startsWith('fr') ? 'fr-CA' : locale;
-
-// « sam. 7 nov. · 9 h », in the event's time zone.
+// « sam. 7 nov. · 9 h », in the event's time zone (re-rendered when the language changes).
 const useEventDate = () => {
-    const {i18n} = useLingui();
-    const locale = intlLocale(i18n.locale);
+    useLingui();
 
-    return (event: Event) => {
-        if (!event.start_date) {
-            return null;
-        }
-        const date = new Date(event.start_date);
-        const timeZone = event.timezone || undefined;
-        const day = new Intl.DateTimeFormat(locale, {weekday: 'short', day: 'numeric', month: 'short', timeZone})
-            .format(date);
-        const minutes = Number(new Intl.DateTimeFormat('en', {minute: 'numeric', timeZone}).format(date));
-        const time = new Intl.DateTimeFormat(locale, {
-            hour: 'numeric',
-            ...(minutes ? {minute: '2-digit'} : {}),
-            timeZone,
-        }).format(date);
-
-        return `${day} · ${time}`;
-    };
+    return (event: Event) => event.start_date ? eventStartLabel(event) : null;
 };
 
 const locationOf = (event: Event) => event.settings?.is_online_event
