@@ -1,7 +1,7 @@
 import {KeyboardEvent, useEffect, useRef, useState} from "react";
 import {createPortal} from "react-dom";
 import {useLocation} from "react-router";
-import {IconArrowUp, IconPlayerStopFilled, IconRefresh, IconSparkles, IconX} from "@tabler/icons-react";
+import {IconArrowUp, IconPlayerStopFilled, IconRefresh, IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {Answer, useAnswerLink} from "./Answer.tsx";
@@ -106,6 +106,8 @@ const AssistantPanel = ({userId}: { userId: string }) => {
     const panel = open && (
         <div className={classes.panel} role="dialog" aria-label={t`Assistant`} onKeyDown={onKeyDown}>
             <div className={classes.header}>
+                <img className={classes.headerMascot} src={'/interface/admin/stagiaire.svg'} width={21} height={24} alt=""
+                     aria-hidden/>
                 <strong className={classes.title}>{t`Assistant`}</strong>
                 {status && status.remaining <= 20 && (
                     <span className={classes.remaining}>{t`${status.remaining} requests left today`}</span>
@@ -184,7 +186,8 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                     data-tab-bar={withTabBar} onClick={() => setOpen(!open)} aria-expanded={open}
                     title={open ? t`Close the assistant` : t`Assistant`}
                     aria-label={open ? t`Close the assistant` : t`Open the assistant`}>
-                <IconSparkles size={28} stroke={2} className={classes.launcherIcon} aria-hidden/>
+                <img className={classes.launcherIcon} src={'/interface/admin/stagiaire.svg'} width={27} height={32}
+                     alt="" aria-hidden/>
             </button>
         </>,
         document.body,

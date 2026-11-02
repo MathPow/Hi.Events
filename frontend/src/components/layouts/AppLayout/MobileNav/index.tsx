@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, UnstyledButton} from "@mantine/core";
-import {IconSparkles, IconUserShield} from "@tabler/icons-react";
+import {IconUserShield} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {NavLink, useLocation} from "react-router";
 import classNames from "classnames";
@@ -235,7 +235,8 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                     data-busy={assistant.busy || undefined}
                 >
                     <span className={classes.tabIcon}>
-                        <IconSparkles size={22} stroke={2} className={classes.assistantIcon} aria-hidden/>
+                        <img className={classes.assistantIcon} src={'/interface/admin/stagiaire.svg'} width={19} height={22}
+                             alt="" aria-hidden/>
                     </span>
                     <span className={classes.tabLabel}>{t`Assistant`}</span>
                 </UnstyledButton>
