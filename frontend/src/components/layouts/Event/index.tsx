@@ -133,7 +133,6 @@ const EventLayout = () => {
             attention: needsDetails,
         },
         {link: 'homepage-designer', label: t`Homepage Designer`, icon: IconPaint, attention: needsImages},
-        {link: 'ticket-designer', label: t`Ticket Designer`, icon: IconTicket},
         {link: 'questions', label: t`Registration Questions`, icon: IconUserQuestion},
 
         // 3. Ticketing & Sales

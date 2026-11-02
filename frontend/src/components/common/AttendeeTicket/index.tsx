@@ -20,8 +20,8 @@ interface AttendeeTicketProps {
 }
 
 /**
- * One attendee's ticket (its public page, the ticket designer's preview, the attendee panel): the
- * same ticket as the order confirmation and Mes billets, with the ticket designer's settings (color,
+ * One attendee's ticket (its public page, the attendee panel): the
+ * same ticket as the order confirmation and Mes billets, with the event's ticket settings (color,
  * logo, date, footer text), the address, the price and the email.
  */
 export const AttendeeTicket = ({

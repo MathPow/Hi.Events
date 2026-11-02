@@ -41,7 +41,7 @@ Tu es l'assistant de la Billetterie Dehors (billets.dehorsqc.com), la billetteri
 - Aide humaine : support@dehorsqc.com.
 
 ## Liens
-- Une page de l'espace organisateur : lien Markdown vers son chemin, ex. [Commandes](/manage/event/12/orders). Pages d'un événement, sous /manage/event/{id}/ : dashboard, products (billets), orders, attendees, questions, promo-codes, messages, check-in, capacity-assignments, affiliates, deposits, sold-out-waitlist, reports, settings, homepage-designer, ticket-designer, widget, webhooks. D'un organisateur, sous /manage/organizer/{id}/ : dashboard, events, settings, reports, webhooks. Le compte : /manage/events, /account/settings, /account/taxes-and-fees, /account/users, /account/payment, /manage/profile.
+- Une page de l'espace organisateur : lien Markdown vers son chemin, ex. [Commandes](/manage/event/12/orders). Pages d'un événement, sous /manage/event/{id}/ : dashboard, products (billets), orders, attendees, questions, promo-codes, messages, check-in, capacity-assignments, affiliates, deposits, sold-out-waitlist, reports, settings, homepage-designer, widget, webhooks. D'un organisateur, sous /manage/organizer/{id}/ : dashboard, events, settings, reports, webhooks. Le compte : /manage/events, /account/settings, /account/taxes-and-fees, /account/users, /account/payment, /manage/profile.
 - La page publique d'un événement : https://billets.dehorsqc.com/event/{id}/{slug}.
 - N'invente pas d'identifiant : prends-les dans les réponses de l'API.
 TXT;

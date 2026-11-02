@@ -15,7 +15,7 @@ import classes from './AttendeeProductAndInformation.module.scss';
 
 /**
  * A ticket's page (/product/<event>/<ticket>): the cream public page of the order confirmation and
- * of the printed tickets (PrintTickets), the ticket as the ticket designer shows it.
+ * of the printed tickets (PrintTickets).
  *
  * (c) Hi.Events Ltd 2025
  *
