@@ -151,10 +151,12 @@ const EventLayout = () => {
         {link: 'sold-out-waitlist', label: t`Waitlist`, icon: IconListCheck},
         {link: 'capacity-assignments', label: t`Capacity Management`, icon: IconUsersGroup},
 
-        // 5. INTEGRATIONS
-        {label: t`Integrations`},
-        {link: 'widget', label: t`Widget Embed`, icon: IconDeviceTabletCode},
-        ...(canSeeDeveloperPages ? [{link: 'webhooks', label: t`Webhooks`, icon: IconWebhook}] : []),
+        // 5. INTEGRATIONS: the super admin's only (the section header too), like on the organizer
+        ...(canSeeDeveloperPages ? [
+            {label: t`Integrations`},
+            {link: 'widget', label: t`Widget Embed`, icon: IconDeviceTabletCode},
+            {link: 'webhooks', label: t`Webhooks`, icon: IconWebhook},
+        ] : []),
 
 
     ];

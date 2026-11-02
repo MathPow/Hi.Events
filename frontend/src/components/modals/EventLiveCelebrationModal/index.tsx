@@ -10,6 +10,7 @@ import {
 import {t} from "@lingui/macro";
 import {NavLink} from "react-router";
 import {ShareModal} from "../ShareModal";
+import {useCanSeeDeveloperPages} from "../../../hooks/useIsCurrentUserAdmin.ts";
 import classes from './EventLiveCelebrationModal.module.scss';
 
 interface EventLiveCelebrationModalProps {
@@ -28,6 +29,7 @@ export const EventLiveCelebrationModal = ({
     eventId
 }: EventLiveCelebrationModalProps) => {
     const [shareModalOpened, {open: openShareModal, close: closeShareModal}] = useDisclosure(false);
+    const canSeeDeveloperPages = useCanSeeDeveloperPages();
 
     return (
         <>
@@ -102,16 +104,18 @@ export const EventLiveCelebrationModal = ({
                             {t`Share Event`}
                         </Button>
 
-                        <Button
-                            component={NavLink}
-                            to={`/manage/event/${eventId}/widget`}
-                            variant="light"
-                            leftSection={<IconCode size={16}/>}
-                            onClick={onClose}
-                            className={classes.actionButton}
-                        >
-                            {t`Embed Widget`}
-                        </Button>
+                        {canSeeDeveloperPages && (
+                            <Button
+                                component={NavLink}
+                                to={`/manage/event/${eventId}/widget`}
+                                variant="light"
+                                leftSection={<IconCode size={16}/>}
+                                onClick={onClose}
+                                className={classes.actionButton}
+                            >
+                                {t`Embed Widget`}
+                            </Button>
+                        )}
                     </div>
 
                     <Button
