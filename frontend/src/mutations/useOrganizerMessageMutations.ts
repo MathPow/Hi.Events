@@ -43,3 +43,14 @@ export const useDeleteOrganizerMessage = () => {
         onSuccess: (_, {organizerId}) => refresh(organizerId),
     });
 };
+
+// The answer, by email to the person who wrote; the message is then marked replied (and read).
+export const useReplyToOrganizerMessage = () => {
+    const refresh = useRefreshInbox();
+
+    return useMutation({
+        mutationFn: ({organizerId, messageId, reply}: { organizerId: IdParam, messageId: IdParam, reply: string }) =>
+            organizerMessageClient.reply(organizerId, messageId, reply),
+        onSuccess: (_, {organizerId}) => refresh(organizerId),
+    });
+};

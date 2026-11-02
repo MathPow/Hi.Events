@@ -20,6 +20,7 @@ abstract class OrganizerMessageDomainObjectAbstract extends \HiEvents\DomainObje
     final public const CREATED_AT = 'created_at';
     final public const UPDATED_AT = 'updated_at';
     final public const DELETED_AT = 'deleted_at';
+    final public const REPLIED_AT = 'replied_at';
 
     protected int $id;
     protected int $organizer_id;
@@ -31,6 +32,7 @@ abstract class OrganizerMessageDomainObjectAbstract extends \HiEvents\DomainObje
     protected ?string $created_at = null;
     protected ?string $updated_at = null;
     protected ?string $deleted_at = null;
+    protected ?string $replied_at = null;
 
     public function toArray(): array
     {
@@ -45,6 +47,7 @@ abstract class OrganizerMessageDomainObjectAbstract extends \HiEvents\DomainObje
                     'created_at' => $this->created_at ?? null,
                     'updated_at' => $this->updated_at ?? null,
                     'deleted_at' => $this->deleted_at ?? null,
+                    'replied_at' => $this->replied_at ?? null,
                 ];
     }
 
@@ -156,5 +159,16 @@ abstract class OrganizerMessageDomainObjectAbstract extends \HiEvents\DomainObje
     public function getDeletedAt(): ?string
     {
         return $this->deleted_at;
+    }
+
+    public function setRepliedAt(?string $replied_at): self
+    {
+        $this->replied_at = $replied_at;
+        return $this;
+    }
+
+    public function getRepliedAt(): ?string
+    {
+        return $this->replied_at;
     }
 }

@@ -7,6 +7,7 @@ import {
     IconBell,
     IconBellOff,
     IconCalendarEvent,
+    IconCheck,
     IconChecks,
     IconInbox,
     IconMail,
@@ -29,6 +30,7 @@ import {useWebPush} from "../../../../hooks/useWebPush.ts";
 import {relativeDate} from "../../../../utilites/dates.ts";
 import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
+import {ReplyModal} from "./ReplyModal.tsx";
 import classes from "./Messages.module.scss";
 
 // Les notifications de cet appareil: les activer, ou dire pourquoi c'est impossible ici.
@@ -80,18 +82,16 @@ const DeviceNotifications = () => {
     );
 };
 
-const MessageRow = ({message, organizerName, isOpen, onToggle}: {
+const MessageRow = ({message, isOpen, onToggle, onReply}: {
     message: OrganizerMessage,
-    organizerName: string,
     isOpen: boolean,
     onToggle: () => void,
+    onReply: () => void,
 }) => {
     const {organizerId} = useParams();
     const setRead = useSetOrganizerMessageRead();
     const deleteMessage = useDeleteOrganizerMessage();
     const isUnread = !message.read_at;
-    // eslint-disable-next-line lingui/no-unlocalized-strings
-    const subject = `Re: ${message.event?.title ?? organizerName}`;
 
     const handleDelete = () => confirmationDialog(t`Delete this message?`, () => {
         deleteMessage.mutate({organizerId, messageId: message.id}, {
@@ -108,6 +108,12 @@ const MessageRow = ({message, organizerName, isOpen, onToggle}: {
                 <span className={classes.sender}>
                     <span className={classes.senderName}>{message.sender_name}</span>
                     <span className={classes.senderEmail}>{message.sender_email}</span>
+                    {message.replied_at && (
+                        <span className={classes.repliedTag}>
+                            <IconCheck size={13} stroke={2.5}/>
+                            {t({message: 'Replied', context: 'organizer message'})}
+                        </span>
+                    )}
                 </span>
                 <time className={classes.date} dateTime={message.created_at}
                       title={dayjs.utc(message.created_at).local().format('YYYY-MM-DD HH:mm')}>
@@ -127,8 +133,7 @@ const MessageRow = ({message, organizerName, isOpen, onToggle}: {
                 <div className={classes.messageBody}>
                     <p className={classes.messageText}>{message.message}</p>
                     <div className={classes.messageActions}>
-                        <Button component="a" leftSection={<IconArrowBackUp size={18}/>}
-                                href={`mailto:${message.sender_email}?subject=${encodeURIComponent(subject)}`}>
+                        <Button leftSection={<IconArrowBackUp size={18}/>} onClick={onReply}>
                             {t`Reply`}
                         </Button>
                         <Button variant="default" leftSection={<IconMail size={18}/>}
@@ -157,6 +162,7 @@ const Messages = () => {
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState<'all' | 'unread'>('all');
     const [openId, setOpenId] = useState<number | null>(null);
+    const [replyTo, setReplyTo] = useState<OrganizerMessage | null>(null);
     const {data: organizer} = useGetOrganizer(organizerId);
     const {data, isLoading} = useGetOrganizerMessages(organizerId, page, filter === 'unread');
     const setRead = useSetOrganizerMessageRead();
@@ -174,7 +180,8 @@ const Messages = () => {
         }
     };
 
-    // Arrive d'une notification (?message=): ce message s'ouvre, lu.
+    // Arrive d'une notification (?message=): ce message s'ouvre, lu, avec la reponse a ecrire
+    // (&reply=1).
     useEffect(() => {
         if (!linkedMessage || handledLink.current === linkedMessage) {
             return;
@@ -185,7 +192,11 @@ const Messages = () => {
         }
         handledLink.current = linkedMessage;
         open(message);
+        if (searchParams.get('reply')) {
+            setReplyTo(message);
+        }
         searchParams.delete('message');
+        searchParams.delete('reply');
         setSearchParams(searchParams, {replace: true});
         requestAnimationFrame(() => document.getElementById(`message-${message.id}`)
             ?.scrollIntoView({block: 'center', behavior: 'smooth'}));
@@ -242,9 +253,9 @@ const Messages = () => {
                         <MessageRow
                             key={message.id}
                             message={message}
-                            organizerName={organizer?.name ?? ''}
                             isOpen={openId === message.id}
                             onToggle={() => openId === message.id ? setOpenId(null) : open(message)}
+                            onReply={() => setReplyTo(message)}
                         />
                     ))}
                 </div>
@@ -254,6 +265,8 @@ const Messages = () => {
                 <Pagination className={classes.pagination} value={page} onChange={setPage}
                             total={data?.meta.last_page ?? 1}/>
             )}
+
+            <ReplyModal message={replyTo} organizerEmail={organizer?.email} onClose={() => setReplyTo(null)}/>
         </PageBody>
     );
 };

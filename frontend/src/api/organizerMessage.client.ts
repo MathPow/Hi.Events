@@ -11,6 +11,8 @@ export interface OrganizerMessage {
     sender_email: string;
     message: string;
     read_at: string | null;
+    // When the organizer answered from the inbox (null: not yet).
+    replied_at: string | null;
     created_at: string;
 }
 
@@ -39,6 +41,11 @@ export const organizerMessageClient = {
 
     markAllRead: async (organizerId: IdParam) => {
         await api.post(`organizers/${organizerId}/messages/read-all`);
+    },
+
+    reply: async (organizerId: IdParam, messageId: IdParam, reply: string) => {
+        const response = await api.post<{ data: OrganizerMessage }>(`organizers/${organizerId}/messages/${messageId}/reply`, {reply});
+        return response.data.data;
     },
 
     remove: async (organizerId: IdParam, messageId: IdParam) => {

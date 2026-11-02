@@ -70,7 +70,8 @@ class SendOrganizerMessagePushJob implements ShouldQueue
             $webPushService->sendToUser($user->getId(), [
                 'title' => __('New message · :organizer', ['organizer' => $organizer->getName()], $locale),
                 'body' => $message->getSenderName() . $separator . Str::limit(Str::squish($message->getMessage()), 140),
-                'url' => '/manage/organizer/' . $organizer->getId() . '/messages?message=' . $message->getId(),
+                // Opens the message with its answer ready to write.
+                'url' => '/manage/organizer/' . $organizer->getId() . '/messages?message=' . $message->getId() . '&reply=1',
                 'tag' => 'organizer-message-' . $message->getId(),
             ]);
         }

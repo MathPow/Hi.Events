@@ -28,6 +28,7 @@ class OrganizerMessageResource extends JsonResource
             'sender_email' => $this->getSenderEmail(),
             'message' => $this->getMessage(),
             'read_at' => $this->getReadAt(),
+            'replied_at' => $this->getRepliedAt(),
             'created_at' => $this->getCreatedAt(),
         ];
     }

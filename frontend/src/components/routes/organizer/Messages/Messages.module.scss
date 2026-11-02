@@ -230,3 +230,96 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.repliedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.0625rem 0.5rem;
+  border-radius: 999px;
+  background: #ddeed8;
+  color: #2f6b3a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+// « Répondre »: the address, their message, the answer.
+.replyTitle {
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.replyBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.replyLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dehors-texte-doux, #6b7280);
+}
+
+.replyTo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: #fff6ed;
+}
+
+.replyRecipient {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  min-width: 0;
+
+  span {
+    color: var(--dehors-texte-doux, #6b7280);
+    overflow-wrap: anywhere;
+  }
+}
+
+.replyQuote {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0 0 0 1rem;
+  border-left: 3px solid #f7dccd;
+
+  p {
+    max-height: 9rem;
+    margin: 0;
+    overflow-y: auto;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+.replyField :global(.mantine-InputWrapper-label) {
+  margin-bottom: 0.375rem;
+  font-weight: 700;
+}
+
+.replyHint {
+  margin: -0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--dehors-texte-doux, #6b7280);
+  overflow-wrap: anywhere;
+}
+
+.replyActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

@@ -75,6 +75,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->by($request->route('check_in_list_short_id') . '|' . $request->ip());
         });
 
+        // Answers from the organizer's inbox go out as emails: plenty for a busy day, not for a script.
+        RateLimiter::for('organizer-reply', function (Request $request) {
+            return Limit::perHour(60)->by('organizer-reply:' . ($request->user()?->id ?: $request->ip()));
+        });
+
         $this->routes(function () {
             Route::middleware('api')
                 ->group(base_path('routes/api.php'));

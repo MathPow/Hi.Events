@@ -156,6 +156,7 @@ use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentsAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerUnreadMessagesCountAction;
 use HiEvents\Http\Actions\Organizers\Messages\MarkAllOrganizerMessagesReadAction;
+use HiEvents\Http\Actions\Organizers\Messages\ReplyToOrganizerMessageAction;
 use HiEvents\Http\Actions\Organizers\Messages\UpdateOrganizerMessageAction;
 use HiEvents\Http\Actions\Users\Push\CreatePushSubscriptionAction;
 use HiEvents\Http\Actions\Users\Push\DeletePushSubscriptionAction;
@@ -375,6 +376,7 @@ $router->middleware(['auth:api'])->group(
         $router->get('/organizers/{organizer_id}/messages/unread-count', GetOrganizerUnreadMessagesCountAction::class);
         $router->post('/organizers/{organizer_id}/messages/read-all', MarkAllOrganizerMessagesReadAction::class);
         $router->patch('/organizers/{organizer_id}/messages/{message_id}', UpdateOrganizerMessageAction::class);
+        $router->post('/organizers/{organizer_id}/messages/{message_id}/reply', ReplyToOrganizerMessageAction::class)->middleware('throttle:organizer-reply');
         $router->delete('/organizers/{organizer_id}/messages/{message_id}', DeleteOrganizerMessageAction::class);
 
         // Documents (attestations, decharges, formulaires) de l'organisateur
