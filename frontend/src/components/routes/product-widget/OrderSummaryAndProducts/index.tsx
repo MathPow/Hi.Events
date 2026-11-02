@@ -33,6 +33,7 @@ import {useEditAttendeePublic} from "../../../../mutations/useEditAttendeePublic
 import {useEditOrderPublic} from "../../../../mutations/useEditOrderPublic";
 import {useResendAttendeeTicketPublic} from "../../../../mutations/useResendAttendeeTicketPublic";
 import {useResendOrderConfirmationPublic} from "../../../../mutations/useResendOrderConfirmationPublic";
+import {useAddToGoogleWallet} from "../../../../mutations/useAddToGoogleWallet";
 
 import {Attendee, Event, Invoice, Order} from "../../../../types.ts";
 import classes from './OrderSummaryAndProducts.module.scss';
@@ -60,6 +61,20 @@ const refundStatusLabel = (order: Order): string | null => {
     };
 
     return order.refund_status ? refundStatuses[order.refund_status] || null : null;
+};
+
+type WalletPlatform = 'apple' | 'google';
+
+// Le portefeuille du telephone: Apple Wallet sur iPhone, Google Wallet sur Android, rien ailleurs.
+const phoneWallet = (): WalletPlatform | null => {
+    const userAgent = window.navigator.userAgent;
+    if (/iPhone|iPod/.test(userAgent)) {
+        return 'apple';
+    }
+    if (/Android/i.test(userAgent)) {
+        return 'google';
+    }
+    return null;
 };
 
 // La pastille du recapitulatif (« Paye » dans la maquette), selon l'etat de la commande.
@@ -145,13 +160,14 @@ const ActionRow = ({icon, label}: { icon: PublicIconName, label: string }) => (
     </>
 );
 
-const ManageAction = ({icon, label, onClick, href}: {
+const ManageAction = ({icon, label, onClick, href, newTab = true}: {
     icon: PublicIconName,
     label: string,
     onClick?: () => void,
     href?: string,
+    newTab?: boolean,
 }) => href ? (
-    <a className={classes.action} data-rough="button" href={href} target="_blank" rel="noreferrer">
+    <a className={classes.action} data-rough="button" href={href} {...(newTab ? {target: '_blank', rel: 'noreferrer'} : {})}>
         <ActionRow icon={icon} label={label}/>
     </a>
 ) : (
@@ -339,6 +355,9 @@ export const OrderSummaryAndProducts = () => {
 
     const [editingAttendee, setEditingAttendee] = useState<Attendee | null>(null);
     const [editOrderModalOpened, setEditOrderModalOpened] = useState(false);
+    const [wallet, setWallet] = useState<WalletPlatform | null>(null);
+
+    useEffect(() => setWallet(phoneWallet()), []);
 
     useEffect(() => {
         if (eventId && order && (order.status === 'COMPLETED' || order.status === 'AWAITING_OFFLINE_PAYMENT')) {
@@ -346,6 +365,7 @@ export const OrderSummaryAndProducts = () => {
         }
     }, [eventId, order?.status]);
 
+    const addToGoogleWalletMutation = useAddToGoogleWallet();
     const editAttendeeMutation = useEditAttendeePublic();
     const editOrderMutation = useEditOrderPublic();
     const resendAttendeeTicketMutation = useResendAttendeeTicketPublic();
@@ -465,6 +485,24 @@ export const OrderSummaryAndProducts = () => {
         );
     };
 
+    const handleAddToGoogleWallet = () => {
+        if (addToGoogleWalletMutation.isPending) {
+            return;
+        }
+        addToGoogleWalletMutation.mutate(
+            {eventId: eventId!, orderShortId: orderShortId!},
+            {
+                onError: (error: any) => {
+                    if (error?.response?.status === 429) {
+                        showError(t`Rate limit exceeded. Please try again later.`);
+                    } else {
+                        showError(error?.response?.data?.message || t`Your tickets could not be added to the wallet. Please try again later.`);
+                    }
+                },
+            }
+        );
+    };
+
     const handleInvoiceDownload = async (invoice: Invoice) => {
         await withLoadingNotification(
             async () => {
@@ -527,6 +565,7 @@ export const OrderSummaryAndProducts = () => {
     const ticketsUrl = hasTickets ? `/order/${eventId}/${orderShortId}/print` : null;
     const canSelfEdit = allowSelfEdit && !isCancelled;
     // Avec un seul billet envoye a l'acheteur, renvoyer la confirmation suffit.
+    const canAddToWallet = isCompleted && activeAttendees.length > 0 && !!wallet && !!order.wallet_passes?.[wallet];
     const showResendTicket = canSelfEdit && activeAttendees.length > 0
         && (activeAttendees.length > 1 || activeAttendees[0].email !== order.email);
 
@@ -543,6 +582,23 @@ export const OrderSummaryAndProducts = () => {
         : isCancelled ? t`Your order has been cancelled` : t`Your order is awaiting payment`;
 
     const manageActions = [
+        canAddToWallet && wallet === 'apple' && (
+            <ManageAction
+                key="apple-wallet"
+                icon={'portefeuille'}
+                label={t`Add to Apple Wallet`}
+                href={orderClientPublic.appleWalletPassUrl(eventId!, orderShortId!)}
+                newTab={false}
+            />
+        ),
+        canAddToWallet && wallet === 'google' && (
+            <ManageAction
+                key="google-wallet"
+                icon={'portefeuille'}
+                label={t`Add to Google Wallet`}
+                onClick={handleAddToGoogleWallet}
+            />
+        ),
         canSelfEdit && activeAttendees.length > 0 && (
             <AttendeeAction
                 key="edit-attendee"

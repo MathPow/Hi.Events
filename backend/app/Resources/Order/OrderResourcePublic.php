@@ -9,6 +9,7 @@ use HiEvents\Resources\Attendee\AttendeeResourcePublic;
 use HiEvents\Resources\BaseResource;
 use HiEvents\Resources\Event\EventResourcePublic;
 use HiEvents\Resources\Order\Invoice\InvoiceResourcePublic;
+use HiEvents\Services\Infrastructure\Wallet\WalletConfig;
 use Illuminate\Http\Request;
 
 /**
@@ -66,6 +67,14 @@ class OrderResourcePublic extends BaseResource
             'attendees' => $this->when(
                 !is_null($this->getAttendees()),
                 fn() => AttendeeResourcePublic::collection($this->getAttendees())
+            ),
+            // The wallets that can take the tickets: the page shows the one of the phone.
+            'wallet_passes' => $this->when(
+                $this->getStatus() === OrderStatus::COMPLETED->name,
+                fn() => [
+                    'apple' => app(WalletConfig::class)->isAppleEnabled(),
+                    'google' => app(WalletConfig::class)->isGoogleEnabled(),
+                ],
             ),
             $this->mergeWhen($this->getSessionIdentifier() !== null, fn() => [
                 'session_identifier' => $this->getSessionIdentifier(),

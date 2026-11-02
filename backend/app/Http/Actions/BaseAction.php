@@ -157,6 +157,19 @@ abstract class BaseAction extends Controller
         return Response::make($xmlContent, $statusCode, $allHeaders);
     }
 
+    protected function fileResponse(
+        string $content,
+        string $mimeType,
+        string $filename,
+    ): LaravelResponse
+    {
+        return Response::make($content, ResponseCodes::HTTP_OK, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"\\') . '"',
+            'Cache-Control' => 'no-store',
+        ]);
+    }
+
     protected function isActionAuthorized(
         int    $entityId,
         string $entityType,

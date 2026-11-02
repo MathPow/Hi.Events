@@ -1,4 +1,5 @@
 import {publicApi} from "./public-client.ts";
+import {getConfig} from "../utilites/config.ts";
 import {
     GenericDataResponse,
     GenericPaginatedResponse,
@@ -256,5 +257,14 @@ export const orderClientPublic = {
     abandonOrder: async (eventId: IdParam, orderShortId: IdParam) => {
         const response = await publicApi.post<GenericDataResponse<Order>>(`events/${eventId}/order/${orderShortId}/abandon`);
         return response.data;
+    },
+
+    // The .pkpass is opened by Safari itself (the « Add » sheet of Apple Wallet): a plain link.
+    appleWalletPassUrl: (eventId: IdParam, orderShortId: IdParam): string =>
+        `${getConfig('VITE_API_URL_CLIENT')}/public/events/${eventId}/order/${orderShortId}/wallet/apple`,
+
+    getGoogleWalletSaveUrl: async (eventId: IdParam, orderShortId: IdParam): Promise<string> => {
+        const response = await publicApi.get<{ save_url: string }>(`events/${eventId}/order/${orderShortId}/wallet/google`);
+        return response.data.save_url;
     },
 }

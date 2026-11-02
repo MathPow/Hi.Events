@@ -768,6 +768,11 @@ export interface Order {
     event?: Event;
     latest_invoice?: Invoice;
     donation_receipt?: DonationReceipt;
+    // The wallets that can take the tickets of a paid order.
+    wallet_passes?: {
+        apple: boolean;
+        google: boolean;
+    };
     platform_contribution?: number;
     deposit_amount?: number;
     deposit_status?: OrderDepositStatus | null;

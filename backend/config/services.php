@@ -77,4 +77,21 @@ return [
     'open_exchange_rates' => [
         'app_id' => env('OPEN_EXCHANGE_RATES_APP_ID'),
     ],
+
+    // Les billets dans Apple Wallet: l'identifiant de type de carte (pass.xxx), l'equipe et le
+    // certificat de ce type (le .p12 ou le PEM certificat + cle, encode en base64). Sans eux, le
+    // bouton reste cache.
+    'apple_wallet' => [
+        'pass_type_identifier' => env('APPLE_WALLET_PASS_TYPE_ID'),
+        'team_identifier' => env('APPLE_WALLET_TEAM_ID'),
+        'certificate' => env('APPLE_WALLET_CERTIFICATE'),
+        'certificate_password' => env('APPLE_WALLET_CERTIFICATE_PASSWORD', ''),
+    ],
+
+    // Les billets dans Google Wallet: l'identifiant d'emetteur et la cle JSON du compte de service
+    // (encodee en base64). Sans eux, le bouton reste cache.
+    'google_wallet' => [
+        'issuer_id' => env('GOOGLE_WALLET_ISSUER_ID'),
+        'service_account' => env('GOOGLE_WALLET_SERVICE_ACCOUNT'),
+    ],
 ];

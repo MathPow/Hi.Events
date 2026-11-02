@@ -269,6 +269,8 @@ use HiEvents\Http\Actions\Waitlist\Organizer\GetWaitlistStatsAction;
 use HiEvents\Http\Actions\Waitlist\Organizer\OfferWaitlistEntryAction;
 use HiEvents\Http\Actions\Waitlist\Public\CancelWaitlistEntryActionPublic;
 use HiEvents\Http\Actions\Waitlist\Public\CreateWaitlistEntryActionPublic;
+use HiEvents\Http\Actions\Wallet\GetAppleWalletPassPublicAction;
+use HiEvents\Http\Actions\Wallet\GetGoogleWalletPassPublicAction;
 use HiEvents\Http\Actions\Webhooks\CreateWebhookAction;
 use HiEvents\Http\Actions\Webhooks\DeleteWebhookAction;
 use HiEvents\Http\Actions\Webhooks\EditWebhookAction;
@@ -698,6 +700,12 @@ $router->prefix('/public')->group(
 
         // Color themes
         $router->get('/color-themes', GetColorThemesAction::class);
+
+        // Wallet passes (Apple, Google) of a paid order
+        $router->get('/events/{event_id}/order/{order_short_id}/wallet/apple', GetAppleWalletPassPublicAction::class)
+            ->middleware('throttle:wallet-pass');
+        $router->get('/events/{event_id}/order/{order_short_id}/wallet/google', GetGoogleWalletPassPublicAction::class)
+            ->middleware('throttle:wallet-pass');
 
         // Ticket Lookup
         $router->post('/ticket-lookup', SendTicketLookupEmailAction::class);
