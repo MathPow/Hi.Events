@@ -6,7 +6,7 @@ import {utcToTz} from "../../../../../utilites/dates.ts";
 import {timezones} from "../../../../../../data/timezones.ts";
 import {EventCategories} from "../../../../../constants/eventCategories.ts";
 import {Editor} from "../../../../common/Editor";
-import {currencyName, SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
+import {PillChoice, SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 import extra from "../EventSettings.module.scss";
@@ -81,19 +81,17 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                         onBlur={() => commit('title')}
                     />
                 </div>
+                <div className={`${classes.fieldsSpan} ${extra.fieldGroup}`}>
+                    <p className={classes.fieldLabel}>{t`Category`}</p>
+                    <PillChoice
+                        label={t`Category`}
+                        value={form.values.category || null}
+                        options={EventCategories.map(category => ({value: category.id, label: `${category.emoji} ${category.name}`}))}
+                        onChange={(value) => choose('category', value)}
+                    />
+                </div>
                 {dateField('start_date', t`Start Date`)}
                 {dateField('end_date', t`End Date`)}
-                <Select
-                    className={classes.field}
-                    label={t`Category`}
-                    placeholder={t`Select a category`}
-                    searchable
-                    clearable
-                    data={EventCategories.map(category => ({value: category.id, label: `${category.emoji} ${category.name}`}))}
-                    value={form.values.category || null}
-                    error={form.errors.category}
-                    onChange={(value) => choose('category', value ?? '')}
-                />
                 <Select
                     className={classes.field}
                     label={t`Timezone`}
@@ -114,13 +112,6 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                         onBlur={() => commit('description')}
                     />
                 </div>
-                <TextInput
-                    className={`${classes.field} ${extra.readOnly}`}
-                    label={t`Currency`}
-                    value={currencyName(form.values.currency, form.values.currency)}
-                    description={t`Set when the event is created.`}
-                    disabled
-                />
             </div>
         </SettingsCard>
     );
