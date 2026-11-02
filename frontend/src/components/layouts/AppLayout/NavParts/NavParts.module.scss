@@ -259,13 +259,29 @@
   font-weight: 700;
 }
 
+// The label may shrink (Mantine's would grow with a long title and push the ✓ out of the menu).
+.menuEventItem {
+  align-items: center;
+}
+
+.menuEventLabel {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .menuEventText {
   display: flex;
   flex-direction: column;
   min-width: 0;
 
+  // Long titles on two lines at most.
   > :first-child {
-    @include mixins.ellipsis();
+    display: -webkit-box;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   > :last-child {

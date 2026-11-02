@@ -43,6 +43,7 @@ export const EventSwitcherMenu = ({eventId, organizerId}: { eventId: IdParam, or
                                 )}
                                 rightSection={current ? <IconCheck size={16}/> : undefined}
                                 aria-current={current || undefined}
+                                classNames={{item: classes.menuEventItem, itemLabel: classes.menuEventLabel}}
                                 onClick={() => !current && navigate(`/manage/event/${event.id}/${section}`)}
                             >
                                 <span className={classes.menuEventText}>
