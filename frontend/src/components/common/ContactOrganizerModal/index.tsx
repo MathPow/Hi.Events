@@ -13,6 +13,12 @@ interface ContactOrganizerModalProps {
     organizer: Organizer;
     // Ouvert depuis la page d'un evenement: le message le rappelle a l'organisateur.
     eventId?: IdParam;
+    // Deja remplis (la page de commande connait le nom, le courriel et le numero de commande).
+    initialValues?: {
+        name?: string;
+        email?: string;
+        message?: string;
+    };
 }
 
 export const ContactOrganizerModal: React.FC<ContactOrganizerModalProps> = ({
@@ -20,14 +26,15 @@ export const ContactOrganizerModal: React.FC<ContactOrganizerModalProps> = ({
     onClose,
     organizer,
     eventId,
+    initialValues,
 }) => {
     const contactMutation = useContactOrganizer();
     
     const contactForm = useForm({
         initialValues: {
-            name: '',
-            email: '',
-            message: '',
+            name: initialValues?.name ?? '',
+            email: initialValues?.email ?? '',
+            message: initialValues?.message ?? '',
         },
         validateInputOnBlur: true,
         validate: {

@@ -18,6 +18,7 @@ import {withLoadingNotification} from "../../../../utilites/withLoadingNotificat
 import {LoadingMask} from "../../../common/LoadingMask";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {CalendarOptionsPopover} from "../../../common/CalendarOptionsPopover";
+import {ContactOrganizerModal} from "../../../common/ContactOrganizerModal";
 import {ShareComponent} from "../../../common/ShareIcon";
 import {PublicBarLink, PublicPageBar} from "../../../common/PublicPageBar";
 import {PublicPageFooter} from "../../../common/PublicPageFooter";
@@ -35,7 +36,7 @@ import {useResendAttendeeTicketPublic} from "../../../../mutations/useResendAtte
 import {useResendOrderConfirmationPublic} from "../../../../mutations/useResendOrderConfirmationPublic";
 import {useAddToGoogleWallet} from "../../../../mutations/useAddToGoogleWallet";
 
-import {Attendee, Event, Invoice, Order} from "../../../../types.ts";
+import {Attendee, Event, Invoice, Order, OrganizerStatus} from "../../../../types.ts";
 import classes from './OrderSummaryAndProducts.module.scss';
 import {clearWaitlistJoinedForEvent} from "../../../../hooks/useWaitlistJoined.ts";
 // Purchase tracking is handled by the parent Checkout layout
@@ -356,6 +357,7 @@ export const OrderSummaryAndProducts = () => {
     const [editingAttendee, setEditingAttendee] = useState<Attendee | null>(null);
     const [editOrderModalOpened, setEditOrderModalOpened] = useState(false);
     const [wallet, setWallet] = useState<WalletPlatform | null>(null);
+    const [contactOpened, setContactOpened] = useState(false);
 
     useEffect(() => setWallet(phoneWallet()), []);
 
@@ -565,6 +567,8 @@ export const OrderSummaryAndProducts = () => {
     const ticketsUrl = hasTickets ? `/order/${eventId}/${orderShortId}/print` : null;
     const canSelfEdit = allowSelfEdit && !isCancelled;
     // Avec un seul billet envoye a l'acheteur, renvoyer la confirmation suffit.
+    // Comme sur la page de l'evenement: seulement un organisateur en ligne recoit les messages.
+    const organizerIsLive = event.organizer?.status === OrganizerStatus.LIVE;
     const canAddToWallet = isCompleted && activeAttendees.length > 0 && !!wallet && !!order.wallet_passes?.[wallet];
     const showResendTicket = canSelfEdit && activeAttendees.length > 0
         && (activeAttendees.length > 1 || activeAttendees[0].email !== order.email);
@@ -642,6 +646,14 @@ export const OrderSummaryAndProducts = () => {
                 icon={'telecharger'}
                 label={t`Download Invoice`}
                 onClick={() => handleInvoiceDownload(order.latest_invoice as Invoice)}
+            />
+        ),
+        organizerIsLive && (
+            <ManageAction
+                key="contact-organizer"
+                icon={'courriel'}
+                label={t`Contact the organizer`}
+                onClick={() => setContactOpened(true)}
             />
         ),
         !isCancelled && (
@@ -776,6 +788,20 @@ export const OrderSummaryAndProducts = () => {
                     attendee={editingAttendee}
                     onSuccess={(values: any) => {
                         handleEditAttendee(editingAttendee, values);
+                    }}
+                />
+            )}
+
+            {organizerIsLive && event.organizer && (
+                <ContactOrganizerModal
+                    opened={contactOpened}
+                    onClose={() => setContactOpened(false)}
+                    organizer={event.organizer}
+                    eventId={event.id}
+                    initialValues={{
+                        name: [order.first_name, order.last_name].filter(Boolean).join(' '),
+                        email: order.email,
+                        message: `${t`Order`} ${order.public_id}\n\n`,
                     }}
                 />
             )}
