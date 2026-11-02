@@ -4,10 +4,13 @@ namespace Tests\Unit\Services\Application\Handlers\OrganizerSettings;
 
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\OrganizerSettingDomainObject;
+use HiEvents\Repository\Interfaces\EventRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\DTO\PartialUpdateOrganizerSettingsDTO;
 use HiEvents\Services\Application\Handlers\Organizer\Settings\PartialUpdateOrganizerSettingsHandler;
+use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tests\TestCase;
@@ -19,6 +22,9 @@ class PartialUpdateOrganizerSettingsHandlerTest extends TestCase
     private OrganizerSettingsRepositoryInterface $settingsRepository;
     private OrganizerRepositoryInterface $organizerRepository;
     private PartialUpdateOrganizerSettingsHandler $handler;
+    private EventRepositoryInterface $eventRepository;
+    private EventSettingsRepositoryInterface $eventSettingsRepository;
+    private HtmlPurifierService $purifier;
 
     protected function setUp(): void
     {
@@ -30,6 +36,9 @@ class PartialUpdateOrganizerSettingsHandlerTest extends TestCase
         $this->handler = new PartialUpdateOrganizerSettingsHandler(
             organizerSettingsRepository: $this->settingsRepository,
             organizerRepository: $this->organizerRepository,
+            eventRepository: $this->eventRepository = Mockery::mock(EventRepositoryInterface::class),
+            eventSettingsRepository: $this->eventSettingsRepository = Mockery::mock(EventSettingsRepositoryInterface::class),
+            purifier: $this->purifier = Mockery::mock(HtmlPurifierService::class),
         );
     }
 
@@ -276,6 +285,69 @@ class PartialUpdateOrganizerSettingsHandlerTest extends TestCase
             'organizer_id' => 1,
             'account_id' => '100',
             'facebook_handle' => 'dehors.fb',
+        ]));
+    }
+
+    public function testEmailFooterIsSavedAndCopiedToTheOrganizersEvents(): void
+    {
+        $organizer = (new OrganizerDomainObject())->setId(1);
+        $existingSettings = (new OrganizerSettingDomainObject())->setId(10)->setOrganizerId(1);
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existingSettings);
+        $this->purifier->shouldReceive('purify')->with('<p>Merci!</p>')->once()->andReturn('<p>Merci!</p>');
+
+        $this->settingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->with(Mockery::on(fn(array $attributes) => $attributes['email_footer_message'] === '<p>Merci!</p>'), Mockery::any());
+
+        $this->eventRepository
+            ->shouldReceive('findWhere')
+            ->with(['organizer_id' => 1])
+            ->once()
+            ->andReturn(collect([
+                (new \HiEvents\DomainObjects\EventDomainObject())->setId(5),
+                (new \HiEvents\DomainObjects\EventDomainObject())->setId(7),
+            ]));
+
+        $this->eventSettingsRepository
+            ->shouldReceive('updateWhere')
+            ->with(['email_footer_message' => '<p>Merci!</p>'], [['event_id', 'in', [5, 7]]])
+            ->once();
+
+        $this->settingsRepository->shouldReceive('findFirst')->with(10)->once()->andReturn($existingSettings);
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'email_footer_message' => '<p>Merci!</p>',
+        ]));
+    }
+
+    public function testAnEmptyEditorClearsTheEmailFooter(): void
+    {
+        $organizer = (new OrganizerDomainObject())->setId(1);
+        $existingSettings = (new OrganizerSettingDomainObject())->setId(10)->setOrganizerId(1)
+            ->setEmailFooterMessage('<p>Ancien</p>');
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existingSettings);
+        $this->purifier->shouldReceive('purify')->once()->andReturn('<p></p>');
+
+        $this->settingsRepository
+            ->shouldReceive('updateWhere')
+            ->once()
+            ->with(Mockery::on(fn(array $attributes) => $attributes['email_footer_message'] === null), Mockery::any());
+
+        $this->eventRepository->shouldReceive('findWhere')->once()->andReturn(collect());
+        $this->eventSettingsRepository->shouldNotReceive('updateWhere');
+        $this->settingsRepository->shouldReceive('findFirst')->once()->andReturn($existingSettings);
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'email_footer_message' => '<p></p>',
         ]));
     }
 }

@@ -375,6 +375,8 @@ class CreateEventServiceTest extends TestCase
             ->andReturn(false);
         $organizerSettings->shouldReceive('getDefaultPassProcessingFeeToBuyer')
             ->andReturn(false);
+        $organizerSettings->shouldReceive('getEmailFooterMessage')
+            ->andReturn(null);
 
         $organizer = $this->createMockOrganizerDomainObject()
             ->shouldReceive('getOrganizerSettings')

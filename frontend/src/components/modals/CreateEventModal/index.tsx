@@ -12,7 +12,7 @@ import {useGetAccount} from "../../../queries/useGetAccount.ts";
 import {useGetOrganizers} from "../../../queries/useGetOrganizers.ts";
 import {useCreateEvent} from "../../../mutations/useCreateEvent.ts";
 import {AccountEventType, Event, GenericModalProps, IdParam} from "../../../types.ts";
-import {EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
+import {CATEGORY_OF_TYPE, EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
 import {useLingui} from "@lingui/react";
 import classes from "./CreateEventModal.module.scss";
 
@@ -29,13 +29,6 @@ interface CreateEventFormValues {
     organizer_id?: string;
 }
 
-// The Hi.Events category stored for each Dehors type (see constants/eventTypes.ts).
-const CATEGORY_OF_TYPE: Record<AccountEventType, string> = {
-    SPORT: 'SPORTS',
-    ENTREPRENEURSHIP: 'BUSINESS',
-    SOCIAL: 'SOCIAL',
-    OTHER: 'OTHER',
-};
 
 // The coming Saturday, 9 to 12, like the example of the mockup.
 const defaultStart = () => {

@@ -4,7 +4,7 @@ import {Event, IdParam} from "../../../../../types.ts";
 import {useUpdateEvent} from "../../../../../mutations/useUpdateEvent.ts";
 import {utcToTz} from "../../../../../utilites/dates.ts";
 import {timezones} from "../../../../../../data/timezones.ts";
-import {EventCategories} from "../../../../../constants/eventCategories.ts";
+import {CATEGORY_OF_TYPE, EVENT_TYPES, eventTypeLabel, typeOfCategory} from "../../../../../constants/eventTypes.ts";
 import {Editor} from "../../../../common/Editor";
 import {PillChoice, SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
@@ -83,10 +83,12 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                 </div>
                 <div className={`${classes.fieldsSpan} ${extra.fieldGroup}`}>
                     <p className={classes.fieldLabel}>{t`Category`}</p>
+                    {/* Sport, Entrepreneuriat, Social, Autre, as in « Créer un événement »: a former category
+                        (Musique, Technologie…) shows as the type it belongs to. */}
                     <PillChoice
                         label={t`Category`}
-                        value={form.values.category || null}
-                        options={EventCategories.map(category => ({value: category.id, label: `${category.emoji} ${category.name}`}))}
+                        value={form.values.category ? CATEGORY_OF_TYPE[typeOfCategory(form.values.category)] : null}
+                        options={EVENT_TYPES.map(type => ({value: CATEGORY_OF_TYPE[type], label: eventTypeLabel(type)}))}
                         onChange={(value) => choose('category', value)}
                     />
                 </div>

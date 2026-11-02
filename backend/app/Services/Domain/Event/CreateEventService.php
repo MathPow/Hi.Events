@@ -212,6 +212,8 @@ class CreateEventService
 
             'continue_button_text' => __('Continue'),
             'support_email' => $organizer->getEmail(),
+            // The organizer's « Pied de page des courriels » (Courriels page).
+            'email_footer_message' => $organizerSettings->getEmailFooterMessage(),
 
             'payment_providers' => [PaymentProviders::STRIPE->value],
             'offline_payment_instructions' => null,

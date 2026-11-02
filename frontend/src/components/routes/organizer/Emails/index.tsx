@@ -3,10 +3,14 @@ import {t} from "@lingui/macro";
 import {PageBody} from "../../../common/PageBody";
 import {PageTitle} from "../../../common/PageTitle";
 import {AutomaticEmails} from "./AutomaticEmails.tsx";
+import {EmailFooterCard} from "./EmailFooterCard.tsx";
+import {useGetOrganizerSettings} from "../../../../queries/useGetOrganizerSettings.ts";
+import classes from "./Emails.module.scss";
 
 // « Courriels », under « Gérer » like « Documents »: the automatic emails, exactly as they are sent.
 const Emails = () => {
     const {organizerId} = useParams();
+    const {data: settings} = useGetOrganizerSettings(organizerId);
 
     if (!organizerId) {
         return null;
@@ -18,6 +22,11 @@ const Emails = () => {
                 {t`Emails`}
             </PageTitle>
             <AutomaticEmails key={organizerId} organizerId={organizerId}/>
+            {settings && (
+                <div className={classes.footerCard}>
+                    <EmailFooterCard key={organizerId} organizerId={organizerId} settings={settings}/>
+                </div>
+            )}
         </PageBody>
     );
 };

@@ -9,7 +9,6 @@ import {useGetEventSettings} from "../../../../queries/useGetEventSettings.ts";
 import {EventTab} from "./tabs/EventTab.tsx";
 import {RegistrationTab} from "./tabs/RegistrationTab.tsx";
 import {PaymentTab} from "./tabs/PaymentTab.tsx";
-import {EmailsTab} from "./tabs/EmailsTab.tsx";
 import {EVENT_SETTINGS_TABS, EventSettingsTab, eventSettingsTabPath, SECTION_TABS} from "./settingsTabs.ts";
 import classes from "../../organizer/Settings/Settings.module.scss";
 
@@ -17,7 +16,6 @@ const tabLabel = (tab: EventSettingsTab) => ({
     event: t({message: 'Event', context: 'settings tab'}),
     registration: t({message: 'Registration', context: 'settings tab'}),
     payment: t`Payment & Invoicing`,
-    emails: t`Emails`,
 })[tab];
 
 const SettingsSkeleton = () => (
@@ -81,7 +79,7 @@ const Settings = () => {
         <div className={classes.page}>
             <header className={classes.header}>
                 <h1 className={classes.title}>{t`Event Settings`}</h1>
-                <p className={classes.subtitle}>{t`Your event's details, registration, payments and emails.`}</p>
+                <p className={classes.subtitle}>{t`Your event's details, registration and payments.`}</p>
             </header>
 
             <div className={classes.tabsSticky}>
@@ -103,7 +101,6 @@ const Settings = () => {
             {ready && active === 'event' && <EventTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
             {ready && active === 'registration' && <RegistrationTab key={eventId} eventId={eventId} settings={settings}/>}
             {ready && active === 'payment' && <PaymentTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
-            {ready && active === 'emails' && <EmailsTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
         </div>
     );
 };

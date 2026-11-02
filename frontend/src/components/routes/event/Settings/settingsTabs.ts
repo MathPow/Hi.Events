@@ -1,5 +1,6 @@
 // The tabs of « Paramètres de l'événement », by their address (/manage/event/1/settings/payment).
-export const EVENT_SETTINGS_TABS = ['event', 'registration', 'payment', 'emails'] as const;
+// No « Courriels » tab: the emails and their footer are the organizer's (Courriels page).
+export const EVENT_SETTINGS_TABS = ['event', 'registration', 'payment'] as const;
 export type EventSettingsTab = typeof EVENT_SETTINGS_TABS[number];
 
 export const eventSettingsTabPath = (eventId: string | number, tab: EventSettingsTab) =>
@@ -22,6 +23,4 @@ export const SECTION_TABS: Record<string, EventSettingsTab> = {
     'platform-fees': 'payment',
     'deposit-settings': 'payment',
     'invoice-settings': 'payment',
-    'email-settings': 'emails',
-    'email-templates': 'emails',
 };

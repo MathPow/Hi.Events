@@ -17,7 +17,7 @@ import {EventNotAvailable} from "./EventNotAvailable";
 import {ContactOrganizerModal} from "../../common/ContactOrganizerModal";
 import {socialMediaConfig} from "../../../constants/socialMediaConfig";
 import {visibleSocialHandles} from "../../../utilites/socialLinks.ts";
-import {EventCategories} from "../../../constants/eventCategories.ts";
+import {eventTypeLabel, typeOfCategory} from "../../../constants/eventTypes.ts";
 import {
     formatAddress,
     getGoogleMapsUrl,
@@ -177,9 +177,10 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const hasOtherProducts = (event.product_categories?.flatMap(c => c.products || []) || []).length > 1;
 
     const tags: string[] = [];
-    const category = EventCategories.find(item => item.id === event.category && item.id !== 'OTHER');
-    if (category) {
-        tags.push(category.name);
+    // The event's type (Sport, Entrepreneuriat, Social), as chosen in its settings; nothing for « Autre ».
+    const eventType = typeOfCategory(event.category);
+    if (event.category && eventType !== 'OTHER') {
+        tags.push(eventTypeLabel(eventType));
     }
     if (isOnlineEvent) {
         tags.push(t`Online Event`);

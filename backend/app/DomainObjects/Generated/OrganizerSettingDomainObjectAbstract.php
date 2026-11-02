@@ -38,6 +38,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     final public const CHARITY_RECEIPT_PREFIX = 'charity_receipt_prefix';
     final public const DEFAULT_PASS_PROCESSING_FEE_TO_BUYER = 'default_pass_processing_fee_to_buyer';
     final public const FAQS = 'faqs';
+    final public const EMAIL_FOOTER_MESSAGE = 'email_footer_message';
     final public const PLATFORM_SUPPORT_ENABLED = 'platform_support_enabled';
     final public const SOCIAL_MEDIA_LAYOUT = 'social_media_layout';
 
@@ -69,6 +70,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     protected ?string $charity_receipt_prefix = null;
     protected bool $default_pass_processing_fee_to_buyer = false;
     protected array|string|null $faqs = null;
+    protected ?string $email_footer_message = null;
     protected bool $platform_support_enabled = true;
     protected array|string|null $social_media_layout = null;
 
@@ -103,6 +105,7 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
                     'charity_receipt_prefix' => $this->charity_receipt_prefix ?? null,
                     'default_pass_processing_fee_to_buyer' => $this->default_pass_processing_fee_to_buyer ?? null,
                     'faqs' => $this->faqs ?? null,
+                    'email_footer_message' => $this->email_footer_message ?? null,
                     'platform_support_enabled' => $this->platform_support_enabled ?? null,
                     'social_media_layout' => $this->social_media_layout ?? null,
                 ];
@@ -415,6 +418,17 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     public function getFaqs(): array|string|null
     {
         return $this->faqs;
+    }
+
+    public function setEmailFooterMessage(?string $email_footer_message): self
+    {
+        $this->email_footer_message = $email_footer_message;
+        return $this;
+    }
+
+    public function getEmailFooterMessage(): ?string
+    {
+        return $this->email_footer_message;
     }
 
     public function setPlatformSupportEnabled(bool $platform_support_enabled): self

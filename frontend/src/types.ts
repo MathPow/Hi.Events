@@ -523,6 +523,8 @@ export interface OrganizerSettings {
     tracking_pixels?: TrackingPixelConfig[];
     tracking_consent_acknowledged?: boolean;
     faqs?: OrganizerFaq[];
+    // « Pied de page des courriels » (Courriels page), copied to every event of the organizer.
+    email_footer_message?: string | null;
     charity_registration_number?: string | null;
     charity_legal_name?: string | null;
     charity_address?: string | null;

@@ -140,6 +140,8 @@ class PartialUpdateOrganizerSettingsRequest extends BaseRequest
 
             // FAQ
             'faqs' => ['sometimes', 'nullable', 'array', 'max:50'],
+            // « Pied de page des courriels » (Courriels page): HTML, purified when saved.
+            'email_footer_message' => ['sometimes', 'nullable', 'string', 'max:5000'],
             'faqs.*.question' => ['required', 'string', 'max:255'],
             'faqs.*.answer' => ['required', 'string', 'max:5000'],
 

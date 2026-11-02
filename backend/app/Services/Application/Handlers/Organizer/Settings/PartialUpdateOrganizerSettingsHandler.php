@@ -4,9 +4,12 @@ namespace HiEvents\Services\Application\Handlers\Organizer\Settings;
 
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\OrganizerSettingDomainObject;
+use HiEvents\Repository\Interfaces\EventRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\DTO\PartialUpdateOrganizerSettingsDTO;
+use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Spatie\LaravelData\Data;
 
 class PartialUpdateOrganizerSettingsHandler
@@ -14,6 +17,9 @@ class PartialUpdateOrganizerSettingsHandler
     public function __construct(
         private readonly OrganizerSettingsRepositoryInterface $organizerSettingsRepository,
         private readonly OrganizerRepositoryInterface         $organizerRepository,
+        private readonly EventRepositoryInterface             $eventRepository,
+        private readonly EventSettingsRepositoryInterface     $eventSettingsRepository,
+        private readonly HtmlPurifierService                  $purifier,
     )
     {
     }
@@ -40,6 +46,10 @@ class PartialUpdateOrganizerSettingsHandler
         } else {
             $locationDetails = [];
         }
+
+        $emailFooterMessage = $dto->wasProvided('emailFooterMessage')
+            ? $this->cleanFooter($dto->emailFooterMessage)
+            : $organizerSettings->getEmailFooterMessage();
 
         $this->organizerSettingsRepository->updateWhere([
             'default_attendee_details_collection_method' => $dto->getProvided(
@@ -119,10 +129,15 @@ class PartialUpdateOrganizerSettingsHandler
             'charity_address' => $dto->getProvided('charityAddress', $organizerSettings->getCharityAddress()),
             'charity_signatory_name' => $dto->getProvided('charitySignatoryName', $organizerSettings->getCharitySignatoryName()),
             'charity_receipt_prefix' => $dto->getProvided('charityReceiptPrefix', $organizerSettings->getCharityReceiptPrefix()),
+            'email_footer_message' => $emailFooterMessage,
         ], [
             'organizer_id' => $dto->organizerId,
             'id' => $organizerSettings->getId(),
         ]);
+
+        if ($dto->wasProvided('emailFooterMessage')) {
+            $this->applyEmailFooterToEvents($organizer->getId(), $emailFooterMessage);
+        }
 
         return $this->organizerSettingsRepository->findFirst($organizerSettings->getId());
     }
@@ -139,6 +154,35 @@ class PartialUpdateOrganizerSettingsHandler
             ])
             ->values()
             ->all();
+    }
+
+    /** An empty editor (« <p></p> ») is no footer. */
+    private function cleanFooter(?string $html): ?string
+    {
+        $html = $this->purifier->purify($html);
+
+        return trim(strip_tags((string)$html)) === '' ? null : $html;
+    }
+
+    /**
+     * The emails read the footer from each event's settings: the organizer's footer replaces those of
+     * all its events (the event no longer has its own, see « Courriels » of the organizer).
+     */
+    private function applyEmailFooterToEvents(int $organizerId, ?string $emailFooterMessage): void
+    {
+        $eventIds = $this->eventRepository
+            ->findWhere(['organizer_id' => $organizerId])
+            ->map(static fn($event) => $event->getId())
+            ->all();
+
+        if ($eventIds === []) {
+            return;
+        }
+
+        $this->eventSettingsRepository->updateWhere(
+            ['email_footer_message' => $emailFooterMessage],
+            [['event_id', 'in', $eventIds]],
+        );
     }
 
     private function sanitizeFaqs(?array $faqs): array

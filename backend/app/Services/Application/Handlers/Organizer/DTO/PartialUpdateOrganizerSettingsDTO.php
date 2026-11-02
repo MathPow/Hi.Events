@@ -86,6 +86,9 @@ class PartialUpdateOrganizerSettingsDTO extends BaseDataObject
         public readonly string|Optional|null                          $charityAddress,
         public readonly string|Optional|null                          $charitySignatoryName,
         public readonly string|Optional|null                          $charityReceiptPrefix,
+
+        // Courriels
+        public readonly string|Optional|null                          $emailFooterMessage,
     )
     {
     }

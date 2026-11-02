@@ -27,4 +27,15 @@ const TYPE_OF_CATEGORY: Record<string, AccountEventType> = {
     THEATER: 'SOCIAL',
 };
 
-export const eventTypeOf = (event: Event): AccountEventType => TYPE_OF_CATEGORY[event.category ?? ''] ?? 'OTHER';
+export const typeOfCategory = (category?: string | null): AccountEventType => TYPE_OF_CATEGORY[category ?? ''] ?? 'OTHER';
+
+export const eventTypeOf = (event: Event): AccountEventType => typeOfCategory(event.category);
+
+// The Hi.Events category stored for each Dehors type: « Créer un événement » and the Catégorie of the
+// event's settings offer only these four.
+export const CATEGORY_OF_TYPE: Record<AccountEventType, string> = {
+    SPORT: 'SPORTS',
+    ENTREPRENEURSHIP: 'BUSINESS',
+    SOCIAL: 'SOCIAL',
+    OTHER: 'OTHER',
+};
