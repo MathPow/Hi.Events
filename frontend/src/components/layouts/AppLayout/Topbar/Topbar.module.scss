@@ -21,6 +21,11 @@
     padding: 1rem 1rem 0.5rem;
   }
 
+  // The breadcrumb and the actions line up with the centred page (layouts/AppLayout).
+  @include mixins.respond-above(md) {
+    padding-inline: max(2.5rem, calc((100% - 1400px) / 2));
+  }
+
   &.withShadow {
     box-shadow: 0 1px 0 var(--dehors-trait);
   }

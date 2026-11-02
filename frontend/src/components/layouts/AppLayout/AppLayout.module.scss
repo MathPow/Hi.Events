@@ -10,6 +10,12 @@
   initial-value: 256px;
 }
 
+// On a wide screen every page sits in the middle of its column, at its own max width (1400px for
+// most), instead of against the sidebar. No specificity: a page's own margins win.
+:where(.main) > * {
+  margin-inline: auto;
+}
+
 .container {
   --sidebar-width: 16rem;
 
