@@ -10,7 +10,6 @@ import {showSuccess} from "../../../../utilites/notifications.tsx";
 import {getProductsFromEvent} from "../../../../utilites/helpers.ts";
 import {ReactNode, useEffect, useState} from 'react';
 import ConfettiAnimation from "./ConfettiAnimaiton";
-import {Browser, useBrowser} from "../../../../hooks/useGetBrowser.ts";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
 import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
 import {PublicIcon, PublicIconName} from "../../../common/PublicIcon";
@@ -34,13 +33,10 @@ const GettingStarted = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [showConfetti, setShowConfetti] = useState(false);
-    const browser = useBrowser();
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const isChromeOrFirefox = browser === Browser.Chrome || browser === Browser.Firefox;
-
-        if (searchParams.get('new_event') === 'true' && isChromeOrFirefox) {
+        if (searchParams.get('new_event') === 'true') {
             setShowConfetti(true);
 
             setTimeout(() => {
