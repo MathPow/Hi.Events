@@ -38,7 +38,6 @@ import {useSendEventMessage} from "../../../mutations/useSendEventMessage.ts";
 import {ProductSelector} from "../../common/ProductSelector";
 import {useEffect, useMemo, useState} from "react";
 import {useGetAccount} from "../../../queries/useGetAccount.ts";
-import {StripeConnectButton} from "../../common/StripeConnectButton";
 import {getConfig} from "../../../utilites/config";
 import {utcToTz} from "../../../utilites/dates.ts";
 import {intlLocale} from "../../../utilites/intlLocale.ts";
@@ -142,8 +141,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
     const isPreselectedRecipient = !!(orderId || attendeeId || productId);
     const {data: account, isFetched: isAccountFetched} = useGetAccount();
     const isAccountVerified = isAccountFetched && account?.is_account_email_confirmed;
-    const accountRequiresManualVerification = isAccountFetched && account?.requires_manual_verification;
-    const formIsDisabled = !isAccountVerified || accountRequiresManualVerification;
+    const formIsDisabled = !isAccountVerified;
     const supportEmail = getConfig('VITE_PLATFORM_SUPPORT_EMAIL');
     const [tierLimitError, setTierLimitError] = useState<string | null>(null);
     const [isScheduled, setIsScheduled] = useState(false);
@@ -278,17 +276,6 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                     <Alert className={classes.verificationAlert} variant={'light'}
                            icon={<IconAlertCircle size="1rem"/>}>
                         {t`You need to verify your account email before you can send messages.`}
-                    </Alert>
-                )}
-
-                {accountRequiresManualVerification && (
-                    <Alert className={classes.verificationAlert} variant={'light'} icon={<IconAlertCircle size="1rem"/>}
-                           title={t`Connect Stripe to enable messaging`}>
-                        {t`Due to the high risk of spam, you must connect a Stripe account before you can send messages to attendees.
-                         This is to ensure that all event organizers are verified and accountable.`}
-                        <div className={classes.stripeConnectButton}>
-                            <StripeConnectButton/>
-                        </div>
                     </Alert>
                 )}
 
@@ -522,7 +509,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                     loading={sendMessageMutation.isPending}
                                     type={'submit'}
                                     leftSection={isScheduled ? <IconClock size={16}/> : <IconSend size={16}/>}
-                                    disabled={!form.values.acknowledgement || !isAccountVerified || accountRequiresManualVerification}
+                                    disabled={!form.values.acknowledgement || !isAccountVerified}
                                 >
                                     {isScheduled ? t`Schedule Message` : (form.values.is_test ? t`Send Test` : t`Send Message`)}
                                 </Button>
@@ -531,7 +518,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                         <Button
                                             type="button"
                                             className={classes.menuButton}
-                                            disabled={!form.values.acknowledgement || !isAccountVerified || accountRequiresManualVerification}
+                                            disabled={!form.values.acknowledgement || !isAccountVerified}
                                         >
                                             <IconChevronDown size={16}/>
                                         </Button>

@@ -23,7 +23,6 @@ use HiEvents\Services\Application\Handlers\Message\SendMessageHandler;
 use HiEvents\Services\Domain\Message\MessageAttachmentService;
 use HiEvents\Services\Domain\Message\MessagingEligibilityService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
-use Illuminate\Config\Repository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Mockery as m;
@@ -37,7 +36,6 @@ class SendMessageHandlerTest extends TestCase
     private MessageRepositoryInterface $messageRepository;
     private AccountRepositoryInterface $accountRepository;
     private HtmlPurifierService $purifier;
-    private Repository $config;
     private MessagingEligibilityService $eligibilityService;
     private EventRepositoryInterface $eventRepository;
     private MessageAttachmentService $attachmentService;
@@ -54,7 +52,6 @@ class SendMessageHandlerTest extends TestCase
         $this->messageRepository = m::mock(MessageRepositoryInterface::class);
         $this->accountRepository = m::mock(AccountRepositoryInterface::class);
         $this->purifier = m::mock(HtmlPurifierService::class);
-        $this->config = m::mock(Repository::class);
         $this->eligibilityService = m::mock(MessagingEligibilityService::class);
         $this->eventRepository = m::mock(EventRepositoryInterface::class);
         $this->attachmentService = m::mock(MessageAttachmentService::class);
@@ -68,7 +65,6 @@ class SendMessageHandlerTest extends TestCase
             accountRepository: $this->accountRepository,
             eventRepository: $this->eventRepository,
             purifier: $this->purifier,
-            config: $this->config,
             eligibilityService: $this->eligibilityService,
             attachmentService: $this->attachmentService,
         );
@@ -101,36 +97,6 @@ class SendMessageHandlerTest extends TestCase
         $this->handler->handle($dto);
     }
 
-    public function testThrowsIfSaasModeEnabledAndNotManuallyVerified(): void
-    {
-        $dto = new SendMessageDTO(
-            account_id: 1,
-            event_id: 1,
-            subject: 'Subject',
-            message: 'Message',
-            type: MessageTypeEnum::INDIVIDUAL_ATTENDEES,
-            is_test: false,
-            send_copy_to_current_user: false,
-            sent_by_user_id: 1,
-            order_id: null,
-            order_statuses: [],
-            attendee_ids: [],
-            product_ids: []
-        );
-
-        $account = m::mock(AccountDomainObject::class);
-        $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
-        $account->shouldReceive('getIsManuallyVerified')->andReturn(false);
-
-        $this->accountRepository->shouldReceive('findById')->with(1)->andReturn($account);
-        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(true);
-        $this->config->shouldReceive('get')->with('app.platform_support_email')->andReturn('support@example.com');
-
-        $this->expectException(AccountNotVerifiedException::class);
-
-        $this->handler->handle($dto);
-    }
-
     public function testHandleCreatesMessageAndDispatchesJob(): void
     {
         $dto = new SendMessageDTO(
@@ -154,10 +120,9 @@ class SendMessageHandlerTest extends TestCase
 
         $account = m::mock(AccountDomainObject::class);
         $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
-        $account->shouldReceive('getIsManuallyVerified')->andReturn(true);
+        $account->shouldReceive('getIsManuallyVerified')->andReturn(false);
 
         $this->accountRepository->shouldReceive('findById')->with(1)->andReturn($account);
-        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(false);
 
         // Mock eligibility checks to pass (return null = no violations)
         $this->eligibilityService->shouldReceive('checkTierLimits')->andReturn(null);
@@ -221,9 +186,7 @@ class SendMessageHandlerTest extends TestCase
 
         $account = m::mock(AccountDomainObject::class);
         $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
-        $account->shouldReceive('getIsManuallyVerified')->andReturn(true);
         $this->accountRepository->shouldReceive('findById')->with(1)->andReturn($account);
-        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(false);
 
         $this->eligibilityService->shouldReceive('checkTierLimits')->andReturn(null);
         $this->eligibilityService->shouldReceive('checkEligibility')->andReturn(null);
@@ -283,9 +246,7 @@ class SendMessageHandlerTest extends TestCase
 
         $account = m::mock(AccountDomainObject::class);
         $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
-        $account->shouldReceive('getIsManuallyVerified')->andReturn(true);
         $this->accountRepository->shouldReceive('findById')->andReturn($account);
-        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(false);
 
         $this->eligibilityService->shouldReceive('checkTierLimits')->andReturn(null);
         $this->eligibilityService->shouldReceive('checkEligibility')->andReturn(null);

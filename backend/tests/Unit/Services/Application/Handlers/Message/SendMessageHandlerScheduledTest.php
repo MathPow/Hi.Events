@@ -23,7 +23,6 @@ use HiEvents\Services\Application\Handlers\Message\SendMessageHandler;
 use HiEvents\Services\Domain\Message\MessageAttachmentService;
 use HiEvents\Services\Domain\Message\MessagingEligibilityService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
-use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\Bus;
 use Mockery as m;
 use Tests\TestCase;
@@ -38,7 +37,6 @@ class SendMessageHandlerScheduledTest extends TestCase
     private EventRepositoryInterface $eventRepository;
     private MessageAttachmentService $attachmentService;
     private HtmlPurifierService $purifier;
-    private Repository $config;
     private MessagingEligibilityService $eligibilityService;
     private SendMessageHandler $handler;
 
@@ -55,7 +53,6 @@ class SendMessageHandlerScheduledTest extends TestCase
         $this->attachmentService = m::mock(MessageAttachmentService::class);
         $this->attachmentService->shouldReceive('store')->andReturn([])->byDefault();
         $this->purifier = m::mock(HtmlPurifierService::class);
-        $this->config = m::mock(Repository::class);
         $this->eligibilityService = m::mock(MessagingEligibilityService::class);
 
         $this->handler = new SendMessageHandler(
@@ -66,7 +63,6 @@ class SendMessageHandlerScheduledTest extends TestCase
             $this->accountRepository,
             $this->eventRepository,
             $this->purifier,
-            $this->config,
             $this->eligibilityService,
             $this->attachmentService,
         );
@@ -76,14 +72,12 @@ class SendMessageHandlerScheduledTest extends TestCase
     {
         $account = m::mock(AccountDomainObject::class);
         $account->shouldReceive('getAccountVerifiedAt')->andReturn(Carbon::now());
-        $account->shouldReceive('getIsManuallyVerified')->andReturn(true);
 
         $event = m::mock(EventDomainObject::class);
         $event->shouldReceive('getTimezone')->andReturn('America/New_York');
 
         $this->accountRepository->shouldReceive('findById')->with(1)->andReturn($account);
         $this->eventRepository->shouldReceive('findById')->with(101)->andReturn($event);
-        $this->config->shouldReceive('get')->with('app.saas_mode_enabled')->andReturn(false);
 
         $this->eligibilityService->shouldReceive('checkTierLimits')->andReturn(null);
         $this->eligibilityService->shouldReceive('checkEligibility')->andReturn(null);
