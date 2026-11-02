@@ -12,7 +12,6 @@ import {
     IconQrcode,
     IconReceipt,
     IconShare,
-    IconStar,
     IconTicket,
     IconTrendingUp,
     IconUserQuestion,
@@ -28,7 +27,6 @@ import {useGetEvent} from "../../../queries/useGetEvent";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings";
 import {useGetEventStats} from "../../../queries/useGetEventStats";
 import {useGetEventImages} from "../../../queries/useGetEventImages.ts";
-import {useGetAccount} from "../../../queries/useGetAccount.ts";
 import {useCanSeeDeveloperPages} from "../../../hooks/useIsCurrentUserAdmin.ts";
 import {BreadcrumbItem, NavContext, NavItem} from "../AppLayout/types.ts";
 import {adminIcon} from "../AppLayout/NavParts";
@@ -61,10 +59,9 @@ const EventLayout = () => {
     const statusToggleMutation = useUpdateEventStatus();
 
     const {data: event, isFetched: isEventFetched} = useGetEvent(eventId);
-    const {data: eventSettings, isFetched: isEventSettingsFetched} = useGetEventSettings(eventId);
+    const {isFetched: isEventSettingsFetched} = useGetEventSettings(eventId);
     const {data: eventStats} = useGetEventStats(eventId);
     const {data: eventImages, isFetched: isEventImagesFetched} = useGetEventImages(eventId);
-    const {data: account, isFetched: isAccountFetched} = useGetAccount();
     const canSeeDeveloperPages = useCanSeeDeveloperPages();
     const {data: me} = useGetMe();
 
@@ -88,32 +85,17 @@ const EventLayout = () => {
     const products = getProductsFromEvent(event);
     const hasDeposits = !!products?.some(product => (product.deposit_amount || 0) > 0);
 
-    // Same steps as the Getting Started page: point to the pages that still need work.
-    const isSetupStatusKnown = isEventFetched && isEventImagesFetched && isAccountFetched;
+    // The steps of the dashboard's « Préparez votre événement »: point to the pages that still need work.
+    const isSetupStatusKnown = isEventFetched && isEventImagesFetched;
     const needsProducts = isSetupStatusKnown && !products?.length;
     const needsDetails = isSetupStatusKnown && !event?.description;
     const needsImages = isSetupStatusKnown && !eventImages?.length;
-    const remainingSetupSteps = isSetupStatusKnown ? [
-        needsProducts,
-        needsDetails,
-        !account?.stripe_connect_setup_complete,
-        needsImages,
-        event?.status !== 'LIVE',
-    ].filter(Boolean).length : 0;
 
     const navItems: NavItem[] = [
         {link: '/manage/organizer/' + event?.organizer?.id, label: t`Organizer Dashboard`, icon: IconArrowLeft},
 
         // 1. OVERVIEW
         {label: t`Overview`},
-        {
-            link: 'getting-started',
-            label: t`Getting Started`,
-            icon: IconStar,
-            showWhen: () => !eventSettings?.hide_getting_started_page,
-            badge: remainingSetupSteps > 0 ? remainingSetupSteps : undefined,
-            attention: remainingSetupSteps > 0,
-        },
         {link: 'dashboard', label: t`Dashboard`, iconSrc: adminIcon('accueil'), mobileTab: true, mobileTabLabel: t`Overview`},
         {
             link: 'reports',

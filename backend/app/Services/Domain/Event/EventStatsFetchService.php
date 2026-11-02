@@ -124,8 +124,26 @@ readonly class EventStatsFetchService
         });
     }
 
+    /**
+     * The dashboard's « last N days »: today and the N - 1 days before it (each column of the chart is
+     * a day), twice as long when the page compares with the period before.
+     */
+    private const LAST_DAYS_PRESETS = [
+        'last_7_days' => 7,
+        'last_14_days' => 14,
+        'last_28_days' => 28,
+        'last_60_days' => 60,
+    ];
+
     private function resolveStatsDateRange(int $eventId, string $preset): array
     {
+        if (isset(self::LAST_DAYS_PRESETS[$preset])) {
+            return [
+                Carbon::now()->subDays(self::LAST_DAYS_PRESETS[$preset] - 1)->startOfDay()->format('Y-m-d H:i:s'),
+                Carbon::now()->format('Y-m-d H:i:s'),
+            ];
+        }
+
         $event = $this->eventRepository->findById($eventId);
 
         $bounds = $this->db->selectOne(

@@ -3,17 +3,18 @@ import {NavLink, useParams} from "react-router";
 import {Button, Popover, Skeleton, UnstyledButton} from "@mantine/core";
 import {useDebouncedValue, useMediaQuery} from "@mantine/hooks";
 import {IconCalendarEvent, IconChevronRight, IconClockHour4, IconDownload} from "@tabler/icons-react";
-import {plural, t} from "@lingui/macro";
+import {t} from "@lingui/macro";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import {IdParam, Order, QueryFilterFields, QueryFilterOperator, QueryFilters} from "../../../../types.ts";
+import {IdParam, QueryFilterFields, QueryFilterOperator, QueryFilters} from "../../../../types.ts";
 import {useGetOrganizerOrders} from "../../../../queries/useGetOrganizerOrders.ts";
 import {useGetOrganizerEvents} from "../../../../queries/useGetOrganizerEvents.ts";
 import {organizerClient} from "../../../../api/organizer.client.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {getInitials} from "../../../../utilites/helpers.ts";
 import {useOrderDate} from "../../../../utilites/orderDate.ts";
+import {orderContents, orderStatus} from "../../../../utilites/orderSummary.ts";
 import {downloadBinary} from "../../../../utilites/download.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
 import {usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
@@ -73,39 +74,6 @@ const tabFilters = (tab: OrdersTab): QueryFilterFields => ({
     pending: {status: {operator: QueryFilterOperator.Equals, value: 'AWAITING_OFFLINE_PAYMENT'}},
     refunds: {refund_status: {operator: QueryFilterOperator.NotEquals, value: 'null'}},
 })[tab];
-
-const orderStatus = (order: Order): { label: string, tone: 'done' | 'waiting' | 'neutral' } => {
-    if (order.status === 'CANCELLED') {
-        return {label: t({message: 'Cancelled', context: 'order status'}), tone: 'neutral'};
-    }
-    if (order.refund_status === 'REFUNDED') {
-        return {label: t({message: 'Refunded', context: 'order status'}), tone: 'neutral'};
-    }
-    if (order.refund_status === 'PARTIALLY_REFUNDED') {
-        return {label: t({message: 'Partially Refunded', context: 'order status'}), tone: 'waiting'};
-    }
-    if (order.refund_status === 'REFUND_PENDING') {
-        return {label: t`Refund pending`, tone: 'waiting'};
-    }
-    if (order.status === 'AWAITING_OFFLINE_PAYMENT' || order.payment_status === 'AWAITING_PAYMENT') {
-        return {label: t`Pending`, tone: 'waiting'};
-    }
-    return {label: t({message: 'Completed', context: 'order status'}), tone: 'done'};
-};
-
-// « 2 billets · 1 casquette »: the tickets counted together, each other product by its name.
-const orderContents = (order: Order) => {
-    const items = order.order_items ?? [];
-    const tickets = items
-        .filter(item => (item.product_type ?? 'TICKET') === 'TICKET')
-        .reduce((total, item) => total + (item.quantity ?? 0), 0);
-    const parts = tickets > 0 ? [plural(tickets, {one: '# ticket', other: '# tickets'})] : [];
-    items
-        .filter(item => item.product_type && item.product_type !== 'TICKET')
-        .forEach(item => parts.push(`${item.quantity} × ${item.item_name}`));
-
-    return parts.join(' · ');
-};
 
 const EventsMenu = ({organizerId, value, onChange}: {
     organizerId: IdParam,

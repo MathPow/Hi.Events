@@ -10,6 +10,11 @@ import { eventsDirectoryRouteLoader } from "./routeLoaders/eventsDirectoryRouteL
 import { myTicketsRouteLoader } from "./routeLoaders/myTicketsRouteLoader.ts";
 import Landing from "./components/routes/landing";
 
+const GettingStartedRedirect = () => {
+    const {search} = useLocation();
+    return <Navigate to={{pathname: "../dashboard", search}} replace />;
+};
+
 const Root = () => {
     const me = useGetMe();
     const searchParams = typeof window !== 'undefined' ? window.location.search : '';
@@ -484,11 +489,9 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                // « Commencer » is now the card at the top of the dashboard (old links and ?new_event).
                 path: "getting-started",
-                async lazy() {
-                    const GettingStarted = await import("./components/routes/event/GettingStarted");
-                    return { Component: GettingStarted.default };
-                }
+                Component: GettingStartedRedirect,
             },
             {
                 path: "sold-out-waitlist",

@@ -1,403 +1,235 @@
-import {ReactNode, useEffect, useRef, useState} from 'react';
-import {NavLink, useParams} from "react-router";
+import {useEffect, useState} from 'react';
+import {NavLink, useLocation, useNavigate, useParams} from "react-router";
 import {t} from "@lingui/macro";
-import {AreaChart} from "@mantine/charts";
-import {Button, Menu, Skeleton, UnstyledButton} from "@mantine/core";
+import {Button, Skeleton} from "@mantine/core";
 import classNames from "classnames";
 import {useGetEvent} from "../../../../queries/useGetEvent.ts";
-import {useGetMe} from "../../../../queries/useGetMe.ts";
 import {useGetEventStats} from "../../../../queries/useGetEventStats.ts";
-import {useGetAccount} from "../../../../queries/useGetAccount.ts";
 import {useGetEventOrders} from "../../../../queries/useGetEventOrders.ts";
-import {useUpdateEventStatus} from "../../../../mutations/useUpdateEventStatus.ts";
+import {Event, EventDailyStats, QueryFilters} from "../../../../types.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
-import {formatDateWithLocale} from "../../../../utilites/dates.ts";
-import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
-import {showSuccess} from "../../../../utilites/notifications.tsx";
-import {getInitials, isHiEvents} from "../../../../utilites/helpers.ts";
-import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
-import {EventLifecycleStatus, EventStatus, Order, QueryFilters, StripePlatform} from "../../../../types.ts";
-import {StatBoxes} from "../../../common/StatBoxes";
-import {StripeConnectButton} from "../../../common/StripeConnectButton";
-import {OrderStatusBadge} from "../../../common/OrderStatusBadge";
-import {PublicIcon} from "../../../common/PublicIcon";
-import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
-import {useOrderDate} from "../../../../utilites/orderDate.ts";
+import {formatNumber, getInitials} from "../../../../utilites/helpers.ts";
+import {intlLocale} from "../../../../utilites/intlLocale.ts";
+import {eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
+import {orderContents, orderStatus} from "../../../../utilites/orderSummary.ts";
+import {StatTile} from "../../../common/StatBoxes";
+import {comparisonLabel, NotificationItem, ScrollList} from "../../organizer/OrganizerDashboard";
+import dashboardClasses from "../../organizer/OrganizerDashboard/OrganizerDashboard.module.scss";
+import ConfettiAnimation from "./ConfettiAnimation";
+import {SetupCard} from "./SetupCard.tsx";
+import {lastDaysPreset, SalesChart} from "./SalesChart.tsx";
+import {useEventNotifications} from "./eventNotifications.ts";
 import classes from "./EventDashboard.module.scss";
 
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
-
-type DateRange = 'last_30_days' | 'week' | 'month' | 'quarter' | 'event';
-
-const DATE_RANGES: DateRange[] = ['last_30_days', 'week', 'month', 'quarter', 'event'];
-
-const dateRangeLabel = (range: DateRange, short = false) => {
-    if (short) {
-        return ({
-            last_30_days: t`Recent`,
-            week: t`Week`,
-            month: t`Month`,
-            quarter: t`Quarter`,
-            event: t`Event`,
-        })[range];
-    }
-    return ({
-        last_30_days: t`Last 30 days`,
-        week: t`First 7 days from event start`,
-        month: t`First 30 days from event start`,
-        quarter: t`First 90 days from event start`,
-        event: t`Full event duration`,
-    })[range];
-};
+const eventIcon = (name: string) => `/interface/admin/evenement/${name}.svg`;
 
 const RECENT_ORDERS: QueryFilters = {
     pageNumber: 1,
-    perPage: 5,
+    perPage: 20,
     sortBy: 'created_at',
     sortDirection: 'desc',
 };
 
-const ticketCount = (order: Order) =>
-    (order.order_items ?? []).reduce((total, item) => total + (item.quantity ?? 0), 0);
+// « sam. 7 nov. 2026 · 9 h · Parc de la Chute-Montmorency », in the event's time zone.
+const eventWhenAndWhere = (event: Event) => {
+    const parts: string[] = [];
+    if (event.start_date) {
+        const date = new Date(event.start_date);
+        const timeZone = event.timezone || undefined;
+        const minutes = Number(new Intl.DateTimeFormat('en', {minute: 'numeric', timeZone}).format(date));
+        parts.push(new Intl.DateTimeFormat(intlLocale(), {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone})
+            .format(date));
+        parts.push(new Intl.DateTimeFormat(intlLocale(), {hour: 'numeric', ...(minutes ? {minute: '2-digit'} : {}), timeZone})
+            .format(date));
+    }
+    const place = event.settings?.is_online_event
+        ? t`Online Event`
+        : (event.settings?.location_details?.venue_name || event.settings?.location_details?.city);
+    if (place) {
+        parts.push(place);
+    }
+    return parts.join(' · ');
+};
 
-export const DashBoardSkeleton = () => {
-    return (
-        <div className={classes.skeleton}>
-            <div className={classes.skeletonTiles}>
-                {[...Array(6)].map((_, index) => <Skeleton key={index} height={170} radius={28}/>)}
-            </div>
-            <Skeleton height={420} radius={32}/>
-        </div>
-    );
-}
+// This week against the one before, from the last 14 days.
+const weekTotals = (days: EventDailyStats[] | undefined, pick: (day: EventDailyStats) => number) => {
+    const list = days ?? [];
+    const total = (slice: EventDailyStats[]) => slice.reduce((sum, day) => sum + pick(day), 0);
+    return {current: total(list.slice(-7)), previous: total(list.slice(0, Math.max(0, list.length - 7)))};
+};
 
-// A step of « Préparez votre événement »: a check once done, the action otherwise.
-const SetupStep = ({done, number, title, description, action}: {
-    done: boolean,
-    number: number,
-    title: string,
-    description: string,
-    action?: ReactNode,
-}) => (
-    <div className={classes.step} data-done={done || undefined}>
-        <span className={classes.stepPastille}>
-            {done ? <PublicIcon name="coche" size={18}/> : number}
-        </span>
-        <div className={classes.stepText}>
-            <span className={classes.stepTitle}>{title}</span>
-            <span className={classes.stepDescription}>{description}</span>
+export const DashBoardSkeleton = () => (
+    <div className={classes.skeleton}>
+        <Skeleton height={81} radius="md" width="60%"/>
+        <div className={classes.stats}>
+            {[...Array(4)].map((_, index) => <Skeleton key={index} height={190} radius={28}/>)}
         </div>
-        {action && <div className={classes.stepAction}>{action}</div>}
+        <Skeleton height={400} radius={32}/>
     </div>
 );
 
 /**
- * The event's dashboard, like the organizer's (Figma « Admin · Tableau de bord »): the figures since
- * the start, the sales and revenue over a chosen period and the latest orders.
+ * The event's dashboard (Figma « Admin · Événement · Tableau de bord »): when and where, the steps
+ * left before selling (the former « Commencer » page), the figures, the sales per day, the latest
+ * orders and what needs attention.
  */
 export const EventDashboard = () => {
     const {eventId} = useParams();
-    const eventQuery = useGetEvent(eventId);
-    const {data: me} = useGetMe();
-    const event = eventQuery?.data;
-    const defaultDateRangeRef = useRef<DateRange | null>(null);
-    if (event && !defaultDateRangeRef.current) {
-        defaultDateRangeRef.current = (event.lifecycle_status === EventLifecycleStatus.ENDED
-            || event.status === EventStatus.ARCHIVED) ? 'event' : 'last_30_days';
-    }
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
-    const effectiveDateRange: DateRange = dateRange ?? defaultDateRangeRef.current ?? 'last_30_days';
-
-    const eventStatsQuery = useGetEventStats(eventId, effectiveDateRange, !!defaultDateRangeRef.current);
-    const {data: eventStats} = eventStatsQuery;
+    const location = useLocation();
+    const navigate = useNavigate();
+    const {data: event} = useGetEvent(eventId);
+    const statsQuery = useGetEventStats(eventId, lastDaysPreset(14));
+    const stats = statsQuery.data;
     const ordersQuery = useGetEventOrders(eventId, RECENT_ORDERS);
     const recentOrders = ordersQuery.data?.data;
-    const {data: account, isFetched: accountIsFetched} = useGetAccount();
-    const statusToggleMutation = useUpdateEventStatus();
-    const formatOrderDate = useOrderDate();
+    const {notifications, toHandleCount} = useEventNotifications(eventId, event);
+    const [showConfetti, setShowConfetti] = useState(false);
 
-    const [isChecklistVisible, setIsChecklistVisible] = useState(true);
-    const [isMounted, setIsMounted] = useState(false);
-
-    const showStripeUpgradeNotice = account?.stripe_platform === StripePlatform.Canada.valueOf()
-        && account?.stripe_connect_setup_complete
-        && isHiEvents();
-
+    // A new event lands here (?new_event=true): a little celebration.
     useEffect(() => {
-        setIsMounted(true);
-        const dismissed = window.localStorage.getItem('setupChecklistDismissed-' + eventId);
-        if (dismissed === 'true') {
-            setIsChecklistVisible(false);
+        const params = new URLSearchParams(location.search);
+        if (params.get('new_event') !== 'true') {
+            return;
         }
-    }, []);
+        setShowConfetti(true);
+        const timer = window.setTimeout(() => {
+            params.delete('new_event');
+            navigate({pathname: location.pathname, search: params.toString()}, {replace: true});
+        }, 2000);
+        return () => window.clearTimeout(timer);
+    }, [location.search]);
 
-    const dismissChecklist = () => {
-        setIsChecklistVisible(false);
-        if (isMounted) {
-            window.localStorage.setItem('setupChecklistDismissed-' + eventId, 'true');
-        }
-    };
-
-    const handleStatusToggle = () => {
-        const newStatus = event?.status === 'LIVE' ? 'DRAFT' : 'LIVE';
-        const message = event?.status === 'LIVE'
-            ? t`Are you sure you want to make this event draft? This will make the event invisible to the public`
-            : t`Are you sure you want to make this event public? This will make the event visible to the public`;
-
-        confirmationDialog(message, () => {
-            statusToggleMutation.mutate({
-                eventId,
-                status: newStatus
-            }, {
-                onSuccess: () => {
-                    if (newStatus === 'LIVE') {
-                        trackEvent(AnalyticsEvents.EVENT_PUBLISHED);
-                    }
-                    showSuccess(t`Event status updated`);
-                },
-                onError: (error: any) => {
-                    showStatusChangeError(error, t`Event status update failed. Please try again later`);
-                }
-            });
-        })
+    if (!event || !eventId) {
+        return <DashBoardSkeleton/>;
     }
 
-    const dateRangeText = (eventStats && event)
-        ? `${formatDateWithLocale(eventStats.start_date, 'chartDate', event?.timezone)} – ${formatDateWithLocale(eventStats.end_date, 'chartDate', event?.timezone)}`
-        : '';
-
-    const shouldShowChecklist = (isChecklistVisible && event && accountIsFetched && account?.is_saas_mode_enabled) && (
-        !account?.stripe_connect_setup_complete ||
-        event?.status !== 'LIVE'
-    );
-
-    const firstName = me?.first_name ?? '';
-    const eventTitle = event?.title ?? '';
-    const isLive = event?.status === 'LIVE';
+    const currency = event.currency;
+    const comparison = comparisonLabel(7);
+    const sales = weekTotals(stats?.daily_stats, (day) => Number(day.total_sales_gross));
+    const products = weekTotals(stats?.daily_stats, (day) => Number(day.products_sold));
+    const attendees = weekTotals(stats?.daily_stats, (day) => Number(day.attendees_registered));
 
     return (
         <div className={classes.page}>
+            {showConfetti && <ConfettiAnimation duration={2000}/>}
+
             <header className={classes.header}>
-                <h1 className={classes.title}>{t`Dashboard`}</h1>
-                <p className={classes.subtitle}>
-                    <span className={classes.desktopOnly}>
-                        {firstName
-                            ? t`Welcome back, ${firstName}! Here's how ${eventTitle} is doing.`
-                            : t`Here's how ${eventTitle} is doing.`}
-                    </span>
-                    {firstName && <span className={classes.mobileOnly}>{t`Welcome back, ${firstName}!`}</span>}
-                </p>
+                <div className={classes.headerText}>
+                    <h1 className={classes.title}>{t`Dashboard`}</h1>
+                    <p className={classes.subtitle}>{eventWhenAndWhere(event)}</p>
+                </div>
+                <Button
+                    component="a"
+                    href={eventHomepageUrl(event)}
+                    target="_blank"
+                    rel="noopener"
+                    className={classes.viewButton}
+                    leftSection={<img src={icon('oeil')} alt=""/>}
+                >
+                    {t`View event page`}
+                </Button>
             </header>
 
-            {!event && <DashBoardSkeleton/>}
+            <SetupCard eventId={eventId} event={event}/>
 
-            {showStripeUpgradeNotice && (
-                <section className={classes.notice}>
-                    <span className={classes.noticePastille}><img src={icon('alerte')} alt=""/></span>
-                    <div className={classes.noticeText}>
-                        <h2>{t`Important: Stripe reconnection required`}</h2>
-                        <p>{t`We've relocated our headquarters to Ireland. As a result, we need you to reconnect your Stripe account. This quick process takes just a few minutes. Your sales and existing data remain completely unaffected.`}</p>
-                        <p>{t`Sorry for the inconvenience.`}</p>
-                    </div>
-                    <StripeConnectButton
-                        className={classes.noticeButton}
-                        buttonText={t`Reconnect Stripe →`}
-                        variant="filled"
-                        size="md"
-                        platform="ie"
-                    />
-                </section>
-            )}
+            <section className={classNames(classes.stats, {[classes.statsLoading]: statsQuery.isFetching})}>
+                <StatTile
+                    tone="sales"
+                    iconName="ventes"
+                    label={t`Sales`}
+                    value={formatCurrency(stats?.total_gross_sales ?? 0, currency)}
+                    current={sales.current}
+                    previous={sales.previous}
+                    comparison={comparison}
+                    formatAmount={(amount) => formatCurrency(amount, currency)}
+                />
+                <StatTile
+                    tone="products"
+                    iconName="produits"
+                    label={t`Products Sold`}
+                    value={String(formatNumber(stats?.total_products_sold ?? 0))}
+                    current={products.current}
+                    previous={products.previous}
+                    comparison={comparison}
+                />
+                <StatTile
+                    tone="attendees"
+                    iconName="participants"
+                    label={t`Attendees`}
+                    value={String(formatNumber(stats?.total_attendees_registered ?? 0))}
+                    current={attendees.current}
+                    previous={attendees.previous}
+                    comparison={comparison}
+                />
+                <StatTile
+                    tone="views"
+                    iconSrc={eventIcon('vues')}
+                    label={t`Page views`}
+                    value={String(formatNumber(stats?.total_views ?? 0))}
+                />
+            </section>
 
-            {event && (<>
-                {shouldShowChecklist && (
-                    <section className={classNames(classes.card, classes.setupCard)}>
-                        <div className={classes.sectionTitle}>
-                            <h2>{t`Get your event ready`}</h2>
-                            <UnstyledButton className={classes.closeButton} onClick={dismissChecklist}
-                                            aria-label={t`Hide`} title={t`Hide`}>
-                                <img src={icon('fermer')} alt=""/>
-                            </UnstyledButton>
-                        </div>
-                        <p className={classes.cardText}>
-                            {t`Complete these steps to start selling tickets for your event.`}
-                        </p>
-                        <div className={classes.steps}>
-                            <SetupStep
-                                number={1}
-                                done={isLive}
-                                title={t`Make your event live`}
-                                description={t`Your event must be live before you can sell tickets to attendees.`}
-                                action={(
-                                    <Button onClick={handleStatusToggle}
-                                            variant={isLive ? 'outline' : 'filled'}
-                                            className={isLive ? classes.outlineButton : classes.primaryButton}>
-                                        {isLive ? t`Unpublish Event` : t`Publish Event`}
-                                    </Button>
-                                )}
-                            />
-                            <SetupStep
-                                number={2}
-                                done={!!account?.stripe_connect_setup_complete}
-                                title={t`Connect payment processing`}
-                                description={t`Link your Stripe account to receive funds from ticket sales.`}
-                                action={!account?.stripe_connect_setup_complete && (
-                                    <Button component={NavLink} to="/account/payment"
-                                            className={classes.primaryButton}>
-                                        {account?.stripe_account_id ? t`Complete Stripe Setup` : t`Connect to Stripe`}
-                                    </Button>
-                                )}
-                            />
-                        </div>
-                    </section>
-                )}
+            <SalesChart eventId={eventId} currency={currency}/>
 
-                <StatBoxes/>
-
-                <section className={classes.section}>
-                    <div className={classes.sectionHeader}>
-                        <h2 className={classes.sectionHeading}>{t`Sales over time`}</h2>
-                        <Menu position="bottom-end" width={320} withinPortal>
-                            <Menu.Target>
-                                <UnstyledButton className={classes.selector}>
-                                    <img src={icon('periode')} alt="" className={classes.desktopOnly}/>
-                                    <span className={classes.desktopOnly}>{dateRangeLabel(effectiveDateRange)}</span>
-                                    <span className={classes.mobileOnly}>{dateRangeLabel(effectiveDateRange, true)}</span>
-                                    <img src={icon('chevron-bas')} alt=""/>
-                                </UnstyledButton>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                {DATE_RANGES.map((range) => (
-                                    <Menu.Item
-                                        key={range}
-                                        onClick={() => setDateRange(range)}
-                                        data-selected={range === effectiveDateRange || undefined}
-                                        className={classes.periodOption}
-                                    >
-                                        {dateRangeLabel(range)}
-                                    </Menu.Item>
-                                ))}
-                            </Menu.Dropdown>
-                        </Menu>
-                    </div>
-
-                    <div className={classNames(classes.charts, {[classes.chartsLoading]: eventStatsQuery.isFetching})}>
-                        <section className={classNames(classes.card, classes.chartCard)}>
-                            <div className={classes.sectionTitle}>
-                                <h2>{t`Product Sales`}</h2>
-                                <span className={classes.dateRange}>{dateRangeText}</span>
-                            </div>
-                            <AreaChart
-                                h={300}
-                                data={eventStats?.daily_stats.map(stat => ({
-                                    date: formatDateWithLocale(stat.date, 'chartDate', event.timezone),
-                                    orders_created: stat.orders_created,
-                                    products_sold: stat.products_sold,
-                                    attendees_registered: stat.attendees_registered,
-                                })) || []}
-                                dataKey="date"
-                                withLegend
-                                legendProps={{verticalAlign: 'bottom', height: 50}}
-                                series={[
-                                    {name: 'orders_created', color: '#fa7853', label: t`Completed Orders`},
-                                    {name: 'products_sold', color: '#e3ad92', label: t`Products Sold`},
-                                    {name: 'attendees_registered', color: '#352924', label: t`Attendees Registered`},
-                                ]}
-                                curveType="bump"
-                                tickLine="none"
-                                className={classes.chart}
-                                areaChartProps={{syncId: 'events'}}
-                            />
-                        </section>
-
-                        <section className={classNames(classes.card, classes.chartCard)}>
-                            <div className={classes.sectionTitle}>
-                                <h2>{t`Revenue`}</h2>
-                                <span className={classes.dateRange}>{dateRangeText}</span>
-                            </div>
-                            <AreaChart
-                                h={300}
-                                data={eventStats?.daily_stats.map(stat => ({
-                                    date: formatDateWithLocale(stat.date, 'chartDate', event.timezone),
-                                    total_fees: stat.total_fees,
-                                    total_sales_gross: stat.total_sales_gross,
-                                    total_tax: stat.total_tax,
-                                    total_refunded: stat.total_refunded,
-                                })) || []}
-                                dataKey="date"
-                                valueFormatter={(value) => formatCurrency(value, event.currency)}
-                                withLegend
-                                legendProps={{verticalAlign: 'bottom', height: 50}}
-                                series={[
-                                    {name: 'total_sales_gross', label: t`Gross Sales`, color: '#fa7853'},
-                                    {name: 'total_fees', label: t`Total Fees`, color: '#e3ad92'},
-                                    {name: 'total_tax', label: t`Total Tax`, color: '#352924'},
-                                    {name: 'total_refunded', label: t`Total Refunded`, color: '#9a3b25'},
-                                ]}
-                                curveType="natural"
-                                tickLine="none"
-                                className={classes.chart}
-                                areaChartProps={{syncId: 'events'}}
-                            />
-                        </section>
-                    </div>
-                </section>
-
-                <section className={classNames(classes.card, classes.ordersCard)}>
+            <div className={classes.bottom}>
+                <section className={classNames(classes.card, classes.listCard)}>
                     <div className={classes.sectionTitle}>
-                        <h2>{t`Recent Orders`}</h2>
+                        <h2 className={classes.sectionHeading}>{t`Recent Orders`}</h2>
                         <NavLink to={`/manage/event/${eventId}/orders`} className={classes.seeAll}>
                             {t`View all`}
                             <img src={icon('fleche')} alt=""/>
                         </NavLink>
                     </div>
-                    {!recentOrders && <Skeleton height={180} radius={20}/>}
+                    {!recentOrders && <Skeleton height={300} radius={20}/>}
                     {recentOrders && recentOrders.length === 0 && (
-                        <div className={classes.empty}>
-                            <p>{t`When customers purchase tickets, their orders will appear here.`}</p>
-                        </div>
+                        <p className={classes.empty}>{t`When customers purchase tickets, their orders will appear here.`}</p>
                     )}
                     {recentOrders && recentOrders.length > 0 && (
-                        <div className={classes.orders} role="table" aria-label={t`Recent Orders`}>
-                            <div className={classes.tableHead} role="row">
-                                <span className={classes.colCustomer} role="columnheader">{t`Customer`}</span>
-                                <span className={classes.colTickets} role="columnheader">{t`Tickets`}</span>
-                                <span className={classes.colAmount} role="columnheader">{t`Amount`}</span>
-                                <span className={classes.colDate} role="columnheader">{t`Date`}</span>
-                                <span className={classes.colStatus} role="columnheader">{t`Status`}</span>
-                            </div>
+                        <ScrollList className={classes.ordersList}>
                             {recentOrders.map((order) => {
                                 const name = `${order.first_name} ${order.last_name}`.trim();
+                                const status = orderStatus(order);
 
                                 return (
-                                    <NavLink key={order.id} role="row"
-                                             to={`/manage/event/${eventId}/orders#order-${order.id}`}
+                                    <NavLink key={order.id} to={`/manage/event/${eventId}/orders#order-${order.id}`}
                                              className={classes.orderRow}>
-                                        <span className={classes.colCustomer} role="cell">
-                                            <span className={classes.avatar}>{getInitials(name || '?')}</span>
-                                            <span className={classes.customerText}>
-                                                <span className={classes.customerName}>{name}</span>
-                                                <span className={classes.orderId}>#{order.public_id}</span>
-                                            </span>
+                                        <span className={classes.avatar}>{getInitials(name || '?')}</span>
+                                        <span className={classes.orderText}>
+                                            <span className={classes.orderName}>{name}</span>
+                                            <span className={classes.orderContents}>{orderContents(order)}</span>
                                         </span>
-                                        <span className={classes.colTickets} role="cell">{ticketCount(order)}</span>
-                                        <span className={classes.colAmount} role="cell">
-                                            {formatCurrency(order.total_gross, order.currency)}
-                                            <span className={classes.orderDateMobile}>{formatOrderDate(order.created_at)}</span>
-                                        </span>
-                                        <span className={classes.colDate} role="cell">{formatOrderDate(order.created_at)}</span>
-                                        <span className={classes.colStatus} role="cell">
-                                            <OrderStatusBadge order={order}/>
+                                        <span className={classes.orderEnd}>
+                                            <span className={classes.orderAmount}>{formatCurrency(order.total_gross, order.currency)}</span>
+                                            <span className={classes.tag} data-tone={status.tone}>{status.label}</span>
                                         </span>
                                     </NavLink>
                                 );
                             })}
-                        </div>
+                        </ScrollList>
                     )}
                 </section>
-            </>)}
+
+                <section className={classNames(classes.card, classes.listCard)}>
+                    <div className={classes.sectionTitle}>
+                        <h2 className={classes.sectionHeading}>
+                            {t`Notifications`}
+                            {toHandleCount > 0 && <span className={classes.countPastille}>{toHandleCount}</span>}
+                        </h2>
+                    </div>
+                    {notifications.length > 0 ? (
+                        <ScrollList className={`${dashboardClasses.notificationsList} ${dashboardClasses.notificationsExpanded}`}>
+                            {notifications.map((notification) => (
+                                <NotificationItem key={notification.id} notification={notification}/>
+                            ))}
+                        </ScrollList>
+                    ) : (
+                        <p className={classes.empty}>{t`Nothing to handle for now.`}</p>
+                    )}
+                </section>
+            </div>
         </div>
-    )
+    );
 };
 
 export default EventDashboard;

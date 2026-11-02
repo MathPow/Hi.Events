@@ -80,8 +80,8 @@ export const readPeriod = (): number | null => {
     }
 };
 
-// A list that scrolls inside its card, with a fade while there is more below.
-const ScrollList = ({children, className}: { children: ReactNode, className?: string }) => {
+// A list that scrolls inside its card, with a fade while there is more below (also on the event's dashboard).
+export const ScrollList = ({children, className}: { children: ReactNode, className?: string }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [moreBelow, setMoreBelow] = useState(false);
 
@@ -187,7 +187,7 @@ const notificationIcon = (notification: DashboardNotification) => {
     }
 };
 
-const NotificationItem = ({notification}: { notification: DashboardNotification }) => (
+export const NotificationItem = ({notification}: { notification: DashboardNotification }) => (
     <div className={classNames(classes.notification, {[classes.notificationRead]: !notification.unread})}>
         <span className={classes.notificationPastille}
               data-urgent={notification.kind === 'message' && notification.unread ? '' : undefined}>

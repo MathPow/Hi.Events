@@ -10,18 +10,16 @@ type PriceDisplayMode = 'INCLUSIVE' | 'EXCLUSIVE';
 
 interface Display {
     price_display_mode: PriceDisplayMode;
-    hide_getting_started_page: boolean;
     allow_attendee_self_edit: boolean;
 }
 
-// « Affichage et options »: how prices show, the « Commencer » page and the attendees' self-service.
+// « Affichage et options »: how prices show and the attendees' self-service.
 export const DisplayCard = ({eventId, settings}: { eventId: IdParam, settings: EventSettings }) => {
     const updateSettings = useUpdateEventSettings();
     const {form, choose} = useAutosaveForm<Display>({
         key: 'display',
         initialValues: {
             price_display_mode: settings.price_display_mode ?? 'EXCLUSIVE',
-            hide_getting_started_page: !!settings.hide_getting_started_page,
             allow_attendee_self_edit: !!settings.allow_attendee_self_edit,
         },
         save: (changes) => updateSettings.mutateAsync({eventId, eventSettings: changes}),
@@ -78,12 +76,6 @@ export const DisplayCard = ({eventId, settings}: { eventId: IdParam, settings: E
                 hint={t`Allow attendees to update their ticket information (name, email) via a secure link sent with their order confirmation.`}
                 checked={form.values.allow_attendee_self_edit}
                 onChange={(checked) => choose('allow_attendee_self_edit', checked)}
-            />
-            <ToggleRow
-                label={t`Hide getting started page`}
-                hint={t`Hide the getting started page from the sidebar`}
-                checked={form.values.hide_getting_started_page}
-                onChange={(checked) => choose('hide_getting_started_page', checked)}
             />
         </SettingsCard>
     );
