@@ -1,5 +1,5 @@
 import {Button, Loader} from "@mantine/core";
-import {IconTicket} from "@tabler/icons-react";
+import {IconCheck} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {Attendee} from "../../../types.ts";
 import classes from "../../layouts/CheckIn/CheckIn.module.scss";
@@ -9,19 +9,24 @@ interface AttendeeListProps {
     attendees: Attendee[] | undefined;
     products: { id: number; title: string; }[] | undefined;
     isLoading: boolean;
-    isCheckInPending: boolean;
-    isDeletePending: boolean;
+    // The attendee being checked in or out, and whether any check-in is under way.
+    pendingAttendeeId?: string;
+    isBusy: boolean;
     allowOrdersAwaitingOfflinePaymentToCheckIn: boolean;
     onCheckInToggle: (attendee: Attendee) => void;
     onClickSound?: () => void;
 }
 
+const initials = (attendee: Attendee) =>
+    `${attendee.first_name?.[0] ?? ''}${attendee.last_name?.[0] ?? ''}`.toUpperCase() || '?';
+
+// The attendees of the check-in list, in one card: name, ticket, status and the check-in button.
 export const AttendeeList = ({
                                  attendees,
                                  products,
                                  isLoading,
-                                 isCheckInPending,
-                                 isDeletePending,
+                                 pendingAttendeeId,
+                                 isBusy,
                                  allowOrdersAwaitingOfflinePaymentToCheckIn,
                                  onCheckInToggle,
                                  onClickSound
@@ -42,75 +47,63 @@ export const AttendeeList = ({
         return t`Check In`;
     };
 
-    const getButtonColor = (attendee: Attendee) => {
-        if (attendee.check_in || attendee.status === 'CANCELLED') {
-            return 'red';
-        }
-        if (attendee.status === 'AWAITING_PAYMENT' && !allowOrdersAwaitingOfflinePaymentToCheckIn) {
-            return 'gray';
-        }
-        return 'teal';
-    };
-
     if (isLoading || !attendees || !products) {
         return (
-            <div className={classes.loading}>
-                <Loader size={40}/>
+            <div className={classes.listCard}>
+                <div className={classes.loading}>
+                    <Loader size={32} color="var(--dehors-brun)"/>
+                </div>
             </div>
         );
     }
 
     if (attendees.length === 0) {
         return (
-            <div className={classes.noResults}>
-                No attendees to show.
+            <div className={classes.listCard}>
+                <p className={classes.noResults}>{t`No attendees to show.`}</p>
             </div>
         );
     }
 
     return (
-        <div className={classes.attendees}>
+        <div className={classes.listCard}>
             {attendees.map(attendee => {
-                const isAttendeeAwaitingPayment = attendee.status === 'AWAITING_PAYMENT';
+                const isCancelled = attendee.status === 'CANCELLED';
+                const isAwaitingPayment = attendee.status === 'AWAITING_PAYMENT';
+                const product = products.find(product => product.id === attendee.product_id)?.title;
 
                 return (
-                    <div className={classes.attendee} key={attendee.public_id}>
+                    <div className={classes.attendee} key={attendee.public_id} data-checked-in={!!attendee.check_in || undefined}>
+                        <span className={classes.avatar} aria-hidden>{initials(attendee)}</span>
                         <div className={classes.details}>
-                            <div>
-                                <b>{attendee.first_name} {attendee.last_name}</b>
-                                {' '}<BibNumber bibNumber={attendee.bib_number} size="xs"/>
+                            <div className={classes.nameRow}>
+                                <span className={classes.name}>{attendee.first_name} {attendee.last_name}</span>
+                                <BibNumber bibNumber={attendee.bib_number} size="xs"/>
+                                {attendee.check_in && (
+                                    <span className={classes.tag} data-tone="ok">
+                                        <IconCheck size={14} stroke={2.5}/>
+                                        {t({message: 'Checked in', context: 'attendee check-in'})}
+                                    </span>
+                                )}
+                                {isCancelled && <span className={classes.tag} data-tone="problem">{t`Ticket Cancelled`}</span>}
+                                {isAwaitingPayment && <span className={classes.tag} data-tone="waiting">{t`Awaiting payment`}</span>}
                             </div>
-                            {attendee.status === 'CANCELLED' ? (
-                                <div style={{fontSize: '0.8em', color: 'red'}}>
-                                    {t`Ticket Cancelled`}
-                                </div>
-                            ) : null}
-                            {isAttendeeAwaitingPayment && (
-                                <div className={classes.awaitingPayment}>
-                                    {t`Awaiting payment`}
-                                </div>
-                            )}
-                            <div>
-                                <span>{attendee.public_id}</span>
-                            </div>
-                            <div className={classes.product}>
-                                <IconTicket
-                                    size={15}/> {products.find(product => product.id === attendee.product_id)?.title}
-                            </div>
+                            <span className={classes.meta}>
+                                {product && <>{product} · </>}{attendee.public_id}
+                            </span>
                         </div>
-                        <div className={classes.actions}>
-                            <Button
-                                onClick={() => {
-                                    onClickSound?.();
-                                    onCheckInToggle(attendee);
-                                }}
-                                disabled={isCheckInPending || isDeletePending || attendee.status === 'CANCELLED'}
-                                loading={isCheckInPending || isDeletePending}
-                                color={getButtonColor(attendee)}
-                            >
-                                {checkInButtonText(attendee)}
-                            </Button>
-                        </div>
+                        <Button
+                            className={attendee.check_in ? classes.checkOutButton : classes.checkInButton}
+                            onClick={() => {
+                                onClickSound?.();
+                                onCheckInToggle(attendee);
+                            }}
+                            data-blocked={(isAwaitingPayment && !allowOrdersAwaitingOfflinePaymentToCheckIn) || undefined}
+                            disabled={isBusy || isCancelled}
+                            loading={pendingAttendeeId === attendee.public_id}
+                        >
+                            {checkInButtonText(attendee)}
+                        </Button>
                     </div>
                 );
             })}

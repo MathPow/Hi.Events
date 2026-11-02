@@ -7,28 +7,24 @@ import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {t, Trans} from "@lingui/macro";
 import {AxiosError} from "axios";
 import classes from "./CheckIn.module.scss";
-import {ActionIcon, Modal} from "@mantine/core";
+import {Button, Modal, UnstyledButton} from "@mantine/core";
 import {SearchBar} from "../../common/SearchBar";
-import {IconInfoCircle, IconQrcode, IconShoppingCart, IconVolume, IconVolumeOff} from "@tabler/icons-react";
+import {IconQrcode, IconShoppingCart, IconVolume, IconVolumeOff, IconWifiOff} from "@tabler/icons-react";
 import {QRScannerComponent} from "../../common/AttendeeCheckInTable/QrScanner.tsx";
 import {useGetCheckInListAttendees} from "../../../queries/useGetCheckInListAttendeesPublic.ts";
 import {useCreateCheckInPublic} from "../../../mutations/useCreateCheckInPublic.ts";
 import {useDeleteCheckInPublic} from "../../../mutations/useDeleteCheckInPublic.ts";
 import {NoResultsSplash} from "../../common/NoResultsSplash";
 import {Countdown} from "../../common/Countdown";
-import Truncate from "../../common/Truncate";
-import {Header} from "../../common/Header";
 import {publicCheckInClient} from "../../../api/check-in.client.ts";
 import {isSsr} from "../../../utilites/helpers.ts";
 import {AttendeeList} from "../../common/CheckIn/AttendeeList";
 import {CheckInOptionsModal} from "../../common/CheckIn/CheckInOptionsModal";
 import {ScannerSelectionModal} from "../../common/CheckIn/ScannerSelectionModal";
-import {CheckInInfoModal} from "../../common/CheckIn/CheckInInfoModal";
 import {HidScannerStatus} from "../../common/CheckIn/HidScannerStatus";
 import {PinPromptModal} from "../../common/CheckIn/PinPromptModal";
 import {DoorSaleModal} from "../../common/CheckIn/DoorSaleModal";
 import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/checkInPin.ts";
-import {Button} from "@mantine/core";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 
 const CheckIn = () => {
@@ -64,12 +60,6 @@ const CheckIn = () => {
     const [hasPin, setHasPin] = useState(() => Boolean(getCheckInPin(checkInListShortId)));
     const [doorSaleOpen, doorSaleHandlers] = useDisclosure(false);
     const [checkInModalOpen, checkInModalHandlers] = useDisclosure(false);
-    const [infoModalOpen, infoModalHandlers] = useDisclosure(false, {
-            onOpen: () => {
-                CheckInListQuery.refetch();
-            }
-        }
-    );
 
     const products = checkInList?.products;
     const queryFilters: QueryFilters = {
@@ -159,6 +149,7 @@ const CheckIn = () => {
                 }
                 showSuccess(<Trans>{attendee.first_name} <b>checked in</b> successfully</Trans>);
                 playSuccessSound();
+                CheckInListQuery.refetch();
                 checkInModalHandlers.close();
                 setSelectedAttendee(null);
             },
@@ -185,6 +176,7 @@ const CheckIn = () => {
                 onSuccess: () => {
                     showSuccess(<Trans>{attendee.first_name} <b>checked out</b> successfully</Trans>);
                     playSuccessSound();
+                    CheckInListQuery.refetch();
                 },
                 onError: (error) => {
                     playErrorSound();
@@ -425,82 +417,115 @@ const CheckIn = () => {
             />)
     }
 
+    const checkedIn = checkInList?.checked_in_attendees ?? 0;
+    const total = checkInList?.total_attendees ?? 0;
+    const percentage = total > 0 ? Math.min(100, checkedIn / total * 100) : 0;
+    // The attendee whose button is working (the others stay usable-looking but wait their turn).
+    const pendingAttendeeId = checkInMutation.isPending
+        ? String(checkInMutation.variables?.attendeePublicId)
+        : deleteCheckInMutation.isPending
+            ? attendees?.find(attendee => attendee.check_in?.short_id === deleteCheckInMutation.variables?.checkInShortId)?.public_id
+            : undefined;
+
     return (
-        <div className={classes.container}>
-            <Header
-                fullWidth
-                variant={'floating'}
-                rightContent={(
-                    <>
+        <div className={classes.page}>
+            <div className={classes.inner}>
+                <header className={classes.top}>
+                    <span className={classes.wordmark} aria-hidden>
+                        <span>{'Billetterie'}</span>
+                        <span>{'Dehors'}</span>
+                    </span>
+                    <div className={classes.topActions}>
                         {!networkStatus.online && (
-                            <div className={classes.offline}/>
+                            <span className={classes.offline}>
+                                <IconWifiOff size={16} stroke={2.25}/>
+                                {t`Offline`}
+                            </span>
                         )}
-                        <ActionIcon
-                            display={'flex'}
-                            variant={'transparent'}
-                            onClick={() => infoModalHandlers.open()}
+                        <UnstyledButton
+                            className={classes.roundButton}
+                            aria-label={isSoundOn ? t`Turn sound off` : t`Turn sound on`}
+                            aria-pressed={isSoundOn}
+                            onClick={() => setIsSoundOn(!isSoundOn)}
                         >
-                            <IconInfoCircle/>
-                        </ActionIcon>
-                    </>
-                )}/>
-            <HidScannerStatus
-                isActive={hidScannerMode}
-                pageHasFocus={pageHasFocus}
-                onDisable={() => setHidScannerMode(false)}
-            />
-            <div className={classes.header}>
-                <div>
-                    <h4 className={classes.title}>
-                        <Truncate text={checkInList?.name} length={30}/>
-                    </h4>
-                </div>
-                <div className={classes.search}>
-                    <div className={classes.searchBar}>
+                            {isSoundOn ? <IconVolume size={22}/> : <IconVolumeOff size={22}/>}
+                        </UnstyledButton>
+                    </div>
+                </header>
+
+                <section className={classes.hero}>
+                    {event?.title && <span className={classes.overline}>{event.title}</span>}
+                    <h1 className={classes.title}>{checkInList?.name}</h1>
+                    {checkInList?.description && <p className={classes.description}>{checkInList.description}</p>}
+                    {checkInList && isUnlocked && (
+                        <div className={classes.progress}>
+                            <div className={classes.count}>
+                                <span className={classes.countValue}>{checkedIn}</span>
+                                <span className={classes.countTotal}>/ {total}</span>
+                                <span className={classes.countLabel}>
+                                    {t({message: 'checked in', context: 'check-in list count'})}
+                                </span>
+                            </div>
+                            <span
+                                className={classes.bar}
+                                data-level={total > 0 && checkedIn >= total ? 'done' : undefined}
+                                role="progressbar"
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                                aria-valuenow={Math.round(percentage)}
+                            >
+                                <span style={{width: `${percentage}%`}}/>
+                            </span>
+                        </div>
+                    )}
+                </section>
+
+                <div className={classes.toolbar}>
+                    <div className={classes.search}>
                         <SearchBar
-                            className={classes.searchInput}
-                            mb={20}
                             value={searchQuery}
                             onChange={(event) => setSearchQuery(event.target.value)}
                             onClear={() => setSearchQuery('')}
                             placeholder={t`Search by name, order #, attendee # or email...`}
                         />
-                        <Button variant={'light'} size={'md'} className={classes.scanButton}
-                                onClick={() => setScannerSelectionOpen(true)} leftSection={<IconQrcode/>}>
-                            {t`Scan`}
-                        </Button>
-                        <ActionIcon 
-                            aria-label={isSoundOn ? t`Turn sound off` : t`Turn sound on`} 
-                            variant={'light'} 
-                            size={'xl'}
-                            onClick={() => setIsSoundOn(!isSoundOn)}
-                        >
-                            {isSoundOn ? <IconVolume size={24}/> : <IconVolumeOff size={24}/>}
-                        </ActionIcon>
-                        <ActionIcon aria-label={t`Scan`} variant={'light'} size={'xl'}
-                                    className={classes.scanIcon}
-                                    onClick={() => setScannerSelectionOpen(true)}>
-                            <IconQrcode size={32}/>
-                        </ActionIcon>
-                        {checkInList?.allow_door_sales && (
-                            <ActionIcon aria-label={t`Sell a ticket`} variant={'light'} size={'xl'}
-                                        onClick={() => doorSaleHandlers.open()}>
-                                <IconShoppingCart size={28}/>
-                            </ActionIcon>
-                        )}
                     </div>
+                    <Button
+                        className={classes.scanButton}
+                        leftSection={<IconQrcode size={22}/>}
+                        aria-label={t`Scan`}
+                        onClick={() => setScannerSelectionOpen(true)}
+                    >
+                        <span className={classes.buttonLabel}>{t`Scan`}</span>
+                    </Button>
+                    {checkInList?.allow_door_sales && (
+                        <Button
+                            className={classes.saleButton}
+                            leftSection={<IconShoppingCart size={22}/>}
+                            aria-label={t`Sell a ticket`}
+                            onClick={() => doorSaleHandlers.open()}
+                        >
+                            <span className={classes.buttonLabel}>{t`Sell a ticket`}</span>
+                        </Button>
+                    )}
                 </div>
+
+                <HidScannerStatus
+                    isActive={hidScannerMode}
+                    pageHasFocus={pageHasFocus}
+                    onDisable={() => setHidScannerMode(false)}
+                />
+
+                <AttendeeList
+                    attendees={attendees}
+                    products={products}
+                    isLoading={attendeesQuery.isLoading}
+                    pendingAttendeeId={pendingAttendeeId}
+                    isBusy={checkInMutation.isPending || deleteCheckInMutation.isPending}
+                    allowOrdersAwaitingOfflinePaymentToCheckIn={allowOrdersAwaitingOfflinePaymentToCheckIn || false}
+                    onCheckInToggle={handleCheckInToggle}
+                    onClickSound={playClickSound}
+                />
             </div>
-            <AttendeeList
-                attendees={attendees}
-                products={products}
-                isLoading={attendeesQuery.isFetching}
-                isCheckInPending={checkInMutation.isPending}
-                isDeletePending={deleteCheckInMutation.isPending}
-                allowOrdersAwaitingOfflinePaymentToCheckIn={allowOrdersAwaitingOfflinePaymentToCheckIn || false}
-                onCheckInToggle={handleCheckInToggle}
-                onClickSound={playClickSound}
-            />
             <CheckInOptionsModal
                 isOpen={checkInModalOpen}
                 attendee={selectedAttendee}
@@ -545,17 +570,15 @@ const CheckIn = () => {
                     </Modal.Content>
                 </Modal.Root>
             )}
-            <CheckInInfoModal
-                isOpen={infoModalOpen}
-                checkInList={checkInList}
-                onClose={infoModalHandlers.close}
-            />
             {checkInList?.allow_door_sales && (
                 <DoorSaleModal
                     isOpen={doorSaleOpen}
                     checkInListShortId={checkInListShortId as string}
                     currency={event?.currency as string}
-                    onClose={doorSaleHandlers.close}
+                    onClose={() => {
+                        doorSaleHandlers.close();
+                        CheckInListQuery.refetch();
+                    }}
                 />
             )}
             <PinPromptModal

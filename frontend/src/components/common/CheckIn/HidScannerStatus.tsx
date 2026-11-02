@@ -2,6 +2,7 @@ import {Button} from "@mantine/core";
 import {IconScan, IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {showSuccess} from "../../../utilites/notifications.tsx";
+import classes from "../../layouts/CheckIn/CheckIn.module.scss";
 
 interface HidScannerStatusProps {
     isActive: boolean;
@@ -9,6 +10,7 @@ interface HidScannerStatusProps {
     onDisable: () => void;
 }
 
+// The USB scanner banner: green while it listens, yellow once the page lost the focus.
 export const HidScannerStatus = ({
     isActive,
     pageHasFocus,
@@ -17,38 +19,22 @@ export const HidScannerStatus = ({
     if (!isActive) return null;
 
     return (
-        <div style={{
-            backgroundColor: pageHasFocus ? '#12b886' : '#ffa94d',
-            color: 'white',
-            padding: '8px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: '14px',
-            fontWeight: 500,
-            transition: 'background-color 0.2s ease',
-            marginTop: '-1px',
-        }}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <IconScan size={18}/>
-                <span>
-                    {pageHasFocus
-                        ? 'USB Scanner Active - Ready to Scan'
-                        : 'USB Scanner Paused - Click anywhere to resume scanning'}
-                </span>
-            </div>
+        <div className={classes.scannerStatus} data-tone={pageHasFocus ? 'ok' : 'waiting'} role="status">
+            <IconScan size={20} className={classes.scannerStatusIcon}/>
+            <span className={classes.scannerStatusText}>
+                {pageHasFocus
+                    ? t`USB scanner on: scan a ticket.`
+                    : t`USB scanner paused: click anywhere on the page to resume.`}
+            </span>
             <Button
-                size="xs"
-                variant="white"
-                color={pageHasFocus ? "teal" : "orange"}
-                leftSection={<IconX size={14}/>}
-                miw={95}
+                className={classes.scannerStatusButton}
+                leftSection={<IconX size={16}/>}
                 onClick={() => {
                     onDisable();
                     showSuccess(t`USB Scanner mode deactivated`);
                 }}
             >
-                Disable
+                {t({message: 'Turn off', context: 'usb scanner'})}
             </Button>
         </div>
     );
