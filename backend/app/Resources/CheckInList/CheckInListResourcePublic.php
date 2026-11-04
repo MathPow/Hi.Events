@@ -18,6 +18,7 @@ class CheckInListResourcePublic extends JsonResource
             'id' => $this->getId(),
             'short_id' => $this->getShortId(),
             'requires_pin' => $this->getPin() !== null && $this->getPin() !== '',
+            'pin_length' => strlen((string)$this->getPin()),
             'allow_door_sales' => $this->getAllowDoorSales(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),

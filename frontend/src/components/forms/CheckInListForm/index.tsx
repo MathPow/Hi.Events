@@ -1,91 +1,159 @@
-import {Alert, Switch, Textarea, TextInput} from "@mantine/core";
+import {Button, Switch, Textarea, TextInput} from "@mantine/core";
+import {IconCheck} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {UseFormReturnType} from "@mantine/form";
+import {useMemo} from "react";
 import {CheckInListRequest, ProductCategory, ProductType} from "../../../types.ts";
-import {InputGroup} from "../../common/InputGroup";
-import {ProductSelector} from "../../common/ProductSelector";
-import {useEffect, useMemo} from "react";
-import {IconInfoCircle} from "@tabler/icons-react";
+import {DateTimeField} from "../../common/DateTimeField";
+import settings from "../../routes/organizer/Settings/Settings.module.scss";
+import classes from "./CheckInListForm.module.scss";
 
 interface CheckInListFormProps {
     form: UseFormReturnType<CheckInListRequest>;
     productCategories: ProductCategory[];
+    // Editing: a new PIN signs out the phones already open.
+    isEditing?: boolean;
 }
 
-export const CheckInListForm = ({form, productCategories}: CheckInListFormProps) => {
-    const tickets = useMemo(() => {
-        return productCategories
-            .flatMap(category => category.products || [])
-            .filter(product => product.product_type === ProductType.Ticket);
-    }, [productCategories]);
+// The scanner's code: 4 digits, drawn by the browser's secure generator.
+export const generateScannerPin = () => {
+    const [value] = crypto.getRandomValues(new Uint32Array(1));
+    return String(value % 10000).padStart(4, '0');
+};
 
-    useEffect(() => {
-        if (tickets.length === 1 && (!form.values.product_ids || form.values.product_ids.length === 0)) {
-            form.setFieldValue('product_ids', [String(tickets[0].id)]);
-        }
-    }, [tickets]);
+export const ticketIds = (productCategories: ProductCategory[]) => productCategories
+    .flatMap(category => category.products || [])
+    .filter(product => product.product_type === ProductType.Ticket)
+    .map(product => String(product.id));
+
+/**
+ * Figma « Nouvelle liste d'entrée » (552:3244): the name, the description for the staff, the tickets
+ * accepted, the opening hours with the homemade calendar, the scanner's PIN and on-site sales.
+ */
+export const CheckInListForm = ({form, productCategories, isEditing}: CheckInListFormProps) => {
+    const tickets = useMemo(() => productCategories
+        .flatMap(category => category.products || [])
+        .filter(product => product.product_type === ProductType.Ticket), [productCategories]);
+
+    const selected = (form.values.product_ids ?? []).map(String);
+
+    const toggleTicket = (id: string) => {
+        form.setFieldValue('product_ids', selected.includes(id) ? selected.filter(item => item !== id) : [...selected, id]);
+        form.clearFieldError('product_ids');
+    };
+
+    const pin = form.values.pin ?? '';
 
     return (
-        <>
-            <Alert mb={20} icon={<IconInfoCircle size={16}/>} color="blue" variant="light">
-                {t`Check-in lists let you control entry across days, areas, or ticket types. You can share a secure check-in link with staff — no account required.`}
-            </Alert>
-
+        <div className={classes.form}>
             <TextInput
+                className={settings.field}
                 {...form.getInputProps('name')}
                 required
-                label={t`Name`}
-                placeholder={t`VIP check-in list`}
-            />
-
-            <ProductSelector
-                label={t`Which tickets should be associated with this check-in list?`}
-                placeholder={t`Select tickets`}
-                productCategories={productCategories}
-                form={form}
-                productFieldName="product_ids"
-                includedProductTypes={[ProductType.Ticket]}
+                withAsterisk={false}
+                label={t`List name`}
+                placeholder={t`E.g.: Main entrance`}
             />
 
             <Textarea
+                className={settings.field}
                 {...form.getInputProps('description')}
-                label={t`Description for check-in staff`}
-                placeholder={t`Add a description for this check-in list`}
-                description={t`Visible to check-in staff only. Helps identify this list during check-in.`}
-                minRows={2}
+                label={(
+                    <>
+                        {t`Description`}
+                        <span className={classes.labelNote}>{t`visible in the scanner`}</span>
+                    </>
+                )}
+                autosize
+                minRows={3}
             />
 
-            <InputGroup>
-                <TextInput
-                    {...form.getInputProps('activates_at')}
-                    type="datetime-local"
-                    label={t`Activation date`}
-                    description={t`When check-in opens`}
+            <div className={classes.group}>
+                <p className={settings.fieldLabel}>{t`Accepted tickets`}</p>
+                <div className={settings.pills} role="group" aria-label={t`Accepted tickets`}>
+                    {tickets.map(ticket => {
+                        const id = String(ticket.id);
+                        const checked = selected.includes(id);
+                        return (
+                            <button
+                                key={id}
+                                type="button"
+                                role="checkbox"
+                                aria-checked={checked}
+                                className={settings.pill}
+                                onClick={() => toggleTicket(id)}
+                            >
+                                {checked && <IconCheck size={16} stroke={2.25}/>}
+                                {ticket.title}
+                            </button>
+                        );
+                    })}
+                </div>
+                {form.errors.product_ids && <p className={classes.error} role="alert">{form.errors.product_ids}</p>}
+            </div>
+
+            <div className={classes.group}>
+                <p className={settings.fieldLabel}>{t({message: 'Open', context: 'list hours'})}</p>
+                <div className={classes.dates}>
+                    <DateTimeField
+                        clearable
+                        placeholder={t`Opening`}
+                        defaultTime="07:00"
+                        value={form.values.activates_at}
+                        error={form.errors.activates_at}
+                        onChange={(value) => form.setFieldValue('activates_at', value)}
+                    />
+                    <DateTimeField
+                        clearable
+                        placeholder={t`Closing`}
+                        defaultTime="11:00"
+                        value={form.values.expires_at}
+                        error={form.errors.expires_at}
+                        onChange={(value) => form.setFieldValue('expires_at', value)}
+                    />
+                </div>
+                <p className={settings.hint}>{t`Outside these hours, the scanner link shows « List closed ».`}</p>
+            </div>
+
+            <div className={classes.group}>
+                <p className={settings.fieldLabel}>{t`Scanner PIN`}</p>
+                <div className={classes.pinRow}>
+                    <span className={classes.pin} aria-label={t`Scanner PIN`}>
+                        <img src="/interface/admin/scanner/cadenas.svg" width={20} height={20} alt=""/>
+                        <span className={classes.pinDigits}>{pin || '—'}</span>
+                    </span>
+                    <Button
+                        variant="transparent"
+                        className={settings.outlineButton}
+                        onClick={() => form.setFieldValue('pin', generateScannerPin())}
+                    >
+                        {t`Generate a new PIN`}
+                    </Button>
+                </div>
+                <p className={settings.hint}>
+                    {t`Asked when the link opens. If the link gets around, nobody can scan without the PIN.`}
+                    {isEditing && <> {t`A new PIN signs out the phones already open.`}</>}
+                </p>
+                {form.errors.pin && <p className={classes.error} role="alert">{form.errors.pin}</p>}
+            </div>
+
+            <div className={classes.doorSale}>
+                <span className={classes.doorSaleIcon}>
+                    <img src="/interface/admin/accueil/carte.svg" width={20} height={20} alt=""/>
+                </span>
+                <span className={settings.toggleText}>
+                    <span className={settings.toggleLabel} id="list-door-sales">{t`Allow selling tickets on site`}</span>
+                    <span className={settings.toggleHint}>
+                        {t`If spots are left, staff can register someone in the scanner and take the payment with a card terminal.`}
+                    </span>
+                </span>
+                <Switch
+                    className={settings.switch}
+                    withThumbIndicator={false}
+                    aria-labelledby="list-door-sales"
+                    {...form.getInputProps('allow_door_sales', {type: 'checkbox'})}
                 />
-                <TextInput
-                    {...form.getInputProps('expires_at')}
-                    type="datetime-local"
-                    label={t`Expiration date`}
-                    description={t`When check-in closes`}
-                />
-            </InputGroup>
-
-            <TextInput
-                {...form.getInputProps('pin')}
-                mt={20}
-                inputMode="numeric"
-                maxLength={12}
-                label={t`Check-in PIN`}
-                placeholder={t`e.g. 4821`}
-                description={t`Digits only, 4 to 12. Anyone with the check-in link can see your attendee list and undo check-ins, so give this code to your staff and leave it set.`}
-            />
-
-            <Switch
-                {...form.getInputProps('allow_door_sales', {type: 'checkbox'})}
-                mt={20}
-                label={t`Allow selling tickets at the door`}
-                description={t`Check-in staff can sell any remaining tickets from this list. Take the payment on your own card terminal or in cash — the ticket is issued and checked in on the spot.`}
-            />
-        </>
+            </div>
+        </div>
     );
-}
+};

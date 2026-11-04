@@ -1,7 +1,7 @@
 import {useParams} from "react-router";
 import {useGetCheckInListPublic} from "../../../queries/useGetCheckInListPublic.ts";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useDebouncedValue, useDisclosure, useNetwork} from "@mantine/hooks";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {useDebouncedValue, useDisclosure, useMediaQuery, useNetwork} from "@mantine/hooks";
 import {Attendee, QueryFilters, QueryFilterOperator} from "../../../types.ts";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {t, Trans} from "@lingui/macro";
@@ -22,10 +22,13 @@ import {AttendeeList} from "../../common/CheckIn/AttendeeList";
 import {CheckInOptionsModal} from "../../common/CheckIn/CheckInOptionsModal";
 import {ScannerSelectionModal} from "../../common/CheckIn/ScannerSelectionModal";
 import {HidScannerStatus} from "../../common/CheckIn/HidScannerStatus";
-import {PinPromptModal} from "../../common/CheckIn/PinPromptModal";
+import {ListIntro, PinScreen} from "../../common/CheckIn/PinScreen";
+import {PhoneScanner, ScanResult} from "../../common/CheckIn/PhoneScanner";
+import scannerClasses from "../../common/CheckIn/Scanner.module.scss";
 import {DoorSaleModal} from "../../common/CheckIn/DoorSaleModal";
 import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/checkInPin.ts";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
+import {intlLocale} from "../../../utilites/intlLocale.ts";
 
 const CheckIn = () => {
     useDehorsAppTheme();
@@ -55,11 +58,15 @@ const CheckIn = () => {
         return storedIsSoundOn === null ? true : JSON.parse(storedIsSoundOn);
     });
     const [selectedAttendee, setSelectedAttendee] = useState<Attendee | null>(null);
-    const [pinPromptOpen, setPinPromptOpen] = useState(false);
     const [pinFailed, setPinFailed] = useState(false);
     const [hasPin, setHasPin] = useState(() => Boolean(getCheckInPin(checkInListShortId)));
     const [doorSaleOpen, doorSaleHandlers] = useDisclosure(false);
     const [checkInModalOpen, checkInModalHandlers] = useDisclosure(false);
+    // On a phone the page is the scanner (Figma 552:3772); its X shows the whole list instead.
+    const isPhone = useMediaQuery('(max-width: 767px)');
+    const [phoneListOpen, setPhoneListOpen] = useState(false);
+    const showPhoneScanner = !!isPhone && !phoneListOpen;
+    const [scanResult, setScanResult] = useState<ScanResult | null>(null);
 
     const products = checkInList?.products;
     const queryFilters: QueryFilters = {
@@ -85,19 +92,12 @@ const CheckIn = () => {
     const allowOrdersAwaitingOfflinePaymentToCheckIn = areOfflinePaymentsEnabled
         && eventSettings?.allow_orders_awaiting_offline_payment_to_check_in;
 
-    useEffect(() => {
-        if (checkInList?.requires_pin && !hasPin) {
-            setPinPromptOpen(true);
-        }
-    }, [checkInList?.requires_pin, hasPin]);
-
     // A stored PIN can go stale when the organizer changes it, so a refusal sends us back to the prompt.
     useEffect(() => {
         if ((attendeesQuery.error as AxiosError)?.response?.status === 401) {
             clearCheckInPin(checkInListShortId);
             setHasPin(false);
             setPinFailed(true);
-            setPinPromptOpen(true);
         }
     }, [attendeesQuery.error, checkInListShortId]);
 
@@ -135,6 +135,21 @@ const CheckIn = () => {
         }
     }, [isSoundOn]);
 
+    // What a scan or a check-in says: in the scanner's sheet on a phone, a notification elsewhere.
+    const reportProblem = (message: React.ReactNode) => {
+        if (showPhoneScanner) {
+            setScanResult({tone: 'problem', title: message});
+            return;
+        }
+        showError(message);
+    };
+
+    const attendeeDetail = (attendee: Attendee) => {
+        const product = products?.find(item => item.id === attendee.product_id)?.title;
+        const bib = attendee.bib_number;
+        return [product, bib ? t`Bib ${bib}` : null].filter(Boolean).join(' · ');
+    };
+
     const handleCheckInAction = (attendee: Attendee, action: 'check-in' | 'check-in-and-mark-order-as-paid') => {
         checkInMutation.mutate({
             checkInListShortId: checkInListShortId,
@@ -143,11 +158,16 @@ const CheckIn = () => {
         }, {
             onSuccess: ({errors}) => {
                 if (errors && errors[attendee.public_id]) {
-                    showError(errors[attendee.public_id]);
+                    reportProblem(errors[attendee.public_id]);
                     playErrorSound();
                     return;
                 }
-                showSuccess(<Trans>{attendee.first_name} <b>checked in</b> successfully</Trans>);
+                if (showPhoneScanner) {
+                    const name = attendee.first_name;
+                    setScanResult({tone: 'ok', title: t`Welcome, ${name}!`, detail: attendeeDetail(attendee)});
+                } else {
+                    showSuccess(<Trans>{attendee.first_name} <b>checked in</b> successfully</Trans>);
+                }
                 playSuccessSound();
                 CheckInListQuery.refetch();
                 checkInModalHandlers.close();
@@ -156,12 +176,12 @@ const CheckIn = () => {
             onError: (error) => {
                 playErrorSound();
                 if (!networkStatus.online) {
-                    showError(t`You are offline`);
+                    reportProblem(t`You are offline`);
                     return;
                 }
 
                 if (error instanceof AxiosError) {
-                    showError(error?.response?.data?.message || t`Unable to check in attendee`);
+                    reportProblem(error?.response?.data?.message || t`Unable to check in attendee`);
                 }
             }
         });
@@ -181,7 +201,7 @@ const CheckIn = () => {
                 onError: (error) => {
                     playErrorSound();
                     if (!networkStatus.online) {
-                        showError(t`You are offline`);
+                        reportProblem(t`You are offline`);
                         return;
                     }
 
@@ -204,7 +224,7 @@ const CheckIn = () => {
         }
 
         if (!allowOrdersAwaitingOfflinePaymentToCheckIn && isAttendeeAwaitingPayment) {
-            showError(t`You cannot check in attendees with unpaid orders. This setting can be changed in the event settings.`);
+            reportProblem(t`You cannot check in attendees with unpaid orders. This setting can be changed in the event settings.`);
             return;
         }
 
@@ -221,7 +241,7 @@ const CheckIn = () => {
         const now = Date.now();
         if (processedBarcodesRef.current.has(attendeePublicId) &&
             now - lastScanTimeRef.current < 3000) {
-            showError(t`This ticket was just scanned. Please wait before scanning again.`);
+            reportProblem(t`This ticket was just scanned. Please wait before scanning again.`);
             playErrorSound();
             return;
         }
@@ -237,14 +257,16 @@ const CheckIn = () => {
                 const {data} = await publicCheckInClient.getCheckInListAttendee(checkInListShortId, attendeePublicId);
                 attendee = data;
             } catch (error) {
-                showError(t`Unable to fetch attendee`);
+                reportProblem((error as AxiosError)?.response?.status === 404
+                    ? t`This ticket is not on this list.`
+                    : t`Unable to fetch attendee`);
                 playErrorSound();
                 isProcessingRef.current = false;
                 return;
             }
 
             if (!attendee) {
-                showError(t`Attendee not found`);
+                reportProblem(t`Attendee not found`);
                 playErrorSound();
                 isProcessingRef.current = false;
                 return;
@@ -253,7 +275,7 @@ const CheckIn = () => {
 
         // Check if already checked in
         if (attendee.check_in) {
-            showError(<Trans>{attendee.first_name} {attendee.last_name} is already checked in</Trans>);
+            reportProblem(<Trans>{attendee.first_name} {attendee.last_name} is already checked in</Trans>);
             playErrorSound();
             processedBarcodesRef.current.add(attendeePublicId);
             isProcessingRef.current = false;
@@ -270,7 +292,7 @@ const CheckIn = () => {
         }
 
         if (!allowOrdersAwaitingOfflinePaymentToCheckIn && isAttendeeAwaitingPayment) {
-            showError(t`You cannot check in attendees with unpaid orders. This setting can be changed in the event settings.`);
+            reportProblem(t`You cannot check in attendees with unpaid orders. This setting can be changed in the event settings.`);
             playErrorSound();
             isProcessingRef.current = false;
             return;
@@ -361,6 +383,15 @@ const CheckIn = () => {
         };
     }, [hidScannerMode, currentBarcode, processBarcode]);
 
+    const eventLine = event
+        ? [event.title, event.start_date && new Intl.DateTimeFormat(intlLocale(), {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+            timeZone: event.timezone,
+        }).format(new Date(event.start_date))].filter(Boolean).join(' · ')
+        : undefined;
+
     if (CheckInListQuery.error && (CheckInListQuery.error as any).response?.status === 404) {
         return (
             <NoResultsSplash
@@ -376,45 +407,54 @@ const CheckIn = () => {
             />)
     }
 
-    if (checkInList?.is_expired) {
+    // Outside its hours, a list shows « Liste fermée » (Figma: notes of Accueil et scan).
+    if (checkInList?.is_expired || (checkInList && !checkInList.is_active)) {
         return (
-            <NoResultsSplash
-                heading={t`Check-in list has expired`}
-                imageHref={'/blank-slate/check-in-lists.svg'}
-                subHeading={(
-                    <>
-                        <p>
-                            <Trans>
-                                This check-in list has expired and is no longer available for check-ins.
-                            </Trans>
-                        </p>
-                    </>
+            <ListIntro listName={checkInList.name} eventLine={eventLine} description={checkInList.description}>
+                <p className={scannerClasses.closedTitle}>{t`List closed`}</p>
+                {checkInList.is_expired ? (
+                    <p className={scannerClasses.closedText}>{t`This list no longer accepts scans.`}</p>
+                ) : (
+                    <p className={scannerClasses.closedText}>
+                        {t`It opens in`}{' '}
+                        <b>
+                            <Countdown
+                                targetDate={checkInList.activates_at as string}
+                                onExpiry={() => CheckInListQuery.refetch()}
+                            />
+                        </b>
+                    </p>
                 )}
-            />)
+            </ListIntro>
+        );
     }
 
-    if (checkInList && !checkInList?.is_active) {
+    if (checkInList?.requires_pin && !hasPin) {
         return (
-            <NoResultsSplash
-                heading={t`Check-in list is not active`}
-                imageHref={'/blank-slate/check-in-lists.svg'}
-                subHeading={(
-                    <>
-                        <p>
-                            {t`This check-in list is not yet active and is not available for check-ins.`}
-                        </p>
-                        <p>
-                            Check-in list will activate in{' '}<br/>
-                            <b>
-                                <Countdown
-                                    targetDate={checkInList.activates_at as string}
-                                    onExpiry={() => CheckInListQuery.refetch()}
-                                />
-                            </b>
-                        </p>
-                    </>
-                )}
-            />)
+            <PinScreen
+                key={String(pinFailed)}
+                listName={checkInList.name}
+                eventLine={eventLine}
+                description={checkInList.description}
+                length={checkInList.pin_length}
+                hasFailed={pinFailed}
+                onSubmit={async (pin) => {
+                    setCheckInPin(checkInListShortId, pin);
+                    try {
+                        await publicCheckInClient.getCheckInListAttendees(checkInListShortId as string, {pageNumber: 1, perPage: 1});
+                        setHasPin(true);
+                        setPinFailed(false);
+                        return true;
+                    } catch (error) {
+                        clearCheckInPin(checkInListShortId);
+                        if ((error as AxiosError)?.response?.status !== 401) {
+                            reportProblem(t`Unable to check the PIN. Please try again.`);
+                        }
+                        return false;
+                    }
+                }}
+            />
+        );
     }
 
     const checkedIn = checkInList?.checked_in_attendees ?? 0;
@@ -427,9 +467,40 @@ const CheckIn = () => {
             ? attendees?.find(attendee => attendee.check_in?.short_id === deleteCheckInMutation.variables?.checkInShortId)?.public_id
             : undefined;
 
+    const attendeeList = (
+        <AttendeeList
+            attendees={attendees}
+            products={products}
+            isLoading={attendeesQuery.isLoading}
+            pendingAttendeeId={pendingAttendeeId}
+            isBusy={checkInMutation.isPending || deleteCheckInMutation.isPending}
+            allowOrdersAwaitingOfflinePaymentToCheckIn={allowOrdersAwaitingOfflinePaymentToCheckIn || false}
+            onCheckInToggle={handleCheckInToggle}
+            onClickSound={playClickSound}
+        />
+    );
+
     return (
         <div className={classes.page}>
-            <div className={classes.inner}>
+            {showPhoneScanner && (
+                <PhoneScanner
+                    listName={checkInList?.name}
+                    eventTitle={event?.title}
+                    description={checkInList?.description}
+                    checkedIn={checkedIn}
+                    total={total}
+                    result={scanResult}
+                    query={searchQuery}
+                    onQueryChange={setSearchQuery}
+                    searchResults={attendeeList}
+                    onSell={checkInList?.allow_door_sales ? () => doorSaleHandlers.open() : undefined}
+                    onScan={(code) => code.startsWith('A-')
+                        ? handleQrCheckIn(code)
+                        : reportProblem(t`This code is not a ticket.`)}
+                    onClose={() => setPhoneListOpen(true)}
+                />
+            )}
+            {!showPhoneScanner && <div className={classes.inner}>
                 <header className={classes.top}>
                     <span className={classes.wordmark} aria-hidden>
                         <span>{'Billetterie'}</span>
@@ -493,7 +564,7 @@ const CheckIn = () => {
                         className={classes.scanButton}
                         leftSection={<IconQrcode size={22}/>}
                         aria-label={t`Scan`}
-                        onClick={() => setScannerSelectionOpen(true)}
+                        onClick={() => isPhone ? setPhoneListOpen(false) : setScannerSelectionOpen(true)}
                     >
                         <span className={classes.buttonLabel}>{t`Scan`}</span>
                     </Button>
@@ -515,17 +586,8 @@ const CheckIn = () => {
                     onDisable={() => setHidScannerMode(false)}
                 />
 
-                <AttendeeList
-                    attendees={attendees}
-                    products={products}
-                    isLoading={attendeesQuery.isLoading}
-                    pendingAttendeeId={pendingAttendeeId}
-                    isBusy={checkInMutation.isPending || deleteCheckInMutation.isPending}
-                    allowOrdersAwaitingOfflinePaymentToCheckIn={allowOrdersAwaitingOfflinePaymentToCheckIn || false}
-                    onCheckInToggle={handleCheckInToggle}
-                    onClickSound={playClickSound}
-                />
-            </div>
+                {attendeeList}
+            </div>}
             <CheckInOptionsModal
                 isOpen={checkInModalOpen}
                 attendee={selectedAttendee}
@@ -581,17 +643,6 @@ const CheckIn = () => {
                     }}
                 />
             )}
-            <PinPromptModal
-                isOpen={pinPromptOpen}
-                checkInListName={checkInList?.name}
-                hasFailed={pinFailed}
-                onSubmit={(pin) => {
-                    setCheckInPin(checkInListShortId, pin);
-                    setHasPin(true);
-                    setPinFailed(false);
-                    setPinPromptOpen(false);
-                }}
-            />
             {/* Audio elements for HID scanner sounds */}
             <audio ref={scanSuccessAudioRef} src="/sounds/scan-success.wav"/>
             <audio ref={scanErrorAudioRef} src="/sounds/scan-error.wav"/>

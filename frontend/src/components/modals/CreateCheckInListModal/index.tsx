@@ -1,7 +1,8 @@
-import {CheckInList, CheckInListRequest, GenericModalProps, Product, ProductCategory} from "../../../types.ts";
-import {Modal} from "../../common/Modal";
+import {CheckInListRequest, GenericModalProps, Product, ProductCategory} from "../../../types.ts";
+import {DehorsPopup} from "../../common/DehorsPopup";
 import {t} from "@lingui/macro";
-import {CheckInListForm} from "../../forms/CheckInListForm";
+import {CheckInListForm, generateScannerPin, ticketIds} from "../../forms/CheckInListForm";
+import formClasses from "../../forms/CheckInListForm/CheckInListForm.module.scss";
 import {useForm} from "@mantine/form";
 import {Button} from "@mantine/core";
 import {useCreateCheckInList} from "../../../mutations/useCreateCheckInList.ts";
@@ -10,25 +11,32 @@ import {useFormErrorResponseHandler} from "../../../hooks/useFormErrorResponseHa
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {NoResultsSplash} from "../../common/NoResultsSplash";
 import {IconPlus} from "@tabler/icons-react";
-import {CheckInListSuccessModal} from "../CheckInListSuccessModal";
-import {useState} from "react";
+import {useEffect} from "react";
+import {showSuccess} from "../../../utilites/notifications.tsx";
 
 export const CreateCheckInListModal = ({onClose}: GenericModalProps) => {
     const {eventId} = useParams();
     const errorHandler = useFormErrorResponseHandler();
     const {data: event} = useGetEvent(eventId);
-    const [createdCheckInList, setCreatedCheckInList] = useState<CheckInList | null>(null);
     const form = useForm<CheckInListRequest>({
         initialValues: {
             name: '',
             description: '',
             expires_at: '',
             activates_at: '',
-            pin: '',
+            pin: generateScannerPin(),
             allow_door_sales: false,
             product_ids: [],
         }
     });
+
+    // Every ticket is accepted to start with: it's the usual « Entrée principale ».
+    useEffect(() => {
+        if (event?.product_categories && !form.values.product_ids.length) {
+            form.setFieldValue('product_ids', ticketIds(event.product_categories as ProductCategory[]));
+        }
+    }, [event?.id]);
+
     const createMutation = useCreateCheckInList();
     const eventHasTickets = event?.product_categories
         && event.product_categories.some(category => category.products.length > 0)
@@ -40,8 +48,9 @@ export const CreateCheckInListModal = ({onClose}: GenericModalProps) => {
             eventId: eventId,
             checkInListData: requestData,
         }, {
-            onSuccess: (response) => {
-                setCreatedCheckInList(response.data);
+            onSuccess: () => {
+                showSuccess(t`The list is created. Open the scanner or copy its link from its card.`);
+                onClose();
             },
             onError: (error) => errorHandler(form, error),
         })
@@ -71,37 +80,22 @@ export const CreateCheckInListModal = ({onClose}: GenericModalProps) => {
         );
     }
 
-    if (createdCheckInList) {
-        return (
-            <CheckInListSuccessModal
-                onClose={onClose}
-                checkInListName={createdCheckInList.name}
-                checkInListShortId={createdCheckInList.short_id}
-            />
-        );
-    }
-
     return (
-        <Modal opened onClose={onClose} heading={eventHasTickets ? t`Create Check-In List` : null}>
+        <DehorsPopup onClose={onClose} title={eventHasTickets ? t`New entry list` : t`Please create a ticket`}>
             {!eventHasTickets && <NoProducts/>}
             {eventHasTickets && (
-                <form onSubmit={form.onSubmit(handleSubmit)}>
+                <form onSubmit={form.onSubmit(handleSubmit)} className={formClasses.form}>
                     {event && (
                         <CheckInListForm
                             form={form}
                             productCategories={event.product_categories as ProductCategory[]}
                         />
                     )}
-                    <Button
-                        type={'submit'}
-                        fullWidth
-                        loading={createMutation.isPending}
-                        mt="md"
-                    >
-                        {t`Create Check-In List`}
-                    </Button>
+                    <div className={formClasses.actions}>
+                        <Button type="submit" loading={createMutation.isPending}>{t`Create the list`}</Button>
+                    </div>
                 </form>
             )}
-        </Modal>
+        </DehorsPopup>
     );
 }

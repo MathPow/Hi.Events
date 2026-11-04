@@ -867,6 +867,7 @@ export interface CheckInList {
     description?: string | null;
     pin?: string | null;
     requires_pin?: boolean;
+    pin_length?: number;
     allow_door_sales?: boolean;
     expires_at?: string;  // ISO 8601 string
     activates_at?: string;  // ISO 8601 string

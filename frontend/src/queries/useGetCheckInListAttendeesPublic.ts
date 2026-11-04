@@ -11,5 +11,7 @@ export const useGetCheckInListAttendees = (checkInListShortId: IdParam, paginati
             return await publicCheckInClient.getCheckInListAttendees(checkInListShortId, pagination);
         },
         enabled: enabled,
+        // A refused PIN answers right away: the screen goes back to the PIN without waiting for retries.
+        retry: (failures, error: any) => error?.response?.status !== 401 && failures < 3,
     });
 };

@@ -1,5 +1,6 @@
 import {CheckInListRequest, GenericModalProps, IdParam, ProductCategory} from "../../../types.ts";
-import {Modal} from "../../common/Modal";
+import {DehorsPopup} from "../../common/DehorsPopup";
+import formClasses from "../../forms/CheckInListForm/CheckInListForm.module.scss";
 import {t} from "@lingui/macro";
 import {CheckInListForm} from "../../forms/CheckInListForm";
 import {useForm} from "@mantine/form";
@@ -70,8 +71,7 @@ export const EditCheckInListModal = ({
     }, [checkInList]);
 
     return (
-        <Modal opened onClose={onClose} heading={t`Edit Check-In List`}>
-
+        <DehorsPopup onClose={onClose} title={t`Edit the entry list`}>
             {checkInListLoading && (
                 <Center>
                     <Loader/>
@@ -85,21 +85,17 @@ export const EditCheckInListModal = ({
             )}
 
             {event && checkInList && (
-                <form onSubmit={form.onSubmit(handleSubmit)}>
+                <form onSubmit={form.onSubmit(handleSubmit)} className={formClasses.form}>
                     <CheckInListForm
                         form={form}
+                        isEditing
                         productCategories={event.product_categories as ProductCategory[]}
                     />
-                    <Button
-                        type={'submit'}
-                        fullWidth
-                        loading={editMutation.isPending}
-                        mt="md"
-                    >
-                        {t`Edit Check-In List`}
-                    </Button>
+                    <div className={formClasses.actions}>
+                        <Button type="submit" loading={editMutation.isPending}>{t`Save`}</Button>
+                    </div>
                 </form>
             )}
-        </Modal>
+        </DehorsPopup>
     );
 }
