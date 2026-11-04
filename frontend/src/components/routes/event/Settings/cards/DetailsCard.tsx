@@ -1,6 +1,7 @@
 import {useMemo} from "react";
 import {t} from "@lingui/macro";
 import {Select, TextInput} from "@mantine/core";
+import dayjs from "dayjs";
 import {Event, IdParam} from "../../../../../types.ts";
 import {useUpdateEvent} from "../../../../../mutations/useUpdateEvent.ts";
 import {utcToTz} from "../../../../../utilites/dates.ts";
@@ -56,6 +57,16 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
         }),
     });
 
+    // A start moved past the end takes the end along, the event keeping its length.
+    const chooseStart = (value: string) => {
+        const {start_date: start, end_date: end} = form.values;
+        if (end && dayjs(end).isBefore(value)) {
+            const length = start ? Math.max(dayjs(end).diff(start), 0) : 0;
+            form.setFieldValue('end_date', dayjs(value).add(length, 'millisecond').format('YYYY-MM-DDTHH:mm'));
+        }
+        choose('start_date', value);
+    };
+
     const timezoneOptions = useMemo(() => timezones.map(timezone => ({
         value: timezone,
         label: timezoneLabel(timezone),
@@ -97,7 +108,7 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                     withWeekday
                     value={form.values.start_date}
                     error={form.errors.start_date}
-                    onChange={(value) => choose('start_date', value)}
+                    onChange={chooseStart}
                 />
                 <DateTimeField
                     label={t({message: 'End', context: 'event date'})}
