@@ -71,7 +71,7 @@ class ProductDocumentsRule implements ValidationRule, ValidatorAwareRule
             $entries = is_array($attendee['documents'] ?? null) ? array_values($attendee['documents']) : [];
 
             foreach ($this->onlineDocuments() as $document) {
-                if (!$this->signingService->applies($document, $isMinor)) {
+                if (!$this->signingService->applies($document, $dateOfBirth, $this->event)) {
                     continue;
                 }
 

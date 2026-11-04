@@ -49,6 +49,14 @@ class WaiverServiceTest extends TestCase
         $this->assertTrue($this->service->isMinorOnEventDay('2009-06-13', $this->event()));
     }
 
+    public function testUnderAnyAgeOnTheEventDay(): void
+    {
+        // The event is on 2027-06-12: born 2011-06-12, 16 that day; born the day after, still 15.
+        $this->assertFalse($this->service->isUnderAgeOnEventDay('2011-06-12', $this->event(), 16));
+        $this->assertTrue($this->service->isUnderAgeOnEventDay('2011-06-13', $this->event(), 16));
+        $this->assertFalse($this->service->isUnderAgeOnEventDay(null, $this->event(), 16));
+    }
+
     public function testTheEventDayIsTheLocalDay(): void
     {
         // 02:00 UTC on June 13 is still June 12 in Montreal.

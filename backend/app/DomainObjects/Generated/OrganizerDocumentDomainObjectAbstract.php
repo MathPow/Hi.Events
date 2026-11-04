@@ -16,6 +16,7 @@ abstract class OrganizerDocumentDomainObjectAbstract extends \HiEvents\DomainObj
     final public const BLOCKS = 'blocks';
     final public const SIGNING_MODE = 'signing_mode';
     final public const AUDIENCE = 'audience';
+    final public const AUDIENCE_AGE = 'audience_age';
     final public const TEMPLATE = 'template';
     final public const CREATED_AT = 'created_at';
     final public const UPDATED_AT = 'updated_at';
@@ -27,6 +28,7 @@ abstract class OrganizerDocumentDomainObjectAbstract extends \HiEvents\DomainObj
     protected array $blocks;
     protected string $signing_mode = 'ONLINE';
     protected string $audience = 'ALL';
+    protected ?int $audience_age = null;
     protected ?string $template = null;
     protected ?string $created_at = null;
     protected ?string $updated_at = null;
@@ -41,6 +43,7 @@ abstract class OrganizerDocumentDomainObjectAbstract extends \HiEvents\DomainObj
                     'blocks' => $this->blocks ?? null,
                     'signing_mode' => $this->signing_mode ?? null,
                     'audience' => $this->audience ?? null,
+                    'audience_age' => $this->audience_age ?? null,
                     'template' => $this->template ?? null,
                     'created_at' => $this->created_at ?? null,
                     'updated_at' => $this->updated_at ?? null,
@@ -112,6 +115,17 @@ abstract class OrganizerDocumentDomainObjectAbstract extends \HiEvents\DomainObj
     public function getAudience(): string
     {
         return $this->audience;
+    }
+
+    public function setAudienceAge(?int $audience_age): self
+    {
+        $this->audience_age = $audience_age;
+        return $this;
+    }
+
+    public function getAudienceAge(): ?int
+    {
+        return $this->audience_age;
     }
 
     public function setTemplate(?string $template): self

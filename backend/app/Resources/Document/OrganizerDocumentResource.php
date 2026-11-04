@@ -20,6 +20,7 @@ class OrganizerDocumentResource extends JsonResource
             'blocks' => $this->getBlocks(),
             'signing_mode' => $this->getSigningMode(),
             'audience' => $this->getAudience(),
+            'audience_age' => $this->getAudienceAge(),
             'template' => $this->getTemplate(),
             'event_ids' => $this->getEventIds(),
             'created_at' => $this->getCreatedAt(),

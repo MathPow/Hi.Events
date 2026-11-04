@@ -5,7 +5,7 @@ import {organizerDocumentClient, OrganizerDocument} from "../../../../../api/org
 import {useUpdateOrganizerDocument} from "../../../../../mutations/useOrganizerDocumentMutations.ts";
 import {GET_ORGANIZER_DOCUMENTS_QUERY_KEY} from "../../../../../queries/useGetOrganizerDocuments.ts";
 
-export type DocumentDraft = Pick<OrganizerDocument, 'title' | 'blocks' | 'signing_mode' | 'audience' | 'event_ids'>;
+export type DocumentDraft = Pick<OrganizerDocument, 'title' | 'blocks' | 'signing_mode' | 'audience' | 'audience_age' | 'event_ids'>;
 
 export type SaveStatus = 'saved' | 'saving' | 'error';
 

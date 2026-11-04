@@ -21,6 +21,7 @@ class OrganizerDocumentResourcePublic extends JsonResource
             'blocks' => $this->getBlocks(),
             'signing_mode' => $this->getSigningMode(),
             'audience' => $this->getAudience(),
+            'audience_age' => $this->ageLimit(),
         ];
     }
 }

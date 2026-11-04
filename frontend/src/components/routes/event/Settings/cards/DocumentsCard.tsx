@@ -4,6 +4,7 @@ import {t} from "@lingui/macro";
 import {Button, Skeleton} from "@mantine/core";
 import {IdParam} from "../../../../../types.ts";
 import {OrganizerDocument} from "../../../../../api/organizerDocument.client.ts";
+import {documentAgeLimit} from "../../../../common/OrganizerDocument/blocks.ts";
 import {useGetEvent} from "../../../../../queries/useGetEvent.ts";
 import {useGetOrganizerDocuments} from "../../../../../queries/useGetOrganizerDocuments.ts";
 import {useUpdateOrganizerDocument} from "../../../../../mutations/useOrganizerDocumentMutations.ts";
@@ -46,10 +47,14 @@ export const DocumentsCard = ({eventId}: { eventId: IdParam }) => {
             .finally(() => setPending(({[document.id]: _, ...rest}) => rest));
     };
 
-    const details = (document: OrganizerDocument) => [
-        document.signing_mode === 'ONLINE' ? t`Online signature` : t`PDF to print`,
-        document.audience === 'MINORS' ? t`Minors only` : t`Everyone`,
-    ].join(' · ');
+    const details = (document: OrganizerDocument) => {
+        const age = documentAgeLimit(document);
+
+        return [
+            document.signing_mode === 'ONLINE' ? t`Online signature` : t`PDF to print`,
+            age === null ? t`Everyone` : t`Under ${age}`,
+        ].join(' · ');
+    };
 
     return (
         <SettingsCard

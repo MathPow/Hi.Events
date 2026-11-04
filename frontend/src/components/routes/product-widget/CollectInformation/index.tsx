@@ -38,7 +38,7 @@ import {DocumentSigning, emptyDocumentEntry} from "../../../common/DocumentSigni
 import {documentNeedsBirthDate} from "../../../common/OrganizerDocument/blocks.ts";
 import {useGetEventDocumentsPublic} from "../../../../queries/useGetOrganizerDocuments.ts";
 import {PublicOrganizerDocument} from "../../../../api/organizerDocument.client.ts";
-import {isMinorOnEventDay} from "../../../../utilites/dates.ts";
+import {isUnderAgeOnEventDay, WAIVER_ADULT_AGE} from "../../../../utilites/dates.ts";
 import dayjs from "dayjs";
 import {getClientLocale} from "../../../../locales.ts";
 import {isEmptyHtml} from "../../../../utilites/helpers.ts";
@@ -196,22 +196,23 @@ export const CollectInformation = () => {
     const askDocumentBirthDate = !dateOfBirthQuestion
         && linkedDocuments.some(document => documentNeedsBirthDate(document.blocks, document.audience));
 
-    /** From the participant form's date of birth, when the attendee answered it (or the one asked with the documents). */
-    const isAttendeeMinor = (productIndex: number): boolean => {
-        if (event && !dateOfBirthQuestion) {
-            return isMinorOnEventDay((form.values.products[productIndex] as { document_birth_date?: string } | undefined)?.document_birth_date, event.start_date, event.timezone);
-        }
-        if (!event || !dateOfBirthQuestion) {
-            return false;
+    /** The participant form's date of birth, when the attendee answered it (or the one asked with the documents). */
+    const attendeeBirthDate = (productIndex: number): string | undefined => {
+        if (!dateOfBirthQuestion) {
+            return (form.values.products[productIndex] as { document_birth_date?: string } | undefined)?.document_birth_date;
         }
         // An empty object until the form is filled from the order (createProductsAndQuestions).
         const questions = form.values.products[productIndex]?.questions;
-        const answer = (Array.isArray(questions) ? questions as { question_id: IdParam, response?: { answer?: string } }[] : [])
+
+        return (Array.isArray(questions) ? questions as { question_id: IdParam, response?: { answer?: string } }[] : [])
             .find(question => question.question_id === dateOfBirthQuestion.id)
             ?.response?.answer;
-
-        return isMinorOnEventDay(answer, event.start_date, event.timezone);
     };
+
+    const isAttendeeUnder = (productIndex: number) => (age: number): boolean =>
+        !!event && isUnderAgeOnEventDay(attendeeBirthDate(productIndex), event.start_date, event.timezone, age);
+
+    const isAttendeeMinor = (productIndex: number): boolean => isAttendeeUnder(productIndex)(WAIVER_ADULT_AGE);
 
     // « Meme personne que l'acheteur », coche par participant. Au depart, le premier billet;
     // les suivants seulement si l'evenement permet de copier vers tous les participants.
@@ -784,6 +785,7 @@ export const CollectInformation = () => {
                             form={form}
                             path={`products.${currentProductIndex}`}
                             isMinor={isAttendeeMinor(currentProductIndex)}
+                            isUnder={isAttendeeUnder(currentProductIndex)}
                             askBirthDate={askDocumentBirthDate}
                             autoValues={documentAutoValues(form.values.products[currentProductIndex]?.full_name, (form.values.products[currentProductIndex] as { document_birth_date?: string } | undefined)?.document_birth_date)}
                         />
@@ -937,6 +939,7 @@ export const CollectInformation = () => {
                             form={form}
                             path={`products.${getFirstTicketAttendeeIndex()}`}
                             isMinor={isAttendeeMinor(getFirstTicketAttendeeIndex())}
+                            isUnder={isAttendeeUnder(getFirstTicketAttendeeIndex())}
                             askBirthDate={askDocumentBirthDate}
                             autoValues={documentAutoValues(form.values.order?.full_name, (form.values.products[getFirstTicketAttendeeIndex()] as { document_birth_date?: string } | undefined)?.document_birth_date)}
                         />

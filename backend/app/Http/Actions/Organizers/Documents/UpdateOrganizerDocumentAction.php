@@ -31,6 +31,7 @@ class UpdateOrganizerDocumentAction extends BaseAction
             'blocks' => 'sometimes|array',
             'signing_mode' => 'sometimes|string|in:ONLINE,PRINT',
             'audience' => 'sometimes|string|in:ALL,MINORS',
+            'audience_age' => 'sometimes|nullable|integer|min:1|max:18',
             'event_ids' => 'sometimes|array|max:500',
             'event_ids.*' => 'integer',
         ]);

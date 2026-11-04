@@ -1,3 +1,4 @@
+import {WAIVER_ADULT_AGE} from "../../../utilites/dates.ts";
 import {t} from "@lingui/macro";
 import {JSONContent} from "@tiptap/core";
 import {
@@ -81,5 +82,15 @@ export const needsImplicitSignature = (blocks: DocumentBlock[], guardianSigning:
     signatures(blocks, 'participant').length === 0
     && !(guardianSigning && signatures(blocks, 'guardian').length > 0);
 
-export const documentApplies = (audience: DocumentAudience, isMinor: boolean): boolean =>
-    audience !== 'MINORS' || isMinor;
+// « Selon l'âge »: under its age limit on the event's day (18 when it has none). Null: for everyone.
+export const documentAgeLimit = (document: { audience: DocumentAudience, audience_age?: number | null }): number | null =>
+    document.audience === 'MINORS' ? (document.audience_age ?? WAIVER_ADULT_AGE) : null;
+
+export const documentApplies = (
+    document: { audience: DocumentAudience, audience_age?: number | null },
+    isUnder: (age: number) => boolean,
+): boolean => {
+    const ageLimit = documentAgeLimit(document);
+
+    return ageLimit === null || isUnder(ageLimit);
+};

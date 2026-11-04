@@ -43,13 +43,15 @@ export interface OrganizerDocument {
     blocks: DocumentBlock[];
     signing_mode: DocumentSigningMode;
     audience: DocumentAudience;
+    // « Selon l'âge » (MINORS): under this age on the event's day; empty, the age of majority (18).
+    audience_age: number | null;
     template: DocumentTemplateKey | null;
     event_ids: number[];
     created_at: string;
     updated_at: string;
 }
 
-export type OrganizerDocumentChanges = Partial<Pick<OrganizerDocument, 'title' | 'blocks' | 'signing_mode' | 'audience' | 'event_ids'>>;
+export type OrganizerDocumentChanges = Partial<Pick<OrganizerDocument, 'title' | 'blocks' | 'signing_mode' | 'audience' | 'audience_age' | 'event_ids'>>;
 
 // Ce que l'acheteur lit et remplit a la caisse.
 export interface PublicOrganizerDocument {
@@ -58,6 +60,8 @@ export interface PublicOrganizerDocument {
     blocks: DocumentBlock[];
     signing_mode: DocumentSigningMode;
     audience: DocumentAudience;
+    // Its age limit when it is « selon l'âge », else null.
+    audience_age: number | null;
 }
 
 // La copie d'un participant: signee en ligne, ou a imprimer.

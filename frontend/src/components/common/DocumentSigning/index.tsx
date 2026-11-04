@@ -33,6 +33,8 @@ interface DocumentSigningProps {
     // La fiche du participant dans le formulaire: products.N.
     path: string;
     isMinor: boolean;
+    // Under this age on the event's day, from the participant's date of birth.
+    isUnder: (age: number) => boolean;
     // Sans question « date de naissance » au formulaire, les documents la demandent eux-memes.
     askBirthDate: boolean;
     // Les champs automatiques connus a la caisse (nom du participant, evenement...).
@@ -44,9 +46,9 @@ interface DocumentSigningProps {
  * lire, ses champs a remplir et sa signature (le nom complet tape); un parent
  * ou tuteur signe aussi pour un mineur. Les documents a imprimer sont annonces.
  */
-export const DocumentSigning = ({documents, form, path, isMinor, askBirthDate, autoValues}: DocumentSigningProps) => {
+export const DocumentSigning = ({documents, form, path, isMinor, isUnder, askBirthDate, autoValues}: DocumentSigningProps) => {
     const online = documents.filter(document => document.signing_mode === 'ONLINE');
-    const toPrint = documents.filter(document => document.signing_mode === 'PRINT' && documentApplies(document.audience, isMinor));
+    const toPrint = documents.filter(document => document.signing_mode === 'PRINT' && documentApplies(document, isUnder));
     const generalError = form.errors[`${path}.documents`];
 
     if (!documents.length) {
@@ -69,7 +71,7 @@ export const DocumentSigning = ({documents, form, path, isMinor, askBirthDate, a
             {generalError && <Text c="red" size="sm">{generalError}</Text>}
 
             {online.map((document, position) => {
-                if (!documentApplies(document.audience, isMinor)) {
+                if (!documentApplies(document, isUnder)) {
                     return null;
                 }
 

@@ -135,11 +135,15 @@ export const WAIVER_ADULT_AGE = 18;
  * Whether someone born on dateOfBirth (YYYY-MM-DD) is under WAIVER_ADULT_AGE
  * on the event's day, in its time zone, like the server checks it.
  */
-export const isMinorOnEventDay = (dateOfBirth: string | undefined | null, eventStartDate: string, eventTimezone: string): boolean => {
+export const isMinorOnEventDay = (dateOfBirth: string | undefined | null, eventStartDate: string, eventTimezone: string): boolean =>
+    isUnderAgeOnEventDay(dateOfBirth, eventStartDate, eventTimezone, WAIVER_ADULT_AGE);
+
+/** Whether someone born on dateOfBirth (YYYY-MM-DD) is under `age` on the event's day (WaiverService). */
+export const isUnderAgeOnEventDay = (dateOfBirth: string | undefined | null, eventStartDate: string, eventTimezone: string, age: number): boolean => {
     if (!dateOfBirth || !/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
         return false;
     }
     const eventDay = dayjs.utc(eventStartDate).tz(eventTimezone || 'UTC').format('YYYY-MM-DD');
 
-    return dayjs(dateOfBirth).add(WAIVER_ADULT_AGE, 'year').format('YYYY-MM-DD') > eventDay;
+    return dayjs(dateOfBirth).add(age, 'year').format('YYYY-MM-DD') > eventDay;
 };

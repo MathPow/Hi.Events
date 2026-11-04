@@ -62,6 +62,15 @@ class WaiverService
      */
     public function isMinorOnEventDay(?string $dateOfBirth, EventDomainObject $event): bool
     {
+        return $this->isUnderAgeOnEventDay($dateOfBirth, $event, self::ADULT_AGE);
+    }
+
+    /**
+     * Whether someone born on $dateOfBirth (YYYY-MM-DD) is under $age on the event's day, in its
+     * time zone. An unreadable date is under no age: the date of birth question checks it on its own.
+     */
+    public function isUnderAgeOnEventDay(?string $dateOfBirth, EventDomainObject $event, int $age): bool
+    {
         if (!$dateOfBirth || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateOfBirth)) {
             return false;
         }
@@ -76,6 +85,6 @@ class WaiverService
             ->toDateString();
 
         // Dates as YYYY-MM-DD compare in order as strings.
-        return $born->addYears(self::ADULT_AGE)->toDateString() > $eventDay;
+        return $born->addYears($age)->toDateString() > $eventDay;
     }
 }

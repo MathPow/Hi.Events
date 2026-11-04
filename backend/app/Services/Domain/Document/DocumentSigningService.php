@@ -25,9 +25,14 @@ class DocumentSigningService
     {
     }
 
-    public function applies(OrganizerDocumentDomainObject $document, bool $isMinor): bool
+    /**
+     * Everyone fills a document for all; one « selon l'âge » only the participants under its age limit.
+     */
+    public function applies(OrganizerDocumentDomainObject $document, ?string $dateOfBirth, EventDomainObject $event): bool
     {
-        return $document->getAudience() !== DocumentAudience::MINORS->value || $isMinor;
+        $ageLimit = $document->ageLimit();
+
+        return $ageLimit === null || $this->waiverService->isUnderAgeOnEventDay($dateOfBirth, $event, $ageLimit);
     }
 
     /**
@@ -154,7 +159,7 @@ class DocumentSigningService
         $now = now()->toDateTimeString();
 
         foreach ($documents as $document) {
-            if (!$this->applies($document, $isMinor)) {
+            if (!$this->applies($document, $dateOfBirth, $event)) {
                 continue;
             }
 

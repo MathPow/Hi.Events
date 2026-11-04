@@ -2,7 +2,7 @@ import {t, Trans} from "@lingui/macro";
 import {MouseEvent as ReactMouseEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Link, useParams} from "react-router";
 import {Editor} from "@tiptap/core";
-import {ActionIcon, Button, Drawer, Menu, Popover, Skeleton, Switch, UnstyledButton} from "@mantine/core";
+import {ActionIcon, Button, Drawer, Menu, NumberInput, Popover, Skeleton, Switch, UnstyledButton} from "@mantine/core";
 import dayjs from "dayjs";
 import {
     IconAlertTriangle,
@@ -59,8 +59,8 @@ import {
     organizerDocumentClient,
     OrganizerDocument,
 } from "../../../../../api/organizerDocument.client.ts";
-import {autoFieldLabel, blockTypeLabel, newBlock, newBlockId} from "../../../../common/OrganizerDocument/blocks.ts";
-import {relativeDate} from "../../../../../utilites/dates.ts";
+import {autoFieldLabel, blockTypeLabel, documentAgeLimit, newBlock, newBlockId} from "../../../../common/OrganizerDocument/blocks.ts";
+import {relativeDate, WAIVER_ADULT_AGE} from "../../../../../utilites/dates.ts";
 import {showError} from "../../../../../utilites/notifications.tsx";
 import {exportDocumentPdf} from "../exportDocumentPdf.ts";
 import {RichBlockEditor, RichBlockKind} from "./RichBlockEditor.tsx";
@@ -91,6 +91,7 @@ const toDraft = (document: OrganizerDocument): DocumentDraft => ({
     blocks: document.blocks,
     signing_mode: document.signing_mode,
     audience: document.audience,
+    audience_age: document.audience_age,
     event_ids: document.event_ids,
 });
 
@@ -751,6 +752,7 @@ const DocumentSettings = ({draft, onChange, onExport}: {
     onExport: () => void,
 }) => {
     const {organizerId} = useParams();
+    const ageLimit = documentAgeLimit(draft) ?? WAIVER_ADULT_AGE;
     const eventsQuery = useGetOrganizerEvents(organizerId, {perPage: 100, sortBy: 'start_date', sortDirection: 'desc'});
     // Upcoming (not over, not archived), soonest first; plus those already linked.
     const events = useMemo(() => (eventsQuery.data?.data ?? [])
@@ -788,7 +790,7 @@ const DocumentSettings = ({draft, onChange, onExport}: {
 
             <h3 className={classes.settingsTitle}>{t`Who has to fill it in?`}</h3>
             <div className={classes.pills}>
-                {([['ALL', t`Everyone`], ['MINORS', t`Minors only`]] as const).map(([audience, label]) => (
+                {([['ALL', t`Everyone`], ['MINORS', t`By age`]] as const).map(([audience, label]) => (
                     <button
                         key={audience}
                         type="button"
@@ -801,9 +803,23 @@ const DocumentSettings = ({draft, onChange, onExport}: {
                 ))}
             </div>
             {draft.audience === 'MINORS' && (
-                <p className={classes.panelHint}>
-                    <Trans>Under 18 on the day of the event, from the date of birth asked at checkout.</Trans>
-                </p>
+                <>
+                    {/* 16 for the rules some activities have in Québec; a parent or guardian still signs under 18. */}
+                    <NumberInput
+                        className={classes.ageInput}
+                        label={t`Under what age?`}
+                        min={1}
+                        max={WAIVER_ADULT_AGE}
+                        allowDecimal={false}
+                        allowNegative={false}
+                        clampBehavior="strict"
+                        value={ageLimit}
+                        onChange={(value) => typeof value === 'number' && value >= 1 && onChange({audience_age: value})}
+                    />
+                    <p className={classes.panelHint}>
+                        <Trans>Under {ageLimit} on the day of the event, from the date of birth asked at checkout.</Trans>
+                    </p>
+                </>
             )}
 
             <h3 className={classes.settingsTitle}>{t`Linked events`}</h3>

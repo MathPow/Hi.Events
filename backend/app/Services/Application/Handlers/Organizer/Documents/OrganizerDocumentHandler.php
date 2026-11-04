@@ -64,7 +64,7 @@ class OrganizerDocumentHandler
     }
 
     /**
-     * Saves what changed: any of title, blocks, signing_mode, audience, event_ids.
+     * Saves what changed: any of title, blocks, signing_mode, audience, audience_age, event_ids.
      *
      * @throws ValidationException|Throwable
      */
@@ -91,6 +91,10 @@ class OrganizerDocumentHandler
 
         if (array_key_exists('audience', $changes)) {
             $attributes[OrganizerDocumentDomainObjectAbstract::AUDIENCE] = DocumentAudience::from($changes['audience'])->value;
+        }
+
+        if (array_key_exists('audience_age', $changes)) {
+            $attributes[OrganizerDocumentDomainObjectAbstract::AUDIENCE_AGE] = $changes['audience_age'] === null ? null : (int)$changes['audience_age'];
         }
 
         $eventIds = array_key_exists('event_ids', $changes)
@@ -128,6 +132,7 @@ class OrganizerDocumentHandler
             OrganizerDocumentDomainObjectAbstract::BLOCKS => DocumentBlocks::normalize($document->getBlocks()),
             OrganizerDocumentDomainObjectAbstract::SIGNING_MODE => $document->getSigningMode(),
             OrganizerDocumentDomainObjectAbstract::AUDIENCE => $document->getAudience(),
+            OrganizerDocumentDomainObjectAbstract::AUDIENCE_AGE => $document->getAudienceAge(),
             OrganizerDocumentDomainObjectAbstract::TEMPLATE => $document->getTemplate(),
         ]);
 

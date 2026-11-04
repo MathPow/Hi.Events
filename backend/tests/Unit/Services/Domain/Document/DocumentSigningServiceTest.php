@@ -26,6 +26,27 @@ class DocumentSigningServiceTest extends TestCase
     /**
      * @return array[] The copies created for an attendee born on $dateOfBirth.
      */
+    public function testADocumentByAgeIsForTheParticipantsUnderItsAgeLimit(): void
+    {
+        $service = new DocumentSigningService(
+            new WaiverService(m::mock(WaiverRepositoryInterface::class), m::mock(DatabaseManager::class)),
+            m::mock(DocumentSignatureRepositoryInterface::class),
+        );
+        $event = (new EventDomainObject())->setStartDate('2027-06-12 12:00:00')->setTimezone('America/Montreal');
+        $forAll = (new OrganizerDocumentDomainObject())->setAudience('ALL');
+        $under16 = (new OrganizerDocumentDomainObject())->setAudience('MINORS')->setAudienceAge(16);
+        $minors = (new OrganizerDocumentDomainObject())->setAudience('MINORS');
+
+        $this->assertTrue($service->applies($forAll, '1990-01-01', $event));
+        // 15 on the event day, then 16, then 17.
+        $this->assertTrue($service->applies($under16, '2011-06-13', $event));
+        $this->assertFalse($service->applies($under16, '2011-06-12', $event));
+        $this->assertFalse($service->applies($under16, '2010-01-01', $event));
+        // Without an age limit, the minors (under 18).
+        $this->assertTrue($service->applies($minors, '2010-01-01', $event));
+        $this->assertFalse($service->applies($minors, '2009-06-12', $event));
+    }
+
     private function copies(?string $dateOfBirth, array $entries): array
     {
         $created = [];
