@@ -48,8 +48,6 @@ import {eventHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 import {PublicIcon} from "../../common/PublicIcon";
 import {eventStartLabel} from "../../../utilites/eventStartLabel.ts";
-import {getEventSaleStatus, getTicketCapacity, saleStatusLabel} from "../../../utilites/eventSales.ts";
-import navClasses from "../AppLayout/NavParts/NavParts.module.scss";
 import {EventSwitcherMenu} from "./EventSwitcherMenu.tsx";
 
 const EventLayout = () => {
@@ -196,10 +194,8 @@ const EventLayout = () => {
 
     const eventPageUrl = `/event/${eventId}/${event?.slug}`;
 
-    // The event card (Figma « Événement actif »): cover, title, date, then its sale status.
+    // The event card (Figma « Événement actif »): cover, title and date.
     const cover = eventImages?.find((image) => image.type === 'EVENT_COVER');
-    const capacity = event ? getTicketCapacity({...event, products: products ?? []}) : null;
-    const saleStatus = event && capacity ? getEventSaleStatus(event, capacity) : null;
     const organizerId = event?.organizer?.id ?? event?.organizer_id;
 
     const navContext: NavContext = {
@@ -208,16 +204,6 @@ const EventLayout = () => {
         subtitle: event ? eventStartLabel(event) : undefined,
         overline: t`Event`,
         imageUrl: cover?.url,
-        footer: saleStatus && capacity && (
-            <>
-                <span className={navClasses.statusTag} data-status={saleStatus}>{saleStatusLabel(saleStatus)}</span>
-                <span>
-                    {capacity.capacity
-                        ? t`${capacity.sold} / ${capacity.capacity} tickets`
-                        : t`${capacity.sold} tickets`}
-                </span>
-            </>
-        ),
         menu: event && (
             <>
                 {organizerId && <EventSwitcherMenu eventId={eventId as string} organizerId={organizerId}/>}

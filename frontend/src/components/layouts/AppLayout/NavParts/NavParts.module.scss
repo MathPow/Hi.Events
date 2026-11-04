@@ -131,7 +131,7 @@
   }
 }
 
-// Label and status: open, their height; folded, none (they close up like the group headings).
+// The label: open, its height; folded, none (it closes up like the group headings).
 .foldable {
   display: grid;
   grid-template-rows: 1fr;
@@ -209,39 +209,6 @@
 
   :global([data-nav-animating]) & {
     transition: width nav.$fold-duration nav.$fold-ease, height nav.$fold-duration nav.$fold-ease;
-  }
-}
-
-.eventFooter {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding-top: 0.375rem;
-  color: rgb(251 242 227 / 0.7);
-  font-size: 0.75rem;
-  line-height: normal;
-  white-space: nowrap;
-}
-
-// Sale status: green on sale, yellow almost full or sold out, pale otherwise (draft, ended).
-.statusTag {
-  flex-shrink: 0;
-  padding: 0.3125rem 0.75rem;
-  border-radius: 999px;
-  background: #ede6dd;
-  color: #6e625a;
-  font-size: 0.8125rem;
-  font-weight: 700;
-
-  &[data-status='on_sale'] {
-    background: #ddeed8;
-    color: #2f6b3a;
-  }
-
-  &[data-status='almost_full'],
-  &[data-status='sold_out'] {
-    background: #fbe7b5;
-    color: #7a5200;
   }
 }
 

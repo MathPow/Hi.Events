@@ -36,7 +36,7 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
     const subtitle = variant === 'menu' ? (context.mobileSubtitle ?? context.subtitle) : context.subtitle;
     const label = typeof context.title === 'string' ? context.title : undefined;
 
-    const isEvent = !!(context.overline || context.imageUrl || context.footer);
+    const isEvent = !!(context.overline || context.imageUrl);
 
     const row = (
         <>
@@ -52,12 +52,11 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
         </>
     );
 
-    // An event: the label, the row, then its status, each part folding away with the sidebar.
+    // An event: the label, folding away with the sidebar, then the row.
     const body = isEvent ? (
         <>
             {context.overline && <span className={classes.foldable}><span className={classes.overline}>{context.overline}</span></span>}
             <span className={classes.eventRow}>{row}</span>
-            {context.footer && <span className={classes.foldable}><span className={classes.eventFooter}>{context.footer}</span></span>}
         </>
     ) : row;
 

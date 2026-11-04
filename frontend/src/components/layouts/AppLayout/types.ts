@@ -37,11 +37,9 @@ export interface NavContext {
     mobileSubtitle?: ReactNode;
     // Menu.Item entries opened by the card; without them the card is a plain label.
     menu?: ReactNode;
-    // An event (Figma « Événement actif »): a small label above, its cover instead of the initial,
-    // and a line below (sale status, tickets sold).
+    // An event (Figma « Événement actif »): a small label above, its cover instead of the initial.
     overline?: string;
     imageUrl?: string;
-    footer?: ReactNode;
 }
 
 export interface MobilePrimaryAction {
