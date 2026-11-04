@@ -173,7 +173,9 @@ $shadow: 0 10px 16px rgb(55 39 33 / 0.08);
   grid-template-columns: repeat(auto-fill, minmax(min(21.5rem, 100%), 1fr));
   gap: 1.5rem;
   justify-items: center;
+  width: 100%;
   max-width: 67.5rem;
+  margin-inline: auto;
 
   @include mixins.respond-below(md) {
     grid-template-columns: minmax(0, 1fr);
