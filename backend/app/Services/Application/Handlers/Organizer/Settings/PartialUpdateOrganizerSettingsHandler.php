@@ -72,6 +72,10 @@ class PartialUpdateOrganizerSettingsHandler
                 $organizerSettings->getDefaultPassProcessingFeeToBuyer()
             ),
 
+            'default_invoice_tax_details' => $dto->wasProvided('defaultInvoiceTaxDetails')
+                ? $this->cleanHtml($dto->defaultInvoiceTaxDetails)
+                : $organizerSettings->getDefaultInvoiceTaxDetails(),
+
             'platform_support_enabled' => $dto->getProvided(
                 'platformSupportEnabled',
                 $organizerSettings->getPlatformSupportEnabled()
@@ -158,6 +162,11 @@ class PartialUpdateOrganizerSettingsHandler
 
     /** An empty editor (« <p></p> ») is no footer. */
     private function cleanFooter(?string $html): ?string
+    {
+        return $this->cleanHtml($html);
+    }
+
+    private function cleanHtml(?string $html): ?string
     {
         $html = $this->purifier->purify($html);
 

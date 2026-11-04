@@ -352,7 +352,7 @@ class CreateEventServiceTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testCreateEventInheritsOrganizerFontFamily(): void
+    public function testCreateEventInheritsOrganizerFontFamilyAndTaxNumbers(): void
     {
         $eventData = $this->createMockEventDomainObjectWithCategory('MUSIC');
 
@@ -377,6 +377,8 @@ class CreateEventServiceTest extends TestCase
             ->andReturn(false);
         $organizerSettings->shouldReceive('getEmailFooterMessage')
             ->andReturn(null);
+        $organizerSettings->shouldReceive('getDefaultInvoiceTaxDetails')
+            ->andReturn('<p>TPS : 123456789 RT0001</p>');
 
         $organizer = $this->createMockOrganizerDomainObject()
             ->shouldReceive('getOrganizerSettings')
@@ -417,7 +419,8 @@ class CreateEventServiceTest extends TestCase
         $this->eventSettingsRepository->shouldReceive('create')
             ->with(Mockery::on(function ($arg) {
                 return isset($arg['homepage_theme_settings']['font_family'])
-                    && $arg['homepage_theme_settings']['font_family'] === 'Inter';
+                    && $arg['homepage_theme_settings']['font_family'] === 'Inter'
+                    && $arg['invoice_tax_details'] === '<p>TPS : 123456789 RT0001</p>';
             }));
 
         $this->eventStatisticsRepository->shouldReceive('create');

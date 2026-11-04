@@ -223,6 +223,80 @@
   }
 }
 
+// Etape 2: trois reponses en tuiles larges, la meme coche que l'etape 1.
+.taxChoices {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 760px;
+  margin-top: 20px;
+
+  @include mixins.respond-below(lg) {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+}
+
+.taxChoice {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px 20px;
+  border: none;
+  border-radius: 24px;
+  background: var(--dehors-champ);
+  color: var(--dehors-brun);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--dehors-champ-survol);
+  }
+
+  &[data-selected] {
+    outline: 3px solid var(--dehors-brun);
+    outline-offset: 3px;
+  }
+
+  @include mixins.respond-below(lg) {
+    padding: 16px 18px;
+  }
+}
+
+.taxHint {
+  padding-right: 24px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.taxNumbers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  width: 100%;
+  max-width: 760px;
+  margin-top: 20px;
+  text-align: left;
+
+  @include mixins.respond-below(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 12px;
+  }
+}
+
+.taxNumbersHint {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 13px;
+  color: var(--dehors-brun);
+}
+
 .actions {
   display: flex;
   gap: 16px;

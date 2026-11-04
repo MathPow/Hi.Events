@@ -3,7 +3,7 @@ import {useGetOrganizers} from "../../../queries/useGetOrganizers.ts";
 import {useGetAccount} from "../../../queries/useGetAccount.ts";
 import {useGetEvents} from "../../../queries/useGetEvents.ts";
 import {t} from "@lingui/macro";
-import {Button, Center, LoadingOverlay, PinInput, Stack, Text} from "@mantine/core";
+import {Button, Center, LoadingOverlay, PinInput, Stack, Text, TextInput} from "@mantine/core";
 import classes from "./Onboarding.module.scss";
 import {useForm} from "@mantine/form";
 import {useDebouncedValue, useMediaQuery} from "@mantine/hooks";
@@ -13,15 +13,20 @@ import {useConfirmEmailWithCode} from "../../../mutations/useConfirmEmailWithCod
 import {useResendEmailConfirmation} from "../../../mutations/useResendEmailConfirmation.ts";
 import {useCreateOrganizer} from "../../../mutations/useCreateOrganizer.ts";
 import {useUpdateAccountEventTypes} from "../../../mutations/useUpdateAccountEventTypes.ts";
+import {useCreateTaxOrFee} from "../../../mutations/useCreateTaxOrFee.ts";
+import {useUpdateOrganizerSettings} from "../../../mutations/useUpdateOrganizerSettings.ts";
+import {useGetTaxesAndFees} from "../../../queries/useGetTaxesAndFees.ts";
 import {IconClock} from "@tabler/icons-react";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {trackEvent, AnalyticsEvents} from "../../../utilites/analytics.ts";
-import {AccountEventType} from "../../../types.ts";
+import {AccountEventType, IdParam, TaxAndFeeCalculationType, TaxAndFeeType} from "../../../types.ts";
 import {EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
 import {EventTypeIllustration} from "../../common/EventTypeIllustration";
 
 // La carte creme sur l'orange, son logo et la progression en haut.
-const OnboardingCard = ({step, children}: { step?: 1 | 2, children: ReactNode }) => {
+const STEPS = 3;
+
+const OnboardingCard = ({step, children}: { step?: 1 | 2 | 3, children: ReactNode }) => {
 
     return (
         <div className={classes.page}>
@@ -33,10 +38,11 @@ const OnboardingCard = ({step, children}: { step?: 1 | 2, children: ReactNode })
                     </Link>
                     {step && (
                         <div className={classes.progress}>
-                            <span className={classes.progressLong}>{t`Step ${step} of 2`}</span>
-                            <span className={classes.progressShort}>{step}/2</span>
-                            <span className={classes.segment} data-done/>
-                            <span className={classes.segment} data-done={step === 2 || undefined}/>
+                            <span className={classes.progressLong}>{t`Step ${step} of ${STEPS}`}</span>
+                            <span className={classes.progressShort}>{step}/{STEPS}</span>
+                            {Array.from({length: STEPS}, (_, index) => (
+                                <span key={index} className={classes.segment} data-done={index < step || undefined}/>
+                            ))}
                         </div>
                     )}
                 </div>
@@ -248,11 +254,132 @@ const EventTypesStep = ({onDone}: { onDone: () => void }) => {
     );
 };
 
+type TaxAnswer = 'registered' | 'not_registered' | 'unsure';
+
+// Quebec's sales taxes on a ticket: each on the price, QST not on top of GST (since 2013).
+const GST_RATE = 5;
+const QST_RATE = 9.975;
+
+/**
+ * Is the organization registered for GST and QST? Registered: both taxes are created, ticked on every
+ * new ticket, and their numbers go on the invoices of new events. Otherwise nothing is charged: a small
+ * supplier (under $30,000 a year) doesn't have to register, and can't charge taxes without registering.
+ */
+const TaxesStep = ({organizerId, onDone}: { organizerId: IdParam, onDone: () => void }) => {
+    const [answer, setAnswer] = useState<TaxAnswer | null>(null);
+    const [gstNumber, setGstNumber] = useState('');
+    const [qstNumber, setQstNumber] = useState('');
+    const [saving, setSaving] = useState(false);
+    const {data: taxes} = useGetTaxesAndFees();
+    const createTax = useCreateTaxOrFee();
+    const updateOrganizerSettings = useUpdateOrganizerSettings();
+
+    const choices: { value: TaxAnswer, label: string, hint: string }[] = [
+        {value: 'registered', label: t`Yes, both`, hint: t`GST 5% and QST 9.975% will be added to the price of your tickets.`},
+        {value: 'not_registered', label: t`No`, hint: t`No taxes: as a small supplier (under $30,000 of sales a year), you don't charge them.`},
+        {value: 'unsure', label: t`I don't know`, hint: t`No taxes for now. You can add them at any time in the settings, under Taxes and receipts.`},
+    ];
+
+    const createQuebecTaxes = async () => {
+        const existing = new Set((taxes?.data ?? []).map(tax => tax.name.trim().toLowerCase()));
+        const quebecTaxes = [
+            {name: t({message: 'GST', context: 'Canadian goods and services tax'}), rate: GST_RATE, number: gstNumber},
+            {name: t({message: 'QST', context: 'Quebec sales tax'}), rate: QST_RATE, number: qstNumber},
+        ];
+        for (const tax of quebecTaxes) {
+            if (existing.has(tax.name.toLowerCase())) {
+                continue;
+            }
+            await createTax.mutateAsync({
+                taxOrFeeData: {
+                    name: tax.name,
+                    rate: tax.rate,
+                    type: TaxAndFeeType.Tax,
+                    calculation_type: TaxAndFeeCalculationType.Percentage,
+                    is_default: true,
+                    is_active: true,
+                    description: tax.number.trim() || undefined,
+                },
+            });
+        }
+
+        const numbers = quebecTaxes.filter(tax => tax.number.trim()).map(tax => `${tax.name} : ${tax.number.trim()}`);
+        if (numbers.length) {
+            await updateOrganizerSettings.mutateAsync({
+                organizerId,
+                organizerSettings: {default_invoice_tax_details: `<p>${numbers.map(escapeHtml).join('<br>')}</p>`},
+            });
+        }
+    };
+
+    const handleContinue = async () => {
+        if (answer !== 'registered') {
+            onDone();
+            return;
+        }
+        setSaving(true);
+        try {
+            await createQuebecTaxes();
+            onDone();
+        } catch {
+            showError(t`Something went wrong. Please try again.`);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <OnboardingCard step={2}>
+            <h1 className={classes.title}>{t`Are you registered for GST and QST?`}</h1>
+            <p className={classes.subtitle}>{t`It decides whether taxes are added to the price of your tickets.`}</p>
+
+            <div className={classes.taxChoices} role="radiogroup" aria-label={t`Are you registered for GST and QST?`}>
+                {choices.map((choice) => {
+                    const isSelected = answer === choice.value;
+                    return (
+                        <button key={choice.value} type="button" role="radio" aria-checked={isSelected}
+                                className={classes.taxChoice} data-rough="button"
+                                data-selected={isSelected || undefined}
+                                onClick={() => setAnswer(choice.value)}>
+                            <span className={classes.choiceLabel}>{choice.label}</span>
+                            <span className={classes.taxHint}>{choice.hint}</span>
+                            {isSelected && <img src={'/interface/bienvenue/coche.svg'} alt={''} className={classes.check}/>}
+                        </button>
+                    );
+                })}
+            </div>
+
+            {answer === 'registered' && (
+                <div className={classes.taxNumbers}>
+                    <TextInput label={t`GST number`} placeholder="123456789 RT0001" value={gstNumber}
+                               onChange={(e) => setGstNumber(e.currentTarget.value)} maxLength={30}/>
+                    <TextInput label={t`QST number`} placeholder="1234567890 TQ0001" value={qstNumber}
+                               onChange={(e) => setQstNumber(e.currentTarget.value)} maxLength={30}/>
+                    <p className={classes.taxNumbersHint}>
+                        {t`Shown on your invoices and receipts. You can add them later.`}
+                    </p>
+                </div>
+            )}
+
+            <div className={classes.actions}>
+                <Button variant="outline" className={classes.outlineButton} onClick={onDone}>
+                    {t`Skip this step`}
+                </Button>
+                <Button className={classes.darkButton} onClick={handleContinue} loading={saving} disabled={!answer}>
+                    {t`Continue`}
+                </Button>
+            </div>
+        </OnboardingCard>
+    );
+};
+
+const escapeHtml = (text: string) => text.replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c] as string);
+
 const StartStep = ({organizerId}: { organizerId: string | number }) => {
     const organizerPath = `/manage/organizer/${organizerId}`;
 
     return (
-        <OnboardingCard step={2}>
+        <OnboardingCard step={3}>
             <p className={classes.hand}>{t`Account created!`}</p>
             <h1 className={classes.title}>{t`Your ticketing is ready!`}</h1>
             <p className={classes.subtitle}>{t`Where to start? The rest can wait.`}</p>
@@ -309,7 +436,7 @@ const Welcome = () => {
     const createOrganizer = useCreateOrganizer();
     const creatingOrganizer = useRef(false);
     const hasTrackedSignup = useRef(false);
-    const [step, setStep] = useState<'types' | 'start'>('types');
+    const [step, setStep] = useState<'types' | 'taxes' | 'start'>('types');
 
     const organizer = organizersQuery.data?.data?.[0];
     const requiresVerification = me
@@ -365,9 +492,13 @@ const Welcome = () => {
         return <LoadingOverlay visible/>;
     }
 
-    return step === 'types'
-        ? <EventTypesStep onDone={() => setStep('start')}/>
-        : <StartStep organizerId={organizer.id as string | number}/>;
+    if (step === 'types') {
+        return <EventTypesStep onDone={() => setStep('taxes')}/>;
+    }
+    if (step === 'taxes') {
+        return <TaxesStep organizerId={organizer.id as IdParam} onDone={() => setStep('start')}/>;
+    }
+    return <StartStep organizerId={organizer.id as string | number}/>;
 }
 
 export default Welcome;

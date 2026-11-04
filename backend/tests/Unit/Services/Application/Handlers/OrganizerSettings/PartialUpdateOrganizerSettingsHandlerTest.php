@@ -350,4 +350,51 @@ class PartialUpdateOrganizerSettingsHandlerTest extends TestCase
             'email_footer_message' => '<p></p>',
         ]));
     }
+
+    public function testDefaultInvoiceTaxDetailsAreSanitizedAndSaved(): void
+    {
+        $this->expectSettingsUpdate(new OrganizerSettingDomainObject, function (array $attributes) {
+            return $attributes['default_invoice_tax_details'] === '<p>TPS : 123456789 RT0001</p>';
+        });
+
+        $this->purifier->shouldReceive('purify')
+            ->once()
+            ->with('<p>TPS : 123456789 RT0001</p><script>x</script>')
+            ->andReturn('<p>TPS : 123456789 RT0001</p>');
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'default_invoice_tax_details' => '<p>TPS : 123456789 RT0001</p><script>x</script>',
+        ]));
+    }
+
+    public function testDefaultInvoiceTaxDetailsAreKeptWhenNotProvided(): void
+    {
+        $existing = new OrganizerSettingDomainObject;
+        $existing->setDefaultInvoiceTaxDetails('<p>TVQ : 1234567890 TQ0001</p>');
+
+        $this->expectSettingsUpdate($existing, function (array $attributes) {
+            return $attributes['default_invoice_tax_details'] === '<p>TVQ : 1234567890 TQ0001</p>';
+        });
+
+        $this->handler->handle(PartialUpdateOrganizerSettingsDTO::from([
+            'organizer_id' => 1,
+            'account_id' => '100',
+            'default_show_marketing_opt_in' => true,
+        ]));
+    }
+
+    private function expectSettingsUpdate(OrganizerSettingDomainObject $existing, callable $check): void
+    {
+        $organizer = new OrganizerDomainObject;
+        $organizer->setId(1);
+        $existing->setId(10);
+        $existing->setOrganizerId(1);
+
+        $this->organizerRepository->shouldReceive('findFirstWhere')->once()->andReturn($organizer);
+        $this->settingsRepository->shouldReceive('findFirstWhere')->once()->andReturn($existing);
+        $this->settingsRepository->shouldReceive('updateWhere')->once()->with(Mockery::on($check), Mockery::any());
+        $this->settingsRepository->shouldReceive('findFirst')->with(10)->once()->andReturn($existing);
+    }
 }

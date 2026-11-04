@@ -38,9 +38,10 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     final public const CHARITY_RECEIPT_PREFIX = 'charity_receipt_prefix';
     final public const DEFAULT_PASS_PROCESSING_FEE_TO_BUYER = 'default_pass_processing_fee_to_buyer';
     final public const FAQS = 'faqs';
-    final public const EMAIL_FOOTER_MESSAGE = 'email_footer_message';
     final public const PLATFORM_SUPPORT_ENABLED = 'platform_support_enabled';
     final public const SOCIAL_MEDIA_LAYOUT = 'social_media_layout';
+    final public const EMAIL_FOOTER_MESSAGE = 'email_footer_message';
+    final public const DEFAULT_INVOICE_TAX_DETAILS = 'default_invoice_tax_details';
 
     protected int $id;
     protected int $organizer_id;
@@ -70,9 +71,10 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     protected ?string $charity_receipt_prefix = null;
     protected bool $default_pass_processing_fee_to_buyer = false;
     protected array|string|null $faqs = null;
-    protected ?string $email_footer_message = null;
     protected bool $platform_support_enabled = true;
     protected array|string|null $social_media_layout = null;
+    protected ?string $email_footer_message = null;
+    protected ?string $default_invoice_tax_details = null;
 
     public function toArray(): array
     {
@@ -105,9 +107,10 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
                     'charity_receipt_prefix' => $this->charity_receipt_prefix ?? null,
                     'default_pass_processing_fee_to_buyer' => $this->default_pass_processing_fee_to_buyer ?? null,
                     'faqs' => $this->faqs ?? null,
-                    'email_footer_message' => $this->email_footer_message ?? null,
                     'platform_support_enabled' => $this->platform_support_enabled ?? null,
                     'social_media_layout' => $this->social_media_layout ?? null,
+                    'email_footer_message' => $this->email_footer_message ?? null,
+                    'default_invoice_tax_details' => $this->default_invoice_tax_details ?? null,
                 ];
     }
 
@@ -420,17 +423,6 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
         return $this->faqs;
     }
 
-    public function setEmailFooterMessage(?string $email_footer_message): self
-    {
-        $this->email_footer_message = $email_footer_message;
-        return $this;
-    }
-
-    public function getEmailFooterMessage(): ?string
-    {
-        return $this->email_footer_message;
-    }
-
     public function setPlatformSupportEnabled(bool $platform_support_enabled): self
     {
         $this->platform_support_enabled = $platform_support_enabled;
@@ -451,5 +443,27 @@ abstract class OrganizerSettingDomainObjectAbstract extends \HiEvents\DomainObje
     public function getSocialMediaLayout(): array|string|null
     {
         return $this->social_media_layout;
+    }
+
+    public function setEmailFooterMessage(?string $email_footer_message): self
+    {
+        $this->email_footer_message = $email_footer_message;
+        return $this;
+    }
+
+    public function getEmailFooterMessage(): ?string
+    {
+        return $this->email_footer_message;
+    }
+
+    public function setDefaultInvoiceTaxDetails(?string $default_invoice_tax_details): self
+    {
+        $this->default_invoice_tax_details = $default_invoice_tax_details;
+        return $this;
+    }
+
+    public function getDefaultInvoiceTaxDetails(): ?string
+    {
+        return $this->default_invoice_tax_details;
     }
 }

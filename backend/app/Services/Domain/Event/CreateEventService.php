@@ -225,7 +225,7 @@ class CreateEventService
             'require_billing_address' => false,
             'organization_name' => $organizer->getName(),
             'organization_address' => null,
-            'invoice_tax_details' => null,
+            'invoice_tax_details' => $organizerSettings->getDefaultInvoiceTaxDetails(),
 
             'attendee_details_collection_method' => $organizerSettings->getDefaultAttendeeDetailsCollectionMethod(),
             'show_marketing_opt_in' => $organizerSettings->getDefaultShowMarketingOptIn(),
