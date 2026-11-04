@@ -454,6 +454,12 @@ export interface OrganizerAchievementProgress {
     is_new: boolean;
 }
 
+// On the organizer's public page: only what was earned, hardest first.
+export interface OrganizerEarnedAchievement {
+    key: OrganizerAchievementKey;
+    earned_at: string;
+}
+
 export interface Organizer {
     id?: IdParam;
     name: string;
@@ -470,6 +476,7 @@ export interface Organizer {
     settings?: OrganizerSettings;
     location_details?: VenueAddress;
     status?: OrganizerStatus;
+    achievements?: OrganizerEarnedAchievement[];
 }
 
 export interface SocialMediaLayoutEntry {

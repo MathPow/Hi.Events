@@ -47,6 +47,28 @@ enum OrganizerAchievement: string
     }
 
     /**
+     * How hard it is to earn: the organizer's public page shows the hardest first.
+     */
+    public function difficulty(): int
+    {
+        return match ($this) {
+            self::Club69420 => 13,
+            self::Club5000 => 12,
+            self::Club1000 => 11,
+            self::Club500 => 10,
+            self::ReturningAttendees => 9,
+            self::QuebecTour => 8,
+            self::Club250 => 7,
+            self::Rookies => 6,
+            self::HatTrick => 5,
+            self::SecretCode => 4,
+            self::Club100 => 3,
+            self::FirstMerchandiseSale => 2,
+            self::FirstEvent => 1,
+        };
+    }
+
+    /**
      * Where the organizer stands, on the same scale as target().
      */
     public function progress(OrganizerAchievementMetricsDTO $metrics): int

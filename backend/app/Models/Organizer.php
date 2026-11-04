@@ -26,4 +26,9 @@ class Organizer extends BaseModel
     {
         return $this->hasMany(Webhook::class);
     }
+
+    public function organizer_achievements(): HasMany
+    {
+        return $this->hasMany(OrganizerAchievement::class);
+    }
 }

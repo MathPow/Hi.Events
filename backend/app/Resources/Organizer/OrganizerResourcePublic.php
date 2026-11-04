@@ -2,6 +2,8 @@
 
 namespace HiEvents\Resources\Organizer;
 
+use HiEvents\DomainObjects\Enums\OrganizerAchievement;
+use HiEvents\DomainObjects\OrganizerAchievementDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\Resources\Event\EventResourcePublic;
 use HiEvents\Resources\Image\ImageResource;
@@ -34,6 +36,30 @@ class OrganizerResourcePublic extends JsonResource
                 condition: !is_null($this->getOrganizerSettings()),
                 value: fn() => new OrganizerSettingsPublicResource($this->getOrganizerSettings())
             ),
+            'achievements' => $this->when(
+                condition: !is_null($this->getOrganizerAchievements()),
+                value: fn() => $this->earnedAchievementsHardestFirst(),
+            ),
         ];
+    }
+
+    /**
+     * Only what was earned and when: the progress towards the others stays private.
+     */
+    private function earnedAchievementsHardestFirst(): array
+    {
+        return $this->getOrganizerAchievements()
+            ->map(fn(OrganizerAchievementDomainObject $earned) => [
+                'achievement' => OrganizerAchievement::tryFrom($earned->getAchievement()),
+                'earned_at' => $earned->getEarnedAt(),
+            ])
+            ->filter(fn(array $earned) => $earned['achievement'] !== null)
+            ->sortByDesc(fn(array $earned) => $earned['achievement']->difficulty())
+            ->map(fn(array $earned) => [
+                'key' => $earned['achievement']->value,
+                'earned_at' => $earned['earned_at'],
+            ])
+            ->values()
+            ->all();
     }
 }

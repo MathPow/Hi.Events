@@ -22,6 +22,7 @@ import {PublicIcon} from "../../common/PublicIcon";
 import {FaqAccordion} from "../../common/FaqAccordion";
 import {ShareComponent} from "../../common/ShareIcon";
 import {visibleSocialHandles} from "../../../utilites/socialLinks.ts";
+import {AchievementStack} from "./AchievementStack";
 
 interface OrganizerHomepageProps {
     organizer?: Organizer;
@@ -164,6 +165,7 @@ export const OrganizerHomepage = ({
                             ) : (
                                 <span className={classes.bannerName} aria-hidden="true">{organizer.name}</span>
                             )}
+                            {!!organizer.achievements?.length && <AchievementStack achievements={organizer.achievements}/>}
                         </div>
 
                         <div className={classes.profile}>

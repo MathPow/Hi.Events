@@ -1,0 +1,176 @@
+@use "../../../styles/mixins.scss";
+
+$police-titre: FatFrank, 'Arial Black', sans-serif;
+
+// Over the photo, top left: the discs overlap like profile pictures, the hardest on top.
+.stack {
+  --disc-size: 46px;
+  --disc-overlap: -14px;
+
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 999px;
+
+  @include mixins.respond-below(md) {
+    --disc-size: 38px;
+    --disc-overlap: -12px;
+
+    top: 10px;
+    left: 10px;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--dehors-creme);
+    outline-offset: 2px;
+  }
+
+  // They spread a little when the list opens.
+  &:hover,
+  &[data-opened] {
+    --disc-overlap: -6px;
+  }
+}
+
+.disc {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--disc-size);
+  height: var(--disc-size);
+  border: 3px solid var(--dehors-creme);
+  border-radius: 50%;
+  color: #ffffff;
+  background: var(--achievement-badge);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.28);
+  transition: margin 160ms ease;
+
+  & + & {
+    margin-left: var(--disc-overlap);
+  }
+
+  &:nth-child(1) { z-index: 4; }
+  &:nth-child(2) { z-index: 3; }
+  &:nth-child(3) { z-index: 2; }
+  &:nth-child(4) { z-index: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.more {
+  font-family: $police-titre;
+  font-size: calc(var(--disc-size) * 0.34);
+  line-height: 1;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+}
+
+.discIcon {
+  width: 52%;
+  height: 52%;
+}
+
+// « Club des 100 »: its number, smaller as it gets longer.
+.discLabel {
+  font-family: $police-titre;
+  font-size: calc(var(--disc-size) * 0.34);
+  line-height: 1;
+  letter-spacing: -0.02em;
+
+  &[data-length='4'] {
+    font-size: calc(var(--disc-size) * 0.27);
+  }
+
+  &[data-length='5'] {
+    font-size: calc(var(--disc-size) * 0.22);
+  }
+}
+
+// The list: every achievement, the hardest first.
+.dropdown {
+  max-width: calc(100vw - 32px);
+  padding: 16px 14px 10px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 4px 10px;
+  font-family: $police-titre;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: min(420px, 60vh);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px;
+}
+
+.itemDisc {
+  --disc-size: 40px;
+
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--disc-size);
+  height: var(--disc-size);
+  margin: 4px;
+  border-radius: 50%;
+  color: #ffffff;
+  background: var(--achievement-badge);
+  box-shadow: 0 0 0 4px var(--achievement-background);
+}
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+
+  strong {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  span {
+    font-size: 13px;
+    line-height: 1.35;
+    color: rgb(55 39 33 / 0.75);
+  }
+}

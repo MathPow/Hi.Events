@@ -16,6 +16,11 @@ class OrganizerDomainObject extends Generated\OrganizerDomainObjectAbstract
 
     private ?OrganizerSettingDomainObject $settings = null;
 
+    /**
+     * @var Collection<OrganizerAchievementDomainObject>|null
+     */
+    private ?Collection $organizerAchievements = null;
+
     public function getImages(): ?Collection
     {
         return $this->images;
@@ -48,6 +53,18 @@ class OrganizerDomainObject extends Generated\OrganizerDomainObjectAbstract
     public function setOrganizerSettings(?OrganizerSettingDomainObject $settings): self
     {
         $this->settings = $settings;
+
+        return $this;
+    }
+
+    public function getOrganizerAchievements(): ?Collection
+    {
+        return $this->organizerAchievements;
+    }
+
+    public function setOrganizerAchievements(?Collection $organizerAchievements): self
+    {
+        $this->organizerAchievements = $organizerAchievements;
 
         return $this;
     }
