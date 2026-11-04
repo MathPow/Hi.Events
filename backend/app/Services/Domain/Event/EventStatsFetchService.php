@@ -144,6 +144,10 @@ readonly class EventStatsFetchService
             ];
         }
 
+        if ($preset === 'all_time') {
+            return $this->resolveAllTimeRange($eventId);
+        }
+
         $event = $this->eventRepository->findById($eventId);
 
         $bounds = $this->db->selectOne(
@@ -186,6 +190,34 @@ readonly class EventStatsFetchService
         return [
             $adjustedStart->format('Y-m-d H:i:s'),
             $endDate->format('Y-m-d H:i:s'),
+        ];
+    }
+
+    /**
+     * The dashboard's « all time »: from the event's first day of activity (its creation when it has
+     * none yet) to today, never into the future.
+     */
+    private function resolveAllTimeRange(int $eventId): array
+    {
+        $firstDay = $this->db->selectOne(
+            'SELECT MIN(date) AS min_date
+             FROM event_daily_statistics
+             WHERE event_id = :eventId AND deleted_at IS NULL',
+            ['eventId' => $eventId]
+        )?->min_date;
+
+        $now = Carbon::now();
+        $start = $firstDay
+            ? Carbon::parse($firstDay)
+            : Carbon::parse($this->eventRepository->findById($eventId)->getCreatedAt());
+
+        if ($start->isAfter($now)) {
+            $start = $now->copy();
+        }
+
+        return [
+            $start->startOfDay()->format('Y-m-d H:i:s'),
+            $now->format('Y-m-d H:i:s'),
         ];
     }
 
