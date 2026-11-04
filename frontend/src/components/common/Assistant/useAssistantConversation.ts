@@ -126,7 +126,6 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
         controller.current = ctrl;
         setRunning(true);
         // A change went through during this answer: the page in view reloads at the end.
-        let changed = false;
 
         const execute = async (call: Block): Promise<Block> => {
             const toolInput = (call.input ?? {}) as Record<string, unknown>;
@@ -236,9 +235,8 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
                     try {
                         const response = await changeApi(approval);
                         updateApproval(approval.id, {state: "done"});
-                        // The pages open behind reload their data.
-                        queryClient.invalidateQueries();
-                        changed = true;
+                        // The page in view starts again from the fresh data, right away, and flashes.
+                        queryClient.invalidateQueries().then(requestPageRefresh, requestPageRefresh);
                         return result(response);
                     } catch (error) {
                         if (!(error instanceof TicketingUnavailableError)) {
@@ -297,10 +295,6 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
             setRunning(false);
             if (controller.current === ctrl) {
                 controller.current = null;
-            }
-            // Once the fresh data is in, so the page doesn't start again from the old one.
-            if (changed) {
-                queryClient.invalidateQueries().then(requestPageRefresh, requestPageRefresh);
             }
         }
     };

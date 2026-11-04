@@ -64,3 +64,93 @@
     }
   }
 }
+
+// After the assistant changed something: the fresh page rises in with an orange glow around its
+// column, and a pill says where the change came from.
+@keyframes pageRefreshedIn {
+  from {
+    opacity: 0.25;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes pageRefreshedGlow {
+  0%,
+  40% {
+    box-shadow: inset 0 0 0 3px var(--dehors-orange);
+  }
+  100% {
+    box-shadow: inset 0 0 0 3px transparent;
+  }
+}
+
+@keyframes refreshedPill {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -12px) scale(0.92);
+  }
+  12%,
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+}
+
+.container .main[data-refreshed] {
+  animation: pageRefreshedGlow 2.2s ease-out;
+
+  > * {
+    animation: pageRefreshedIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+.refreshedPill {
+  position: fixed;
+  z-index: 200;
+  top: 84px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dehors-creme);
+  background: var(--dehors-brun);
+  box-shadow: 0 6px 20px rgb(53 41 36 / 0.25);
+  pointer-events: none;
+  animation: refreshedPill 2.2s ease forwards;
+
+  // Over the page's column, not the whole window.
+  @include mixins.respond-above(md) {
+    left: calc(var(--sidebar-width) + 1.5rem + (100vw - var(--sidebar-width) - 1.5rem) / 2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container .main[data-refreshed] > * {
+    animation: none;
+  }
+
+  .refreshedPill {
+    animation-name: refreshedPillFade;
+  }
+}
+
+@keyframes refreshedPillFade {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  10%,
+  85% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}

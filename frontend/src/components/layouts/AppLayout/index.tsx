@@ -14,6 +14,7 @@ import {InstallAppPrompt} from "../../common/InstallAppPrompt";
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 import {PageStatusProvider} from "./PageStatus.tsx";
 import {isPageRefreshHeld, PAGE_REFRESH_EVENT} from "./pageRefresh.ts";
+import {IconCheck} from "@tabler/icons-react";
 
 interface AppLayoutProps {
     navItems: NavItem[];
@@ -34,6 +35,8 @@ interface AppLayoutProps {
 const COLLAPSED_STORAGE_KEY = 'dehors-nav-collapsed';
 // A bit longer than the sidebar's folding (Sidebar.module.scss, nav.$fold-duration).
 const FOLD_ANIMATION_MS = 400;
+// How long a page freshly changed by the assistant stays highlighted.
+const REFRESH_FLASH_MS = 2200;
 
 // The sidebar entry for the current page, so the breadcrumbs can end with where the user is.
 const findCurrentNavItem = (navItems: NavItem[], pathname: string): NavItem | undefined => {
@@ -76,6 +79,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     const [topBarShadow, setTopBarShadow] = useState<boolean>(false);
     // Bumped when the assistant changed something: the page starts again from the fresh data.
     const [pageRevision, setPageRevision] = useState(0);
+    const [refreshed, setRefreshed] = useState(false);
+    const refreshedTimer = useRef<number>();
 
     const helpItem: NavItem = {
         label: t`Help center`,
@@ -99,10 +104,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         const refresh = () => {
             if (!isPageRefreshHeld()) {
                 setPageRevision((revision) => revision + 1);
+                // The fresh page fades in with a glow and a « Updated » pill, so the change is seen.
+                setRefreshed(true);
+                window.clearTimeout(refreshedTimer.current);
+                refreshedTimer.current = window.setTimeout(() => setRefreshed(false), REFRESH_FLASH_MS);
             }
         };
         window.addEventListener(PAGE_REFRESH_EVENT, refresh);
-        return () => window.removeEventListener(PAGE_REFRESH_EVENT, refresh);
+        return () => {
+            window.removeEventListener(PAGE_REFRESH_EVENT, refresh);
+            window.clearTimeout(refreshedTimer.current);
+        };
     }, []);
 
     const toggleCollapsed = () => {
@@ -158,9 +170,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                         actions={topBarActions}
                     />
                 )}>
-                    <div className={classes.main} id={'app-manage-main'}>
+                    <div className={classes.main} id={'app-manage-main'} data-refreshed={refreshed || undefined}>
                         <Outlet key={pageRevision}/>
                     </div>
+                    {refreshed && (
+                        <div key={pageRevision} className={classes.refreshedPill} role="status">
+                            <IconCheck size={16} stroke={2.5}/>
+                            {t`Updated by the assistant`}
+                        </div>
+                    )}
                 </PageStatusProvider>
 
                 <Sidebar
