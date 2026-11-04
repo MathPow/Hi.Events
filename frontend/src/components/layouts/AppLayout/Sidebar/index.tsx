@@ -122,7 +122,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     };
 
     return (
-        <aside className={classNames(classes.sidebar, {[classes.collapsed]: collapsed})}>
+        <aside className={classNames(classes.sidebar, {[classes.collapsed]: collapsed, [classes.compact]: context?.compact})}
+               data-nav-compact={context?.compact || undefined}>
             <div className={classes.top}>
                 <div className={classes.brand}>
                     <NavLink to="/manage/events" className={classes.wordmark} tabIndex={collapsed ? -1 : undefined}

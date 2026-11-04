@@ -356,3 +356,55 @@
 :global(html[data-impersonating]) .sidebar {
   background: var(--dehors-orange);
 }
+
+// Figma « Admin · Barre latérale · Événement »: more entries, in tighter rows (36 px, 18 px icons, small
+// dim headings), so the whole list fits without scrolling.
+.compact {
+  padding: 1.125rem 1rem 0.75rem;
+
+  .top {
+    gap: 0.625rem;
+  }
+
+  .brand {
+    min-height: 2.25rem;
+  }
+
+  .nav {
+    gap: 0.625rem;
+    margin-top: 0.625rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .group {
+    gap: 1px;
+  }
+
+  .groupHeading {
+    color: rgb(251 242 227 / 0.5);
+    font-size: 0.6875rem;
+    line-height: 0.875rem;
+
+    > span {
+      padding-top: 2px;
+      padding-bottom: 0;
+    }
+  }
+
+  .link {
+    min-height: 2.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .iconSlot > :is(img, svg) {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Folded, the 18 px icon centred in 56 px.
+.compact.collapsed .link {
+  max-height: 2.25rem;
+  padding: 0.25rem 0.375rem 0.25rem 1.1875rem;
+}

@@ -182,6 +182,11 @@ $z-tab-bar: 170;
   gap: 0.5rem;
 }
 
+// An event's pages have longer names (« Questions d'inscription »): two columns, so no word gets cut.
+.menu[data-nav-compact] .grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .tile {
   display: flex;
   flex-direction: column;

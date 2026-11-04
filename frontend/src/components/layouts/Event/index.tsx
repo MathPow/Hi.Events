@@ -2,29 +2,19 @@ import {
     IconArrowLeft,
     IconChevronRight,
     IconDeviceTabletCode,
-    IconDiscount2,
     IconExternalLink,
     IconEye,
     IconEyeOff,
     IconMailCheck,
     IconMailForward,
-    IconPaint,
-    IconQrcode,
-    IconReceipt,
     IconShare,
-    IconTicket,
-    IconTrendingUp,
-    IconUserQuestion,
-    IconUsersGroup,
     IconWebhook,
-    IconListCheck,
     IconShieldLock,
 } from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {getProductsFromEvent} from "../../../utilites/helpers.ts";
 import {useGetEvent} from "../../../queries/useGetEvent";
 import {useGetEventSettings} from "../../../queries/useGetEventSettings";
-import {useGetEventStats} from "../../../queries/useGetEventStats";
 import {useGetEventImages} from "../../../queries/useGetEventImages.ts";
 import {useCanSeeDeveloperPages} from "../../../hooks/useIsCurrentUserAdmin.ts";
 import {BreadcrumbItem, NavContext, NavItem} from "../AppLayout/types.ts";
@@ -49,6 +39,9 @@ import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 import {PublicIcon} from "../../common/PublicIcon";
 import {eventStartLabel} from "../../../utilites/eventStartLabel.ts";
 import {EventSwitcherMenu} from "./EventSwitcherMenu.tsx";
+import {useEventNotifications} from "../../routes/event/EventDashboard/eventNotifications.ts";
+
+const navIcon = (name: string) => adminIcon(`nav-evenement/${name}`);
 
 const EventLayout = () => {
     const location = useLocation();
@@ -61,7 +54,6 @@ const EventLayout = () => {
 
     const {data: event, isFetched: isEventFetched} = useGetEvent(eventId);
     const {isFetched: isEventSettingsFetched} = useGetEventSettings(eventId);
-    const {data: eventStats} = useGetEventStats(eventId);
     const {data: eventImages, isFetched: isEventImagesFetched} = useGetEventImages(eventId);
     const canSeeDeveloperPages = useCanSeeDeveloperPages();
     const {data: me} = useGetMe();
@@ -91,64 +83,72 @@ const EventLayout = () => {
     const needsProducts = isSetupStatusKnown && !products?.length;
     const needsDetails = isSetupStatusKnown && !event?.description;
     const needsImages = isSetupStatusKnown && !eventImages?.length;
+    // The dashboard's notifications still to handle: messages, payments to confirm, tickets almost gone.
+    const {toHandleCount} = useEventNotifications(eventId, event);
 
+    // Figma « Admin · Barre latérale · Événement ». Its notes retire Affiliates and Capacity Management:
+    // both pages still exist (by URL, and from the product form for capacities).
     const navItems: NavItem[] = [
-        {link: '/manage/organizer/' + event?.organizer?.id, label: t`Organizer Dashboard`, icon: IconArrowLeft},
-
         // 1. OVERVIEW
         {label: t`Overview`},
-        {link: 'dashboard', label: t`Dashboard`, iconSrc: adminIcon('accueil'), mobileTab: true, mobileTabLabel: t`Overview`},
+        {
+            link: 'dashboard',
+            label: t`Dashboard`,
+            iconSrc: navIcon('accueil'),
+            badge: toHandleCount > 0 ? String(toHandleCount) : undefined,
+            attention: toHandleCount > 0,
+            mobileTab: true,
+            mobileTabLabel: t`Overview`,
+        },
         {
             link: 'reports',
             label: t`Reports`,
-            iconSrc: adminIcon('rapports'),
+            iconSrc: navIcon('rapports'),
             isActive: (isActive) => isActive || location.pathname.includes('/report/')
         },
 
-        // 2. EVENT SETUP
-        {label: t`Setup & Design`},
-        {
-            link: 'settings',
-            label: t`Event Settings`,
-            crumbLabel: t`Settings`,
-            iconSrc: adminIcon('parametres'),
-            tileIconSrc: adminIcon('parametres-22'),
-            attention: needsDetails,
-        },
-        {link: 'homepage-designer', label: t`Homepage Designer`, icon: IconPaint, attention: needsImages},
-        {link: 'questions', label: t`Registration Questions`, icon: IconUserQuestion},
-
-        // 3. Ticketing & Sales
-        {label: t`Ticketing & Sales`},
-        {link: 'products', label: t`Tickets & Products`, icon: IconTicket, attention: needsProducts},
+        // 2. TICKETING
+        {label: t`Ticketing`},
+        {link: 'products', label: t`Tickets & Products`, iconSrc: navIcon('billets'), attention: needsProducts},
         // « Commandes » holds the participants too (Figma « Commandes et participants »): one entry for both.
         {
             link: 'orders',
             label: t`Orders`,
-            icon: IconReceipt,
-            badge: eventStats?.total_orders,
+            iconSrc: navIcon('commandes'),
             mobileTab: true,
             isActive: (isActive) => isActive || /\/attendees\/?$/.test(location.pathname),
         },
+        // Only where tickets have a deposit: the one place to return or retain it.
         ...(hasDeposits ? [{link: 'deposits', label: t`Deposits`, icon: IconShieldLock}] : []),
-        {link: 'promo-codes', label: t`Promo Codes`, icon: IconDiscount2},
-        {link: 'affiliates', label: t`Affiliates`, icon: IconTrendingUp},
+        {link: 'promo-codes', label: t`Promo Codes`, iconSrc: navIcon('codes-promo')},
+        {link: 'sold-out-waitlist', label: t`Waitlist`, iconSrc: navIcon('liste-attente')},
 
-        // 4. GUESTS
-        {label: t`Guest Management`},
-        {link: 'check-in', label: t`Check-in and scanning`, icon: IconQrcode, mobileTab: true, mobileTabLabel: t`Check-in`},
-        {link: 'messages', label: t`Messages`, iconSrc: adminIcon('messages'), tileIconSrc: adminIcon('messages-22')},
-        {link: 'sold-out-waitlist', label: t`Waitlist`, icon: IconListCheck},
-        {link: 'capacity-assignments', label: t`Capacity Management`, icon: IconUsersGroup},
+        // 3. ON SITE
+        {label: t`On site`},
+        {link: 'check-in', label: t`Check-in and scanning`, iconSrc: navIcon('scan'), mobileTab: true, mobileTabLabel: t`Check-in`},
 
-        // 5. INTEGRATIONS: the super admin's only (the section header too), like on the organizer
+        // 4. CONFIGURATION
+        {label: t`Configuration`},
+        {
+            link: 'settings',
+            label: t`Settings`,
+            iconSrc: navIcon('parametres'),
+            tileIconSrc: adminIcon('parametres-22'),
+            attention: needsDetails,
+        },
+        {link: 'homepage-designer', label: t`Event Page`, iconSrc: navIcon('page'), attention: needsImages},
+        {link: 'questions', label: t`Registration Questions`, iconSrc: navIcon('questions')},
+
+        // 5. COMMUNICATION
+        {label: t`Communication`},
+        {link: 'messages', label: t`Messages`, iconSrc: navIcon('messages'), tileIconSrc: adminIcon('messages-22')},
+
+        // 6. INTEGRATIONS: the super admin's only (the section header too), like on the organizer
         ...(canSeeDeveloperPages ? [
             {label: t`Integrations`},
             {link: 'widget', label: t`Widget Embed`, icon: IconDeviceTabletCode},
             {link: 'webhooks', label: t`Webhooks`, icon: IconWebhook},
         ] : []),
-
-
     ];
     const navItemsWithLoading = !isEventSettingsFetched || !isEventFetched
         ? navItems.map(item => item.link ? {...item, loading: true} : item)
@@ -197,6 +197,7 @@ const EventLayout = () => {
     // The event card (Figma « Événement actif »): cover, title and date.
     const cover = eventImages?.find((image) => image.type === 'EVENT_COVER');
     const organizerId = event?.organizer?.id ?? event?.organizer_id;
+    const organizerName = event?.organizer?.name;
 
     const navContext: NavContext = {
         initial: event?.title?.trim().charAt(0).toUpperCase() || '…',
@@ -204,6 +205,11 @@ const EventLayout = () => {
         subtitle: event ? eventStartLabel(event) : undefined,
         overline: t`Event`,
         imageUrl: cover?.url,
+        compact: true,
+        backLink: organizerId && organizerName ? {
+            to: `/manage/organizer/${organizerId}/events`,
+            label: t`${organizerName} · All events`,
+        } : undefined,
         menu: event && (
             <>
                 {organizerId && <EventSwitcherMenu eventId={eventId as string} organizerId={organizerId}/>}
@@ -215,7 +221,7 @@ const EventLayout = () => {
                 <Menu.Divider/>
                 <Menu.Item component="a" href={eventPageUrl} target="_blank" rel="noopener"
                            leftSection={<IconExternalLink size={16}/>}>
-                    {t`Event Page`}
+                    {t`View event page`}
                 </Menu.Item>
                 <Menu.Item leftSection={<IconShare size={16}/>} onClick={open}>
                     {t`Share Event`}
@@ -281,7 +287,8 @@ const EventLayout = () => {
             mobileMenuItems={event ? [{
                 link: eventPageUrl,
                 external: true,
-                label: t`Event Page`,
+                // Not « Event Page »: that's the designer now, in the nav.
+                label: t`View event page`,
                 tileIconSrc: adminIcon('voir-22'),
             }] : []}
             mobileMenuGrouped

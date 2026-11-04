@@ -40,6 +40,10 @@ export interface NavContext {
     // An event (Figma « Événement actif »): a small label above, its cover instead of the initial.
     overline?: string;
     imageUrl?: string;
+    // The way back to the list, above the card (« ‹ Dehors · Tous les événements »).
+    backLink?: { to: string, label: string };
+    // A long list (Figma « Barre latérale · Événement »): tighter rows, so it fits without scrolling.
+    compact?: boolean;
 }
 
 export interface MobilePrimaryAction {

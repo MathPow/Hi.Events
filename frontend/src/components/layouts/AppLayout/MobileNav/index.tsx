@@ -174,6 +174,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 <>
                     <div className={classes.veil} onClick={closeMenu} aria-hidden/>
                     <div className={classes.menu} id="mobile-nav-menu" role="dialog" aria-modal="true"
+                         data-nav-compact={context?.compact || undefined}
                          aria-label={t`Menu`}>
                         <div ref={menuScrollRef} className={classes.menuScroll}>
                             <div className={classes.menuHeading}>{t`Menu`}</div>

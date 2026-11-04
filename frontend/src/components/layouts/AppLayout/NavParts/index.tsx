@@ -1,6 +1,7 @@
 import {Menu, UnstyledButton} from "@mantine/core";
 import {t} from "@lingui/macro";
 import classNames from "classnames";
+import {NavLink} from "react-router";
 import {getInitials} from "../../../../utilites/helpers.ts";
 import {AccountMenuItems, useAccountMenu} from "../../../common/GlobalMenu";
 import {NavContext, NavItem} from "../types.ts";
@@ -22,7 +23,10 @@ export const NavIcon = ({item, tile = false}: { item: NavItem, tile?: boolean })
     const src = tile ? (item.tileIconSrc ?? item.iconSrc) : item.iconSrc;
 
     if (src) {
-        return <img src={src} alt="" className={classes.icon}/>;
+        // Drawn smaller than a tile's icon when it has no version of its own: same size as the others.
+        const size = tile && !item.tileIconSrc ? {width: 22, height: 22} : undefined;
+
+        return <img src={src} alt="" className={classes.icon} style={size}/>;
     }
 
     if (item.icon) {
@@ -62,11 +66,9 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
 
     const className = classNames(classes.card, classes.contextCard, classes[variant], {[classes.eventCard]: isEvent});
 
-    if (!context.menu) {
-        return <div className={className} title={variant === 'collapsed' ? label : undefined}>{body}</div>;
-    }
-
-    return (
+    const card = !context.menu ? (
+        <div className={className} title={variant === 'collapsed' ? label : undefined}>{body}</div>
+    ) : (
         <Menu
             position={variant === 'menu' ? 'bottom' : 'right-start'}
             offset={variant === 'menu' ? 8 : 12}
@@ -81,6 +83,22 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
             </Menu.Target>
             <Menu.Dropdown>{context.menu}</Menu.Dropdown>
         </Menu>
+    );
+
+    if (!context.backLink) {
+        return card;
+    }
+
+    return (
+        <>
+            <NavLink to={context.backLink.to} className={classNames(classes.backLink, classes[variant])}
+                     aria-label={context.backLink.label}
+                     title={variant === 'collapsed' ? context.backLink.label : undefined}>
+                <img src={adminIcon('nav-evenement/retour')} alt=""/>
+                <span className={classes.backLabel}>{context.backLink.label}</span>
+            </NavLink>
+            {card}
+        </>
     );
 };
 

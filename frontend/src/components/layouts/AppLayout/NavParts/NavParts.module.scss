@@ -131,6 +131,66 @@
   }
 }
 
+// An event's longer nav (see .compact in the sidebar): the smaller account card of its Figma (52 px).
+:global([data-nav-compact]) .accountCard {
+  gap: 0.625rem;
+  padding: 0.5rem;
+
+  &.collapsed {
+    padding: 0.625rem;
+  }
+}
+
+:global([data-nav-compact]) .accountAvatar {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+// « ‹ Dehors · Tous les événements », above an event's card. Folded, only the chevron stays, centred.
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+  color: rgb(251 242 227 / 0.7);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--dehors-creme);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-orange);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  img {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  &.collapsed {
+    padding-left: 1.25rem;
+  }
+
+  :global([data-nav-animating]) & {
+    transition: padding nav.$fold-duration nav.$fold-ease;
+  }
+}
+
+.backLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include nav.fold-fade('.collapsed &');
+}
+
 // The label: open, its height; folded, none (it closes up like the group headings).
 .foldable {
   display: grid;
