@@ -116,24 +116,45 @@ export const CheckInListForm = ({form, productCategories, isEditing}: CheckInLis
             </div>
 
             <div className={classes.group}>
-                <p className={settings.fieldLabel}>{t`Scanner PIN`}</p>
-                <div className={classes.pinRow}>
-                    <span className={classes.pin} aria-label={t`Scanner PIN`}>
+                <div className={classes.doorSale}>
+                    <span className={classes.doorSaleIcon}>
                         <img src="/interface/admin/scanner/cadenas.svg" width={20} height={20} alt=""/>
-                        <span className={classes.pinDigits}>{pin || '—'}</span>
                     </span>
-                    <Button
-                        variant="transparent"
-                        className={settings.outlineButton}
-                        onClick={() => form.setFieldValue('pin', generateScannerPin())}
-                    >
-                        {t`Generate a new PIN`}
-                    </Button>
+                    <span className={settings.toggleText}>
+                        <span className={settings.toggleLabel} id="list-pin">{t`Scanner PIN`}</span>
+                        <span className={settings.toggleHint}>
+                            {t`Asked when the link opens. If the link gets around, nobody can scan without the PIN.`}
+                        </span>
+                    </span>
+                    <Switch
+                        className={settings.switch}
+                        withThumbIndicator={false}
+                        aria-labelledby="list-pin"
+                        checked={!!pin}
+                        onChange={(event) => {
+                            form.setFieldValue('pin', event.currentTarget.checked ? generateScannerPin() : '');
+                            form.clearFieldError('pin');
+                        }}
+                    />
                 </div>
-                <p className={settings.hint}>
-                    {t`Asked when the link opens. If the link gets around, nobody can scan without the PIN.`}
-                    {isEditing && <> {t`A new PIN signs out the phones already open.`}</>}
-                </p>
+                {!!pin && (
+                    <>
+                        <div className={classes.pinRow}>
+                            <span className={classes.pin} aria-label={t`Scanner PIN`}>
+                                <img src="/interface/admin/scanner/cadenas.svg" width={20} height={20} alt=""/>
+                                <span className={classes.pinDigits}>{pin}</span>
+                            </span>
+                            <Button
+                                variant="transparent"
+                                className={settings.outlineButton}
+                                onClick={() => form.setFieldValue('pin', generateScannerPin())}
+                            >
+                                {t`Generate a new PIN`}
+                            </Button>
+                        </div>
+                        {isEditing && <p className={settings.hint}>{t`A new PIN signs out the phones already open.`}</p>}
+                    </>
+                )}
                 {form.errors.pin && <p className={classes.error} role="alert">{form.errors.pin}</p>}
             </div>
 

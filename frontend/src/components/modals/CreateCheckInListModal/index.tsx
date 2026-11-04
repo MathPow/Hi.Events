@@ -1,7 +1,7 @@
 import {CheckInListRequest, GenericModalProps, Product, ProductCategory} from "../../../types.ts";
 import {DehorsPopup} from "../../common/DehorsPopup";
 import {t} from "@lingui/macro";
-import {CheckInListForm, generateScannerPin, ticketIds} from "../../forms/CheckInListForm";
+import {CheckInListForm, ticketIds} from "../../forms/CheckInListForm";
 import formClasses from "../../forms/CheckInListForm/CheckInListForm.module.scss";
 import {useForm} from "@mantine/form";
 import {Button} from "@mantine/core";
@@ -24,7 +24,7 @@ export const CreateCheckInListModal = ({onClose}: GenericModalProps) => {
             description: '',
             expires_at: '',
             activates_at: '',
-            pin: generateScannerPin(),
+            pin: '',
             allow_door_sales: false,
             product_ids: [],
         }
