@@ -17,6 +17,7 @@ export const SECTION_TABS: Record<string, EventSettingsTab> = {
     'homepage-settings': 'registration',
     'information-block': 'registration',
     'waiver-settings': 'registration',
+    'document-settings': 'registration',
     'bib-number-settings': 'registration',
     'waitlist-settings': 'registration',
     'payment-settings': 'payment',
