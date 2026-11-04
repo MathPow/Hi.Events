@@ -78,8 +78,8 @@ const Settings = () => {
     return (
         <div className={classes.page}>
             <header className={classes.header}>
-                <h1 className={classes.title}>{t`Event Settings`}</h1>
-                <p className={classes.subtitle}>{t`Your event's details, registration and payments.`}</p>
+                <h1 className={classes.title}>{t`Settings`}</h1>
+                <p className={classes.subtitle}>{t`The settings of this event.`}</p>
             </header>
 
             <div className={classes.tabsSticky}>

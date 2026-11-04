@@ -7,6 +7,7 @@ import {useUpdateOrganizerSettings} from "../../../../../mutations/useUpdateOrga
 import {organizerHomepageUrl} from "../../../../../utilites/urlHelper.ts";
 import {useSectionAutosave} from "../../../../layouts/AppLayout/PageStatus.tsx";
 import {SettingsCard, showServerErrors} from "../SettingsUi.tsx";
+import {GooglePreview} from "../GooglePreview.tsx";
 import classes from "../Settings.module.scss";
 
 type Seo = Required<Pick<OrganizerSettings, 'seo_title' | 'seo_description' | 'seo_keywords'>>;
@@ -16,16 +17,6 @@ const fromSettings = (settings: OrganizerSettings): Seo => ({
     seo_description: settings.seo_description ?? '',
     seo_keywords: settings.seo_keywords ?? '',
 });
-
-// « billets.dehorsqc.com › events › 1 › sulpace », as Google writes it.
-const googleUrl = (url: string) => {
-    try {
-        const {host, pathname} = new URL(url);
-        return [host, ...pathname.split('/').filter(Boolean)].join(' › ');
-    } catch {
-        return url;
-    }
-};
 
 // « Référencement (Google) ». The pages are always indexed: no choice about it any more.
 export const SeoCard = ({organizerId, organizer, settings}: {
@@ -88,11 +79,11 @@ export const SeoCard = ({organizerId, organizer, settings}: {
                 {...form.getInputProps('seo_keywords')}
                 onBlur={() => commit('seo_keywords')}
             />
-            <div className={classes.googlePreview} aria-label={t`Google preview`}>
-                <span className={classes.googleUrl}>{googleUrl(organizerHomepageUrl(organizer))}</span>
-                <span className={classes.googleTitle}>{form.values.seo_title.trim() || defaultTitle}</span>
-                <span className={classes.googleText}>{form.values.seo_description.trim() || defaultDescription}</span>
-            </div>
+            <GooglePreview
+                url={organizerHomepageUrl(organizer)}
+                title={form.values.seo_title.trim() || defaultTitle}
+                description={form.values.seo_description.trim() || defaultDescription}
+            />
         </SettingsCard>
     );
 };

@@ -3,22 +3,15 @@ import {Textarea, TextInput} from "@mantine/core";
 import {Event, EventSettings, IdParam} from "../../../../../types.ts";
 import {useUpdateEventSettings} from "../../../../../mutations/useUpdateEventSettings.ts";
 import {eventHomepageUrl} from "../../../../../utilites/urlHelper.ts";
+import {intlLocale} from "../../../../../utilites/intlLocale.ts";
 import {SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
+import {GooglePreview} from "../../../organizer/Settings/GooglePreview.tsx";
 import {useAutosaveForm} from "../useAutosaveForm.ts";
+import {HINT_UNDER_FIELD} from "../fieldParts.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 import extra from "../EventSettings.module.scss";
 
 type Seo = Required<Pick<EventSettings, 'seo_title' | 'seo_description' | 'seo_keywords'>>;
-
-// « billets.dehorsqc.com › event › 1 › rando », as Google writes it.
-const googleUrl = (url: string) => {
-    try {
-        const {host, pathname} = new URL(url);
-        return [host, ...pathname.split('/').filter(Boolean)].join(' › ');
-    } catch {
-        return url;
-    }
-};
 
 const plainText = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -46,6 +39,10 @@ export const SeoCard = ({eventId, event, settings}: { eventId: IdParam, event: E
     const defaultTitle = organizerName ? `${event.title} | ${organizerName}` : event.title;
     const defaultDescription = event.description_preview || plainText(event.description ?? '').slice(0, 160);
     const title = form.values.seo_title.trim();
+    const date = event.start_date
+        ? new Intl.DateTimeFormat(intlLocale(), {day: 'numeric', month: 'short', year: 'numeric', timeZone: event.timezone})
+            .format(new Date(event.start_date))
+        : undefined;
 
     return (
         <SettingsCard
@@ -57,7 +54,7 @@ export const SeoCard = ({eventId, event, settings}: { eventId: IdParam, event: E
             <TextInput
                 className={classes.field}
                 label={t`Title`}
-                placeholder={event.title}
+                placeholder={defaultTitle}
                 maxLength={255}
                 {...form.getInputProps('seo_title')}
                 onBlur={() => commit('seo_title')}
@@ -67,7 +64,7 @@ export const SeoCard = ({eventId, event, settings}: { eventId: IdParam, event: E
                 label={t`Description`}
                 placeholder={defaultDescription}
                 autosize
-                minRows={2}
+                minRows={3}
                 maxLength={255}
                 {...form.getInputProps('seo_description')}
                 onBlur={() => commit('seo_description')}
@@ -77,16 +74,16 @@ export const SeoCard = ({eventId, event, settings}: { eventId: IdParam, event: E
                 label={t`Keywords`}
                 description={t`Separated by commas.`}
                 maxLength={255}
+                {...HINT_UNDER_FIELD}
                 {...form.getInputProps('seo_keywords')}
                 onBlur={() => commit('seo_keywords')}
             />
-            <div className={classes.googlePreview} aria-label={t`Google preview`}>
-                <span className={classes.googleUrl}>{googleUrl(eventHomepageUrl(event))}</span>
-                <span className={classes.googleTitle}>
-                    {title ? (organizerName ? `${title} | ${organizerName}` : title) : defaultTitle}
-                </span>
-                <span className={classes.googleText}>{form.values.seo_description.trim() || defaultDescription}</span>
-            </div>
+            <GooglePreview
+                url={eventHomepageUrl(event)}
+                title={title ? (organizerName ? `${title} | ${organizerName}` : title) : defaultTitle}
+                description={form.values.seo_description.trim() || defaultDescription}
+                date={date}
+            />
         </SettingsCard>
     );
 };

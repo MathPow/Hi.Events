@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {Link} from "react-router";
 import {t} from "@lingui/macro";
 import {Account, Event, EventSettings, IdParam} from "../../../../../types.ts";
 import {useUpdateEventSettings} from "../../../../../mutations/useUpdateEventSettings.ts";
@@ -90,9 +89,6 @@ export const FeesCard = ({eventId, event, settings, account}: FeesCardProps) => 
                 </p>
             )}
             <p className={classes.softHint}>{t`For this event only. Estimated amounts.`}</p>
-            <Link className={classes.textButton} to={`/manage/organizer/${event.organizer?.id}/settings/taxes`}>
-                {t`Taxes and additional fees`} →
-            </Link>
         </SettingsCard>
     );
 };

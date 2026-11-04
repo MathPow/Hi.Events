@@ -12,7 +12,7 @@ interface Messages {
     post_checkout_message: string;
 }
 
-// « Messages de la caisse »: before the payment, and after it on the order summary.
+// « Messages aux acheteurs »: before the payment, and after it on the order summary.
 export const CheckoutMessagesCard = ({eventId, settings}: { eventId: IdParam, settings: EventSettings }) => {
     const updateSettings = useUpdateEventSettings();
     const {form, commit} = useAutosaveForm<Messages>({
@@ -28,31 +28,30 @@ export const CheckoutMessagesCard = ({eventId, settings}: { eventId: IdParam, se
         }),
     });
 
-    const editor = (field: keyof Messages, label: string, description: string) => (
-        <Editor
-            className={`${classes.description} ${extra.editor}`}
-            label={label}
-            description={description}
-            value={form.values[field]}
-            error={form.errors[field] as string | undefined}
-            onChange={(value) => form.setFieldValue(field, value)}
-            onBlur={() => commit(field)}
-        />
+    const editor = (field: keyof Messages, label: string, hint: string) => (
+        <div className={extra.fieldGroup}>
+            <Editor
+                className={`${classes.description} ${extra.plainEditor}`}
+                editorType="plain"
+                label={label}
+                value={form.values[field]}
+                error={form.errors[field] as string | undefined}
+                onChange={(value) => form.setFieldValue(field, value)}
+                onBlur={() => commit(field)}
+            />
+            <p className={classes.hint}>{hint}</p>
+        </div>
     );
 
     return (
         <SettingsCard
             full
-            title={t`Checkout messages`}
-            subtitle={t`A word for your buyers, before and after they pay.`}
+            title={t`Messages to buyers`}
+            subtitle={t`A word before and after payment.`}
         >
             <div className={extra.columns}>
-                {editor('pre_checkout_message', t`Pre Checkout message`, t`Shown to the customer before they checkout`)}
-                {editor(
-                    'post_checkout_message',
-                    t`Post Checkout message`,
-                    t`Shown on the order summary, once the order is paid.`,
-                )}
+                {editor('pre_checkout_message', t`Before payment`, t`Shown right before paying.`)}
+                {editor('post_checkout_message', t`After payment`, t`Shown on the order confirmation.`)}
             </div>
         </SettingsCard>
     );

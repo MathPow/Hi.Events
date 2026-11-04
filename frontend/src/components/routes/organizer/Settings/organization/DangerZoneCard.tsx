@@ -17,16 +17,16 @@ import {showStatusChangeError} from "../../../../common/EmailNotConfirmedError";
 import settings from "../Settings.module.scss";
 import classes from "./CloseOrganizer.module.scss";
 
-type Choice = 'archive' | 'delete';
+export type CloseChoice = 'archive' | 'delete';
 
 // eslint-disable-next-line lingui/no-unlocalized-strings
 const PHONE = '(max-width: 767px)';
 
 // A choice of the popup; `extra` (the name to type) sits under its text, outside its label.
-const Option = ({choice, selected, onSelect, icon, title, recommended, disabled, children, extra}: {
-    choice: Choice,
+export const CloseOption = ({choice, selected, onSelect, icon, title, recommended, disabled, children, extra}: {
+    choice: CloseChoice,
     selected: boolean,
-    onSelect: (choice: Choice) => void,
+    onSelect: (choice: CloseChoice) => void,
     icon: ReactNode,
     title: string,
     recommended?: boolean,
@@ -67,7 +67,7 @@ export const DangerZoneCard = ({organizerId}: { organizerId: IdParam }) => {
     const deleteMutation = useDeleteOrganizer();
     const statusMutation = useUpdateOrganizerStatus();
     const [open, setOpen] = useState(false);
-    const [choice, setChoice] = useState<Choice>('archive');
+    const [choice, setChoice] = useState<CloseChoice>('archive');
     const [confirmation, setConfirmation] = useState('');
 
     const name = organizer?.name ?? '';
@@ -112,7 +112,7 @@ export const DangerZoneCard = ({organizerId}: { organizerId: IdParam }) => {
 
     const body = (
         <div className={classes.popupBody}>
-            <Option choice="archive" selected={choice === 'archive'} onSelect={setChoice} disabled={archiveDisabled}
+            <CloseOption choice="archive" selected={choice === 'archive'} onSelect={setChoice} disabled={archiveDisabled}
                     icon={isArchived ? <IconArchiveOff size={18} stroke={2}/> : <IconArchive size={18} stroke={2}/>}
                     title={isArchived ? t({message: 'Restore', context: 'organizer'}) : t`Archive`} recommended={!isArchived && !archiveDisabled}>
                 <span className={classes.optionText}>
@@ -122,9 +122,9 @@ export const DangerZoneCard = ({organizerId}: { organizerId: IdParam }) => {
                             ? t`You cannot archive the last active organizer on your account.`
                             : t`The page and the events are hidden. Your data and your history are kept: you can restore it at any time.`}
                 </span>
-            </Option>
+            </CloseOption>
 
-            <Option choice="delete" selected={choice === 'delete'} onSelect={setChoice} disabled={deleteDisabled}
+            <CloseOption choice="delete" selected={choice === 'delete'} onSelect={setChoice} disabled={deleteDisabled}
                     icon={<IconTrash size={18} stroke={2}/>} title={t`Delete permanently`}
                     extra={choice === 'delete' && (
                         <TextInput
@@ -141,7 +141,7 @@ export const DangerZoneCard = ({organizerId}: { organizerId: IdParam }) => {
                         ? deletionStatus.reason
                         : t`Deletes the page, the events, the orders and the history. This cannot be undone.`}
                 </span>
-            </Option>
+            </CloseOption>
 
             <div className={classes.actions}>
                 {choice === 'archive' ? (

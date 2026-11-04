@@ -13,7 +13,7 @@ interface Display {
     allow_attendee_self_edit: boolean;
 }
 
-// « Affichage et options »: how prices show and the attendees' self-service.
+// « Affichage et options »: how prices show and the attendees' self-service, on one column.
 export const DisplayCard = ({eventId, settings}: { eventId: IdParam, settings: EventSettings }) => {
     const updateSettings = useUpdateEventSettings();
     const {form, choose} = useAutosaveForm<Display>({
@@ -28,13 +28,13 @@ export const DisplayCard = ({eventId, settings}: { eventId: IdParam, settings: E
     const priceOptions: { value: PriceDisplayMode, title: string, text: string }[] = [
         {
             value: 'INCLUSIVE',
-            title: t`Include tax and fees in the price`,
-            text: t`The price displayed to the customer will include taxes and fees.`,
+            title: t`Taxes and fees included`,
+            text: t`The price shown is the final price paid.`,
         },
         {
             value: 'EXCLUSIVE',
-            title: t`Show tax and fees separately`,
-            text: t`The price displayed to the customer will not include taxes and fees. They will be shown separately`,
+            title: t`Taxes and fees separate`,
+            text: t`The price shown is before taxes; taxes and fees are added at payment.`,
         },
     ];
 
@@ -47,8 +47,8 @@ export const DisplayCard = ({eventId, settings}: { eventId: IdParam, settings: E
             subtitle={t`How prices show and what attendees can change themselves.`}
         >
             <div className={extra.fieldGroup}>
-                <p className={classes.fieldLabel}>{t`Price display mode`}</p>
-                <div className={extra.radioCards} role="radiogroup" aria-label={t`Price display mode`}>
+                <p className={classes.fieldLabel}>{t`Prices shown`}</p>
+                <div className={extra.radioStack} role="radiogroup" aria-label={t`Prices shown`}>
                     {priceOptions.map(option => (
                         <button
                             key={option.value}
@@ -69,11 +69,9 @@ export const DisplayCard = ({eventId, settings}: { eventId: IdParam, settings: E
                 {form.errors.price_display_mode && <p className={classes.hint} role="alert">{form.errors.price_display_mode}</p>}
             </div>
 
-            <hr className={classes.separator}/>
-
             <ToggleRow
-                label={t`Enable attendee self-service`}
-                hint={t`Allow attendees to update their ticket information (name, email) via a secure link sent with their order confirmation.`}
+                label={t`Attendee self-service`}
+                hint={t`They can correct their name and email with the link in their confirmation.`}
                 checked={form.values.allow_attendee_self_edit}
                 onChange={(checked) => choose('allow_attendee_self_edit', checked)}
             />

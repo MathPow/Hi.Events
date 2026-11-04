@@ -1,3 +1,4 @@
+import {ReactNode} from "react";
 import {t} from "@lingui/macro";
 import {Link} from "react-router";
 import {Switch} from "@mantine/core";
@@ -7,6 +8,7 @@ import {Editor} from "../../../../common/Editor";
 import {LiquidTokenControl} from "../../../../common/Editor/Controls/LiquidTokenControl";
 import {SettingsCard, ToggleRow} from "../../../organizer/Settings/SettingsUi.tsx";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
+import {fieldIcon} from "../fieldParts.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 import extra from "../EventSettings.module.scss";
 
@@ -54,14 +56,14 @@ export const PaymentMethodsCard = ({eventId, event, settings}: { eventId: IdPara
         PROVIDERS,
     );
 
-    const method = (provider: PaymentProvider, title: string, hint: string) => (
+    const method = (provider: PaymentProvider, title: string, under: ReactNode) => (
         <div className={extra.methodHead}>
-            <span className={classes.pastille}>
-                <img src={`/interface/admin/parametres/${provider === 'STRIPE' ? 'carte' : 'recu'}.svg`} alt=""/>
+            <span className={provider === 'STRIPE' ? classes.pastille : `${classes.pastille} ${extra.pastilleNeutral}`}>
+                {fieldIcon(provider === 'STRIPE' ? 'carte-20' : 'banque')}
             </span>
             <span className={classes.toggleText}>
                 <span className={classes.toggleLabel} id={`payment-${provider}`}>{title}</span>
-                <span className={classes.toggleHint}>{hint}</span>
+                {under}
             </span>
             <Switch
                 className={classes.switch}
@@ -76,21 +78,26 @@ export const PaymentMethodsCard = ({eventId, event, settings}: { eventId: IdPara
     return (
         <SettingsCard
             id="payment-settings"
-            full
             className={extra.anchored}
             title={t`Payment Methods`}
-            subtitle={t`How buyers can pay for this event.`}
+            subtitle={t`How buyers can pay.`}
         >
             <div className={extra.methods}>
                 <div className={extra.method}>
-                    {method('STRIPE', t`Stripe`, t`Accept credit card payments with Stripe`)}
-                    <Link className={`${classes.textButton} ${extra.methodLink}`} to={`/manage/organizer/${event.organizer?.id}/settings/payments`}>
-                        {t`Manage the Stripe account in Settings → Payments`}
-                    </Link>
+                    {method('STRIPE', t`Credit card (Stripe)`, (
+                        <Link className={extra.methodLink} to={`/manage/organizer/${event.organizer?.id}/settings/payments`}>
+                            {t`Manage the Stripe account`}
+                            <img src="/interface/admin/parametres/fleche-accent.svg" width={14} height={14} alt=""/>
+                        </Link>
+                    ))}
                 </div>
 
                 <div className={extra.method}>
-                    {method('OFFLINE', t`Offline Payments`, t`Accept bank transfers, checks, or other offline payment methods`)}
+                    {method('OFFLINE', t`Offline payment`, (
+                        <span className={classes.toggleHint}>
+                            {t`Interac e-Transfer, cheque or cash. You confirm the payment by hand.`}
+                        </span>
+                    ))}
 
                     {offline && (
                         <div className={extra.methodBody}>

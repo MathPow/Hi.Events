@@ -101,20 +101,19 @@ export const InvoicingCard = ({eventId, settings}: { eventId: IdParam, settings:
     return (
         <SettingsCard
             id="invoice-settings"
-            full
             className={extra.anchored}
             title={t`Billing`}
-            subtitle={t`The billing address at checkout and the invoices sent with the orders.`}
+            subtitle={t`Billing address and invoices sent with orders.`}
         >
             <ToggleRow
-                label={t`Require Billing Address`}
-                hint={t`Make billing address mandatory during checkout`}
+                label={t`Billing address required`}
+                hint={t`Requested at payment.`}
                 checked={form.values.require_billing_address}
                 onChange={(checked) => choose('require_billing_address', checked)}
             />
             <ToggleRow
-                label={t`Enable Invoicing`}
-                hint={t`An invoice for each order, sent with the confirmation email and downloadable from the order page.`}
+                label={t`Automatic invoices`}
+                hint={t`One invoice per order, attached to the confirmation email and downloadable.`}
                 checked={form.values.enable_invoicing}
                 onChange={(checked) => choose('enable_invoicing', checked, REQUIRED)}
             />
@@ -122,7 +121,7 @@ export const InvoicingCard = ({eventId, settings}: { eventId: IdParam, settings:
             {form.values.enable_invoicing && (
                 <>
                     <hr className={classes.separator}/>
-                    <div className={classes.fields}>
+                    <div className={`${classes.fields} ${extra.singleColumn}`}>
                         <TextInput
                             className={classes.field}
                             label={t`Organization Name`}

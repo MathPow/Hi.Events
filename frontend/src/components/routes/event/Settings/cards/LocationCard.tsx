@@ -4,9 +4,11 @@ import {Select, TextInput} from "@mantine/core";
 import {EventSettings, IdParam} from "../../../../../types.ts";
 import {useUpdateEventSettings} from "../../../../../mutations/useUpdateEventSettings.ts";
 import countries from "../../../../../../data/countries.json";
+import {canadianProvinces} from "../../../../../constants/canadianProvinces.ts";
 import {Editor} from "../../../../common/Editor";
 import {countryName, SettingsCard, ToggleRow} from "../../../organizer/Settings/SettingsUi.tsx";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
+import {fieldIcon, FIELD_CHEVRON, HINT_UNDER_FIELD} from "../fieldParts.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 import extra from "../EventSettings.module.scss";
 
@@ -69,6 +71,14 @@ export const LocationCard = ({eventId, settings}: { eventId: IdParam, settings: 
         .map(country => ({value: country.value, label: countryName(country.value, country.label)}))
         .sort((a, b) => a.label.localeCompare(b.label)), []);
 
+    const province = form.values.state_or_region;
+    // A Canadian address picks its province; a name written before stays among the choices.
+    const provinces = useMemo(() => {
+        const names = canadianProvinces();
+        return province && !names.includes(province) ? [province, ...names] : names;
+    }, [province]);
+    const isCanadian = !form.values.country || form.values.country === 'CA';
+
     const addressField = (field: keyof Location, label: string, extra: Record<string, unknown> = {}) => (
         <TextInput
             className={classes.field}
@@ -83,6 +93,22 @@ export const LocationCard = ({eventId, settings}: { eventId: IdParam, settings: 
         />
     );
 
+    const select = (field: 'state_or_region' | 'country', label: string, data: { value: string, label: string }[] | string[]) => (
+        <Select
+            className={classes.field}
+            label={label}
+            searchable
+            data={data}
+            {...FIELD_CHEVRON}
+            value={form.values[field] || null}
+            error={form.errors[`location_details.${field}`]}
+            onChange={(value) => {
+                form.setFieldValue(field, value ?? '');
+                form.clearFieldError(`location_details.${field}`);
+            }}
+        />
+    );
+
     return (
         <SettingsCard
             id="location-settings"
@@ -91,8 +117,8 @@ export const LocationCard = ({eventId, settings}: { eventId: IdParam, settings: 
             subtitle={t`Shown on the event page and on tickets.`}
         >
             <ToggleRow
-                label={t`This is an online event`}
-                hint={t`No address: the connection details are given once the order is paid.`}
+                label={t`Online event`}
+                hint={t`No address: the connection link is sent with the order.`}
                 checked={form.values.is_online_event}
                 onChange={(checked) => choose('is_online_event', checked)}
             />
@@ -112,38 +138,39 @@ export const LocationCard = ({eventId, settings}: { eventId: IdParam, settings: 
 
             {!form.values.is_online_event && (
                 <>
-                    <div className={classes.fields} onBlur={groupBlur(ADDRESS)}>
+                    <div className={`${classes.fields} ${extra.addressFields}`} onBlur={groupBlur(ADDRESS)}>
                         <div className={classes.fieldsSpan}>
                             {addressField('venue_name', t`Name of the place`, {maxLength: 255, placeholder: t`E.g.: Mont Sainte-Anne`})}
                         </div>
-                        <div className={classes.fieldsSpan}>{addressField('address_line_1', t`Address`, {maxLength: 255})}</div>
                         <div className={classes.fieldsSpan}>
-                            {addressField('address_line_2', t`Apartment, suite or office (optional)`, {maxLength: 255})}
+                            {addressField('address_line_1', t`Address`, {
+                                maxLength: 255,
+                                leftSection: fieldIcon('lieu'),
+                                leftSectionWidth: 48,
+                            })}
                         </div>
+                        {/* No longer asked for; a second line already written stays editable. */}
+                        {form.values.address_line_2 && (
+                            <div className={classes.fieldsSpan}>
+                                {addressField('address_line_2', t`Apartment, suite or office (optional)`, {maxLength: 255})}
+                            </div>
+                        )}
                         {addressField('city', t`City`, {maxLength: 85})}
                         {addressField('zip_or_postal_code', t`Postal code`, {maxLength: 85})}
-                        {addressField('state_or_region', t`Province`, {maxLength: 85})}
-                        <Select
-                            className={classes.field}
-                            label={t`Country`}
-                            searchable
-                            clearable
-                            data={countryOptions}
-                            value={form.values.country || null}
-                            error={form.errors['location_details.country']}
-                            onChange={(value) => {
-                                form.setFieldValue('country', value ?? '');
-                                form.clearFieldError('location_details.country');
-                            }}
-                        />
+                        {isCanadian
+                            ? select('state_or_region', t`Province`, provinces)
+                            : addressField('state_or_region', t`Province`, {maxLength: 85})}
+                        {select('country', t`Country`, countryOptions)}
                     </div>
-                    <p className={classes.softHint}>{t`A place's name is enough. A street address also needs its city, postal code and country.`}</p>
                     <TextInput
                         className={classes.field}
                         type="url"
-                        label={t`Map link (optional)`}
+                        label={t`Map link`}
                         description={t`Without a link, the address opens in Google Maps.`}
-                        placeholder="https://"
+                        placeholder={t`Optional`}
+                        leftSection={fieldIcon('lien-champ')}
+                        leftSectionWidth={48}
+                        {...HINT_UNDER_FIELD}
                         {...form.getInputProps('maps_url')}
                         onBlur={() => commit('maps_url')}
                     />

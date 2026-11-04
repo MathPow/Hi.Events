@@ -18,4 +18,6 @@ enum ProductInfoIcon: string
     case Mountain = 'mountain';
     case Speakerphone = 'speakerphone';
     case Star = 'star';
+    case Alert = 'alert';
+    case Tag = 'tag';
 }

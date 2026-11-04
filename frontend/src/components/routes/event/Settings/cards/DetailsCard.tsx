@@ -1,13 +1,17 @@
+import {useMemo} from "react";
 import {t} from "@lingui/macro";
 import {Select, TextInput} from "@mantine/core";
 import {Event, IdParam} from "../../../../../types.ts";
 import {useUpdateEvent} from "../../../../../mutations/useUpdateEvent.ts";
 import {utcToTz} from "../../../../../utilites/dates.ts";
+import {timezoneLabel} from "../../../../../utilites/timezoneLabel.ts";
 import {timezones} from "../../../../../../data/timezones.ts";
 import {CATEGORY_OF_TYPE, EVENT_TYPES, eventTypeLabel, typeOfCategory} from "../../../../../constants/eventTypes.ts";
 import {Editor} from "../../../../common/Editor";
+import {DateTimeField} from "../../../../common/DateTimeField";
 import {PillChoice, SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
+import {fieldIcon, FIELD_CHEVRON} from "../fieldParts.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 import extra from "../EventSettings.module.scss";
 
@@ -52,15 +56,10 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
         }),
     });
 
-    const dateField = (field: 'start_date' | 'end_date', label: string) => (
-        <TextInput
-            className={classes.field}
-            type="datetime-local"
-            label={label}
-            {...form.getInputProps(field)}
-            onBlur={() => commit(field)}
-        />
-    );
+    const timezoneOptions = useMemo(() => timezones.map(timezone => ({
+        value: timezone,
+        label: timezoneLabel(timezone),
+    })), []);
 
     return (
         <SettingsCard
@@ -74,7 +73,7 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                 <div className={classes.fieldsSpan}>
                     <TextInput
                         className={classes.field}
-                        label={t`Name`}
+                        label={t`Event name`}
                         maxLength={150}
                         placeholder={t`E.g.: Hare Race · 10 km`}
                         {...form.getInputProps('title')}
@@ -91,22 +90,42 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                         options={EVENT_TYPES.map(type => ({value: CATEGORY_OF_TYPE[type], label: eventTypeLabel(type)}))}
                         onChange={(value) => choose('category', value)}
                     />
+                    <p className={classes.hint}>{t`Used for the Directory filters.`}</p>
                 </div>
-                {dateField('start_date', t`Start Date`)}
-                {dateField('end_date', t`End Date`)}
-                <Select
-                    className={classes.field}
-                    label={t`Timezone`}
-                    searchable
-                    allowDeselect={false}
-                    data={timezones}
-                    value={form.values.timezone || null}
-                    error={form.errors.timezone}
-                    onChange={(value) => value && choose('timezone', value)}
+                <DateTimeField
+                    label={t({message: 'Start', context: 'event date'})}
+                    withWeekday
+                    value={form.values.start_date}
+                    error={form.errors.start_date}
+                    onChange={(value) => choose('start_date', value)}
                 />
+                <DateTimeField
+                    label={t({message: 'End', context: 'event date'})}
+                    withWeekday
+                    clearable
+                    value={form.values.end_date}
+                    error={form.errors.end_date}
+                    onChange={(value) => choose('end_date', value)}
+                />
+                <div className={classes.fieldsSpan}>
+                    <Select
+                        className={classes.field}
+                        label={t`Timezone`}
+                        searchable
+                        allowDeselect={false}
+                        data={timezoneOptions}
+                        leftSection={fieldIcon('globe')}
+                        leftSectionWidth={48}
+                        {...FIELD_CHEVRON}
+                        value={form.values.timezone || null}
+                        error={form.errors.timezone}
+                        onChange={(value) => value && choose('timezone', value)}
+                    />
+                </div>
                 <div className={classes.fieldsSpan}>
                     <Editor
                         className={`${classes.description} ${extra.editor}`}
+                        editorType="minimal"
                         label={t`Description`}
                         value={form.values.description}
                         error={form.errors.description as string | undefined}

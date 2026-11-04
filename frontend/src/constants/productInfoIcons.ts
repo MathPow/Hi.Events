@@ -1,6 +1,7 @@
 import {t} from "@lingui/macro";
 import {
     Icon,
+    IconAlertCircle,
     IconGift,
     IconHeart,
     IconHeartHandshake,
@@ -9,6 +10,7 @@ import {
     IconMountain,
     IconSpeakerphone,
     IconStar,
+    IconTag,
 } from "@tabler/icons-react";
 
 /**
@@ -24,9 +26,14 @@ export const PRODUCT_INFO_ICONS = {
     'mountain': IconMountain,
     'speakerphone': IconSpeakerphone,
     'star': IconStar,
+    'alert': IconAlertCircle,
+    'tag': IconTag,
 } satisfies Record<string, Icon>;
 
 export type ProductInfoIconKey = keyof typeof PRODUCT_INFO_ICONS;
+
+// The choices of « Bloc d'info » (Figma 560:3392); the others stay valid for the blocks that use them.
+export const PRODUCT_INFO_ICON_CHOICES: ProductInfoIconKey[] = ['heart', 'alert', 'star', 'tag'];
 
 export const DEFAULT_PRODUCT_INFO_ICON: ProductInfoIconKey = 'info';
 
@@ -42,4 +49,6 @@ export const getProductInfoIconLabels = (): Record<ProductInfoIconKey, string> =
     'mountain': t`Mountain`,
     'speakerphone': t`Announcement`,
     'star': t`Star`,
+    'alert': t`Important`,
+    'tag': t`Tag`,
 });

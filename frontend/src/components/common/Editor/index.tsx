@@ -34,8 +34,9 @@ interface EditorProps {
     required?: boolean;
     className?: string;
     error?: string | React.ReactNode;
-    // 'minimal': bold, italic, link and list only (organizer description).
-    editorType?: 'full' | 'simple' | 'minimal';
+    // 'minimal': bold, italic, link and list only (organizer description). 'plain': no bar at all,
+    // written like a text box but still kept as HTML (the messages of the event's settings).
+    editorType?: 'full' | 'simple' | 'minimal' | 'plain';
     // When the text loses the focus (fields that save themselves).
     onBlur?: () => void;
     maxLength?: number;
@@ -128,7 +129,7 @@ export const Editor = ({
                 </div>
             )}
             <RichTextEditor variant={'subtle'} editor={editor}>
-                <RichTextEditor.Toolbar sticky className={classes.toolbar}>
+                {editorType !== 'plain' && <RichTextEditor.Toolbar sticky className={classes.toolbar}>
                     {editorType === 'full' && (
                         <>
                             <RichTextEditor.ControlsGroup>
@@ -213,7 +214,7 @@ export const Editor = ({
                     )}
                     
                     {additionalToolbarControls}
-                </RichTextEditor.Toolbar>
+                </RichTextEditor.Toolbar>}
 
                 <RichTextEditor.Content/>
             </RichTextEditor>

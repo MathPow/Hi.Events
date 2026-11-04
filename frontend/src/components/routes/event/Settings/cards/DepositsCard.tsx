@@ -25,18 +25,21 @@ export const DepositsCard = ({eventId, settings}: { eventId: IdParam, settings: 
             id="deposit-settings"
             className={extra.anchored}
             title={t`Security Deposits`}
-            subtitle={t`Set a deposit amount on a product to ask for a security deposit. Participants send it separately; it is not included in the order total. Track, return or retain deposits from the Deposits page.`}
+            subtitle={t`An amount sent separately (e.g. borrowed equipment), tracked on the Deposits page.`}
         >
-            <Editor
-                className={`${classes.description} ${extra.editor}`}
-                editorType="simple"
-                label={t`Deposit Instructions`}
-                description={t`Shown with the deposit amount on the order page and confirmation email (e.g., where to send the Interac e-Transfer).`}
-                value={form.values.deposit_instructions}
-                error={form.errors.deposit_instructions as string | undefined}
-                onChange={(value) => form.setFieldValue('deposit_instructions', value)}
-                onBlur={() => commit('deposit_instructions')}
-            />
+            <div className={extra.fieldGroup}>
+                <Editor
+                    className={`${classes.description} ${extra.plainEditor}`}
+                    editorType="plain"
+                    label={t`Deposit Instructions`}
+                    value={form.values.deposit_instructions}
+                    error={form.errors.deposit_instructions as string | undefined}
+                    onChange={(value) => form.setFieldValue('deposit_instructions', value)}
+                    onBlur={() => commit('deposit_instructions')}
+                />
+                <p className={classes.hint}>{t`Shown with the amount on the order and in the confirmation email.`}</p>
+            </div>
+            <p className={classes.hint}>{t`The amount is set on each product, in Tickets & Products.`}</p>
         </SettingsCard>
     );
 };
