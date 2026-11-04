@@ -1,16 +1,19 @@
-import {Button} from "@mantine/core";
+import {Button, UnstyledButton} from "@mantine/core";
+import {IconCheck, IconTrash} from "@tabler/icons-react";
 import {GenericModalProps, IdParam, Product, ProductPriceType, ProductType} from "../../../types.ts";
 import {useForm} from "@mantine/form";
 import {useParams} from "react-router";
-import {useEffect} from "react";
+import {useEffect, useRef, useState} from "react";
 import {ProductForm} from "../../forms/ProductForm";
-import {Modal} from "../../common/Modal";
+import {DehorsPopup} from "../../common/DehorsPopup";
+import formClasses from "../../forms/ProductForm/ProductForm.module.scss";
+import {useDeleteProduct} from "../../../mutations/useDeleteProduct.ts";
+import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {useUpdateProduct} from "../../../mutations/useUpdateProduct.ts";
-import {showSuccess} from "../../../utilites/notifications.tsx";
+import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {useFormErrorResponseHandler} from "../../../hooks/useFormErrorResponseHandler.tsx";
 import {t} from "@lingui/macro";
 import {useGetProduct} from "../../../queries/useGetProduct.ts";
-import {LoadingMask} from "../../common/LoadingMask";
 import {utcToTz} from "../../../utilites/dates.ts";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 
@@ -45,11 +48,17 @@ export const EditProductModal = ({onClose, productId}: GenericModalProps & { pro
     });
 
     const mutation = useUpdateProduct();
+    const deleteMutation = useDeleteProduct();
+    const loaded = useRef(false);
+    const saved = useRef<string | null>(null);
+    const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'failed'>('idle');
 
+    // The form starts from the saved product once: refetches after a save don't overwrite what is being typed.
     useEffect(() => {
-        if (!product || !event) {
+        if (!product || !event || loaded.current) {
             return;
         }
+        loaded.current = true;
 
         form.setValues({
             id: product.id,
@@ -88,35 +97,97 @@ export const EditProductModal = ({onClose, productId}: GenericModalProps & { pro
         });
     }, [product, event]);
 
-    const handleEditProduct = (product: Product) => {
-        mutation.mutate({
-            productData: product,
-            eventId: eventId,
-            productId: productId
-        }, {
+    const save = async (values: Product, quiet: boolean) => {
+        const snapshot = JSON.stringify(values);
+        setStatus('saving');
+        try {
+            await mutation.mutateAsync({productData: values, eventId: eventId, productId: productId});
+            saved.current = snapshot;
+            form.clearErrors();
+            setStatus('saved');
+            return true;
+        } catch (error: any) {
+            setStatus('failed');
+            if (quiet) {
+                form.setErrors(error?.response?.data?.errors ?? {});
+            } else {
+                errorHandler(form, error);
+            }
+            return false;
+        }
+    };
+
+    // « Enregistrement automatique »: a moment after the last change. New price options wait for
+    // « Terminé », since they only get their id from the server once saved.
+    useEffect(() => {
+        if (form.values.id === undefined) {
+            return;
+        }
+        const snapshot = JSON.stringify(form.values);
+        if (saved.current === null) {
+            saved.current = snapshot;
+            return;
+        }
+        if (snapshot === saved.current || !form.values.prices?.every(price => price.id)) {
+            return;
+        }
+        const timer = window.setTimeout(() => save(form.values, true), 900);
+        return () => window.clearTimeout(timer);
+    }, [form.values]);
+
+    // « Terminé » and the X: what is left to save first, and stay open if it is refused.
+    const finish = async () => {
+        if (mutation.isPending) {
+            return;
+        }
+        const isDirty = saved.current !== null && JSON.stringify(form.values) !== saved.current;
+        if (!isDirty || await save(form.values, false)) {
+            onClose();
+        }
+    };
+
+    const remove = () => confirmationDialog(
+        t`Are you sure you want to delete this product? This cannot be undone.`,
+        () => deleteMutation.mutate({productId, eventId}, {
             onSuccess: () => {
-                showSuccess(t`Successfully updated product ` + product.title);
-                form.reset();
+                showSuccess(t`Product deleted successfully`);
                 onClose();
             },
-            onError: (error) => errorHandler(form, error)
-        })
-    }
+            onError: (error: any) => showError(
+                error?.response?.data?.message
+                || t`This product cannot be deleted because it is associated with an order. You can hide it instead.`,
+            ),
+        }),
+    );
+
+    const statusLine = status === 'idle' ? null : (
+        <span className={formClasses.saveStatus} data-failed={status === 'failed' || undefined} role="status">
+            {status === 'saved' && <IconCheck size={16} stroke={2.5}/>}
+            {status === 'saving' && t`Saving...`}
+            {status === 'saved' && t`Changes saved`}
+            {status === 'failed' && t`Not saved: check the fields in red.`}
+        </span>
+    );
+
+    const isTicket = form.values.product_type === ProductType.Ticket;
 
     return (
-        <Modal
-            onClose={onClose}
-            heading={t`Edit Product`}
-            opened
-        >
-            <form onSubmit={form.onSubmit(handleEditProduct)}>
-                <ProductForm product={product} form={form}/>
-                <LoadingMask/>
-
-                <Button type="submit" fullWidth mt="xl" disabled={mutation.isPending}>
-                    {mutation.isPending ? t`Working...` : t`Edit Product`}
-                </Button>
+        <DehorsPopup onClose={finish} title={isTicket ? t`Edit the ticket` : t`Edit the product`} status={statusLine}>
+            <form onSubmit={(submitEvent) => {
+                submitEvent.preventDefault();
+                finish();
+            }} className={formClasses.form}>
+                {product && <ProductForm product={product} form={form}/>}
+                <div className={formClasses.actions}>
+                    <UnstyledButton className={formClasses.deleteButton} onClick={remove}>
+                        <IconTrash size={18} stroke={2}/>
+                        {t`Delete`}
+                    </UnstyledButton>
+                    <Button type="submit" className={formClasses.doneButton} loading={mutation.isPending}>
+                        {t`Done`}
+                    </Button>
+                </div>
             </form>
-        </Modal>
+        </DehorsPopup>
     )
 };

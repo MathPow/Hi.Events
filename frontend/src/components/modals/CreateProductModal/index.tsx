@@ -2,7 +2,8 @@ import {Button} from "@mantine/core";
 import {GenericModalProps, IdParam, Product, ProductPriceType, ProductType, TaxAndFee} from "../../../types.ts";
 import {useForm} from "@mantine/form";
 import {useParams} from "react-router";
-import {Modal} from "../../common/Modal";
+import {DehorsPopup} from "../../common/DehorsPopup";
+import formClasses from "../../forms/ProductForm/ProductForm.module.scss";
 import {ProductForm} from "../../forms/ProductForm";
 import {useEffect} from "react";
 import {useGetTaxesAndFees} from "../../../queries/useGetTaxesAndFees.ts";
@@ -82,20 +83,18 @@ export const CreateProductModal = ({
             }) || []);
     }, [taxesAndFeesLoaded]);
 
+    const isTicket = form.values.product_type === ProductType.Ticket;
+
     return (
-        <Modal
-            onClose={onClose}
-            heading={t`Create Ticket or Product`}
-            opened
-            size={'lg'}
-            withCloseButton
-        >
-            <form onSubmit={form.onSubmit((values) => handleCreateProduct(values))}>
+        <DehorsPopup onClose={onClose} title={isTicket ? t`Add a ticket` : t`Add a product`}>
+            <form onSubmit={form.onSubmit((values) => handleCreateProduct(values))} className={formClasses.form}>
                 <ProductForm form={form}/>
-                <Button type="submit" fullWidth disabled={createProductMutation.isPending}>
-                    {createProductMutation.isPending ? t`Working...` : t`Create Product`}
-                </Button>
+                <div className={formClasses.actions} data-end>
+                    <Button type="submit" loading={createProductMutation.isPending}>
+                        {isTicket ? t`Add the ticket` : t`Add the product`}
+                    </Button>
+                </div>
             </form>
-        </Modal>
+        </DehorsPopup>
     )
 };
