@@ -121,6 +121,7 @@
 
 // The event card (Figma « Admin · Barre latérale · Événement », « Événement actif »).
 .eventCard {
+  position: relative;
   flex-direction: column;
   align-items: stretch;
   gap: 0;
@@ -128,6 +129,14 @@
 
   &.collapsed {
     padding: 0.5rem;
+  }
+
+  // The arrows, centred on the whole card (its label included), not only on the row.
+  .cardTrailing {
+    position: absolute;
+    top: 50%;
+    right: 0.625rem;
+    translate: 0 -50%;
   }
 }
 
@@ -234,6 +243,8 @@
   align-items: center;
   gap: 0.625rem;
   min-width: 0;
+  // Room for the arrows (16 px), which sit over the card's right side.
+  padding-right: 1.625rem;
 
   .cardTitle {
     font-size: 0.875rem;
