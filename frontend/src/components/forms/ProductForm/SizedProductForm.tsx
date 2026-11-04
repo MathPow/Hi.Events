@@ -39,19 +39,26 @@ export const SizedProductForm = ({form, product, event}: SizedProductFormProps) 
         form.setFieldValue('prices', prices.map(p => ({...p, price})));
     };
 
-    const addOptions = (labels: string[], heading: string) => {
-        const existing = new Set(prices.map(p => (p.label || '').trim().toLowerCase()));
-        const missing = labels.filter(label => !existing.has(label.toLowerCase()));
+    const sold = (price: ProductPrice) => Number(product?.prices?.find(p => Number(p.id) === Number(price.id))?.quantity_sold) > 0;
 
-        // Une seule ligne vide (cas du produit qu'on vient de passer en
-        // « tailles ») est remplacee plutot que gardee en tete de liste.
-        const kept = prices.filter(p => p.id || (p.label || '').trim() !== '' || p.initial_quantity_available);
+    const presetHeadings = () => [t`Choose your size`, t`Choose your distance`];
 
-        form.setFieldValue('prices', [...kept, ...missing.map(label => newSize(label, sharedPrice))]);
-        if (!(form.values.option_heading || '').trim()) {
+    // An example replaces the list: an option already sold stays (it can only be hidden), and an option
+    // with the same name keeps its stock.
+    const applyOptions = (labels: string[], heading: string) => {
+        const byLabel = new Map(prices.map(p => [(p.label || '').trim().toLowerCase(), p]));
+        const chosen = labels.map(label => byLabel.get(label.toLowerCase()) ?? newSize(label, sharedPrice));
+        const keptSold = prices.filter(p => sold(p) && !chosen.includes(p));
+
+        form.setFieldValue('prices', [...keptSold, ...chosen]);
+        const currentHeading = (form.values.option_heading || '').trim();
+        if (!currentHeading || presetHeadings().includes(currentHeading)) {
             form.setFieldValue('option_heading', heading);
         }
     };
+
+    const isCurrent = (labels: string[]) => prices.length === labels.length
+        && prices.every((p, index) => (p.label || '').trim().toLowerCase() === labels[index].toLowerCase());
 
     const distances = () => DISTANCES.map(km => `${new Intl.NumberFormat(i18n.locale).format(km)} km`);
 
@@ -105,16 +112,19 @@ export const SizedProductForm = ({form, product, event}: SizedProductFormProps) 
             <div className={classes.sizesHeader}>
                 <span className={classes.sizesTitle}>{t({message: 'Options', context: 'list of a product with options'})}</span>
                 <Group gap={6}>
-                    <Button size={'compact-xs'} variant={'light'}
-                            onClick={() => addOptions(ADULT_SIZES, t`Choose your size`)}>
+                    <Button size={'compact-xs'} variant={isCurrent(ADULT_SIZES) ? 'filled' : 'light'}
+                            aria-pressed={isCurrent(ADULT_SIZES)}
+                            onClick={() => applyOptions(ADULT_SIZES, t`Choose your size`)}>
                         {t`Adult XS–XXL`}
                     </Button>
-                    <Button size={'compact-xs'} variant={'light'}
-                            onClick={() => addOptions(YOUTH_SIZES, t`Choose your size`)}>
+                    <Button size={'compact-xs'} variant={isCurrent(YOUTH_SIZES) ? 'filled' : 'light'}
+                            aria-pressed={isCurrent(YOUTH_SIZES)}
+                            onClick={() => applyOptions(YOUTH_SIZES, t`Choose your size`)}>
                         {t`Youth 2–14`}
                     </Button>
-                    <Button size={'compact-xs'} variant={'light'}
-                            onClick={() => addOptions(distances(), t`Choose your distance`)}>
+                    <Button size={'compact-xs'} variant={isCurrent(distances()) ? 'filled' : 'light'}
+                            aria-pressed={isCurrent(distances())}
+                            onClick={() => applyOptions(distances(), t`Choose your distance`)}>
                         {t`Distances 5–42 km`}
                     </Button>
                 </Group>
