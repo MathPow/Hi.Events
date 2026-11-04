@@ -37,6 +37,7 @@ class ReplyToOrganizerMessageAction extends BaseAction
                 reply: $data['reply'],
                 // The language the organizer is using (SetUserLocaleMiddleware: their cookie, then their account).
                 locale: app()->getLocale(),
+                user_id: $this->getAuthenticatedUser()->getId(),
             ));
         } catch (ResourceNotFoundException $exception) {
             return $this->errorResponse($exception->getMessage(), Response::HTTP_NOT_FOUND);

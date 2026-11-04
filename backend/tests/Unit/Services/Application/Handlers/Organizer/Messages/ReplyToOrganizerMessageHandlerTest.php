@@ -8,6 +8,7 @@ use HiEvents\DomainObjects\OrganizerMessageDomainObject;
 use HiEvents\Exceptions\AccountNotVerifiedException;
 use HiEvents\Mail\Organizer\OrganizerContactReplyEmail;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
+use HiEvents\Repository\Interfaces\OrganizerMessageReplyRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\Messages\DTO\ReplyToOrganizerMessageDTO;
@@ -21,6 +22,7 @@ use Tests\TestCase;
 class ReplyToOrganizerMessageHandlerTest extends TestCase
 {
     private OrganizerMessageRepositoryInterface|MockInterface $messageRepository;
+    private OrganizerMessageReplyRepositoryInterface|MockInterface $replyRepository;
     private OrganizerRepositoryInterface|MockInterface $organizerRepository;
     private AccountRepositoryInterface|MockInterface $accountRepository;
     private Mailer|MockInterface $mailer;
@@ -31,12 +33,14 @@ class ReplyToOrganizerMessageHandlerTest extends TestCase
         parent::setUp();
 
         $this->messageRepository = Mockery::mock(OrganizerMessageRepositoryInterface::class);
+        $this->replyRepository = Mockery::mock(OrganizerMessageReplyRepositoryInterface::class);
         $this->organizerRepository = Mockery::mock(OrganizerRepositoryInterface::class);
         $this->accountRepository = Mockery::mock(AccountRepositoryInterface::class);
         $this->mailer = Mockery::mock(Mailer::class);
 
         $this->handler = new ReplyToOrganizerMessageHandler(
             $this->messageRepository,
+            $this->replyRepository,
             $this->organizerRepository,
             $this->accountRepository,
             $this->mailer,
@@ -62,6 +66,9 @@ class ReplyToOrganizerMessageHandlerTest extends TestCase
         $this->mailer->shouldReceive('locale')->once()->with('fr')->andReturnSelf();
         $this->mailer->shouldReceive('send')->once()->with(Mockery::type(OrganizerContactReplyEmail::class));
 
+        $this->replyRepository->shouldReceive('create')->once()
+            ->with(['organizer_message_id' => 42, 'user_id' => 9, 'message' => "Bonjour Marie,\nOui!"]);
+
         $this->messageRepository->shouldReceive('updateFromArray')->once()
             ->with(42, Mockery::on(fn(array $attributes) => is_string($attributes['replied_at'])
                 && $attributes['read_at'] === $attributes['replied_at']))
@@ -83,6 +90,7 @@ class ReplyToOrganizerMessageHandlerTest extends TestCase
         $this->mailer->shouldReceive('to')->andReturnSelf();
         $this->mailer->shouldReceive('locale')->andReturnSelf();
         $this->mailer->shouldReceive('send')->once();
+        $this->replyRepository->shouldReceive('create')->once();
 
         $this->messageRepository->shouldReceive('updateFromArray')->once()
             ->with(42, Mockery::on(fn(array $attributes) => $attributes['read_at'] === '2026-10-30 10:00:00'))
@@ -114,6 +122,7 @@ class ReplyToOrganizerMessageHandlerTest extends TestCase
 
         $this->messageRepository->shouldReceive('findFirstWhere')->andReturn(null);
         $this->mailer->shouldNotReceive('to');
+        $this->replyRepository->shouldNotReceive('create');
         $this->messageRepository->shouldNotReceive('updateFromArray');
 
         $this->handler->handle($this->dto());
@@ -127,6 +136,7 @@ class ReplyToOrganizerMessageHandlerTest extends TestCase
         $this->organizerRepository->shouldReceive('findById')->andReturn($this->organizer());
         $this->accountRepository->shouldReceive('findById')->andReturn($this->account(verified: false));
         $this->mailer->shouldNotReceive('to');
+        $this->replyRepository->shouldNotReceive('create');
         $this->messageRepository->shouldNotReceive('updateFromArray');
 
         $this->handler->handle($this->dto());
@@ -134,7 +144,7 @@ class ReplyToOrganizerMessageHandlerTest extends TestCase
 
     private function dto(): ReplyToOrganizerMessageDTO
     {
-        return new ReplyToOrganizerMessageDTO(organizer_id: 5, message_id: 42, reply: "  Bonjour Marie,\nOui!  ", locale: 'fr');
+        return new ReplyToOrganizerMessageDTO(organizer_id: 5, message_id: 42, reply: "  Bonjour Marie,\nOui!  ", locale: 'fr', user_id: 9);
     }
 
     private function message(): OrganizerMessageDomainObject

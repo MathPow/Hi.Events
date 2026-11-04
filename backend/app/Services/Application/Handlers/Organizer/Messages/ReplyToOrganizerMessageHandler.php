@@ -9,6 +9,7 @@ use HiEvents\Exceptions\AccountNotVerifiedException;
 use HiEvents\Mail\Organizer\OrganizerContactReplyEmail;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
+use HiEvents\Repository\Interfaces\OrganizerMessageReplyRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\Messages\DTO\ReplyToOrganizerMessageDTO;
@@ -22,7 +23,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class ReplyToOrganizerMessageHandler
 {
     public function __construct(
-        private readonly OrganizerMessageRepositoryInterface $messageRepository,
+        private readonly OrganizerMessageRepositoryInterface      $messageRepository,
+        private readonly OrganizerMessageReplyRepositoryInterface $replyRepository,
         private readonly OrganizerRepositoryInterface        $organizerRepository,
         private readonly AccountRepositoryInterface          $accountRepository,
         private readonly Mailer                              $mailer,
@@ -60,6 +62,12 @@ class ReplyToOrganizerMessageHandler
                 reply: trim($dto->reply),
             ));
 
+        $this->replyRepository->create([
+            'organizer_message_id' => $message->getId(),
+            'user_id' => $dto->user_id,
+            'message' => trim($dto->reply),
+        ]);
+
         // As text: the repository hands the saved values straight to the domain object's setters.
         $now = Carbon::now()->toDateTimeString();
         $this->messageRepository->updateFromArray($message->getId(), [
@@ -69,6 +77,7 @@ class ReplyToOrganizerMessageHandler
 
         return $this->messageRepository
             ->loadRelation(new Relationship(EventDomainObject::class, name: 'event'))
+            ->loadRelation(OrganizerInboxHandler::repliesRelation())
             ->findById($message->getId());
     }
 }

@@ -14,6 +14,14 @@ export interface OrganizerMessage {
     // When the organizer answered from the inbox (null: not yet).
     replied_at: string | null;
     created_at: string;
+    // The answers sent from the inbox, oldest first.
+    replies?: OrganizerMessageReply[];
+}
+
+export interface OrganizerMessageReply {
+    id: number;
+    message: string;
+    created_at: string;
 }
 
 export interface OrganizerMessagesResponse {

@@ -5,6 +5,8 @@ namespace HiEvents\Services\Application\Handlers\Organizer\Messages;
 use Carbon\Carbon;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\OrganizerMessageDomainObject;
+use HiEvents\DomainObjects\OrganizerMessageReplyDomainObject;
+use HiEvents\Repository\Eloquent\Value\OrderAndDirection;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -25,6 +27,7 @@ class OrganizerInboxHandler
     {
         return $this->messageRepository
             ->loadRelation(new Relationship(EventDomainObject::class, name: 'event'))
+            ->loadRelation(self::repliesRelation())
             ->paginateForOrganizer($organizerId, min(max($perPage, 1), 100), max($page, 1), $unreadOnly);
     }
 
@@ -62,6 +65,15 @@ class OrganizerInboxHandler
         $message = $this->find($organizerId, $messageId);
 
         $this->messageRepository->deleteById($message->getId());
+    }
+
+    public static function repliesRelation(): Relationship
+    {
+        return new Relationship(
+            domainObject: OrganizerMessageReplyDomainObject::class,
+            name: 'replies',
+            orderAndDirections: [new OrderAndDirection(order: OrganizerMessageReplyDomainObject::CREATED_AT, direction: 'asc')],
+        );
     }
 
     private function find(int $organizerId, int $messageId): OrganizerMessageDomainObject

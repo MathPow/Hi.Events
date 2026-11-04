@@ -82,8 +82,26 @@ const DeviceNotifications = () => {
     );
 };
 
-const MessageRow = ({message, isOpen, onToggle, onReply}: {
+const ThreadEntry = ({author, date, text, fromOrganizer}: {
+    author: string,
+    date: string,
+    text: string,
+    fromOrganizer?: boolean,
+}) => (
+    <div className={classes.threadEntry} data-organizer={fromOrganizer || undefined}>
+        <div className={classes.threadMeta}>
+            <strong>{author}</strong>
+            <time dateTime={date} title={dayjs.utc(date).local().format('YYYY-MM-DD HH:mm')}>
+                {relativeDate(date)}
+            </time>
+        </div>
+        <p className={classes.messageText}>{text}</p>
+    </div>
+);
+
+const MessageRow = ({message, organizerName, isOpen, onToggle, onReply}: {
     message: OrganizerMessage,
+    organizerName?: string,
     isOpen: boolean,
     onToggle: () => void,
     onReply: () => void,
@@ -131,7 +149,17 @@ const MessageRow = ({message, isOpen, onToggle, onReply}: {
 
             {isOpen && (
                 <div className={classes.messageBody}>
-                    <p className={classes.messageText}>{message.message}</p>
+                    {message.replies?.length ? (
+                        <div className={classes.thread}>
+                            <ThreadEntry author={message.sender_name} date={message.created_at} text={message.message}/>
+                            {message.replies.map((reply) => (
+                                <ThreadEntry key={reply.id} author={organizerName ?? ''} date={reply.created_at}
+                                             text={reply.message} fromOrganizer/>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className={classes.messageText}>{message.message}</p>
+                    )}
                     <div className={classes.messageActions}>
                         <Button leftSection={<IconArrowBackUp size={18}/>} onClick={onReply}>
                             {t`Reply`}
@@ -253,6 +281,7 @@ const Messages = () => {
                         <MessageRow
                             key={message.id}
                             message={message}
+                            organizerName={organizer?.name}
                             isOpen={openId === message.id}
                             onToggle={() => openId === message.id ? setOpenId(null) : open(message)}
                             onReply={() => setReplyTo(message)}

@@ -194,6 +194,39 @@
   overflow-wrap: anywhere;
 }
 
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.threadEntry {
+  max-width: min(36rem, 92%);
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  border-top-left-radius: 4px;
+  background: var(--mantine-color-gray-1);
+
+  &[data-organizer] {
+    align-self: flex-end;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 4px;
+    background: var(--mantine-color-primary-0, var(--mantine-color-orange-0));
+  }
+}
+
+.threadMeta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+
+  time {
+    color: var(--mantine-color-dimmed);
+  }
+}
+
 .messageActions {
   display: flex;
   flex-wrap: wrap;

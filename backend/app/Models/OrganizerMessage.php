@@ -3,6 +3,7 @@
 namespace HiEvents\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -20,5 +21,10 @@ class OrganizerMessage extends BaseModel
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function replies(): HasMany
+    {
+        return $this->hasMany(OrganizerMessageReply::class);
     }
 }

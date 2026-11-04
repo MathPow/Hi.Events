@@ -3,6 +3,7 @@
 namespace HiEvents\Resources\Organizer;
 
 use HiEvents\DomainObjects\OrganizerMessageDomainObject;
+use HiEvents\DomainObjects\OrganizerMessageReplyDomainObject;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,6 +31,14 @@ class OrganizerMessageResource extends JsonResource
             'read_at' => $this->getReadAt(),
             'replied_at' => $this->getRepliedAt(),
             'created_at' => $this->getCreatedAt(),
+            'replies' => $this->when(
+                condition: !is_null($this->getReplies()),
+                value: fn() => $this->getReplies()->map(fn(OrganizerMessageReplyDomainObject $reply) => [
+                    'id' => $reply->getId(),
+                    'message' => $reply->getMessage(),
+                    'created_at' => $reply->getCreatedAt(),
+                ])->values(),
+            ),
         ];
     }
 }

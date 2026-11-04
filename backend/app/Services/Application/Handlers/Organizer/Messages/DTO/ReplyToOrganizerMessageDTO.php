@@ -12,6 +12,7 @@ class ReplyToOrganizerMessageDTO extends BaseDataObject
         public string $reply,
         // The language of the person answering: their answer is written in it, the email follows.
         public ?string $locale = null,
+        public ?int    $user_id = null,
     )
     {
     }
