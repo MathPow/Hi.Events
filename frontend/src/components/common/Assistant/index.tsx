@@ -33,7 +33,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
     const field = useRef<HTMLTextAreaElement>(null);
     const {pathname} = useLocation();
     const link = useAnswerLink();
-    const {status, statusFailed, refreshStatus, ready, canSend, running, bubbles, send, stop, reset, decide} =
+    const {status, statusFailed, refreshStatus, ready, canSend, running, awaitingAnswer, bubbles, send, stop, reset, decide, respond} =
         useAssistantConversation({userId});
 
     const suggestions = [
@@ -144,7 +144,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                     {bubbles.map((b) =>
                         b.role === "user"
                             ? <div key={b.id} className={classes.question}>{b.text}</div>
-                            : <Answer key={b.id} bubble={b} link={link} decide={decide}/>,
+                            : <Answer key={b.id} bubble={b} link={link} decide={decide} respond={respond}/>,
                     )}
                 </div>
             </div>
@@ -152,7 +152,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
             <div className={classes.composer}>
                 <div className={classes.column}>
                     <div className={classes.field}>
-                        <textarea ref={field} rows={1} value={input} placeholder={t`Write your request…`}
+                        <textarea ref={field} rows={1} value={input} placeholder={awaitingAnswer ? t`Write your answer…` : t`Write your request…`}
                                   aria-label={t`Your request`} disabled={!ready}
                                   onChange={(e) => setInput(e.target.value)}
                                   onKeyDown={(e) => {
@@ -161,7 +161,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                                           submit(input);
                                       }
                                   }}/>
-                        {running ? (
+                        {running && !(awaitingAnswer && input.trim()) ? (
                             <button type="button" className={classes.send} onClick={stop}
                                     title={t`Stop`} aria-label={t`Stop`}>
                                 <IconPlayerStopFilled size={16}/>

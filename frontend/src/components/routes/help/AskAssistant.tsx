@@ -68,7 +68,7 @@ const SignedOutAsk = ({title}: { title?: string }) => {
 const SignedInAsk = ({userId, title}: { userId: string, title?: string }) => {
     const [question, setQuestion] = useQuestionField();
     const link = useAnswerLink();
-    const {status, statusFailed, refreshStatus, ready, canSend, running, bubbles, send, stop, reset, decide} =
+    const {status, statusFailed, refreshStatus, ready, canSend, running, bubbles, send, stop, reset, decide, respond} =
         useAssistantConversation({userId, storageKey: HELP_CONVERSATION, canOpenPages: false});
     const lastQuestion = useRef<HTMLDivElement>(null);
     const justAsked = useRef(false);
@@ -129,7 +129,7 @@ const SignedInAsk = ({userId, title}: { userId: string, title?: string }) => {
                             {b.text}
                         </div>
                     ) : (
-                        <Answer key={b.id} bubble={b} link={link} decide={decide}/>
+                        <Answer key={b.id} bubble={b} link={link} decide={decide} respond={respond}/>
                     ))}
                     {bubbles.length > 0 && (
                         <div className={classes.askFooter}>

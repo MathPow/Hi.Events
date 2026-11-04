@@ -13,6 +13,7 @@ import {
     breakText,
     Bubble,
     changeApi,
+    Question,
     fetchStatus,
     load,
     modelTurn,
@@ -55,6 +56,9 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
     const [running, setRunning] = useState(false);
     const controller = useRef<AbortController | null>(null);
     const decisions = useRef(new Map<string, (yes: boolean) => void>());
+    // The questions waiting for an answer, oldest first: the composer answers the first one.
+    const answers = useRef(new Map<string, (answer: string | null) => void>());
+    const [awaiting, setAwaiting] = useState<string[]>([]);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {i18n} = useLingui();
@@ -79,7 +83,7 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
     }, []);
 
     const ready = !!status?.ready && status.remaining > 0;
-    const canSend = ready && !running;
+    const canSend = ready && (!running || awaiting.length > 0);
 
     const stop = () => controller.current?.abort();
 
@@ -91,8 +95,15 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
 
     const decide = (id: string, yes: boolean) => decisions.current.get(id)?.(yes);
 
+    // A choice, a written answer, or null to skip the question.
+    const respond = (id: string, answer: string | null) => answers.current.get(id)?.(answer);
+
     const send = async (raw: string) => {
         const text = raw.trim();
+        if (text && awaiting.length) {
+            respond(awaiting[0], text);
+            return;
+        }
         if (!text || running || !ready) {
             return;
         }
@@ -106,6 +117,8 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
             setBubbles((list) => list.map((b) => (b.id === answerId && b.role === "assistant" ? f(b) : b)));
         const updateApproval = (id: string, fields: Partial<Approval>) =>
             update((b) => ({...b, pieces: b.pieces.map((p) => (p.type === "approval" && p.id === id ? {...p, ...fields} : p))}));
+        const updateQuestion = (id: string, fields: Partial<Question>) =>
+            update((b) => ({...b, pieces: b.pieces.map((p) => (p.type === "question" && p.id === id ? {...p, ...fields} : p))}));
         const updateStep = (id: string, state: "ok" | "error") =>
             update((b) => ({...b, steps: b.steps.map((s) => (s.id === id ? {...s, state} : s))}));
 
@@ -145,6 +158,43 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
                 update((b) => ({...b, steps: [...b.steps, {id: newId(), label: t`Opening ${path}`, state: "ok"}]}));
                 navigate(path);
                 return result("Page ouverte.");
+            }
+
+            if (call.name === "poser_question") {
+                const choices = (Array.isArray(toolInput.choix) ? toolInput.choix : [])
+                    .map((choice) => (choice ?? {}) as Record<string, unknown>)
+                    .filter((choice) => typeof choice.libelle === "string" && choice.libelle.trim())
+                    .map((choice) => ({
+                        label: String(choice.libelle),
+                        ...(typeof choice.detail === "string" && choice.detail ? {detail: choice.detail} : {}),
+                    }));
+                const question: Question = {
+                    type: "question",
+                    id: String(call.id),
+                    question: String(toolInput.question ?? ""),
+                    choices,
+                    state: "waiting",
+                };
+                update((b) => ({...b, pieces: [...b.pieces, question]}));
+                setAwaiting((list) => [...list, question.id]);
+                const answer = await new Promise<string | null>((resolve) => {
+                    answers.current.set(question.id, resolve);
+                    ctrl.signal.addEventListener("abort", () => resolve(null), {once: true});
+                });
+                answers.current.delete(question.id);
+                setAwaiting((list) => list.filter((id) => id !== question.id));
+
+                if (ctrl.signal.aborted) {
+                    updateQuestion(question.id, {state: "cancelled"});
+                    return result("Annulé : la personne a arrêté la réponse.", true);
+                }
+                if (answer === null) {
+                    updateQuestion(question.id, {state: "skipped"});
+                    return result("La personne a passé la question sans répondre. Fais au mieux sans redemander la même chose.");
+                }
+                updateQuestion(question.id, {state: "answered", answer});
+                const chosen = choices.some((choice) => choice.label === answer);
+                return result(chosen ? `La personne a choisi : « ${answer} ».` : `La personne a écrit sa propre réponse : « ${answer} ».`);
             }
 
             if (call.name === "modifier_billetterie") {
@@ -255,5 +305,7 @@ export const useAssistantConversation = ({userId, storageKey = PANEL_CONVERSATIO
         }
     };
 
-    return {status, statusFailed, refreshStatus, ready, canSend, running, bubbles, send, stop, reset, decide};
+    const awaitingAnswer = awaiting.length > 0;
+
+    return {status, statusFailed, refreshStatus, ready, canSend, running, awaitingAnswer, bubbles, send, stop, reset, decide, respond};
 };

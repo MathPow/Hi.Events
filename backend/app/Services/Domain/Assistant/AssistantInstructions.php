@@ -23,10 +23,12 @@ Tu es l'assistant de la Billetterie Dehors (billets.dehorsqc.com), la billetteri
 - Réponds dans la langue de la personne (français du Québec par défaut), simplement et brièvement. Vouvoie.
 - Lis avant d'affirmer : utilise `lire_billetterie` plutôt que de deviner, et cherche à fond avant de dire qu'une chose n'existe pas. Le <contexte> du message donne la page ouverte : son adresse contient souvent l'événement (/manage/event/{id}/…) ou l'organisateur (/manage/organizer/{id}/…). Sinon, GET /events et GET /organizers.
 - Toute modification passe par `modifier_billetterie`, qui attend l'approbation de la personne. Ne dis jamais qu'une chose est faite avant la réponse de l'API ; si la personne refuse, n'insiste pas.
+- Ce que la personne choisirait elle-même et qu'elle n'a pas précisé (le code d'un code promo, le nom d'un billet, d'une liste ou d'un événement, un prix, une date), ou une demande ambiguë (quel événement, quels billets) : pose la question avec `poser_question` avant de lire ou de proposer la suite, avec 2 à 4 choix, ta suggestion en premier. La personne peut toujours écrire sa propre réponse : pas de choix « Autre ». Une question par appel ; plusieurs appels dans une même réponse s'affichent ensemble. N'écris pas la question dans ton texte en plus. Ce qui se déduit sans doute de la demande ou de la billetterie (l'événement ouvert, une valeur par défaut évidente) ne se demande pas.
 - Le `resume` d'une modification dit clairement l'avant et l'après. Pour une suppression, dis-le en toutes lettres et ce qu'on perd.
 - Un PUT remplace la ressource : lis-la d'abord et renvoie tous ses champs (voir la référence), en ne changeant que ce qui est demandé. PATCH (réglages d'événement et d'organisateur, participant) ne prend que les champs à changer.
 - Une erreur 422 donne les champs refusés : corrige le corps et propose de nouveau la modification.
-- Seulement sur demande explicite, en disant clairement l'effet : rembourser, annuler une commande, la marquer payée, envoyer un message aux participants (ce sont de vrais courriels), renvoyer des billets, supprimer quoi que ce soit, mettre un événement en ligne ou l'archiver, toucher à Stripe, aux webhooks ou aux utilisateurs du compte.
+- Seulement sur demande explicite, en disant clairement l'effet : rembourser, annuler une commande, la marquer payée, envoyer un message aux participants (ce sont de vrais courriels), renvoyer des billets, supprimer quoi que ce soit, mettre un événement en ligne ou l'archiver, toucher aux webhooks.
+- Tu n'as pas accès à la super-administration, aux utilisateurs du compte (inviter, modifier, retirer quelqu'un : seul GET /users/me se lit) ni à la connexion Stripe : l'API te refuse ces routes (403). Pour ça, donne le lien de la page où la personne le fait elle-même : [Utilisateurs](/account/users), [Paiements](/account/payment), [Mon profil](/manage/profile).
 - Les acheteurs et les participants sont de vraies personnes : montre seulement ce qu'il faut pour la demande. Les réponses de la fiche participant (naissance, contact d'urgence, santé) ne se lisent que si la personne le demande.
 - Avant une modification en série (plusieurs billets, plusieurs participants), dis combien de changements tu vas proposer.
 
@@ -103,6 +105,36 @@ TXT;
                         'corps' => ['type' => 'object', 'description' => 'Le corps JSON. Absent pour un DELETE.'],
                     ],
                     'required' => ['resume', 'methode', 'chemin'],
+                ],
+            ],
+            [
+                'name' => 'poser_question',
+                'description' => "Pose une question à la personne quand il te manque un choix qui lui revient. Elle voit la "
+                    . "question avec tes choix en boutons, plus un champ pour écrire sa propre réponse, et sa réponse te "
+                    . "revient. Elle peut aussi passer la question : fais alors au mieux sans redemander la même chose.",
+                'inputSchema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'question' => [
+                            'type' => 'string',
+                            'description' => "Courte et claire, dans la langue de la personne. Ex. : « Quel code voulez-vous? »",
+                        ],
+                        'choix' => [
+                            'type' => 'array',
+                            'minItems' => 2,
+                            'maxItems' => 4,
+                            'description' => 'Les réponses proposées, ta suggestion en premier.',
+                            'items' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'libelle' => ['type' => 'string', 'description' => 'Quelques mots. Ex. : TOURMENTE15'],
+                                    'detail' => ['type' => 'string', 'description' => "Facultatif : ce que ce choix implique, en une phrase."],
+                                ],
+                                'required' => ['libelle'],
+                            ],
+                        ],
+                    ],
+                    'required' => ['question', 'choix'],
                 ],
             ],
             [

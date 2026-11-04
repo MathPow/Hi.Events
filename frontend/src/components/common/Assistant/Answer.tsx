@@ -1,10 +1,10 @@
-import {MouseEvent, ReactNode} from "react";
+import {FormEvent, MouseEvent, ReactNode, useState} from "react";
 import {useNavigate} from "react-router";
 import {Button, Loader} from "@mantine/core";
-import {IconCheck, IconRefresh} from "@tabler/icons-react";
+import {IconArrowUp, IconCheck, IconRefresh} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {Markdown} from "./Markdown.tsx";
-import {Approval} from "./assistant.ts";
+import {Approval, Question} from "./assistant.ts";
 import {AssistantBubble} from "./useAssistantConversation.ts";
 import classes from "./Assistant.module.scss";
 
@@ -34,11 +34,68 @@ export const useAnswerLink = (): LinkRenderer => {
     };
 };
 
-/** One answer of the assistant: its steps, its text and the changes to approve. */
-export const Answer = ({bubble, link, decide}: {
+/** A question of the assistant: its choices as buttons, or the person's own answer. */
+const QuestionCard = ({question, respond}: {
+    question: Question;
+    respond: (id: string, answer: string | null) => void;
+}) => {
+    const [other, setOther] = useState("");
+    const waiting = question.state === "waiting";
+
+    const submitOther = (event: FormEvent) => {
+        event.preventDefault();
+        if (other.trim()) {
+            respond(question.id, other.trim());
+        }
+    };
+
+    return (
+        <div className={classes.questionCard} data-state={question.state}>
+            <p className={classes.approvalTitle}>{t`Question`}</p>
+            <p className={classes.questionText}>{question.question}</p>
+            {waiting ? (
+                <>
+                    <div className={classes.choices}>
+                        {question.choices.map((choice, index) => (
+                            <button key={index} type="button" className={classes.choice}
+                                    onClick={() => respond(question.id, choice.label)}>
+                                <span className={classes.choiceNumber} aria-hidden>{index + 1}</span>
+                                <span className={classes.choiceText}>
+                                    <span className={classes.choiceLabel}>{choice.label}</span>
+                                    {choice.detail && <span className={classes.choiceDetail}>{choice.detail}</span>}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
+                    <form className={classes.otherAnswer} onSubmit={submitOther}>
+                        <input value={other} onChange={(e) => setOther(e.target.value)}
+                               placeholder={t`Or write your own answer…`} aria-label={t`Your own answer`}/>
+                        <button type="submit" className={classes.otherSend} disabled={!other.trim()}
+                                title={t`Send`} aria-label={t`Send`}>
+                            <IconArrowUp size={16}/>
+                        </button>
+                    </form>
+                    <button type="button" className={classes.skip} onClick={() => respond(question.id, null)}>
+                        {t`Skip`}
+                    </button>
+                </>
+            ) : (
+                <p className={classes.note}>
+                    {question.state === "answered" && <><IconCheck size={14}/> <strong className={classes.questionAnswer}>{question.answer}</strong></>}
+                    {question.state === "skipped" && t`Skipped.`}
+                    {question.state === "cancelled" && t`Not answered.`}
+                </p>
+            )}
+        </div>
+    );
+};
+
+/** One answer of the assistant: its steps, its text, its questions and the changes to approve. */
+export const Answer = ({bubble, link, decide, respond}: {
     bubble: AssistantBubble;
     link: LinkRenderer;
     decide: (id: string, yes: boolean) => void;
+    respond: (id: string, answer: string | null) => void;
 }) => {
     const waiting = bubble.pieces.filter((p): p is Approval => p.type === "approval" && p.state === "waiting");
     const lastStep = bubble.steps[bubble.steps.length - 1];
@@ -84,6 +141,8 @@ export const Answer = ({bubble, link, decide}: {
             {bubble.pieces.map((p, i) =>
                 p.type === "text" ? (
                     <div key={i} className={classes.markdown}><Markdown text={p.text} link={link}/></div>
+                ) : p.type === "question" ? (
+                    <QuestionCard key={p.id} question={p} respond={respond}/>
                 ) : (
                     <div key={p.id} className={classes.approval} data-state={p.state} data-method={p.method}>
                         <p className={classes.approvalTitle}>
