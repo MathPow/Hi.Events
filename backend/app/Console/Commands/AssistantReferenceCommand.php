@@ -61,7 +61,9 @@ class AssistantReferenceCommand extends Command
             ->contains(fn($middleware) => is_string($middleware) && str_ends_with($middleware, ':api')
                 && (str_starts_with($middleware, 'auth') || str_contains($middleware, 'Authenticate')));
 
-        return $authenticated && AssistantRoutes::isAllowed('/' . $route->uri());
+        return $authenticated && collect($route->methods())
+            ->reject(fn($method) => $method === 'HEAD')
+            ->contains(fn($method) => AssistantRoutes::isAllowed('/' . $route->uri(), $method));
     }
 
     private function method(Route $route): string

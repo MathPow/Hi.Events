@@ -3,8 +3,9 @@ PUT /accounts/{account_id?}
   name: required|string
   timezone: required|timezone:all
   currency_code: in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
-POST /accounts/{account_id}/stripe/connect
-GET /accounts/{account_id}/stripe/connect_accounts
+PUT /accounts/{account_id}/event-types
+  event_types: present|array
+  event_types.*: string|in:"SPORT","ENTREPRENEURSHIP","SOCIAL","OTHER"
 GET /accounts/{account_id}/taxes-and-fees
 POST /accounts/{account_id}/taxes-and-fees
   name: required|string|max:255
@@ -42,13 +43,13 @@ POST /events
   attributes.*.value: min:1|max:1000|required
   attributes.*.is_public: boolean|required
   location_details: array
-  location_details.venue_name: string|max:100
-  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.venue_name: nullable|string|max:100|
+  location_details.address_line_1: nullable|string|max:255|
   location_details.address_line_2: string|max:255|nullable
-  location_details.city: required_with:location_details|string|max:85
-  location_details.state_or_region: string|max:85
-  location_details.zip_or_postal_code: required_with:location_details|string|max:85
-  location_details.country: required_with:location_details|string|max:2
+  location_details.city: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.state_or_region: nullable|string|max:85
+  location_details.zip_or_postal_code: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.country: nullable|string|max:2|required_with:location_details.address_line_1
 GET /events/{eventId}/email-templates
 POST /events/{eventId}/email-templates
 POST /events/{eventId}/email-templates/preview
@@ -68,13 +69,13 @@ PUT /events/{event_id}
   attributes.*.value: min:1|max:1000|required
   attributes.*.is_public: boolean|required
   location_details: array
-  location_details.venue_name: string|max:100
-  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.venue_name: nullable|string|max:100|
+  location_details.address_line_1: nullable|string|max:255|
   location_details.address_line_2: string|max:255|nullable
-  location_details.city: required_with:location_details|string|max:85
-  location_details.state_or_region: string|max:85
-  location_details.zip_or_postal_code: required_with:location_details|string|max:85
-  location_details.country: required_with:location_details|string|max:2
+  location_details.city: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.state_or_region: nullable|string|max:85
+  location_details.zip_or_postal_code: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.country: nullable|string|max:2|required_with:location_details.address_line_1
 GET /events/{event_id}/affiliates
   liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
 POST /events/{event_id}/affiliates
@@ -120,6 +121,8 @@ PUT /events/{event_id}/attendees/{attendee_id}
   product_id: numeric|required
   product_price_id: numeric|required
   notes: string|max:2000|nullable
+GET /events/{event_id}/attendees/{attendee_id}/documents
+GET /events/{event_id}/attendees/{attendee_id}/documents/{document_id}/pdf
 POST /events/{event_id}/attendees/{attendee_public_id}/check_in
   action: required|string|in:check_in,check_out
 POST /events/{event_id}/attendees/{attendee_public_id}/resend-ticket
@@ -162,6 +165,7 @@ PUT /events/{event_id}/check-in-lists/{check_in_list_id}
   product_ids: required|array|min:1
   pin: nullable|string|min:4|max:12|regex:/^[0-9]+$/
   allow_door_sales: boolean
+GET /events/{event_id}/check_in_stats
 GET /events/{event_id}/deletion-status
 GET /events/{event_id}/deposits
 POST /events/{event_id}/deposits/split
@@ -397,7 +401,7 @@ PATCH /events/{event_id}/settings
   product_info_message: string|nullable|max:10000
   product_info_button_text: string|nullable|max:100|required_with:product_info_button_url
   product_info_button_url: nullable|url:http,https|max:2048|required_with:product_info_button_text
-  product_info_icon: nullable|string|in:"info","heart","heart-handshake","gift","leaf","mountain","speakerphone","star"
+  product_info_icon: nullable|string|in:"info","heart","heart-handshake","gift","leaf","mountain","speakerphone","star","alert","tag"
   support_email: email|nullable
   require_attendee_details: boolean
   attendee_details_collection_method: in:"PER_TICKET","PER_ORDER"
@@ -412,13 +416,13 @@ PATCH /events/{event_id}/settings
   website_url: url|nullable
   maps_url: url|nullable
   location_details: array
-  location_details.venue_name: string|max:255|nullable
-  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.venue_name: nullable|string|max:255|
+  location_details.address_line_1: nullable|string|max:255|
   location_details.address_line_2: string|max:255|nullable
-  location_details.city: required_with:location_details|string|max:85
-  location_details.state_or_region: string|max:85|nullable
-  location_details.zip_or_postal_code: required_with:location_details|string|max:85
-  location_details.country: required_with:location_details|string|max:2
+  location_details.city: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.state_or_region: nullable|string|max:85
+  location_details.zip_or_postal_code: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.country: nullable|string|max:2|required_with:location_details.address_line_1
   is_online_event: boolean
   online_event_connection_details: string|nullable
   seo_title: string|max:255|nullable
@@ -472,7 +476,7 @@ PUT /events/{event_id}/settings
   product_info_message: string|nullable|max:10000
   product_info_button_text: string|nullable|max:100|required_with:product_info_button_url
   product_info_button_url: nullable|url:http,https|max:2048|required_with:product_info_button_text
-  product_info_icon: nullable|string|in:"info","heart","heart-handshake","gift","leaf","mountain","speakerphone","star"
+  product_info_icon: nullable|string|in:"info","heart","heart-handshake","gift","leaf","mountain","speakerphone","star","alert","tag"
   support_email: email|nullable
   require_attendee_details: boolean
   attendee_details_collection_method: in:"PER_TICKET","PER_ORDER"
@@ -487,13 +491,13 @@ PUT /events/{event_id}/settings
   website_url: url|nullable
   maps_url: url|nullable
   location_details: array
-  location_details.venue_name: string|max:255|nullable
-  location_details.address_line_1: required_with:location_details|string|max:255
+  location_details.venue_name: nullable|string|max:255|
+  location_details.address_line_1: nullable|string|max:255|
   location_details.address_line_2: string|max:255|nullable
-  location_details.city: required_with:location_details|string|max:85
-  location_details.state_or_region: string|max:85|nullable
-  location_details.zip_or_postal_code: required_with:location_details|string|max:85
-  location_details.country: required_with:location_details|string|max:2
+  location_details.city: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.state_or_region: nullable|string|max:85
+  location_details.zip_or_postal_code: nullable|string|max:85|required_with:location_details.address_line_1
+  location_details.country: nullable|string|max:2|required_with:location_details.address_line_1
   is_online_event: boolean
   online_event_connection_details: string|nullable
   seo_title: string|max:255|nullable
@@ -578,11 +582,14 @@ POST /organizers
   description: string|nullable|max:1200
   timezone: timezone|required
   currency: required|in:"AED","AFN","ALL","AMD","AOA","ARS",… (142 valeurs)
+PUT /organizers/{organizerId}/email-customizations/{templateType}
 GET /organizers/{organizerId}/email-templates
 POST /organizers/{organizerId}/email-templates
 POST /organizers/{organizerId}/email-templates/preview
 DELETE /organizers/{organizerId}/email-templates/{templateId}
 PUT /organizers/{organizerId}/email-templates/{templateId}
+GET /organizers/{organizerId}/email-templates/{templateType}/sample
+POST /organizers/{organizerId}/email-templates/{templateType}/test
 DELETE /organizers/{organizer_id}
 GET /organizers/{organizer_id}
 POST /organizers/{organizer_id}
@@ -597,10 +604,26 @@ POST /organizers/{organizer_id}
 GET /organizers/{organizer_id}/achievements
 POST /organizers/{organizer_id}/achievements/seen
 GET /organizers/{organizer_id}/deletion-status
+GET /organizers/{organizer_id}/documents
+POST /organizers/{organizer_id}/documents
+DELETE /organizers/{organizer_id}/documents/{document_id}
+GET /organizers/{organizer_id}/documents/{document_id}
+PATCH /organizers/{organizer_id}/documents/{document_id}
+POST /organizers/{organizer_id}/documents/{document_id}/duplicate
+GET /organizers/{organizer_id}/documents/{document_id}/pdf
 GET /organizers/{organizer_id}/events
   liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+GET /organizers/{organizer_id}/messages
+POST /organizers/{organizer_id}/messages/read-all
+GET /organizers/{organizer_id}/messages/unread-count
+DELETE /organizers/{organizer_id}/messages/{message_id}
+PATCH /organizers/{organizer_id}/messages/{message_id}
+POST /organizers/{organizer_id}/messages/{message_id}/reply
 GET /organizers/{organizer_id}/orders
   liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+GET /organizers/{organizer_id}/orders/export
+  liste : page, per_page, query, sort_by, sort_direction, filter_fields[champ][eq|ne|lt|lte|gt|gte|like|in]=valeur (champs permis dans meta.allowed_filter_fields)
+POST /organizers/{organizer_id}/page-import
 GET /organizers/{organizer_id}/reports/{report_type}
   start_date: date|before:end_date|required_with:end_date|nullable
   end_date: date|after:start_date|required_with:start_date|nullable
@@ -644,6 +667,10 @@ PATCH /organizers/{organizer_id}/settings
   quora_handle: sometimes|nullable|string|max:255
   vimeo_handle: sometimes|nullable|string|max:255
   github_handle: sometimes|nullable|string|max:255
+  strava_handle: sometimes|nullable|string|max:255
+  social_media_layout: sometimes|nullable|array|max:50
+  social_media_layout.*.platform: required|string|in:"facebook","instagram","twitter","linkedin","discord","tiktok",… (22 valeurs)
+  social_media_layout.*.visible: required|boolean
   website_url: sometimes|nullable|url
   location_details: sometimes|array
   location_details.venue_name: sometimes|nullable|string|max:255
@@ -671,6 +698,7 @@ PATCH /organizers/{organizer_id}/settings
   tracking_pixels.*.enabled: required|boolean
   tracking_consent_acknowledged: sometimes|nullable|boolean
   faqs: sometimes|nullable|array|max:50
+  email_footer_message: sometimes|nullable|string|max:5000
   faqs.*.question: required|string|max:255
   faqs.*.answer: required|string|max:5000
   charity_registration_number: sometimes|nullable|string|max:255
@@ -681,9 +709,6 @@ PATCH /organizers/{organizer_id}/settings
 GET /organizers/{organizer_id}/stats
 PUT /organizers/{organizer_id}/status
   status: required|in:"DRAFT","LIVE","ARCHIVED"
-DELETE /organizers/{organizer_id}/stripe
-GET /organizers/{organizer_id}/stripe
-POST /organizers/{organizer_id}/stripe/connect
 GET /organizers/{organizer_id}/webhooks
 POST /organizers/{organizer_id}/webhooks
   url: required|url|NoInternalUrlRule
@@ -696,32 +721,7 @@ PUT /organizers/{organizer_id}/webhooks/{webhook_id}
   event_types.*: required|in:"product.created","product.updated","product.deleted","event.created","event.updated","event.archived",… (16 valeurs)
   status: nullable|in:"ENABLED","PAUSED"
 GET /organizers/{organizer_id}/webhooks/{webhook_id}/logs
-GET /users
-POST /users
-  first_name: required|min:1
-  last_name: min:1|nullable
-  role: required|in:"ADMIN","ORGANIZER"
-  email: required|email
+GET /push/public-key
+DELETE /push/subscriptions
+POST /push/subscriptions
 GET /users/me
-PUT /users/me
-  first_name: required_without_all:current_password,password,password_confirmation|min:1
-  last_name: required_without_all:current_password,password,password_confirmation|min:1
-  email: required_without_all:current_password,password,password_confirmation|email
-  timezone: required_without_all:current_password,password,password_confirmation|timezone
-  locale: required_without_all:current_password,password,password_confirmation|in:en,de,fr,it,nl,hu,es,pt,pt-br,zh-cn,se,zh-hk,vi,tr,pl,sk,el
-  current_password: required_with:password,password_confirmation|min:8
-  password: required_with:current_password|confirmed|Password
-  marketing_opt_in: boolean|nullable
-GET /users/{user_id}
-PUT /users/{user_id}
-  first_name: string|max:100|min:1|nullable
-  last_name: string|max:100|min:1|nullable
-  status: in:"INACTIVE","ACTIVE"
-  role: in:"ADMIN","ORGANIZER"
-POST /users/{user_id}/confirm-email-with-code
-POST /users/{user_id}/confirm-email/{resetToken}
-DELETE /users/{user_id}/email-change
-POST /users/{user_id}/email-change/{changeToken}
-DELETE /users/{user_id}/invitation
-POST /users/{user_id}/invitation
-POST /users/{user_id}/resend-email-confirmation

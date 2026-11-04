@@ -9,6 +9,7 @@ use HiEvents\Http\Middleware\LogImpersonationMiddleware;
 use HiEvents\Http\Middleware\PreventRequestsDuringMaintenance;
 use HiEvents\Http\Middleware\RedirectIfAuthenticated;
 use HiEvents\Http\Middleware\ExchangeApiTokenForJwt;
+use HiEvents\Http\Middleware\RestrictAssistantRequests;
 use HiEvents\Http\Middleware\RejectSuspendedAccount;
 use HiEvents\Http\Middleware\SetAccountContext;
 use HiEvents\Http\Middleware\SetUserLocaleMiddleware;
@@ -52,6 +53,7 @@ class Kernel extends HttpKernel
         // apres le rejet en 401. La pile globale, elle, n'est pas triee.
         // Sans jeton de la forme « <id>|<secret> », ce middleware ne fait rien.
         ExchangeApiTokenForJwt::class,
+        RestrictAssistantRequests::class,
         PreventRequestsDuringMaintenance::class,
         ValidatePostSize::class,
         TrimStrings::class,

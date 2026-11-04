@@ -28,7 +28,17 @@ export type Approval = {
     state: "waiting" | "sending" | "done" | "refused" | "cancelled" | "error" | "unreachable";
     message?: string;
 };
-export type Piece = { type: "text"; text: string } | Approval;
+export type QuestionChoice = { label: string; detail?: string };
+
+export type Question = {
+    type: "question";
+    id: string;
+    question: string;
+    choices: QuestionChoice[];
+    state: "waiting" | "answered" | "skipped" | "cancelled";
+    answer?: string;
+};
+export type Piece = { type: "text"; text: string } | Approval | Question;
 
 export type Bubble =
     | { id: string; role: "user"; text: string }
@@ -122,19 +132,32 @@ const truncate = (text: string) =>
         ? text
         : `${text.slice(0, LIMIT)}\n… (réponse coupée à ${LIMIT} caractères sur ${text.length} : demandez moins, avec per_page, page, query ou filter_fields)`;
 
-/** Same list as the backend (AssistantRoutes): login, app tokens, super admin, public pages and the assistant itself. */
-const BLOCKED_PREFIXES = ["/auth", "/api-tokens", "/admin", "/public", "/assistant"];
+/**
+ * Same rules as the backend (AssistantRoutes), which enforces them on every call marked with this
+ * header: login, app tokens, super admin, public pages, the assistant itself, the account's users
+ * (only the person's own profile can be read) and the Stripe connections.
+ */
+const ASSISTANT_HEADER = {"X-Dehors-Assistant": "1"};
+const BLOCKED_PREFIXES = ["/auth", "/api-tokens", "/admin", "/public", "/assistant", "/users"];
+const READABLE_EXCEPTIONS = ["/users/me"];
+const BLOCKED_PATTERNS = [/^\/accounts\/[^/]+\/stripe(\/|$)/, /^\/organizers\/[^/]+\/stripe(\/|$)/];
 
-export function checkPath(path: unknown): string {
+export function checkPath(path: unknown, method = "GET"): string {
     if (typeof path !== "string") {
         throw new Error("Le chemin doit être du texte.");
     }
-    const bare = path.split("?")[0];
-    if (!bare.startsWith("/") || bare.startsWith("//") || bare.includes("..") || bare.includes("\\")) {
+    const raw = path.split("?")[0];
+    // An encoded path (« /%61dmin ») would get past the list: the ticketing's paths never need one.
+    if (!raw.startsWith("/") || raw.startsWith("//") || raw.includes("..") || raw.includes("\\") || raw.includes("%")) {
         throw new Error("Le chemin doit commencer par / et rester dans l'API de la billetterie.");
     }
-    if (BLOCKED_PREFIXES.some((prefix) => bare === prefix || bare.startsWith(`${prefix}/`))) {
-        throw new Error("Cette partie de l'API n'est pas ouverte à l'assistant.");
+    const bare = raw.replace(/\/+$/, "") || "/";
+    if (method === "GET" && READABLE_EXCEPTIONS.includes(bare)) {
+        return path;
+    }
+    if (BLOCKED_PREFIXES.some((prefix) => bare === prefix || bare.startsWith(`${prefix}/`))
+        || BLOCKED_PATTERNS.some((pattern) => pattern.test(bare))) {
+        throw new Error("Cette partie de l'API n'est pas ouverte à l'assistant : la personne doit le faire elle-même depuis ses pages.");
     }
     return path;
 }
@@ -149,7 +172,11 @@ async function readResponse(response: Response): Promise<string> {
 }
 
 export async function readApi(path: unknown, signal: AbortSignal): Promise<string> {
-    const response = await fetch(apiUrl(checkPath(path)), {credentials: "include", headers: {Accept: "application/json"}, signal});
+    const response = await fetch(apiUrl(checkPath(path)), {
+        credentials: "include",
+        headers: {Accept: "application/json", ...ASSISTANT_HEADER},
+        signal,
+    });
     const text = await readResponse(response);
     if (!response.ok) {
         throw new Error(`L'API a répondu ${response.status} : ${text.slice(0, 3000)}`);
@@ -173,10 +200,10 @@ export async function changeApi(approval: Approval): Promise<string> {
     const withBody = approval.method !== "DELETE";
     let response: Response;
     try {
-        response = await fetch(apiUrl(checkPath(approval.path)), {
+        response = await fetch(apiUrl(checkPath(approval.path, approval.method)), {
             method: approval.method,
             credentials: "include",
-            headers: {Accept: "application/json", ...(withBody ? {"Content-Type": "application/json"} : {})},
+            headers: {Accept: "application/json", ...ASSISTANT_HEADER, ...(withBody ? {"Content-Type": "application/json"} : {})},
             body: withBody ? JSON.stringify(approval.body ?? {}) : undefined,
         });
     } catch (error) {
@@ -253,17 +280,22 @@ export function load(userId: string, key = PANEL_CONVERSATION): { api: ApiMessag
         if (!raw || raw.userId !== userId || !Array.isArray(raw.api) || !Array.isArray(raw.bubbles)) {
             return {api: [], bubbles: []};
         }
-        // An approval left waiting can't resume after a reload.
+        // An approval or a question left waiting can't resume after a reload.
         const bubbles = (raw.bubbles as Bubble[]).map((b) =>
             b.role === "assistant"
                 ? {
                     ...b,
                     running: false,
                     steps: b.steps.map((s) => (s.state === "running" ? {...s, state: "error" as const} : s)),
-                    pieces: b.pieces.map((p) => (p.type === "approval" && (p.state === "waiting" || p.state === "sending") ? {
-                        ...p,
-                        state: "cancelled" as const
-                    } : p)),
+                    pieces: b.pieces.map((p) => {
+                        if (p.type === "approval" && (p.state === "waiting" || p.state === "sending")) {
+                            return {...p, state: "cancelled" as const};
+                        }
+                        if (p.type === "question" && p.state === "waiting") {
+                            return {...p, state: "cancelled" as const};
+                        }
+                        return p;
+                    }),
                 }
                 : b,
         );
