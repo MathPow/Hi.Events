@@ -9,6 +9,7 @@ import {MobilePrimaryAction, NavContext, NavItem} from "../types.ts";
 import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
 import {useStopImpersonating} from "../../../common/ImpersonationBanner/useStopImpersonating";
 import {toggleAssistant, useAssistantState} from "../../../../utilites/assistantEvents.ts";
+import {useScrollFade} from "../../../../hooks/useScrollFade.ts";
 
 interface MobileNavProps {
     navItems: NavItem[];
@@ -73,6 +74,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     const {pathname} = useLocation();
     const closeMenu = () => setMenuOpen(false);
     const impersonation = useStopImpersonating();
+    const menuScrollRef = useScrollFade<HTMLDivElement>(menuOpen);
 
     useEffect(closeMenu, [pathname]);
 
@@ -173,30 +175,32 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                     <div className={classes.veil} onClick={closeMenu} aria-hidden/>
                     <div className={classes.menu} id="mobile-nav-menu" role="dialog" aria-modal="true"
                          aria-label={t`Menu`}>
-                        <div className={classes.menuHeading}>{t`Menu`}</div>
+                        <div ref={menuScrollRef} className={classes.menuScroll}>
+                            <div className={classes.menuHeading}>{t`Menu`}</div>
 
-                        {context && <ContextCard context={context} variant="menu"/>}
+                            {context && <ContextCard context={context} variant="menu"/>}
 
-                        {groups.map((group, index) => (
-                            <section key={group.heading ?? index} className={classes.group}>
-                                {group.heading && <h3 className={classes.menuHeading}>{group.heading}</h3>}
-                                <div className={classes.grid}>
-                                    {group.items.map(renderTile)}
-                                </div>
-                            </section>
-                        ))}
+                            {groups.map((group, index) => (
+                                <section key={group.heading ?? index} className={classes.group}>
+                                    {group.heading && <h3 className={classes.menuHeading}>{group.heading}</h3>}
+                                    <div className={classes.grid}>
+                                        {group.items.map(renderTile)}
+                                    </div>
+                                </section>
+                            ))}
 
-                        {menuFooter && <div className={classes.menuFooter}>{menuFooter}</div>}
+                            {menuFooter && <div className={classes.menuFooter}>{menuFooter}</div>}
 
-                        {impersonation.isImpersonating && (
-                            <Button variant="white" color="orange" fullWidth loading={impersonation.isPending}
-                                    leftSection={<IconUserShield size={18}/>} onClick={impersonation.stop}
-                                    style={{flexShrink: 0}}>
-                                {t`Stop Impersonating`}
-                            </Button>
-                        )}
+                            {impersonation.isImpersonating && (
+                                <Button variant="white" color="orange" fullWidth loading={impersonation.isPending}
+                                        leftSection={<IconUserShield size={18}/>} onClick={impersonation.stop}
+                                        style={{flexShrink: 0}}>
+                                    {t`Stop Impersonating`}
+                                </Button>
+                            )}
 
-                        <AccountCard variant="menu" onNavigate={closeMenu}/>
+                            <AccountCard variant="menu" onNavigate={closeMenu}/>
+                        </div>
                     </div>
                 </>
             )}

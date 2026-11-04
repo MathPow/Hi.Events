@@ -6,6 +6,7 @@ import classNames from "classnames";
 import classes from './Sidebar.module.scss';
 import {NavContext, NavItem} from "../types";
 import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
+import {useScrollFade} from "../../../../hooks/useScrollFade.ts";
 
 interface SidebarProps {
     collapsed: boolean;
@@ -62,6 +63,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                                     context,
                                                     sidebarFooter,
                                                 }) => {
+    const navRef = useScrollFade<HTMLElement>();
+
     const renderItem = (item: NavItem) => {
         if (item.loading) {
             return <span key={item.label} className={classNames(classes.link, classes.loading)}/>;
@@ -141,7 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {context && <ContextCard context={context} variant={collapsed ? 'collapsed' : 'sidebar'}/>}
             </div>
 
-            <nav className={classes.nav}>
+            <nav ref={navRef} className={classes.nav}>
                 {groupItems(navItems).map((group, index) => (
                     <div key={group.heading ?? index} className={classes.group}>
                         {group.heading && (

@@ -138,12 +138,8 @@ $z-tab-bar: 170;
     z-index: $z-menu;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
     max-height: calc(100dvh - #{$bottom-gap} - #{$tab-bar-height} - 1.625rem - env(safe-area-inset-bottom));
-    padding: 0.875rem;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: none;
+    overflow: hidden;
     border-radius: 1.75rem;
     background: var(--dehors-brun);
     color: var(--dehors-creme);
@@ -151,6 +147,20 @@ $z-tab-bar: 170;
     transform-origin: bottom center;
     animation: menu-in 0.22s nav.$ease;
   }
+}
+
+// Scrolls inside the card, which keeps the background: the fade only takes the content.
+.menuScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+  padding: 0.875rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: nav.$scrollbar transparent;
+  @include nav.scroll-fade;
 }
 
 .menuHeading {

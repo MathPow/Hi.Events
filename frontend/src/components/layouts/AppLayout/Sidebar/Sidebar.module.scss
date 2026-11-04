@@ -112,10 +112,11 @@
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+  scrollbar-color: nav.$scrollbar transparent;
+  @include nav.scroll-fade;
 
   &:hover {
-    scrollbar-color: rgb(255 247 233 / 0.2) transparent;
+    scrollbar-color: rgb(255 247 233 / 0.4) transparent;
   }
 
   // Folded, the icons scroll without a bar: it would take its width from the 56 px of the links.

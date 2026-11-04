@@ -6,6 +6,7 @@ $creme-06: rgb(255 247 233 / 0.06);
 $creme-65: rgb(255 247 233 / 0.65);
 $creme-55: rgb(255 247 233 / 0.55);
 $badge-pale: #f7dccd;
+$scrollbar: rgb(255 247 233 / 0.25);
 $ease: cubic-bezier(0.4, 0, 0.2, 1);
 
 // Opening and folding the sidebar (data-nav-animating on the layout while it moves).
@@ -31,6 +32,22 @@ $fold-fade-in-delay: 0.14s;
   :global([data-nav-animating]) #{$folded} {
     transition: opacity $fold-fade-out ease, visibility 0s $fold-fade-out;
   }
+}
+
+// Fades a scrolling list at the edges it continues past; the useScrollFade hook sets how much. A mask
+// also fades the element's own background, so the list must sit on a parent's. The padding keeps a row
+// reached with the keyboard clear of the fade.
+@mixin scroll-fade {
+  $fade: linear-gradient(
+    to bottom,
+    transparent,
+    #000 var(--scroll-fade-top, 0px),
+    #000 calc(100% - var(--scroll-fade-bottom, 0px)),
+    transparent
+  );
+  -webkit-mask-image: $fade;
+  mask-image: $fade;
+  scroll-padding-block: 3.5rem;
 }
 
 @mixin group-heading {
