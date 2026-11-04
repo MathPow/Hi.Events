@@ -1,30 +1,74 @@
-import {CSSProperties, PointerEvent, useEffect, useRef, useState} from "react";
+import {CSSProperties, PointerEvent, ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {t} from "@lingui/macro";
 import {Popover, UnstyledButton} from "@mantine/core";
 import {OrganizerEarnedAchievement} from "../../../types.ts";
 import {achievementDefinition} from "../../common/OrganizerAchievements/achievements.ts";
+import {roughButtonPath} from "../../../hooks/useRoughButton.ts";
 import classes from "./AchievementStack.module.scss";
 
 const SHOWN = 3;
+
+// The discs are drawn at the size of the stack's (smaller ones scale the drawing), with a ring
+// of RING px around them that follows the same rough edge.
+const SIZE = 46;
+const RING = 3;
+// The harder the achievement, the rougher its edge, up to « Nice club » (the hardest of the 13):
+// the bumps of the site's round buttons, scaled from MIN_ROUGHNESS to MAX_ROUGHNESS.
+const HARDEST = 13;
+const MIN_ROUGHNESS = 0.4;
+const MAX_ROUGHNESS = 1.5;
+
+const roughnessOf = (difficulty: number) =>
+    MIN_ROUGHNESS + (MAX_ROUGHNESS - MIN_ROUGHNESS) * Math.min(1, Math.max(0, (difficulty - 1) / (HARDEST - 1)));
+
+// The same cut for the same achievement, on the server and in the browser.
+const seedOf = (text: string) =>
+    [...text].reduce((hash, char) => Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0, 2166136261);
+
+const RoughDisc = ({seed, roughness, className, style, children}: {
+    seed: number,
+    roughness: number,
+    className: string,
+    style?: CSSProperties,
+    children: ReactNode,
+}) => {
+    const path = useMemo(
+        () => roughButtonPath(SIZE, SIZE, seed, {radius: SIZE / 2, round: true, scale: roughness}),
+        [seed, roughness],
+    );
+    const center = SIZE / 2;
+
+    return (
+        <span className={className} style={style} aria-hidden>
+            <svg className={classes.discShape} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+                <path d={path} className={classes.discRing}/>
+                <path d={path} className={classes.discFill}
+                      transform={`translate(${center} ${center}) scale(${(SIZE - 2 * RING) / SIZE}) translate(${-center} ${-center})`}/>
+            </svg>
+            {children}
+        </span>
+    );
+};
 
 const Disc = ({achievement, className}: { achievement: OrganizerEarnedAchievement, className: string }) => {
     const definition = achievementDefinition(achievement.key);
     const Icon = definition.icon;
 
     return (
-        <span
+        <RoughDisc
+            seed={seedOf(achievement.key)}
+            roughness={roughnessOf(achievement.difficulty)}
             className={className}
             style={{
                 '--achievement-badge': definition.badge,
                 '--achievement-background': definition.background,
             } as CSSProperties}
-            aria-hidden
         >
             {Icon && <Icon className={classes.discIcon} stroke={1.75}/>}
             {definition.label && (
                 <span className={classes.discLabel} data-length={definition.label.length}>{definition.label}</span>
             )}
-        </span>
+        </RoughDisc>
     );
 };
 
@@ -86,7 +130,11 @@ export const AchievementStack = ({achievements}: { achievements: OrganizerEarned
                     {shown.map((achievement) => (
                         <Disc key={achievement.key} achievement={achievement} className={classes.disc}/>
                     ))}
-                    {others > 0 && <span className={`${classes.disc} ${classes.more}`} aria-hidden>+{others}</span>}
+                    {others > 0 && (
+                        <RoughDisc seed={seedOf('more')} roughness={MIN_ROUGHNESS} className={`${classes.disc} ${classes.more}`}>
+                            <span className={classes.moreLabel}>+{others}</span>
+                        </RoughDisc>
+                    )}
                 </UnstyledButton>
             </Popover.Target>
 
@@ -101,7 +149,7 @@ export const AchievementStack = ({achievements}: { achievements: OrganizerEarned
 
                         return (
                             <li key={achievement.key} className={classes.item}>
-                                <Disc achievement={achievement} className={classes.itemDisc}/>
+                                <Disc achievement={achievement} className={`${classes.disc} ${classes.itemDisc}`}/>
                                 <span className={classes.itemText}>
                                     <strong>{definition.title}</strong>
                                     <span>{definition.description}</span>

@@ -87,7 +87,7 @@ export const achievementDefinition = (key: OrganizerAchievementKey): Achievement
         case 'attendees_5000':
             return {...club('5000', COLORS.blue), card: DARK.blue};
         case 'attendees_69420':
-            return club('69420', COLORS.terracotta);
+            return {...club('69420', COLORS.terracotta), title: t`Nice club`};
         case 'returning_attendees':
             return {
                 icon: IconHeartHandshake, ...COLORS.periwinkle,

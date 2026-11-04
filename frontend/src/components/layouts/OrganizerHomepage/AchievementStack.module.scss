@@ -5,7 +5,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 // Over the photo, top left: the discs overlap like profile pictures, the hardest on top.
 .stack {
   --disc-size: 46px;
-  --disc-overlap: -14px;
+  --disc-overlap: -18px;
 
   position: absolute;
   top: 16px;
@@ -18,7 +18,7 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 
   @include mixins.respond-below(md) {
     --disc-size: 38px;
-    --disc-overlap: -12px;
+    --disc-overlap: -15px;
 
     top: 10px;
     left: 10px;
@@ -32,26 +32,45 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   // They spread a little when the list opens.
   &:hover,
   &[data-opened] {
-    --disc-overlap: -6px;
+    --disc-overlap: -10px;
+
+    @include mixins.respond-below(md) {
+      --disc-overlap: -8px;
+    }
   }
 }
 
+// A rough disc (drawn by AchievementStack): its ring in --disc-ring, its fill in --disc-fill,
+// the icon or the number on top.
 .disc {
+  --disc-ring: var(--dehors-creme);
+  --disc-fill: var(--achievement-badge);
+
   position: relative;
   display: grid;
   flex: none;
   place-items: center;
   width: var(--disc-size);
   height: var(--disc-size);
-  border: 3px solid var(--dehors-creme);
-  border-radius: 50%;
   color: #ffffff;
-  background: var(--achievement-badge);
-  box-shadow: 0 4px 14px rgb(0 0 0 / 0.28);
   transition: margin 160ms ease;
 
   & + & {
     margin-left: var(--disc-overlap);
+
+    // Half hidden under the one before: its number or icon moves into the part that shows,
+    // a « 5000 » a little smaller to fit there.
+    > :not(svg) {
+      translate: calc((var(--disc-overlap) + 3px) / -2) 0;
+    }
+
+    .discLabel[data-length='4'] {
+      font-size: calc(var(--disc-size) * 0.2);
+    }
+  }
+
+  > :not(svg) {
+    transition: translate 160ms ease;
   }
 
   &:nth-child(1) { z-index: 4; }
@@ -61,35 +80,64 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+
+    > :not(svg) {
+      transition: none;
+    }
   }
 }
 
+.discShape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  // The shadow follows the rough edge.
+  filter: drop-shadow(0 4px 7px rgb(0 0 0 / 0.3));
+}
+
+.discRing {
+  fill: var(--disc-ring);
+}
+
+.discFill {
+  fill: var(--disc-fill);
+}
+
 .more {
-  font-family: $police-titre;
-  font-size: calc(var(--disc-size) * 0.34);
-  line-height: 1;
+  --disc-fill: var(--dehors-brun);
+
   color: var(--dehors-creme);
-  background: var(--dehors-brun);
+}
+
+.moreLabel {
+  position: relative;
+  font-family: $police-titre;
+  font-size: calc(var(--disc-size) * 0.32);
+  line-height: 1;
 }
 
 .discIcon {
-  width: 52%;
-  height: 52%;
+  position: relative;
+  width: 48%;
+  height: 48%;
 }
 
 // « Club des 100 »: its number, smaller as it gets longer.
 .discLabel {
+  position: relative;
   font-family: $police-titre;
-  font-size: calc(var(--disc-size) * 0.34);
+  font-size: calc(var(--disc-size) * 0.32);
   line-height: 1;
   letter-spacing: -0.02em;
 
   &[data-length='4'] {
-    font-size: calc(var(--disc-size) * 0.27);
+    font-size: calc(var(--disc-size) * 0.23);
   }
 
   &[data-length='5'] {
-    font-size: calc(var(--disc-size) * 0.22);
+    font-size: calc(var(--disc-size) * 0.2);
   }
 }
 
@@ -142,18 +190,14 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 .itemDisc {
-  --disc-size: 40px;
+  --disc-size: 46px;
+  --disc-ring: var(--achievement-background);
 
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: var(--disc-size);
-  height: var(--disc-size);
-  margin: 4px;
-  border-radius: 50%;
-  color: #ffffff;
-  background: var(--achievement-badge);
-  box-shadow: 0 0 0 4px var(--achievement-background);
+  margin: 2px;
+
+  .discShape {
+    filter: none;
+  }
 }
 
 .itemText {

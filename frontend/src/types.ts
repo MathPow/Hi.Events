@@ -457,6 +457,8 @@ export interface OrganizerAchievementProgress {
 // On the organizer's public page: only what was earned, hardest first.
 export interface OrganizerEarnedAchievement {
     key: OrganizerAchievementKey;
+    // 1 for the easiest, up to the number of achievements for the hardest
+    difficulty: number;
     earned_at: string;
 }
 

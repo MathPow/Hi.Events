@@ -57,6 +57,7 @@ class OrganizerResourcePublic extends JsonResource
             ->sortByDesc(fn(array $earned) => $earned['achievement']->difficulty())
             ->map(fn(array $earned) => [
                 'key' => $earned['achievement']->value,
+                'difficulty' => $earned['achievement']->difficulty(),
                 'earned_at' => $earned['earned_at'],
             ])
             ->values()
