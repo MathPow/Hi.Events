@@ -9,6 +9,16 @@ import classes from "./OrganizerLayout.module.scss";
 
 const initial = (name?: string) => name?.trim().charAt(0).toUpperCase() || '…';
 
+export const organizerLogo = (organizer?: Organizer) => organizer?.images?.find((image) => image.type === 'ORGANIZER_LOGO')?.url;
+
+const OrganizerAvatar = ({organizer}: { organizer: Organizer }) => {
+    const logo = organizerLogo(organizer);
+
+    return logo
+        ? <img src={logo} alt="" className={`${classes.menuInitial} ${classes.menuLogo}`}/>
+        : <span className={classes.menuInitial}>{initial(organizer.name)}</span>;
+};
+
 // The other accounts the person belongs to (another club, a client): one click opens it, no new login.
 const OtherAccounts = () => {
     const {data: accounts} = useGetMyAccounts();
@@ -58,7 +68,7 @@ export const OrganizerSwitcherMenu = ({organizerId, organizers, onCreateOrganize
                         const current = String(organizer.id) === String(organizerId);
                         return (
                             <Menu.Item key={organizer.id}
-                                       leftSection={<span className={classes.menuInitial}>{initial(organizer.name)}</span>}
+                                       leftSection={<OrganizerAvatar organizer={organizer}/>}
                                        rightSection={current ? <IconCheck size={16}/> : undefined}
                                        aria-current={current || undefined}
                                        onClick={() => !current && navigate(`/manage/organizer/${organizer.id}/dashboard`)}>

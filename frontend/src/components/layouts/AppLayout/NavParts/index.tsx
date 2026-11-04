@@ -46,7 +46,9 @@ export const ContextCard = ({context, variant}: { context: NavContext, variant: 
         <>
             {context.imageUrl
                 ? <span className={classes.contextImage} style={{backgroundImage: `url(${context.imageUrl})`}}/>
-                : <span className={classes.contextAvatar}>{context.initial}</span>}
+                : context.avatarUrl
+                    ? <img src={context.avatarUrl} alt="" className={classNames(classes.contextAvatar, classes.contextLogo)}/>
+                    : <span className={classes.contextAvatar}>{context.initial}</span>}
             {/* Folded, the texts stay (hidden) so the sidebar can open and fold smoothly. */}
             <span className={classes.cardText}>
                 <span className={classes.cardTitle}>{context.title}</span>

@@ -31,6 +31,8 @@ export interface NavItem {
 // The organizer (or event) at the top of the sidebar and of the phone menu.
 export interface NavContext {
     initial: string;
+    // The organizer's logo, round, in place of the initial.
+    avatarUrl?: string;
     title: ReactNode;
     subtitle?: ReactNode;
     // Subtitle in the phone menu, where the card is the way to switch organizer.

@@ -38,7 +38,7 @@ import {showStatusChangeError} from "../../common/EmailNotConfirmedError";
 import { notifications } from "@mantine/notifications";
 import { useGetOrganizerUnreadMessagesCount } from "../../../queries/useGetOrganizerMessages.ts";
 import { rememberLastOrganizer } from "../../../utilites/lastOrganizer.ts";
-import { OrganizerSwitcherMenu } from "./OrganizerSwitcherMenu.tsx";
+import { OrganizerSwitcherMenu, organizerLogo } from "./OrganizerSwitcherMenu.tsx";
 
 const OrganizerLayout = () => {
     const { organizerId } = useParams();
@@ -254,6 +254,7 @@ const OrganizerLayout = () => {
 
     const navContext: NavContext = {
         initial: organizer?.name?.trim().charAt(0).toUpperCase() || '…',
+        avatarUrl: organizerLogo(organizer),
         title: organizer?.name ?? '…',
         subtitle: t`Organizer`,
         mobileSubtitle: hasSeveralOrganizers ? t`Switch Organizer` : t`Organizer`,
