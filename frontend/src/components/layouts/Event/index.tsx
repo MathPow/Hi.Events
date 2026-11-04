@@ -213,7 +213,6 @@ const EventLayout = () => {
         menu: event && (
             <>
                 {organizerId && <EventSwitcherMenu eventId={eventId as string} organizerId={organizerId}/>}
-                <Menu.Divider/>
                 <Menu.Item component={NavLink} to={`/manage/organizer/${event.organizer?.id}`}
                            leftSection={<IconArrowLeft size={16}/>}>
                     {t`Organizer Dashboard`}
