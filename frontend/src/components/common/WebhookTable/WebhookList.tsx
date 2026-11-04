@@ -7,6 +7,7 @@ import {relativeDate} from "../../../utilites/dates.ts";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {ActionMenu} from "../ActionMenu";
 import {NoResultsSplash} from "../NoResultsSplash";
+import {SkeletonLine, SkeletonPill, varied} from "../Skeletons";
 import classes from "./WebhookTable.module.scss";
 
 interface WebhookListProps {
@@ -145,3 +146,27 @@ export const WebhookList = ({webhooks, openCreateModal, onDelete, editModal, log
         </>
     );
 };
+
+// The webhooks table while it loads: its real header, rows of placeholders.
+export const WebhookListSkeleton = ({rows = 4}: { rows?: number }) => (
+    <div className={classes.table} aria-busy>
+        <div className={classes.head}>
+            <span>{t`URL`}</span>
+            <span>{t`Event Types`}</span>
+            <span>{t`Status`}</span>
+            <span>{t`Last Response`}</span>
+            <span>{t`Last Triggered`}</span>
+            <span/>
+        </div>
+        {[...Array(rows)].map((_, row) => (
+            <div key={row} className={classes.row}>
+                <span className={classes.url}><SkeletonLine width={varied(row)} height={14}/></span>
+                <span className={classes.cell} data-label={t`Event Types`}><SkeletonPill width={row % 2 ? 76 : 96} height={24}/></span>
+                <span className={classes.cell} data-label={t`Status`}><SkeletonPill width={72} height={24}/></span>
+                <span className={classes.cell} data-label={t`Last Response`}><SkeletonPill width={56} height={24}/></span>
+                <span className={classes.cell} data-label={t`Last Triggered`}><SkeletonLine width={row % 2 ? 64 : 80} height={10}/></span>
+                <span className={classes.menu}><SkeletonLine width={16} height={6}/></span>
+            </div>
+        ))}
+    </div>
+);

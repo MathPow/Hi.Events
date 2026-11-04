@@ -64,6 +64,13 @@
 }
 
 // Une carte de document: la feuille en apercu, puis le nom, le menu et l'etat.
+// The third loading card, only where the grid has three columns.
+.skeletonExtra {
+  @include mixins.respond-below(lg) {
+    display: none !important;
+  }
+}
+
 .card {
   display: flex;
   flex-direction: column;

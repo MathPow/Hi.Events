@@ -756,3 +756,17 @@ body.dehors-app {
     }
   }
 }
+
+// Loading placeholders: a warm sand that pulses on the cream as on the cards, instead of Mantine's
+// cold gray over an opaque body-colored layer.
+:root {
+  --dehors-squelette: rgb(196 119 98 / 0.15);
+}
+
+.mantine-Skeleton-root[data-visible]::before {
+  background-color: transparent;
+}
+
+:where([data-mantine-color-scheme='light']) .mantine-Skeleton-root[data-visible]::after {
+  background-color: var(--dehors-squelette);
+}

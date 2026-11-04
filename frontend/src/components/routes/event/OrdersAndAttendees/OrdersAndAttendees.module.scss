@@ -937,3 +937,17 @@ $cream-text: #fbf2e3;
   background: ui.$ink;
   color: $cream-text;
 }
+
+.tileValueSkeleton {
+  display: flex;
+  align-items: center;
+  height: 1.15em;
+}
+
+.skeletonRow {
+  min-height: 4.75rem;
+
+  @include mixins.respond-below(md) {
+    min-height: 0;
+  }
+}

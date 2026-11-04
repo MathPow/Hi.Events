@@ -1,5 +1,5 @@
 import {ReactNode, useEffect, useMemo, useState} from "react";
-import {ActionIcon, Button, Menu, Skeleton, UnstyledButton} from "@mantine/core";
+import {ActionIcon, Button, Menu, UnstyledButton} from "@mantine/core";
 import {useDebouncedValue, useDisclosure, useMediaQuery} from "@mantine/hooks";
 import {IconPencil, IconRepeat, IconTrash, IconUserCheck} from "@tabler/icons-react";
 import {plural, t} from "@lingui/macro";
@@ -30,7 +30,7 @@ import {CreateAttendeeModal} from "../../../modals/CreateAttendeeModal";
 import {ManageAttendeeModal} from "../../../modals/ManageAttendeeModal";
 import {ManageOrderModal} from "../../../modals/ManageOrderModal";
 import {CheckChoice, CheckMenu, FilterButton, FilterSheet, ICONS, SheetChips} from "./filters.tsx";
-import {InfoTile} from "./index.tsx";
+import {AttendeeRowsSkeleton, InfoTile} from "./index.tsx";
 import classes from "./OrdersAndAttendees.module.scss";
 
 const PER_PAGE = 10;
@@ -222,7 +222,7 @@ export const AttendeesTab = ({event, stats, capsule}: { event: Event, stats?: Ev
             {capsule}
 
             <div className={classes.tiles}>
-                <InfoTile icon={`${ICONS}/participants-20.svg`} tone="orange" label={t`Registered`}
+                <InfoTile loading={!stats} icon={`${ICONS}/participants-20.svg`} tone="orange" label={t`Registered`}
                           value={capacity !== null ? `${registered} / ${capacity}` : registered}
                           detail={remaining !== null
                               ? plural(remaining, {one: '# spot left', other: '# spots left'})
@@ -232,7 +232,7 @@ export const AttendeesTab = ({event, stats, capsule}: { event: Event, stats?: Ev
                               value={merchSold} detail={sizesLine || undefined}/>
                 )}
                 {givesBibs && (
-                    <InfoTile icon={`${ICONS}/dossard.svg`} tone="yellow" label={t`Bibs assigned`}
+                    <InfoTile loading={bibsGiven === undefined} icon={`${ICONS}/dossard.svg`} tone="yellow" label={t`Bibs assigned`}
                               value={bibsGiven ?? '—'}
                               detail={toAssign > 0 ? t`${toAssign} to assign` : undefined}/>
                 )}
@@ -262,11 +262,7 @@ export const AttendeesTab = ({event, stats, capsule}: { event: Event, stats?: Ev
             </Button>
 
             <section className={classes.card}>
-                {attendeesQuery.isLoading && (
-                    <div className={classes.loading}>
-                        {Array.from({length: 4}).map((_, index) => <Skeleton key={index} height={52} radius={12}/>)}
-                    </div>
-                )}
+                {attendeesQuery.isLoading && <AttendeeRowsSkeleton/>}
 
                 {!attendeesQuery.isLoading && attendees.length === 0 && (
                     <p className={classes.empty}>{filtered

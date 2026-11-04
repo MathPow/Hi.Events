@@ -15,6 +15,7 @@ import {
 import dayjs from "dayjs";
 import {useState} from "react";
 import {PageBody} from "../../../common/PageBody";
+import {SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import {PageTitle} from "../../../common/PageTitle";
 import {useGetOrganizerDocuments} from "../../../../queries/useGetOrganizerDocuments.ts";
 import {
@@ -58,6 +59,25 @@ const TemplateChoices = ({onPick, pendingKey, compact = false}: {
                     </span>
                 </span>
             </button>
+        ))}
+    </div>
+);
+
+// Document cards: a sand sheet, the title and its menu, the links line and the signing badge.
+const DocumentsSkeleton = () => (
+    <div className={classes.grid} aria-busy>
+        {[0, 1, 2].map(index => (
+            <div key={index} className={index === 2 ? `${classes.card} ${classes.skeletonExtra}` : classes.card}>
+                <Skeleton className={classes.thumbnail} width="auto" radius={18} style={{cursor: 'default'}}/>
+                <div className={classes.cardBody}>
+                    <div className={classes.cardTitleRow}>
+                        <SkeletonLine width={['62%', '74%', '54%'][index]} height={16}/>
+                        <SkeletonLine width={16} height={6}/>
+                    </div>
+                    <SkeletonLine width={['70%', '58%', '76%'][index]} height={10}/>
+                    <SkeletonPill width={index % 2 ? 92 : 112} height={20}/>
+                </div>
+            </div>
         ))}
     </div>
 );
@@ -106,11 +126,7 @@ const Documents = () => {
             </Modal>
 
             <h2 className={classes.sectionTitle}>{t`Your documents`}</h2>
-            {isLoading && (
-                <div className={classes.grid}>
-                    {[0, 1, 2].map(index => <Skeleton key={index} height={260} radius={24}/>)}
-                </div>
-            )}
+            {isLoading && <DocumentsSkeleton/>}
             {!isLoading && !documents?.length && (
                 <div className={classes.empty}>
                     <IconFileText size={28} stroke={1.5}/>

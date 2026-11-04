@@ -23,6 +23,7 @@ import {StripeConnectButton} from "../../../common/StripeConnectButton";
 import {DashboardNotification, useDashboardNotifications} from "./dashboardData.ts";
 import {getEventSaleStatus, getTicketCapacity, saleStatusLabel} from "../../../../utilites/eventSales.ts";
 import {StatTile} from "../../../common/StatBoxes";
+import {ListRowsSkeleton, SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import {useOrderDate} from "../../../../utilites/orderDate.ts";
 import classes from './OrganizerDashboard.module.scss';
 
@@ -240,15 +241,37 @@ const SectionTitle = ({children, link}: { children: ReactNode, link?: string }) 
     </div>
 );
 
+// Loading: the real titles and frames, placeholders where the figures, events and notifications go.
 export const DashboardSkeleton = () => (
     <div className={classes.page}>
-        <Skeleton height={81} radius="md" width="60%"/>
-        <div className={classes.stats}>
-            {[...Array(4)].map((_, index) => <Skeleton key={index} height={190} radius={28}/>)}
-        </div>
+        <header className={classes.header}>
+            <div className={classes.headerText}>
+                <h1 className={classes.title}>{t`Dashboard`}</h1>
+                <SkeletonLine width={340} height={14}/>
+            </div>
+            <Skeleton className={classes.skeletonCreateButton} height={48} radius={16}/>
+            <div className={classes.headerControls}>
+                <SkeletonPill width={200} height={44}/>
+            </div>
+        </header>
+        <section className={classes.stats}>
+            <StatTile loading loadingCompare tone="sales" iconName="ventes" label={t`Sales`} value=""/>
+            <StatTile loading loadingCompare tone="products" iconName="produits" label={t`Products Sold`} value=""/>
+            <StatTile loading loadingCompare tone="attendees" iconName="participants" label={t`Attendees`} value=""/>
+        </section>
         <div className={classes.middle}>
-            <Skeleton height={560} radius={32}/>
-            <Skeleton height={560} radius={32}/>
+            <section className={classNames(classes.card, classes.eventsCard)}>
+                <SectionTitle>{t`Events`}</SectionTitle>
+                <ListRowsSkeleton rows={3} trailing={['text', 'pill', 'chevron']}/>
+            </section>
+            <section className={classNames(classes.card, classes.notificationsCard)}>
+                <SectionTitle>{t`Notifications`}</SectionTitle>
+                <div className={classes.notificationsBar}>
+                    <SkeletonPill width={62} height={36}/>
+                    <SkeletonPill width={110} height={36}/>
+                </div>
+                <ListRowsSkeleton rows={3} leading="circle"/>
+            </section>
         </div>
     </div>
 );

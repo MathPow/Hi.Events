@@ -8,6 +8,7 @@ import {formatNumber} from "../../../utilites/helpers.ts";
 import {intlLocale} from "../../../utilites/intlLocale.ts";
 import {ReactNode} from "react";
 import classNames from "classnames";
+import {Skeleton} from "@mantine/core";
 
 export type StatTone = 'sales' | 'orders' | 'products' | 'attendees' | 'views' | 'refunds' | 'taxes' | 'neutral';
 
@@ -51,6 +52,10 @@ interface StatTileProps {
     comparison?: string | null;
     formatAmount?: (amount: number) => string;
     note?: string;
+    // The figure is not known yet: a placeholder takes its place, the rest of the tile stays.
+    loading?: boolean;
+    // While loading, also keep the room of the comparison line the loaded tile will show.
+    loadingCompare?: boolean;
 }
 
 /**
@@ -69,6 +74,8 @@ export const StatTile = ({
                              comparison,
                              formatAmount = (amount) => String(formatNumber(amount)),
                              note,
+                             loading = false,
+                             loadingCompare = false,
                          }: StatTileProps) => (
     <div className={classes.tile} data-tone={tone}>
         <div className={classes.tileTop}>
@@ -77,9 +84,17 @@ export const StatTile = ({
             </span>
             <span className={classes.tileLabel}>{label}</span>
         </div>
-        <span className={classes.tileValue}>{value}</span>
-        {note && <span className={classes.tileNote}>{note}</span>}
-        {!note && comparison && current !== undefined && previous !== null && previous !== undefined
+        {loading
+            ? <Skeleton className={classes.tileValueSkeleton} height={34} width="58%" radius={999}/>
+            : <span className={classes.tileValue}>{value}</span>}
+        {loading && loadingCompare && (
+            <div className={classes.tileCompare}>
+                <Skeleton width={64} height={24} radius={999}/>
+                <Skeleton width={72} height={10} radius={999}/>
+            </div>
+        )}
+        {!loading && note && <span className={classes.tileNote}>{note}</span>}
+        {!loading && !note && comparison && current !== undefined && previous !== null && previous !== undefined
             && (current > 0 || previous > 0) && (
                 <div className={classes.tileCompare}>
                     <ChangeTag current={current} previous={previous} formatAmount={formatAmount}/>
@@ -128,32 +143,37 @@ export const StatBoxes = () => {
     const currency = event?.currency;
 
     return (
-        <StatGrid loading={!eventStats} className={classes.five}>
+        <StatGrid className={classes.five}>
             <StatTile
+                loading={!eventStats}
                 tone="sales"
                 iconName="ventes"
                 label={t`Gross sales`}
                 value={formatCurrency(eventStats?.total_gross_sales || 0, currency)}
             />
             <StatTile
+                loading={!eventStats}
                 tone="products"
                 iconName="produits"
                 label={t`Products sold`}
                 value={formatNumber(eventStats?.total_products_sold as number)}
             />
             <StatTile
+                loading={!eventStats}
                 tone="attendees"
                 iconName="participants"
                 label={t`Attendees`}
                 value={formatNumber(eventStats?.total_attendees_registered as number)}
             />
             <StatTile
+                loading={!eventStats}
                 tone="views"
                 iconSrc={eventIcon('vues')}
                 label={t`Page views`}
                 value={formatNumber(eventStats?.total_views as number)}
             />
             <StatTile
+                loading={!eventStats}
                 tone="refunds"
                 iconName="remboursement"
                 label={t`Refunded`}

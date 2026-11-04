@@ -121,6 +121,14 @@ $neutral-text: #6e625a;
   background: $accent-soft;
 }
 
+.skeletonCreateButton {
+  display: none;
+
+  @include mixins.respond-below(md) {
+    display: block;
+  }
+}
+
 .mobileCreateButton {
   display: none !important;
 

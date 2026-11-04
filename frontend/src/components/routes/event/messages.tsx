@@ -8,7 +8,7 @@ import {IconArrowLeft, IconClock, IconPaperclip, IconSend, IconX} from "@tabler/
 import {useFilterQueryParamSync} from "../../../hooks/useFilterQueryParamSync.ts";
 import {IdParam, Message, MessageType, QueryFilters} from "../../../types.ts";
 import {useGetEventMessages} from "../../../queries/useGetEventMessages.ts";
-import {MessageList, messageStatus, messageTimestamp, senderName, typeLabel} from "../../common/MessageList";
+import {MessageList, MessageListSkeleton, messageStatus, messageTimestamp, senderName, typeLabel} from "../../common/MessageList";
 import {NoResultsSplash} from "../../common/NoResultsSplash";
 import {SendMessageModal} from "../../modals/SendMessageModal";
 import {t} from "@lingui/macro";
@@ -22,7 +22,7 @@ import {PageBody} from "../../common/PageBody";
 import {PageTitle} from "../../common/PageTitle";
 import {ToolBar} from "../../common/ToolBar";
 import {SearchBar} from "../../common/SearchBar";
-import {TableSkeleton} from "../../common/TableSkeleton";
+import {SkeletonCircle, SkeletonLine, SkeletonLines, SkeletonPill} from "../../common/Skeletons";
 import {StatusTag} from "../../common/StatusTag";
 import classes from "./messages.module.scss";
 
@@ -262,7 +262,33 @@ export const Messages = () => {
                 </div>
             )}
 
-            <TableSkeleton isVisible={isLoading}/>
+            {isLoading && (
+                <div className={classes.mailLayout} aria-busy>
+                    <section className={classes.listPanel}>
+                        <MessageListSkeleton/>
+                    </section>
+                    <section className={classes.previewPanel}>
+                        <div className={classes.previewHeader}>
+                            <div className={classes.previewHeaderTop}>
+                                <SkeletonPill width={72} height={26}/>
+                                <SkeletonLine width={90} height={10}/>
+                            </div>
+                            <SkeletonLine width="62%" height={26}/>
+                            <div className={classes.previewMeta}>
+                                <SkeletonCircle size={40}/>
+                                <SkeletonLines subWidth="24%"/>
+                            </div>
+                        </div>
+                        <div className={classes.previewContent}>
+                            {['94%', '88%', '97%', '64%', '90%', '82%', '48%'].map((width, index) => (
+                                <div key={index} style={{marginBottom: index === 3 ? 28 : 12}}>
+                                    <SkeletonLine width={width}/>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            )}
 
             {!isLoading && messages.length === 0 && (
                 <NoResultsSplash

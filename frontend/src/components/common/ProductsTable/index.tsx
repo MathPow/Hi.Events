@@ -15,6 +15,7 @@ import {Event, Product, ProductCategory, ProductType} from "../../../types.ts";
 import {useSortProducts} from "../../../mutations/useSortProducts.ts";
 import {showError} from "../../../utilites/notifications.tsx";
 import {ProductRow} from "./ProductRow.tsx";
+import {SkeletonLine, SkeletonPill} from "../Skeletons";
 import classes from "./ProductsTable.module.scss";
 
 export type ProductKind = 'ticket' | 'product';
@@ -160,3 +161,60 @@ export const ProductSections = ({initialCategories, event, onAdd}: ProductSectio
         </div>
     );
 };
+
+const ICONS = '/interface/admin/produits';
+
+const SectionSkeleton = ({kind, rows}: { kind: ProductKind, rows: number }) => {
+    const isTicket = kind === 'ticket';
+
+    return (
+        <section className={classes.section} aria-busy>
+            <div className={classes.sectionHeader}>
+                <h2 className={classes.sectionTitle}>{isTicket ? t`Tickets` : t`Products`}</h2>
+            </div>
+            {!isTicket && (
+                <p className={classes.sectionText}>{t`Merch to pick up on site, sold on its own as an extra at checkout.`}</p>
+            )}
+            <div className={classes.rows}>
+                {[...Array(rows)].map((_, index) => (
+                    <div key={index} className={classes.row}>
+                        <span className={classes.grip}><img src={`${ICONS}/grip.svg`} width={18} height={18} alt=""/></span>
+                        <span className={classes.pastille} data-kind={kind}>
+                            <img src={`${ICONS}/${isTicket ? 'billet' : 'sac'}.svg`} width={20} height={20} alt=""/>
+                        </span>
+                        <div className={classes.main}>
+                            <SkeletonLine width={['min(150px, 80%)', 'min(190px, 90%)', 'min(130px, 75%)'][index % 3]} height={16}/>
+                            {isTicket
+                                ? <span className={classes.phoneOnly}><SkeletonLine width="min(110px, 70%)" height={10}/></span>
+                                : <SkeletonLine width="min(170px, 85%)" height={10}/>}
+                        </div>
+                        {isTicket && (
+                            <div className={`${classes.sales} ${classes.desktopOnly}`}>
+                                <SkeletonLine width={[64, 72, 80][index % 3]} height={12}/>
+                            </div>
+                        )}
+                        <span className={`${classes.price} ${isTicket ? classes.desktopOnly : ''}`} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <SkeletonLine width={[44, 64, 40][index % 3]} height={20}/>
+                        </span>
+                        {isTicket && <span className={classes.status}><SkeletonPill width={78} height={28}/></span>}
+                        <span className={classes.more} style={{display: 'grid', placeItems: 'center'}}>
+                            <img src={`${ICONS}/actions.svg`} width={20} height={20} alt=""/>
+                        </span>
+                    </div>
+                ))}
+            </div>
+            <div className={classes.addRow} aria-hidden>
+                <img src={`${ICONS}/plus-18.svg`} width={18} height={18} alt=""/>
+                {isTicket ? t`Add a ticket` : t`Add a product`}
+            </div>
+        </section>
+    );
+};
+
+// The two cards while the tickets and products load.
+export const ProductSectionsSkeleton = () => (
+    <div className={classes.sections}>
+        <SectionSkeleton kind="ticket" rows={3}/>
+        <SectionSkeleton kind="product" rows={1}/>
+    </div>
+);

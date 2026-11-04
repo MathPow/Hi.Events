@@ -4,7 +4,7 @@ import {useGetOrganizer} from "../../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerSettings} from "../../../../../queries/useGetOrganizerSettings.ts";
 import {TaxesAndFeesCard} from "../taxes/TaxesAndFeesCard.tsx";
 import {CharityCard} from "../taxes/CharityCard.tsx";
-import {SettingsSkeleton} from "./OrganizationTab.tsx";
+import {TaxesTabSkeleton} from "./TabSkeletons.tsx";
 import classes from "../Settings.module.scss";
 
 // « Taxes et reçus »: the taxes and fees added to products, and the official donation receipts.
@@ -14,7 +14,7 @@ export const TaxesTab = ({organizerId}: { organizerId: IdParam }) => {
     const {data: settings} = useGetOrganizerSettings(organizerId);
 
     if (!account || !organizer || !settings) {
-        return <SettingsSkeleton/>;
+        return <TaxesTabSkeleton/>;
     }
 
     return (

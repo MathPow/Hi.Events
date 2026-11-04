@@ -1,6 +1,7 @@
 import {Fragment, useState} from "react";
 import {t} from "@lingui/macro";
 import {Menu, Skeleton, Tooltip, UnstyledButton} from "@mantine/core";
+import {SkeletonLine} from "../../../common/Skeletons";
 import {useMediaQuery} from "@mantine/hooks";
 import {EventDailyStats, IdParam} from "../../../../types.ts";
 import {useGetEventStats} from "../../../../queries/useGetEventStats.ts";
@@ -179,12 +180,13 @@ const dayDetails = (day: EventDailyStats, mode: ChartMode, currency: string): De
  * « Ventes »: the net revenue (or the products sold) of each day of the period in columns (each week or
  * month over a long period), today in full orange, with the total and its change against the period before.
  */
-export const SalesChart = ({eventId, currency}: { eventId: IdParam, currency: string }) => {
+export const SalesChart = ({eventId, currency, loading = false}: { eventId: IdParam, currency: string, loading?: boolean }) => {
     const [mode, setMode] = useState<ChartMode>('revenue');
     const [period, setPeriod] = useState<Period>(14);
     const isPhone = useMediaQuery('(max-width: 767px)');
     const statsQuery = useGetEventStats(eventId, statsPreset(period));
-    const allDays = statsQuery.data?.daily_stats ?? [];
+    const data = loading ? undefined : statsQuery.data;
+    const allDays = data?.daily_stats ?? [];
     const days = period === 'all' ? allDays : allDays.slice(-period);
     const previousDays = period === 'all' ? [] : allDays.slice(0, Math.max(0, allDays.length - period));
 
@@ -225,16 +227,20 @@ export const SalesChart = ({eventId, currency}: { eventId: IdParam, currency: st
                 </div>
             </div>
 
-            <div className={classes.chartPanel} data-loading={statsQuery.isFetching || undefined}>
+            <div className={classes.chartPanel} data-loading={(data && statsQuery.isFetching) || undefined}>
                 <div className={classes.chartTotalRow}>
                     <div className={classes.chartTotal}>
                         <span>{mode === 'revenue' ? t`Net revenue` : t`Products sold`}</span>
-                        <strong>{statsQuery.data ? format(total) : '…'}</strong>
+                        {data ? <strong>{format(total)}</strong> : <SkeletonLine width={150} height={36}/>}
                     </div>
                     <ChangeBadge current={total} previous={previous} comparison={periodComparison(period)}/>
                 </div>
 
-                {!statsQuery.data ? <Skeleton height={200} radius={12}/> : (
+                {!data ? (
+                    <div className={classes.bars} aria-busy>
+                        <Skeleton height="100%" radius={12}/>
+                    </div>
+                ) : (
                     <div className={classes.bars}>
                         {visibleBars.map((bar, index) => {
                             const value = valueOf(bar.stats, mode);

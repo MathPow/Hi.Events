@@ -13,6 +13,7 @@ import {useGetOrganizer} from "../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerAchievements} from "../../../../queries/useGetOrganizerAchievements.ts";
 import {OrganizerAchievementProgress} from "../../../../types.ts";
 import {formatDateWithLocale} from "../../../../utilites/dates.ts";
+import {SkeletonCircle, SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import classes from "./Achievements.module.scss";
 
 // « 2 oct. », with the year when it isn't this one.
@@ -103,6 +104,35 @@ const AchievementCard = ({achievement, timezone, index}: {
     );
 };
 
+// The overview with its count and track, then dashed cards waiting for their badge.
+const AchievementsSkeleton = () => (
+    <>
+        <section className={classes.overview} aria-busy>
+            <div className={classes.count}>
+                <div className={classes.countValue}><Skeleton width="2.4em" height="1.08em" radius={999}/></div>
+                <span className={classes.countLabel}>{t`achievements earned`}</span>
+            </div>
+            <div className={classes.overviewMain}>
+                <div className={classes.overallProgress}/>
+                <div className={classes.next}><SkeletonLine width="48%" height={12}/></div>
+            </div>
+        </section>
+        <div className={classes.grid} aria-busy>
+            {[...Array(6)].map((_, index) => (
+                <article key={index} className={classes.card}
+                         style={{'--card-tilt': `${TILTS[index]}deg`} as CSSProperties}>
+                    <SkeletonPill width={index % 2 ? 96 : 124} height={28}/>
+                    <div className={classes.art}><SkeletonCircle size={index % 2 ? 104 : 168}/></div>
+                    <div className={classes.text}>
+                        <SkeletonLine width={index % 2 ? '62%' : '78%'} height={24}/>
+                        <SkeletonLine width={index % 2 ? '84%' : '70%'} height={12}/>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </>
+);
+
 const Achievements = () => {
     const {organizerId} = useParams();
     const {data: organizer} = useGetOrganizer(organizerId);
@@ -124,10 +154,7 @@ const Achievements = () => {
         return (
             <div className={classes.page}>
                 {header}
-                <Skeleton height={130} radius={32}/>
-                <div className={classes.grid}>
-                    {[...Array(6)].map((_, index) => <Skeleton key={index} height={464} radius={28}/>)}
-                </div>
+                <AchievementsSkeleton/>
             </div>
         );
     }

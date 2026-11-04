@@ -5,7 +5,7 @@ import {StatGrid, StatTile} from "../StatBoxes";
 import {formatNumber} from "../../../utilites/helpers.ts";
 
 interface WaitlistStatsProps {
-    stats: WaitlistStatsType;
+    stats?: WaitlistStatsType;
     className?: string;
 }
 
@@ -13,12 +13,12 @@ interface WaitlistStatsProps {
 export const WaitlistStatsCards = ({stats, className}: WaitlistStatsProps) => (
     <StatGrid compact className={className}>
         <StatTile tone="neutral" icon={<IconListNumbers stroke={2}/>} label={t`Total Entries`}
-                  value={formatNumber(stats.total)}/>
+                  loading={!stats} value={formatNumber(stats?.total ?? 0)}/>
         <StatTile tone="attendees" icon={<IconHourglass stroke={2}/>} label={t`Waiting`}
-                  value={formatNumber(stats.waiting)}/>
+                  loading={!stats} value={formatNumber(stats?.waiting ?? 0)}/>
         <StatTile tone="products" icon={<IconSend stroke={2}/>} label={t`Offered`}
-                  value={formatNumber(stats.offered)}/>
+                  loading={!stats} value={formatNumber(stats?.offered ?? 0)}/>
         <StatTile tone="sales" icon={<IconCircleCheck stroke={2}/>} label={t`Purchased`}
-                  value={formatNumber(stats.purchased)}/>
+                  loading={!stats} value={formatNumber(stats?.purchased ?? 0)}/>
     </StatGrid>
 );

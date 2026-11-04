@@ -23,6 +23,7 @@ import {Pagination} from "../../../common/Pagination";
 import {CreateEventModal} from "../../../modals/CreateEventModal";
 import {DuplicateEventModal} from "../../../modals/DuplicateEventModal";
 import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
+import {SkeletonLine, SkeletonLines, SkeletonPill} from "../../../common/Skeletons";
 import classes from "./Events.module.scss";
 
 type EventsState = 'upcoming' | 'ended' | 'archived';
@@ -197,6 +198,46 @@ const EventListRow = ({event, onDuplicate}: EventActionsProps) => {
     );
 };
 
+// The cards (or rows) of the chosen view, with a sand cover where the photo goes.
+const EventsSkeleton = ({view}: { view: View }) => view === 'list' ? (
+    <div className={classes.list} aria-busy>
+        {[0, 1, 2, 3].map((index) => (
+            <div key={index} className={classes.row}>
+                <Skeleton className={classes.rowImage} radius={16}/>
+                <div className={classes.rowInfo}>
+                    <SkeletonLine width={96} height={10}/>
+                    <SkeletonLines index={index} title={14} sub={10}/>
+                </div>
+                <div className={classes.rowTickets}>
+                    <div className={classes.ticketsLine}>
+                        <SkeletonLine width={84} height={12}/>
+                        <SkeletonPill width={index % 2 ? 72 : 86} height={24}/>
+                    </div>
+                </div>
+                <SkeletonLine width={16} height={6}/>
+            </div>
+        ))}
+    </div>
+) : (
+    <div className={classes.grid} aria-busy>
+        {[0, 1, 2].map((index) => (
+            <div key={index} className={classes.card}>
+                <Skeleton height={190} radius={20}/>
+                <div className={classes.cardBody}>
+                    <SkeletonLine width={index % 2 ? '58%' : '72%'} height={18}/>
+                    <SkeletonLine width={index % 2 ? '44%' : '36%'} height={12}/>
+                    <div className={classes.tickets}>
+                        <div className={classes.ticketsLine}>
+                            <SkeletonLine width={84} height={12}/>
+                            <SkeletonPill width={index % 2 ? 72 : 86} height={26}/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+);
+
 /**
  * Figma « Admin · Événements »: the organizer's events in cards (or a list), by tab (upcoming,
  * ended, archived), to search and filter by date and type like the public events directory.
@@ -330,11 +371,7 @@ const Events = () => {
                 </div>
             </div>
 
-            {eventsQuery.isLoading && (
-                <div className={classes.grid}>
-                    {Array.from({length: 3}).map((_, index) => <Skeleton key={index} height={360} radius={28}/>)}
-                </div>
-            )}
+            {eventsQuery.isLoading && <EventsSkeleton view={view}/>}
 
             {!eventsQuery.isLoading && results.length === 0 && !showCreateCard && (
                 <div className={classes.empty}>

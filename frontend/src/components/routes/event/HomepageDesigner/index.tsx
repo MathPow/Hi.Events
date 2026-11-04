@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from "react";
 import {useBlocker, useParams} from "react-router";
 import {useHoldPageRefresh} from "../../../layouts/AppLayout/pageRefresh.ts";
 import {plural, t} from "@lingui/macro";
-import {Button, Skeleton, Text, TextInput} from "@mantine/core";
+import {Button, Text, TextInput} from "@mantine/core";
 import {useMediaQuery} from "@mantine/hooks";
 import {modals} from "@mantine/modals";
 import {useGetEvent} from "../../../../queries/useGetEvent.ts";
@@ -28,8 +28,9 @@ import {cleanDescription, DraftImage} from "../../organizer/OrganizerHomepageDes
 import {DesignerSection, SectionId} from "../../organizer/OrganizerHomepageDesigner/DesignerSection.tsx";
 import {ImagePicker} from "../../organizer/OrganizerHomepageDesigner/ImagesSection.tsx";
 import {AccentSection} from "../../organizer/OrganizerHomepageDesigner/AccentSection.tsx";
-import {PreviewMessages, PreviewModal, PreviewPanel} from "../../organizer/OrganizerHomepageDesigner/PreviewPanel.tsx";
+import {PreviewMessages, PreviewModal, PreviewPanel, PreviewSkeleton} from "../../organizer/OrganizerHomepageDesigner/PreviewPanel.tsx";
 import {eventDraftChanges, EventPageDraft, publishedEventDraft} from "./eventPageDraft.ts";
+import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "../../organizer/OrganizerHomepageDesigner/OrganizerHomepageDesigner.module.scss";
 
 const PREVIEW_MESSAGES: PreviewMessages = {update: EVENT_PREVIEW_MESSAGE, ready: EVENT_PREVIEW_READY};
@@ -355,7 +356,9 @@ const HomepageDesigner = () => {
             <div className={classes.designer}>
                 <div className={classes.settings}>
                     {loading ? (
-                        <Skeleton height={46} radius={20}/>
+                        <div className={classes.status} data-published aria-busy>
+                            <SkeletonLine width={150} height={12}/>
+                        </div>
                     ) : (
                         <div className={classes.status} data-published={changeCount === 0 || undefined} role="status">
                             <span className={classes.statusDot}/>
@@ -376,9 +379,7 @@ const HomepageDesigner = () => {
                         </div>
                     )}
 
-                    {sections.map(section => loading ? (
-                        <Skeleton key={section.id} height={81} radius={24}/>
-                    ) : (
+                    {sections.map(section => (
                         <DesignerSection
                             key={section.id}
                             id={section.id}
@@ -390,10 +391,10 @@ const HomepageDesigner = () => {
                                     <span className={classes.shortLabel}>{section.short}</span>
                                 </>
                             )}
-                            open={openSections.includes(section.id)}
-                            onToggle={toggleSection}
+                            open={!loading && openSections.includes(section.id)}
+                            onToggle={loading ? () => undefined : toggleSection}
                         >
-                            {sectionContent(section.id)}
+                            {!loading && sectionContent(section.id)}
                         </DesignerSection>
                     ))}
                 </div>
@@ -401,7 +402,7 @@ const HomepageDesigner = () => {
                 {isWide && (
                     <div className={classes.previewColumn}>
                         {loading
-                            ? <Skeleton height={600} radius={28}/>
+                            ? <PreviewSkeleton/>
                             : <PreviewPanel src={previewSrc} url={displayUrl} draft={previewDraft} messages={PREVIEW_MESSAGES}/>}
                     </div>
                 )}

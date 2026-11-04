@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Navigate, useParams, useSearchParams} from "react-router";
 import {t} from "@lingui/macro";
-import {Menu, Skeleton, UnstyledButton} from "@mantine/core";
+import {Menu, UnstyledButton} from "@mantine/core";
 import classNames from "classnames";
 import {useGetOrganizer} from "../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerStats} from "../../../../queries/useGetOrganizerStats.ts";
@@ -158,8 +158,10 @@ const OrganizerReports = () => {
                 </div>
 
                 {!stats ? (
-                    <div className={classes.statsSkeleton}>
-                        {[0, 1, 2, 3].map((index) => <Skeleton key={index} height={190} radius={28}/>)}
+                    <div className={dashboardClasses.stats}>
+                        <StatTile loading loadingCompare tone="sales" iconName="ventes" label={t`Sales`} value=""/>
+                        <StatTile loading loadingCompare tone="products" iconName="produits" label={t`Products Sold`} value=""/>
+                        <StatTile loading loadingCompare tone="attendees" iconName="participants" label={t`Attendees`} value=""/>
                     </div>
                 ) : (
                     <div className={classNames(dashboardClasses.stats, {[dashboardClasses.statsLoading]: statsQuery.isFetching})}>

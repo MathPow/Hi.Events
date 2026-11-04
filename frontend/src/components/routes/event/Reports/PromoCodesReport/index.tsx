@@ -5,6 +5,7 @@ import ReportTable from "../../../../common/ReportTable";
 import {t} from "@lingui/macro";
 import {formatDateWithLocale} from "../../../../../utilites/dates.ts";
 import {ReportTypes} from "../../../../../types.ts";
+import {ReportLoading} from "../../../organizer/Reports/ReportPanel.tsx";
 
 const PromoCodesReport = ({showTitle = true}: { showTitle?: boolean }) => {
     const {eventId} = useParams();
@@ -12,7 +13,7 @@ const PromoCodesReport = ({showTitle = true}: { showTitle?: boolean }) => {
     const event = eventQuery.data;
 
     if (!event) {
-        return null;
+        return <ReportLoading/>;
     }
 
     const columns = [

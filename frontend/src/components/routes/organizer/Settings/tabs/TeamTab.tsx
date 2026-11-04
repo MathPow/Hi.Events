@@ -5,7 +5,7 @@ import {MembersCard} from "../team/MembersCard.tsx";
 import {AccountCard} from "../team/AccountCard.tsx";
 import {ApiTokensCard} from "../team/ApiTokensCard.tsx";
 import {SettingsCard} from "../SettingsUi.tsx";
-import {SettingsSkeleton} from "./OrganizationTab.tsx";
+import {TeamTabSkeleton} from "./TabSkeletons.tsx";
 import classes from "../Settings.module.scss";
 
 // « Équipe »: the people of the account and their roles, the account itself, and the API tokens.
@@ -15,7 +15,7 @@ export const TeamTab = () => {
     const canSeeDeveloperPages = useCanSeeDeveloperPages();
 
     if (!account) {
-        return <SettingsSkeleton/>;
+        return <TeamTabSkeleton showTokens={isAdmin && canSeeDeveloperPages}/>;
     }
 
     return (

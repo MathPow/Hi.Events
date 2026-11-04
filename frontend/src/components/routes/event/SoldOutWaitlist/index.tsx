@@ -2,7 +2,7 @@ import {useParams} from "react-router";
 import {useGetEvent} from "../../../../queries/useGetEvent.ts";
 import {PageTitle} from "../../../common/PageTitle";
 import {PageBody} from "../../../common/PageBody";
-import {WaitlistTable} from "../../../common/WaitlistTable";
+import {WaitlistTable, WaitlistTableSkeleton} from "../../../common/WaitlistTable";
 import {WaitlistStatsCards} from "../../../common/WaitlistStats";
 import {SearchBarWrapper} from "../../../common/SearchBar";
 import {Pagination} from "../../../common/Pagination";
@@ -13,7 +13,6 @@ import {useGetWaitlistStats} from "../../../../queries/useGetWaitlistStats.ts";
 import {useGetEventSettings} from "../../../../queries/useGetEventSettings.ts";
 import {useFilterQueryParamSync} from "../../../../hooks/useFilterQueryParamSync.ts";
 import {QueryFilterOperator, QueryFilters, WaitlistEntryStatus} from "../../../../types.ts";
-import {TableSkeleton} from "../../../common/TableSkeleton";
 import {t} from "@lingui/macro";
 import {useDisclosure} from "@mantine/hooks";
 import {OfferWaitlistModal} from "../../../modals/OfferWaitlistModal";
@@ -75,7 +74,7 @@ export const SoldOutWaitlist = () => {
                 )}
             >{t`Waitlist`}</PageTitle>
 
-            {stats && <WaitlistStatsCards stats={stats} className={classes.stats}/>}
+            <WaitlistStatsCards stats={stats} className={classes.stats}/>
 
             <ToolBar
                 searchComponent={() => (
@@ -88,7 +87,7 @@ export const SoldOutWaitlist = () => {
                 )}
             />
 
-            <TableSkeleton isVisible={!entries || !event}/>
+            {(!entries || !event) && <WaitlistTableSkeleton toolbar={statusChips}/>}
 
             {(entries && event) && (
                 <WaitlistTable

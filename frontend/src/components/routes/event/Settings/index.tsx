@@ -2,7 +2,6 @@ import {useEffect, useRef} from "react";
 import {Link, Navigate, useLocation, useParams} from "react-router";
 import {t} from "@lingui/macro";
 import classNames from "classnames";
-import {Skeleton} from "@mantine/core";
 import {useAutosaveStatus, usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
 import {useGetEvent} from "../../../../queries/useGetEvent.ts";
 import {useGetEventSettings} from "../../../../queries/useGetEventSettings.ts";
@@ -10,7 +9,11 @@ import {EventTab} from "./tabs/EventTab.tsx";
 import {RegistrationTab} from "./tabs/RegistrationTab.tsx";
 import {PaymentTab} from "./tabs/PaymentTab.tsx";
 import {EVENT_SETTINGS_TABS, EventSettingsTab, eventSettingsTabPath, SECTION_TABS} from "./settingsTabs.ts";
+import {PillChoice, SettingsCard} from "../../organizer/Settings/SettingsUi.tsx";
+import {SkeletonLine} from "../../../common/Skeletons";
+import {EVENT_TYPES, eventTypeLabel} from "../../../../constants/eventTypes.ts";
 import classes from "../../organizer/Settings/Settings.module.scss";
+import extra from "./EventSettings.module.scss";
 
 const tabLabel = (tab: EventSettingsTab) => ({
     event: t({message: 'Event', context: 'settings tab'}),
@@ -18,13 +21,78 @@ const tabLabel = (tab: EventSettingsTab) => ({
     payment: t`Payment & Invoicing`,
 })[tab];
 
-const SettingsSkeleton = () => (
-    <div className={classes.grid}>
-        <Skeleton className={classes.full} height={420} radius={32}/>
-        <Skeleton height={360} radius={32}/>
-        <Skeleton height={360} radius={32}/>
+// A field while the settings load: its real label over an empty field (or a placeholder label).
+const FieldSkeleton = ({label, span, tall}: { label?: string, span?: boolean, tall?: boolean }) => (
+    <div className={classNames(extra.skeletonField, {[classes.fieldsSpan]: span})}>
+        {label ? <p className={classes.fieldLabel}>{label}</p> : <SkeletonLine width={110} height={14}/>}
+        <div className={extra.skeletonInput} data-tall={tall || undefined}/>
     </div>
 );
+
+const CardHeadSkeleton = () => (
+    <div className={classes.cardHead}>
+        <div className={classes.cardHeadText}>
+            <SkeletonLine width={180} height={22}/>
+            <SkeletonLine width="70%" height={12}/>
+        </div>
+    </div>
+);
+
+// The settings while they load: on « Événement », the real « Infos de base », « Lieu » and « Référencement »
+// frames with their labels; on the other tabs, cards of fields.
+const SettingsSkeleton = ({tab}: { tab: EventSettingsTab }) => {
+    if (tab !== 'event') {
+        return (
+            <div className={classes.grid} aria-busy>
+                {[true, false, false].map((full, index) => (
+                    <section key={index} className={classNames(classes.card, {[classes.full]: full})}>
+                        <CardHeadSkeleton/>
+                        <div className={classes.fields}>
+                            <FieldSkeleton span={!full}/>
+                            <FieldSkeleton span={!full}/>
+                            <FieldSkeleton span tall={full}/>
+                        </div>
+                    </section>
+                ))}
+            </div>
+        );
+    }
+
+    return (
+        <div className={classes.grid} aria-busy>
+            <SettingsCard full title={t`Basic info`} subtitle={t`Shown on the event page, on tickets and in emails.`}>
+                <div className={classes.fields}>
+                    <FieldSkeleton span label={t`Event name`}/>
+                    <div className={`${classes.fieldsSpan} ${extra.fieldGroup}`}>
+                        <p className={classes.fieldLabel}>{t`Category`}</p>
+                        <PillChoice label={t`Category`} value={null} disabled onChange={() => undefined}
+                                    options={EVENT_TYPES.map(type => ({value: type, label: eventTypeLabel(type)}))}/>
+                        <p className={classes.hint}>{t`Used for the Directory filters.`}</p>
+                    </div>
+                    <FieldSkeleton label={t({message: 'Start', context: 'event date'})}/>
+                    <FieldSkeleton label={t({message: 'End', context: 'event date'})}/>
+                    <FieldSkeleton span label={t`Timezone`}/>
+                    <FieldSkeleton span tall label={t`Description`}/>
+                </div>
+            </SettingsCard>
+            <SettingsCard title={t({message: 'Location', context: 'place'})} subtitle={t`Shown on the event page and on tickets.`}>
+                <div className={classes.fields}>
+                    <FieldSkeleton span/>
+                    <FieldSkeleton span/>
+                    <FieldSkeleton/>
+                    <FieldSkeleton/>
+                </div>
+            </SettingsCard>
+            <SettingsCard title={t`Search engines (Google)`} subtitle={t`How the event page shows in Google and when it is shared.`}>
+                <div className={classes.fields}>
+                    <FieldSkeleton span label={t`Title`}/>
+                    <FieldSkeleton span tall label={t`Description`}/>
+                    <FieldSkeleton span label={t`Keywords`}/>
+                </div>
+            </SettingsCard>
+        </div>
+    );
+};
 
 /**
  * « Paramètres de l'événement », like the organizer's Paramètres: sticky tabs, sections in a bento
@@ -97,7 +165,7 @@ const Settings = () => {
                 </nav>
             </div>
 
-            {!ready && <SettingsSkeleton/>}
+            {!ready && <SettingsSkeleton tab={active}/>}
             {ready && active === 'event' && <EventTab key={eventId} eventId={eventId} event={event} settings={settings}/>}
             {ready && active === 'registration' && <RegistrationTab key={eventId} eventId={eventId} settings={settings}/>}
             {ready && active === 'payment' && <PaymentTab key={eventId} eventId={eventId} event={event} settings={settings}/>}

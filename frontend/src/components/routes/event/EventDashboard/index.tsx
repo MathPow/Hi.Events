@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {NavLink, useLocation, useNavigate, useParams} from "react-router";
 import {t} from "@lingui/macro";
-import {Button, Skeleton} from "@mantine/core";
+import {Button} from "@mantine/core";
 import classNames from "classnames";
 import {useGetEvent} from "../../../../queries/useGetEvent.ts";
 import {useGetEventStats} from "../../../../queries/useGetEventStats.ts";
@@ -16,7 +16,8 @@ import {StatTile} from "../../../common/StatBoxes";
 import {comparisonLabel, NotificationItem, ScrollList} from "../../organizer/OrganizerDashboard";
 import dashboardClasses from "../../organizer/OrganizerDashboard/OrganizerDashboard.module.scss";
 import ConfettiAnimation from "./ConfettiAnimation";
-import {SetupCard} from "./SetupCard.tsx";
+import {SetupCard, SetupCardSkeleton} from "./SetupCard.tsx";
+import {ListRowsSkeleton, SkeletonCircle, SkeletonLine, SkeletonLines, SkeletonPill} from "../../../common/Skeletons";
 import {lastDaysPreset, SalesChart} from "./SalesChart.tsx";
 import {useEventNotifications} from "./eventNotifications.ts";
 import classes from "./EventDashboard.module.scss";
@@ -47,15 +48,66 @@ const weekTotals = (days: EventDailyStats[] | undefined, pick: (day: EventDailyS
     return {current: total(list.slice(-7)), previous: total(list.slice(0, Math.max(0, list.length - 7)))};
 };
 
-export const DashBoardSkeleton = () => (
-    <div className={classes.skeleton}>
-        <Skeleton height={81} radius="md" width="60%"/>
-        <div className={classes.stats}>
-            {[...Array(4)].map((_, index) => <Skeleton key={index} height={190} radius={28}/>)}
-        </div>
-        <Skeleton height={400} radius={32}/>
+// Rows of « Commandes récentes » while the orders load.
+const RecentOrdersSkeleton = () => (
+    <div aria-busy>
+        {[...Array(6)].map((_, index) => (
+            <div key={index} className={classes.orderRow}>
+                <SkeletonCircle/>
+                <span className={classes.orderText}><SkeletonLines index={index}/></span>
+                <span className={classes.orderEnd}>
+                    <SkeletonLine width={index % 2 ? 48 : 60} height={14}/>
+                    <SkeletonPill width={index % 2 ? 70 : 82} height={22}/>
+                </span>
+            </div>
+        ))}
     </div>
 );
+
+// The dashboard while the event loads: real titles and frames, placeholders for the figures and lists.
+export const DashBoardSkeleton = () => {
+    const {eventId} = useParams();
+
+    return (
+        <div className={classes.page}>
+            <header className={classes.header}>
+                <div className={classes.headerText}>
+                    <h1 className={classes.title}>{t`Dashboard`}</h1>
+                    <div className={classes.subtitle}><SkeletonLine width={260} height={18}/></div>
+                </div>
+                <Button className={classes.viewButton} leftSection={<img src={icon('oeil')} alt=""/>} disabled>
+                    {t`View event page`}
+                </Button>
+            </header>
+
+            <SetupCardSkeleton/>
+
+            <section className={classes.stats}>
+                <StatTile loading loadingCompare tone="sales" iconName="ventes" label={t`Sales`} value=""/>
+                <StatTile loading loadingCompare tone="products" iconName="produits" label={t`Products Sold`} value=""/>
+                <StatTile loading loadingCompare tone="attendees" iconName="participants" label={t`Attendees`} value=""/>
+                <StatTile loading tone="views" iconSrc={eventIcon('vues')} label={t`Page views`} value=""/>
+            </section>
+
+            {eventId && <SalesChart eventId={eventId} currency="" loading/>}
+
+            <div className={classes.bottom}>
+                <section className={classNames(classes.card, classes.listCard)}>
+                    <div className={classes.sectionTitle}>
+                        <h2 className={classes.sectionHeading}>{t`Recent Orders`}</h2>
+                    </div>
+                    <RecentOrdersSkeleton/>
+                </section>
+                <section className={classNames(classes.card, classes.listCard)}>
+                    <div className={classes.sectionTitle}>
+                        <h2 className={classes.sectionHeading}>{t`Notifications`}</h2>
+                    </div>
+                    <ListRowsSkeleton rows={5} leading="circle"/>
+                </section>
+            </div>
+        </div>
+    );
+};
 
 /**
  * The event's dashboard (Figma « Admin · Événement · Tableau de bord »): when and where, the steps
@@ -169,7 +221,7 @@ export const EventDashboard = () => {
                             <img src={icon('fleche')} alt=""/>
                         </NavLink>
                     </div>
-                    {!recentOrders && <Skeleton height={300} radius={20}/>}
+                    {!recentOrders && <RecentOrdersSkeleton/>}
                     {recentOrders && recentOrders.length === 0 && (
                         <p className={classes.empty}>{t`When customers purchase tickets, their orders will appear here.`}</p>
                     )}

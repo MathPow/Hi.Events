@@ -1,0 +1,152 @@
+@use "../../../styles/admin-ui" as ui;
+@use "../../../styles/mixins";
+
+.card {
+  @include ui.card(1.5rem 1.75rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.tableCard {
+  @include ui.card(0.875rem 1rem);
+
+  @include mixins.respond-below(md) {
+    padding: 0.625rem;
+  }
+}
+
+.tableHead,
+.tableRow {
+  display: grid;
+  grid-template-columns: var(--skeleton-columns);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 0.75rem;
+}
+
+.tableHead {
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  background: ui.$row;
+}
+
+.tableRow {
+  min-height: 4rem;
+  border-bottom: 1px solid ui.$separator;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+
+  &[data-align='end'] {
+    justify-content: flex-end;
+  }
+}
+
+.lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.4375rem;
+  min-width: 0;
+}
+
+// Phones: each row becomes the stacked card the tables show there.
+.desktopOnly {
+  @include mixins.respond-below(md) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  display: none !important;
+
+  @include mixins.respond-below(md) {
+    display: flex !important;
+  }
+}
+
+.mobileRow {
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 0.5rem;
+  border-bottom: 1px solid ui.$separator;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 4rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+
+  &[data-plain] {
+    padding: 0.75rem 0;
+    border-radius: 0;
+    background: none;
+    border-bottom: 1px solid ui.$separator;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.trailing {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1rem;
+  margin-top: 1.5rem;
+
+  @include mixins.respond-below(sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &[data-wide] {
+    grid-column: 1 / -1;
+  }
+}
+
+.input {
+  height: 2.75rem;
+  border-radius: 0.875rem;
+  background: var(--dehors-champ);
+  opacity: 0.6;
+
+  &[data-tall] {
+    height: 7rem;
+  }
+}

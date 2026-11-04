@@ -11,6 +11,7 @@ import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {showSuccess} from "../../../../utilites/notifications.tsx";
 import {trackEvent, AnalyticsEvents} from "../../../../utilites/analytics.ts";
 import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
+import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "./EventDashboard.module.scss";
 
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
@@ -142,6 +143,38 @@ export const SetupCard = ({eventId, event}: { eventId: IdParam, event: Event }) 
                         <span className={classes.stepTitle}>{step.title}</span>
                         <span className={classes.stepDescription}>{step.description}</span>
                         {step.done ? <span className={classes.stepDone}>{t`Done`}</span> : step.action}
+                    </li>
+                ))}
+            </ol>
+        </section>
+    );
+};
+
+// « Préparez votre événement » while the event loads: the four steps, their state still unknown.
+export const SetupCardSkeleton = () => {
+    const steps = [
+        [t`Add a ticket`, t`At least one ticket on sale.`],
+        [t({message: 'Customize the page', context: 'getting started action'}), t`Image, description and color.`],
+        [t`Connect Stripe`, t`To receive your payments.`],
+        [t`Publish Event`, t`Make it visible to the public.`],
+    ];
+
+    return (
+        <section className={`${classes.card} ${classes.setupCard}`} aria-busy>
+            <div className={classes.setupHead}>
+                <div className={classes.setupHeadText}>
+                    <h2 className={classes.setupTitle}>{t`Get your event ready`}</h2>
+                    <SkeletonLine width={90} height={16}/>
+                </div>
+            </div>
+            <span className={classes.setupBar}><span style={{width: 0}}/></span>
+            <ol className={classes.steps}>
+                {steps.map(([title, description], index) => (
+                    <li key={index} className={classes.step}>
+                        <span className={classes.stepPastille}>{index + 1}</span>
+                        <span className={classes.stepTitle}>{title}</span>
+                        <span className={classes.stepDescription}>{description}</span>
+                        <span className={classes.stepAction}><SkeletonLine width={84} height={18}/></span>
                     </li>
                 ))}
             </ol>

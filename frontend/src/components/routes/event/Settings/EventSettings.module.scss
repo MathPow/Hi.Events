@@ -274,3 +274,22 @@
     min-height: 3.5rem;
   }
 }
+
+// The settings while they load: a label over an empty field.
+.skeletonField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.skeletonInput {
+  height: 3.5rem;
+  border-radius: 1rem;
+  background: var(--dehors-champ);
+  opacity: 0.6;
+
+  &[data-tall] {
+    height: 9.25rem;
+  }
+}

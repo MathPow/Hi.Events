@@ -4,6 +4,7 @@ import {useGetEvent} from "../../../../../queries/useGetEvent.ts";
 import {formatCurrency} from "../../../../../utilites/currency.ts";
 import ReportTable from "../../../../common/ReportTable";
 import {ReportTypes} from "../../../../../types.ts";
+import {ReportLoading} from "../../../organizer/Reports/ReportPanel.tsx";
 
 const ProductSalesReport = ({showTitle = true}: { showTitle?: boolean }) => {
     const {eventId} = useParams();
@@ -11,7 +12,7 @@ const ProductSalesReport = ({showTitle = true}: { showTitle?: boolean }) => {
     const event = eventQuery.data;
 
     if (!event) {
-        return null;
+        return <ReportLoading/>;
     }
 
     const columns = [

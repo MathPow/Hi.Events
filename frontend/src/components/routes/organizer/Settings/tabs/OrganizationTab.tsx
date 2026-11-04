@@ -1,4 +1,3 @@
-import {Skeleton} from "@mantine/core";
 import {IdParam} from "../../../../../types.ts";
 import {useGetOrganizer} from "../../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerSettings} from "../../../../../queries/useGetOrganizerSettings.ts";
@@ -8,15 +7,8 @@ import {SocialLinksCard} from "../organization/SocialLinksCard.tsx";
 import {EventDefaultsCard} from "../organization/EventDefaultsCard.tsx";
 import {SeoCard} from "../organization/SeoCard.tsx";
 import {DangerZoneCard} from "../organization/DangerZoneCard.tsx";
+import {OrganizationTabSkeleton} from "./TabSkeletons.tsx";
 import classes from "../Settings.module.scss";
-
-export const SettingsSkeleton = () => (
-    <div className={classes.grid}>
-        <Skeleton className={classes.full} height={420} radius={32}/>
-        <Skeleton height={360} radius={32}/>
-        <Skeleton height={360} radius={32}/>
-    </div>
-);
 
 // « Organisation »: the organizer's details, address, networks, event defaults, Google and the danger zone.
 export const OrganizationTab = ({organizerId}: { organizerId: IdParam }) => {
@@ -25,7 +17,7 @@ export const OrganizationTab = ({organizerId}: { organizerId: IdParam }) => {
 
     // The forms start from the saved values once; later refetches don't overwrite what is being typed.
     if (!organizer || !settings) {
-        return <SettingsSkeleton/>;
+        return <OrganizationTabSkeleton/>;
     }
 
     return (

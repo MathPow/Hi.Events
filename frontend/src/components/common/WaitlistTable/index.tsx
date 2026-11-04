@@ -7,6 +7,7 @@ import {useDisclosure} from "@mantine/hooks";
 import {IdParam, WaitlistEntry, WaitlistEntryStatus} from "../../../types.ts";
 import {relativeDate} from "../../../utilites/dates.ts";
 import {NoResultsSplash} from "../NoResultsSplash";
+import {TableCardSkeleton} from "../Skeletons";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {useRemoveWaitlistEntry} from "../../../mutations/useRemoveWaitlistEntry.ts";
 import {useOfferSpecificWaitlistEntry} from "../../../mutations/useOfferSpecificWaitlistEntry.ts";
@@ -296,3 +297,11 @@ export const WaitlistTable = ({eventId, entries, toolbar}: WaitlistTableProps) =
         </>
     );
 };
+
+// The filter chips stay, the entries wait.
+export const WaitlistTableSkeleton = ({toolbar}: { toolbar?: React.ReactNode }) => (
+    <>
+        {toolbar && <div className={classes.emptyToolbar}>{toolbar}</div>}
+        <TableCardSkeleton columns={['short', 'person', 'text', 'pill', 'short', 'menu']} rows={5}/>
+    </>
+);

@@ -13,7 +13,7 @@ import {useGetEventPromoCodes} from "../../../queries/useGetEventPromoCodes.ts";
 import {CreatePromoCodeModal} from "../../modals/CreatePromoCodeModal";
 import {useFilterQueryParamSync} from "../../../hooks/useFilterQueryParamSync.ts";
 import {QueryFilters} from "../../../types.ts";
-import {TableSkeleton} from "../../common/TableSkeleton";
+import {TableCardSkeleton} from "../../common/Skeletons";
 import {t} from "@lingui/macro";
 
 export const PromoCodes = () => {
@@ -45,7 +45,9 @@ export const PromoCodes = () => {
                     />
                 )}/>
 
-                <TableSkeleton isVisible={!promoCodes || !event}/>
+                {(!promoCodes || !event) && (
+                    <TableCardSkeleton columns={['pill', 'short', 'short', 'pill', 'text', 'pill', 'menu']} rows={5}/>
+                )}
 
                 {(promoCodes && event) &&
                     <PromoCodeTable

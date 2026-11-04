@@ -1,6 +1,6 @@
 import {CSSProperties, useEffect, useRef, useState} from "react";
 import {t} from "@lingui/macro";
-import {Modal} from "@mantine/core";
+import {Modal, Skeleton} from "@mantine/core";
 import {useElementSize} from "@mantine/hooks";
 import {IconDeviceDesktop, IconDeviceMobile} from "@tabler/icons-react";
 import {
@@ -8,6 +8,7 @@ import {
     ORGANIZER_PREVIEW_READY,
     OrganizerPreviewDraft
 } from "../../../layouts/OrganizerHomepagePreview/previewMessages.ts";
+import {SkeletonCircle, SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import classes from "./OrganizerHomepageDesigner.module.scss";
 
 // The public page as seen on a 1440px screen and on a 402px phone (the mockup frames).
@@ -152,6 +153,45 @@ export const PreviewPanel = ({src, url, draft, messages}: PreviewPanelProps) => 
         </div>
     );
 };
+
+// The browser frame while the draft loads: its bar, then the page's hero, name and first section in sand.
+export const PreviewSkeleton = () => (
+    <div className={classes.preview} aria-busy>
+        <div className={classes.browserBar}>
+            <img src="/interface/admin/ma-page/dots.svg" alt=""/>
+            <div className={classes.address}>
+                <img src="/interface/admin/ma-page/lock.svg" alt=""/>
+                <SkeletonLine width={190} height={10}/>
+            </div>
+            <div className={classes.devices} aria-hidden>
+                <span className={classes.device} aria-pressed="true"><IconDeviceDesktop size={15} stroke={2}/></span>
+                <span className={classes.device}><IconDeviceMobile size={15} stroke={2}/></span>
+            </div>
+        </div>
+        <div className={classes.viewport} style={{display: 'flex', flexDirection: 'column', gap: 20, padding: '24px 54px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <SkeletonPill width={84} height={20}/>
+                <div style={{display: 'flex', gap: 6}}>
+                    <SkeletonPill width={70} height={20}/>
+                    <SkeletonPill width={62} height={20}/>
+                    <SkeletonPill width={24} height={20}/>
+                </div>
+            </div>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
+                <Skeleton height={190} radius={14}/>
+                <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+                    <SkeletonCircle size={46}/>
+                    <SkeletonLine width={120} height={16}/>
+                </div>
+            </div>
+            <SkeletonLine width={180} height={14}/>
+            <div style={{display: 'flex', gap: 12}}>
+                <Skeleton width={156} height={100} radius={10}/>
+                <Skeleton width={156} height={100} radius={10}/>
+            </div>
+        </div>
+    </div>
+);
 
 interface PreviewModalProps {
     opened: boolean;

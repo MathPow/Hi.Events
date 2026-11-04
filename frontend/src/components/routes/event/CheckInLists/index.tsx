@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useParams} from "react-router";
 import {plural, t} from "@lingui/macro";
-import {Button, Menu, Skeleton, UnstyledButton} from "@mantine/core";
+import {Button, Menu, UnstyledButton} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import {IconCopy, IconExternalLink, IconPencil, IconTrash} from "@tabler/icons-react";
 import QRCode from "react-qr-code";
@@ -18,6 +18,7 @@ import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {CreateCheckInListModal} from "../../../modals/CreateCheckInListModal";
 import {EditCheckInListModal} from "../../../modals/EditCheckInListModal";
 import {listTimes, nextOpening} from "./checkInListTimes.ts";
+import {SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import classes from "./CheckInLists.module.scss";
 
 const icon = (path: string) => `/interface/admin/${path}.svg`;
@@ -45,21 +46,71 @@ const copyLink = (list: CheckInList) => navigator.clipboard.writeText(checkInUrl
 
 const openScanner = (list: CheckInList) => window.open(`/check-in/${list.short_id}`, '_blank');
 
-const InfoCard = ({tone, iconPath, value, label, note}: {
+const InfoCard = ({tone, iconPath, value, label, note, loading = false}: {
     tone: 'green' | 'pink' | 'yellow',
     iconPath: string,
     value: string,
     label: string,
     note?: string | null,
+    loading?: boolean,
 }) => (
     <div className={classes.info}>
         <span className={classes.infoPastille} data-tone={tone}><img src={icon(iconPath)} alt=""/></span>
         <div className={classes.infoText}>
-            <span className={classes.infoValue}>{value}</span>
+            {loading
+                ? <span className={classes.infoValueSkeleton}><SkeletonLine width={92} height={26}/></span>
+                : <span className={classes.infoValue}>{value}</span>}
             <span className={classes.infoLabel}>{label}</span>
-            {note && <span className={classes.infoNote}>{note}</span>}
+            {loading && <span className={classes.infoNoteSkeleton}><SkeletonLine width={120} height={11}/></span>}
+            {!loading && note && <span className={classes.infoNote}>{note}</span>}
         </div>
     </div>
+);
+
+// The three figures while the lists load (the same plural message as the loaded card).
+const InfoCardsSkeleton = () => {
+    const openCount = 2;
+
+    return (
+        <div className={classes.infos}>
+            <InfoCard loading tone="green" iconPath="tableau/verifie" value="" label={t`Participants arrived`}/>
+            <InfoCard loading tone="pink" iconPath="accueil/liste" value=""
+                      label={plural(openCount, {one: 'Open list', other: 'Open lists'})}/>
+            <InfoCard loading tone="yellow" iconPath="accueil/horloge" value="" label={t`Latest arrival`}/>
+        </div>
+    );
+};
+
+// A list's card while the lists load: its frame, tags, progress and scanner button.
+const ListCardSkeleton = ({index}: { index: number }) => (
+    <article className={classes.card} aria-busy>
+        <div className={classes.cardHead}>
+            <span className={classes.listPastille} data-tone={TONES[index % TONES.length]}>
+                <img src={icon('rapports/presence')} alt=""/>
+            </span>
+            <div className={classes.cardTitleBlock}>
+                <SkeletonLine width={index ? 120 : 150} height={20}/>
+                <SkeletonLine width={index ? 130 : 110} height={11}/>
+            </div>
+            <span className={classes.moreButton}><img src={icon('produits/actions')} alt=""/></span>
+        </div>
+        <div className={classes.tags}>
+            {(index ? [92, 98, 54] : [62, 104, 120]).map((width, tag) => <SkeletonPill key={tag} width={width} height={28}/>)}
+        </div>
+        <div className={classes.progress}>
+            <div className={classes.progressText}>
+                <SkeletonLine width={100} height={14}/>
+                <SkeletonLine width={28} height={14}/>
+            </div>
+            <span className={classes.bar}/>
+        </div>
+        <div className={classes.cardActions}>
+            <Button className={classes.scanButtonOutline} leftSection={<img src={icon('accueil/scan')} alt=""/>} disabled>
+                {t`Open the scanner`}
+            </Button>
+            <span className={classes.linkButton}><img src={icon('accueil/lien')} alt=""/></span>
+        </div>
+    </article>
 );
 
 const ListCard = ({list, index, timeZone, onEdit, onDelete}: {
@@ -250,6 +301,14 @@ const CheckInLists = () => {
         other: `# others, the first at ${nextTime} on ${nextDay}`,
     }) : null;
 
+    const createCard = (
+        <UnstyledButton className={classes.createCard} onClick={openCreate}>
+            <span className={classes.createPastille}><img src={icon('accueil/plus')} alt=""/></span>
+            <span className={classes.createTitle}>{t`Create a list`}</span>
+            <span className={classes.createHint}>{t`E.g. one entrance per door, the t-shirt pickup, the volunteers.`}</span>
+        </UnstyledButton>
+    );
+
     return (
         <div className={classes.page}>
             <header className={classes.header}>
@@ -263,7 +322,7 @@ const CheckInLists = () => {
                 </Button>
             </header>
 
-            {!lists ? <Skeleton height={107} radius={24}/> : (
+            {!lists ? <InfoCardsSkeleton/> : (
                 <div className={classes.infos}>
                     <InfoCard
                         tone="green"
@@ -291,7 +350,8 @@ const CheckInLists = () => {
 
             {!lists && (
                 <div className={classes.lists}>
-                    {[0, 1].map((index) => <Skeleton key={index} height={300} radius={28}/>)}
+                    {[0, 1].map((index) => <ListCardSkeleton key={index} index={index}/>)}
+                    {createCard}
                 </div>
             )}
 
@@ -301,11 +361,7 @@ const CheckInLists = () => {
                         <ListCard key={list.id} list={list} index={index} timeZone={timeZone}
                                   onEdit={() => setEditingId(list.id as IdParam)} onDelete={() => remove(list)}/>
                     ))}
-                    <UnstyledButton className={classes.createCard} onClick={openCreate}>
-                        <span className={classes.createPastille}><img src={icon('accueil/plus')} alt=""/></span>
-                        <span className={classes.createTitle}>{t`Create a list`}</span>
-                        <span className={classes.createHint}>{t`E.g. one entrance per door, the t-shirt pickup, the volunteers.`}</span>
-                    </UnstyledButton>
+                    {createCard}
                 </div>
             )}
 

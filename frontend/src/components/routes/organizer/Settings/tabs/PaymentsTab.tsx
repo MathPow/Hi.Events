@@ -15,7 +15,7 @@ import {getVatInfo} from "../../../account/ManageAccount/sections/PaymentSetting
 import {StripeCard} from "../payments/StripeCard.tsx";
 import {FeesCard} from "../payments/FeesCard.tsx";
 import {SettingsCard, ToggleRow} from "../SettingsUi.tsx";
-import {SettingsSkeleton} from "./OrganizationTab.tsx";
+import {PaymentsTabSkeleton} from "./TabSkeletons.tsx";
 import classes from "../Settings.module.scss";
 
 // Up to this fee rate included, the buyers' contribution is always offered and the organizer has no
@@ -57,7 +57,7 @@ export const PaymentsTab = ({organizerId}: { organizerId: IdParam }) => {
     const stripeAccounts = useGetStripeConnectAccounts(account?.id || 0, {enabled: showVat && !!account?.id});
 
     if (!account || !organizer || !settings) {
-        return <SettingsSkeleton/>;
+        return <PaymentsTabSkeleton/>;
     }
 
     const feePercentage = Number(account.configuration?.application_fees?.percentage ?? 0);

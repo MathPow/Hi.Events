@@ -1,5 +1,5 @@
 import {ReactNode, useEffect, useMemo, useState} from "react";
-import {Button, Skeleton, UnstyledButton} from "@mantine/core";
+import {Button, UnstyledButton} from "@mantine/core";
 import {useDebouncedValue, useDisclosure, useMediaQuery} from "@mantine/hooks";
 import {t} from "@lingui/macro";
 import classNames from "classnames";
@@ -32,7 +32,7 @@ import {
     SheetChips,
     SheetDates,
 } from "./filters.tsx";
-import {InfoTile} from "./index.tsx";
+import {OrderRowsSkeleton, InfoTile} from "./index.tsx";
 import classes from "./OrdersAndAttendees.module.scss";
 
 dayjs.extend(utc);
@@ -214,11 +214,11 @@ export const OrdersTab = ({event, stats, capsule}: { event: Event, stats?: Event
             {capsule}
 
             <div className={classes.tiles}>
-                <InfoTile icon={`${ICONS}/dollar.svg`} tone="green" label={t`Net sales`}
+                <InfoTile loading={!stats} icon={`${ICONS}/dollar.svg`} tone="green" label={t`Net sales`}
                           value={formatCurrency(netSales, event.currency).replace(/[.,]00(?=\D*$)/, '')}/>
-                <InfoTile icon="/interface/admin/produits/sac.svg" tone="orange" label={t`Average order`}
+                <InfoTile loading={!stats} icon="/interface/admin/produits/sac.svg" tone="orange" label={t`Average order`}
                           value={formatCurrency(orderCount > 0 ? netSales / orderCount : 0, event.currency)}/>
-                <InfoTile icon={`${ICONS}/remboursement.svg`} tone="neutral" label={t`Refunds`}
+                <InfoTile loading={refundedOrders === undefined} icon={`${ICONS}/remboursement.svg`} tone="neutral" label={t`Refunds`}
                           value={refundedOrders ?? '—'}
                           detail={refundedAmount > 0 ? t`${refunded} refunded` : undefined}/>
             </div>
@@ -240,11 +240,7 @@ export const OrdersTab = ({event, stats, capsule}: { event: Event, stats?: Event
             </div>
 
             <section className={classes.card}>
-                {ordersQuery.isLoading && (
-                    <div className={classes.loading}>
-                        {Array.from({length: 4}).map((_, index) => <Skeleton key={index} height={52} radius={12}/>)}
-                    </div>
-                )}
+                {ordersQuery.isLoading && <OrderRowsSkeleton/>}
 
                 {!ordersQuery.isLoading && orders.length === 0 && (
                     <p className={classes.empty}>{filtered

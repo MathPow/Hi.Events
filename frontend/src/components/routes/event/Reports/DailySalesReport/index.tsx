@@ -5,6 +5,7 @@ import {formatCurrency} from "../../../../../utilites/currency.ts";
 import {formatDateWithLocale} from "../../../../../utilites/dates.ts";
 import ReportTable from "../../../../common/ReportTable";
 import {ReportTypes} from "../../../../../types.ts";
+import {ReportLoading} from "../../../organizer/Reports/ReportPanel.tsx";
 
 export const DailySalesReport = ({showTitle = true}: { showTitle?: boolean }) => {
     const {eventId} = useParams();
@@ -12,7 +13,7 @@ export const DailySalesReport = ({showTitle = true}: { showTitle?: boolean }) =>
     const event = eventQuery.data;
 
     if (!event) {
-        return null;
+        return <ReportLoading/>;
     }
 
     const columns = [

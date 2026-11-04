@@ -14,6 +14,7 @@ import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {confirmationDialog} from "../../../utilites/confirmationDialog.tsx";
 import {StatusTag} from "../StatusTag";
 import {formatNumber} from "../../../utilites/helpers.ts";
+import {SkeletonCircle, SkeletonLine, SkeletonPill, varied} from "../Skeletons";
 
 interface CapacityAssignmentListProps {
     capacityAssignments: CapacityAssignment[];
@@ -193,3 +194,33 @@ export const CapacityAssignmentList = ({capacityAssignments, openCreateModal}: C
         </>
     );
 };
+
+// The capacity cards while they load.
+export const CapacityAssignmentListSkeleton = ({cards = 3}: { cards?: number }) => (
+    <div className={classes.capacityAssignmentList} aria-busy>
+        {[...Array(cards)].map((_, card) => (
+            <div key={card} className={classes.card}>
+                <div className={classes.head}>
+                    <SkeletonCircle size={44}/>
+                    <div className={classes.titleBlock} style={{gap: 10, paddingTop: 2}}>
+                        <SkeletonLine width={varied(card)} height={18}/>
+                        <div className={classes.meta}>
+                            <SkeletonPill width={64} height={24}/>
+                            <SkeletonLine width={110} height={10}/>
+                        </div>
+                    </div>
+                </div>
+                <div className={classes.capacity}>
+                    <div className={classes.count}>
+                        <SkeletonLine width={110} height={28}/>
+                    </div>
+                    <SkeletonLine height={8}/>
+                </div>
+                <div className={classes.actions}>
+                    <div style={{flex: 1}}><SkeletonLine height={44}/></div>
+                    <SkeletonCircle size={44}/>
+                </div>
+            </div>
+        ))}
+    </div>
+);

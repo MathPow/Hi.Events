@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {NavLink, useParams} from "react-router";
-import {Button, Popover, Skeleton, UnstyledButton} from "@mantine/core";
+import {Button, Popover, UnstyledButton} from "@mantine/core";
 import {useDebouncedValue, useMediaQuery} from "@mantine/hooks";
 import {IconCalendarEvent, IconChevronRight, IconClockHour4, IconDownload} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
@@ -18,6 +18,7 @@ import {orderContents, orderStatus} from "../../../../utilites/orderSummary.ts";
 import {downloadBinary} from "../../../../utilites/download.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
 import {usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
+import {SkeletonCircle, SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import {MenuOption, MenuTrigger, SearchInput} from "../../../common/EventFilters";
 import {PublicIcon} from "../../../common/PublicIcon";
 import filterClasses from "../../../common/EventFilters/EventFilters.module.scss";
@@ -146,6 +147,59 @@ const OrderDatesMenu = ({value, onChange}: { value: OrderDates, onChange: (value
         </Popover>
     );
 };
+
+const TableHead = () => (
+    <div className={classNames(classes.row, classes.tableHead)}>
+        <span className={classes.colOrder}>{t`Order`}</span>
+        <span className={classes.colCustomer}>{t`Customer`}</span>
+        <span className={classes.colEvent}>{t`Event`}</span>
+        <span className={classes.colContents}>{t`Contents`}</span>
+        <span className={classes.colAmount}>{t`Amount`}</span>
+        <span className={classes.colStatus}>{t`Status`}</span>
+        <span className={classes.colChevron}/>
+    </div>
+);
+
+// The real column headings, then rows shaped like orders (stacked on phones like the loaded ones).
+const OrdersSkeleton = () => (
+    <div aria-busy>
+        <TableHead/>
+        <div className={classes.list}>
+            {[...Array(6)].map((_, index) => (
+                <div key={index} className={classNames(classes.row, classes.orderRow)}>
+                    <div className={classes.colOrder}>
+                        <SkeletonLine width={84} height={13}/>
+                        <SkeletonLine width={44} height={10}/>
+                    </div>
+                    <div className={classes.colCustomer}>
+                        <SkeletonCircle size={36}/>
+                        <div className={classes.customerText}>
+                            <SkeletonLine width={[112, 96, 128, 104, 88, 120][index]} height={13}/>
+                            <div className={classes.mobileMeta} style={{flexDirection: 'column', gap: 6, margin: '2px 0'}}>
+                                <SkeletonLine width={170} height={10}/>
+                                <SkeletonLine width={60} height={10}/>
+                            </div>
+                            <div className={classes.mobileTag}><SkeletonPill width={84} height={24}/></div>
+                        </div>
+                    </div>
+                    <div className={classes.colEvent}>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: 11, padding: '5px 0'}}>
+                            <SkeletonLine width={index % 2 ? '78%' : '92%'} height={12}/>
+                            <SkeletonLine width={index % 2 ? '36%' : '44%'} height={12}/>
+                        </div>
+                    </div>
+                    <div className={classes.colContents}><SkeletonLine width={index % 2 ? 52 : 60} height={12}/></div>
+                    <div className={classes.colAmount}>
+                        <SkeletonLine width={index % 2 ? 48 : 56} height={13}/>
+                        <div className={classes.mobileDate}><SkeletonLine width={44} height={10}/></div>
+                    </div>
+                    <div className={classes.colStatus}><SkeletonPill width={index % 2 ? 78 : 90} height={26}/></div>
+                    <span className={classes.colChevron}/>
+                </div>
+            ))}
+        </div>
+    </div>
+);
 
 /**
  * Figma « Admin · Commandes »: every order of the organizer, all events together, opened from the
@@ -279,11 +333,7 @@ const Orders = () => {
             </nav>
 
             <section className={classes.card}>
-                {ordersQuery.isLoading && (
-                    <div className={classes.loading}>
-                        {Array.from({length: 4}).map((_, index) => <Skeleton key={index} height={52} radius={12}/>)}
-                    </div>
-                )}
+                {ordersQuery.isLoading && <OrdersSkeleton/>}
 
                 {!ordersQuery.isLoading && orders.length === 0 && (
                     <div className={classes.empty}>
@@ -295,15 +345,7 @@ const Orders = () => {
 
                 {orders.length > 0 && (
                     <>
-                        <div className={classNames(classes.row, classes.tableHead)}>
-                            <span className={classes.colOrder}>{t`Order`}</span>
-                            <span className={classes.colCustomer}>{t`Customer`}</span>
-                            <span className={classes.colEvent}>{t`Event`}</span>
-                            <span className={classes.colContents}>{t`Contents`}</span>
-                            <span className={classes.colAmount}>{t`Amount`}</span>
-                            <span className={classes.colStatus}>{t`Status`}</span>
-                            <span className={classes.colChevron}/>
-                        </div>
+                        <TableHead/>
                         <div className={classes.list}>
                             {orders.map(order => {
                                 const status = orderStatus(order);

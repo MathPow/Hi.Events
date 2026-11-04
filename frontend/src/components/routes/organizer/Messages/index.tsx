@@ -1,7 +1,7 @@
 import {t, Trans} from "@lingui/macro";
 import {useEffect, useRef, useState} from "react";
 import {useParams, useSearchParams} from "react-router";
-import {Button, Pagination, SegmentedControl, Skeleton} from "@mantine/core";
+import {Button, Pagination, SegmentedControl} from "@mantine/core";
 import {
     IconArrowBackUp,
     IconBell,
@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import {PageBody} from "../../../common/PageBody";
+import {SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import {PageTitle} from "../../../common/PageTitle";
 import {Card} from "../../../common/Card";
 import {IosInstallSteps} from "../../../common/InstallAppPrompt";
@@ -180,6 +181,26 @@ const MessageRow = ({message, organizerName, isOpen, onToggle, onReply}: {
     );
 };
 
+// Closed messages: the sender and their email, the date, the event tag, then the preview.
+const MessagesSkeleton = () => (
+    <div className={classes.list} aria-busy>
+        {[0, 1, 2, 3].map((index) => (
+            <article key={index} className={classes.message}>
+                <div className={classes.messageHead} style={{alignItems: 'center', rowGap: 12, cursor: 'default'}}>
+                    <span className={classes.unreadDot}/>
+                    <div className={classes.sender} style={{alignItems: 'center', rowGap: 10}}>
+                        <SkeletonLine width={[112, 96, 124, 104][index]} height={16}/>
+                        <SkeletonLine width={[168, 150, 176, 160][index]} height={10}/>
+                    </div>
+                    <SkeletonLine width={index % 2 ? 64 : 76} height={10}/>
+                    <SkeletonPill width={index % 2 ? 190 : 214} height={24}/>
+                    <SkeletonLine width={['52%', '64%', '40%', '70%'][index]} height={14}/>
+                </div>
+            </article>
+        ))}
+    </div>
+);
+
 /**
  * La boite de reception de l'organisateur: les messages du bouton « Contacter » de sa page et de
  * ses evenements (aussi envoyes par courriel), et les notifications de cet appareil.
@@ -261,11 +282,7 @@ const Messages = () => {
                 )}
             </div>
 
-            {isLoading && (
-                <div className={classes.list}>
-                    {[...Array(3)].map((_, index) => <Skeleton key={index} height={88} radius="md"/>)}
-                </div>
-            )}
+            {isLoading && <MessagesSkeleton/>}
 
             {!isLoading && messages.length === 0 && (
                 <Card className={classes.empty}>

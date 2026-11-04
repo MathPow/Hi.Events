@@ -25,7 +25,7 @@ import {
 } from "@tabler/icons-react";
 import {PageBody} from "../../../common/PageBody";
 import {PageTitle} from "../../../common/PageTitle";
-import {TableSkeleton} from "../../../common/TableSkeleton";
+import {TableCardSkeleton} from "../../../common/Skeletons";
 import {NoResultsSplash} from "../../../common/NoResultsSplash";
 import {useGetEvent} from "../../../../queries/useGetEvent.ts";
 import {useGetEventDeposits} from "../../../../queries/useGetEventDeposits.ts";
@@ -257,16 +257,16 @@ const Deposits = () => {
                 {t`Security Deposits`}
             </PageTitle>
 
-            <StatGrid loading={!orders} className={classes.stats} compact>
-                <StatTile tone="attendees" icon={<IconHourglass stroke={2}/>} label={t`Awaiting`}
+            <StatGrid className={classes.stats} compact>
+                <StatTile tone="attendees" icon={<IconHourglass stroke={2}/>} loading={!orders} label={t`Awaiting`}
                           value={formatCurrency(totals.awaiting, currency)}/>
-                <StatTile tone="products" icon={<IconShieldLock stroke={2}/>} label={t`Held`}
+                <StatTile tone="products" icon={<IconShieldLock stroke={2}/>} loading={!orders} label={t`Held`}
                           value={formatCurrency(totals.held, currency)}/>
-                <StatTile tone="refunds" icon={<IconScale stroke={2}/>} label={t`Retained`}
+                <StatTile tone="refunds" icon={<IconScale stroke={2}/>} loading={!orders} label={t`Retained`}
                           value={formatCurrency(totals.retained, currency)}/>
-                <StatTile tone="orders" icon={<IconArrowBackUp stroke={2}/>} label={t`Left to return`}
+                <StatTile tone="orders" icon={<IconArrowBackUp stroke={2}/>} loading={!orders} label={t`Left to return`}
                           value={formatCurrency(totals.toReturn, currency)}/>
-                <StatTile tone="sales" icon={<IconCircleCheck stroke={2}/>} label={t`Returned`}
+                <StatTile tone="sales" icon={<IconCircleCheck stroke={2}/>} loading={!orders} label={t`Returned`}
                           value={formatCurrency(totals.returned, currency)}/>
             </StatGrid>
 
@@ -285,7 +285,7 @@ const Deposits = () => {
                 </ToolBar>
             )}
 
-            <TableSkeleton isVisible={!orders}/>
+            {!orders && <TableCardSkeleton columns={['person', 'short', 'amount', 'pill', 'amount', 'menu']} rows={5}/>}
 
             {orders && orders.length === 0 && (
                 <NoResultsSplash

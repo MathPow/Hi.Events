@@ -1,11 +1,12 @@
 import {ReactNode, useState} from "react";
 import {t} from "@lingui/macro";
-import {Menu, Skeleton, UnstyledButton} from "@mantine/core";
+import {Menu, UnstyledButton} from "@mantine/core";
 import {Event, IdParam} from "../../../../types.ts";
 import {organizerClient} from "../../../../api/organizer.client.ts";
 import {downloadBinary} from "../../../../utilites/download.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
 import {DateRange, REPORT_PERIODS, ReportPeriod, reportPeriodLabel} from "./reportData.ts";
+import {SkeletonLine, varied} from "../../../common/Skeletons";
 import classes from "./Reports.module.scss";
 
 export const reportIcon = (name: string) => `/interface/admin/rapports/${name}.svg`;
@@ -250,13 +251,40 @@ export function ReportTable<T>({columns, rows, rowKey, mobile, total}: ReportTab
     );
 }
 
-export const ReportLoading = () => (
-    <div className={classes.loading}>
-        <Skeleton height={44} radius="xl" width="40%"/>
-        <Skeleton height={180} radius={24}/>
-        <Skeleton height={120} radius="md"/>
-    </div>
-);
+// The report's table while its rows load.
+export const ReportLoading = ({rows = 5}: { rows?: number }) => {
+    // eslint-disable-next-line lingui/no-unlocalized-strings
+    const template = 'minmax(0, 2fr) repeat(3, minmax(0, 1fr))';
+
+    return (
+        <div className={classes.table} aria-busy>
+            <div className={classes.tableHead} style={{gridTemplateColumns: template}}>
+                <SkeletonLine width={72} height={8}/>
+                {[0, 1, 2].map((column) => (
+                    <div key={column} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <SkeletonLine width={52} height={8}/>
+                    </div>
+                ))}
+            </div>
+            {[...Array(rows)].map((_, row) => (
+                <div key={row} className={classes.tableRow}>
+                    <div className={classes.tableCells} style={{gridTemplateColumns: template}}>
+                        <SkeletonLine width={varied(row)} height={12}/>
+                        {[0, 1, 2].map((column) => (
+                            <div key={column} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                                <SkeletonLine width={(row + column) % 2 ? 44 : 60} height={12}/>
+                            </div>
+                        ))}
+                    </div>
+                    <div className={classes.tableMobile}>
+                        <SkeletonLine width={varied(row)} height={12}/>
+                        <SkeletonLine width={56} height={12}/>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
 
 export const ReportEmpty = ({children}: { children: ReactNode }) => (
     <p className={classes.empty}>{children}</p>

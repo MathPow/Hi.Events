@@ -2,7 +2,7 @@ import {PageBody} from "../../../common/PageBody";
 import {PageTitle} from "../../../common/PageTitle";
 import {t} from "@lingui/macro";
 import {useParams} from "react-router";
-import {TableSkeleton} from "../../../common/TableSkeleton";
+import {TableCardSkeleton} from "../../../common/Skeletons";
 import {useDisclosure} from "@mantine/hooks";
 import {ToolBar} from "../../../common/ToolBar";
 import {SearchBarWrapper} from "../../../common/SearchBar";
@@ -86,7 +86,7 @@ const Affiliates = () => {
                 </Button>
             </ToolBar>
 
-            <TableSkeleton isVisible={!affiliates}/>
+            {!affiliates && <TableCardSkeleton columns={['person', 'pill', 'pill', 'short', 'amount', 'menu']} rows={5}/>}
 
             {affiliates && <AffiliateTable
                 affiliates={affiliates}

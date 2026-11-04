@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from "react";
 import {useBlocker, useParams, useSearchParams} from "react-router";
 import {useHoldPageRefresh} from "../../../layouts/AppLayout/pageRefresh.ts";
 import {plural, t} from "@lingui/macro";
-import {Button, Skeleton, Text} from "@mantine/core";
+import {Button, Text} from "@mantine/core";
 import {useMediaQuery} from "@mantine/hooks";
 import {modals} from "@mantine/modals";
 import {useGetOrganizer} from "../../../../queries/useGetOrganizer.ts";
@@ -35,7 +35,8 @@ import {AccentSection} from "./AccentSection.tsx";
 import {InfoSection} from "./InfoSection.tsx";
 import {SocialLinksSection} from "./SocialLinksSection.tsx";
 import {FaqSection} from "./FaqSection.tsx";
-import {PreviewModal, PreviewPanel} from "./PreviewPanel.tsx";
+import {PreviewModal, PreviewPanel, PreviewSkeleton} from "./PreviewPanel.tsx";
+import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "./OrganizerHomepageDesigner.module.scss";
 
 const IMAGE_TYPES = {cover: 'ORGANIZER_COVER', logo: 'ORGANIZER_LOGO'} as const;
@@ -452,7 +453,9 @@ const OrganizerHomepageDesigner = () => {
             <div className={classes.designer}>
                 <div className={classes.settings}>
                     {loading ? (
-                        <Skeleton height={46} radius={20}/>
+                        <div className={classes.status} data-published aria-busy>
+                            <SkeletonLine width={150} height={12}/>
+                        </div>
                     ) : (
                         <div className={classes.status} data-published={changeCount === 0 || undefined} role="status">
                             <span className={classes.statusDot}/>
@@ -473,13 +476,11 @@ const OrganizerHomepageDesigner = () => {
                         </div>
                     )}
 
-                    {!loading && organizerId && (
-                        <ImportFromUrl organizerId={organizerId} onApply={applyImport} disabled={publishing}/>
+                    {organizerId && (
+                        <ImportFromUrl organizerId={organizerId} onApply={applyImport} disabled={loading || publishing}/>
                     )}
 
-                    {sections.map(section => loading ? (
-                        <Skeleton key={section.id} height={81} radius={24}/>
-                    ) : (
+                    {sections.map(section => (
                         <DesignerSection
                             key={section.id}
                             id={section.id}
@@ -491,10 +492,10 @@ const OrganizerHomepageDesigner = () => {
                                     <span className={classes.shortLabel}>{section.short}</span>
                                 </>
                             )}
-                            open={openSections.includes(section.id)}
-                            onToggle={toggleSection}
+                            open={!loading && openSections.includes(section.id)}
+                            onToggle={loading ? () => undefined : toggleSection}
                         >
-                            {sectionContent(section.id)}
+                            {!loading && sectionContent(section.id)}
                         </DesignerSection>
                     ))}
                 </div>
@@ -502,7 +503,7 @@ const OrganizerHomepageDesigner = () => {
                 {isWide && (
                     <div className={classes.previewColumn}>
                         {loading
-                            ? <Skeleton height={600} radius={28}/>
+                            ? <PreviewSkeleton/>
                             : <PreviewPanel src={previewSrc} url={displayUrl} draft={previewDraft}/>}
                     </div>
                 )}

@@ -38,9 +38,11 @@ import {useAddParticipantForm} from "../../../mutations/useAddParticipantForm.ts
 import {ActionMenu} from "../ActionMenu";
 import {FilterChips} from "../FilterChips";
 import {PillChoice} from "../../routes/organizer/Settings/SettingsUi.tsx";
+import {SkeletonLine, SkeletonLines, SkeletonPill} from "../Skeletons";
 
 interface QuestionsTableProp {
-    questions: Partial<Question>[];
+    // Not loaded yet: the cards keep their titles, placeholders take the place of the data.
+    questions?: Partial<Question>[];
 }
 
 type QuestionBelongsTo = 'ORDER' | 'PRODUCT';
@@ -190,6 +192,24 @@ const QuestionsList = ({questions, onEdit, onAdd, emptyMessage, emptyHint}: {
     );
 };
 
+// Question rows while they load.
+const QuestionsListSkeleton = () => (
+    <div className={classes.list} aria-busy>
+        {[0, 1, 2].map((row) => (
+            <div key={row} className={classes.question}>
+                <span className={classes.grip}><SkeletonLine width={8} height={16}/></span>
+                <div className={classes.questionMain} style={{minHeight: '3.625rem', justifyContent: 'center'}}>
+                    <SkeletonLines index={row} subWidth="28%"/>
+                </div>
+                <div className={classes.tags}><SkeletonPill width={64} height={28}/></div>
+                <span className={classes.roundButton} style={{display: 'grid', placeItems: 'center'}}>
+                    <SkeletonLine width={6} height={16}/>
+                </span>
+            </div>
+        ))}
+    </div>
+);
+
 const DefaultFields = () => (
     <div className={classes.defaultFields}>
         <span className={classes.fieldPill}>{t`First Name`}</span>
@@ -254,7 +274,9 @@ const FormPreview = ({questions, isPerOrderCollection}: {
  * « Questions d'inscription »: how the attendees' details are collected, the custom questions of the
  * order and of each attendee (drag to reorder), and a preview of the checkout form.
  */
-export const QuestionsTable = ({questions}: QuestionsTableProp) => {
+export const QuestionsTable = ({questions: loadedQuestions}: QuestionsTableProp) => {
+    const loading = !loadedQuestions;
+    const questions = loadedQuestions ?? [];
     const {eventId} = useParams();
     const [activeTab, setActiveTab] = useState<QuestionBelongsTo>('ORDER');
     const [createModalOpen, {open: openCreateModal, close: closeCreateModal}] = useDisclosure(false);
@@ -318,19 +340,33 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
                         <h2 className={classes.cardTitle}>{t`Attendee Information`}</h2>
                         <p className={classes.cardSubtitle}>{t`Name and email of each attendee, or the buyer's for everyone.`}</p>
                     </div>
-                    <PillChoice
-                        label={t`Attendee Information`}
-                        value={collectionMethod}
-                        disabled={updateSettingsMutation.isPending || !eventSettingsQuery.data}
-                        options={[
-                            {value: 'PER_TICKET', label: t`Per ticket`},
-                            {value: 'PER_ORDER', label: t`Per order`},
-                        ]}
-                        onChange={changeCollectionMethod}
-                    />
-                    <p className={classes.hint}>
-                        {isPerOrderCollection ? t`Use the buyer's details for all attendees` : t`Ask for name and email for each ticket purchased`}
-                    </p>
+                    {eventSettingsQuery.isLoading ? (
+                        <>
+                            <div style={{display: 'flex', gap: 8}}>
+                                <SkeletonPill width={104} height={40}/>
+                                <SkeletonPill width={140} height={40}/>
+                            </div>
+                            <div className={classes.hint} style={{display: 'flex', alignItems: 'center', height: '1.35em'}}>
+                                <SkeletonLine width="52%" height={10}/>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <PillChoice
+                                label={t`Attendee Information`}
+                                value={collectionMethod}
+                                disabled={updateSettingsMutation.isPending || !eventSettingsQuery.data}
+                                options={[
+                                    {value: 'PER_TICKET', label: t`Per ticket`},
+                                    {value: 'PER_ORDER', label: t`Per order`},
+                                ]}
+                                onChange={changeCollectionMethod}
+                            />
+                            <p className={classes.hint}>
+                                {isPerOrderCollection ? t`Use the buyer's details for all attendees` : t`Ask for name and email for each ticket purchased`}
+                            </p>
+                        </>
+                    )}
                 </section>
 
                 <section className={classes.card}>
@@ -358,15 +394,22 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
                         <h2 className={classes.cardTitle}>{t`Custom Questions`}</h2>
                         <p className={classes.cardSubtitle}>{t`Drag the questions to change their order.`}</p>
                     </div>
-                    <FilterChips<QuestionBelongsTo>
-                        label={t`Custom Questions`}
-                        value={activeTab}
-                        onChange={setActiveTab}
-                        chips={[
-                            {value: 'ORDER', label: t`Order`, count: orderQuestions.length},
-                            {value: 'PRODUCT', label: t`Attendee`, count: productQuestions.length},
-                        ]}
-                    />
+                    {loading ? (
+                        <div style={{display: 'flex', gap: 8}}>
+                            <SkeletonPill width={150} height={44}/>
+                            <SkeletonPill width={156} height={44}/>
+                        </div>
+                    ) : (
+                        <FilterChips<QuestionBelongsTo>
+                            label={t`Custom Questions`}
+                            value={activeTab}
+                            onChange={setActiveTab}
+                            chips={[
+                                {value: 'ORDER', label: t`Order`, count: orderQuestions.length},
+                                {value: 'PRODUCT', label: t`Attendee`, count: productQuestions.length},
+                            ]}
+                        />
+                    )}
                 </div>
                 <p className={classes.hint}>
                     {activeTab === 'ORDER'
@@ -374,16 +417,18 @@ export const QuestionsTable = ({questions}: QuestionsTableProp) => {
                         : t`Asked of each attendee.`}
                 </p>
 
-                <QuestionsList
-                    key={activeTab}
-                    questions={activeQuestions}
-                    onEdit={edit}
-                    onAdd={openCreateModal}
-                    emptyMessage={activeTab === 'ORDER' ? t`No order questions yet` : t`No attendee questions yet`}
-                    emptyHint={activeTab === 'ORDER'
-                        ? t`Examples: "How did you hear about us?", "Company name for invoice"`
-                        : t`Examples: "T-shirt size", "Meal preference", "Job title"`}
-                />
+                {loading ? <QuestionsListSkeleton/> : (
+                    <QuestionsList
+                        key={activeTab}
+                        questions={activeQuestions}
+                        onEdit={edit}
+                        onAdd={openCreateModal}
+                        emptyMessage={activeTab === 'ORDER' ? t`No order questions yet` : t`No attendee questions yet`}
+                        emptyHint={activeTab === 'ORDER'
+                            ? t`Examples: "How did you hear about us?", "Company name for invoice"`
+                            : t`Examples: "T-shirt size", "Meal preference", "Job title"`}
+                    />
+                )}
             </section>
 
             <FormPreview questions={questions} isPerOrderCollection={isPerOrderCollection}/>

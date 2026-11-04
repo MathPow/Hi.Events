@@ -3,8 +3,7 @@ import {PageTitle} from "../../../common/PageTitle";
 import {t} from "@lingui/macro";
 import {useParams} from "react-router";
 import {useGetEventCapacityAssignments} from "../../../../queries/useGetCapacityAssignments.ts";
-import {CapacityAssignmentList} from "../../../common/CapacityAssignmentList";
-import {TableSkeleton} from "../../../common/TableSkeleton";
+import {CapacityAssignmentList, CapacityAssignmentListSkeleton} from "../../../common/CapacityAssignmentList";
 import {CreateCapacityAssignmentModal} from "../../../modals/CreateCapacityAssignmentModal";
 import {useDisclosure} from "@mantine/hooks";
 import {ToolBar} from "../../../common/ToolBar";
@@ -48,7 +47,7 @@ const CapacityAssignments = () => {
                 />
             )}/>
 
-            <TableSkeleton isVisible={!capacityAssignments}/>
+            {!capacityAssignments && <CapacityAssignmentListSkeleton/>}
 
             {capacityAssignments && <CapacityAssignmentList
                 capacityAssignments={capacityAssignments}

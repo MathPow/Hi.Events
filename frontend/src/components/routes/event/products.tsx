@@ -5,8 +5,7 @@ import {t} from "@lingui/macro";
 import {PageTitle} from "../../common/PageTitle";
 import {PageBody} from "../../common/PageBody";
 import {CreateProductModal} from "../../modals/CreateProductModal";
-import {ProductKind, ProductSections} from "../../common/ProductsTable";
-import {TableSkeleton} from "../../common/TableSkeleton";
+import {ProductKind, ProductSections, ProductSectionsSkeleton} from "../../common/ProductsTable";
 import {useUrlHash} from "../../../hooks/useUrlHash.ts";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {useGetEventProductCategories} from "../../../queries/useGetProductCategories.ts";
@@ -114,7 +113,7 @@ export const Products = () => {
 
             <Explainer/>
 
-            <TableSkeleton isVisible={!productCategories || !event}/>
+            {(!productCategories || !event) && <ProductSectionsSkeleton/>}
 
             {event && productCategories && (
                 <ProductSections initialCategories={productCategories} event={event} onAdd={add}/>

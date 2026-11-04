@@ -5,6 +5,7 @@ import {getInitials} from "../../../utilites/helpers.ts";
 import {t} from "@lingui/macro";
 import {IconPaperclip} from "@tabler/icons-react";
 import {StatusTag, StatusTone} from "../StatusTag";
+import {SkeletonCircle, SkeletonLine, SkeletonPill, varied} from "../Skeletons";
 
 interface MessageListProps {
     messages: Message[];
@@ -116,3 +117,25 @@ export const MessageList = ({messages, selectedId, onSelect}: MessageListProps) 
         </div>
     );
 };
+
+// The message rows while they load.
+export const MessageListSkeleton = ({rows = 5}: { rows?: number }) => (
+    <div className={classes.listContainer} aria-busy>
+        {[...Array(rows)].map((_, row) => (
+            <div key={row} className={classes.messageItem} data-selected={row === 0 || undefined}>
+                <SkeletonCircle/>
+                <div className={classes.itemContent}>
+                    <div className={classes.itemTopRow}>
+                        <SkeletonLine width={varied(row)} height={14}/>
+                        <SkeletonLine width={44} height={9}/>
+                    </div>
+                    <SkeletonLine width={varied(row, 3)} height={10}/>
+                    <div className={classes.itemBottomRow}>
+                        <SkeletonPill width={row % 2 ? 60 : 72} height={22}/>
+                        <SkeletonLine width={row % 2 ? 84 : 70} height={10}/>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+);
