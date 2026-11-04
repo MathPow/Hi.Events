@@ -445,6 +445,72 @@
   white-space: nowrap;
 }
 
+.bar:hover .barFill {
+  filter: brightness(0.92);
+}
+
+// The day's figures over its column, on hover, in the app's brown tooltip.
+.barTooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.875rem;
+  box-shadow: 0 8px 24px rgb(53 41 36 / 0.18);
+  font-size: 0.8125rem;
+}
+
+.barTooltipDate {
+  font-weight: 700;
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+
+.barTooltipValue {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: ui.$accent;
+  }
+
+  strong {
+    margin-left: auto;
+    padding-left: 1rem;
+  }
+}
+
+// What the day's figure comes from, under a thin line: label on the left, amount on the right.
+.barTooltipRows {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 1.5rem;
+  row-gap: 0.25rem;
+  margin: 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgb(255 247 233 / 0.16);
+  color: rgb(255 247 233 / 0.7);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  dd {
+    color: #fff7e9;
+    font-weight: 700;
+    text-align: right;
+  }
+}
+
 // Commandes récentes et notifications, côte à côte.
 .bottom {
   display: grid;
