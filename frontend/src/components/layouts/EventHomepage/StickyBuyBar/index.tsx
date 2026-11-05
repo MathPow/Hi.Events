@@ -118,7 +118,7 @@ export const StickyBuyBar = ({
         if (selection && hasSelection) {
             return (
                 <>
-                    <div className={classes.info}>
+                    <div className={`${classes.info} ${classes.subtotal}`}>
                         <span className={classes.label}>
                             {selection.quantity === 1 ? t`1 ticket` : t`${Number(selection.quantity)} tickets`}
                         </span>
@@ -127,7 +127,7 @@ export const StickyBuyBar = ({
                     <button
                         type="submit"
                         form={formId}
-                        className={classes.button} data-rough="button"
+                        className={`${classes.button} ${classes.continue}`} data-rough="button"
                         disabled={!selection.canContinue || selection.isSubmitting}
                         tabIndex={tabIndex}
                     >

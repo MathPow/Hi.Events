@@ -860,8 +860,9 @@ $deplie: 0.45s cubic-bezier(0.33, 1, 0.68, 1);
     }
 
     .hi-continue-button {
-      height: 56px;
-      padding: 0 24px;
+      height: auto;
+      min-height: 56px;
+      padding: 12px 24px;
       border: none;
       border-radius: 16px;
       background: var(--public-accent);
@@ -877,9 +878,18 @@ $deplie: 0.45s cubic-bezier(0.33, 1, 0.68, 1);
         opacity: 0.5;
       }
 
+      .mantine-Button-inner {
+        height: auto;
+      }
+
       .mantine-Button-label {
         gap: 10px;
+        height: auto;
         color: inherit;
+        line-height: 1.2;
+        text-align: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
 
         &::after {
           @include icone('fleche', 20px);
