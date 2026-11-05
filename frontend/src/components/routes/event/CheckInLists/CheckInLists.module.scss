@@ -382,10 +382,13 @@
   border-radius: 1.75rem;
   background: ui.$accent-soft;
 
+  // On a phone, everything on the middle line: the code, the text, then the buttons across the
+  // card, one on the other.
   @include mixins.respond-below(md) {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     padding: 1.25rem;
+    text-align: center;
   }
 }
 
@@ -408,6 +411,10 @@
   gap: 0.375rem;
   min-width: 0;
 
+  @include mixins.respond-below(md) {
+    align-self: stretch;
+  }
+
   p {
     margin: 0;
     font-size: 0.9375rem;
@@ -428,6 +435,17 @@
   flex-wrap: wrap;
   gap: 0.625rem;
   padding-top: 0.375rem;
+
+  @include mixins.respond-below(md) {
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 0.625rem;
+
+    > * {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }
 
 .listChoice {
