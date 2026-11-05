@@ -134,7 +134,7 @@ msgid "{availableCount} of {totalCount} available"
 msgstr "{availableCount} z {totalCount} dostupných"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:367
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:464
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
 msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
 msgstr "{changeCount, plural, one {# zmena ešte nie je zverejnená} few {# zmeny ešte nie sú zverejnené} other {# zmien ešte nie je zverejnených}}"
 
@@ -190,11 +190,11 @@ msgstr "{doneCount, plural, one {# krok z {total}} few {# kroky z {total}} many 
 msgid "{eventCount} events"
 msgstr "{eventCount} udalostí"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:360
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:255
 msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
 msgstr "{faqCount, plural, =0 {Zatiaľ žiadne otázky} one {# otázka · zobrazená v spodnej časti stránky} few {# otázky · zobrazené v spodnej časti stránky} other {# otázok · zobrazených v spodnej časti stránky}}"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:101
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:104
 msgid "{faqCount} questions"
 msgstr "{faqCount} otázok"
 
@@ -513,7 +513,7 @@ msgstr "Viacriadkový textový vstup"
 msgid "A new PIN signs out the phones already open."
 msgstr "Nový PIN odhlási už otvorené telefóny."
 
-#: src/components/routes/welcome/index.tsx:117
+#: src/components/routes/welcome/index.tsx:123
 msgid "A new verification code has been sent to your email"
 msgstr "Na váš e-mail bol odoslaný nový overovací kód"
 
@@ -597,8 +597,8 @@ msgstr "Uhradiť poplatky"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:237
 #: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx:67
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:78
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:338
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:233
 msgid "Accent color"
 msgstr "Farba zvýraznenia"
 
@@ -653,7 +653,7 @@ msgstr "Účet"
 msgid "Account configuration updated successfully"
 msgstr "Konfigurácia účtu bola úspešne aktualizovaná"
 
-#: src/components/routes/welcome/index.tsx:383
+#: src/components/routes/welcome/index.tsx:488
 msgid "Account created!"
 msgstr "Účet bol vytvorený!"
 
@@ -770,7 +770,7 @@ msgstr ""
 msgid "Add a first block from the list or with the button below."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:403
+#: src/components/routes/welcome/index.tsx:508
 msgid "Add a logo and colors that match the organization."
 msgstr "Pridajte logo a farby, ktoré zodpovedajú organizácii."
 
@@ -908,7 +908,7 @@ msgstr "Pridať do kalendára"
 msgid "Add to Google Wallet"
 msgstr "Pridať do Peňaženky Google"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:181
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:216
 msgid "Add to my draft"
 msgstr "Pridať do môjho konceptu"
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "Added to the price of the products you choose, in all your events."
 msgstr "Pripočítajú sa k cene vybraných produktov vo všetkých vašich podujatiach."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:163
 msgid "Added to your draft. Check the preview, then publish."
 msgstr "Pridané do konceptu. Skontrolujte náhľad a potom zverejnite."
 
@@ -978,9 +978,13 @@ msgstr "Adresa riadok 2"
 msgid "Address Line 2"
 msgstr "Adresa riadok 2"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:135
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
 msgid "Address of your website or Instagram"
 msgstr "Adresa vášho webu alebo Instagramu"
+
+#: src/components/routes/welcome/index.tsx:338
+msgid "Address of your website, Instagram or ticketing page"
+msgstr "Adresa vašej webovej stránky, Instagramu alebo stránky s lístkami"
 
 #: src/components/layouts/Admin/index.tsx:13
 #: src/components/modals/EditUserModal/index.tsx:49
@@ -1209,6 +1213,10 @@ msgstr "Takmer vypredané"
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Takmer hotovo! Čakáme na spracovanie vašej platby. Malo by to trvať len niekoľko sekúnd."
 
+#: src/components/routes/welcome/index.tsx:307
+msgid "Already have a page somewhere?"
+msgstr "Máte už niekde svoju stránku?"
+
 #: src/components/routes/auth/Register/index.tsx:125
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Už máte účet? <0>{0}</0>"
@@ -1297,7 +1305,8 @@ msgstr "Aktuálny zoznam, e-maily na informovanie a skenovanie vstupeniek v deň
 msgid "Analytics"
 msgstr "Meranie návštevnosti"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:146
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:196
+#: src/components/routes/welcome/index.tsx:353
 msgid "Analyze"
 msgstr "Analyzovať"
 
@@ -1451,8 +1460,8 @@ msgstr "Archivovaní organizátori"
 msgid "Archiving hides it from the public (can be restored). Deleting erases everything, for good."
 msgstr "Archivovanie ju skryje pred verejnosťou (dá sa obnoviť). Odstránenie zmaže všetko natrvalo."
 
-#: src/components/routes/welcome/index.tsx:333
-#: src/components/routes/welcome/index.tsx:336
+#: src/components/routes/welcome/index.tsx:438
+#: src/components/routes/welcome/index.tsx:441
 msgid "Are you registered for GST and QST?"
 msgstr "Ste registrovaný na GST a QST?"
 
@@ -2117,8 +2126,8 @@ msgstr "Text tlačidla"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:238
 #: src/components/routes/event/HomepageDesigner/index.tsx:239
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:339
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:340
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:234
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:235
 msgid "Buttons and highlighted elements"
 msgstr "Tlačidlá a zvýraznené prvky"
 
@@ -2227,8 +2236,8 @@ msgstr ""
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:190
 #: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:86
 #: src/components/routes/organizer/Messages/ReplyModal.tsx:109
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:473
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:220
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:368
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:51
@@ -2379,7 +2388,7 @@ msgid "Change waitlist settings"
 msgstr "Zmeniť nastavenia zoznamu čakateľov"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:321
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:418
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:313
 msgid "Changes appear on the right."
 msgstr "Zmeny sa zobrazujú vpravo."
 
@@ -2423,7 +2432,7 @@ msgid "Check out this event!"
 msgstr "Pozrite si túto udalosť!"
 
 #: src/components/routes/auth/ForgotPassword/index.tsx:42
-#: src/components/routes/welcome/index.tsx:133
+#: src/components/routes/welcome/index.tsx:139
 msgid "Check your email"
 msgstr "Skontrolujte svoj e-mail"
 
@@ -2716,7 +2725,7 @@ msgstr "Provízie"
 msgid "Communication"
 msgstr "Komunikácia"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:244
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:195
 msgid "Complete or delete the unfinished questions before publishing."
 msgstr "Pred zverejnením doplňte alebo odstráňte nedokončené otázky."
 
@@ -2869,7 +2878,7 @@ msgid "Congratulations! Your event is now visible to the public."
 msgstr "Gratulujeme! Vaša udalosť je teraz viditeľná pre verejnosť."
 
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:95
-#: src/components/routes/welcome/index.tsx:417
+#: src/components/routes/welcome/index.tsx:522
 msgid "Connect"
 msgstr "Pripojiť"
 
@@ -2879,7 +2888,7 @@ msgstr "Pripojiť"
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:444
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:133
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:139
-#: src/components/routes/welcome/index.tsx:413
+#: src/components/routes/welcome/index.tsx:518
 msgid "Connect Stripe"
 msgstr "Pripojiť Stripe"
 
@@ -2945,8 +2954,8 @@ msgstr ""
 #: src/components/common/WidgetEditor/index.tsx:220
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:115
 #: src/components/routes/product-widget/SelectProducts/index.tsx:433
-#: src/components/routes/welcome/index.tsx:250
-#: src/components/routes/welcome/index.tsx:369
+#: src/components/routes/welcome/index.tsx:256
+#: src/components/routes/welcome/index.tsx:474
 msgid "Continue"
 msgstr "Pokračovať"
 
@@ -3143,7 +3152,7 @@ msgstr "Kauciu sa nepodarilo aktualizovať"
 msgid "Country"
 msgstr "Krajina"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:83
 msgid "Cover image"
 msgstr "Titulný obrázok"
 
@@ -3173,7 +3182,7 @@ msgstr ""
 msgid "Create a custom widget to sell tickets on your site."
 msgstr "Vytvorte vlastný widget na predaj lístkov na vašom webe."
 
-#: src/components/routes/welcome/index.tsx:391
+#: src/components/routes/welcome/index.tsx:496
 msgid "Create a first event"
 msgstr "Vytvoriť prvé podujatie"
 
@@ -3215,7 +3224,7 @@ msgstr "Vytvoriť účet"
 
 #: src/components/modals/CreateEventModal/index.tsx:204
 #: src/components/modals/CreateEventModal/index.tsx:230
-#: src/components/routes/welcome/index.tsx:396
+#: src/components/routes/welcome/index.tsx:501
 msgid "Create an event"
 msgstr "Vytvoriť podujatie"
 
@@ -3434,7 +3443,7 @@ msgstr "Zákazník dostane e-mail potvrdzujúci vrátenie platby"
 #: src/components/common/CookieConsentBanner/index.tsx:182
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:88
-#: src/components/routes/welcome/index.tsx:407
+#: src/components/routes/welcome/index.tsx:512
 msgid "Customize"
 msgstr "Prispôsobiť"
 
@@ -3452,11 +3461,11 @@ msgstr "Prispôsobiť stránku"
 msgid "Customize the questions asked during checkout to gather important information from your attendees."
 msgstr "Prispôsobte otázky kladené počas pokladne na zber dôležitých informácií od účastníkov."
 
-#: src/components/routes/welcome/index.tsx:402
+#: src/components/routes/welcome/index.tsx:507
 msgid "Customize the ticketing"
 msgstr "Prispôsobiť predaj vstupeniek"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:417
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:312
 msgid "Customize your public page."
 msgstr "Prispôsobte si svoju verejnú stránku."
 
@@ -3734,7 +3743,7 @@ msgstr ""
 msgid "Details"
 msgstr "Podrobnosti"
 
-#: src/components/routes/welcome/index.tsx:170
+#: src/components/routes/welcome/index.tsx:176
 msgid "Didn't receive the code?"
 msgstr "Nedostali ste kód?"
 
@@ -3798,7 +3807,7 @@ msgstr "Zobrazenie"
 msgid "Display and options"
 msgstr "Zobrazenie a možnosti"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:354
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
 msgid "Display and order"
 msgstr "Zobrazenie a poradie"
 
@@ -4329,7 +4338,7 @@ msgstr ""
 msgid "Email Verification Required"
 msgstr "Vyžaduje sa overenie e-mailu"
 
-#: src/components/routes/welcome/index.tsx:98
+#: src/components/routes/welcome/index.tsx:104
 msgid "Email verified successfully!"
 msgstr "E-mail bol úspešne overený!"
 
@@ -4758,7 +4767,7 @@ msgid "Everyone"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:371
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:468
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:363
 msgid "Everything is published"
 msgstr "Všetko je zverejnené"
 
@@ -5019,7 +5028,7 @@ msgstr "Nepodarilo sa znovu odoslať lístok"
 msgid "Failed to resend ticket email"
 msgstr "Nepodarilo sa znovu odoslať e-mail s lístkom"
 
-#: src/components/routes/welcome/index.tsx:126
+#: src/components/routes/welcome/index.tsx:132
 msgid "Failed to resend verification code"
 msgstr "Nepodarilo sa znovu odoslať overovací kód"
 
@@ -5121,7 +5130,7 @@ msgstr "Nepodarilo sa nahrať obrázok."
 msgid "Failed to upload image. Please try again."
 msgstr "Nepodarilo sa nahrať obrázok. Skúste to znovu."
 
-#: src/components/routes/welcome/index.tsx:103
+#: src/components/routes/welcome/index.tsx:109
 msgid "Failed to verify email"
 msgstr "Nepodarilo sa overiť e-mail"
 
@@ -5129,8 +5138,8 @@ msgstr "Nepodarilo sa overiť e-mail"
 msgid "Fair market value of what the buyer receives."
 msgstr "Trhová hodnota toho, čo kupujúci dostane."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:85
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:254
 msgid "FAQ"
 msgstr "Časté otázky"
 
@@ -5202,9 +5211,13 @@ msgstr ""
 msgid "File is too large. Maximum size is 30MB."
 msgstr "Súbor je príliš veľký. Maximálna veľkosť je 30 MB."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:120
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:170
 msgid "Fill from your website or Instagram"
 msgstr "Vyplniť z vášho webu alebo Instagramu"
+
+#: src/components/routes/welcome/index.tsx:324
+msgid "Fill in my page"
+msgstr "Vyplniť moju stránku"
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:307
 msgid "Filled in on their own at registration."
@@ -5550,16 +5563,16 @@ msgstr "Hrubý predaj"
 msgid "Gross Sales"
 msgstr "Hrubý predaj"
 
-#: src/components/routes/welcome/index.tsx:286
+#: src/components/routes/welcome/index.tsx:391
 msgctxt "Canadian goods and services tax"
 msgid "GST"
 msgstr "GST"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "GST 5% and QST 9.975% will be added to the price of your tickets."
 msgstr "K cene vstupeniek sa pripočíta GST 5 % a QST 9,975 %."
 
-#: src/components/routes/welcome/index.tsx:354
+#: src/components/routes/welcome/index.tsx:459
 msgid "GST number"
 msgstr "Číslo GST"
 
@@ -5817,7 +5830,7 @@ msgstr "Súhlasím s <0>podmienkami a ustanoveniami</0>"
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Potvrdzujem, že toto je transakčná správa súvisiaca s touto udalosťou"
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "I don't know"
 msgstr "Neviem"
 
@@ -5888,7 +5901,7 @@ msgid "images"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:233
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Images"
 msgstr "Obrázky"
 
@@ -5986,7 +5999,7 @@ msgid "Info added automatically"
 msgstr "Automaticky pridané údaje"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:244
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:345
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:240
 msgid "Info and description"
 msgstr "Informácie a popis"
 
@@ -6031,7 +6044,7 @@ msgstr "Integrácie"
 msgid "Interac e-Transfer, cheque or cash. You confirm the payment by hand."
 msgstr "Prevod Interac, šek alebo hotovosť. Platbu potvrdzuješ ručne."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:77
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
 msgid "Introduction"
 msgstr "Predstavenie"
 
@@ -6137,7 +6150,7 @@ msgstr "Vydávať oficiálne potvrdenia o dare"
 msgid "Issue official donation receipts for the charitable portion of an order."
 msgstr "Vystavovať oficiálne potvrdenia o dare za charitatívnu časť objednávky."
 
-#: src/components/routes/welcome/index.tsx:334
+#: src/components/routes/welcome/index.tsx:439
 msgid "It decides whether taxes are added to the price of your tickets."
 msgstr "Od toho závisí, či sa k cene vstupeniek pripočítajú dane."
 
@@ -6371,7 +6384,7 @@ msgstr "Naposledy použité"
 msgid "Last Used"
 msgstr "Naposledy použité"
 
-#: src/components/routes/welcome/index.tsx:424
+#: src/components/routes/welcome/index.tsx:529
 msgid "Later, go to the dashboard"
 msgstr "Neskôr, prejsť na prehľad"
 
@@ -6389,7 +6402,7 @@ msgid "Learn more about Stripe"
 msgstr "Viac o Stripe"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Leave"
 msgstr "Odísť"
 
@@ -6414,7 +6427,7 @@ msgid "Leave quantity empty for unlimited stock"
 msgstr "Nechajte množstvo prázdne pre neobmedzené zásoby"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:98
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:114
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:107
 msgid "Leave without publishing?"
 msgstr "Odísť bez zverejnenia?"
 
@@ -6589,15 +6602,15 @@ msgid "Logging in"
 msgstr "Prihlasovanie"
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx:162
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
 msgid "Logo"
 msgstr "Logo"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover"
 msgstr "Logo a obálka"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover image"
 msgstr "Logo a titulný obrázok"
 
@@ -6956,7 +6969,7 @@ msgid "My other app"
 msgstr "Moja druhá aplikácia"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:171
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:415
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:310
 msgid "My page"
 msgstr "Moja stránka"
 
@@ -6993,7 +7006,7 @@ msgstr "N/A"
 #: src/components/routes/admin/Configurations/index.tsx:219
 #: src/components/routes/admin/PlatformRevenue/index.tsx:209
 #: src/components/routes/event/HomepageDesigner/index.tsx:280
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:76
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
 msgid "Name"
 msgstr "Meno"
 
@@ -7002,12 +7015,12 @@ msgid "Name and email of each attendee, or the buyer's for everyone."
 msgstr "Meno a e-mail každého účastníka alebo kupujúceho pre všetkých."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:246
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:347
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:242
 msgid "Name and introduction"
 msgstr "Názov a predstavenie"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:245
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:346
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:241
 msgid "Name and introduction text"
 msgstr "Názov a úvodný text"
 
@@ -7017,7 +7030,7 @@ msgstr "Názov a úvodný text"
 #: src/components/routes/admin/Configurations/index.tsx:168
 #: src/components/routes/event/HomepageDesigner/index.tsx:159
 #: src/components/routes/event/HomepageDesigner/index.tsx:284
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:200
 #: src/components/routes/organizer/OrganizerHomepageDesigner/InfoSection.tsx:26
 msgid "Name is required"
 msgstr "Meno je povinné"
@@ -7171,7 +7184,7 @@ msgstr "Nice club"
 
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:305
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:332
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No"
 msgstr "Nie"
 
@@ -7490,7 +7503,7 @@ msgstr "Žiadne výsledky vyhľadávania."
 msgid "No taxes collected during this period."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "No taxes for now. You can add them at any time in the settings, under Taxes and receipts."
 msgstr "Zatiaľ bez daní. Môžete ich kedykoľvek pridať v nastaveniach, v časti Dane a potvrdenky."
 
@@ -7499,7 +7512,7 @@ msgstr "Zatiaľ bez daní. Môžete ich kedykoľvek pridať v nastaveniach, v č
 msgid "No Taxes or Fees have been added."
 msgstr "Neboli pridané žiadne dane ani poplatky."
 
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No taxes: as a small supplier (under $30,000 of sales a year), you don't charge them."
 msgstr "Bez daní: ako malý dodávateľ (predaj pod 30 000 $ ročne) ich neúčtujete."
 
@@ -7617,7 +7630,7 @@ msgstr "Poznámky"
 msgid "Nothing collected yet"
 msgstr "Zatiaľ nič nebolo prijaté"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:188
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:223
 msgid "Nothing is published: check the preview, then publish."
 msgstr "Nič sa nezverejní: skontrolujte náhľad a potom zverejnite."
 
@@ -7630,7 +7643,7 @@ msgstr "Zatiaľ nie je čo vybaviť."
 msgid "Nothing to show yet"
 msgstr "Zatiaľ nič na zobrazenie"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:158
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:119
 msgid "Nothing usable was found on this page."
 msgstr "Na tejto stránke sa nenašlo nič použiteľné."
 
@@ -7950,8 +7963,8 @@ msgid "Option {i}"
 msgstr "Možnosť {i}"
 
 #: src/components/routes/event/Settings/cards/LocationCard.tsx:170
-#: src/components/routes/welcome/index.tsx:401
-#: src/components/routes/welcome/index.tsx:412
+#: src/components/routes/welcome/index.tsx:506
+#: src/components/routes/welcome/index.tsx:517
 msgid "Optional"
 msgstr "Voliteľné"
 
@@ -8513,6 +8526,10 @@ msgstr "Minulé"
 msgid "Past Events"
 msgstr "Minulé udalosti"
 
+#: src/components/routes/welcome/index.tsx:309
+msgid "Paste the address of your website, your Instagram or your old ticketing page. We'll use it to fill in your page."
+msgstr "Vložte adresu svojej webovej stránky, Instagramu alebo starej stránky s lístkami. Použijeme ju na vyplnenie vašej stránky."
+
 #: src/components/common/WidgetEditor/index.tsx:297
 msgid "Paste this where you want the widget to appear."
 msgstr "Vložte toto tam, kde chcete zobraziť widget."
@@ -8735,7 +8752,7 @@ msgstr "Telefón"
 msgid "Photo and video consent"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:221
+#: src/components/routes/welcome/index.tsx:227
 msgid "Pick as many as you like."
 msgstr "Môžete vybrať viac možností."
 
@@ -8833,7 +8850,7 @@ msgstr "Zadajte platnú URL adresu obrázka."
 msgid "Please enter a valid URL"
 msgstr "Zadajte platnú URL adresu"
 
-#: src/components/routes/welcome/index.tsx:70
+#: src/components/routes/welcome/index.tsx:76
 msgid "Please enter the 5-digit code"
 msgstr "Zadajte 5-ciferný kód"
 
@@ -8881,7 +8898,7 @@ msgstr "Skúste to znovu."
 msgid "Please verify your email address to access all features"
 msgstr "Overte svoju e-mailovú adresu pre prístup ku všetkým funkciám"
 
-#: src/components/routes/welcome/index.tsx:124
+#: src/components/routes/welcome/index.tsx:130
 msgid "Please wait before requesting another code"
 msgstr "Počkajte pred požiadaním o ďalší kód"
 
@@ -8934,7 +8951,7 @@ msgstr "Predchádzajte predaju nad kapacitu zdieľaním zásob naprieč viacerý
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:139
 #: src/components/routes/event/HomepageDesigner/index.tsx:341
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:274
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:438
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:333
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:106
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:212
 msgid "Preview"
@@ -9201,12 +9218,12 @@ msgstr "Kraj"
 #: src/components/common/StatusToggle/index.tsx:96
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:104
 #: src/components/routes/event/HomepageDesigner/index.tsx:351
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:448
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:343
 msgid "Publish"
 msgstr "Zverejniť"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:447
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:342
 msgid "Publish changes"
 msgstr "Zverejniť zmeny"
 
@@ -9225,7 +9242,7 @@ msgctxt "waitlist filter"
 msgid "Purchased"
 msgstr "Kúpené"
 
-#: src/components/routes/welcome/index.tsx:392
+#: src/components/routes/welcome/index.tsx:497
 msgid "Put free or paid tickets on sale in a few minutes."
 msgstr "Spustite predaj bezplatných alebo platených vstupeniek za pár minút."
 
@@ -9241,12 +9258,12 @@ msgstr "QR kód"
 msgid "QR Code Check-in"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:287
+#: src/components/routes/welcome/index.tsx:392
 msgctxt "Quebec sales tax"
 msgid "QST"
 msgstr "QST"
 
-#: src/components/routes/welcome/index.tsx:356
+#: src/components/routes/welcome/index.tsx:461
 msgid "QST number"
 msgstr "Číslo QST"
 
@@ -9369,7 +9386,8 @@ msgstr "Prečítať správu"
 msgid "Reading"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:152
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:202
+#: src/components/routes/welcome/index.tsx:345
 msgid "Reading the page… This can take up to 30 seconds."
 msgstr "Čítanie stránky… Môže to trvať až 30 sekúnd."
 
@@ -9414,7 +9432,7 @@ msgstr "Dostávať novinky z predajnej platformy"
 msgid "Receive product updates from {0}."
 msgstr "Dostávajte aktualizácie produktov od {0}."
 
-#: src/components/routes/welcome/index.tsx:414
+#: src/components/routes/welcome/index.tsx:519
 msgid "Receive ticket payments directly in the Stripe account."
 msgstr "Prijímajte platby za vstupenky priamo na účet Stripe."
 
@@ -9457,7 +9475,7 @@ msgstr "Príjemcovia sú dostupní po odoslaní správy"
 
 #: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx:46
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:95
-#: src/components/routes/welcome/index.tsx:390
+#: src/components/routes/welcome/index.tsx:495
 msgid "Recommended"
 msgstr "Odporúčané"
 
@@ -9672,7 +9690,7 @@ msgstr "Povinné"
 msgid "Required gear"
 msgstr "Povinná výbava"
 
-#: src/components/routes/welcome/index.tsx:183
+#: src/components/routes/welcome/index.tsx:189
 msgid "Resend code"
 msgstr "Znovu odoslať kód"
 
@@ -9693,7 +9711,7 @@ msgstr "Znovu odoslať e-mail"
 msgid "Resend email confirmation"
 msgstr "Znovu odoslať potvrdenie e-mailu"
 
-#: src/components/routes/welcome/index.tsx:182
+#: src/components/routes/welcome/index.tsx:188
 msgid "Resend in {resendCooldown}s"
 msgstr "Znovu odoslať za {resendCooldown} s"
 
@@ -10673,7 +10691,7 @@ msgstr "Zobrazuje sa nad možnosťami. Nechajte prázdne pre „Vyberte možnos�
 msgid "Shown at checkout."
 msgstr "Zobrazuje sa pri platbe."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:365
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:260
 msgid "Shown at the bottom of the page"
 msgstr "Zobrazené v spodnej časti stránky"
 
@@ -10699,7 +10717,7 @@ msgstr "Zobrazia sa v súhrne objednávky a na vstupenkách po zaplatení."
 msgid "Shown on the payment page, the order summary and the confirmation email (e.g. where to send the Interac e-Transfer, the deadline)."
 msgstr "Zobrazia sa na platobnej stránke, v súhrne objednávky a v potvrdzovacom e-maile (napr. kam poslať prevod Interac, termín)."
 
-#: src/components/routes/welcome/index.tsx:359
+#: src/components/routes/welcome/index.tsx:464
 msgid "Shown on your invoices and receipts. You can add them later."
 msgstr "Zobrazia sa na faktúrach a potvrdenkách. Môžete ich pridať neskôr."
 
@@ -10794,8 +10812,10 @@ msgstr "Jednoriadkové textové pole"
 msgid "Skip"
 msgstr "Preskočiť"
 
-#: src/components/routes/welcome/index.tsx:247
-#: src/components/routes/welcome/index.tsx:366
+#: src/components/routes/welcome/index.tsx:253
+#: src/components/routes/welcome/index.tsx:328
+#: src/components/routes/welcome/index.tsx:350
+#: src/components/routes/welcome/index.tsx:471
 msgid "Skip this step"
 msgstr "Preskočiť tento krok"
 
@@ -10824,8 +10844,8 @@ msgstr "Aby ste ich neskôr rozlíšili, napríklad web dehorsqc.com"
 msgid "Social"
 msgstr "Sociálne"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:352
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:84
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:247
 #: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx:97
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:60
 msgid "Social networks"
@@ -10859,7 +10879,7 @@ msgid "Some automatic info is badly written. Please correct it and try again."
 msgstr "Jeden automatický údaj je napísaný nesprávne. Opravte ho a skúste to znova."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:220
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:319
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:214
 msgid "Some changes could not be published. Please try again."
 msgstr "Niektoré zmeny sa nepodarilo zverejniť. Skúste to znova."
 
@@ -10905,9 +10925,10 @@ msgstr "Niečo sa pokazilo. Skúste to neskôr."
 #: src/components/routes/my-tickets/index.tsx:493
 #: src/components/routes/profile/ManageProfile/index.tsx:127
 #: src/components/routes/profile/ManageProfile/index.tsx:141
-#: src/components/routes/welcome/index.tsx:213
-#: src/components/routes/welcome/index.tsx:325
-#: src/components/routes/welcome/index.tsx:482
+#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:299
+#: src/components/routes/welcome/index.tsx:430
+#: src/components/routes/welcome/index.tsx:587
 #: src/mutations/useSwitchAccount.ts:24
 msgid "Something went wrong. Please try again."
 msgstr "Niečo sa pokazilo. Skúste to znovu."
@@ -11037,11 +11058,11 @@ msgid "Status"
 msgstr "Stav"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Stay"
 msgstr "Zostať"
 
-#: src/components/routes/welcome/index.tsx:41
+#: src/components/routes/welcome/index.tsx:47
 msgid "Step {step} of {STEPS}"
 msgstr "Krok {step} z {STEPS}"
 
@@ -11528,7 +11549,7 @@ msgstr "Zoznam odbavení, ktorý hľadáte, neexistuje."
 msgid "The club"
 msgstr "Klub"
 
-#: src/components/routes/welcome/index.tsx:188
+#: src/components/routes/welcome/index.tsx:194
 msgid "The code will expire in 10 minutes. Check your spam folder if you don't see the email."
 msgstr "Kód vyprší za 10 minút. Skontrolujte priečinok so spamom, ak e-mail nevidíte."
 
@@ -11684,7 +11705,7 @@ msgstr ""
 msgid "The page and the events are visible again."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:23
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "Stránku sa nepodarilo prečítať. Skontrolujte adresu a skúste to znova."
 
@@ -11776,7 +11797,7 @@ msgstr "Test sa nepodarilo odoslať. Skúste to znova."
 msgid "The text of the button under the tickets"
 msgstr "Text tlačidla pod vstupenkami"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:171
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:137
 msgid "The texts are taken as is from the page."
 msgstr "Texty sú prevzaté zo stránky bez zmien."
 
@@ -11987,7 +12008,11 @@ msgstr "Profil tohto organizátora ešte nie je zverejnený"
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "Predaje tohto organizátora sa vyplácajú priamo na jeho vlastný účet Stripe ({ownAccountId})."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:167
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
+msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
+msgstr "Túto stránku hostí {platform}: logo, farba a siete platformy boli vynechané. Doplňte sami, čo chýba."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:133
 msgid "This page shows little text: complete what is missing yourself."
 msgstr "Táto stránka obsahuje málo textu: doplňte, čo chýba."
 
@@ -12455,6 +12480,10 @@ msgstr "Dôvera a bezpečnosť"
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
 msgid "Try again"
 msgstr "Skúsiť znova"
+
+#: src/components/routes/welcome/index.tsx:320
+msgid "Try another address"
+msgstr "Skúsiť inú adresu"
 
 #: src/components/routes/auth/Login/index.tsx:145
 #: src/components/routes/my-tickets/index.tsx:512
@@ -12942,7 +12971,7 @@ msgstr "Zaobchádzanie s DPH pre poplatky platformy: firmy registrované pre DPH
 msgid "VAT validation service temporarily unavailable"
 msgstr "Služba overenia DPH je dočasne nedostupná"
 
-#: src/components/routes/welcome/index.tsx:143
+#: src/components/routes/welcome/index.tsx:149
 msgid "Verification code"
 msgstr "Overovací kód"
 
@@ -12951,7 +12980,7 @@ msgstr "Overovací kód"
 msgid "Verified"
 msgstr "Overené"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verify Email"
 msgstr "Overiť e-mail"
 
@@ -12959,7 +12988,7 @@ msgstr "Overiť e-mail"
 msgid "Verify your email"
 msgstr "Overte svoj e-mail"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verifying..."
 msgstr "Overovanie..."
 
@@ -13026,7 +13055,7 @@ msgstr "Zobraziť správu"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:272
 #: src/components/layouts/OrganizerLayout/index.tsx:319
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:430
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:325
 msgid "View my page"
 msgstr "Zobraziť moju stránku"
 
@@ -13214,7 +13243,7 @@ msgstr "Odporúčame rozmery 400px x 400px a maximálnu veľkosť súboru 30 MB"
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "Podujatia z platformy zdieľame na sociálnych sieťach Dehors. Tvoje podujatie sa dostane priamo pred komunitu ľudí v pohybe."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:122
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:172
 msgid "We suggest a name, a text, a color, images and your networks. You choose what to keep."
 msgstr "Navrhneme názov, text, farbu, obrázky a vaše siete. Vy si vyberiete, čo si ponecháte."
 
@@ -13246,7 +13275,7 @@ msgstr "Overíme číslo DPH na pozadí. Ak nastanú problémy, dáme vám vedie
 msgid "We're processing your order. Please wait..."
 msgstr "Spracovávame vašu objednávku. Čakajte prosím..."
 
-#: src/components/routes/welcome/index.tsx:134
+#: src/components/routes/welcome/index.tsx:140
 msgid "We've sent a 5-digit verification code to:"
 msgstr "Poslali sme 5-ciferný overovací kód na:"
 
@@ -13328,7 +13357,7 @@ msgstr "Vitajte späť, {firstName}!"
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
 msgstr "Vitajte späť, {firstName}! Toto sa deje v {0}."
 
-#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:225
 msgid "Welcome, {0}!"
 msgstr "Vitajte, {0}!"
 
@@ -13353,7 +13382,7 @@ msgstr ""
 msgid "What is a Category?"
 msgstr "Čo je kategória?"
 
-#: src/components/routes/welcome/index.tsx:220
+#: src/components/routes/welcome/index.tsx:226
 msgid "What kinds of events do you organize?"
 msgstr "Aké typy podujatí organizujete?"
 
@@ -13547,11 +13576,11 @@ msgstr "Kde"
 msgid "Where the money from your sales goes."
 msgstr "Kam idú peniaze z vašich predajov."
 
-#: src/components/routes/welcome/index.tsx:385
+#: src/components/routes/welcome/index.tsx:490
 msgid "Where to start? The rest can wait."
 msgstr "Kde začať? Zvyšok počká."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:353
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:248
 msgid "Which ones to show and in what order"
 msgstr "Ktoré zobraziť a v akom poradí"
 
@@ -13618,7 +13647,7 @@ msgstr "S ukážkovým kupujúcim a vaším posledným podujatím. Tento e-mail 
 msgid "Without a link, the address opens in Google Maps."
 msgstr "Bez odkazu sa adresa otvorí v Mapách Google."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:166
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:132
 msgid "Without an account, Instagram only shows the profile picture and the bio: complete the text yourself."
 msgstr "Bez účtu Instagram zobrazuje iba profilovú fotku a bio: text doplňte sami."
 
@@ -13700,7 +13729,7 @@ msgstr "Áno"
 msgid "Yes - I have a valid EU VAT registration number"
 msgstr "Áno – mám platné číslo registrácie DPH v EÚ"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "Yes, both"
 msgstr "Áno, obe"
 
@@ -13992,7 +14021,11 @@ msgstr "Údaje vašej organizácie, vaše platby, vaše dane a váš tím."
 msgid "Your own answer"
 msgstr "Vlastná odpoveď"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:317
+#: src/components/routes/welcome/index.tsx:296
+msgid "Your page is filled in. You can change everything in My page."
+msgstr "Vaša stránka je vyplnená. Všetko môžete zmeniť v časti Moja stránka."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
 msgid "Your page is published"
 msgstr "Vaša stránka je zverejnená"
 
@@ -14053,7 +14086,7 @@ msgstr ""
 msgid "Your ticketing in 4 steps"
 msgstr "Tvoj predaj vstupeniek v 4 krokoch"
 
-#: src/components/routes/welcome/index.tsx:384
+#: src/components/routes/welcome/index.tsx:489
 msgid "Your ticketing is ready!"
 msgstr "Váš predaj vstupeniek je pripravený!"
 
@@ -14074,7 +14107,7 @@ msgid "Your tickets have been confirmed."
 msgstr "Vaše lístky boli potvrdené."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:99
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:115
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:108
 msgid "Your unpublished changes will be lost."
 msgstr "Vaše nezverejnené zmeny sa stratia."
 
@@ -14094,7 +14127,8 @@ msgstr "Vaša ponuka zo zoznamu čakateľov vypršala a nepodarilo sa dokončiť
 msgid "your-website.com"
 msgstr "vasa-stranka.sk"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:134
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:184
+#: src/components/routes/welcome/index.tsx:337
 msgid "yourclub.com"
 msgstr "vasklub.sk"
 

@@ -134,7 +134,7 @@ msgid "{availableCount} of {totalCount} available"
 msgstr "{totalCount} arasından {availableCount} mevcut"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:367
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:464
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
 msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
 msgstr "{changeCount, plural, one {# değişiklik henüz yayınlanmadı} other {# değişiklik henüz yayınlanmadı}}"
 
@@ -190,11 +190,11 @@ msgstr "{doneCount, plural, one {{total} adımdan #} other {{total} adımdan #}}
 msgid "{eventCount} events"
 msgstr "{eventCount} etkinlik"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:360
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:255
 msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
 msgstr "{faqCount, plural, =0 {Henüz soru yok} one {# soru · sayfanın altında gösterilir} other {# soru · sayfanın altında gösterilir}}"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:101
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:104
 msgid "{faqCount} questions"
 msgstr "{faqCount} soru"
 
@@ -513,7 +513,7 @@ msgstr "Çok satırlı metin girişi"
 msgid "A new PIN signs out the phones already open."
 msgstr "Yeni bir PIN, zaten açık olan telefonların oturumunu kapatır."
 
-#: src/components/routes/welcome/index.tsx:117
+#: src/components/routes/welcome/index.tsx:123
 msgid "A new verification code has been sent to your email"
 msgstr "E-postanıza yeni bir doğrulama kodu gönderildi"
 
@@ -597,8 +597,8 @@ msgstr "Ücretleri üstlen"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:237
 #: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx:67
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:78
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:338
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:233
 msgid "Accent color"
 msgstr "Vurgu rengi"
 
@@ -653,7 +653,7 @@ msgstr "Hesap"
 msgid "Account configuration updated successfully"
 msgstr "Hesap yapılandırması başarıyla güncellendi"
 
-#: src/components/routes/welcome/index.tsx:383
+#: src/components/routes/welcome/index.tsx:488
 msgid "Account created!"
 msgstr "Hesap oluşturuldu!"
 
@@ -770,7 +770,7 @@ msgstr ""
 msgid "Add a first block from the list or with the button below."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:403
+#: src/components/routes/welcome/index.tsx:508
 msgid "Add a logo and colors that match the organization."
 msgstr "Kuruluşa uygun bir logo ve renkler ekleyin."
 
@@ -908,7 +908,7 @@ msgstr "Takvime Ekle"
 msgid "Add to Google Wallet"
 msgstr "Google Cüzdan'a ekle"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:181
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:216
 msgid "Add to my draft"
 msgstr "Taslağıma ekle"
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "Added to the price of the products you choose, in all your events."
 msgstr "Seçtiğiniz ürünlerin fiyatına, tüm etkinliklerinizde eklenir."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:163
 msgid "Added to your draft. Check the preview, then publish."
 msgstr "Taslağınıza eklendi. Önizlemeyi kontrol edin, sonra yayınlayın."
 
@@ -978,9 +978,13 @@ msgstr "Adres satırı 2"
 msgid "Address Line 2"
 msgstr "Adres Satırı 2"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:135
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
 msgid "Address of your website or Instagram"
 msgstr "Web sitenizin veya Instagram'ınızın adresi"
+
+#: src/components/routes/welcome/index.tsx:338
+msgid "Address of your website, Instagram or ticketing page"
+msgstr "Web sitenizin, Instagram hesabınızın veya bilet sayfanızın adresi"
 
 #: src/components/layouts/Admin/index.tsx:13
 #: src/components/modals/EditUserModal/index.tsx:49
@@ -1209,6 +1213,10 @@ msgstr "Neredeyse dolu"
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "Neredeyse bitti! Ödemenizin işlenmesini bekliyoruz. Bu sadece birkaç saniye sürmelidir."
 
+#: src/components/routes/welcome/index.tsx:307
+msgid "Already have a page somewhere?"
+msgstr "Zaten bir yerde sayfanız var mı?"
+
 #: src/components/routes/auth/Register/index.tsx:125
 msgid "Already have an account? <0>{0}</0>"
 msgstr "Zaten hesabınız var mı? <0>{0}</0>"
@@ -1297,7 +1305,8 @@ msgstr "Güncel bir liste, onları bilgilendiren e-postalar ve etkinlik günü b
 msgid "Analytics"
 msgstr "Ziyaretçi ölçümü"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:146
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:196
+#: src/components/routes/welcome/index.tsx:353
 msgid "Analyze"
 msgstr "Analiz et"
 
@@ -1451,8 +1460,8 @@ msgstr "Arşivlenen Organizatörler"
 msgid "Archiving hides it from the public (can be restored). Deleting erases everything, for good."
 msgstr "Arşivlemek etkinliği herkesten gizler (geri yüklenebilir). Silmek her şeyi kalıcı olarak siler."
 
-#: src/components/routes/welcome/index.tsx:333
-#: src/components/routes/welcome/index.tsx:336
+#: src/components/routes/welcome/index.tsx:438
+#: src/components/routes/welcome/index.tsx:441
 msgid "Are you registered for GST and QST?"
 msgstr "GST ve QST için kayıtlı mısınız?"
 
@@ -2117,8 +2126,8 @@ msgstr "Buton metni"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:238
 #: src/components/routes/event/HomepageDesigner/index.tsx:239
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:339
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:340
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:234
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:235
 msgid "Buttons and highlighted elements"
 msgstr "Düğmeler ve öne çıkan öğeler"
 
@@ -2227,8 +2236,8 @@ msgstr ""
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:190
 #: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:86
 #: src/components/routes/organizer/Messages/ReplyModal.tsx:109
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:473
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:220
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:368
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:51
@@ -2379,7 +2388,7 @@ msgid "Change waitlist settings"
 msgstr "Bekleme listesi ayarlarını değiştir"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:321
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:418
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:313
 msgid "Changes appear on the right."
 msgstr "Değişiklikler sağda görünür."
 
@@ -2423,7 +2432,7 @@ msgid "Check out this event!"
 msgstr "Bu etkinliğe göz atın!"
 
 #: src/components/routes/auth/ForgotPassword/index.tsx:42
-#: src/components/routes/welcome/index.tsx:133
+#: src/components/routes/welcome/index.tsx:139
 msgid "Check your email"
 msgstr "E-postanızı kontrol edin"
 
@@ -2716,7 +2725,7 @@ msgstr "Komisyonlar"
 msgid "Communication"
 msgstr "İletişim"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:244
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:195
 msgid "Complete or delete the unfinished questions before publishing."
 msgstr "Yayınlamadan önce tamamlanmamış soruları tamamlayın veya silin."
 
@@ -2869,7 +2878,7 @@ msgid "Congratulations! Your event is now visible to the public."
 msgstr "Tebrikler! Etkinliğiniz artık herkese açık."
 
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:95
-#: src/components/routes/welcome/index.tsx:417
+#: src/components/routes/welcome/index.tsx:522
 msgid "Connect"
 msgstr "Bağlan"
 
@@ -2879,7 +2888,7 @@ msgstr "Bağlan"
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:444
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:133
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:139
-#: src/components/routes/welcome/index.tsx:413
+#: src/components/routes/welcome/index.tsx:518
 msgid "Connect Stripe"
 msgstr "Stripe'ı Bağla"
 
@@ -2945,8 +2954,8 @@ msgstr ""
 #: src/components/common/WidgetEditor/index.tsx:220
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:115
 #: src/components/routes/product-widget/SelectProducts/index.tsx:433
-#: src/components/routes/welcome/index.tsx:250
-#: src/components/routes/welcome/index.tsx:369
+#: src/components/routes/welcome/index.tsx:256
+#: src/components/routes/welcome/index.tsx:474
 msgid "Continue"
 msgstr "Devam Et"
 
@@ -3143,7 +3152,7 @@ msgstr "Depozito güncellenemedi"
 msgid "Country"
 msgstr "Ülke"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:83
 msgid "Cover image"
 msgstr "Kapak görseli"
 
@@ -3173,7 +3182,7 @@ msgstr ""
 msgid "Create a custom widget to sell tickets on your site."
 msgstr "Sitenizde bilet satmak için özel bir widget oluşturun."
 
-#: src/components/routes/welcome/index.tsx:391
+#: src/components/routes/welcome/index.tsx:496
 msgid "Create a first event"
 msgstr "İlk etkinliği oluştur"
 
@@ -3215,7 +3224,7 @@ msgstr "Hesap oluştur"
 
 #: src/components/modals/CreateEventModal/index.tsx:204
 #: src/components/modals/CreateEventModal/index.tsx:230
-#: src/components/routes/welcome/index.tsx:396
+#: src/components/routes/welcome/index.tsx:501
 msgid "Create an event"
 msgstr "Etkinlik oluştur"
 
@@ -3434,7 +3443,7 @@ msgstr "Müşteri iade onayını içeren bir e-posta alacaktır"
 #: src/components/common/CookieConsentBanner/index.tsx:182
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:88
-#: src/components/routes/welcome/index.tsx:407
+#: src/components/routes/welcome/index.tsx:512
 msgid "Customize"
 msgstr "Özelleştir"
 
@@ -3452,11 +3461,11 @@ msgstr "Sayfayı özelleştir"
 msgid "Customize the questions asked during checkout to gather important information from your attendees."
 msgstr "Katılımcılarınızdan önemli bilgiler toplamak için ödeme sırasında sorulan soruları özelleştirin."
 
-#: src/components/routes/welcome/index.tsx:402
+#: src/components/routes/welcome/index.tsx:507
 msgid "Customize the ticketing"
 msgstr "Bilet satışını özelleştir"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:417
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:312
 msgid "Customize your public page."
 msgstr "Herkese açık sayfanızı özelleştirin."
 
@@ -3734,7 +3743,7 @@ msgstr ""
 msgid "Details"
 msgstr "Detaylar"
 
-#: src/components/routes/welcome/index.tsx:170
+#: src/components/routes/welcome/index.tsx:176
 msgid "Didn't receive the code?"
 msgstr "Kodu almadınız mı?"
 
@@ -3798,7 +3807,7 @@ msgstr "Görünüm"
 msgid "Display and options"
 msgstr "Görünüm ve seçenekler"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:354
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
 msgid "Display and order"
 msgstr "Görünüm ve sıra"
 
@@ -4329,7 +4338,7 @@ msgstr ""
 msgid "Email Verification Required"
 msgstr "E-posta Doğrulaması Gerekli"
 
-#: src/components/routes/welcome/index.tsx:98
+#: src/components/routes/welcome/index.tsx:104
 msgid "Email verified successfully!"
 msgstr "E-posta başarıyla doğrulandı!"
 
@@ -4758,7 +4767,7 @@ msgid "Everyone"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:371
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:468
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:363
 msgid "Everything is published"
 msgstr "Her şey yayınlandı"
 
@@ -5019,7 +5028,7 @@ msgstr "Bilet yeniden gönderilemedi"
 msgid "Failed to resend ticket email"
 msgstr "Bilet e-postası yeniden gönderilemedi"
 
-#: src/components/routes/welcome/index.tsx:126
+#: src/components/routes/welcome/index.tsx:132
 msgid "Failed to resend verification code"
 msgstr "Doğrulama kodu yeniden gönderilemedi"
 
@@ -5121,7 +5130,7 @@ msgstr "Görsel yüklenemedi."
 msgid "Failed to upload image. Please try again."
 msgstr "Görsel yüklenemedi. Lütfen tekrar deneyin."
 
-#: src/components/routes/welcome/index.tsx:103
+#: src/components/routes/welcome/index.tsx:109
 msgid "Failed to verify email"
 msgstr "E-posta doğrulanamadı"
 
@@ -5129,8 +5138,8 @@ msgstr "E-posta doğrulanamadı"
 msgid "Fair market value of what the buyer receives."
 msgstr "Alıcının aldığı şeyin rayiç bedeli."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:85
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:254
 msgid "FAQ"
 msgstr "SSS"
 
@@ -5202,9 +5211,13 @@ msgstr ""
 msgid "File is too large. Maximum size is 30MB."
 msgstr "Dosya çok büyük. Maksimum boyut 30MB'dir."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:120
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:170
 msgid "Fill from your website or Instagram"
 msgstr "Web sitenizden veya Instagram'dan doldurun"
+
+#: src/components/routes/welcome/index.tsx:324
+msgid "Fill in my page"
+msgstr "Sayfamı doldur"
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:307
 msgid "Filled in on their own at registration."
@@ -5550,16 +5563,16 @@ msgstr "Brüt satışlar"
 msgid "Gross Sales"
 msgstr "Brüt Satışlar"
 
-#: src/components/routes/welcome/index.tsx:286
+#: src/components/routes/welcome/index.tsx:391
 msgctxt "Canadian goods and services tax"
 msgid "GST"
 msgstr "GST"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "GST 5% and QST 9.975% will be added to the price of your tickets."
 msgstr "%5 GST ve %9,975 QST bilet fiyatınıza eklenecek."
 
-#: src/components/routes/welcome/index.tsx:354
+#: src/components/routes/welcome/index.tsx:459
 msgid "GST number"
 msgstr "GST numarası"
 
@@ -5817,7 +5830,7 @@ msgstr "<0>Şartlar ve koşulları</0> kabul ediyorum"
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Bunun bu etkinlikle ilgili işlemsel bir mesaj olduğunu onaylıyorum"
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "I don't know"
 msgstr "Bilmiyorum"
 
@@ -5888,7 +5901,7 @@ msgid "images"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:233
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Images"
 msgstr "Görseller"
 
@@ -5986,7 +5999,7 @@ msgid "Info added automatically"
 msgstr "Otomatik eklenen bilgiler"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:244
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:345
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:240
 msgid "Info and description"
 msgstr "Bilgiler ve açıklama"
 
@@ -6031,7 +6044,7 @@ msgstr "Entegrasyonlar"
 msgid "Interac e-Transfer, cheque or cash. You confirm the payment by hand."
 msgstr "Interac e-Transfer, çek veya nakit. Ödemeyi elle onaylarsın."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:77
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
 msgid "Introduction"
 msgstr "Tanıtım"
 
@@ -6137,7 +6150,7 @@ msgstr "Resmi bağış makbuzu düzenle"
 msgid "Issue official donation receipts for the charitable portion of an order."
 msgstr "Bir siparişin hayır amaçlı kısmı için resmi bağış makbuzu düzenleyin."
 
-#: src/components/routes/welcome/index.tsx:334
+#: src/components/routes/welcome/index.tsx:439
 msgid "It decides whether taxes are added to the price of your tickets."
 msgstr "Bilet fiyatına vergi eklenip eklenmeyeceğini belirler."
 
@@ -6371,7 +6384,7 @@ msgstr "Son kullanım"
 msgid "Last Used"
 msgstr "Son Kullanım"
 
-#: src/components/routes/welcome/index.tsx:424
+#: src/components/routes/welcome/index.tsx:529
 msgid "Later, go to the dashboard"
 msgstr "Daha sonra, panele git"
 
@@ -6389,7 +6402,7 @@ msgid "Learn more about Stripe"
 msgstr "Stripe hakkında daha fazla bilgi"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Leave"
 msgstr "Çık"
 
@@ -6414,7 +6427,7 @@ msgid "Leave quantity empty for unlimited stock"
 msgstr "Sınırsız stok için miktarı boş bırakın"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:98
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:114
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:107
 msgid "Leave without publishing?"
 msgstr "Yayınlamadan çıkılsın mı?"
 
@@ -6589,15 +6602,15 @@ msgid "Logging in"
 msgstr "Giriş yapılıyor"
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx:162
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
 msgid "Logo"
 msgstr "Logo"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover"
 msgstr "Logo ve kapak"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover image"
 msgstr "Logo ve kapak görseli"
 
@@ -6956,7 +6969,7 @@ msgid "My other app"
 msgstr "Diğer uygulamam"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:171
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:415
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:310
 msgid "My page"
 msgstr "Sayfam"
 
@@ -6993,7 +7006,7 @@ msgstr "Yok"
 #: src/components/routes/admin/Configurations/index.tsx:219
 #: src/components/routes/admin/PlatformRevenue/index.tsx:209
 #: src/components/routes/event/HomepageDesigner/index.tsx:280
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:76
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
 msgid "Name"
 msgstr "Ad"
 
@@ -7002,12 +7015,12 @@ msgid "Name and email of each attendee, or the buyer's for everyone."
 msgstr "Her katılımcının adı ve e-postası ya da herkes için alıcınınki."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:246
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:347
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:242
 msgid "Name and introduction"
 msgstr "Ad ve tanıtım"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:245
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:346
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:241
 msgid "Name and introduction text"
 msgstr "Ad ve tanıtım metni"
 
@@ -7017,7 +7030,7 @@ msgstr "Ad ve tanıtım metni"
 #: src/components/routes/admin/Configurations/index.tsx:168
 #: src/components/routes/event/HomepageDesigner/index.tsx:159
 #: src/components/routes/event/HomepageDesigner/index.tsx:284
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:200
 #: src/components/routes/organizer/OrganizerHomepageDesigner/InfoSection.tsx:26
 msgid "Name is required"
 msgstr "Ad gerekli"
@@ -7171,7 +7184,7 @@ msgstr "Nice club"
 
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:305
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:332
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No"
 msgstr "Hayır"
 
@@ -7490,7 +7503,7 @@ msgstr "Arama sonucu yok."
 msgid "No taxes collected during this period."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "No taxes for now. You can add them at any time in the settings, under Taxes and receipts."
 msgstr "Şimdilik vergi yok. İstediğiniz zaman ayarlarda, Vergiler ve makbuzlar altında ekleyebilirsiniz."
 
@@ -7499,7 +7512,7 @@ msgstr "Şimdilik vergi yok. İstediğiniz zaman ayarlarda, Vergiler ve makbuzla
 msgid "No Taxes or Fees have been added."
 msgstr "Hiçbir Vergi veya Ücret eklenmemiş."
 
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No taxes: as a small supplier (under $30,000 of sales a year), you don't charge them."
 msgstr "Vergi yok: küçük tedarikçi olarak (yıllık satış 30.000 $ altında) vergi tahsil etmezsiniz."
 
@@ -7617,7 +7630,7 @@ msgstr "Notlar"
 msgid "Nothing collected yet"
 msgstr "Henüz hiçbir tahsilat yok"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:188
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:223
 msgid "Nothing is published: check the preview, then publish."
 msgstr "Hiçbir şey yayınlanmaz: önizlemeyi kontrol edin, sonra yayınlayın."
 
@@ -7630,7 +7643,7 @@ msgstr "Şimdilik yapılacak bir şey yok."
 msgid "Nothing to show yet"
 msgstr "Henüz gösterilecek bir şey yok"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:158
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:119
 msgid "Nothing usable was found on this page."
 msgstr "Bu sayfada kullanılabilir bir şey bulunamadı."
 
@@ -7950,8 +7963,8 @@ msgid "Option {i}"
 msgstr "Seçenek {i}"
 
 #: src/components/routes/event/Settings/cards/LocationCard.tsx:170
-#: src/components/routes/welcome/index.tsx:401
-#: src/components/routes/welcome/index.tsx:412
+#: src/components/routes/welcome/index.tsx:506
+#: src/components/routes/welcome/index.tsx:517
 msgid "Optional"
 msgstr "İsteğe bağlı"
 
@@ -8513,6 +8526,10 @@ msgstr "Geçmiş"
 msgid "Past Events"
 msgstr "Geçmiş Etkinlikler"
 
+#: src/components/routes/welcome/index.tsx:309
+msgid "Paste the address of your website, your Instagram or your old ticketing page. We'll use it to fill in your page."
+msgstr "Web sitenizin, Instagram hesabınızın veya eski bilet sayfanızın adresini yapıştırın. Sayfanızı doldurmak için bunu kullanacağız."
+
 #: src/components/common/WidgetEditor/index.tsx:297
 msgid "Paste this where you want the widget to appear."
 msgstr "Widget'ın görünmesini istediğiniz yere bunu yapıştırın."
@@ -8735,7 +8752,7 @@ msgstr "Telefon"
 msgid "Photo and video consent"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:221
+#: src/components/routes/welcome/index.tsx:227
 msgid "Pick as many as you like."
 msgstr "Birden fazla seçebilirsiniz."
 
@@ -8833,7 +8850,7 @@ msgstr "Lütfen bir resme işaret eden geçerli bir resim URL'si girin."
 msgid "Please enter a valid URL"
 msgstr "Lütfen geçerli bir URL girin"
 
-#: src/components/routes/welcome/index.tsx:70
+#: src/components/routes/welcome/index.tsx:76
 msgid "Please enter the 5-digit code"
 msgstr "Lütfen 5 haneli kodu girin"
 
@@ -8881,7 +8898,7 @@ msgstr "Lütfen tekrar deneyin."
 msgid "Please verify your email address to access all features"
 msgstr "Tüm özelliklere erişmek için lütfen e-posta adresinizi doğrulayın"
 
-#: src/components/routes/welcome/index.tsx:124
+#: src/components/routes/welcome/index.tsx:130
 msgid "Please wait before requesting another code"
 msgstr "Başka bir kod istemeden önce lütfen bekleyin"
 
@@ -8934,7 +8951,7 @@ msgstr "Birden fazla bilet türünde stok paylaşarak aşırı satışı önleyi
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:139
 #: src/components/routes/event/HomepageDesigner/index.tsx:341
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:274
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:438
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:333
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:106
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:212
 msgid "Preview"
@@ -9201,12 +9218,12 @@ msgstr "İl"
 #: src/components/common/StatusToggle/index.tsx:96
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:104
 #: src/components/routes/event/HomepageDesigner/index.tsx:351
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:448
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:343
 msgid "Publish"
 msgstr "Yayınla"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:447
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:342
 msgid "Publish changes"
 msgstr "Değişiklikleri yayınla"
 
@@ -9225,7 +9242,7 @@ msgctxt "waitlist filter"
 msgid "Purchased"
 msgstr "Satın alınan"
 
-#: src/components/routes/welcome/index.tsx:392
+#: src/components/routes/welcome/index.tsx:497
 msgid "Put free or paid tickets on sale in a few minutes."
 msgstr "Ücretsiz veya ücretli biletleri birkaç dakikada satışa çıkarın."
 
@@ -9241,12 +9258,12 @@ msgstr "QR Kod"
 msgid "QR Code Check-in"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:287
+#: src/components/routes/welcome/index.tsx:392
 msgctxt "Quebec sales tax"
 msgid "QST"
 msgstr "QST"
 
-#: src/components/routes/welcome/index.tsx:356
+#: src/components/routes/welcome/index.tsx:461
 msgid "QST number"
 msgstr "QST numarası"
 
@@ -9369,7 +9386,8 @@ msgstr "Mesajı oku"
 msgid "Reading"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:152
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:202
+#: src/components/routes/welcome/index.tsx:345
 msgid "Reading the page… This can take up to 30 seconds."
 msgstr "Sayfa okunuyor… Bu 30 saniye kadar sürebilir."
 
@@ -9414,7 +9432,7 @@ msgstr "Bilet platformundan haberler al"
 msgid "Receive product updates from {0}."
 msgstr "{0}'ten ürün güncellemeleri alın."
 
-#: src/components/routes/welcome/index.tsx:414
+#: src/components/routes/welcome/index.tsx:519
 msgid "Receive ticket payments directly in the Stripe account."
 msgstr "Bilet ödemelerini doğrudan Stripe hesabına alın."
 
@@ -9457,7 +9475,7 @@ msgstr "Alıcılar mesaj gönderildikten sonra görüntülenebilir"
 
 #: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx:46
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:95
-#: src/components/routes/welcome/index.tsx:390
+#: src/components/routes/welcome/index.tsx:495
 msgid "Recommended"
 msgstr "Önerilen"
 
@@ -9672,7 +9690,7 @@ msgstr "Gerekli"
 msgid "Required gear"
 msgstr "Zorunlu ekipman"
 
-#: src/components/routes/welcome/index.tsx:183
+#: src/components/routes/welcome/index.tsx:189
 msgid "Resend code"
 msgstr "Kodu yeniden gönder"
 
@@ -9693,7 +9711,7 @@ msgstr "E-postayı yeniden gönder"
 msgid "Resend email confirmation"
 msgstr "E-posta onayını tekrar gönder"
 
-#: src/components/routes/welcome/index.tsx:182
+#: src/components/routes/welcome/index.tsx:188
 msgid "Resend in {resendCooldown}s"
 msgstr "{resendCooldown}s içinde yeniden gönder"
 
@@ -10673,7 +10691,7 @@ msgstr "Seçeneklerin üstünde gösterilir. «Bir seçenek seçin» için boş 
 msgid "Shown at checkout."
 msgstr "Ödeme sırasında gösterilir."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:365
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:260
 msgid "Shown at the bottom of the page"
 msgstr "Sayfanın altında gösterilir"
 
@@ -10699,7 +10717,7 @@ msgstr "Sipariş ödendiğinde sipariş özetinde ve biletlerde gösterilir."
 msgid "Shown on the payment page, the order summary and the confirmation email (e.g. where to send the Interac e-Transfer, the deadline)."
 msgstr "Ödeme sayfasında, sipariş özetinde ve onay e-postasında gösterilir (örn. Interac havalesinin nereye gönderileceği, son tarih)."
 
-#: src/components/routes/welcome/index.tsx:359
+#: src/components/routes/welcome/index.tsx:464
 msgid "Shown on your invoices and receipts. You can add them later."
 msgstr "Faturalarınızda ve makbuzlarınızda gösterilir. Daha sonra ekleyebilirsiniz."
 
@@ -10794,8 +10812,10 @@ msgstr "Tek satır metin kutusu"
 msgid "Skip"
 msgstr "Atla"
 
-#: src/components/routes/welcome/index.tsx:247
-#: src/components/routes/welcome/index.tsx:366
+#: src/components/routes/welcome/index.tsx:253
+#: src/components/routes/welcome/index.tsx:328
+#: src/components/routes/welcome/index.tsx:350
+#: src/components/routes/welcome/index.tsx:471
 msgid "Skip this step"
 msgstr "Bu adımı atla"
 
@@ -10824,8 +10844,8 @@ msgstr "Sonradan ayırt edebilmek için, örneğin dehorsqc.com sitesi"
 msgid "Social"
 msgstr "Sosyal"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:352
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:84
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:247
 #: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx:97
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:60
 msgid "Social networks"
@@ -10859,7 +10879,7 @@ msgid "Some automatic info is badly written. Please correct it and try again."
 msgstr "Otomatik bilgilerden biri hatalı yazılmış. Düzeltip tekrar deneyin."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:220
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:319
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:214
 msgid "Some changes could not be published. Please try again."
 msgstr "Bazı değişiklikler yayınlanamadı. Lütfen tekrar deneyin."
 
@@ -10905,9 +10925,10 @@ msgstr "Bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin."
 #: src/components/routes/my-tickets/index.tsx:493
 #: src/components/routes/profile/ManageProfile/index.tsx:127
 #: src/components/routes/profile/ManageProfile/index.tsx:141
-#: src/components/routes/welcome/index.tsx:213
-#: src/components/routes/welcome/index.tsx:325
-#: src/components/routes/welcome/index.tsx:482
+#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:299
+#: src/components/routes/welcome/index.tsx:430
+#: src/components/routes/welcome/index.tsx:587
 #: src/mutations/useSwitchAccount.ts:24
 msgid "Something went wrong. Please try again."
 msgstr "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
@@ -11037,11 +11058,11 @@ msgid "Status"
 msgstr "Durum"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Stay"
 msgstr "Kal"
 
-#: src/components/routes/welcome/index.tsx:41
+#: src/components/routes/welcome/index.tsx:47
 msgid "Step {step} of {STEPS}"
 msgstr "Adım {step} / {STEPS}"
 
@@ -11528,7 +11549,7 @@ msgstr "Aradığınız check-in listesi mevcut değil."
 msgid "The club"
 msgstr "Kulüp"
 
-#: src/components/routes/welcome/index.tsx:188
+#: src/components/routes/welcome/index.tsx:194
 msgid "The code will expire in 10 minutes. Check your spam folder if you don't see the email."
 msgstr "Kod 10 dakika içinde sona erecek. E-postayı görmüyorsanız spam klasörünüzü kontrol edin."
 
@@ -11684,7 +11705,7 @@ msgstr ""
 msgid "The page and the events are visible again."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:23
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "Sayfa okunamadı. Adresi kontrol edip tekrar deneyin."
 
@@ -11776,7 +11797,7 @@ msgstr "Test gönderilemedi. Tekrar deneyin."
 msgid "The text of the button under the tickets"
 msgstr "Biletlerin altındaki düğmenin metni"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:171
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:137
 msgid "The texts are taken as is from the page."
 msgstr "Metinler sayfadan olduğu gibi alındı."
 
@@ -11987,7 +12008,11 @@ msgstr "Bu organizatör profili henüz yayınlanmadı"
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "Bu organizatörün satışları doğrudan kendi Stripe hesabına ödenir ({ownAccountId})."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:167
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
+msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
+msgstr "Bu sayfa {platform} üzerinde barındırılıyor: platformun logosu, rengi ve sosyal ağları dahil edilmedi. Eksik kalanları kendiniz tamamlayın."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:133
 msgid "This page shows little text: complete what is missing yourself."
 msgstr "Bu sayfada az metin var: eksikleri kendiniz tamamlayın."
 
@@ -12455,6 +12480,10 @@ msgstr "Güven ve güvenlik"
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
 msgid "Try again"
 msgstr "Tekrar dene"
+
+#: src/components/routes/welcome/index.tsx:320
+msgid "Try another address"
+msgstr "Başka bir adres dene"
 
 #: src/components/routes/auth/Login/index.tsx:145
 #: src/components/routes/my-tickets/index.tsx:512
@@ -12942,7 +12971,7 @@ msgstr "Platform ücretleri için KDV uygulaması: AB KDV'ye kayıtlı işletmel
 msgid "VAT validation service temporarily unavailable"
 msgstr "KDV doğrulama hizmeti geçici olarak kullanılamıyor"
 
-#: src/components/routes/welcome/index.tsx:143
+#: src/components/routes/welcome/index.tsx:149
 msgid "Verification code"
 msgstr "Doğrulama kodu"
 
@@ -12951,7 +12980,7 @@ msgstr "Doğrulama kodu"
 msgid "Verified"
 msgstr "Doğrulandı"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verify Email"
 msgstr "E-postayı Doğrula"
 
@@ -12959,7 +12988,7 @@ msgstr "E-postayı Doğrula"
 msgid "Verify your email"
 msgstr "E-postanızı doğrulayın"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verifying..."
 msgstr "Doğrulanıyor..."
 
@@ -13026,7 +13055,7 @@ msgstr "Mesajı görüntüle"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:272
 #: src/components/layouts/OrganizerLayout/index.tsx:319
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:430
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:325
 msgid "View my page"
 msgstr "Sayfamı görüntüle"
 
@@ -13214,7 +13243,7 @@ msgstr "400px x 400px boyutlarını ve maksimum 30MB dosya boyutunu öneriyoruz"
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "Biletleme platformundaki etkinlikleri Dehors'un sosyal medyasında paylaşıyoruz. Etkinliğin doğrudan hareket eden insanlardan oluşan bir topluluğun önüne çıkar."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:122
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:172
 msgid "We suggest a name, a text, a color, images and your networks. You choose what to keep."
 msgstr "Bir ad, bir metin, bir renk, görseller ve sosyal ağlarınızı öneriyoruz. Neyi tutacağınızı siz seçersiniz."
 
@@ -13246,7 +13275,7 @@ msgstr "KDV numaranızı arka planda doğrulayacağız. Herhangi bir sorun olurs
 msgid "We're processing your order. Please wait..."
 msgstr "Siparişinizi işliyoruz. Lütfen bekleyin..."
 
-#: src/components/routes/welcome/index.tsx:134
+#: src/components/routes/welcome/index.tsx:140
 msgid "We've sent a 5-digit verification code to:"
 msgstr "5 haneli doğrulama kodunu şuraya gönderdik:"
 
@@ -13328,7 +13357,7 @@ msgstr "Tekrar hoş geldiniz, {firstName}!"
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
 msgstr "Tekrar hoş geldiniz, {firstName}! {0} tarafında olanlar burada."
 
-#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:225
 msgid "Welcome, {0}!"
 msgstr "Hoş geldiniz, {0}!"
 
@@ -13353,7 +13382,7 @@ msgstr ""
 msgid "What is a Category?"
 msgstr "Kategori nedir?"
 
-#: src/components/routes/welcome/index.tsx:220
+#: src/components/routes/welcome/index.tsx:226
 msgid "What kinds of events do you organize?"
 msgstr "Ne tür etkinlikler düzenliyorsunuz?"
 
@@ -13547,11 +13576,11 @@ msgstr "Nerede"
 msgid "Where the money from your sales goes."
 msgstr "Satışlarınızın parası nereye gidiyor."
 
-#: src/components/routes/welcome/index.tsx:385
+#: src/components/routes/welcome/index.tsx:490
 msgid "Where to start? The rest can wait."
 msgstr "Nereden başlamalı? Gerisi bekleyebilir."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:353
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:248
 msgid "Which ones to show and in what order"
 msgstr "Hangilerinin hangi sırayla gösterileceği"
 
@@ -13618,7 +13647,7 @@ msgstr "Örnek bir alıcı ve son etkinliğinizle. Bu e-postayı siz alırsını
 msgid "Without a link, the address opens in Google Maps."
 msgstr "Bağlantı yoksa adres Google Haritalar'da açılır."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:166
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:132
 msgid "Without an account, Instagram only shows the profile picture and the bio: complete the text yourself."
 msgstr "Hesap olmadan Instagram yalnızca profil fotoğrafını ve biyografiyi gösterir: metni kendiniz tamamlayın."
 
@@ -13700,7 +13729,7 @@ msgstr "Evet"
 msgid "Yes - I have a valid EU VAT registration number"
 msgstr "Evet - Geçerli bir AB KDV kayıt numaram var"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "Yes, both"
 msgstr "Evet, ikisi de"
 
@@ -13992,7 +14021,11 @@ msgstr "Organizasyonunuzun bilgileri, ödemeleriniz, vergileriniz ve ekibiniz."
 msgid "Your own answer"
 msgstr "Kendi yanıtınız"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:317
+#: src/components/routes/welcome/index.tsx:296
+msgid "Your page is filled in. You can change everything in My page."
+msgstr "Sayfanız dolduruldu. Her şeyi Sayfam bölümünden değiştirebilirsiniz."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
 msgid "Your page is published"
 msgstr "Sayfanız yayınlandı"
 
@@ -14053,7 +14086,7 @@ msgstr ""
 msgid "Your ticketing in 4 steps"
 msgstr "4 adımda biletleme sayfan"
 
-#: src/components/routes/welcome/index.tsx:384
+#: src/components/routes/welcome/index.tsx:489
 msgid "Your ticketing is ready!"
 msgstr "Bilet satışınız hazır!"
 
@@ -14074,7 +14107,7 @@ msgid "Your tickets have been confirmed."
 msgstr "Biletleriniz onaylandı."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:99
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:115
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:108
 msgid "Your unpublished changes will be lost."
 msgstr "Yayınlanmamış değişiklikleriniz kaybolacak."
 
@@ -14094,7 +14127,8 @@ msgstr "Bekleme listesi teklifinizin süresi doldu ve siparişinizi tamamlayamad
 msgid "your-website.com"
 msgstr "siteniz.com"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:134
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:184
+#: src/components/routes/welcome/index.tsx:337
 msgid "yourclub.com"
 msgstr "kulubunuz.com"
 

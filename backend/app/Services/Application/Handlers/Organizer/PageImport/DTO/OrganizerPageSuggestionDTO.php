@@ -9,8 +9,10 @@ class OrganizerPageSuggestionDTO extends BaseDataObject
 {
     public function __construct(
         public readonly string  $source_url,
-        /** 'website' or 'instagram' */
+        /** 'website', 'instagram' or 'platform' */
         public readonly string  $source,
+        /** The ticketing service or network hosting the page; what is its own was left out. */
+        public readonly ?string $platform,
         public readonly ?string $name,
         public readonly ?string $description,
         public readonly ?string $accent,

@@ -1,5 +1,6 @@
 import {IdParam, Organizer, OrganizerSettings, SocialMediaLayoutEntry} from "../../../../types.ts";
 import {visibleSocialHandles} from "../../../../utilites/socialLinks.ts";
+import {OrganizerPageSuggestion} from "../../../../api/organizer.client.ts";
 
 // « Ma page » edits a local draft; nothing reaches the public page before « Publier les changements ».
 
@@ -150,3 +151,51 @@ export const draftSocialLayout = (links: DraftSocialLink[]): SocialMediaLayoutEn
 
 export const draftSocialHandles = (links: DraftSocialLink[]): Record<string, string> =>
     Object.fromEntries(filledLinks(links).map(({platform, handle}) => [platform, handle]));
+
+export type ImportPart = 'name' | 'description' | 'accent' | 'logo' | 'cover' | 'social' | 'faqs';
+
+// The server sends images as data: URLs; they become files, like the ones an organizer drops.
+export const suggestionImage = async (dataUrl: string, name: string): Promise<Extract<DraftImage, { kind: 'new' }>> => {
+    const blob = await (await fetch(dataUrl)).blob();
+    const file = new File([blob], `${name}.${blob.type.split('/')[1] ?? 'png'}`, {type: blob.type});
+    return {kind: 'new', file, url: URL.createObjectURL(file)};
+};
+
+// What the organizer keeps from a suggestion, images aside.
+export const mergeSuggestion = (
+    draft: HomepageDraft,
+    suggestion: OrganizerPageSuggestion,
+    parts: ImportPart[],
+): HomepageDraft => {
+    const next = {...draft};
+    if (parts.includes('name') && suggestion.name) {
+        next.name = suggestion.name;
+    }
+    if (parts.includes('description') && suggestion.description) {
+        next.description = suggestion.description;
+    }
+    if (parts.includes('accent') && suggestion.accent) {
+        next.accent = suggestion.accent;
+    }
+    if (parts.includes('social')) {
+        // Accounts already filled in stay; the others are added, visible.
+        const links = draft.socialLinks.map(link => {
+            const found = suggestion.social_links.find(s => s.platform === link.platform);
+            return !link.handle.trim() && found ? {...link, handle: found.handle, visible: true} : link;
+        });
+        suggestion.social_links
+            .filter(found => !links.some(link => link.platform === found.platform))
+            .forEach(found => links.push({platform: found.platform, handle: found.handle, visible: true}));
+        next.socialLinks = links;
+    }
+    if (parts.includes('faqs')) {
+        const asked = new Set(draft.faqs.map(faq => faq.question.trim().toLowerCase()));
+        next.faqs = [
+            ...draft.faqs,
+            ...suggestion.faqs
+                .filter(faq => !asked.has(faq.question.trim().toLowerCase()))
+                .map(faq => ({key: newFaqKey(), question: faq.question, answer: faq.answer})),
+        ];
+    }
+    return next;
+};

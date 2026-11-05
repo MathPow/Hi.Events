@@ -133,7 +133,7 @@ msgid "{availableCount} of {totalCount} available"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:367
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:464
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
 msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
 msgstr "{changeCount, plural, one {# изменение ещё не опубликовано} few {# изменения ещё не опубликованы} many {# изменений ещё не опубликовано} other {# изменения ещё не опубликованы}}"
 
@@ -189,11 +189,11 @@ msgstr "{doneCount, plural, one {# шаг из {total}} few {# шага из {to
 msgid "{eventCount} events"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:360
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:255
 msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
 msgstr "{faqCount, plural, =0 {Вопросов пока нет} one {# вопрос · внизу страницы} few {# вопроса · внизу страницы} many {# вопросов · внизу страницы} other {# вопроса · внизу страницы}}"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:101
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:104
 msgid "{faqCount} questions"
 msgstr "{faqCount} вопросов"
 
@@ -512,7 +512,7 @@ msgstr ""
 msgid "A new PIN signs out the phones already open."
 msgstr "Новый PIN-код завершает сеанс на уже открытых телефонах."
 
-#: src/components/routes/welcome/index.tsx:117
+#: src/components/routes/welcome/index.tsx:123
 msgid "A new verification code has been sent to your email"
 msgstr ""
 
@@ -596,8 +596,8 @@ msgstr "Брать комиссии на себя"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:237
 #: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx:67
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:78
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:338
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:233
 msgid "Accent color"
 msgstr "Акцентный цвет"
 
@@ -652,7 +652,7 @@ msgstr ""
 msgid "Account configuration updated successfully"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:383
+#: src/components/routes/welcome/index.tsx:488
 msgid "Account created!"
 msgstr ""
 
@@ -769,7 +769,7 @@ msgstr ""
 msgid "Add a first block from the list or with the button below."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:403
+#: src/components/routes/welcome/index.tsx:508
 msgid "Add a logo and colors that match the organization."
 msgstr ""
 
@@ -907,7 +907,7 @@ msgstr ""
 msgid "Add to Google Wallet"
 msgstr "Добавить в Google Кошелёк"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:181
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:216
 msgid "Add to my draft"
 msgstr "Добавить в мой черновик"
 
@@ -938,7 +938,7 @@ msgstr ""
 msgid "Added to the price of the products you choose, in all your events."
 msgstr "Добавляются к цене выбранных товаров во всех ваших мероприятиях."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:163
 msgid "Added to your draft. Check the preview, then publish."
 msgstr "Добавлено в черновик. Проверьте предпросмотр, затем опубликуйте."
 
@@ -977,9 +977,13 @@ msgstr ""
 msgid "Address Line 2"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:135
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
 msgid "Address of your website or Instagram"
 msgstr "Адрес вашего сайта или Instagram"
+
+#: src/components/routes/welcome/index.tsx:338
+msgid "Address of your website, Instagram or ticketing page"
+msgstr ""
 
 #: src/components/layouts/Admin/index.tsx:13
 #: src/components/modals/EditUserModal/index.tsx:49
@@ -1208,6 +1212,10 @@ msgstr "Почти распродано"
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr ""
 
+#: src/components/routes/welcome/index.tsx:307
+msgid "Already have a page somewhere?"
+msgstr ""
+
 #: src/components/routes/auth/Register/index.tsx:125
 msgid "Already have an account? <0>{0}</0>"
 msgstr ""
@@ -1296,7 +1304,8 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:146
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:196
+#: src/components/routes/welcome/index.tsx:353
 msgid "Analyze"
 msgstr "Анализировать"
 
@@ -1450,8 +1459,8 @@ msgstr ""
 msgid "Archiving hides it from the public (can be restored). Deleting erases everything, for good."
 msgstr "Архивация скрывает его от публики (можно восстановить). Удаление стирает всё навсегда."
 
-#: src/components/routes/welcome/index.tsx:333
-#: src/components/routes/welcome/index.tsx:336
+#: src/components/routes/welcome/index.tsx:438
+#: src/components/routes/welcome/index.tsx:441
 msgid "Are you registered for GST and QST?"
 msgstr "Вы зарегистрированы для GST и QST?"
 
@@ -2116,8 +2125,8 @@ msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:238
 #: src/components/routes/event/HomepageDesigner/index.tsx:239
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:339
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:340
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:234
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:235
 msgid "Buttons and highlighted elements"
 msgstr "Кнопки и выделенные элементы"
 
@@ -2226,8 +2235,8 @@ msgstr ""
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:190
 #: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:86
 #: src/components/routes/organizer/Messages/ReplyModal.tsx:109
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:473
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:220
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:368
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:51
@@ -2378,7 +2387,7 @@ msgid "Change waitlist settings"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:321
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:418
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:313
 msgid "Changes appear on the right."
 msgstr "Изменения отображаются справа."
 
@@ -2422,7 +2431,7 @@ msgid "Check out this event!"
 msgstr ""
 
 #: src/components/routes/auth/ForgotPassword/index.tsx:42
-#: src/components/routes/welcome/index.tsx:133
+#: src/components/routes/welcome/index.tsx:139
 msgid "Check your email"
 msgstr ""
 
@@ -2715,7 +2724,7 @@ msgstr "Комиссии"
 msgid "Communication"
 msgstr "Общение"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:244
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:195
 msgid "Complete or delete the unfinished questions before publishing."
 msgstr "Перед публикацией заполните или удалите незавершённые вопросы."
 
@@ -2868,7 +2877,7 @@ msgid "Congratulations! Your event is now visible to the public."
 msgstr ""
 
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:95
-#: src/components/routes/welcome/index.tsx:417
+#: src/components/routes/welcome/index.tsx:522
 msgid "Connect"
 msgstr ""
 
@@ -2878,7 +2887,7 @@ msgstr ""
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:444
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:133
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:139
-#: src/components/routes/welcome/index.tsx:413
+#: src/components/routes/welcome/index.tsx:518
 msgid "Connect Stripe"
 msgstr ""
 
@@ -2944,8 +2953,8 @@ msgstr ""
 #: src/components/common/WidgetEditor/index.tsx:220
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:115
 #: src/components/routes/product-widget/SelectProducts/index.tsx:433
-#: src/components/routes/welcome/index.tsx:250
-#: src/components/routes/welcome/index.tsx:369
+#: src/components/routes/welcome/index.tsx:256
+#: src/components/routes/welcome/index.tsx:474
 msgid "Continue"
 msgstr ""
 
@@ -3142,7 +3151,7 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:83
 msgid "Cover image"
 msgstr "Обложка"
 
@@ -3172,7 +3181,7 @@ msgstr ""
 msgid "Create a custom widget to sell tickets on your site."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:391
+#: src/components/routes/welcome/index.tsx:496
 msgid "Create a first event"
 msgstr ""
 
@@ -3214,7 +3223,7 @@ msgstr ""
 
 #: src/components/modals/CreateEventModal/index.tsx:204
 #: src/components/modals/CreateEventModal/index.tsx:230
-#: src/components/routes/welcome/index.tsx:396
+#: src/components/routes/welcome/index.tsx:501
 msgid "Create an event"
 msgstr ""
 
@@ -3433,7 +3442,7 @@ msgstr "Клиент получит email с подтверждением воз
 #: src/components/common/CookieConsentBanner/index.tsx:182
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:88
-#: src/components/routes/welcome/index.tsx:407
+#: src/components/routes/welcome/index.tsx:512
 msgid "Customize"
 msgstr ""
 
@@ -3451,11 +3460,11 @@ msgstr "Настроить страницу"
 msgid "Customize the questions asked during checkout to gather important information from your attendees."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:402
+#: src/components/routes/welcome/index.tsx:507
 msgid "Customize the ticketing"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:417
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:312
 msgid "Customize your public page."
 msgstr "Настройте свою публичную страницу."
 
@@ -3733,7 +3742,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:170
+#: src/components/routes/welcome/index.tsx:176
 msgid "Didn't receive the code?"
 msgstr ""
 
@@ -3797,7 +3806,7 @@ msgstr "Вид"
 msgid "Display and options"
 msgstr "Отображение и параметры"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:354
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
 msgid "Display and order"
 msgstr "Отображение и порядок"
 
@@ -4328,7 +4337,7 @@ msgstr ""
 msgid "Email Verification Required"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:98
+#: src/components/routes/welcome/index.tsx:104
 msgid "Email verified successfully!"
 msgstr ""
 
@@ -4757,7 +4766,7 @@ msgid "Everyone"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:371
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:468
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:363
 msgid "Everything is published"
 msgstr "Всё опубликовано"
 
@@ -5018,7 +5027,7 @@ msgstr "Не удалось повторно отправить билет"
 msgid "Failed to resend ticket email"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:126
+#: src/components/routes/welcome/index.tsx:132
 msgid "Failed to resend verification code"
 msgstr ""
 
@@ -5120,7 +5129,7 @@ msgstr ""
 msgid "Failed to upload image. Please try again."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:103
+#: src/components/routes/welcome/index.tsx:109
 msgid "Failed to verify email"
 msgstr ""
 
@@ -5128,8 +5137,8 @@ msgstr ""
 msgid "Fair market value of what the buyer receives."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:85
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:254
 msgid "FAQ"
 msgstr ""
 
@@ -5201,9 +5210,13 @@ msgstr ""
 msgid "File is too large. Maximum size is 30MB."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:120
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:170
 msgid "Fill from your website or Instagram"
 msgstr "Заполнить с вашего сайта или Instagram"
+
+#: src/components/routes/welcome/index.tsx:324
+msgid "Fill in my page"
+msgstr ""
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:307
 msgid "Filled in on their own at registration."
@@ -5549,16 +5562,16 @@ msgstr ""
 msgid "Gross Sales"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:286
+#: src/components/routes/welcome/index.tsx:391
 msgctxt "Canadian goods and services tax"
 msgid "GST"
 msgstr "GST"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "GST 5% and QST 9.975% will be added to the price of your tickets."
 msgstr "GST 5% и QST 9,975% будут добавлены к цене ваших билетов."
 
-#: src/components/routes/welcome/index.tsx:354
+#: src/components/routes/welcome/index.tsx:459
 msgid "GST number"
 msgstr "Номер GST"
 
@@ -5816,7 +5829,7 @@ msgstr ""
 msgid "I confirm this is a transactional message related to this event"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "I don't know"
 msgstr "Не знаю"
 
@@ -5887,7 +5900,7 @@ msgid "images"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:233
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Images"
 msgstr ""
 
@@ -5985,7 +5998,7 @@ msgid "Info added automatically"
 msgstr "Данные, добавляемые автоматически"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:244
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:345
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:240
 msgid "Info and description"
 msgstr "Информация и описание"
 
@@ -6030,7 +6043,7 @@ msgstr ""
 msgid "Interac e-Transfer, cheque or cash. You confirm the payment by hand."
 msgstr "Перевод Interac, чек или наличные. Ты подтверждаешь оплату вручную."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:77
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
 msgid "Introduction"
 msgstr "Описание"
 
@@ -6136,7 +6149,7 @@ msgstr "Выдавать официальные квитанции о пожер
 msgid "Issue official donation receipts for the charitable portion of an order."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:334
+#: src/components/routes/welcome/index.tsx:439
 msgid "It decides whether taxes are added to the price of your tickets."
 msgstr "От этого зависит, добавляются ли налоги к цене билетов."
 
@@ -6370,7 +6383,7 @@ msgstr ""
 msgid "Last Used"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:424
+#: src/components/routes/welcome/index.tsx:529
 msgid "Later, go to the dashboard"
 msgstr ""
 
@@ -6388,7 +6401,7 @@ msgid "Learn more about Stripe"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Leave"
 msgstr "Уйти"
 
@@ -6413,7 +6426,7 @@ msgid "Leave quantity empty for unlimited stock"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:98
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:114
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:107
 msgid "Leave without publishing?"
 msgstr "Уйти без публикации?"
 
@@ -6588,15 +6601,15 @@ msgid "Logging in"
 msgstr ""
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx:162
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
 msgid "Logo"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover"
 msgstr "Логотип и обложка"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover image"
 msgstr "Логотип и обложка"
 
@@ -6955,7 +6968,7 @@ msgid "My other app"
 msgstr ""
 
 #: src/components/layouts/OrganizerLayout/index.tsx:171
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:415
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:310
 msgid "My page"
 msgstr "Моя страница"
 
@@ -6992,7 +7005,7 @@ msgstr ""
 #: src/components/routes/admin/Configurations/index.tsx:219
 #: src/components/routes/admin/PlatformRevenue/index.tsx:209
 #: src/components/routes/event/HomepageDesigner/index.tsx:280
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:76
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
 msgid "Name"
 msgstr ""
 
@@ -7001,12 +7014,12 @@ msgid "Name and email of each attendee, or the buyer's for everyone."
 msgstr "Имя и e-mail каждого участника или данные покупателя для всех."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:246
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:347
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:242
 msgid "Name and introduction"
 msgstr "Название и представление"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:245
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:346
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:241
 msgid "Name and introduction text"
 msgstr "Название и текст представления"
 
@@ -7016,7 +7029,7 @@ msgstr "Название и текст представления"
 #: src/components/routes/admin/Configurations/index.tsx:168
 #: src/components/routes/event/HomepageDesigner/index.tsx:159
 #: src/components/routes/event/HomepageDesigner/index.tsx:284
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:200
 #: src/components/routes/organizer/OrganizerHomepageDesigner/InfoSection.tsx:26
 msgid "Name is required"
 msgstr ""
@@ -7170,7 +7183,7 @@ msgstr "Nice club"
 
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:305
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:332
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No"
 msgstr ""
 
@@ -7489,7 +7502,7 @@ msgstr ""
 msgid "No taxes collected during this period."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "No taxes for now. You can add them at any time in the settings, under Taxes and receipts."
 msgstr "Пока без налогов. Их можно добавить в любое время в настройках, в разделе «Налоги и квитанции»."
 
@@ -7498,7 +7511,7 @@ msgstr "Пока без налогов. Их можно добавить в лю
 msgid "No Taxes or Fees have been added."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No taxes: as a small supplier (under $30,000 of sales a year), you don't charge them."
 msgstr "Без налогов: как мелкий поставщик (продажи менее 30 000 $ в год) вы их не взимаете."
 
@@ -7616,7 +7629,7 @@ msgstr ""
 msgid "Nothing collected yet"
 msgstr "Пока ничего не получено"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:188
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:223
 msgid "Nothing is published: check the preview, then publish."
 msgstr "Ничего не публикуется: проверьте предпросмотр, затем опубликуйте."
 
@@ -7629,7 +7642,7 @@ msgstr "Пока ничего не требует внимания."
 msgid "Nothing to show yet"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:158
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:119
 msgid "Nothing usable was found on this page."
 msgstr "На этой странице не найдено ничего полезного."
 
@@ -7949,8 +7962,8 @@ msgid "Option {i}"
 msgstr ""
 
 #: src/components/routes/event/Settings/cards/LocationCard.tsx:170
-#: src/components/routes/welcome/index.tsx:401
-#: src/components/routes/welcome/index.tsx:412
+#: src/components/routes/welcome/index.tsx:506
+#: src/components/routes/welcome/index.tsx:517
 msgid "Optional"
 msgstr ""
 
@@ -8512,6 +8525,10 @@ msgstr ""
 msgid "Past Events"
 msgstr ""
 
+#: src/components/routes/welcome/index.tsx:309
+msgid "Paste the address of your website, your Instagram or your old ticketing page. We'll use it to fill in your page."
+msgstr ""
+
 #: src/components/common/WidgetEditor/index.tsx:297
 msgid "Paste this where you want the widget to appear."
 msgstr ""
@@ -8734,7 +8751,7 @@ msgstr ""
 msgid "Photo and video consent"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:221
+#: src/components/routes/welcome/index.tsx:227
 msgid "Pick as many as you like."
 msgstr ""
 
@@ -8832,7 +8849,7 @@ msgstr ""
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:70
+#: src/components/routes/welcome/index.tsx:76
 msgid "Please enter the 5-digit code"
 msgstr ""
 
@@ -8880,7 +8897,7 @@ msgstr ""
 msgid "Please verify your email address to access all features"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:124
+#: src/components/routes/welcome/index.tsx:130
 msgid "Please wait before requesting another code"
 msgstr ""
 
@@ -8933,7 +8950,7 @@ msgstr ""
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:139
 #: src/components/routes/event/HomepageDesigner/index.tsx:341
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:274
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:438
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:333
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:106
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:212
 msgid "Preview"
@@ -9198,12 +9215,12 @@ msgstr "Регион"
 #: src/components/common/StatusToggle/index.tsx:96
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:104
 #: src/components/routes/event/HomepageDesigner/index.tsx:351
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:448
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:343
 msgid "Publish"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:447
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:342
 msgid "Publish changes"
 msgstr "Опубликовать изменения"
 
@@ -9222,7 +9239,7 @@ msgctxt "waitlist filter"
 msgid "Purchased"
 msgstr "Купленные"
 
-#: src/components/routes/welcome/index.tsx:392
+#: src/components/routes/welcome/index.tsx:497
 msgid "Put free or paid tickets on sale in a few minutes."
 msgstr ""
 
@@ -9238,12 +9255,12 @@ msgstr ""
 msgid "QR Code Check-in"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:287
+#: src/components/routes/welcome/index.tsx:392
 msgctxt "Quebec sales tax"
 msgid "QST"
 msgstr "QST"
 
-#: src/components/routes/welcome/index.tsx:356
+#: src/components/routes/welcome/index.tsx:461
 msgid "QST number"
 msgstr "Номер QST"
 
@@ -9366,7 +9383,8 @@ msgstr "Прочитать сообщение"
 msgid "Reading"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:152
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:202
+#: src/components/routes/welcome/index.tsx:345
 msgid "Reading the page… This can take up to 30 seconds."
 msgstr "Чтение страницы… Это может занять до 30 секунд."
 
@@ -9411,7 +9429,7 @@ msgstr ""
 msgid "Receive product updates from {0}."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:414
+#: src/components/routes/welcome/index.tsx:519
 msgid "Receive ticket payments directly in the Stripe account."
 msgstr ""
 
@@ -9454,7 +9472,7 @@ msgstr "Получатели доступны после отправки соо
 
 #: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx:46
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:95
-#: src/components/routes/welcome/index.tsx:390
+#: src/components/routes/welcome/index.tsx:495
 msgid "Recommended"
 msgstr ""
 
@@ -9669,7 +9687,7 @@ msgstr ""
 msgid "Required gear"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:183
+#: src/components/routes/welcome/index.tsx:189
 msgid "Resend code"
 msgstr ""
 
@@ -9690,7 +9708,7 @@ msgstr ""
 msgid "Resend email confirmation"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:182
+#: src/components/routes/welcome/index.tsx:188
 msgid "Resend in {resendCooldown}s"
 msgstr ""
 
@@ -10670,7 +10688,7 @@ msgstr ""
 msgid "Shown at checkout."
 msgstr "Показывается при оплате."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:365
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:260
 msgid "Shown at the bottom of the page"
 msgstr "Показывается внизу страницы"
 
@@ -10696,7 +10714,7 @@ msgstr "Показываются в сводке заказа и в билета
 msgid "Shown on the payment page, the order summary and the confirmation email (e.g. where to send the Interac e-Transfer, the deadline)."
 msgstr "Показываются на странице оплаты, в сводке заказа и в письме-подтверждении (например, куда отправить перевод Interac и до какого срока)."
 
-#: src/components/routes/welcome/index.tsx:359
+#: src/components/routes/welcome/index.tsx:464
 msgid "Shown on your invoices and receipts. You can add them later."
 msgstr "Отображаются в ваших счетах и квитанциях. Их можно добавить позже."
 
@@ -10791,8 +10809,10 @@ msgstr ""
 msgid "Skip"
 msgstr "Пропустить"
 
-#: src/components/routes/welcome/index.tsx:247
-#: src/components/routes/welcome/index.tsx:366
+#: src/components/routes/welcome/index.tsx:253
+#: src/components/routes/welcome/index.tsx:328
+#: src/components/routes/welcome/index.tsx:350
+#: src/components/routes/welcome/index.tsx:471
 msgid "Skip this step"
 msgstr ""
 
@@ -10821,8 +10841,8 @@ msgstr ""
 msgid "Social"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:352
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:84
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:247
 #: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx:97
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:60
 msgid "Social networks"
@@ -10856,7 +10876,7 @@ msgid "Some automatic info is badly written. Please correct it and try again."
 msgstr "Одна из автоматических данных написана неверно. Исправьте её и попробуйте снова."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:220
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:319
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:214
 msgid "Some changes could not be published. Please try again."
 msgstr "Некоторые изменения не удалось опубликовать. Попробуйте ещё раз."
 
@@ -10902,9 +10922,10 @@ msgstr ""
 #: src/components/routes/my-tickets/index.tsx:493
 #: src/components/routes/profile/ManageProfile/index.tsx:127
 #: src/components/routes/profile/ManageProfile/index.tsx:141
-#: src/components/routes/welcome/index.tsx:213
-#: src/components/routes/welcome/index.tsx:325
-#: src/components/routes/welcome/index.tsx:482
+#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:299
+#: src/components/routes/welcome/index.tsx:430
+#: src/components/routes/welcome/index.tsx:587
 #: src/mutations/useSwitchAccount.ts:24
 msgid "Something went wrong. Please try again."
 msgstr ""
@@ -11034,11 +11055,11 @@ msgid "Status"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Stay"
 msgstr "Остаться"
 
-#: src/components/routes/welcome/index.tsx:41
+#: src/components/routes/welcome/index.tsx:47
 msgid "Step {step} of {STEPS}"
 msgstr "Шаг {step} из {STEPS}"
 
@@ -11525,7 +11546,7 @@ msgstr ""
 msgid "The club"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:188
+#: src/components/routes/welcome/index.tsx:194
 msgid "The code will expire in 10 minutes. Check your spam folder if you don't see the email."
 msgstr ""
 
@@ -11681,7 +11702,7 @@ msgstr ""
 msgid "The page and the events are visible again."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:23
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "Не удалось прочитать страницу. Проверьте адрес и попробуйте снова."
 
@@ -11773,7 +11794,7 @@ msgstr "Не удалось отправить тест. Попробуйте с
 msgid "The text of the button under the tickets"
 msgstr "Текст кнопки под билетами"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:171
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:137
 msgid "The texts are taken as is from the page."
 msgstr "Тексты взяты со страницы как есть."
 
@@ -11984,7 +12005,11 @@ msgstr ""
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "Продажи этого организатора поступают напрямую на его собственный аккаунт Stripe ({ownAccountId})."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:167
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
+msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
+msgstr ""
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:133
 msgid "This page shows little text: complete what is missing yourself."
 msgstr "На этой странице мало текста: дополните недостающее сами."
 
@@ -12452,6 +12477,10 @@ msgstr "Доверие и безопасность"
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
 msgid "Try again"
 msgstr "Повторить"
+
+#: src/components/routes/welcome/index.tsx:320
+msgid "Try another address"
+msgstr ""
 
 #: src/components/routes/auth/Login/index.tsx:145
 #: src/components/routes/my-tickets/index.tsx:512
@@ -12939,7 +12968,7 @@ msgstr ""
 msgid "VAT validation service temporarily unavailable"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:143
+#: src/components/routes/welcome/index.tsx:149
 msgid "Verification code"
 msgstr ""
 
@@ -12948,7 +12977,7 @@ msgstr ""
 msgid "Verified"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verify Email"
 msgstr ""
 
@@ -12956,7 +12985,7 @@ msgstr ""
 msgid "Verify your email"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verifying..."
 msgstr ""
 
@@ -13023,7 +13052,7 @@ msgstr ""
 
 #: src/components/layouts/OrganizerLayout/index.tsx:272
 #: src/components/layouts/OrganizerLayout/index.tsx:319
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:430
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:325
 msgid "View my page"
 msgstr "Открыть мою страницу"
 
@@ -13211,7 +13240,7 @@ msgstr ""
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:122
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:172
 msgid "We suggest a name, a text, a color, images and your networks. You choose what to keep."
 msgstr "Мы предложим название, текст, цвет, изображения и ваши соцсети. Вы выбираете, что оставить."
 
@@ -13243,7 +13272,7 @@ msgstr ""
 msgid "We're processing your order. Please wait..."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:134
+#: src/components/routes/welcome/index.tsx:140
 msgid "We've sent a 5-digit verification code to:"
 msgstr ""
 
@@ -13325,7 +13354,7 @@ msgstr "С возвращением, {firstName}!"
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
 msgstr "С возвращением, {firstName}! Вот что происходит в {0}."
 
-#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:225
 msgid "Welcome, {0}!"
 msgstr ""
 
@@ -13350,7 +13379,7 @@ msgstr ""
 msgid "What is a Category?"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:220
+#: src/components/routes/welcome/index.tsx:226
 msgid "What kinds of events do you organize?"
 msgstr ""
 
@@ -13544,11 +13573,11 @@ msgstr ""
 msgid "Where the money from your sales goes."
 msgstr "Куда поступают деньги от ваших продаж."
 
-#: src/components/routes/welcome/index.tsx:385
+#: src/components/routes/welcome/index.tsx:490
 msgid "Where to start? The rest can wait."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:353
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:248
 msgid "Which ones to show and in what order"
 msgstr "Какие показывать и в каком порядке"
 
@@ -13615,7 +13644,7 @@ msgstr "С примерным покупателем и вашим послед�
 msgid "Without a link, the address opens in Google Maps."
 msgstr "Без ссылки адрес откроется в Google Картах."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:166
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:132
 msgid "Without an account, Instagram only shows the profile picture and the bio: complete the text yourself."
 msgstr "Без аккаунта Instagram показывает только фото профиля и описание: дополните текст сами."
 
@@ -13697,7 +13726,7 @@ msgstr ""
 msgid "Yes - I have a valid EU VAT registration number"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "Yes, both"
 msgstr "Да, оба"
 
@@ -13989,7 +14018,11 @@ msgstr "Данные вашей организации, ваши платежи,
 msgid "Your own answer"
 msgstr "Ваш ответ"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:317
+#: src/components/routes/welcome/index.tsx:296
+msgid "Your page is filled in. You can change everything in My page."
+msgstr ""
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
 msgid "Your page is published"
 msgstr "Ваша страница опубликована"
 
@@ -14050,7 +14083,7 @@ msgstr ""
 msgid "Your ticketing in 4 steps"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:384
+#: src/components/routes/welcome/index.tsx:489
 msgid "Your ticketing is ready!"
 msgstr ""
 
@@ -14071,7 +14104,7 @@ msgid "Your tickets have been confirmed."
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:99
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:115
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:108
 msgid "Your unpublished changes will be lost."
 msgstr "Неопубликованные изменения будут потеряны."
 
@@ -14091,7 +14124,8 @@ msgstr ""
 msgid "your-website.com"
 msgstr "vash-sait.ru"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:134
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:184
+#: src/components/routes/welcome/index.tsx:337
 msgid "yourclub.com"
 msgstr "vashklub.ru"
 

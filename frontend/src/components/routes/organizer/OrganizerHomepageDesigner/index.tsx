@@ -7,11 +7,6 @@ import {useMediaQuery} from "@mantine/hooks";
 import {modals} from "@mantine/modals";
 import {useGetOrganizer} from "../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerSettings} from "../../../../queries/useGetOrganizerSettings.ts";
-import {useUpdateOrganizer} from "../../../../mutations/useUpdateOrganizer.ts";
-import {useUpdateOrganizerSettings} from "../../../../mutations/useUpdateOrganizerSettings.ts";
-import {useUploadImage} from "../../../../mutations/useUploadImage.ts";
-import {useDeleteImage} from "../../../../mutations/useDeleteImage.ts";
-import {HomepageThemeSettings, OrganizerSettings} from "../../../../types.ts";
 import {organizerHomepageUrl, organizerPreviewPath} from "../../../../utilites/urlHelper.ts";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {queryClient} from "../../../../utilites/queryClient.ts";
@@ -24,10 +19,13 @@ import {
     draftSocialHandles,
     draftSocialLayout,
     HomepageDraft,
-    newFaqKey,
+    ImportPart,
+    mergeSuggestion,
     publishedDraft,
+    suggestionImage,
 } from "./homepageDraft.ts";
-import {ImportFromUrl, ImportPart} from "./ImportFromUrl.tsx";
+import {ImportFromUrl} from "./ImportFromUrl.tsx";
+import {useSaveHomepageDraft} from "./useSaveHomepageDraft.ts";
 import {OrganizerPageSuggestion} from "../../../../api/organizer.client.ts";
 import {DesignerSection, SectionId} from "./DesignerSection.tsx";
 import {ImagesSection} from "./ImagesSection.tsx";
@@ -38,8 +36,6 @@ import {FaqSection} from "./FaqSection.tsx";
 import {PreviewModal, PreviewPanel, PreviewSkeleton} from "./PreviewPanel.tsx";
 import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "./OrganizerHomepageDesigner.module.scss";
-
-const IMAGE_TYPES = {cover: 'ORGANIZER_COVER', logo: 'ORGANIZER_LOGO'} as const;
 
 const revokeNewImages = (draft: HomepageDraft | null) => [draft?.cover, draft?.logo]
     .forEach(image => image?.kind === 'new' && URL.revokeObjectURL(image.url));
@@ -60,10 +56,7 @@ const OrganizerHomepageDesigner = () => {
     const organizer = organizerQuery.data;
     const settings = settingsQuery.data;
 
-    const updateOrganizer = useUpdateOrganizer();
-    const updateSettings = useUpdateOrganizerSettings();
-    const uploadImage = useUploadImage();
-    const deleteImage = useDeleteImage();
+    const saveDraft = useSaveHomepageDraft();
 
     const published = useMemo(
         () => organizer && settings ? publishedDraft(organizer, settings) : null,
@@ -155,57 +148,15 @@ const OrganizerHomepageDesigner = () => {
     });
 
     // « Remplir depuis votre site » : ce que l'organisateur garde va dans le brouillon, sans rien publier.
-    // Les images arrivent en data: URL et deviennent des fichiers, comme celles qu'on depose.
     const applyImport = async (suggestion: OrganizerPageSuggestion, parts: ImportPart[]) => {
-        const asFile = async (dataUrl: string, name: string) => {
-            const blob = await (await fetch(dataUrl)).blob();
-            const file = new File([blob], `${name}.${blob.type.split('/')[1] ?? 'png'}`, {type: blob.type});
-            return {kind: 'new' as const, file, url: URL.createObjectURL(file)};
-        };
-
         if (parts.includes('logo') && suggestion.logo) {
-            setImage('logo', await asFile(suggestion.logo, 'logo'));
+            setImage('logo', await suggestionImage(suggestion.logo, 'logo'));
         }
         if (parts.includes('cover') && suggestion.cover) {
-            setImage('cover', await asFile(suggestion.cover, 'couverture'));
+            setImage('cover', await suggestionImage(suggestion.cover, 'couverture'));
         }
 
-        setDraft(current => {
-            if (!current) {
-                return current;
-            }
-            const next = {...current};
-            if (parts.includes('name') && suggestion.name) {
-                next.name = suggestion.name;
-            }
-            if (parts.includes('description') && suggestion.description) {
-                next.description = suggestion.description;
-            }
-            if (parts.includes('accent') && suggestion.accent) {
-                next.accent = suggestion.accent;
-            }
-            if (parts.includes('social')) {
-                // Les comptes deja remplis restent ; les autres s'ajoutent, visibles.
-                const links = current.socialLinks.map(link => {
-                    const found = suggestion.social_links.find(s => s.platform === link.platform);
-                    return !link.handle.trim() && found ? {...link, handle: found.handle, visible: true} : link;
-                });
-                suggestion.social_links
-                    .filter(found => !links.some(link => link.platform === found.platform))
-                    .forEach(found => links.push({platform: found.platform, handle: found.handle, visible: true}));
-                next.socialLinks = links;
-            }
-            if (parts.includes('faqs')) {
-                const asked = new Set(current.faqs.map(faq => faq.question.trim().toLowerCase()));
-                next.faqs = [
-                    ...current.faqs,
-                    ...suggestion.faqs
-                        .filter(faq => !asked.has(faq.question.trim().toLowerCase()))
-                        .map(faq => ({key: newFaqKey(), question: faq.question, answer: faq.answer})),
-                ];
-            }
-            return next;
-        });
+        setDraft(current => current && mergeSuggestion(current, suggestion, parts));
 
         // Les editeurs de texte reprennent le nom et la presentation.
         setResetKey(key => key + 1);
@@ -252,63 +203,7 @@ const OrganizerHomepageDesigner = () => {
 
         setPublishing(true);
         try {
-            for (const key of ['cover', 'logo'] as const) {
-                const image = draft[key];
-                const previous = published[key];
-                if (!changes[key]) {
-                    continue;
-                }
-                if (image?.kind === 'new') {
-                    // Replaces the previous image (one cover and one logo per organizer).
-                    const {data} = await uploadImage.mutateAsync({
-                        image: image.file,
-                        imageType: IMAGE_TYPES[key],
-                        entityId: organizerId,
-                    });
-                    setImage(key, {kind: 'saved', id: data.id, url: data.url});
-                } else if (!image && previous?.kind === 'saved') {
-                    await deleteImage.mutateAsync({imageId: previous.id});
-                }
-            }
-
-            if (changes.organizer) {
-                await updateOrganizer.mutateAsync({
-                    organizerId,
-                    organizerData: {
-                        name: draft.name.trim(),
-                        description: cleanDescription(draft.description),
-                        email: organizer.email,
-                        phone: organizer.phone,
-                        website: organizer.website,
-                        donation_url: organizer.donation_url,
-                        currency: organizer.currency,
-                        timezone: organizer.timezone,
-                    },
-                });
-            }
-
-            if (changes.accent || changes.socialLinks || changes.faqs) {
-                const handles = draftSocialHandles(draft.socialLinks);
-                const platforms = new Set([...published.socialLinks, ...draft.socialLinks].map(link => link.platform));
-                await updateSettings.mutateAsync({
-                    organizerId,
-                    organizerSettings: {
-                        ...(changes.accent && {
-                            homepage_theme_settings: {
-                                ...settings.homepage_theme_settings,
-                                accent: draft.accent,
-                            } as HomepageThemeSettings,
-                        }),
-                        ...(changes.socialLinks && {
-                            ...Object.fromEntries([...platforms].map(platform => [`${platform}_handle`, handles[platform] ?? null])),
-                            social_media_layout: draftSocialLayout(draft.socialLinks),
-                        }),
-                        ...(changes.faqs && {
-                            faqs: faqs.map(({question, answer}) => ({question: question.trim(), answer: answer.trim()})),
-                        }),
-                    } as Partial<OrganizerSettings>,
-                });
-            }
+            await saveDraft({organizerId, organizer, settings, published, draft, onImageSaved: setImage});
 
             const [freshOrganizer, freshSettings] = await Promise.all([organizerQuery.refetch(), settingsQuery.refetch()]);
             if (freshOrganizer.data && freshSettings.data) {

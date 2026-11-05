@@ -7,6 +7,7 @@ use HiEvents\Services\Application\Handlers\Organizer\PageImport\DTO\OrganizerPag
 use HiEvents\Services\Domain\Assistant\AssistantQuotaService;
 use HiEvents\Services\Domain\Organizer\PageImport\AccentColorPicker;
 use HiEvents\Services\Domain\Organizer\PageImport\ChosenImage;
+use HiEvents\Services\Domain\Organizer\PageImport\HostingPlatforms;
 use HiEvents\Services\Domain\Organizer\PageImport\PageImageChooser;
 use HiEvents\Services\Domain\Organizer\PageImport\PageTexts;
 use HiEvents\Services\Domain\Organizer\PageImport\PageTextWriter;
@@ -19,9 +20,10 @@ use Imagick;
 use Throwable;
 
 /**
- * « Remplir depuis votre site ou votre Instagram » de « Ma page » : la page est
- * lue, ses images choisies, sa couleur reprise et ses textes reecrits par
- * l'assistant. Rien n'est enregistre ici : tout part dans le brouillon.
+ * « Remplir depuis votre site ou votre Instagram » de « Ma page » et de l'accueil
+ * des nouveaux comptes : la page est lue, ses images choisies, sa couleur reprise
+ * et ses textes reecrits par l'assistant. Sur une billetterie ou un reseau, seul
+ * ce qui est a l'organisateur est garde. Rien n'est enregistre ici.
  */
 class ImportOrganizerPageHandler
 {
@@ -37,6 +39,7 @@ class ImportOrganizerPageHandler
         private readonly AccentColorPicker     $accentPicker,
         private readonly PageTextWriter        $textWriter,
         private readonly AssistantQuotaService $quotaService,
+        private readonly HostingPlatforms      $platforms,
     )
     {
     }
@@ -48,8 +51,8 @@ class ImportOrganizerPageHandler
     public function handle(ImportOrganizerPageDTO $dto): OrganizerPageSuggestionDTO
     {
         $url = $this->fetcher->normalize($dto->url);
-        $instagram = $this->reader->socialLink($url);
-        $isInstagram = $instagram !== null && $instagram[0] === 'instagram';
+        $social = $this->reader->socialLink($url);
+        $isInstagram = $social !== null && $social[0] === 'instagram';
 
         $page = $this->fetcher->fetch($url, self::MAX_PAGE_BYTES, truncate: true);
         // Instagram qui refuse de montrer le compte redirige vers sa connexion : son logo et son nom a lui.
@@ -59,33 +62,39 @@ class ImportOrganizerPageHandler
         if (!$page->isHtml()) {
             throw new WebPageFetchException(__('This address is not a web page.'));
         }
-        $snapshot = $this->reader->read($page);
+        $platform = $this->platforms->of($page->url);
+        if ($platform !== null && $this->platforms->isHomePage($page->url)) {
+            throw new WebPageFetchException(__('This is the home page of :platform. Paste the address of your own page or of one of your events.', ['platform' => $platform]));
+        }
+        $snapshot = $this->reader->read($page, $platform !== null
+            ? fn(string $handle) => $this->platforms->isNamedAfter($platform, $handle)
+            : null);
 
         // Sur Instagram, l'image de la page est la photo de profil : un logo, pas une couverture.
-        $logo = $this->imageChooser->logo($isInstagram ? $snapshot->coverCandidates : $snapshot->logoCandidates);
+        // Sur une billetterie, les logos trouves sont ceux de la billetterie.
+        $logo = match (true) {
+            $isInstagram => $this->imageChooser->logo($snapshot->coverCandidates),
+            $platform !== null => null,
+            default => $this->imageChooser->logo($snapshot->logoCandidates),
+        };
         $cover = $isInstagram ? null : $this->imageChooser->cover(array_values(array_filter(
             $snapshot->coverCandidates,
-            fn(string $candidate) => $candidate !== $logo?->url,
+            fn(string $candidate) => $candidate !== $logo?->url
+                && ($platform === null || !$this->platforms->isGenericImage($candidate)),
         )));
 
-        $texts = $this->texts($snapshot, $dto);
-        $socialLinks = $snapshot->socialLinks;
-        if ($isInstagram) {
-            $socialLinks = [
-                ['platform' => 'instagram', 'handle' => $instagram[1]],
-                ...array_filter($socialLinks, fn($link) => $link['platform'] !== 'instagram'),
-            ];
-        }
+        $texts = $this->texts($snapshot, $dto, $platform);
 
         return new OrganizerPageSuggestionDTO(
             source_url: $page->url,
-            source: $isInstagram ? 'instagram' : 'website',
-            name: $texts?->name ?? $this->fallbackName($snapshot),
-            description: $texts?->descriptionHtml ?? $this->fallbackDescription($snapshot, $isInstagram),
-            accent: $this->accentPicker->pick($snapshot->themeColor, $logo?->bytes),
+            source: $isInstagram ? 'instagram' : ($platform !== null ? 'platform' : 'website'),
+            platform: $platform,
+            name: $texts?->name ?? ($platform !== null ? $this->organizerOnPlatform($snapshot, $platform) : $this->fallbackName($snapshot)),
+            description: $texts?->descriptionHtml ?? ($platform !== null ? null : $this->fallbackDescription($snapshot, $isInstagram)),
+            accent: $platform !== null ? null : $this->accentPicker->pick($snapshot->themeColor, $logo?->bytes),
             logo: $this->dataUrl($logo, 1000),
             cover: $this->dataUrl($cover, 2400),
-            social_links: array_values($socialLinks),
+            social_links: $this->socialLinks($snapshot, $social),
             faqs: $texts?->faqs ?? [],
             written_by_assistant: $texts !== null,
             // Sans compte, Instagram ne montre que la photo et la bio.
@@ -94,13 +103,52 @@ class ImportOrganizerPageHandler
     }
 
     /** Par l'assistant quand il est la et qu'il reste des tours aujourd'hui ; sinon tel quel. */
-    private function texts(WebsiteSnapshot $snapshot, ImportOrganizerPageDTO $dto): ?PageTexts
+    private function texts(WebsiteSnapshot $snapshot, ImportOrganizerPageDTO $dto, ?string $platform): ?PageTexts
     {
+        // Rien a lire (Facebook sans compte) : pas de tour paye pour rien.
+        if ($snapshot->text === '' && $snapshot->descriptions === []) {
+            return null;
+        }
         if (!$this->textWriter->isAvailable() || !$this->quotaService->consume($dto->accountId)) {
             return null;
         }
 
-        return $this->textWriter->write($snapshot, $dto->accountId, $dto->userId);
+        return $this->textWriter->write($snapshot, $dto->accountId, $dto->userId, $platform);
+    }
+
+    /**
+     * Le compte colle passe en premier.
+     *
+     * @param array{0: string, 1: string}|null $social
+     * @return list<array{platform: string, handle: string}>
+     */
+    private function socialLinks(WebsiteSnapshot $snapshot, ?array $social): array
+    {
+        if ($social === null) {
+            return $snapshot->socialLinks;
+        }
+
+        return [
+            ['platform' => $social[0], 'handle' => $social[1]],
+            ...array_values(array_filter($snapshot->socialLinks, fn($link) => $link['platform'] !== $social[0])),
+        ];
+    }
+
+    /** Sans l'assistant : l'organisateur declare, « Club X presente … » dans le titre, ou le seul nom qui n'est pas celui de la plateforme. */
+    private function organizerOnPlatform(WebsiteSnapshot $snapshot, string $platform): ?string
+    {
+        if ($snapshot->organizerName !== null) {
+            return $snapshot->organizerName;
+        }
+        foreach ($snapshot->names as $name) {
+            if (preg_match('/^(.{2,60}?)\s+(?:présente|presente|presents)\s/iu', $name, $match)) {
+                return trim($match[1]);
+            }
+        }
+
+        $others = array_values(array_filter($snapshot->names, fn(string $name) => !$this->platforms->isNamedAfter($platform, $name)));
+
+        return count($others) === 1 ? $others[0] : null;
     }
 
     /** « Club X (@clubx) • Instagram photos and videos », « Accueil | Club X » => le nom seul. */

@@ -45,7 +45,8 @@ class WebsiteReader
         'policies', 'privacy', 'legal', 'about', 'help', 'events', 'pages', 'tos',
     ];
 
-    public function read(FetchedWebPage $page): WebsiteSnapshot
+    /** @param (callable(string): bool)|null $skipHandle les comptes a ignorer : un seul est garde par reseau, ils cacheraient les bons */
+    public function read(FetchedWebPage $page, ?callable $skipHandle = null): WebsiteSnapshot
     {
         $dom = new DOMDocument();
         $previous = libxml_use_internal_errors(true);
@@ -71,7 +72,8 @@ class WebsiteReader
             coverCandidates: $this->unique(array_map(fn($src) => $this->absolute($base, $src), [
                 $meta('og:image:secure_url'), $meta('og:image'), $meta('twitter:image'), $meta('twitter:image:src'),
             ])),
-            socialLinks: $this->socialLinks($xpath, $base),
+            socialLinks: $this->socialLinks($xpath, $base, $skipHandle),
+            organizerName: $this->declaredOrganizer($xpath),
             text: $this->visibleText($dom, $xpath),
         );
     }
@@ -122,6 +124,38 @@ class WebsiteReader
             if ($name === $key) {
                 $value = trim(html_entity_decode($node->getAttribute('content'), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                 return $value !== '' ? $value : null;
+            }
+        }
+
+        return null;
+    }
+
+    /** Le « organizer » des donnees structurees d'une page d'evenement. */
+    private function declaredOrganizer(DOMXPath $xpath): ?string
+    {
+        foreach ($xpath->query('//script[@type="application/ld+json"]') as $script) {
+            $data = json_decode($script->textContent, true);
+            $name = is_array($data) ? $this->organizerIn($data) : null;
+            if ($name !== null) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+
+    private function organizerIn(array $data): ?string
+    {
+        $organizer = $data['organizer'] ?? null;
+        $organizer = is_array($organizer) && array_is_list($organizer) ? ($organizer[0] ?? null) : $organizer;
+        if (is_array($organizer) && is_string($organizer['name'] ?? null) && trim($organizer['name']) !== '') {
+            return trim(html_entity_decode($organizer['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        }
+
+        foreach ($data as $value) {
+            $name = is_array($value) ? $this->organizerIn($value) : null;
+            if ($name !== null) {
+                return $name;
             }
         }
 
@@ -184,13 +218,13 @@ class WebsiteReader
     }
 
     /** @return list<array{platform: string, handle: string}> un compte par reseau, dans l'ordre de la page */
-    private function socialLinks(DOMXPath $xpath, string $base): array
+    private function socialLinks(DOMXPath $xpath, string $base, ?callable $skipHandle): array
     {
         $links = [];
         foreach ($xpath->query('//a[@href]') as $anchor) {
             /** @var DOMElement $anchor */
             $found = $this->socialLink($this->absolute($base, $anchor->getAttribute('href')) ?? '');
-            if ($found !== null && !isset($links[$found[0]])) {
+            if ($found !== null && !isset($links[$found[0]]) && !($skipHandle !== null && $skipHandle($found[1]))) {
                 $links[$found[0]] = ['platform' => $found[0], 'handle' => $found[1]];
             }
         }

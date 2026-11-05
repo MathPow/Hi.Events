@@ -16,6 +16,12 @@ import {useUpdateAccountEventTypes} from "../../../mutations/useUpdateAccountEve
 import {useCreateTaxOrFee} from "../../../mutations/useCreateTaxOrFee.ts";
 import {useUpdateOrganizerSettings} from "../../../mutations/useUpdateOrganizerSettings.ts";
 import {useGetTaxesAndFees} from "../../../queries/useGetTaxesAndFees.ts";
+import {GET_ORGANIZER_QUERY_KEY, useGetOrganizer} from "../../../queries/useGetOrganizer.ts";
+import {useGetOrganizerSettings} from "../../../queries/useGetOrganizerSettings.ts";
+import {queryClient} from "../../../utilites/queryClient.ts";
+import {ImportSuggestionReview, useImportFromUrl} from "../organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx";
+import {mergeSuggestion, publishedDraft, suggestionImage} from "../organizer/OrganizerHomepageDesigner/homepageDraft.ts";
+import {useSaveHomepageDraft} from "../organizer/OrganizerHomepageDesigner/useSaveHomepageDraft.ts";
 import {IconClock} from "@tabler/icons-react";
 import {showError, showSuccess} from "../../../utilites/notifications.tsx";
 import {trackEvent, AnalyticsEvents} from "../../../utilites/analytics.ts";
@@ -24,9 +30,9 @@ import {EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
 import {EventTypeIllustration} from "../../common/EventTypeIllustration";
 
 // La carte creme sur l'orange, son logo et la progression en haut.
-const STEPS = 3;
+const STEPS = 4;
 
-const OnboardingCard = ({step, children}: { step?: 1 | 2 | 3, children: ReactNode }) => {
+const OnboardingCard = ({step, children}: { step?: 1 | 2 | 3 | 4, children: ReactNode }) => {
 
     return (
         <div className={classes.page}>
@@ -254,6 +260,105 @@ const EventTypesStep = ({onDone}: { onDone: () => void }) => {
     );
 };
 
+// A website, an Instagram or an old ticketing page: what the organizer keeps fills in their page right away.
+const PageImportStep = ({organizerId, onDone}: { organizerId: IdParam, onDone: () => void }) => {
+    const {data: organizer} = useGetOrganizer(organizerId);
+    const {data: settings} = useGetOrganizerSettings(organizerId);
+    const saveDraft = useSaveHomepageDraft();
+    const {url, setUrl, scan, suggestion, setSuggestion, kept, toggle, isPending, error} = useImportFromUrl(organizerId);
+    const [saving, setSaving] = useState(false);
+
+    const handleUse = async () => {
+        if (!suggestion || !organizer || !settings) {
+            return;
+        }
+        setSaving(true);
+        try {
+            const published = publishedDraft(organizer, settings);
+            const draft = mergeSuggestion(published, suggestion, kept);
+            if (kept.includes('logo') && suggestion.logo) {
+                draft.logo = await suggestionImage(suggestion.logo, 'logo');
+            }
+            if (kept.includes('cover') && suggestion.cover) {
+                draft.cover = await suggestionImage(suggestion.cover, 'couverture');
+            }
+            await saveDraft({
+                organizerId,
+                organizer,
+                settings,
+                published,
+                draft,
+                website: suggestion.source === 'website' && !organizer.website
+                    ? new URL(suggestion.source_url).origin
+                    : undefined,
+            });
+            await queryClient.invalidateQueries({queryKey: [GET_ORGANIZER_QUERY_KEY, organizerId]});
+            showSuccess(t`Your page is filled in. You can change everything in My page.`);
+            onDone();
+        } catch {
+            showError(t`Something went wrong. Please try again.`);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <OnboardingCard step={2}>
+            <h1 className={classes.title}>{t`Already have a page somewhere?`}</h1>
+            <p className={classes.subtitle}>
+                {t`Paste the address of your website, your Instagram or your old ticketing page. We'll use it to fill in your page.`}
+            </p>
+
+            {suggestion ? (
+                <>
+                    <div className={classes.importBox}>
+                        <ImportSuggestionReview suggestion={suggestion} kept={kept} onToggle={toggle}/>
+                    </div>
+                    <div className={classes.actions}>
+                        <Button variant="outline" className={classes.outlineButton} disabled={saving}
+                                onClick={() => setSuggestion(null)}>
+                            {t`Try another address`}
+                        </Button>
+                        <Button className={classes.darkButton} onClick={handleUse} loading={saving}
+                                disabled={kept.length === 0 || !organizer || !settings}>
+                            {t`Fill in my page`}
+                        </Button>
+                    </div>
+                    <Button variant="subtle" size="sm" className={classes.resend} disabled={saving} onClick={onDone}>
+                        {t`Skip this step`}
+                    </Button>
+                </>
+            ) : (
+                <form className={classes.importForm} onSubmit={scan}>
+                    <div className={classes.importBox}>
+                        <TextInput
+                            value={url}
+                            onChange={(event) => setUrl(event.currentTarget.value)}
+                            placeholder={t`yourclub.com`}
+                            aria-label={t`Address of your website, Instagram or ticketing page`}
+                            inputMode="url"
+                            size="md"
+                            disabled={isPending}
+                            error={error}
+                        />
+                        {isPending && (
+                            <p className={classes.importWait}>{t`Reading the page… This can take up to 30 seconds.`}</p>
+                        )}
+                    </div>
+                    <div className={classes.actions}>
+                        <Button variant="outline" className={classes.outlineButton} disabled={isPending} onClick={onDone}>
+                            {t`Skip this step`}
+                        </Button>
+                        <Button type="submit" className={classes.darkButton} loading={isPending} disabled={!url.trim()}>
+                            {t`Analyze`}
+                        </Button>
+                    </div>
+                </form>
+            )}
+        </OnboardingCard>
+    );
+};
+
 type TaxAnswer = 'registered' | 'not_registered' | 'unsure';
 
 // Quebec's sales taxes on a ticket: each on the price, QST not on top of GST (since 2013).
@@ -329,7 +434,7 @@ const TaxesStep = ({organizerId, onDone}: { organizerId: IdParam, onDone: () => 
     };
 
     return (
-        <OnboardingCard step={2}>
+        <OnboardingCard step={3}>
             <h1 className={classes.title}>{t`Are you registered for GST and QST?`}</h1>
             <p className={classes.subtitle}>{t`It decides whether taxes are added to the price of your tickets.`}</p>
 
@@ -379,7 +484,7 @@ const StartStep = ({organizerId}: { organizerId: string | number }) => {
     const organizerPath = `/manage/organizer/${organizerId}`;
 
     return (
-        <OnboardingCard step={3}>
+        <OnboardingCard step={4}>
             <p className={classes.hand}>{t`Account created!`}</p>
             <h1 className={classes.title}>{t`Your ticketing is ready!`}</h1>
             <p className={classes.subtitle}>{t`Where to start? The rest can wait.`}</p>
@@ -436,7 +541,7 @@ const Welcome = () => {
     const createOrganizer = useCreateOrganizer();
     const creatingOrganizer = useRef(false);
     const hasTrackedSignup = useRef(false);
-    const [step, setStep] = useState<'types' | 'taxes' | 'start'>('types');
+    const [step, setStep] = useState<'types' | 'page' | 'taxes' | 'start'>('types');
 
     const organizer = organizersQuery.data?.data?.[0];
     const requiresVerification = me
@@ -493,7 +598,10 @@ const Welcome = () => {
     }
 
     if (step === 'types') {
-        return <EventTypesStep onDone={() => setStep('taxes')}/>;
+        return <EventTypesStep onDone={() => setStep('page')}/>;
+    }
+    if (step === 'page') {
+        return <PageImportStep organizerId={organizer.id as IdParam} onDone={() => setStep('taxes')}/>;
     }
     if (step === 'taxes') {
         return <TaxesStep organizerId={organizer.id as IdParam} onDone={() => setStep('start')}/>;

@@ -134,7 +134,7 @@ msgid "{availableCount} of {totalCount} available"
 msgstr "{availableCount} de {totalCount} disponibles"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:367
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:464
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
 msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
 msgstr "{changeCount, plural, one {# cambio sin publicar} other {# cambios sin publicar}}"
 
@@ -190,11 +190,11 @@ msgstr "{doneCount, plural, one {# paso de {total}} other {# pasos de {total}}}"
 msgid "{eventCount} events"
 msgstr "{eventCount} eventos"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:360
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:255
 msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
 msgstr "{faqCount, plural, =0 {Aún no hay preguntas} one {# pregunta · mostrada al final de la página} other {# preguntas · mostradas al final de la página}}"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:101
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:104
 msgid "{faqCount} questions"
 msgstr "{faqCount} preguntas"
 
@@ -513,7 +513,7 @@ msgstr "Una entrada de texto de varias líneas"
 msgid "A new PIN signs out the phones already open."
 msgstr "Un nuevo PIN cierra la sesión de los teléfonos ya abiertos."
 
-#: src/components/routes/welcome/index.tsx:117
+#: src/components/routes/welcome/index.tsx:123
 msgid "A new verification code has been sent to your email"
 msgstr "Se ha enviado un nuevo código de verificación a tu correo"
 
@@ -597,8 +597,8 @@ msgstr "Asumir las comisiones"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:237
 #: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx:67
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:78
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:338
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:233
 msgid "Accent color"
 msgstr "Color de acento"
 
@@ -653,7 +653,7 @@ msgstr "Cuenta"
 msgid "Account configuration updated successfully"
 msgstr "Configuración de cuenta actualizada correctamente"
 
-#: src/components/routes/welcome/index.tsx:383
+#: src/components/routes/welcome/index.tsx:488
 msgid "Account created!"
 msgstr "¡Cuenta creada!"
 
@@ -770,7 +770,7 @@ msgstr ""
 msgid "Add a first block from the list or with the button below."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:403
+#: src/components/routes/welcome/index.tsx:508
 msgid "Add a logo and colors that match the organization."
 msgstr "Añade un logo y colores a la imagen de la organización."
 
@@ -908,7 +908,7 @@ msgstr "Agregar al calendario"
 msgid "Add to Google Wallet"
 msgstr "Añadir a Google Wallet"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:181
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:216
 msgid "Add to my draft"
 msgstr "Añadir a mi borrador"
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "Added to the price of the products you choose, in all your events."
 msgstr "Se suman al precio de los productos que elijas, en todos tus eventos."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:163
 msgid "Added to your draft. Check the preview, then publish."
 msgstr "Añadido a tu borrador. Revisa la vista previa y luego publica."
 
@@ -978,9 +978,13 @@ msgstr "Línea de dirección 2"
 msgid "Address Line 2"
 msgstr "Línea de dirección 2"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:135
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
 msgid "Address of your website or Instagram"
 msgstr "Dirección de tu sitio web o Instagram"
+
+#: src/components/routes/welcome/index.tsx:338
+msgid "Address of your website, Instagram or ticketing page"
+msgstr "Dirección de tu sitio web, tu Instagram o tu página de venta de entradas"
 
 #: src/components/layouts/Admin/index.tsx:13
 #: src/components/modals/EditUserModal/index.tsx:49
@@ -1209,6 +1213,10 @@ msgstr "Casi completo"
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "¡Casi listo! Solo estamos esperando que se procese tu pago. Esto debería tomar solo unos segundos."
 
+#: src/components/routes/welcome/index.tsx:307
+msgid "Already have a page somewhere?"
+msgstr "¿Ya tienes una página en algún sitio?"
+
 #: src/components/routes/auth/Register/index.tsx:125
 msgid "Already have an account? <0>{0}</0>"
 msgstr "¿Ya tienes una cuenta? <0>{0}</0>"
@@ -1297,7 +1305,8 @@ msgstr "Una lista al día, correos para informarles y escaneo de entradas el dí
 msgid "Analytics"
 msgstr "Medición de audiencia"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:146
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:196
+#: src/components/routes/welcome/index.tsx:353
 msgid "Analyze"
 msgstr "Analizar"
 
@@ -1451,8 +1460,8 @@ msgstr "Organizadores archivados"
 msgid "Archiving hides it from the public (can be restored). Deleting erases everything, for good."
 msgstr "Archivar lo oculta al público (se puede restaurar). Eliminar borra todo, definitivamente."
 
-#: src/components/routes/welcome/index.tsx:333
-#: src/components/routes/welcome/index.tsx:336
+#: src/components/routes/welcome/index.tsx:438
+#: src/components/routes/welcome/index.tsx:441
 msgid "Are you registered for GST and QST?"
 msgstr "¿Está inscrito en el GST y el QST?"
 
@@ -2117,8 +2126,8 @@ msgstr "Texto del botón"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:238
 #: src/components/routes/event/HomepageDesigner/index.tsx:239
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:339
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:340
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:234
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:235
 msgid "Buttons and highlighted elements"
 msgstr "Botones y elementos destacados"
 
@@ -2227,8 +2236,8 @@ msgstr ""
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:190
 #: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:86
 #: src/components/routes/organizer/Messages/ReplyModal.tsx:109
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:473
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:220
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:368
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:51
@@ -2379,7 +2388,7 @@ msgid "Change waitlist settings"
 msgstr "Cambiar configuración de lista de espera"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:321
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:418
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:313
 msgid "Changes appear on the right."
 msgstr "Los cambios se muestran a la derecha."
 
@@ -2423,7 +2432,7 @@ msgid "Check out this event!"
 msgstr "¡Mira este evento!"
 
 #: src/components/routes/auth/ForgotPassword/index.tsx:42
-#: src/components/routes/welcome/index.tsx:133
+#: src/components/routes/welcome/index.tsx:139
 msgid "Check your email"
 msgstr "Revisa tu correo"
 
@@ -2716,7 +2725,7 @@ msgstr "Comisiones"
 msgid "Communication"
 msgstr "Comunicación"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:244
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:195
 msgid "Complete or delete the unfinished questions before publishing."
 msgstr "Completa o elimina las preguntas sin terminar antes de publicar."
 
@@ -2869,7 +2878,7 @@ msgid "Congratulations! Your event is now visible to the public."
 msgstr "¡Felicidades! Tu evento ahora es visible para el público."
 
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:95
-#: src/components/routes/welcome/index.tsx:417
+#: src/components/routes/welcome/index.tsx:522
 msgid "Connect"
 msgstr "Conectar"
 
@@ -2879,7 +2888,7 @@ msgstr "Conectar"
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:444
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:133
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:139
-#: src/components/routes/welcome/index.tsx:413
+#: src/components/routes/welcome/index.tsx:518
 msgid "Connect Stripe"
 msgstr "Conectar Stripe"
 
@@ -2945,8 +2954,8 @@ msgstr ""
 #: src/components/common/WidgetEditor/index.tsx:220
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:115
 #: src/components/routes/product-widget/SelectProducts/index.tsx:433
-#: src/components/routes/welcome/index.tsx:250
-#: src/components/routes/welcome/index.tsx:369
+#: src/components/routes/welcome/index.tsx:256
+#: src/components/routes/welcome/index.tsx:474
 msgid "Continue"
 msgstr "Continuar"
 
@@ -3143,7 +3152,7 @@ msgstr "No se pudo actualizar el depósito"
 msgid "Country"
 msgstr "País"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:83
 msgid "Cover image"
 msgstr "Imagen de portada"
 
@@ -3173,7 +3182,7 @@ msgstr ""
 msgid "Create a custom widget to sell tickets on your site."
 msgstr "Cree un widget personalizado para vender entradas en su sitio."
 
-#: src/components/routes/welcome/index.tsx:391
+#: src/components/routes/welcome/index.tsx:496
 msgid "Create a first event"
 msgstr "Crear un primer evento"
 
@@ -3215,7 +3224,7 @@ msgstr "Crear una cuenta"
 
 #: src/components/modals/CreateEventModal/index.tsx:204
 #: src/components/modals/CreateEventModal/index.tsx:230
-#: src/components/routes/welcome/index.tsx:396
+#: src/components/routes/welcome/index.tsx:501
 msgid "Create an event"
 msgstr "Crear un evento"
 
@@ -3434,7 +3443,7 @@ msgstr "El cliente recibirá un correo electrónico confirmando el reembolso"
 #: src/components/common/CookieConsentBanner/index.tsx:182
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:88
-#: src/components/routes/welcome/index.tsx:407
+#: src/components/routes/welcome/index.tsx:512
 msgid "Customize"
 msgstr "Personalizar"
 
@@ -3452,11 +3461,11 @@ msgstr "Personalizar la página"
 msgid "Customize the questions asked during checkout to gather important information from your attendees."
 msgstr "Personalice las preguntas durante el proceso de pago para recopilar información importante de sus asistentes."
 
-#: src/components/routes/welcome/index.tsx:402
+#: src/components/routes/welcome/index.tsx:507
 msgid "Customize the ticketing"
 msgstr "Personalizar la taquilla"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:417
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:312
 msgid "Customize your public page."
 msgstr "Personaliza tu página pública."
 
@@ -3734,7 +3743,7 @@ msgstr ""
 msgid "Details"
 msgstr "Detalles"
 
-#: src/components/routes/welcome/index.tsx:170
+#: src/components/routes/welcome/index.tsx:176
 msgid "Didn't receive the code?"
 msgstr "¿No recibiste el código?"
 
@@ -3798,7 +3807,7 @@ msgstr "Vista"
 msgid "Display and options"
 msgstr "Visualización y opciones"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:354
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
 msgid "Display and order"
 msgstr "Visualización y orden"
 
@@ -4329,7 +4338,7 @@ msgstr ""
 msgid "Email Verification Required"
 msgstr "Verificación de correo requerida"
 
-#: src/components/routes/welcome/index.tsx:98
+#: src/components/routes/welcome/index.tsx:104
 msgid "Email verified successfully!"
 msgstr "¡Correo verificado exitosamente!"
 
@@ -4758,7 +4767,7 @@ msgid "Everyone"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:371
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:468
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:363
 msgid "Everything is published"
 msgstr "Todo está publicado"
 
@@ -5019,7 +5028,7 @@ msgstr "No se pudo reenviar la entrada"
 msgid "Failed to resend ticket email"
 msgstr "No se pudo reenviar el correo electrónico del ticket"
 
-#: src/components/routes/welcome/index.tsx:126
+#: src/components/routes/welcome/index.tsx:132
 msgid "Failed to resend verification code"
 msgstr "Error al reenviar el código de verificación"
 
@@ -5121,7 +5130,7 @@ msgstr "No se pudo subir la imagen."
 msgid "Failed to upload image. Please try again."
 msgstr "No se pudo subir la imagen. Por favor, intenta de nuevo."
 
-#: src/components/routes/welcome/index.tsx:103
+#: src/components/routes/welcome/index.tsx:109
 msgid "Failed to verify email"
 msgstr "Error al verificar el correo"
 
@@ -5129,8 +5138,8 @@ msgstr "Error al verificar el correo"
 msgid "Fair market value of what the buyer receives."
 msgstr "Valor justo de mercado de lo que recibe el comprador."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:85
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:254
 msgid "FAQ"
 msgstr "Preguntas frecuentes"
 
@@ -5202,9 +5211,13 @@ msgstr ""
 msgid "File is too large. Maximum size is 30MB."
 msgstr "El archivo es demasiado grande. El tamaño máximo es de 30 MB."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:120
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:170
 msgid "Fill from your website or Instagram"
 msgstr "Rellenar desde tu sitio web o Instagram"
+
+#: src/components/routes/welcome/index.tsx:324
+msgid "Fill in my page"
+msgstr "Completar mi página"
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:307
 msgid "Filled in on their own at registration."
@@ -5550,16 +5563,16 @@ msgstr "Ventas brutas"
 msgid "Gross Sales"
 msgstr "Ventas brutas"
 
-#: src/components/routes/welcome/index.tsx:286
+#: src/components/routes/welcome/index.tsx:391
 msgctxt "Canadian goods and services tax"
 msgid "GST"
 msgstr "GST"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "GST 5% and QST 9.975% will be added to the price of your tickets."
 msgstr "Se añadirán el GST del 5 % y el QST del 9,975 % al precio de sus entradas."
 
-#: src/components/routes/welcome/index.tsx:354
+#: src/components/routes/welcome/index.tsx:459
 msgid "GST number"
 msgstr "Número de GST"
 
@@ -5817,7 +5830,7 @@ msgstr "Acepto los <0>términos y condiciones</0>"
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Confirmo que este es un mensaje transaccional relacionado con este evento"
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "I don't know"
 msgstr "No lo sé"
 
@@ -5888,7 +5901,7 @@ msgid "images"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:233
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Images"
 msgstr "Imágenes"
 
@@ -5986,7 +5999,7 @@ msgid "Info added automatically"
 msgstr "Datos añadidos automáticamente"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:244
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:345
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:240
 msgid "Info and description"
 msgstr "Información y descripción"
 
@@ -6031,7 +6044,7 @@ msgstr "Integraciones"
 msgid "Interac e-Transfer, cheque or cash. You confirm the payment by hand."
 msgstr "Transferencia Interac, cheque o efectivo. Confirmas el pago a mano."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:77
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
 msgid "Introduction"
 msgstr "Presentación"
 
@@ -6137,7 +6150,7 @@ msgstr "Emitir recibos oficiales de donación"
 msgid "Issue official donation receipts for the charitable portion of an order."
 msgstr "Emitir recibos oficiales de donación por la parte benéfica de un pedido."
 
-#: src/components/routes/welcome/index.tsx:334
+#: src/components/routes/welcome/index.tsx:439
 msgid "It decides whether taxes are added to the price of your tickets."
 msgstr "Determina si se añaden impuestos al precio de sus entradas."
 
@@ -6371,7 +6384,7 @@ msgstr "Último uso"
 msgid "Last Used"
 msgstr "Última vez usado"
 
-#: src/components/routes/welcome/index.tsx:424
+#: src/components/routes/welcome/index.tsx:529
 msgid "Later, go to the dashboard"
 msgstr "Más tarde, ir al panel"
 
@@ -6389,7 +6402,7 @@ msgid "Learn more about Stripe"
 msgstr "Saber más sobre Stripe"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Leave"
 msgstr "Salir"
 
@@ -6414,7 +6427,7 @@ msgid "Leave quantity empty for unlimited stock"
 msgstr "Deja la cantidad vacía para stock ilimitado"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:98
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:114
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:107
 msgid "Leave without publishing?"
 msgstr "¿Salir sin publicar?"
 
@@ -6589,15 +6602,15 @@ msgid "Logging in"
 msgstr "Iniciando sesión"
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx:162
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
 msgid "Logo"
 msgstr "Logo"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover"
 msgstr "Logo y portada"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover image"
 msgstr "Logo e imagen de portada"
 
@@ -6956,7 +6969,7 @@ msgid "My other app"
 msgstr "Mi otra aplicación"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:171
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:415
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:310
 msgid "My page"
 msgstr "Mi página"
 
@@ -6993,7 +7006,7 @@ msgstr "No disponible"
 #: src/components/routes/admin/Configurations/index.tsx:219
 #: src/components/routes/admin/PlatformRevenue/index.tsx:209
 #: src/components/routes/event/HomepageDesigner/index.tsx:280
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:76
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
 msgid "Name"
 msgstr "Nombre"
 
@@ -7002,12 +7015,12 @@ msgid "Name and email of each attendee, or the buyer's for everyone."
 msgstr "El nombre y el correo de cada asistente, o los del comprador para todos."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:246
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:347
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:242
 msgid "Name and introduction"
 msgstr "Nombre y presentación"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:245
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:346
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:241
 msgid "Name and introduction text"
 msgstr "Nombre y texto de presentación"
 
@@ -7017,7 +7030,7 @@ msgstr "Nombre y texto de presentación"
 #: src/components/routes/admin/Configurations/index.tsx:168
 #: src/components/routes/event/HomepageDesigner/index.tsx:159
 #: src/components/routes/event/HomepageDesigner/index.tsx:284
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:200
 #: src/components/routes/organizer/OrganizerHomepageDesigner/InfoSection.tsx:26
 msgid "Name is required"
 msgstr "El nombre es obligatorio"
@@ -7171,7 +7184,7 @@ msgstr "Nice club"
 
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:305
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:332
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No"
 msgstr "No"
 
@@ -7490,7 +7503,7 @@ msgstr "Sin resultados de búsqueda."
 msgid "No taxes collected during this period."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "No taxes for now. You can add them at any time in the settings, under Taxes and receipts."
 msgstr "Sin impuestos por ahora. Puede añadirlos en cualquier momento en la configuración, en Impuestos y recibos."
 
@@ -7499,7 +7512,7 @@ msgstr "Sin impuestos por ahora. Puede añadirlos en cualquier momento en la con
 msgid "No Taxes or Fees have been added."
 msgstr "No se han agregado impuestos ni tarifas."
 
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No taxes: as a small supplier (under $30,000 of sales a year), you don't charge them."
 msgstr "Sin impuestos: como pequeño proveedor (menos de 30 000 $ de ventas al año), no los cobra."
 
@@ -7617,7 +7630,7 @@ msgstr "Notas"
 msgid "Nothing collected yet"
 msgstr "Todavía no se ha cobrado nada"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:188
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:223
 msgid "Nothing is published: check the preview, then publish."
 msgstr "No se publica nada: revisa la vista previa y luego publica."
 
@@ -7630,7 +7643,7 @@ msgstr "Nada que resolver por ahora."
 msgid "Nothing to show yet"
 msgstr "Nada que mostrar aún"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:158
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:119
 msgid "Nothing usable was found on this page."
 msgstr "No se encontró nada útil en esta página."
 
@@ -7950,8 +7963,8 @@ msgid "Option {i}"
 msgstr "Opción {i}"
 
 #: src/components/routes/event/Settings/cards/LocationCard.tsx:170
-#: src/components/routes/welcome/index.tsx:401
-#: src/components/routes/welcome/index.tsx:412
+#: src/components/routes/welcome/index.tsx:506
+#: src/components/routes/welcome/index.tsx:517
 msgid "Optional"
 msgstr "Opcional"
 
@@ -8513,6 +8526,10 @@ msgstr "Pasado"
 msgid "Past Events"
 msgstr "Eventos pasados"
 
+#: src/components/routes/welcome/index.tsx:309
+msgid "Paste the address of your website, your Instagram or your old ticketing page. We'll use it to fill in your page."
+msgstr "Pega la dirección de tu sitio web, tu Instagram o tu antigua página de venta de entradas. La usaremos para completar tu página."
+
 #: src/components/common/WidgetEditor/index.tsx:297
 msgid "Paste this where you want the widget to appear."
 msgstr "Pegue esto donde desea que aparezca el widget."
@@ -8735,7 +8752,7 @@ msgstr "Teléfono"
 msgid "Photo and video consent"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:221
+#: src/components/routes/welcome/index.tsx:227
 msgid "Pick as many as you like."
 msgstr "Puedes elegir varias opciones."
 
@@ -8833,7 +8850,7 @@ msgstr "Por favor, introduzca una URL de imagen válida que apunte a una imagen.
 msgid "Please enter a valid URL"
 msgstr "Por favor, introduce una URL válida"
 
-#: src/components/routes/welcome/index.tsx:70
+#: src/components/routes/welcome/index.tsx:76
 msgid "Please enter the 5-digit code"
 msgstr "Por favor, ingresa el código de 5 dígitos"
 
@@ -8881,7 +8898,7 @@ msgstr "Por favor, inténtalo de nuevo."
 msgid "Please verify your email address to access all features"
 msgstr "Verifique su dirección de correo electrónico para acceder a todas las funciones."
 
-#: src/components/routes/welcome/index.tsx:124
+#: src/components/routes/welcome/index.tsx:130
 msgid "Please wait before requesting another code"
 msgstr "Por favor, espera antes de solicitar otro código"
 
@@ -8934,7 +8951,7 @@ msgstr "Evite la sobreventa compartiendo inventario entre múltiples tipos de en
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:139
 #: src/components/routes/event/HomepageDesigner/index.tsx:341
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:274
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:438
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:333
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:106
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:212
 msgid "Preview"
@@ -9201,12 +9218,12 @@ msgstr "Provincia"
 #: src/components/common/StatusToggle/index.tsx:96
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:104
 #: src/components/routes/event/HomepageDesigner/index.tsx:351
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:448
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:343
 msgid "Publish"
 msgstr "Publicar"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:447
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:342
 msgid "Publish changes"
 msgstr "Publicar los cambios"
 
@@ -9225,7 +9242,7 @@ msgctxt "waitlist filter"
 msgid "Purchased"
 msgstr "Compradas"
 
-#: src/components/routes/welcome/index.tsx:392
+#: src/components/routes/welcome/index.tsx:497
 msgid "Put free or paid tickets on sale in a few minutes."
 msgstr "Pon a la venta entradas gratuitas o de pago en pocos minutos."
 
@@ -9241,12 +9258,12 @@ msgstr "Código QR"
 msgid "QR Code Check-in"
 msgstr "Registro con código QR"
 
-#: src/components/routes/welcome/index.tsx:287
+#: src/components/routes/welcome/index.tsx:392
 msgctxt "Quebec sales tax"
 msgid "QST"
 msgstr "QST"
 
-#: src/components/routes/welcome/index.tsx:356
+#: src/components/routes/welcome/index.tsx:461
 msgid "QST number"
 msgstr "Número de QST"
 
@@ -9369,7 +9386,8 @@ msgstr "Leer el mensaje"
 msgid "Reading"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:152
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:202
+#: src/components/routes/welcome/index.tsx:345
 msgid "Reading the page… This can take up to 30 seconds."
 msgstr "Leyendo la página… Puede tardar hasta 30 segundos."
 
@@ -9414,7 +9432,7 @@ msgstr "Recibir novedades de la taquilla"
 msgid "Receive product updates from {0}."
 msgstr "Recibir actualizaciones de productos de {0}."
 
-#: src/components/routes/welcome/index.tsx:414
+#: src/components/routes/welcome/index.tsx:519
 msgid "Receive ticket payments directly in the Stripe account."
 msgstr "Recibe los pagos de las entradas directamente en la cuenta de Stripe."
 
@@ -9457,7 +9475,7 @@ msgstr "Los destinatarios estarán disponibles después de enviar el mensaje"
 
 #: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx:46
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:95
-#: src/components/routes/welcome/index.tsx:390
+#: src/components/routes/welcome/index.tsx:495
 msgid "Recommended"
 msgstr "Recomendado"
 
@@ -9672,7 +9690,7 @@ msgstr "Requerido"
 msgid "Required gear"
 msgstr "Material obligatorio"
 
-#: src/components/routes/welcome/index.tsx:183
+#: src/components/routes/welcome/index.tsx:189
 msgid "Resend code"
 msgstr "Reenviar código"
 
@@ -9693,7 +9711,7 @@ msgstr "Reenviar correo"
 msgid "Resend email confirmation"
 msgstr "Reenviar confirmación por correo electrónico"
 
-#: src/components/routes/welcome/index.tsx:182
+#: src/components/routes/welcome/index.tsx:188
 msgid "Resend in {resendCooldown}s"
 msgstr "Reenviar en {resendCooldown}s"
 
@@ -10673,7 +10691,7 @@ msgstr "Se muestra encima de las opciones. Déjalo vacío para «Elige una opci�
 msgid "Shown at checkout."
 msgstr "Se muestra al pagar."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:365
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:260
 msgid "Shown at the bottom of the page"
 msgstr "Mostrada al final de la página"
 
@@ -10699,7 +10717,7 @@ msgstr "Se muestran en el resumen del pedido y en las entradas, una vez pagado."
 msgid "Shown on the payment page, the order summary and the confirmation email (e.g. where to send the Interac e-Transfer, the deadline)."
 msgstr "Se muestran en la página de pago, el resumen del pedido y el correo de confirmación (p. ej., dónde enviar la transferencia Interac, el plazo)."
 
-#: src/components/routes/welcome/index.tsx:359
+#: src/components/routes/welcome/index.tsx:464
 msgid "Shown on your invoices and receipts. You can add them later."
 msgstr "Se muestran en sus facturas y recibos. Puede añadirlos más tarde."
 
@@ -10794,8 +10812,10 @@ msgstr "Cuadro de texto de una sola línea"
 msgid "Skip"
 msgstr "Omitir"
 
-#: src/components/routes/welcome/index.tsx:247
-#: src/components/routes/welcome/index.tsx:366
+#: src/components/routes/welcome/index.tsx:253
+#: src/components/routes/welcome/index.tsx:328
+#: src/components/routes/welcome/index.tsx:350
+#: src/components/routes/welcome/index.tsx:471
 msgid "Skip this step"
 msgstr "Saltar este paso"
 
@@ -10824,8 +10844,8 @@ msgstr "Para poder distinguirlos después, por ejemplo sitio dehorsqc.com"
 msgid "Social"
 msgstr "Social"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:352
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:84
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:247
 #: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx:97
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:60
 msgid "Social networks"
@@ -10859,7 +10879,7 @@ msgid "Some automatic info is badly written. Please correct it and try again."
 msgstr "Un dato automático está mal escrito. Corrígelo e inténtalo de nuevo."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:220
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:319
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:214
 msgid "Some changes could not be published. Please try again."
 msgstr "Algunos cambios no se pudieron publicar. Inténtalo de nuevo."
 
@@ -10905,9 +10925,10 @@ msgstr "Algo salió mal. Por favor, inténtelo de nuevo más tarde."
 #: src/components/routes/my-tickets/index.tsx:493
 #: src/components/routes/profile/ManageProfile/index.tsx:127
 #: src/components/routes/profile/ManageProfile/index.tsx:141
-#: src/components/routes/welcome/index.tsx:213
-#: src/components/routes/welcome/index.tsx:325
-#: src/components/routes/welcome/index.tsx:482
+#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:299
+#: src/components/routes/welcome/index.tsx:430
+#: src/components/routes/welcome/index.tsx:587
 #: src/mutations/useSwitchAccount.ts:24
 msgid "Something went wrong. Please try again."
 msgstr "Algo salió mal. Inténtalo de nuevo."
@@ -11037,11 +11058,11 @@ msgid "Status"
 msgstr "Estado"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Stay"
 msgstr "Quedarme"
 
-#: src/components/routes/welcome/index.tsx:41
+#: src/components/routes/welcome/index.tsx:47
 msgid "Step {step} of {STEPS}"
 msgstr "Paso {step} de {STEPS}"
 
@@ -11528,7 +11549,7 @@ msgstr "La lista de registro que buscas no existe."
 msgid "The club"
 msgstr "El club"
 
-#: src/components/routes/welcome/index.tsx:188
+#: src/components/routes/welcome/index.tsx:194
 msgid "The code will expire in 10 minutes. Check your spam folder if you don't see the email."
 msgstr "El código expirará en 10 minutos. Revisa tu carpeta de spam si no ves el correo."
 
@@ -11684,7 +11705,7 @@ msgstr ""
 msgid "The page and the events are visible again."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:23
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "No se pudo leer la página. Comprueba la dirección e inténtalo de nuevo."
 
@@ -11776,7 +11797,7 @@ msgstr "No se pudo enviar la prueba. Inténtalo de nuevo."
 msgid "The text of the button under the tickets"
 msgstr "El texto del botón bajo las entradas"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:171
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:137
 msgid "The texts are taken as is from the page."
 msgstr "Los textos se toman tal cual de la página."
 
@@ -11987,7 +12008,11 @@ msgstr "Este perfil de organizador aún no está publicado"
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "Las ventas de este organizador se ingresan directamente en su propia cuenta de Stripe ({ownAccountId})."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:167
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
+msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
+msgstr "Esta página está alojada en {platform}: se han omitido su logotipo, su color y sus redes. Completa tú lo que falte."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:133
 msgid "This page shows little text: complete what is missing yourself."
 msgstr "Esta página tiene poco texto: completa lo que falta."
 
@@ -12455,6 +12480,10 @@ msgstr "Confianza y seguridad"
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
 msgid "Try again"
 msgstr "Reintentar"
+
+#: src/components/routes/welcome/index.tsx:320
+msgid "Try another address"
+msgstr "Probar otra dirección"
 
 #: src/components/routes/auth/Login/index.tsx:145
 #: src/components/routes/my-tickets/index.tsx:512
@@ -12942,7 +12971,7 @@ msgstr "Tratamiento del IVA para tarifas de la plataforma: Las empresas registra
 msgid "VAT validation service temporarily unavailable"
 msgstr "Servicio de validación de IVA temporalmente no disponible"
 
-#: src/components/routes/welcome/index.tsx:143
+#: src/components/routes/welcome/index.tsx:149
 msgid "Verification code"
 msgstr "Código de verificación"
 
@@ -12951,7 +12980,7 @@ msgstr "Código de verificación"
 msgid "Verified"
 msgstr "Verificado"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verify Email"
 msgstr "Verificar correo"
 
@@ -12959,7 +12988,7 @@ msgstr "Verificar correo"
 msgid "Verify your email"
 msgstr "Verifica tu correo electrónico"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verifying..."
 msgstr "Verificando..."
 
@@ -13026,7 +13055,7 @@ msgstr "Ver mensaje"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:272
 #: src/components/layouts/OrganizerLayout/index.tsx:319
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:430
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:325
 msgid "View my page"
 msgstr "Ver mi página"
 
@@ -13214,7 +13243,7 @@ msgstr "Recomendamos dimensiones de 400px por 400px y un tamaño máximo de arch
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "Compartimos los eventos de la taquilla en las redes de Dehors. Tu evento llega directamente a una comunidad de gente que se mueve."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:122
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:172
 msgid "We suggest a name, a text, a color, images and your networks. You choose what to keep."
 msgstr "Proponemos un nombre, un texto, un color, imágenes y tus redes. Tú eliges qué conservar."
 
@@ -13246,7 +13275,7 @@ msgstr "Validaremos tu número de IVA en segundo plano. Si hay algún problema, 
 msgid "We're processing your order. Please wait..."
 msgstr "Estamos procesando tu pedido. Espere por favor..."
 
-#: src/components/routes/welcome/index.tsx:134
+#: src/components/routes/welcome/index.tsx:140
 msgid "We've sent a 5-digit verification code to:"
 msgstr "Hemos enviado un código de verificación de 5 dígitos a:"
 
@@ -13328,7 +13357,7 @@ msgstr "¡Hola de nuevo, {firstName}!"
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
 msgstr "¡Hola de nuevo, {firstName}! Esto es lo que pasa en {0}."
 
-#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:225
 msgid "Welcome, {0}!"
 msgstr "¡Bienvenido, {0}!"
 
@@ -13353,7 +13382,7 @@ msgstr ""
 msgid "What is a Category?"
 msgstr "¿Qué es una categoría?"
 
-#: src/components/routes/welcome/index.tsx:220
+#: src/components/routes/welcome/index.tsx:226
 msgid "What kinds of events do you organize?"
 msgstr "¿Qué tipos de eventos organizas?"
 
@@ -13547,11 +13576,11 @@ msgstr "Dónde"
 msgid "Where the money from your sales goes."
 msgstr "Adónde va el dinero de tus ventas."
 
-#: src/components/routes/welcome/index.tsx:385
+#: src/components/routes/welcome/index.tsx:490
 msgid "Where to start? The rest can wait."
 msgstr "¿Por dónde empezar? El resto puede esperar."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:353
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:248
 msgid "Which ones to show and in what order"
 msgstr "Cuáles mostrar y en qué orden"
 
@@ -13618,7 +13647,7 @@ msgstr "Con un comprador de ejemplo y tu último evento. Tú recibes este correo
 msgid "Without a link, the address opens in Google Maps."
 msgstr "Sin enlace, la dirección se abre en Google Maps."
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:166
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:132
 msgid "Without an account, Instagram only shows the profile picture and the bio: complete the text yourself."
 msgstr "Sin cuenta, Instagram solo muestra la foto de perfil y la biografía: completa el texto tú mismo."
 
@@ -13700,7 +13729,7 @@ msgstr "Sí"
 msgid "Yes - I have a valid EU VAT registration number"
 msgstr "Sí - Tengo un número de registro de IVA de la UE válido"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "Yes, both"
 msgstr "Sí, ambos"
 
@@ -13992,7 +14021,11 @@ msgstr "Los datos de tu organización, tus pagos, tus impuestos y tu equipo."
 msgid "Your own answer"
 msgstr "Tu propia respuesta"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:317
+#: src/components/routes/welcome/index.tsx:296
+msgid "Your page is filled in. You can change everything in My page."
+msgstr "Tu página está completa. Puedes cambiarlo todo en Mi página."
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
 msgid "Your page is published"
 msgstr "Tu página está publicada"
 
@@ -14053,7 +14086,7 @@ msgstr ""
 msgid "Your ticketing in 4 steps"
 msgstr "Tu taquilla en 4 pasos"
 
-#: src/components/routes/welcome/index.tsx:384
+#: src/components/routes/welcome/index.tsx:489
 msgid "Your ticketing is ready!"
 msgstr "¡Tu taquilla está lista!"
 
@@ -14074,7 +14107,7 @@ msgid "Your tickets have been confirmed."
 msgstr "Tus entradas han sido confirmadas."
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:99
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:115
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:108
 msgid "Your unpublished changes will be lost."
 msgstr "Se perderán tus cambios sin publicar."
 
@@ -14094,7 +14127,8 @@ msgstr "Tu oferta de la lista de espera ha expirado y no pudimos completar tu pe
 msgid "your-website.com"
 msgstr "tu-sitio.com"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:134
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:184
+#: src/components/routes/welcome/index.tsx:337
 msgid "yourclub.com"
 msgstr "tuclub.com"
 

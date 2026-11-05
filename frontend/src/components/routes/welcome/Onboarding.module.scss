@@ -310,6 +310,38 @@
   }
 }
 
+// L'etape « Votre page »: l'adresse, puis ce qu'on y a trouve.
+.importForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  .actions {
+    margin-top: 28px;
+  }
+}
+
+.importBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 760px;
+  margin-top: 20px;
+  text-align: left;
+
+  @include mixins.respond-below(lg) {
+    margin-top: 12px;
+  }
+}
+
+.importWait {
+  margin: 0;
+  font-size: 14px;
+  color: var(--dehors-brun);
+}
+
 // Les deux boutons de la maquette: brun plein, et contour brun. Classe doublee pour
 // passer devant les couleurs de variante que Mantine met sur le bouton.
 .darkButton.darkButton,

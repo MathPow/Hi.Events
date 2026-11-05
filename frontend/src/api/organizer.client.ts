@@ -25,7 +25,8 @@ export interface OrganizerStripeConnection {
 // What « Ma page » could take from a website or an Instagram profile (images as data: URLs).
 export interface OrganizerPageSuggestion {
     source_url: string;
-    source: 'website' | 'instagram';
+    source: 'website' | 'instagram' | 'platform';
+    platform: string | null;
     name: string | null;
     description: string | null;
     accent: string | null;

@@ -99,4 +99,24 @@ class WebsiteReaderTest extends TestCase
         $this->assertNull($reader->socialLink('https://twitter.com/intent/tweet?text=x'));
         $this->assertNull($reader->socialLink('https://example.com/instagram'));
     }
+
+    public function testReadsTheDeclaredOrganizerOfAnEvent(): void
+    {
+        $snapshot = (new WebsiteReader())->read(new FetchedWebPage(
+            url: 'https://www.eventbrite.ca/e/the-after-123',
+            contentType: 'text/html',
+            charset: 'utf-8',
+            body: '<html><head>
+                <script type="application/ld+json">{"@type": "WebPage", "name": "THE AFTER"}</script>
+                <script type="application/ld+json">[{"@type": "SocialEvent", "organizer": [{"@type": "Organization", "name": "GLDN &amp; GRVS"}]}]</script>
+            </head><body></body></html>',
+        ));
+
+        $this->assertSame('GLDN & GRVS', $snapshot->organizerName);
+    }
+
+    public function testAPageWithoutAnOrganizerHasNone(): void
+    {
+        $this->assertNull($this->snapshot()->organizerName);
+    }
 }

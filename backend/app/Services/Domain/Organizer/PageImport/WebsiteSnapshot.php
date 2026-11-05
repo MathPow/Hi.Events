@@ -21,6 +21,8 @@ class WebsiteSnapshot extends BaseDataObject
         /** @var list<array{platform: string, handle: string}> */
         public readonly array   $socialLinks,
         public readonly string  $text,
+        /** Who presents the event, when the page declares it (schema.org). */
+        public readonly ?string $organizerName = null,
     )
     {
     }

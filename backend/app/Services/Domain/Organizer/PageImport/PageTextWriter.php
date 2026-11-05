@@ -34,6 +34,12 @@ class PageTextWriter
           to three sentences. Otherwise an empty list.
         Never invent a fact, a date, a price, a place or a number that is not in the content. If the content
         says almost nothing, keep the description to one short sentence from what is there, or leave it empty.
+
+        When the page is hosted by a platform (a ticketing service or a social network), the platform is not
+        the organizer: take nothing from its name, menus, slogans or help pages. The organizer is whoever
+        presents the events. The page may be about one event: use it to say what kind of events they organize
+        and where, without that event's date, price or program, and without FAQs about that event alone. If
+        the organizer's name is not clear, leave name empty.
         TXT;
 
     public function __construct(
@@ -50,12 +56,12 @@ class PageTextWriter
         return $this->clientFactory->isConfigured();
     }
 
-    public function write(WebsiteSnapshot $snapshot, int $accountId, ?int $userId): ?PageTexts
+    public function write(WebsiteSnapshot $snapshot, int $accountId, ?int $userId, ?string $platform = null): ?PageTexts
     {
         try {
             $message = $this->clientFactory->create()->beta->messages->create(
                 maxTokens: self::MAX_TOKENS,
-                messages: [['role' => 'user', 'content' => $this->content($snapshot)]],
+                messages: [['role' => 'user', 'content' => $this->content($snapshot, $platform)]],
                 model: $this->modelService->current(),
                 system: self::SYSTEM,
                 outputConfig: [
@@ -101,10 +107,12 @@ class PageTextWriter
         );
     }
 
-    private function content(WebsiteSnapshot $snapshot): string
+    private function content(WebsiteSnapshot $snapshot, ?string $platform): string
     {
         return implode("\n", [
             'Address: ' . $snapshot->url,
+            ...($platform !== null ? ['Hosted by this platform, which is not the organizer: ' . $platform] : []),
+            ...($snapshot->organizerName !== null ? ['Organizer declared by the page: ' . $snapshot->organizerName] : []),
             'Names found: ' . (implode(' | ', $snapshot->names) ?: '-'),
             'Descriptions found: ' . (implode(' | ', $snapshot->descriptions) ?: '-'),
             '<page_content>',

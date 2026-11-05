@@ -5,9 +5,8 @@ import {IdParam} from "../../../../types.ts";
 import {OrganizerPageSuggestion} from "../../../../api/organizer.client.ts";
 import {useImportOrganizerPage} from "../../../../mutations/useImportOrganizerPage.ts";
 import {socialPlatformLabel} from "./socialPlatforms.ts";
+import {ImportPart} from "./homepageDraft.ts";
 import classes from "./OrganizerHomepageDesigner.module.scss";
-
-export type ImportPart = 'name' | 'description' | 'accent' | 'logo' | 'cover' | 'social' | 'faqs';
 
 interface ImportFromUrlProps {
     organizerId: IdParam;
@@ -22,24 +21,22 @@ const errorMessage = (error: any): string =>
     ?? error?.response?.data?.message
     ?? t`The page could not be read. Check the address and try again.`;
 
-// « Remplir depuis votre site ou votre Instagram »: the server reads the page, the assistant writes
-// the texts, and what the organizer keeps goes into the draft. Nothing is published here.
-export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlProps) => {
+const foundParts = (result: OrganizerPageSuggestion): ImportPart[] => ([
+    result.name && 'name',
+    result.description && 'description',
+    result.accent && 'accent',
+    result.logo && 'logo',
+    result.cover && 'cover',
+    result.social_links.length > 0 && 'social',
+    result.faqs.length > 0 && 'faqs',
+].filter(Boolean) as ImportPart[]);
+
+// The address, the server's suggestion and what the organizer keeps from it.
+export const useImportFromUrl = (organizerId: IdParam) => {
     const importPage = useImportOrganizerPage(organizerId);
     const [url, setUrl] = useState('');
     const [suggestion, setSuggestion] = useState<OrganizerPageSuggestion | null>(null);
     const [kept, setKept] = useState<ImportPart[]>([]);
-    const [applying, setApplying] = useState(false);
-
-    const found = (result: OrganizerPageSuggestion): ImportPart[] => ([
-        result.name && 'name',
-        result.description && 'description',
-        result.accent && 'accent',
-        result.logo && 'logo',
-        result.cover && 'cover',
-        result.social_links.length > 0 && 'social',
-        result.faqs.length > 0 && 'faqs',
-    ].filter(Boolean) as ImportPart[]);
 
     const scan = (event: FormEvent) => {
         event.preventDefault();
@@ -49,7 +46,7 @@ export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlPro
         importPage.mutate(url.trim(), {
             onSuccess: (result) => {
                 setSuggestion(result);
-                setKept(found(result));
+                setKept(foundParts(result));
             },
         });
     };
@@ -57,21 +54,27 @@ export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlPro
     const toggle = (part: ImportPart) =>
         setKept(current => current.includes(part) ? current.filter(item => item !== part) : [...current, part]);
 
-    const apply = async () => {
-        if (!suggestion) {
-            return;
-        }
-        setApplying(true);
-        try {
-            await onApply(suggestion, kept);
-            setSuggestion(null);
-            setUrl('');
-        } finally {
-            setApplying(false);
-        }
+    return {
+        url,
+        setUrl,
+        scan,
+        suggestion,
+        setSuggestion,
+        kept,
+        toggle,
+        isPending: importPage.isPending,
+        error: importPage.isError ? errorMessage(importPage.error) : undefined,
     };
+};
 
-    const rows = suggestion ? found(suggestion).map(part => {
+// What was found, a checkbox per part, and what to know about it.
+export const ImportSuggestionReview = ({suggestion, kept, onToggle}: {
+    suggestion: OrganizerPageSuggestion,
+    kept: ImportPart[],
+    onToggle: (part: ImportPart) => void,
+}) => {
+    const platform = suggestion.platform;
+    const rows = foundParts(suggestion).map(part => {
         const labels: Record<ImportPart, string> = {
             name: t`Name`,
             description: t`Introduction`,
@@ -103,12 +106,59 @@ export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlPro
 
         return (
             <label key={part} className={classes.importRow}>
-                <Checkbox checked={kept.includes(part)} onChange={() => toggle(part)} color="var(--dehors-brun)"/>
+                <Checkbox checked={kept.includes(part)} onChange={() => onToggle(part)} color="var(--dehors-brun)"/>
                 <span className={classes.importLabel}>{labels[part]}</span>
                 {preview}
             </label>
         );
-    }) : [];
+    });
+
+    return (
+        <>
+            {rows.length === 0 ? (
+                <p className={classes.importNote}>{t`Nothing usable was found on this page.`}</p>
+            ) : (
+                <div className={classes.importRows}>{rows}</div>
+            )}
+
+            {platform && (
+                <p className={classes.importNote}>
+                    {t`This page is hosted by ${platform}: its logo, color and networks were left out. Complete what is missing yourself.`}
+                </p>
+            )}
+            {!platform && suggestion.limited && (
+                <p className={classes.importNote}>
+                    {suggestion.source === 'instagram'
+                        ? t`Without an account, Instagram only shows the profile picture and the bio: complete the text yourself.`
+                        : t`This page shows little text: complete what is missing yourself.`}
+                </p>
+            )}
+            {!suggestion.written_by_assistant && suggestion.description && (
+                <p className={classes.importNote}>{t`The texts are taken as is from the page.`}</p>
+            )}
+        </>
+    );
+};
+
+// « Remplir depuis votre site ou votre Instagram »: the server reads the page, the assistant writes
+// the texts, and what the organizer keeps goes into the draft. Nothing is published here.
+export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlProps) => {
+    const {url, setUrl, scan, suggestion, setSuggestion, kept, toggle, isPending, error} = useImportFromUrl(organizerId);
+    const [applying, setApplying] = useState(false);
+
+    const apply = async () => {
+        if (!suggestion) {
+            return;
+        }
+        setApplying(true);
+        try {
+            await onApply(suggestion, kept);
+            setSuggestion(null);
+            setUrl('');
+        } finally {
+            setApplying(false);
+        }
+    };
 
     return (
         <section className={`${classes.section} ${classes.importCard}`}>
@@ -134,13 +184,13 @@ export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlPro
                             placeholder={t`yourclub.com`}
                             aria-label={t`Address of your website or Instagram`}
                             inputMode="url"
-                            disabled={disabled || importPage.isPending}
-                            error={importPage.isError ? errorMessage(importPage.error) : undefined}
+                            disabled={disabled || isPending}
+                            error={error}
                         />
                         <Button
                             type="submit"
                             className={`${classes.button} ${classes.buttonFilled}`}
-                            loading={importPage.isPending}
+                            loading={isPending}
                             disabled={disabled || !url.trim()}
                         >
                             {t`Analyze`}
@@ -148,28 +198,13 @@ export const ImportFromUrl = ({organizerId, disabled, onApply}: ImportFromUrlPro
                     </form>
                 )}
 
-                {importPage.isPending && (
+                {isPending && (
                     <p className={classes.importNote}>{t`Reading the page… This can take up to 30 seconds.`}</p>
                 )}
 
                 {suggestion && (
                     <>
-                        {rows.length === 0 ? (
-                            <p className={classes.importNote}>{t`Nothing usable was found on this page.`}</p>
-                        ) : (
-                            <div className={classes.importRows}>{rows}</div>
-                        )}
-
-                        {suggestion.limited && (
-                            <p className={classes.importNote}>
-                                {suggestion.source === 'instagram'
-                                    ? t`Without an account, Instagram only shows the profile picture and the bio: complete the text yourself.`
-                                    : t`This page shows little text: complete what is missing yourself.`}
-                            </p>
-                        )}
-                        {!suggestion.written_by_assistant && rows.length > 0 && (
-                            <p className={classes.importNote}>{t`The texts are taken as is from the page.`}</p>
-                        )}
+                        <ImportSuggestionReview suggestion={suggestion} kept={kept} onToggle={toggle}/>
 
                         <div className={classes.importActions}>
                             <Button

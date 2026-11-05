@@ -134,7 +134,7 @@ msgid "{availableCount} of {totalCount} available"
 msgstr "{availableCount} / {totalCount} 可用"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:367
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:464
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
 msgid "{changeCount, plural, one {# change not yet published} other {# changes not yet published}}"
 msgstr "{changeCount, plural, other {# 项更改尚未发布}}"
 
@@ -190,11 +190,11 @@ msgstr "{doneCount, plural, one {已完成 # / {total} 步} other {已完成 # /
 msgid "{eventCount} events"
 msgstr "{eventCount} 个事件"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:360
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:255
 msgid "{faqCount, plural, =0 {No questions yet} one {# question · shown at the bottom of the page} other {# questions · shown at the bottom of the page}}"
 msgstr "{faqCount, plural, =0 {还没有问题} other {# 个问题 · 显示在页面底部}}"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:101
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:104
 msgid "{faqCount} questions"
 msgstr "{faqCount} 个问题"
 
@@ -513,7 +513,7 @@ msgstr "多行文本输入"
 msgid "A new PIN signs out the phones already open."
 msgstr "新的 PIN 码会让已打开的手机退出登录。"
 
-#: src/components/routes/welcome/index.tsx:117
+#: src/components/routes/welcome/index.tsx:123
 msgid "A new verification code has been sent to your email"
 msgstr "新的验证码已发送到您的邮箱"
 
@@ -597,8 +597,8 @@ msgstr "自行承担费用"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:237
 #: src/components/routes/organizer/OrganizerHomepageDesigner/AccentSection.tsx:67
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:78
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:338
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:233
 msgid "Accent color"
 msgstr "强调色"
 
@@ -653,7 +653,7 @@ msgstr "账户"
 msgid "Account configuration updated successfully"
 msgstr "账户配置更新成功"
 
-#: src/components/routes/welcome/index.tsx:383
+#: src/components/routes/welcome/index.tsx:488
 msgid "Account created!"
 msgstr "账户已创建！"
 
@@ -770,7 +770,7 @@ msgstr ""
 msgid "Add a first block from the list or with the button below."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:403
+#: src/components/routes/welcome/index.tsx:508
 msgid "Add a logo and colors that match the organization."
 msgstr "添加符合组织形象的标志和颜色。"
 
@@ -908,7 +908,7 @@ msgstr "添加到日历"
 msgid "Add to Google Wallet"
 msgstr "添加到 Google 钱包"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:181
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:216
 msgid "Add to my draft"
 msgstr "添加到我的草稿"
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "Added to the price of the products you choose, in all your events."
 msgstr "加在您所选商品的价格上，适用于您的所有活动。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:163
 msgid "Added to your draft. Check the preview, then publish."
 msgstr "已添加到草稿。请检查预览，然后发布。"
 
@@ -978,9 +978,13 @@ msgstr "地址第 2 行"
 msgid "Address Line 2"
 msgstr "地址第 2 行"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:135
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
 msgid "Address of your website or Instagram"
 msgstr "您的网站或 Instagram 地址"
+
+#: src/components/routes/welcome/index.tsx:338
+msgid "Address of your website, Instagram or ticketing page"
+msgstr "您的网站、Instagram 或售票页面的地址"
 
 #: src/components/layouts/Admin/index.tsx:13
 #: src/components/modals/EditUserModal/index.tsx:49
@@ -1209,6 +1213,10 @@ msgstr "即将售罄"
 msgid "Almost there! We're just waiting for your payment to be processed. This should only take a few seconds."
 msgstr "快完成了！我们正在等待您的付款处理。这只需要几秒钟。"
 
+#: src/components/routes/welcome/index.tsx:307
+msgid "Already have a page somewhere?"
+msgstr "您已经在别处有页面了吗？"
+
 #: src/components/routes/auth/Register/index.tsx:125
 msgid "Already have an account? <0>{0}</0>"
 msgstr "已有账户？<0>{0}</0>"
@@ -1297,7 +1305,8 @@ msgstr "实时更新的名单、通知参与者的邮件，以及活动当天的
 msgid "Analytics"
 msgstr "访问统计"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:146
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:196
+#: src/components/routes/welcome/index.tsx:353
 msgid "Analyze"
 msgstr "分析"
 
@@ -1451,8 +1460,8 @@ msgstr "已归档的主办方"
 msgid "Archiving hides it from the public (can be restored). Deleting erases everything, for good."
 msgstr "归档会对公众隐藏（可恢复）。删除会永久清除所有内容。"
 
-#: src/components/routes/welcome/index.tsx:333
-#: src/components/routes/welcome/index.tsx:336
+#: src/components/routes/welcome/index.tsx:438
+#: src/components/routes/welcome/index.tsx:441
 msgid "Are you registered for GST and QST?"
 msgstr "您是否已登记 GST 和 QST？"
 
@@ -2117,8 +2126,8 @@ msgstr "按钮文字"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:238
 #: src/components/routes/event/HomepageDesigner/index.tsx:239
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:339
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:340
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:234
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:235
 msgid "Buttons and highlighted elements"
 msgstr "按钮和突出显示的元素"
 
@@ -2227,8 +2236,8 @@ msgstr ""
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:190
 #: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:86
 #: src/components/routes/organizer/Messages/ReplyModal.tsx:109
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:185
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:473
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:220
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:368
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:51
@@ -2379,7 +2388,7 @@ msgid "Change waitlist settings"
 msgstr "更改等候名单设置"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:321
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:418
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:313
 msgid "Changes appear on the right."
 msgstr "更改会显示在右侧。"
 
@@ -2423,7 +2432,7 @@ msgid "Check out this event!"
 msgstr "看看这个活动吧！"
 
 #: src/components/routes/auth/ForgotPassword/index.tsx:42
-#: src/components/routes/welcome/index.tsx:133
+#: src/components/routes/welcome/index.tsx:139
 msgid "Check your email"
 msgstr "查看您的邮箱"
 
@@ -2716,7 +2725,7 @@ msgstr "佣金"
 msgid "Communication"
 msgstr "沟通"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:244
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:195
 msgid "Complete or delete the unfinished questions before publishing."
 msgstr "发布前请完成或删除未完成的问题。"
 
@@ -2869,7 +2878,7 @@ msgid "Congratulations! Your event is now visible to the public."
 msgstr "恭喜！您的活动现已对公众可见。"
 
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:95
-#: src/components/routes/welcome/index.tsx:417
+#: src/components/routes/welcome/index.tsx:522
 msgid "Connect"
 msgstr "连接"
 
@@ -2879,7 +2888,7 @@ msgstr "连接"
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:444
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:133
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:139
-#: src/components/routes/welcome/index.tsx:413
+#: src/components/routes/welcome/index.tsx:518
 msgid "Connect Stripe"
 msgstr "连接 Stripe"
 
@@ -2945,8 +2954,8 @@ msgstr ""
 #: src/components/common/WidgetEditor/index.tsx:220
 #: src/components/layouts/EventHomepage/StickyBuyBar/index.tsx:115
 #: src/components/routes/product-widget/SelectProducts/index.tsx:433
-#: src/components/routes/welcome/index.tsx:250
-#: src/components/routes/welcome/index.tsx:369
+#: src/components/routes/welcome/index.tsx:256
+#: src/components/routes/welcome/index.tsx:474
 msgid "Continue"
 msgstr "继续"
 
@@ -3143,7 +3152,7 @@ msgstr "无法更新押金"
 msgid "Country"
 msgstr "国家"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:83
 msgid "Cover image"
 msgstr "封面图片"
 
@@ -3173,7 +3182,7 @@ msgstr ""
 msgid "Create a custom widget to sell tickets on your site."
 msgstr "创建自定义小部件以在您的网站上销售门票。"
 
-#: src/components/routes/welcome/index.tsx:391
+#: src/components/routes/welcome/index.tsx:496
 msgid "Create a first event"
 msgstr "创建第一个活动"
 
@@ -3215,7 +3224,7 @@ msgstr "创建账户"
 
 #: src/components/modals/CreateEventModal/index.tsx:204
 #: src/components/modals/CreateEventModal/index.tsx:230
-#: src/components/routes/welcome/index.tsx:396
+#: src/components/routes/welcome/index.tsx:501
 msgid "Create an event"
 msgstr "创建活动"
 
@@ -3434,7 +3443,7 @@ msgstr "客户将收到确认退款的电子邮件"
 #: src/components/common/CookieConsentBanner/index.tsx:182
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:88
-#: src/components/routes/welcome/index.tsx:407
+#: src/components/routes/welcome/index.tsx:512
 msgid "Customize"
 msgstr "自定义"
 
@@ -3452,11 +3461,11 @@ msgstr "自定义页面"
 msgid "Customize the questions asked during checkout to gather important information from your attendees."
 msgstr "自定义结账时提出的问题，以从参与者那里收集重要信息。"
 
-#: src/components/routes/welcome/index.tsx:402
+#: src/components/routes/welcome/index.tsx:507
 msgid "Customize the ticketing"
 msgstr "自定义票务"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:417
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:312
 msgid "Customize your public page."
 msgstr "自定义您的公开页面。"
 
@@ -3734,7 +3743,7 @@ msgstr ""
 msgid "Details"
 msgstr "详细信息"
 
-#: src/components/routes/welcome/index.tsx:170
+#: src/components/routes/welcome/index.tsx:176
 msgid "Didn't receive the code?"
 msgstr "没有收到验证码？"
 
@@ -3798,7 +3807,7 @@ msgstr "显示"
 msgid "Display and options"
 msgstr "显示与选项"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:354
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
 msgid "Display and order"
 msgstr "显示和顺序"
 
@@ -4329,7 +4338,7 @@ msgstr ""
 msgid "Email Verification Required"
 msgstr "需要验证邮箱"
 
-#: src/components/routes/welcome/index.tsx:98
+#: src/components/routes/welcome/index.tsx:104
 msgid "Email verified successfully!"
 msgstr "邮箱验证成功！"
 
@@ -4758,7 +4767,7 @@ msgid "Everyone"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:371
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:468
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:363
 msgid "Everything is published"
 msgstr "全部已发布"
 
@@ -5019,7 +5028,7 @@ msgstr "重新发送门票失败"
 msgid "Failed to resend ticket email"
 msgstr "重新发送票据电子邮件失败"
 
-#: src/components/routes/welcome/index.tsx:126
+#: src/components/routes/welcome/index.tsx:132
 msgid "Failed to resend verification code"
 msgstr "重新发送验证码失败"
 
@@ -5121,7 +5130,7 @@ msgstr "上传图片失败。"
 msgid "Failed to upload image. Please try again."
 msgstr "上传图片失败。请重试。"
 
-#: src/components/routes/welcome/index.tsx:103
+#: src/components/routes/welcome/index.tsx:109
 msgid "Failed to verify email"
 msgstr "验证邮箱失败"
 
@@ -5129,8 +5138,8 @@ msgstr "验证邮箱失败"
 msgid "Fair market value of what the buyer receives."
 msgstr "买家所获物品的公平市场价值。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:359
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:85
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:254
 msgid "FAQ"
 msgstr "常见问题"
 
@@ -5202,9 +5211,13 @@ msgstr ""
 msgid "File is too large. Maximum size is 30MB."
 msgstr "文件太大。最大大小为30MB。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:120
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:170
 msgid "Fill from your website or Instagram"
 msgstr "从您的网站或 Instagram 填写"
+
+#: src/components/routes/welcome/index.tsx:324
+msgid "Fill in my page"
+msgstr "填写我的页面"
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:307
 msgid "Filled in on their own at registration."
@@ -5550,16 +5563,16 @@ msgstr "销售总额"
 msgid "Gross Sales"
 msgstr "总销售额"
 
-#: src/components/routes/welcome/index.tsx:286
+#: src/components/routes/welcome/index.tsx:391
 msgctxt "Canadian goods and services tax"
 msgid "GST"
 msgstr "GST"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "GST 5% and QST 9.975% will be added to the price of your tickets."
 msgstr "5% 的 GST 和 9.975% 的 QST 将加到您的票价上。"
 
-#: src/components/routes/welcome/index.tsx:354
+#: src/components/routes/welcome/index.tsx:459
 msgid "GST number"
 msgstr "GST 号码"
 
@@ -5817,7 +5830,7 @@ msgstr "我同意<0>条款和条件</0>。"
 msgid "I confirm this is a transactional message related to this event"
 msgstr "我确认这是与此活动相关的交易消息"
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "I don't know"
 msgstr "我不确定"
 
@@ -5888,7 +5901,7 @@ msgid "images"
 msgstr ""
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:233
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Images"
 msgstr "图片"
 
@@ -5986,7 +5999,7 @@ msgid "Info added automatically"
 msgstr "自动添加的信息"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:244
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:345
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:240
 msgid "Info and description"
 msgstr "信息和描述"
 
@@ -6031,7 +6044,7 @@ msgstr "集成"
 msgid "Interac e-Transfer, cheque or cash. You confirm the payment by hand."
 msgstr "Interac 电子转账、支票或现金。你需要手动确认付款。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:77
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:80
 msgid "Introduction"
 msgstr "简介"
 
@@ -6137,7 +6150,7 @@ msgstr "开具官方捐赠收据"
 msgid "Issue official donation receipts for the charitable portion of an order."
 msgstr "为订单中的慈善部分开具正式捐赠收据。"
 
-#: src/components/routes/welcome/index.tsx:334
+#: src/components/routes/welcome/index.tsx:439
 msgid "It decides whether taxes are added to the price of your tickets."
 msgstr "这决定票价是否需要加税。"
 
@@ -6371,7 +6384,7 @@ msgstr "最近使用"
 msgid "Last Used"
 msgstr "最近一次使用"
 
-#: src/components/routes/welcome/index.tsx:424
+#: src/components/routes/welcome/index.tsx:529
 msgid "Later, go to the dashboard"
 msgstr "稍后，前往控制面板"
 
@@ -6389,7 +6402,7 @@ msgid "Learn more about Stripe"
 msgstr "了解更多 Stripe 信息"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Leave"
 msgstr "离开"
 
@@ -6414,7 +6427,7 @@ msgid "Leave quantity empty for unlimited stock"
 msgstr "数量留空表示库存不限"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:98
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:114
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:107
 msgid "Leave without publishing?"
 msgstr "不发布就离开？"
 
@@ -6589,15 +6602,15 @@ msgid "Logging in"
 msgstr "登录"
 
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx:162
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:82
 msgid "Logo"
 msgstr "标志"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover"
 msgstr "徽标和封面"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:334
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:229
 msgid "Logo and cover image"
 msgstr "徽标和封面图片"
 
@@ -6956,7 +6969,7 @@ msgid "My other app"
 msgstr "我的其他应用"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:171
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:415
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:310
 msgid "My page"
 msgstr "我的页面"
 
@@ -6993,7 +7006,7 @@ msgstr "不适用"
 #: src/components/routes/admin/Configurations/index.tsx:219
 #: src/components/routes/admin/PlatformRevenue/index.tsx:209
 #: src/components/routes/event/HomepageDesigner/index.tsx:280
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:76
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
 msgid "Name"
 msgstr "名称"
 
@@ -7002,12 +7015,12 @@ msgid "Name and email of each attendee, or the buyer's for everyone."
 msgstr "每位参与者的姓名和邮箱，或所有人都使用买家的信息。"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:246
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:347
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:242
 msgid "Name and introduction"
 msgstr "名称和介绍"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:245
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:346
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:241
 msgid "Name and introduction text"
 msgstr "名称和介绍文字"
 
@@ -7017,7 +7030,7 @@ msgstr "名称和介绍文字"
 #: src/components/routes/admin/Configurations/index.tsx:168
 #: src/components/routes/event/HomepageDesigner/index.tsx:159
 #: src/components/routes/event/HomepageDesigner/index.tsx:284
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:249
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:200
 #: src/components/routes/organizer/OrganizerHomepageDesigner/InfoSection.tsx:26
 msgid "Name is required"
 msgstr "姓名为必填项"
@@ -7171,7 +7184,7 @@ msgstr "Nice club"
 
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:305
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:332
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No"
 msgstr "否"
 
@@ -7490,7 +7503,7 @@ msgstr "没有搜索结果。"
 msgid "No taxes collected during this period."
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:280
+#: src/components/routes/welcome/index.tsx:385
 msgid "No taxes for now. You can add them at any time in the settings, under Taxes and receipts."
 msgstr "暂不收税。您可以随时在设置的“税费与收据”中添加。"
 
@@ -7499,7 +7512,7 @@ msgstr "暂不收税。您可以随时在设置的“税费与收据”中添加
 msgid "No Taxes or Fees have been added."
 msgstr "未加收任何税费。"
 
-#: src/components/routes/welcome/index.tsx:279
+#: src/components/routes/welcome/index.tsx:384
 msgid "No taxes: as a small supplier (under $30,000 of sales a year), you don't charge them."
 msgstr "不收税：作为小型供应商（年销售额低于 30,000 加元），您无需收税。"
 
@@ -7617,7 +7630,7 @@ msgstr "备注"
 msgid "Nothing collected yet"
 msgstr "暂无收入"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:188
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:223
 msgid "Nothing is published: check the preview, then publish."
 msgstr "不会发布任何内容：请检查预览，然后发布。"
 
@@ -7630,7 +7643,7 @@ msgstr "暂时没有待处理的事项。"
 msgid "Nothing to show yet"
 msgstr "暂无显示内容"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:158
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:119
 msgid "Nothing usable was found on this page."
 msgstr "此页面上没有找到可用的内容。"
 
@@ -7950,8 +7963,8 @@ msgid "Option {i}"
 msgstr "方案 {i}"
 
 #: src/components/routes/event/Settings/cards/LocationCard.tsx:170
-#: src/components/routes/welcome/index.tsx:401
-#: src/components/routes/welcome/index.tsx:412
+#: src/components/routes/welcome/index.tsx:506
+#: src/components/routes/welcome/index.tsx:517
 msgid "Optional"
 msgstr "可选"
 
@@ -8513,6 +8526,10 @@ msgstr "过去"
 msgid "Past Events"
 msgstr "过去的活动"
 
+#: src/components/routes/welcome/index.tsx:309
+msgid "Paste the address of your website, your Instagram or your old ticketing page. We'll use it to fill in your page."
+msgstr "粘贴您的网站、Instagram 或旧售票页面的地址。我们会用它来填写您的页面。"
+
 #: src/components/common/WidgetEditor/index.tsx:297
 msgid "Paste this where you want the widget to appear."
 msgstr "将此粘贴到您希望小部件显示的位置。"
@@ -8735,7 +8752,7 @@ msgstr "电话"
 msgid "Photo and video consent"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:221
+#: src/components/routes/welcome/index.tsx:227
 msgid "Pick as many as you like."
 msgstr "可多选。"
 
@@ -8833,7 +8850,7 @@ msgstr "请输入指向图像的有效图片网址。"
 msgid "Please enter a valid URL"
 msgstr "请输入有效的 URL"
 
-#: src/components/routes/welcome/index.tsx:70
+#: src/components/routes/welcome/index.tsx:76
 msgid "Please enter the 5-digit code"
 msgstr "请输入5位数验证码"
 
@@ -8881,7 +8898,7 @@ msgstr "请再试一次。"
 msgid "Please verify your email address to access all features"
 msgstr "请验证您的电子邮件地址，以访问所有功能"
 
-#: src/components/routes/welcome/index.tsx:124
+#: src/components/routes/welcome/index.tsx:130
 msgid "Please wait before requesting another code"
 msgstr "请稍候再请求新的验证码"
 
@@ -8934,7 +8951,7 @@ msgstr "通过在多种门票类型之间共享库存来防止超卖。"
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:139
 #: src/components/routes/event/HomepageDesigner/index.tsx:341
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:274
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:438
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:333
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:106
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:212
 msgid "Preview"
@@ -9201,12 +9218,12 @@ msgstr "省份"
 #: src/components/common/StatusToggle/index.tsx:96
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:104
 #: src/components/routes/event/HomepageDesigner/index.tsx:351
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:448
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:343
 msgid "Publish"
 msgstr "发布"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:447
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:342
 msgid "Publish changes"
 msgstr "发布更改"
 
@@ -9225,7 +9242,7 @@ msgctxt "waitlist filter"
 msgid "Purchased"
 msgstr "已购买"
 
-#: src/components/routes/welcome/index.tsx:392
+#: src/components/routes/welcome/index.tsx:497
 msgid "Put free or paid tickets on sale in a few minutes."
 msgstr "几分钟内即可发售免费或付费门票。"
 
@@ -9241,12 +9258,12 @@ msgstr "二维码"
 msgid "QR Code Check-in"
 msgstr ""
 
-#: src/components/routes/welcome/index.tsx:287
+#: src/components/routes/welcome/index.tsx:392
 msgctxt "Quebec sales tax"
 msgid "QST"
 msgstr "QST"
 
-#: src/components/routes/welcome/index.tsx:356
+#: src/components/routes/welcome/index.tsx:461
 msgid "QST number"
 msgstr "QST 号码"
 
@@ -9369,7 +9386,8 @@ msgstr "阅读消息"
 msgid "Reading"
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:152
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:202
+#: src/components/routes/welcome/index.tsx:345
 msgid "Reading the page… This can take up to 30 seconds."
 msgstr "正在读取页面… 最多可能需要 30 秒。"
 
@@ -9414,7 +9432,7 @@ msgstr "接收票务平台的最新消息"
 msgid "Receive product updates from {0}."
 msgstr "接收 {0} 的产品更新。"
 
-#: src/components/routes/welcome/index.tsx:414
+#: src/components/routes/welcome/index.tsx:519
 msgid "Receive ticket payments directly in the Stripe account."
 msgstr "门票款项直接进入 Stripe 账户。"
 
@@ -9457,7 +9475,7 @@ msgstr "收件人在消息发送后可用"
 
 #: src/components/routes/organizer/Settings/organization/DangerZoneCard.tsx:46
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:95
-#: src/components/routes/welcome/index.tsx:390
+#: src/components/routes/welcome/index.tsx:495
 msgid "Recommended"
 msgstr "推荐"
 
@@ -9672,7 +9690,7 @@ msgstr "必填"
 msgid "Required gear"
 msgstr "必备装备"
 
-#: src/components/routes/welcome/index.tsx:183
+#: src/components/routes/welcome/index.tsx:189
 msgid "Resend code"
 msgstr "重新发送验证码"
 
@@ -9693,7 +9711,7 @@ msgstr "重新发送邮件"
 msgid "Resend email confirmation"
 msgstr "重新发送电子邮件确认"
 
-#: src/components/routes/welcome/index.tsx:182
+#: src/components/routes/welcome/index.tsx:188
 msgid "Resend in {resendCooldown}s"
 msgstr "{resendCooldown}秒后重新发送"
 
@@ -10673,7 +10691,7 @@ msgstr "显示在选项上方。留空则显示「请选择一个选项」。"
 msgid "Shown at checkout."
 msgstr "在付款时显示。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:365
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:260
 msgid "Shown at the bottom of the page"
 msgstr "显示在页面底部"
 
@@ -10699,7 +10717,7 @@ msgstr "订单付款后显示在订单摘要和门票上。"
 msgid "Shown on the payment page, the order summary and the confirmation email (e.g. where to send the Interac e-Transfer, the deadline)."
 msgstr "显示在付款页面、订单摘要和确认邮件中（例如 Interac 转账的接收地址、截止日期）。"
 
-#: src/components/routes/welcome/index.tsx:359
+#: src/components/routes/welcome/index.tsx:464
 msgid "Shown on your invoices and receipts. You can add them later."
 msgstr "将显示在您的发票和收据上。您可以稍后再添加。"
 
@@ -10794,8 +10812,10 @@ msgstr "单行文本框"
 msgid "Skip"
 msgstr "跳过"
 
-#: src/components/routes/welcome/index.tsx:247
-#: src/components/routes/welcome/index.tsx:366
+#: src/components/routes/welcome/index.tsx:253
+#: src/components/routes/welcome/index.tsx:328
+#: src/components/routes/welcome/index.tsx:350
+#: src/components/routes/welcome/index.tsx:471
 msgid "Skip this step"
 msgstr "跳过此步骤"
 
@@ -10824,8 +10844,8 @@ msgstr "便于日后区分，例如 dehorsqc.com 网站"
 msgid "Social"
 msgstr "社交"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:81
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:352
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:84
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:247
 #: src/components/routes/organizer/Settings/organization/SocialLinksCard.tsx:97
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:60
 msgid "Social networks"
@@ -10859,7 +10879,7 @@ msgid "Some automatic info is badly written. Please correct it and try again."
 msgstr "某个自动信息写错了。请更正后重试。"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:220
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:319
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:214
 msgid "Some changes could not be published. Please try again."
 msgstr "部分更改未能发布。请重试。"
 
@@ -10905,9 +10925,10 @@ msgstr "出了点问题。请稍后再试。"
 #: src/components/routes/my-tickets/index.tsx:493
 #: src/components/routes/profile/ManageProfile/index.tsx:127
 #: src/components/routes/profile/ManageProfile/index.tsx:141
-#: src/components/routes/welcome/index.tsx:213
-#: src/components/routes/welcome/index.tsx:325
-#: src/components/routes/welcome/index.tsx:482
+#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:299
+#: src/components/routes/welcome/index.tsx:430
+#: src/components/routes/welcome/index.tsx:587
 #: src/mutations/useSwitchAccount.ts:24
 msgid "Something went wrong. Please try again."
 msgstr "出错了。请重试。"
@@ -11037,11 +11058,11 @@ msgid "Status"
 msgstr "状态"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:100
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:116
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:109
 msgid "Stay"
 msgstr "留下"
 
-#: src/components/routes/welcome/index.tsx:41
+#: src/components/routes/welcome/index.tsx:47
 msgid "Step {step} of {STEPS}"
 msgstr "第 {step} 步，共 {STEPS} 步"
 
@@ -11528,7 +11549,7 @@ msgstr "您查找的签到列表不存在。"
 msgid "The club"
 msgstr "俱乐部"
 
-#: src/components/routes/welcome/index.tsx:188
+#: src/components/routes/welcome/index.tsx:194
 msgid "The code will expire in 10 minutes. Check your spam folder if you don't see the email."
 msgstr "验证码将在10分钟后过期。如果您没有收到邮件，请检查垃圾邮件文件夹。"
 
@@ -11684,7 +11705,7 @@ msgstr ""
 msgid "The page and the events are visible again."
 msgstr ""
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:23
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "无法读取该页面。请检查地址后重试。"
 
@@ -11776,7 +11797,7 @@ msgstr "无法发送测试。请重试。"
 msgid "The text of the button under the tickets"
 msgstr "门票下方按钮的文字"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:171
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:137
 msgid "The texts are taken as is from the page."
 msgstr "文字按原样取自页面。"
 
@@ -11987,7 +12008,11 @@ msgstr "此主办方资料尚未发布"
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "此主办方的销售款项直接打入其自己的 Stripe 账户 ({ownAccountId})。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:167
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
+msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
+msgstr "此页面由 {platform} 托管：已略去该平台的徽标、颜色和社交网络。请自行补充缺少的内容。"
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:133
 msgid "This page shows little text: complete what is missing yourself."
 msgstr "此页面文字很少：请自行补充缺少的内容。"
 
@@ -12455,6 +12480,10 @@ msgstr "信任与安全"
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
 msgid "Try again"
 msgstr "重试"
+
+#: src/components/routes/welcome/index.tsx:320
+msgid "Try another address"
+msgstr "尝试其他地址"
 
 #: src/components/routes/auth/Login/index.tsx:145
 #: src/components/routes/my-tickets/index.tsx:512
@@ -12942,7 +12971,7 @@ msgstr "平台费用的增值税处理:欧盟增值税注册企业可以使用�
 msgid "VAT validation service temporarily unavailable"
 msgstr "增值税验证服务暂时不可用"
 
-#: src/components/routes/welcome/index.tsx:143
+#: src/components/routes/welcome/index.tsx:149
 msgid "Verification code"
 msgstr "验证码"
 
@@ -12951,7 +12980,7 @@ msgstr "验证码"
 msgid "Verified"
 msgstr "已验证"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verify Email"
 msgstr "验证邮箱"
 
@@ -12959,7 +12988,7 @@ msgstr "验证邮箱"
 msgid "Verify your email"
 msgstr "验证您的邮箱"
 
-#: src/components/routes/welcome/index.tsx:165
+#: src/components/routes/welcome/index.tsx:171
 msgid "Verifying..."
 msgstr "正在验证..."
 
@@ -13026,7 +13055,7 @@ msgstr "查看消息"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:272
 #: src/components/layouts/OrganizerLayout/index.tsx:319
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:430
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:325
 msgid "View my page"
 msgstr "查看我的页面"
 
@@ -13214,7 +13243,7 @@ msgstr "建议尺寸为 400x400 像素，文件大小不超过 30MB"
 msgid "We share the ticketing platform's events on Dehors's social media. Your event goes straight in front of a community of people on the move."
 msgstr "我们会在 Dehors 的社交媒体上转发票务平台的活动。你的活动将直接出现在一群热爱运动的人面前。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:122
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:172
 msgid "We suggest a name, a text, a color, images and your networks. You choose what to keep."
 msgstr "我们会建议名称、介绍、颜色、图片和您的社交网络。由您选择保留哪些。"
 
@@ -13246,7 +13275,7 @@ msgstr "我们将在后台验证您的增值税号。如有任何问题，我们
 msgid "We're processing your order. Please wait..."
 msgstr "我们正在处理您的订单。请稍候..."
 
-#: src/components/routes/welcome/index.tsx:134
+#: src/components/routes/welcome/index.tsx:140
 msgid "We've sent a 5-digit verification code to:"
 msgstr "我们已向以下邮箱发送了5位数验证码："
 
@@ -13328,7 +13357,7 @@ msgstr "欢迎回来，{firstName}！"
 msgid "Welcome back, {firstName}! Here's what's happening at {0}."
 msgstr "欢迎回来，{firstName}！这是 {0} 的最新动态。"
 
-#: src/components/routes/welcome/index.tsx:219
+#: src/components/routes/welcome/index.tsx:225
 msgid "Welcome, {0}!"
 msgstr "欢迎，{0}！"
 
@@ -13353,7 +13382,7 @@ msgstr ""
 msgid "What is a Category?"
 msgstr "什么是类别？"
 
-#: src/components/routes/welcome/index.tsx:220
+#: src/components/routes/welcome/index.tsx:226
 msgid "What kinds of events do you organize?"
 msgstr "您组织哪些类型的活动？"
 
@@ -13547,11 +13576,11 @@ msgstr "地点"
 msgid "Where the money from your sales goes."
 msgstr "您的销售款项去向。"
 
-#: src/components/routes/welcome/index.tsx:385
+#: src/components/routes/welcome/index.tsx:490
 msgid "Where to start? The rest can wait."
 msgstr "从哪里开始？其余的可以稍后再做。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:353
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:248
 msgid "Which ones to show and in what order"
 msgstr "显示哪些以及显示顺序"
 
@@ -13618,7 +13647,7 @@ msgstr "使用示例买家和您最近的活动。此邮件由您接收，无法
 msgid "Without a link, the address opens in Google Maps."
 msgstr "没有链接时，地址会在 Google 地图中打开。"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:166
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:132
 msgid "Without an account, Instagram only shows the profile picture and the bio: complete the text yourself."
 msgstr "未登录时，Instagram 只显示头像和简介：请自行补充文字。"
 
@@ -13700,7 +13729,7 @@ msgstr "是"
 msgid "Yes - I have a valid EU VAT registration number"
 msgstr "是 - 我有有效的欧盟增值税注册号码"
 
-#: src/components/routes/welcome/index.tsx:278
+#: src/components/routes/welcome/index.tsx:383
 msgid "Yes, both"
 msgstr "是，两者都有"
 
@@ -13992,7 +14021,11 @@ msgstr "您的组织信息、付款、税费和团队。"
 msgid "Your own answer"
 msgstr "你自己的回答"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:317
+#: src/components/routes/welcome/index.tsx:296
+msgid "Your page is filled in. You can change everything in My page."
+msgstr "您的页面已填写完成。您可以在“我的页面”中更改所有内容。"
+
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:212
 msgid "Your page is published"
 msgstr "您的页面已发布"
 
@@ -14053,7 +14086,7 @@ msgstr ""
 msgid "Your ticketing in 4 steps"
 msgstr "4 步搭建你的票务"
 
-#: src/components/routes/welcome/index.tsx:384
+#: src/components/routes/welcome/index.tsx:489
 msgid "Your ticketing is ready!"
 msgstr "您的票务已就绪！"
 
@@ -14074,7 +14107,7 @@ msgid "Your tickets have been confirmed."
 msgstr "您的门票已确认。"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:99
-#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:115
+#: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:108
 msgid "Your unpublished changes will be lost."
 msgstr "您尚未发布的更改将会丢失。"
 
@@ -14094,7 +14127,8 @@ msgstr "您的等候名单报价已过期，我们无法完成您的订单。请
 msgid "your-website.com"
 msgstr "your-website.com"
 
-#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:134
+#: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:184
+#: src/components/routes/welcome/index.tsx:337
 msgid "yourclub.com"
 msgstr "yourclub.com"
 
