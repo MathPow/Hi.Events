@@ -4,7 +4,6 @@ import {t} from "@lingui/macro";
 import {Button, Drawer, Modal, Select, TextInput, UnstyledButton} from "@mantine/core";
 import {hasLength, useForm} from "@mantine/form";
 import {useMediaQuery} from "@mantine/hooks";
-import {DateTimePicker} from "@mantine/dates";
 import dayjs from "dayjs";
 import classNames from "classnames";
 import {useFormErrorResponseHandler} from "../../../hooks/useFormErrorResponseHandler.tsx";
@@ -13,8 +12,8 @@ import {useGetOrganizers} from "../../../queries/useGetOrganizers.ts";
 import {useCreateEvent} from "../../../mutations/useCreateEvent.ts";
 import {AccountEventType, Event, GenericModalProps, IdParam} from "../../../types.ts";
 import {CATEGORY_OF_TYPE, EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
-import {useLingui} from "@lingui/react";
 import classes from "./CreateEventModal.module.scss";
+import {DateTimeField} from "../../common/DateTimeField";
 
 interface CreateEventModalProps extends GenericModalProps {
     organizerId?: IdParam;
@@ -29,6 +28,8 @@ interface CreateEventFormValues {
     organizer_id?: string;
 }
 
+
+const WALL_CLOCK = 'YYYY-MM-DDTHH:mm';
 
 // The coming Saturday, 9 to 12, like the example of the mockup.
 const defaultStart = () => {
@@ -50,9 +51,6 @@ export const CreateEventModal = ({onClose, organizerId}: CreateEventModalProps) 
     const organizersQuery = useGetOrganizers();
     const organizers = organizersQuery.data?.data ?? [];
     const eventMutation = useCreateEvent();
-    const {i18n} = useLingui();
-    // « sam. 7 nov. 2026 · 9 h 00 » in French, like the mockup.
-    const dateFormat = i18n.locale.startsWith('fr') ? 'ddd D MMM YYYY · H [h] mm' : 'ddd, MMM D, YYYY · h:mm A';
     // The account's first type is the default, until a type is picked.
     const typeChosen = useRef(false);
 
@@ -60,8 +58,9 @@ export const CreateEventModal = ({onClose, organizerId}: CreateEventModalProps) 
         initialValues: {
             title: '',
             type: account?.event_types?.[0] ?? 'SPORT',
-            start_date: defaultStart().toISOString(),
-            end_date: defaultStart().add(3, 'hour').toISOString(),
+            // The event's wall clock (« 2026-11-07T09:00 »): the server reads it in the event's timezone.
+            start_date: defaultStart().format(WALL_CLOCK),
+            end_date: defaultStart().add(3, 'hour').format(WALL_CLOCK),
             location: '',
             organizer_id: organizerId ? String(organizerId) : undefined,
         },
@@ -108,27 +107,24 @@ export const CreateEventModal = ({onClose, organizerId}: CreateEventModalProps) 
             .catch((error) => errorHandler(form, error));
     };
 
-    // Each picker in its own box: it renders a hidden input next to it.
+    // The homemade calendar of the other popups (Figma « Calendrier et heure »).
     const dateField = (name: 'start_date' | 'end_date', label: string) => (
-        <div className={classes.dateCell}>
-        <DateTimePicker
-            {...form.getInputProps(name)}
+        <DateTimeField
+            className={classes.dateCell}
             label={label}
-            valueFormat={dateFormat}
-            dropdownType={isMobile ? 'modal' : 'popover'}
-            timePickerProps={{withDropdown: true}}
-            minDate={name === 'end_date' ? (form.values.start_date ?? undefined) : undefined}
-            classNames={{input: classes.input, label: classes.label}}
+            value={form.values[name]}
+            error={form.errors[name]}
+            withWeekday
+            clearable={name === 'end_date'}
             onChange={(value) => {
-                form.setFieldValue(name, value);
+                form.setFieldValue(name, value || null);
                 // Keeps the end after the start, three hours later by default.
                 if (name === 'start_date' && value && form.values.end_date
                     && !dayjs(form.values.end_date).isAfter(dayjs(value))) {
-                    form.setFieldValue('end_date', dayjs(value).add(3, 'hour').toISOString());
+                    form.setFieldValue('end_date', dayjs(value).add(3, 'hour').format(WALL_CLOCK));
                 }
             }}
         />
-        </div>
     );
 
     const content = (

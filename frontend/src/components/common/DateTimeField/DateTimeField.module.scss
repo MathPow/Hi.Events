@@ -154,38 +154,57 @@ $ink: var(--dehors-brun);
   font-weight: 700;
 }
 
-// All the half hours; the chosen one is scrolled into view when the menu opens.
-.times {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  max-height: 7.25rem;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.time {
-  height: 2.125rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  background: none;
+.timeInput {
+  height: 3rem;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 1rem;
+  background: var(--dehors-champ);
   color: $ink;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
-  white-space: nowrap;
+
+  &:hover {
+    background: var(--dehors-champ-survol);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ink;
+    outline-offset: 3px;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.25rem;
+}
+
+.done {
+  height: 2.5rem;
+  padding: 0 1.125rem;
+  border: none;
+  border-radius: 999px;
+  background: $ink;
+  color: var(--dehors-creme);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
   cursor: pointer;
 
-  &[aria-pressed='true'] {
-    background: $ink;
-    color: var(--dehors-creme);
+  &:focus-visible {
+    outline: 3px solid var(--dehors-orange);
+    outline-offset: 2px;
   }
 }
 
 .clear {
-  align-self: flex-start;
   padding: 0;
   border: none;
   background: none;

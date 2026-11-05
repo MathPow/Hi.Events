@@ -213,7 +213,7 @@
   :global(.mantine-TextInput-label),
   :global(.mantine-Select-label) {
     font-weight: 700 !important;
-    font-size: 0.95rem !important;
+    font-size: 1rem !important;
     color: var(--dehors-brun) !important;
     margin-bottom: 8px !important;
   }
@@ -384,28 +384,7 @@
     cursor: pointer;
   }
 
-  // Clean dropdown styling
-  :global(.mantine-Select-dropdown) {
-    border: 1px solid var(--hi-color-gray-2) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    padding: 4px !important;
-  }
-
-  :global(.mantine-Select-item) {
-    border-radius: 4px !important;
-    padding: 8px 12px !important;
-    font-size: 0.95rem !important;
-
-    &:hover {
-      background: var(--hi-color-gray) !important;
-    }
-
-    &[data-selected] {
-      background: var(--hi-primary) !important;
-      color: var(--hi-color-white) !important;
-    }
-  }
+  // The lists open in the theme's dropdown, like everywhere else (dehors-app.scss).
 
   :global(.mantine-DateTimePicker-input input),
   :global(.mantine-Select-input input) {

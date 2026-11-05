@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useEffect, useId, useMemo, useState} from "react";
+import {ReactNode, useEffect, useId, useState} from "react";
 import {InputError, InputLabel, Popover} from "@mantine/core";
 import {t} from "@lingui/macro";
 import dayjs, {Dayjs} from "dayjs";
@@ -24,17 +24,10 @@ interface DateTimeFieldProps {
     defaultTime?: string;
 }
 
-const timeLabel = (time: string) => clockTime(dayjs(`2000-01-15T${time}`).toDate(), undefined);
-
-const HALF_HOURS = Array.from({length: 48}, (_, index) => {
-    const hour = String(Math.floor(index / 2)).padStart(2, '0');
-    return `${hour}:${index % 2 ? '30' : '00'}`;
-});
-
 /**
  * The homemade calendar (Figma « Menu ouvert · Calendrier et heure », 552:3499) in place of the
- * browser's picker: a field that opens the month and the hours in capsules. A day keeps the time,
- * an hour closes it.
+ * browser's picker: a field that opens the month, with a classic time field under it (the
+ * browser's own, in the language's 12 or 24 hour clock, a wheel on phones). A day keeps the time.
  */
 export const DateTimeField = ({
     label,
@@ -60,19 +53,6 @@ export const DateTimeField = ({
         }
     }, [opened]);
 
-    // The chosen hour in view when the menu opens (the usual time when there is none yet).
-    const hours = useCallback((list: HTMLDivElement | null) => {
-        const shownTime = list?.querySelector<HTMLElement>('[aria-pressed="true"]')
-            ?? list?.querySelector<HTMLElement>('[data-default="true"]');
-        if (list && shownTime) {
-            list.scrollTop = shownTime.offsetTop - list.clientHeight / 2 + shownTime.offsetHeight / 2;
-        }
-    }, []);
-
-    const times = useMemo(() => (selectedTime && !HALF_HOURS.includes(selectedTime)
-        ? [...HALF_HOURS, selectedTime].sort()
-        : HALF_HOURS), [selectedTime]);
-
     const first = month.startOf('month');
     const days = Array.from({length: first.daysInMonth()}, (_, index) => first.add(index, 'day'));
     const monthLabel = new Intl.DateTimeFormat(locale, {month: 'long', year: 'numeric'}).format(first.toDate());
@@ -90,9 +70,11 @@ export const DateTimeField = ({
 
     const pickDay = (day: Dayjs) => onChange(`${day.format('YYYY-MM-DD')}T${selectedTime ?? defaultTime}`);
 
+    // While the hour is being typed, the field reports an empty value: only a full time counts.
     const pickTime = (time: string) => {
-        onChange(`${(selected ?? dayjs()).format('YYYY-MM-DD')}T${time}`);
-        setOpened(false);
+        if (/^\d{2}:\d{2}/.test(time)) {
+            onChange(`${(selected ?? dayjs()).format('YYYY-MM-DD')}T${time.slice(0, 5)}`);
+        }
     };
 
     return (
@@ -154,25 +136,30 @@ export const DateTimeField = ({
                         ))}
                     </div>
                     <div className={classes.timeBlock}>
-                        <span className={classes.timeLabel}>{t`Time`}</span>
-                        <div className={classes.times} ref={hours}>
-                            {times.map(time => (
-                                <button key={time} type="button" className={classes.time}
-                                        data-default={time === defaultTime || undefined}
-                                        aria-pressed={time === selectedTime} onClick={() => pickTime(time)}>
-                                    {timeLabel(time)}
-                                </button>
-                            ))}
-                        </div>
+                        <label className={classes.timeLabel} htmlFor={`${id}-time`}>{t`Time`}</label>
+                        <input
+                            id={`${id}-time`}
+                            type="time"
+                            step={300}
+                            className={classes.timeInput}
+                            value={selectedTime ?? defaultTime}
+                            onChange={(event) => pickTime(event.currentTarget.value)}
+                            onKeyDown={(event) => event.key === 'Enter' && setOpened(false)}
+                        />
                     </div>
-                    {clearable && selected && (
-                        <button type="button" className={classes.clear} onClick={() => {
-                            onChange('');
-                            setOpened(false);
-                        }}>
-                            {t`Clear`}
+                    <div className={classes.footer}>
+                        {clearable && selected ? (
+                            <button type="button" className={classes.clear} onClick={() => {
+                                onChange('');
+                                setOpened(false);
+                            }}>
+                                {t`Clear`}
+                            </button>
+                        ) : <span/>}
+                        <button type="button" className={classes.done} onClick={() => setOpened(false)}>
+                            {t`Done`}
                         </button>
-                    )}
+                    </div>
                 </Popover.Dropdown>
             </Popover>
             {error && <InputError className={classes.error}>{error}</InputError>}

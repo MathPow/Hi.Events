@@ -86,7 +86,7 @@
 }
 
 .label {
-  margin-bottom: 0.625rem !important;
+  margin-bottom: 0.5rem !important;
   color: var(--dehors-brun);
   font-size: 1rem !important;
   font-weight: 700;
@@ -97,14 +97,8 @@
   }
 }
 
-// Text at the size of the other popups' fields (16 px, which also keeps iOS from zooming in).
+// The size comes from the theme (Figma « Paramètres »: 3.5rem, 16 px text, no zoom on iOS).
 .input {
-  height: 3rem !important;
-  min-height: 3rem !important;
-  padding-inline: 1rem !important;
-  border-radius: 1rem !important;
-  font-size: 1rem !important;
-
   &::placeholder {
     color: rgb(53 41 36 / 0.45);
   }
@@ -127,16 +121,16 @@
   justify-content: center;
   height: 2.5rem;
   padding: 0 1.125rem;
-  border: 2px solid rgb(53 41 36 / 0.25);
+  border: 1.5px solid var(--dehors-brun);
   border-radius: 999px;
   color: var(--dehors-brun);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   white-space: nowrap;
   transition: background-color 0.15s ease, border-color 0.15s ease;
 
   &:hover {
-    border-color: rgb(53 41 36 / 0.5);
+    background: rgb(55 39 33 / 0.05);
   }
 
   &:focus-visible {
