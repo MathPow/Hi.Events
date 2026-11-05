@@ -32,6 +32,7 @@ import {PreviewMessages, PreviewModal, PreviewPanel, PreviewSkeleton} from "../.
 import {eventDraftChanges, EventPageDraft, publishedEventDraft} from "./eventPageDraft.ts";
 import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "../../organizer/OrganizerHomepageDesigner/OrganizerHomepageDesigner.module.scss";
+import {CONFIRM_GROUP_PROPS} from "../../../../utilites/confirmationDialog.tsx";
 
 const PREVIEW_MESSAGES: PreviewMessages = {update: EVENT_PREVIEW_MESSAGE, ready: EVENT_PREVIEW_READY};
 
@@ -98,6 +99,7 @@ const HomepageDesigner = () => {
             title: t`Leave without publishing?`,
             children: <Text size="sm">{t`Your unpublished changes will be lost.`}</Text>,
             labels: {confirm: t`Leave`, cancel: t`Stay`},
+            groupProps: CONFIRM_GROUP_PROPS,
             onConfirm: () => {
                 leaving = true;
                 blocker.proceed?.();

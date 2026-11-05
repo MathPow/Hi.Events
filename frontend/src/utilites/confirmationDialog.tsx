@@ -1,6 +1,9 @@
 import {modals} from "@mantine/modals";
 import {t} from "@lingui/macro";
 
+// The two answers of a confirmation, half and half on one line.
+export const CONFIRM_GROUP_PROPS = {grow: true, wrap: 'nowrap'} as const;
+
 interface ConfirmationDialogOptions {
     confirm?: string;
     cancel?: string;
@@ -35,6 +38,7 @@ export const confirmationDialog = (
     modals.openConfirmModal({
         title: message,
         labels,
+        groupProps: CONFIRM_GROUP_PROPS,
         styles: checkoutStyles,
         onConfirm: () => onConfirm(),
     });

@@ -342,6 +342,12 @@ body.dehors-app {
     font-weight: 700;
   }
 
+  // A button wider than its text (stretched in a column, or given its own display: flex): the
+  // inside fills it, so the text sits in the middle instead of against the left edge.
+  .mantine-Button-inner#{$hors-apercu} {
+    flex-grow: 1;
+  }
+
   // Inputs, at the size of Figma « Admin · Paramètres » (Settings.module.scss .field): 3.5rem high,
   // 1.125rem of room, the default size. Set as Mantine's variables, so a field with an icon or a
   // chevron keeps its text clear of it. Fields asked small (size xs, the tables) stay small.
@@ -684,11 +690,49 @@ body.dehors-app {
     border-color: var(--dehors-trait);
   }
 
+  // On a phone, every dropdown (lists, menus, filters, the calendar) rises from the bottom like the
+  // sheets, with its handle, over the darkened page: a tap beside it closes it. The position the
+  // dropdown computes (inline top/left/width) gives way.
+  @media (max-width: 767px) {
+    :is(.mantine-Combobox-dropdown, .mantine-Menu-dropdown, .mantine-Popover-dropdown) {
+      position: fixed !important;
+      inset: auto 0 0 0 !important;
+      width: auto !important;
+      max-width: none !important;
+      max-height: 75dvh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 0.5rem 0.75rem calc(1rem + env(safe-area-inset-bottom)) !important;
+      border: none !important;
+      border-radius: 1.75rem 1.75rem 0 0 !important;
+      background: var(--dehors-carte) !important;
+      box-shadow: 0 0 0 100vmax rgb(53 41 36 / 0.45) !important;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 2.75rem;
+        height: 5px;
+        margin: 0.25rem auto 0.75rem;
+        border-radius: 9px;
+        background: var(--dehors-trait);
+      }
+    }
+
+    .mantine-Popover-arrow {
+      display: none;
+    }
+  }
+
+  // A long tip goes to the line and stays on the screen, on a phone too.
   .mantine-Tooltip-tooltip {
+    max-width: min(18rem, calc(100vw - 2rem));
     background: var(--dehors-brun);
     color: var(--dehors-creme);
     border-radius: 0.625rem;
     font-weight: 600;
+    line-height: 1.35;
+    white-space: normal;
   }
 
   // Every popup like DehorsPopup (Figma « Créer un événement »), whether it goes through Modal or a

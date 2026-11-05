@@ -1,8 +1,8 @@
 import {useRef, useState} from "react";
 import {t} from "@lingui/macro";
 import {Dropzone, FileRejection, IMAGE_MIME_TYPE} from "@mantine/dropzone";
+import {ActionIcon, Popover, Text} from "@mantine/core";
 import {IconHelp} from "@tabler/icons-react";
-import {Tooltip} from "../../../common/Tooltip";
 import {DraftImage} from "./homepageDraft.ts";
 import classes from "./OrganizerHomepageDesigner.module.scss";
 
@@ -105,9 +105,17 @@ export const ImagePicker = ({kind, label, recommendation, image, onChange, disab
         <div className={classes.imageBlock}>
             <div className={classes.imageLabel}>
                 <p className={classes.fieldLabel}>{label}</p>
-                <Tooltip label={recommendation}>
-                    <IconHelp size={18} stroke={2} aria-label={recommendation}/>
-                </Tooltip>
+                {/* A tap opens it on a phone, where a tooltip never shows: the tip in a little card. */}
+                <Popover position="bottom-end" width={260} withArrow shadow="md">
+                    <Popover.Target>
+                        <ActionIcon variant="subtle" color="dark" radius="xl" aria-label={recommendation}>
+                            <IconHelp size={18} stroke={2}/>
+                        </ActionIcon>
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                        <Text size="sm">{recommendation}</Text>
+                    </Popover.Dropdown>
+                </Popover>
             </div>
 
             {!image && dropzone}

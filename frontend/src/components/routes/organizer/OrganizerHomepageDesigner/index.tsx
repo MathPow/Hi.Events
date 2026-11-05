@@ -36,6 +36,7 @@ import {FaqSection} from "./FaqSection.tsx";
 import {PreviewModal, PreviewPanel, PreviewSkeleton} from "./PreviewPanel.tsx";
 import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "./OrganizerHomepageDesigner.module.scss";
+import {CONFIRM_GROUP_PROPS} from "../../../../utilites/confirmationDialog.tsx";
 
 const revokeNewImages = (draft: HomepageDraft | null) => [draft?.cover, draft?.logo]
     .forEach(image => image?.kind === 'new' && URL.revokeObjectURL(image.url));
@@ -107,6 +108,7 @@ const OrganizerHomepageDesigner = () => {
             title: t`Leave without publishing?`,
             children: <Text size="sm">{t`Your unpublished changes will be lost.`}</Text>,
             labels: {confirm: t`Leave`, cancel: t`Stay`},
+            groupProps: CONFIRM_GROUP_PROPS,
             onConfirm: () => {
                 leaving = true;
                 blocker.proceed?.();
