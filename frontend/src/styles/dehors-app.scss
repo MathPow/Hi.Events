@@ -802,12 +802,15 @@ body.dehors-app {
     }
   }
 
-  // A popup's button keeps its own width, like on the pages, even when asked for the full width:
-  // at the end of its line, under the form.
-  :is(.mantine-Modal-content, .mantine-Drawer-content) .mantine-Button-root[data-block]#{$hors-apercu} {
-    width: fit-content;
-    max-width: 100%;
-    margin-inline-start: auto;
+  // On a computer, a popup's button keeps its own width, like on the pages, even when asked for the
+  // full width: at the end of its line, under the form. On a phone, and in the sheets that rise from
+  // the bottom, full width it is: the buttons stack one on the other.
+  @media (min-width: 768px) {
+    .mantine-Modal-content .mantine-Button-root[data-block]#{$hors-apercu} {
+      width: fit-content;
+      max-width: 100%;
+      margin-inline-start: auto;
+    }
   }
 
   // Tables
