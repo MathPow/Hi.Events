@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Navigate, Outlet, RouteObject, useLocation } from "react-router";
+import { matchRoutes, Navigate, Outlet, RouteObject, useLocation } from "react-router";
+import { setKnownRouteMatcher } from "./api/client.ts";
 import ErrorPage from "./error-page.tsx";
 import { useGetMe } from "./queries/useGetMe.ts";
 import { publicEventRouteLoader } from "./routeLoaders/publicEventRouteLoader.ts";
@@ -717,6 +718,10 @@ const Shell = () => {
 export const router: RouteObject[] = [
     {
         element: <Shell />,
+        // An address no route matches lands here: without it, React Router showed its own error screen.
+        errorElement: <ErrorPage />,
         children: routes,
     },
 ];
+
+setKnownRouteMatcher((path) => matchRoutes(router, path) !== null);

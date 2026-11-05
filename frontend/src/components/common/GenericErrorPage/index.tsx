@@ -1,10 +1,7 @@
-import React from 'react';
-import {Box, Button, Container, Image, rem, Stack, Text, Title} from '@mantine/core';
+import {t} from '@lingui/macro';
 import {IconHome} from '@tabler/icons-react';
-import classes from './GenericErrorPage.module.scss';
-import {PoweredByFooter} from "../PoweredByFooter";
-import {Helmet} from "react-helmet-async";
-import {getConfig} from "../../../utilites/config.ts";
+import React from 'react';
+import {ErrorScreen} from "../ErrorScreen";
 
 interface GenericErrorPageProps {
     title: string;
@@ -14,77 +11,34 @@ interface GenericErrorPageProps {
     buttonText?: string;
     buttonUrl?: string;
     buttonIcon?: React.ReactNode;
-    children?: React.ReactNode;
 }
 
+/**
+ * An event or an organizer that isn't there (anymore): the same screen as the 404, with
+ * a way back to the events and to one's tickets.
+ */
 export const GenericErrorPage: React.FC<GenericErrorPageProps> = ({
                                                                       title,
                                                                       description,
                                                                       pageTitle,
-                                                                      metaDescription,
                                                                       buttonText,
                                                                       buttonUrl,
-                                                                      buttonIcon = <IconHome size={18}/>,
-                                                                      children
+                                                                      buttonIcon,
                                                                   }) => {
+    const home = {label: t`Back to home`, to: '/', icon: <IconHome size={18}/>};
+    const custom = buttonText && buttonUrl ? {label: buttonText, href: buttonUrl, icon: buttonIcon} : null;
+
     return (
-        <>
-            <Helmet
-                title={pageTitle || title}
-                meta={[
-                    {
-                        name: 'description',
-                        content: metaDescription || description,
-                    },
-                ]}
-            />
-            <Box className={classes.wrapper}>
-                {/* Animated background elements */}
-                <div className={classes.backgroundOrb1}/>
-                <div className={classes.backgroundOrb2}/>
-
-                <Container size="md" className={classes.root}>
-                    <Stack gap="xl" align="center">
-
-                        <Image
-                            src={getConfig("VITE_APP_LOGO_DARK", "/logos/hi-events-stacked-light.svg")}
-                            alt={getConfig("VITE_APP_NAME", "Hi.Events") + " Logo"}
-                            w={rem(140)}
-                            h="auto"
-                            fit="contain"
-                            className={classes.logo}
-                        />
-
-                        <Stack gap="lg" align="center" className={classes.content}>
-                            <Title order={1} className={classes.title}>
-                                {title}
-                            </Title>
-
-                            <Text size="lg" c="dimmed" className={classes.description}>
-                                {description}
-                            </Text>
-
-                            {children}
-
-                            {buttonText && buttonUrl && (
-                                <Button
-                                    component="a"
-                                    href={buttonUrl}
-                                    leftSection={buttonIcon}
-                                    variant="gradient"
-                                    gradient={{from: 'purple', to: 'pink'}}
-                                    className={classes.button}
-                                >
-                                    {buttonText}
-                                </Button>
-                            )}
-                        </Stack>
-
-                        <PoweredByFooter/>
-                    </Stack>
-                </Container>
-            </Box>
-        </>
+        <ErrorScreen
+            notFound
+            kicker={t`This trail is closed.`}
+            title={title}
+            pageTitle={pageTitle}
+            description={description}
+            primary={custom ?? home}
+            secondary={custom ? home : {label: t`Explore events`, to: '/events'}}
+            showTicketsHint
+        />
     );
 };
 

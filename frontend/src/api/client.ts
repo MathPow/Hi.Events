@@ -18,6 +18,7 @@ const ALLOWED_UNAUTHENTICATED_PATHS = [
     'account/payment',
     'checkout',
     '/event/',
+    '/e/',
     'print',
     '/order/',
     'widget',
@@ -26,6 +27,13 @@ const ALLOWED_UNAUTHENTICATED_PATHS = [
     '/events/',
     'my-tickets',
 ];
+
+// The router says which addresses lead to a page. One that leads nowhere shows the 404,
+// even signed out: sending it to the login made a missing page look like a private one.
+let isKnownRoute: (path: string) => boolean = () => true;
+export const setKnownRouteMatcher = (matcher: (path: string) => boolean) => {
+    isKnownRoute = matcher;
+};
 
 export const api = axios.create({
     baseURL: BASE_URL,
@@ -38,7 +46,7 @@ export const api = axios.create({
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        const { status } = error.response;
+        const status = error?.response?.status;
         const currentPath = window?.location.pathname;
         const isAllowedUnauthenticatedPath = currentPath === '/'
             || currentPath === '/events'
@@ -48,7 +56,7 @@ api.interceptors.response.use(
         const isManageEventPath = currentPath.startsWith('/manage/event/');
         const isAuthError = status === 401 || status === 403;
 
-        if (isAuthError && (!isAllowedUnauthenticatedPath || isManageEventPath)) {
+        if (isAuthError && isKnownRoute(currentPath) && (!isAllowedUnauthenticatedPath || isManageEventPath)) {
             // Store the current URL before redirecting to the login page
             window?.localStorage?.setItem(PREVIOUS_URL_KEY, window?.location.href);
             // Preserve query params (UTM tracking) during redirect

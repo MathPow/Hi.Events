@@ -1,0 +1,295 @@
+@use "../../../styles/mixins.scss";
+
+// La meme scene que la connexion (AuthLayout): une grande carte creme sur la roche voilee
+// d'orange, centree, au plus 1440px de large.
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 40px;
+  @include mixins.fond-roche;
+
+  @include mixins.respond-below(lg) {
+    padding: 12px;
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1440px;
+  min-height: calc(100dvh - 80px);
+  margin: 0 auto;
+  padding: 44px 64px 32px;
+  border-radius: 36px;
+  overflow: hidden;
+  background: var(--dehors-creme);
+  color: var(--dehors-brun);
+
+  @include mixins.respond-below(lg) {
+    min-height: calc(100dvh - 24px);
+    padding: 24px 20px 24px;
+    border-radius: 28px;
+  }
+}
+
+.top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 16px;
+  line-height: 0.95;
+  color: var(--dehors-brun);
+  text-decoration: none;
+
+  @include mixins.respond-below(lg) {
+    font-size: 14px;
+  }
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 640px;
+  padding: 12px 0 20px;
+  text-align: center;
+}
+
+// L'ecriture a la main orange du site (« On se voit dehors! »).
+.kicker {
+  margin: 0;
+  font-family: 'Felt Tip', 'Comic Sans MS', cursive;
+  font-size: clamp(1.5rem, 3.4vw, 2rem);
+  line-height: 1.1;
+  color: var(--dehors-orange);
+  transform: rotate(-3deg);
+}
+
+// « 4 [billet] 4 »: le billet-montagne du site prend la place du zero.
+.code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.04em;
+  margin: 0.1em 0 0.05em;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: clamp(7rem, 20vw, 11.5rem);
+  font-weight: 900;
+  line-height: 0.82;
+  color: var(--dehors-brun);
+  user-select: none;
+}
+
+.ticket {
+  width: 0.86em;
+  height: 0.86em;
+  transform: rotate(-9deg);
+  animation: sway 5s ease-in-out infinite;
+}
+
+.ticketAlone {
+  width: clamp(6rem, 18vw, 8.5rem);
+  margin: 18px 0 6px;
+  transform: rotate(-9deg);
+  animation: sway 5s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(-9deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-3deg) translateY(-4%);
+  }
+}
+
+.title {
+  margin: 14px 0 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: clamp(2.25rem, 5.5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--dehors-brun);
+}
+
+.description {
+  max-width: 34ch;
+  margin: 14px 0 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--dehors-texte-doux);
+}
+
+// L'adresse suivie, dans un champ peche comme ceux du formulaire de connexion.
+.path {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 100%;
+  margin: 22px 0 0;
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: var(--dehors-champ);
+  text-align: center;
+
+  code {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dehors-brun);
+    overflow-wrap: anywhere;
+  }
+}
+
+.pathLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dehors-texte-doux);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+
+  @include mixins.respond-below(sm) {
+    flex-direction: column;
+    align-self: stretch;
+  }
+}
+
+.action {
+  min-width: 13rem;
+}
+
+// La tuile « Vous cherchez vos billets? » de la connexion, en lien.
+.tickets {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 460px;
+  margin-top: 24px;
+  padding: 16px 20px;
+  border-radius: 18px;
+  background: var(--dehors-champ);
+  color: var(--dehors-brun);
+  text-align: left;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background: var(--dehors-champ-survol);
+  }
+
+  &:hover .ticketsArrow {
+    transform: translateX(4px);
+  }
+}
+
+.ticketsText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.35;
+
+  strong {
+    font-size: 16px;
+  }
+}
+
+.ticketsArrow {
+  flex: none;
+  width: 22px;
+  transition: transform 150ms ease;
+}
+
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+// Des autocollants du site colles sur la carte, dans les coins: jamais sous le texte.
+.sticker {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 6px 10px rgb(53 41 36 / 0.12));
+}
+
+.stickerTree {
+  top: 9%;
+  right: 7%;
+  width: clamp(5.5rem, 9vw, 8.5rem);
+  transform: rotate(9deg);
+  animation: float 7s ease-in-out infinite;
+}
+
+.stickerFire {
+  bottom: 9%;
+  left: 6%;
+  width: clamp(6rem, 10vw, 9.5rem);
+  transform: rotate(-7deg);
+  animation: float 8s ease-in-out 1s infinite;
+}
+
+.stickerBag {
+  right: 9%;
+  bottom: 12%;
+  width: clamp(5rem, 8vw, 7.5rem);
+  transform: rotate(6deg);
+  animation: float 9s ease-in-out 2s infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+// Sur un ecran etroit, les cotes n'ont pas la place: le sapin seul, petit, en haut a droite.
+@include mixins.respond-below(lg) {
+  .stickerFire,
+  .stickerBag {
+    display: none;
+  }
+
+  .stickerTree {
+    top: 12px;
+    right: 14px;
+    width: 3.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket,
+  .ticketAlone,
+  .sticker {
+    animation: none;
+  }
+}

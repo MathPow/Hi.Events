@@ -76,6 +76,8 @@ export async function render(params: {
         appHtml: appHtml,
         dehydratedState,
         helmetContext,
+        // 404 for an address no route matches, the error's status for a failed loader.
+        statusCode: context.statusCode,
     };
 }
 

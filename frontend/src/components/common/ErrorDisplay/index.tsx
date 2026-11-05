@@ -1,78 +1,49 @@
 import {t} from '@lingui/macro';
-import {Box, Button, Container, Image, rem, Stack, Text, Title} from '@mantine/core';
-import {IconHome} from '@tabler/icons-react';
-import classes from './ErrorDisplay.module.scss';
-import {Helmet} from "react-helmet-async";
-import {NavLink, useRouteError} from "react-router";
-import {PoweredByFooter} from "../PoweredByFooter";
-import {getConfig} from '../../../utilites/config';
+import {IconHome, IconRefresh} from '@tabler/icons-react';
+import {isRouteErrorResponse, useLocation, useRouteError} from "react-router";
+import {ErrorScreen} from "../ErrorScreen";
 
+/**
+ * Every route's errorElement: a 404 for an address that leads nowhere, a plain error
+ * otherwise. Both stay on the address the visitor typed.
+ */
 export const ErrorDisplay = () => {
-    const error = useRouteError() as any;
+    const error = useRouteError();
+    const {pathname} = useLocation();
+    const notFound = isRouteErrorResponse(error) && error.status === 404;
 
-    const title = error?.status === 404
-        ? t`Page not found`
-        : t`Something went wrong`;
+    if (!notFound) {
+        console.error('ErrorDisplay error:', error);
+    }
 
-    const description = error?.status === 404
-        ? t`The page you are looking for does not exist`
-        : t`An error occurred while loading the page`;
-
-    console.log('ErrorDisplay error:', error);
+    if (notFound) {
+        return (
+            <ErrorScreen
+                notFound
+                kicker={t`Oops, wrong trail!`}
+                title={t`Off trail`}
+                pageTitle={t`Page not found`}
+                description={t`This page doesn't exist, or it moved. The link may have been cut off when it was copied.`}
+                path={pathname}
+                primary={{label: t`Back to home`, to: '/', icon: <IconHome size={18}/>}}
+                secondary={{label: t`Explore events`, to: '/events'}}
+                showTicketsHint
+            />
+        );
+    }
 
     return (
-        <>
-            <Helmet
-                title={title}
-                meta={[
-                    {
-                        name: 'description',
-                        content: description,
-                    },
-                ]}
-            />
-            <Box className={classes.wrapper}>
-
-                {/* Animated background elements */}
-                <div className={classes.backgroundOrb1}/>
-                <div className={classes.backgroundOrb2}/>
-
-                <Container size="md" className={classes.root}>
-                    <Stack gap="xl" align="center">
-                        <Image
-                            src={getConfig("VITE_APP_LOGO_DARK", "/logos/hi-events-stacked-light.svg")}
-                            alt={getConfig("VITE_APP_NAME", "Hi.Events") + " Logo"}
-                            w={rem(140)}
-                            h="auto"
-                            fit="contain"
-                            className={classes.logo}
-                        />
-
-                        <Stack gap="lg" align="center" className={classes.content}>
-                            <Title order={1} className={classes.title}>
-                                {title}
-                            </Title>
-
-                            <Text size="lg" c="dimmed" className={classes.description}>
-                                {description}
-                            </Text>
-                            <Button
-                                component={NavLink}
-                                to="/"
-                                leftSection={<IconHome size={18}/>}
-                                variant="gradient"
-                                gradient={{from: 'primary', to: 'secondary'}}
-                                className={classes.button}
-                            >
-                                {t`Go to home page`}
-                            </Button>
-                        </Stack>
-
-                        <PoweredByFooter/>
-                    </Stack>
-                </Container>
-            </Box>
-        </>
+        <ErrorScreen
+            kicker={t`Well, that slipped.`}
+            title={t`Something went wrong`}
+            description={t`An error occurred while loading the page`}
+            primary={{
+                label: t`Try again`,
+                icon: <IconRefresh size={18}/>,
+                onClick: () => window.location.reload(),
+            }}
+            secondary={{label: t`Back to home`, to: '/'}}
+        />
     );
 };
 
