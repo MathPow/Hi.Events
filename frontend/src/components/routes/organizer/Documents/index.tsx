@@ -104,18 +104,16 @@ const Documents = () => {
 
     return (
         <PageBody>
-            <div className={classes.header}>
-                <PageTitle subheading={t`Waivers, consent forms and other documents for your participants to sign.`}>
-                    {t`Documents`}
-                </PageTitle>
-                <Button
-                    className={classes.newButton}
-                    leftSection={<IconPlus size={18}/>}
-                    onClick={() => setChoosing(true)}
-                >
-                    {t`New document`}
-                </Button>
-            </div>
+            <PageTitle
+                subheading={t`Waivers, consent forms and other documents for your participants to sign.`}
+                actions={(
+                    <Button leftSection={<IconPlus size={18}/>} onClick={() => setChoosing(true)}>
+                        {t`New document`}
+                    </Button>
+                )}
+            >
+                {t`Documents`}
+            </PageTitle>
 
             {/* « New document »: a template first (or the blank page). */}
             <Modal opened={choosing} onClose={() => setChoosing(false)} heading={t`New document`}>

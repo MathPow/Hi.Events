@@ -1,12 +1,14 @@
 import React from "react";
 import classes from './PageTitle.module.scss';
+import {TopBarAction, useHasTopBarAction} from "../../layouts/AppLayout/TopBarAction.tsx";
 
 interface PageTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
     children: React.ReactNode,
     // One line explaining the page; a long one is hidden on phones unless mobileSubheading is given.
     subheading?: React.ReactNode,
     mobileSubheading?: React.ReactNode,
-    // The page's main actions: on the right on desktop, full width under the title on phones.
+    // The page's main actions: on the right on desktop (in the top bar when the layout offers it),
+    // full width under the title on phones.
     actions?: React.ReactNode,
 }
 
@@ -16,6 +18,7 @@ const LONG_SUBHEADING = 70;
 // FatFrank uppercase title (52px, 34px on phones) and an 18px subtitle.
 export const PageTitle = (props: PageTitleProps) => {
     const {children, subheading, mobileSubheading, actions, ...rest} = props;
+    const actionsInTopBar = useHasTopBarAction() && !!actions;
     const hideOnPhones = mobileSubheading !== undefined
         || (typeof subheading === 'string' && subheading.length > LONG_SUBHEADING);
 
@@ -36,7 +39,12 @@ export const PageTitle = (props: PageTitleProps) => {
                     </div>
                 )}
             </div>
-            {actions && <div className={classes.actions}>{actions}</div>}
+            {actions && (
+                <div className={actionsInTopBar ? `${classes.actions} ${classes.phoneActions}` : classes.actions}>
+                    {actions}
+                </div>
+            )}
+            {actionsInTopBar && <TopBarAction>{actions}</TopBarAction>}
         </header>
     );
 }

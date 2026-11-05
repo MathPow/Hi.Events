@@ -77,3 +77,10 @@
     @include ui.primary-button;
   }
 }
+
+// The actions moved to the top bar (layouts/OrganizerLayout) stay here on phones, where the bar hides them.
+.phoneActions {
+  @include mixins.respond-above(md) {
+    display: none;
+  }
+}

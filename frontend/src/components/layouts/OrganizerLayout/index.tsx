@@ -15,7 +15,8 @@ import AppLayout from "../AppLayout";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { Button, Menu, Modal, Stack, Text } from "@mantine/core";
 import { useGetOrganizer } from "../../../queries/useGetOrganizer.ts";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { TopBarActionContext } from "../AppLayout/TopBarAction.tsx";
 import { CreateEventModal } from "../../modals/CreateEventModal";
 import { TopBarButton } from "../../common/TopBarButton";
 import classes from "./OrganizerLayout.module.scss";
@@ -45,6 +46,16 @@ const OrganizerLayout = () => {
     const location = useLocation();
     const { data: organizer } = useGetOrganizer(organizerId);
     const [showCreateEventModal, setShowCreateEventModal] = useState(false);
+    const [pageActionTarget, setPageActionTarget] = useState<HTMLElement | null>(null);
+    const [pageActionClaims, setPageActionClaims] = useState(0);
+    const claimPageAction = useCallback(() => {
+        setPageActionClaims((count) => count + 1);
+        return () => setPageActionClaims((count) => count - 1);
+    }, []);
+    const topBarActionSlot = useMemo(
+        () => ({target: pageActionTarget, claim: claimPageAction}),
+        [pageActionTarget, claimPageAction],
+    );
     const [searchParams, setSearchParams] = useSearchParams();
     const [showCreateOrganizerModal, setShowCreateOrganizerModal] = useState(false);
     const [switchOrganizerModalOpen, { open: openSwitchModal, close: closeSwitchModal }] = useDisclosure(false);
@@ -288,7 +299,7 @@ const OrganizerLayout = () => {
 
 
     return (
-        <>
+        <TopBarActionContext.Provider value={topBarActionSlot}>
             <AppLayout
                 navItems={navItemsWithLoading}
                 breadcrumbItems={breadcrumbItems}
@@ -305,13 +316,18 @@ const OrganizerLayout = () => {
                     </TopBarButton>
                 )}
                 topBarActions={(
-                    <Button
-                        className={classes.createEventButton}
-                        onClick={() => setShowCreateEventModal(true)}
-                        leftSection={<IconPlus size={20} stroke={2.25} />}
-                    >
-                        {t`Create Event`}
-                    </Button>
+                    <>
+                        <div ref={setPageActionTarget} className={classes.pageActionSlot} />
+                        {pageActionClaims === 0 && (
+                            <Button
+                                className={classes.createEventButton}
+                                onClick={() => setShowCreateEventModal(true)}
+                                leftSection={<IconPlus size={20} stroke={2.25} />}
+                            >
+                                {t`Create Event`}
+                            </Button>
+                        )}
+                    </>
                 )}
                 mobileMenuItems={organizer ? [{
                     link: publicPageUrl,
@@ -378,7 +394,7 @@ const OrganizerLayout = () => {
                     )}
                 </Stack>
             </Modal>
-        </>
+        </TopBarActionContext.Provider>
     );
 };
 
