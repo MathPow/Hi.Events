@@ -51,7 +51,6 @@ export const DehorsPopup = ({onClose, title, status, size = 640, children}: Deho
             size={size}
             radius={32}
             withCloseButton={false}
-            closeOnClickOutside={false}
             classNames={{content: classes.popup, body: classes.popupBody}}
         >
             <div className={classes.popupHeader}>

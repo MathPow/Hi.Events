@@ -143,7 +143,6 @@ export const JoinWaitlistModal = ({onClose, product, event, productPriceId, pric
                 title={t`Join Waitlist for ${productDisplayName}`}
                 size="lg"
                 overlayProps={{opacity: 0.55, blur: 3}}
-                closeOnClickOutside={false}
                 styles={{
                     title: {fontWeight: 600, fontSize: '1.25rem'},
                 }}

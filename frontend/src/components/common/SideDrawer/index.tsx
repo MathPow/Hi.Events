@@ -18,7 +18,6 @@ export const SideDrawer = (props: DrawerProps & SideDrawerProps) => {
             size={'xl'}
             withCloseButton={true}
             title={props.heading}
-            closeOnClickOutside={false}
             classNames={{
                 content: classes.content,
                 header: classes.header,

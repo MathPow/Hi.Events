@@ -20,7 +20,6 @@ export const Modal = (props: MantineModalProps & ModalProps) => {
             size={'xl'}
             withCloseButton={true}
             title={props.heading}
-            closeOnClickOutside={false}
             classNames={{
                 title: classNames(
                     classes.modalTitle,
