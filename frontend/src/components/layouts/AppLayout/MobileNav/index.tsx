@@ -240,7 +240,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                     data-busy={assistant.busy || undefined}
                 >
                     <span className={classes.tabIcon}>
-                        <img className={classes.assistantIcon} src={'/interface/admin/stagiaire.svg'} width={19} height={22}
+                        <img className={classes.assistantIcon} src={'/interface/admin/stagiaire-creme.svg'} width={19} height={22}
                              alt="" aria-hidden/>
                     </span>
                     <span className={classes.tabLabel}>{t`Assistant`}</span>
