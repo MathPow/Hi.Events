@@ -25,6 +25,14 @@ export const toggleAssistant = () => {
     window.dispatchEvent(new Event(TOGGLE_EVENT));
 };
 
+// Another tab of the bar was tapped: the page it opens shows, not the assistant over it.
+export const closeAssistant = () => {
+    openRequested = false;
+    if (current.open) {
+        toggleAssistant();
+    }
+};
+
 export const takeOpenRequest = () => {
     const requested = openRequested;
     openRequested = false;

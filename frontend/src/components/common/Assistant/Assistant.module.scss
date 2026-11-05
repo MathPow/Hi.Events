@@ -87,14 +87,21 @@ $above-tab-bar: 6.375rem;
   color: var(--dehors-brun);
   box-shadow: 0 1rem 3rem rgb(53 41 36 / 0.25);
 
+  // On a phone, the whole screen but under the tab bar (MobileNav, 170), which stays to go elsewhere:
+  // the composer keeps clear of it. While typing, the bar steps aside and so does that room.
   @include mixins.respond-below(md) {
     inset: 0;
+    z-index: 165;
     width: auto;
     height: auto;
     border: 0;
     border-radius: 0;
     padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: calc(1.25rem + 4.375rem + 0.75rem + env(safe-area-inset-bottom));
+
+    :global(body:has(:is(input:not([type='checkbox'], [type='radio'], [readonly]), textarea, [contenteditable='true']):focus)) & {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
   }
 }
 

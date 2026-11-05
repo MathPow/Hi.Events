@@ -8,7 +8,7 @@ import classes from './MobileNav.module.scss';
 import {MobilePrimaryAction, NavContext, NavItem} from "../types.ts";
 import {AccountCard, adminIcon, ContextCard, isHeading, isItemActive, isVisible, NavIcon} from "../NavParts";
 import {useStopImpersonating} from "../../../common/ImpersonationBanner/useStopImpersonating";
-import {toggleAssistant, useAssistantState} from "../../../../utilites/assistantEvents.ts";
+import {closeAssistant, toggleAssistant, useAssistantState} from "../../../../utilites/assistantEvents.ts";
 import {useScrollFade} from "../../../../hooks/useScrollFade.ts";
 
 interface MobileNavProps {
@@ -214,7 +214,10 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                         key={item.label}
                         to={item.link ?? '#'}
                         end={item.link === ''}
-                        onClick={item.onClick}
+                        onClick={() => {
+                            closeAssistant();
+                            item.onClick?.();
+                        }}
                         className={({isActive}) => classNames(classes.tab, {
                             [classes.tabActive]: !menuOpen && isItemActive(item, isActive),
                         })}
@@ -248,7 +251,10 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
                 <UnstyledButton
                     className={classNames(classes.tab, {[classes.tabActive]: menuOpen || isMenuPageActive})}
-                    onClick={() => setMenuOpen(!menuOpen)}
+                    onClick={() => {
+                        closeAssistant();
+                        setMenuOpen(!menuOpen);
+                    }}
                     aria-expanded={menuOpen}
                     aria-controls="mobile-nav-menu"
                 >

@@ -273,10 +273,11 @@
 }
 
 // Chiffres: les tuiles de StatBoxes, quatre par ligne.
+// The tiles of a row at the same height, their colored band along the bottom (StatTile .tileBand).
 .stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: start;
+  align-items: stretch;
   gap: 1.25rem;
   transition: opacity 0.2s ease;
 
