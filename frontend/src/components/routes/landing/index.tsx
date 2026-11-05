@@ -850,7 +850,7 @@ const Landing = () => {
     ];
 
     const features = [
-        {title: t`Free or paid, one link`, text: t`Each event gets a page to share anywhere: free or paid tickets, bought in a few clicks.`, picture: 'features/groupe-crete'},
+        {title: t`Free or paid, one link`, text: t`Each event gets a page to share anywhere: free or paid tickets, bought in a few clicks. The money reaches your bank account from the presale on.`, picture: 'features/groupe-crete'},
         {title: t`Simple, in your colours`, text: t`A dashboard that's easy to pick up, and ticketing that looks like your brand.`, picture: 'features/groupe-drapeau'},
         {title: t`Your participants, from ticket to door`, text: t`An up-to-date list, emails to keep them posted, and ticket scanning on the day.`, picture: 'features/file-sentier'},
         {title: t`Sell your merch`, text: t`Sell your merch with the tickets, handed over at the event.`, picture: 'features/autocollants', contain: true},
