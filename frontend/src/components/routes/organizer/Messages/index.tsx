@@ -11,6 +11,7 @@ import {
     IconChecks,
     IconInbox,
     IconMail,
+    IconSend,
     IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -32,6 +33,7 @@ import {relativeDate} from "../../../../utilites/dates.ts";
 import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {ReplyModal} from "./ReplyModal.tsx";
+import {ComposeMessage} from "./ComposeMessage.tsx";
 import classes from "./Messages.module.scss";
 
 // Les notifications de cet appareil: les activer, ou dire pourquoi c'est impossible ici.
@@ -212,6 +214,7 @@ const Messages = () => {
     const [filter, setFilter] = useState<'all' | 'unread'>('all');
     const [openId, setOpenId] = useState<number | null>(null);
     const [replyTo, setReplyTo] = useState<OrganizerMessage | null>(null);
+    const [isComposing, setIsComposing] = useState(false);
     const {data: organizer} = useGetOrganizer(organizerId);
     const {data, isLoading} = useGetOrganizerMessages(organizerId, page, filter === 'unread');
     const setRead = useSetOrganizerMessageRead();
@@ -255,7 +258,13 @@ const Messages = () => {
 
     return (
         <PageBody>
-            <PageTitle>{t`Messages`}</PageTitle>
+            <PageTitle actions={(
+                <Button leftSection={<IconSend size={18}/>} onClick={() => setIsComposing(true)}>
+                    {t`New message`}
+                </Button>
+            )}>
+                {t`Messages`}
+            </PageTitle>
             <p className={classes.intro}>
                 <Trans>Messages sent with the “Contact” button on your page and your events. They also arrive by email.</Trans>
             </p>
@@ -313,6 +322,9 @@ const Messages = () => {
             )}
 
             <ReplyModal message={replyTo} organizerEmail={organizer?.email} onClose={() => setReplyTo(null)}/>
+            {(isComposing && organizerId) && (
+                <ComposeMessage organizerId={organizerId} onClose={() => setIsComposing(false)}/>
+            )}
         </PageBody>
     );
 };

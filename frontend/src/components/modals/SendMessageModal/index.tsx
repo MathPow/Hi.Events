@@ -49,6 +49,8 @@ import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
 import {buildReminder, ReminderTemplate} from "./reminderTemplates.ts";
 
 interface EventMessageModalProps extends GenericModalProps {
+    // Outside an event's pages (the organizer's Messages page), the event is given here.
+    eventId?: IdParam,
     orderId?: IdParam,
     productId?: IdParam,
     messageType: MessageType,
@@ -184,7 +186,8 @@ const getSchedulePresets = (event: Event) => {
 
 export const SendMessageModal = (props: EventMessageModalProps) => {
     const {onClose, orderId, productId, messageType, attendeeId} = props;
-    const {eventId} = useParams();
+    const params = useParams();
+    const eventId = props.eventId ?? params.eventId;
     const {data: event, data: {product_categories} = {}} = useGetEvent(eventId);
     const {data: eventSettings} = useGetEventSettings(eventId);
     const {data: me} = useGetMe();
@@ -320,7 +323,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
             withCloseButton
             opened
             onClose={onClose}
-            heading={t`Send a message`}
+            heading={props.eventId ? `${t`Send a message`} · ${event.title}` : t`Send a message`}
         >
             {!isAccountFetched && (
                 <div className={classes.loadingContainer}>
