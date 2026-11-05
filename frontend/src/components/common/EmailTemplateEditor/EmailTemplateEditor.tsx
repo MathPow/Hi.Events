@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
-import {ActionIcon, Button, Divider, Group, Stack, Switch, Tabs, Text, TextInput,} from '@mantine/core';
+import {Button, Divider, Group, Stack, Switch, Tabs, Text, TextInput,} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {IconBraces, IconEye, IconX} from '@tabler/icons-react';
+import {IconBraces, IconEye} from '@tabler/icons-react';
 import {t, Trans} from '@lingui/macro';
 import {CreateEmailTemplateRequest, EmailTemplate, EmailTemplateType, UpdateEmailTemplateRequest, DefaultEmailTemplate} from '../../../types';
 import {EmailTemplatePreviewPane} from './EmailTemplatePreviewPane';
@@ -9,6 +9,7 @@ import {CTAConfiguration} from './CTAConfiguration';
 import classes from './EmailTemplateEditor.module.scss';
 import {Editor} from "../Editor";
 import {LiquidTokenControl} from '../Editor/Controls/LiquidTokenControl';
+import {PopupHeader} from '../DehorsPopup';
 
 interface EmailTemplateEditorProps {
     templateType: EmailTemplateType;
@@ -99,29 +100,19 @@ export const EmailTemplateEditor = ({
         <div className={classes.editor}>
             <form onSubmit={form.onSubmit(handleSave)}>
                 <Stack gap="md">
-                    <Group justify="space-between" align="flex-start">
-                        <div>
-                            <Text size="lg" fw={600} mb="xs">
-                                {template ? (
-                                    <Trans>Edit {templateTypeLabels[templateType]} Template</Trans>
-                                ) : (
-                                    <Trans>Create {templateTypeLabels[templateType]} Template</Trans>
-                                )}
-                            </Text>
+                    <PopupHeader
+                        title={template ? (
+                            <Trans>Edit {templateTypeLabels[templateType]} Template</Trans>
+                        ) : (
+                            <Trans>Create {templateTypeLabels[templateType]} Template</Trans>
+                        )}
+                        onClose={() => onClose?.()}
+                        status={(
                             <Text size="sm" c="dimmed">
                                 <Trans>Change the text of this email. The automatic info is filled in when it is sent.</Trans>
                             </Text>
-                        </div>
-                        {onClose && (
-                            <ActionIcon
-                                variant="subtle"
-                                size="lg"
-                                onClick={onClose}
-                            >
-                                <IconX size={16}/>
-                            </ActionIcon>
                         )}
-                    </Group>
+                    />
 
                     <TextInput
                         label={<Trans>Subject</Trans>}
@@ -130,7 +121,7 @@ export const EmailTemplateEditor = ({
                         {...form.getInputProps('subject')}
                     />
 
-                    <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'editor')}>
+                    <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'editor')} variant="pills">
                         <Tabs.List>
                             <Tabs.Tab value="editor" leftSection={<IconBraces size={16}/>}>
                                 <Trans>Editor</Trans>

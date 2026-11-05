@@ -15,6 +15,22 @@ interface DehorsPopupProps {
 }
 
 /**
+ * The popup's header on its own, for a popup that renders its own body inside a plain Modal:
+ * the FatFrank title, an optional line under it, the round close button.
+ */
+export const PopupHeader = ({title, status, onClose}: { title: ReactNode, status?: ReactNode, onClose: () => void }) => (
+    <div className={classes.popupHeader}>
+        <div className={classes.popupHeading}>
+            <h2 className={classes.popupTitle}>{title}</h2>
+            {status}
+        </div>
+        <UnstyledButton className={classes.close} onClick={onClose} aria-label={t`Close`}>
+            <IconX size={20} stroke={2}/>
+        </UnstyledButton>
+    </div>
+);
+
+/**
  * The platform's popup (Figma « Créer un événement »): centered with its title and round close button,
  * a sheet from the bottom on phones.
  */
@@ -53,15 +69,7 @@ export const DehorsPopup = ({onClose, title, status, size = 640, children}: Deho
             withCloseButton={false}
             classNames={{content: classes.popup, body: classes.popupBody}}
         >
-            <div className={classes.popupHeader}>
-                <div className={classes.popupHeading}>
-                    <h2 className={classes.popupTitle}>{title}</h2>
-                    {status}
-                </div>
-                <UnstyledButton className={classes.close} onClick={onClose} aria-label={t`Close`}>
-                    <IconX size={20} stroke={2}/>
-                </UnstyledButton>
-            </div>
+            <PopupHeader title={title} status={status} onClose={onClose}/>
             {children}
         </Modal>
     );

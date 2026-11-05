@@ -388,6 +388,40 @@ body.dehors-app {
     font-weight: 600;
   }
 
+  // Radio buttons and switches drawn like the checkbox: a brown edge when off, orange when on.
+  .mantine-Radio-radio#{$hors-apercu} {
+    border: 2px solid var(--dehors-brun);
+
+    &:checked {
+      border-color: var(--dehors-orange);
+      background: var(--dehors-orange);
+    }
+  }
+
+  .mantine-Radio-label#{$hors-apercu},
+  .mantine-Switch-label#{$hors-apercu} {
+    font-weight: 600;
+  }
+
+  .mantine-Switch-track#{$hors-apercu} {
+    border: 2px solid var(--dehors-brun);
+    background: transparent;
+  }
+
+  .mantine-Switch-thumb#{$hors-apercu} {
+    border: none;
+    background: var(--dehors-brun);
+  }
+
+  .mantine-Switch-input:checked + .mantine-Switch-track#{$hors-apercu} {
+    border-color: var(--dehors-orange);
+    background: var(--dehors-orange);
+
+    .mantine-Switch-thumb {
+      background: var(--dehors-creme);
+    }
+  }
+
   .mantine-Fieldset-root {
     padding: 0;
     border: none;
@@ -447,11 +481,37 @@ body.dehors-app {
     }
   }
 
-  // Rich text editor
+  // Rich text editor: a peach field like the others, its toolbar on a line of its own.
   .mantine-RichTextEditor-root {
+    border: none;
+    border-radius: 1rem;
+    background: var(--dehors-champ);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: var(--dehors-champ-survol);
+    }
+
+    &:focus-within {
+      outline: 3px solid var(--dehors-brun);
+      outline-offset: 3px;
+    }
+  }
+
+  .mantine-RichTextEditor-controlsGroup {
+    background: transparent;
+  }
+
+  // A framed block inside a popup (« Call-to-Action Button »): the popup's line, not a white card.
+  :is(.mantine-Modal-content, .mantine-Drawer-content) .mantine-Paper-root[data-with-border] {
     border-color: var(--dehors-trait);
     border-radius: 1rem;
-    background: var(--dehors-surface);
+    background: transparent;
+  }
+
+  .mantine-RichTextEditor-content .ProseMirror {
+    min-height: 5rem;
+    color: var(--dehors-brun);
   }
 
   .mantine-RichTextEditor-toolbar {
@@ -560,39 +620,92 @@ body.dehors-app {
     font-weight: 600;
   }
 
-  // Modals
-  .mantine-Modal-overlay {
+  // Every popup like DehorsPopup (Figma « Créer un événement »), whether it goes through Modal or a
+  // plain Mantine Modal: the near-white card, the title in FatFrank capitals, the round peach close
+  // button, 2.25rem of room. No blur behind: the page stays readable. Drawers only share the backdrop
+  // and the buttons: each one draws its own sheet (SideDrawer, the bottom sheets).
+  .mantine-Modal-overlay,
+  .mantine-Drawer-overlay {
     background: rgb(53 41 36 / 0.45);
+    backdrop-filter: none !important;
   }
 
   .mantine-Modal-content {
-    background: var(--dehors-creme);
-    border-radius: 1.5rem;
+    --mb-padding: 2.25rem;
+    background: var(--dehors-carte);
+    color: var(--dehors-brun);
+    box-shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+  }
+
+  .mantine-Modal-content {
+    border-radius: 2rem;
   }
 
   .mantine-Modal-header {
-    background: var(--dehors-creme);
+    align-items: flex-start;
+    padding-bottom: 1.25rem;
+    background: var(--dehors-carte);
   }
 
   .mantine-Modal-title {
+    color: var(--dehors-brun);
     font-family: FatFrank, 'Arial Black', sans-serif;
+    font-size: 1.5rem;
     font-weight: 400;
+    line-height: 1.1;
+    text-transform: uppercase;
   }
 
   .mantine-Modal-close {
+    flex-shrink: 0;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
     border-radius: 999px;
+    background: var(--public-accent-doux);
     color: var(--dehors-brun);
-    background: var(--dehors-champ);
+
+    svg {
+      width: 1.25rem !important;
+      height: 1.25rem !important;
+    }
 
     &:hover {
-      background: var(--dehors-champ-survol);
+      background: #f2cbb7;
+    }
+  }
+
+  // On a phone, a sheet from the bottom with its handle, like DehorsPopup there.
+  @media (max-width: 767px) {
+    .mantine-Modal-inner:where(:not(:has([data-full-screen]))) {
+      align-items: flex-end !important;
+      padding: 0 !important;
+    }
+
+    .mantine-Modal-content:where(:not([data-full-screen])) {
+      --mb-padding: 1.25rem;
+      flex: 1 1 100%;
+      max-width: 100%;
+      max-height: 92dvh;
+      padding-bottom: env(safe-area-inset-bottom);
+      border-radius: 1.75rem 1.75rem 0 0;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 2.75rem;
+        height: 5px;
+        margin: 0.75rem auto 0;
+        border-radius: 9px;
+        background: var(--dehors-trait);
+      }
     }
   }
 
   // Popups take the buttons of the pages (admin-ui primary-button / outline-button): 48 px high,
   // 16 px corners, 17 px bold; filled ones orange with brown text (red ones stay red), the others
   // outlined in brown. Small buttons (size xs/sm or compact, or inside a field) keep their size.
-  .mantine-Modal-content .mantine-Button-root:where(:not([style*='button-height-xs'], [style*='button-height-sm'], [style*='compact'], .mantine-Input-section *))#{$hors-apercu} {
+  :is(.mantine-Modal-content, .mantine-Drawer-content) .mantine-Button-root:where(:not([style*='button-height-xs'], [style*='button-height-sm'], [style*='compact'], .mantine-Input-section *, .mantine-RichTextEditor-root *))#{$hors-apercu} {
     height: 3rem;
     padding-inline: 1.375rem;
     border-radius: 1rem;
@@ -620,7 +733,7 @@ body.dehors-app {
 
   // A popup's button keeps its own width, like on the pages, even when asked for the full width:
   // at the end of its line, under the form.
-  .mantine-Modal-content .mantine-Button-root[data-block]#{$hors-apercu} {
+  :is(.mantine-Modal-content, .mantine-Drawer-content) .mantine-Button-root[data-block]#{$hors-apercu} {
     width: fit-content;
     max-width: 100%;
     margin-inline-start: auto;
@@ -695,8 +808,18 @@ body.dehors-app {
     border-radius: 1rem;
   }
 
-  // Pill tabs, like the website's filters: a sand track, the chosen tab in brown.
-  .mantine-Tabs-root[data-variant='pills'] {
+  // Tabs, one version whatever the variant: the pills of the website's filters, a sand track and
+  // the chosen tab in brown. The default and outline variants lose their underline and frame.
+  .mantine-Tabs-root:is([data-variant='pills'], [data-variant='default'], [data-variant='outline']) {
+    .mantine-Tabs-list::before {
+      display: none;
+    }
+
+    .mantine-Tabs-tab {
+      margin: 0;
+      border: none;
+    }
+
     .mantine-Tabs-list {
       display: inline-flex;
       flex-wrap: nowrap;

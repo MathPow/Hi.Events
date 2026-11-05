@@ -1,6 +1,5 @@
-import {ActionIcon, Button, Group, Stack, Text, TextInput} from "@mantine/core";
+import {Button, Group, Stack, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {IconX} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {EmailCustomizationType, EmailTemplate, IdParam} from "../../../../types.ts";
 import {useSaveEmailCustomization} from "../../../../mutations/useSaveEmailCustomization.ts";
@@ -8,7 +7,7 @@ import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {Editor} from "../../../common/Editor";
 import {LiquidTokenControl} from "../../../common/Editor/Controls/LiquidTokenControl.tsx";
 import {showServerErrors} from "../Settings/SettingsUi.tsx";
-import classes from "../Settings/Settings.module.scss";
+import {PopupHeader} from "../../../common/DehorsPopup";
 
 interface EmailMessageEditorProps {
     organizerId: IdParam;
@@ -51,17 +50,15 @@ export const EmailMessageEditor = ({organizerId, type, title, template, defaultS
     return (
         <form onSubmit={form.onSubmit(save)}>
             <Stack gap="md">
-                <Group justify="space-between" align="flex-start" wrap="nowrap">
-                    <div>
-                        <Text size="lg" fw={700} mb={4}>{title}</Text>
+                <PopupHeader
+                    title={title}
+                    onClose={onClose}
+                    status={(
                         <Text size="sm" c="dimmed">
                             {t`The email keeps its usual content, with the right amounts, dates and links. You can change its subject and add a message, shown at the top with your name.`}
                         </Text>
-                    </div>
-                    <ActionIcon variant="subtle" size="lg" onClick={onClose} aria-label={t`Close`}>
-                        <IconX size={16}/>
-                    </ActionIcon>
-                </Group>
+                    )}
+                />
 
                 <TextInput
                     label={t({message: 'Subject', context: 'email'})}
@@ -82,10 +79,10 @@ export const EmailMessageEditor = ({organizerId, type, title, template, defaultS
                 />
 
                 <Group justify="flex-end" gap="sm">
-                    <button type="button" className={classes.textButton} onClick={onClose}>
+                    <Button variant="default" onClick={onClose}>
                         {t`Cancel`}
-                    </button>
-                    <Button type="submit" variant="transparent" className={classes.accentButton} loading={saveMutation.isPending}>
+                    </Button>
+                    <Button type="submit" loading={saveMutation.isPending}>
                         {t`Save`}
                     </Button>
                 </Group>
