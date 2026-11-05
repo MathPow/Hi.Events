@@ -1,0 +1,88 @@
+// One row of a list of choices, the same everywhere: the filter menus (Dates, Types, events) and
+// every Select and MultiSelect of the app (theme.ts). 52px high, bold 16px, a box on the right that
+// fills in brown once chosen; the chosen row in peach, the row under the mouse or the keyboard in
+// cream.
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  color: var(--dehors-brun);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover,
+  &[data-combobox-selected] {
+    background: var(--dehors-creme);
+    color: var(--dehors-brun);
+  }
+
+  &[data-checked] {
+    background: var(--public-accent-doux);
+  }
+
+  &:has(:focus-visible) {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: -2px;
+  }
+
+  &[data-combobox-disabled] {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+// The real checkbox or radio of a filter menu stays for the keyboard, hidden under the row.
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.illustration {
+  --taille: 36;
+
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.label {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.description {
+  color: var(--dehors-texte-doux);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.box {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--dehors-brun);
+  border-radius: 6px;
+  color: var(--dehors-creme);
+
+  &[data-checked] {
+    background: var(--dehors-brun);
+  }
+}

@@ -632,8 +632,7 @@ body.dehors-app {
     padding: 0.625rem;
   }
 
-  .mantine-Menu-item,
-  .mantine-Combobox-option {
+  .mantine-Menu-item {
     gap: 0.75rem;
     padding: 0.5rem 0.625rem;
     border-radius: 0.875rem;
@@ -648,14 +647,6 @@ body.dehors-app {
     --menu-item-hover: var(--public-accent-doux);
     min-height: 3.25rem;
     color: var(--menu-item-color, var(--dehors-brun));
-  }
-
-  // Long lists of choices (selects) stay a bit tighter.
-  .mantine-Combobox-option {
-    min-height: 2.75rem;
-    color: var(--dehors-brun);
-    display: flex;
-    align-items: center;
   }
 
   .mantine-Menu-itemSection[data-position='left'] {
@@ -674,14 +665,6 @@ body.dehors-app {
 
   // The page already open (account menu: the settings section being viewed).
   .mantine-Menu-item[data-current] {
-    background-color: var(--dehors-creme);
-  }
-
-  .mantine-Combobox-option[data-combobox-selected] {
-    background-color: var(--public-accent-doux);
-  }
-
-  .mantine-Combobox-option:where(:not([data-combobox-disabled], [data-combobox-selected])):hover {
     background-color: var(--dehors-creme);
   }
 

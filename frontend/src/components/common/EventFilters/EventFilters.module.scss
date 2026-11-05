@@ -144,67 +144,6 @@
   gap: 2px;
 }
 
-.option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 52px;
-  padding: 8px 10px;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: normal;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
+// The rows themselves: OptionRow (common/OptionRow), shared with every list of the app.
 
-  &:hover {
-    background: var(--dehors-creme);
-  }
-
-  &[data-checked] {
-    background: var(--public-accent-doux);
-  }
-
-  &:has(:focus-visible) {
-    outline: 2px solid var(--dehors-brun);
-    outline-offset: -2px;
-  }
-}
-
-.optionInput {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.optionIllustration {
-  --taille: 36;
-
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-}
-
-.optionLabel {
-  flex: 1;
-  min-width: 0;
-}
-
-.box {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border: 2px solid var(--dehors-brun);
-  border-radius: 6px;
-  color: var(--dehors-creme);
-
-  [data-checked] > & {
-    background: var(--dehors-brun);
-  }
-}
 

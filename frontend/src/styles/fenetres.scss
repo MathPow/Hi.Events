@@ -191,21 +191,14 @@ $publiques: 'body:not(.dehors-app)';
     background: var(--dehors-carte);
   }
 
-  .mantine-Menu-item,
-  .mantine-Combobox-option {
+  .mantine-Menu-item {
     border-radius: 14px;
     font-weight: 700;
     color: var(--dehors-brun);
   }
 
-  .mantine-Menu-item:where(:not([data-disabled]))[data-hovered],
-  .mantine-Combobox-option:where(:not([data-combobox-disabled])):hover {
+  .mantine-Menu-item:where(:not([data-disabled]))[data-hovered] {
     background: var(--dehors-creme);
-  }
-
-  .mantine-Combobox-option[data-combobox-selected] {
-    color: var(--dehors-brun);
-    background: var(--dehors-champ);
   }
 
   .mantine-Tooltip-tooltip {

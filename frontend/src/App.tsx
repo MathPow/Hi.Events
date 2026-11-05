@@ -26,6 +26,7 @@ import {setConsentState, updateGoogleConsentMode} from "./utilites/trackingPixel
 import {initPostHog} from "./utilites/posthog.ts";
 import "./utilites/dateLocales.ts";
 import {useRoughEdges} from "./hooks/useRoughEdges.ts";
+import {optionRowTheme} from "./components/common/OptionRow/theme.ts";
 
 declare global {
     interface Window {
@@ -90,6 +91,7 @@ export const App: FC<
                     // Every popup in the middle of the screen, not near the top.
                     components: {
                         Modal: {defaultProps: {centered: true}},
+                        ...optionRowTheme,
                     },
                 }}
             >

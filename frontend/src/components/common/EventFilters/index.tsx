@@ -5,6 +5,7 @@ import dayjs, {Dayjs} from "dayjs";
 import {EVENT_TYPES, eventTypeLabel} from "../../../constants/eventTypes.ts";
 import {AccountEventType, Event} from "../../../types.ts";
 import {PublicIcon} from "../PublicIcon";
+import {OptionContent, optionRowClasses} from "../OptionRow";
 import {EventTypeIllustration} from "../EventTypeIllustration";
 import classes from './EventFilters.module.scss';
 
@@ -61,13 +62,9 @@ export const MenuOption = ({type, name, checked, onChange, illustration, label}:
     illustration?: ReactNode,
     label: string,
 }) => (
-    <label className={classes.option} data-checked={checked || undefined}>
-        <input type={type} name={name} checked={checked} onChange={onChange} className={classes.optionInput}/>
-        {illustration !== undefined && <span className={classes.optionIllustration}>{illustration}</span>}
-        <span className={classes.optionLabel}>{label}</span>
-        <span className={classes.box} aria-hidden>
-            {checked && <PublicIcon name={'coche'} size={14}/>}
-        </span>
+    <label className={optionRowClasses.option} data-checked={checked || undefined}>
+        <input type={type} name={name} checked={checked} onChange={onChange} className={optionRowClasses.input}/>
+        <OptionContent label={label} illustration={illustration} checked={checked}/>
     </label>
 );
 

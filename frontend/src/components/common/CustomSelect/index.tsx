@@ -1,6 +1,7 @@
 import {Badge, Combobox, Group, Input, InputBase, ScrollArea, Stack, Text, useCombobox} from "@mantine/core";
 import {UseFormReturnType} from "@mantine/form";
 import React from "react";
+import {OptionContent, optionRowClasses} from "../OptionRow";
 import {IconCheck} from "@tabler/icons-react";
 
 export interface ItemProps {
@@ -80,10 +81,14 @@ export const CustomSelect = ({
             key={item.value}
             disabled={item.disabled}
             active={selectedValues.includes(item.value)}
+            className={optionRowClasses.option}
+            data-checked={selectedValues.includes(item.value) || undefined}
         >
-            <SelectOption
-                {...item}
-                selected={selectedValues.includes(item.value)}
+            <OptionContent
+                illustration={item.icon}
+                label={item.label}
+                description={item.description}
+                checked={selectedValues.includes(item.value)}
             />
         </Combobox.Option>
     ));
