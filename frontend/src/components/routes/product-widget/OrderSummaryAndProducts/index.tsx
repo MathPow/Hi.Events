@@ -112,7 +112,8 @@ const HtmlCard = ({title, html}: { title: string, html: string }) => (
     </Card>
 );
 
-// Les trois boutons de la maquette: dans l'en-tete sur ordinateur, sous le billet sur mobile.
+// Les trois boutons de la maquette: dans l'en-tete sur ordinateur, sous le billet sur mobile. La page de
+// l'evenement en premier, en couleur; le calendrier reste dans la carte « L'evenement ».
 const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
     event: Event,
     order: Order,
@@ -126,12 +127,10 @@ const ConfirmationActions = ({event, order, ticketsUrl, mapsUrl, className}: {
 
     return (
         <div className={`${classes.actions} ${className}`}>
-            <CalendarOptionsPopover event={event}>
-                <UnstyledButton className={`${classes.button} ${classes.buttonPrimary}`} data-rough="button">
-                    <PublicIcon name={'calendrier'} size={20}/>
-                    {t`Add to Calendar`}
-                </UnstyledButton>
-            </CalendarOptionsPopover>
+            <a className={`${classes.button} ${classes.buttonPrimary}`} data-rough="button" href={eventHomepageUrl(event)}>
+                <PublicIcon name={'info'} size={20}/>
+                {t`View Event`}
+            </a>
             {(ticketsUrl || mapsUrl) && (
                 <div className={classes.secondaryActions}>
                     {ticketsUrl && (
