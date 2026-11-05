@@ -204,6 +204,31 @@ $ink: var(--dehors-brun);
   }
 }
 
+// On a phone, where the menu is a sheet: « Done » across the whole width, as tall and as rounded as
+// the time field above it; « Clear » under it, in the middle.
+@media (max-width: 767px) {
+  .footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .footer > span:empty {
+    display: none;
+  }
+
+  .done {
+    width: 100%;
+    height: 3rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+  }
+
+  .clear {
+    align-self: center;
+  }
+}
+
 .clear {
   padding: 0;
   border: none;
