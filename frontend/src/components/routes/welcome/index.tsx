@@ -337,7 +337,6 @@ const PageImportStep = ({organizerId, onDone}: { organizerId: IdParam, onDone: (
                             placeholder={t`yourclub.com`}
                             aria-label={t`Address of your website, Instagram or ticketing page`}
                             inputMode="url"
-                            size="md"
                             disabled={isPending}
                             error={error}
                         />
