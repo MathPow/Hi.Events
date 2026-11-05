@@ -160,7 +160,7 @@ const OrganizerLayout = () => {
         },
         {
             link: 'emails',
-            label: t`Emails`,
+            label: t`Automatic emails`,
             iconSrc: adminIcon('courriels'),
             tileIconSrc: adminIcon('courriels-22'),
         },

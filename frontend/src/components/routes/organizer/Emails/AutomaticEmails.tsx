@@ -235,7 +235,7 @@ export const AutomaticEmails = ({organizerId}: { organizerId: IdParam }) => {
             <div className={classes.emailsLayout}>
                 <SettingsCard
                     className={classes.emailList}
-                    title={t`Automatic emails`}
+                    title={t`Templates`}
                     subtitle={t`In your colors, like your event pages. Sent for all your events.`}
                 >
                     {groups.map(group => (

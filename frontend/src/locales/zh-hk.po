@@ -371,15 +371,15 @@ msgstr "本期間約 {estimate}"
 msgid "0 minutes and 0 seconds"
 msgstr "0 分 0 秒"
 
-#: src/components/modals/SendMessageModal/index.tsx:126
+#: src/components/modals/SendMessageModal/index.tsx:177
 msgid "1 day after end date"
 msgstr "結束日期後1天"
 
-#: src/components/modals/SendMessageModal/index.tsx:120
+#: src/components/modals/SendMessageModal/index.tsx:171
 msgid "1 day after start date"
 msgstr "開始日期後1天"
 
-#: src/components/modals/SendMessageModal/index.tsx:118
+#: src/components/modals/SendMessageModal/index.tsx:169
 msgid "1 day before event"
 msgstr "活動前1天"
 
@@ -387,7 +387,7 @@ msgstr "活動前1天"
 msgid "1 hour"
 msgstr "1 小時"
 
-#: src/components/modals/SendMessageModal/index.tsx:119
+#: src/components/modals/SendMessageModal/index.tsx:170
 msgid "1 hour before event"
 msgstr "活動前1小時"
 
@@ -417,7 +417,7 @@ msgstr "1 個即將舉行的活動"
 msgid "1 upcoming ticket"
 msgstr ""
 
-#: src/components/modals/SendMessageModal/index.tsx:117
+#: src/components/modals/SendMessageModal/index.tsx:168
 msgid "1 week before event"
 msgstr "活動前1週"
 
@@ -855,7 +855,7 @@ msgstr "新增選項"
 msgid "Add Option"
 msgstr "添加選項"
 
-#: src/components/modals/SendMessageModal/index.tsx:411
+#: src/components/modals/SendMessageModal/index.tsx:476
 msgid "Add PDF files"
 msgstr "新增 PDF 檔案"
 
@@ -1100,7 +1100,7 @@ msgstr ""
 msgid "All attendees"
 msgstr "所有參與者"
 
-#: src/components/modals/SendMessageModal/index.tsx:323
+#: src/components/modals/SendMessageModal/index.tsx:380
 msgid "All attendees of this event"
 msgstr "本次活動的所有與會者"
 
@@ -1277,7 +1277,7 @@ msgstr "同呢個推廣夥伴關聯嘅電郵。推廣夥伴唔會收到通知。
 msgid "An error occurred while checking export status."
 msgstr "檢查導出狀態時發生錯誤。"
 
-#: src/components/common/ErrorDisplay/index.tsx:19
+#: src/components/common/ErrorDisplay/index.tsx:39
 msgid "An error occurred while loading the page"
 msgstr "加載頁面時出現錯誤"
 
@@ -1676,16 +1676,16 @@ msgstr "最多 {0}。"
 msgid "At payment"
 msgstr "付款時"
 
-#: src/components/modals/SendMessageModal/index.tsx:409
+#: src/components/modals/SendMessageModal/index.tsx:474
 #: src/components/routes/event/messages.tsx:108
 msgid "Attachments"
 msgstr "附件"
 
-#: src/components/modals/SendMessageModal/index.tsx:181
+#: src/components/modals/SendMessageModal/index.tsx:232
 msgid "Attachments must be PDF files"
 msgstr "附件必須是 PDF 檔案"
 
-#: src/components/modals/SendMessageModal/index.tsx:185
+#: src/components/modals/SendMessageModal/index.tsx:236
 msgid "Attachments must not exceed {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "附件總大小不能超過 {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -1789,6 +1789,7 @@ msgstr ""
 #: src/components/common/EventCard/index.tsx:224
 #: src/components/common/StatBoxes/index.tsx:165
 #: src/components/modals/ManageOrderModal/index.tsx:127
+#: src/components/modals/SendMessageModal/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:90
 #: src/components/routes/admin/Messages/index.tsx:139
 #: src/components/routes/event/EventDashboard/index.tsx:88
@@ -1820,7 +1821,7 @@ msgstr "已註冊參加者"
 msgid "Attendees who registered before you set the first numbers have no bib yet."
 msgstr "在您設定起始號碼之前報名的參加者還沒有參賽號碼。"
 
-#: src/components/modals/SendMessageModal/index.tsx:319
+#: src/components/modals/SendMessageModal/index.tsx:376
 msgid "Attendees with a specific ticket"
 msgstr "持有特定門票的與會者"
 
@@ -1852,7 +1853,8 @@ msgstr "自動調整大小"
 msgid "Auto-offer is enabled"
 msgstr "自動提供已啟用"
 
-#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:238
+#: src/components/layouts/OrganizerLayout/index.tsx:163
+#: src/components/routes/organizer/Emails/index.tsx:23
 msgid "Automatic emails"
 msgstr "自動電郵"
 
@@ -1895,7 +1897,7 @@ msgid "Awaiting"
 msgstr "待收"
 
 #: src/components/common/OrderStatusBadge/index.tsx:11
-#: src/components/modals/SendMessageModal/index.tsx:367
+#: src/components/modals/SendMessageModal/index.tsx:432
 msgid "Awaiting offline payment"
 msgstr "等待線下付款"
 
@@ -1948,6 +1950,9 @@ msgstr "返回活動"
 msgid "Back to event page"
 msgstr "返回活動頁面"
 
+#: src/components/common/ErrorDisplay/index.tsx:28
+#: src/components/common/ErrorDisplay/index.tsx:45
+#: src/components/common/GenericErrorPage/index.tsx:28
 #: src/components/layouts/AuthLayout/index.tsx:86
 msgid "Back to home"
 msgstr "返回首頁"
@@ -2602,7 +2607,7 @@ msgstr "點擊複製"
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:27
 #: src/components/common/CookieConsentBanner/index.tsx:135
-#: src/components/common/DehorsPopup/index.tsx:62
+#: src/components/common/DehorsPopup/index.tsx:61
 #: src/components/modals/CreateEventModal/index.tsx:235
 #: src/components/modals/JoinWaitlistModal/index.tsx:103
 #: src/components/modals/JoinWaitlistModal/index.tsx:130
@@ -2756,7 +2761,7 @@ msgstr "完成您的個人資料以加入團隊。"
 
 #: src/components/common/OrdersTable/index.tsx:57
 #: src/components/common/OrderStatusBadge/index.tsx:8
-#: src/components/modals/SendMessageModal/index.tsx:366
+#: src/components/modals/SendMessageModal/index.tsx:431
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:229
 msgid "Completed"
 msgstr "已完成"
@@ -3338,7 +3343,7 @@ msgid "Create your free account"
 msgstr "免費建立你的帳戶"
 
 #: src/components/layouts/EventHomepage/EventNotAvailable/index.tsx:13
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:12
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:13
 msgid "Create your own event"
 msgstr "建立您自己的活動"
 
@@ -3402,7 +3407,7 @@ msgstr ""
 msgid "Custom Branding"
 msgstr ""
 
-#: src/components/modals/SendMessageModal/index.tsx:464
+#: src/components/modals/SendMessageModal/index.tsx:529
 msgid "Custom date and time"
 msgstr "自訂日期和時間"
 
@@ -4016,7 +4021,7 @@ msgstr "例如：每道門一個入口、T 恤領取、義工。"
 msgid "e.g., Get Tickets, Register Now"
 msgstr "例如：取得門票，立即註冊"
 
-#: src/components/modals/SendMessageModal/index.tsx:393
+#: src/components/modals/SendMessageModal/index.tsx:458
 msgid "e.g., Important update about your tickets"
 msgstr "例如：關於您門票的重要更新"
 
@@ -4243,7 +4248,7 @@ msgstr "符合開立正式稅務收據的條件。"
 #: src/components/forms/AffiliateForm/index.tsx:98
 #: src/components/modals/EditUserModal/index.tsx:80
 #: src/components/modals/InviteUserModal/index.tsx:61
-#: src/components/modals/JoinWaitlistModal/index.tsx:171
+#: src/components/modals/JoinWaitlistModal/index.tsx:170
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:147
 #: src/components/routes/admin/Dashboard/index.tsx:519
 #: src/components/routes/admin/PlatformRevenue/index.tsx:210
@@ -4345,11 +4350,6 @@ msgstr "電郵驗證成功！"
 #: src/components/routes/event/messages.tsx:244
 msgid "Email your attendees, now or later."
 msgstr "寫信給參與者，現在或稍後發送。"
-
-#: src/components/layouts/OrganizerLayout/index.tsx:163
-#: src/components/routes/organizer/Emails/index.tsx:22
-msgid "Emails"
-msgstr "電郵"
 
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:90
 msgid "Emails you receive"
@@ -4830,6 +4830,11 @@ msgstr "有效期"
 msgid "Explain what the amount is for."
 msgstr "請說明該金額的用途。"
 
+#: src/components/common/ErrorDisplay/index.tsx:29
+#: src/components/common/GenericErrorPage/index.tsx:39
+msgid "Explore events"
+msgstr "瀏覽活動"
+
 #: src/components/routes/event/Affiliates/index.tsx:85
 msgid "Export"
 msgstr "出口"
@@ -5273,7 +5278,7 @@ msgstr "姓名"
 #: src/components/common/QuestionsTable/index.tsx:215
 #: src/components/modals/EditUserModal/index.tsx:71
 #: src/components/modals/InviteUserModal/index.tsx:57
-#: src/components/modals/JoinWaitlistModal/index.tsx:161
+#: src/components/modals/JoinWaitlistModal/index.tsx:160
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:51
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:51
@@ -5516,10 +5521,6 @@ msgstr "還原此電郵的預設版本？你的版本將被刪除。"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:645
 msgid "Go to Event Page"
 msgstr "前往活動頁面"
-
-#: src/components/common/ErrorDisplay/index.tsx:67
-msgid "Go to home page"
-msgstr "返回主頁"
 
 #: src/components/common/ThemeColorControls/index.tsx:44
 msgid "Good readability"
@@ -5818,7 +5819,7 @@ msgstr "https://webhook-domain.com/webhook"
 msgid "Hungarian"
 msgstr "匈牙利語"
 
-#: src/components/modals/JoinWaitlistModal/index.tsx:177
+#: src/components/modals/JoinWaitlistModal/index.tsx:176
 msgid "I agree to receive email notifications related to this event"
 msgstr "我同意接收與此活動相關的電子郵件通知"
 
@@ -5826,7 +5827,7 @@ msgstr "我同意接收與此活動相關的電子郵件通知"
 msgid "I agree to the <0>terms and conditions</0>"
 msgstr "我同意<0>條款和條件</0>。"
 
-#: src/components/modals/SendMessageModal/index.tsx:503
+#: src/components/modals/SendMessageModal/index.tsx:568
 msgid "I confirm this is a transactional message related to this event"
 msgstr "我確認這是與此活動相關的交易訊息"
 
@@ -6229,7 +6230,7 @@ msgid "Join from anywhere"
 msgstr "隨時隨地加入"
 
 #: src/components/common/JoinWaitlistButton/index.tsx:30
-#: src/components/modals/JoinWaitlistModal/index.tsx:189
+#: src/components/modals/JoinWaitlistModal/index.tsx:188
 msgid "Join Waitlist"
 msgstr "加入候補名單"
 
@@ -6349,7 +6350,7 @@ msgstr "姓氏"
 #: src/components/common/QuestionsTable/index.tsx:216
 #: src/components/modals/EditUserModal/index.tsx:72
 #: src/components/modals/InviteUserModal/index.tsx:58
-#: src/components/modals/JoinWaitlistModal/index.tsx:166
+#: src/components/modals/JoinWaitlistModal/index.tsx:165
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:58
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:58
@@ -6622,6 +6623,7 @@ msgstr "註銷"
 msgid "Look Up My Tickets"
 msgstr "查找我的門票"
 
+#: src/components/common/ErrorScreen/index.tsx:119
 #: src/components/routes/auth/Login/index.tsx:127
 msgid "Looking for your tickets?"
 msgstr "在找你的門票？"
@@ -6765,7 +6767,7 @@ msgstr ""
 
 #: src/components/common/ContactOrganizerModal/index.tsx:96
 #: src/components/common/OrdersTable/index.tsx:372
-#: src/components/modals/SendMessageModal/index.tsx:398
+#: src/components/modals/SendMessageModal/index.tsx:463
 #: src/components/routes/event/Settings/cards/InfoBlockCard.tsx:68
 msgid "Message"
 msgstr "訊息"
@@ -6778,7 +6780,7 @@ msgstr "訊息批准成功"
 msgid "Message Attendees"
 msgstr "留言參與者"
 
-#: src/components/modals/SendMessageModal/index.tsx:343
+#: src/components/modals/SendMessageModal/index.tsx:408
 msgid "Message attendees with specific tickets"
 msgstr "向與會者發送特定門票的信息"
 
@@ -6811,7 +6813,7 @@ msgstr "訊息詳情"
 msgid "Message from your page"
 msgstr "來自您頁面的訊息"
 
-#: src/components/modals/SendMessageModal/index.tsx:99
+#: src/components/modals/SendMessageModal/index.tsx:101
 msgid "Message individual attendees"
 msgstr "給個別與會者留言"
 
@@ -6819,15 +6821,15 @@ msgstr "給個別與會者留言"
 msgid "Message is required"
 msgstr "必須填寫訊息"
 
-#: src/components/modals/SendMessageModal/index.tsx:355
+#: src/components/modals/SendMessageModal/index.tsx:420
 msgid "Message order owners with specific products"
 msgstr "向具有特定產品的訂單所有者發送消息"
 
-#: src/components/modals/SendMessageModal/index.tsx:215
+#: src/components/modals/SendMessageModal/index.tsx:269
 msgid "Message Scheduled"
 msgstr "訊息已排程"
 
-#: src/components/modals/SendMessageModal/index.tsx:215
+#: src/components/modals/SendMessageModal/index.tsx:269
 msgid "Message Sent"
 msgstr "發送的信息"
 
@@ -6872,11 +6874,6 @@ msgstr "每張訂單最少"
 #: src/components/forms/ProductForm/index.tsx:297
 msgid "Minimum Price"
 msgstr "最低價格"
-
-#: src/components/routes/event/Settings/cards/DocumentsCard.tsx:51
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:791
-#~ msgid "Minors only"
-#~ msgstr ""
 
 #: src/components/routes/event/Settings/cards/CheckoutCard.tsx:35
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:21
@@ -7196,6 +7193,7 @@ msgstr "否 - 我是個人或非增值稅註冊企業"
 msgid "No account connected"
 msgstr "未連接帳戶"
 
+#: src/components/common/ErrorScreen/index.tsx:120
 #: src/components/routes/auth/Login/index.tsx:128
 #: src/components/routes/my-tickets/index.tsx:520
 msgid "No account needed: just the email you used at checkout."
@@ -7240,6 +7238,10 @@ msgstr ""
 #: src/components/common/QuestionsTable/index.tsx:426
 msgid "No attendee questions yet"
 msgstr "暫無參與者問題"
+
+#: src/components/modals/SendMessageModal/index.tsx:142
+msgid "No attendees found"
+msgstr "找不到參加者"
 
 #: src/components/common/AttendeeList/index.tsx:23
 msgid "No attendees found for this order."
@@ -7698,6 +7700,10 @@ msgstr "努納武特"
 msgid "of"
 msgstr "共"
 
+#: src/components/common/ErrorDisplay/index.tsx:24
+msgid "Off trail"
+msgstr "偏離路線"
+
 #: src/components/common/WaitlistTable/index.tsx:151
 #: src/components/modals/OfferWaitlistModal/index.tsx:219
 msgid "Offer"
@@ -7898,7 +7904,7 @@ msgstr ""
 msgid "Only free events? No need for Stripe."
 msgstr "只有免費活動？無需 Stripe。"
 
-#: src/components/modals/SendMessageModal/index.tsx:363
+#: src/components/modals/SendMessageModal/index.tsx:428
 msgid "Only send to orders with these statuses"
 msgstr "僅發送給具有這些狀態的訂單"
 
@@ -7913,6 +7919,10 @@ msgstr ""
 #: src/constants/canadianProvinces.ts:13
 msgid "Ontario"
 msgstr "安大略"
+
+#: src/components/common/ErrorDisplay/index.tsx:23
+msgid "Oops, wrong trail!"
+msgstr "哎呀，行錯路喇！"
 
 #: src/components/forms/CheckInListForm/index.tsx:96
 msgctxt "list hours"
@@ -8127,7 +8137,7 @@ msgstr "訂單備註"
 msgid "Order owner"
 msgstr "訂單所有者"
 
-#: src/components/modals/SendMessageModal/index.tsx:327
+#: src/components/modals/SendMessageModal/index.tsx:388
 msgid "Order owners with a specific product"
 msgstr "具有特定產品的訂單所有者"
 
@@ -8143,7 +8153,7 @@ msgstr "摘要"
 msgid "Order Refunded"
 msgstr "訂單已退款"
 
-#: src/components/modals/SendMessageModal/index.tsx:364
+#: src/components/modals/SendMessageModal/index.tsx:429
 msgid "Order statuses"
 msgstr "訂單狀態"
 
@@ -8275,8 +8285,8 @@ msgstr "需要組織者"
 msgid "Organizer Name"
 msgstr "組織者姓名"
 
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:8
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:10
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "Organizer Not Found"
 msgstr "找不到主辦單位"
 
@@ -8367,7 +8377,7 @@ msgstr "頁面"
 msgid "Page no longer available"
 msgstr "頁面不再可用"
 
-#: src/components/common/ErrorDisplay/index.tsx:14
+#: src/components/common/ErrorDisplay/index.tsx:25
 msgid "Page not found"
 msgstr "頁面未找到"
 
@@ -8652,7 +8662,7 @@ msgstr "付款已關閉"
 msgid "Payments on"
 msgstr "付款已開啟"
 
-#: src/components/modals/SendMessageModal/index.tsx:410
+#: src/components/modals/SendMessageModal/index.tsx:475
 msgid "PDF only, up to {MAX_ATTACHMENTS} files and {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "僅限 PDF，最多 {MAX_ATTACHMENTS} 個檔案，總計 {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -9197,7 +9207,7 @@ msgstr "促銷代碼可用於提供折扣、預售權限或為您的活動提供
 msgid "Promo Codes Report"
 msgstr "促銷代碼報告"
 
-#: src/components/modals/SendMessageModal/index.tsx:547
+#: src/components/modals/SendMessageModal/index.tsx:612
 msgid "Promotional emails may result in account suspension"
 msgstr "促銷電子郵件可能導致帳戶被暫停"
 
@@ -9454,7 +9464,7 @@ msgstr "最近訂單"
 msgid "recipient"
 msgstr "位收件人"
 
-#: src/components/modals/SendMessageModal/index.tsx:65
+#: src/components/modals/SendMessageModal/index.tsx:67
 msgid "Recipient"
 msgstr "受援國"
 
@@ -9463,7 +9473,7 @@ msgid "recipients"
 msgstr "位收件人"
 
 #: src/components/modals/MessageRecipientsModal/index.tsx:38
-#: src/components/modals/SendMessageModal/index.tsx:330
+#: src/components/modals/SendMessageModal/index.tsx:391
 #: src/components/routes/admin/Messages/index.tsx:166
 #: src/components/routes/admin/Messages/index.tsx:299
 msgid "Recipients"
@@ -9601,11 +9611,11 @@ msgstr "註冊問題"
 msgid "Remaining Uses"
 msgstr "剩餘使用次數"
 
-#: src/components/modals/SendMessageModal/index.tsx:382
+#: src/components/modals/SendMessageModal/index.tsx:447
 msgid "Reminder a week before"
 msgstr "提前一星期提醒"
 
-#: src/components/modals/SendMessageModal/index.tsx:386
+#: src/components/modals/SendMessageModal/index.tsx:451
 msgid "Reminder the day before"
 msgstr "提前一天提醒"
 
@@ -9647,7 +9657,7 @@ msgstr "移除優惠碼"
 msgid "Replace"
 msgstr "取代"
 
-#: src/components/modals/SendMessageModal/index.tsx:240
+#: src/components/modals/SendMessageModal/index.tsx:297
 msgid "Replace the subject and the message with this template?"
 msgstr "用此範本取代主旨和內容？"
 
@@ -9675,6 +9685,10 @@ msgstr "報告"
 #: src/components/routes/my-tickets/index.tsx:527
 msgid "Request a new link"
 msgstr "請求新連結"
+
+#: src/components/common/ErrorScreen/index.tsx:106
+msgid "Requested address"
+msgstr "要求的地址"
 
 #: src/components/routes/event/Settings/cards/InvoicingCard.tsx:110
 msgid "Requested at payment."
@@ -10047,11 +10061,11 @@ msgstr ""
 msgid "Scanner PIN"
 msgstr "掃描器 PIN"
 
-#: src/components/modals/SendMessageModal/index.tsx:440
+#: src/components/modals/SendMessageModal/index.tsx:505
 msgid "Schedule for later"
 msgstr "稍後發送"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:579
 msgid "Schedule Message"
 msgstr "排程訊息"
 
@@ -10065,7 +10079,7 @@ msgstr "已排程"
 msgid "Scheduled"
 msgstr "已排程"
 
-#: src/components/modals/SendMessageModal/index.tsx:470
+#: src/components/modals/SendMessageModal/index.tsx:535
 msgid "Scheduled time"
 msgstr "排程時間"
 
@@ -10093,6 +10107,7 @@ msgstr ""
 msgid "Search affiliates..."
 msgstr "搜尋推廣夥伴..."
 
+#: src/components/modals/SendMessageModal/index.tsx:134
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:247
 #: src/components/routes/event/OrdersAndAttendees/index.tsx:166
 msgid "Search attendees"
@@ -10109,6 +10124,10 @@ msgstr "按活動標題或主辦方搜索..."
 #: src/components/routes/admin/FailedJobs/index.tsx:142
 msgid "Search by job name or exception..."
 msgstr "按任務名稱或異常搜索..."
+
+#: src/components/modals/SendMessageModal/index.tsx:133
+msgid "Search by name or email. Up to 50 attendees."
+msgstr "按姓名或電郵搜尋。最多 50 位參加者。"
 
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:82
 msgid "Search by name or email..."
@@ -10302,7 +10321,11 @@ msgstr "選擇帳戶"
 msgid "Select All"
 msgstr "全選"
 
-#: src/components/modals/SendMessageModal/index.tsx:332
+#: src/components/modals/SendMessageModal/index.tsx:241
+msgid "Select at least one attendee"
+msgstr "請至少選擇一位參加者"
+
+#: src/components/modals/SendMessageModal/index.tsx:393
 msgid "Select attendee group"
 msgstr "選擇參加者群組"
 
@@ -10339,7 +10362,7 @@ msgid "Select Product Tier"
 msgstr "選擇產品等級"
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:49
-#: src/components/modals/SendMessageModal/index.tsx:356
+#: src/components/modals/SendMessageModal/index.tsx:421
 msgid "Select products"
 msgstr "選擇產品"
 
@@ -10363,7 +10386,7 @@ msgstr "為此帳戶選擇訊息級別。這控制訊息限制和連結權限。
 msgid "Select Ticket"
 msgstr "選擇機票"
 
-#: src/components/modals/SendMessageModal/index.tsx:344
+#: src/components/modals/SendMessageModal/index.tsx:409
 msgid "Select tickets"
 msgstr "選擇票"
 
@@ -10376,7 +10399,7 @@ msgstr "選擇時間段"
 msgid "Select timezone"
 msgstr "選擇時區"
 
-#: src/components/modals/SendMessageModal/index.tsx:331
+#: src/components/modals/SendMessageModal/index.tsx:392
 msgid "Select which attendees should receive this message"
 msgstr "選擇哪些參加者應該收到此訊息"
 
@@ -10439,7 +10462,7 @@ msgstr "熱賣中 🔥"
 msgid "Send"
 msgstr "發送"
 
-#: src/components/modals/SendMessageModal/index.tsx:266
+#: src/components/modals/SendMessageModal/index.tsx:323
 msgid "Send a message"
 msgstr "發送信息"
 
@@ -10447,7 +10470,7 @@ msgstr "發送信息"
 msgid "Send a test"
 msgstr "發送測試"
 
-#: src/components/modals/SendMessageModal/index.tsx:532
+#: src/components/modals/SendMessageModal/index.tsx:597
 msgid "Send as test"
 msgstr "作為測試發送"
 
@@ -10459,16 +10482,16 @@ msgstr "以電郵傳送"
 msgid "Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later."
 msgstr "向參與者、持票人或訂單擁有者發送電子郵件。訊息可以立即發送或安排稍後發送。"
 
-#: src/components/modals/SendMessageModal/index.tsx:540
+#: src/components/modals/SendMessageModal/index.tsx:605
 msgid "Send me a copy"
 msgstr "發送副本給我"
 
 #: src/components/common/ContactOrganizerModal/index.tsx:118
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:579
 msgid "Send Message"
 msgstr "發送消息"
 
-#: src/components/modals/SendMessageModal/index.tsx:432
+#: src/components/modals/SendMessageModal/index.tsx:497
 msgid "Send now"
 msgstr "立即發送"
 
@@ -10492,7 +10515,7 @@ msgstr "發送退款通知郵件"
 msgid "Send reset link"
 msgstr "發送重置連結"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:579
 msgid "Send Test"
 msgstr "發送測試"
 
@@ -10887,7 +10910,7 @@ msgstr "部分更改未能發佈。請再試一次。"
 msgid "Someone wrote to you with the Contact button. Click to read it."
 msgstr ""
 
-#: src/components/common/ErrorDisplay/index.tsx:15
+#: src/components/common/ErrorDisplay/index.tsx:38
 #: src/components/routes/auth/AcceptInvitation/index.tsx:48
 #: src/components/routes/product-widget/CollectInformation/index.tsx:654
 #: src/components/routes/product-widget/CollectInformation/OrderAddOns/index.tsx:51
@@ -10948,6 +10971,10 @@ msgstr "來源"
 #: src/components/common/LanguageSwitcher/index.tsx:21
 msgid "Spanish"
 msgstr "西班牙語"
+
+#: src/components/modals/SendMessageModal/index.tsx:384
+msgid "Specific attendees"
+msgstr "指定參加者"
 
 #: src/constants/eventTypes.ts:9
 msgid "Sport"
@@ -11142,7 +11169,7 @@ msgid "Stripe,<0/>what's that?"
 msgstr "Stripe<0/>是甚麼？"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
-#: src/components/modals/SendMessageModal/index.tsx:392
+#: src/components/modals/SendMessageModal/index.tsx:457
 #: src/components/routes/admin/Messages/index.tsx:162
 #: src/components/routes/admin/Messages/index.tsx:272
 msgid "Subject"
@@ -11430,7 +11457,8 @@ msgstr "範本刪除成功"
 msgid "Template saved successfully"
 msgstr "範本儲存成功"
 
-#: src/components/modals/SendMessageModal/index.tsx:379
+#: src/components/modals/SendMessageModal/index.tsx:444
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:238
 msgid "Templates"
 msgstr "範本"
 
@@ -11603,7 +11631,7 @@ msgstr "無法儲存電郵。請再試一次。"
 msgid "The email keeps its usual content, with the right amounts, dates and links. You can change its subject and add a message, shown at the top with your name."
 msgstr "電郵保留其一貫內容，金額、日期和連結均正確。您可以更改主旨並加入一則訊息，訊息會連同您的名字顯示在頂部。"
 
-#: src/components/routes/organizer/Emails/index.tsx:21
+#: src/components/routes/organizer/Emails/index.tsx:22
 msgid "The emails your buyers and attendees receive automatically."
 msgstr "你的購票者和參加者自動收到的電郵。"
 
@@ -11688,8 +11716,8 @@ msgstr ""
 msgid "The organizer gives you the PIN. The scanner opens at the last digit."
 msgstr "PIN 由主辦單位提供。輸入最後一個數字時掃描器會打開。"
 
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:10
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:12
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
 msgstr "找不到您正在尋找的主辦單位。頁面可能已被移動、刪除，或網址不正確。"
 
@@ -11708,10 +11736,6 @@ msgstr ""
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "無法讀取該頁面。請檢查地址後再試。"
-
-#: src/components/common/ErrorDisplay/index.tsx:18
-msgid "The page you are looking for does not exist"
-msgstr "您要查找的頁面不存在"
 
 #: src/components/common/QuestionsTable/index.tsx:306
 msgid "The participant form is already there"
@@ -11769,11 +11793,11 @@ msgstr "為運動社群打造的魁北克票務平台。"
 msgid "The same price applies to every option. Please enter the price excluding taxes and fees."
 msgstr "每個選項價格相同。請輸入不含稅費的價格。"
 
-#: src/components/modals/SendMessageModal/index.tsx:193
+#: src/components/modals/SendMessageModal/index.tsx:247
 msgid "The scheduled time is required"
 msgstr "排程時間為必填項"
 
-#: src/components/modals/SendMessageModal/index.tsx:194
+#: src/components/modals/SendMessageModal/index.tsx:248
 msgid "The scheduled time must be in the future"
 msgstr "排程時間必須是將來的時間"
 
@@ -12008,6 +12032,10 @@ msgstr "呢個主辦方資料未發佈"
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "此主辦方的銷售款項直接存入其自己的 Stripe 帳戶 ({ownAccountId})。"
 
+#: src/components/common/ErrorDisplay/index.tsx:26
+msgid "This page doesn't exist, or it moved. The link may have been cut off when it was copied."
+msgstr "此頁面不存在，或已被移走。連結可能在複製時被截斷了。"
+
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
 msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
 msgstr "此頁面由 {platform} 託管：已略去該平台的標誌、顏色和社交網絡。請自行補充缺少的內容。"
@@ -12040,6 +12068,10 @@ msgstr "此門票不在此名單上。"
 #: src/components/layouts/CheckIn/index.tsx:244
 msgid "This ticket was just scanned. Please wait before scanning again."
 msgstr "此門票剛剛被掃描。請等待後再次掃描。"
+
+#: src/components/common/GenericErrorPage/index.tsx:34
+msgid "This trail is closed."
+msgstr "呢條路線已經封咗。"
 
 #: src/components/modals/EditUserModal/index.tsx:65
 msgid "This user is not active, as they have not accepted their invitation."
@@ -12295,7 +12327,7 @@ msgstr "要編輯配置，請前往管理選單中的配置部分。"
 msgid "To handle"
 msgstr "待處理"
 
-#: src/components/modals/SendMessageModal/index.tsx:292
+#: src/components/modals/SendMessageModal/index.tsx:349
 msgid "To increase your limits, contact us at"
 msgstr "要提高您的限制，請聯繫我們"
 
@@ -12478,6 +12510,7 @@ msgid "Trust and safety"
 msgstr "信任與安全"
 
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
+#: src/components/common/ErrorDisplay/index.tsx:41
 msgid "Try again"
 msgstr "重試"
 
@@ -12615,10 +12648,6 @@ msgstr "未滿 {age} 歲"
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:820
 msgid "Under {ageLimit} on the day of the event, from the date of birth asked at checkout."
 msgstr "活動當天未滿 {ageLimit} 歲，以結帳時填寫的出生日期為準。"
-
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:805
-#~ msgid "Under 18 on the day of the event, from the date of birth asked at checkout."
-#~ msgstr ""
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:810
 msgid "Under what age?"
@@ -13365,6 +13394,10 @@ msgstr "歡迎，{0}！"
 msgid "Welcome, {name}!"
 msgstr "歡迎，{name}！"
 
+#: src/components/common/ErrorDisplay/index.tsx:37
+msgid "Well, that slipped."
+msgstr "哎呀，出咗啲小意外。"
+
 #: src/components/routes/event/Settings/cards/CheckoutCard.tsx:43
 msgid "What buyers fill in and how long they have to pay."
 msgstr "買家需要填寫的內容，以及他們的付款時限。"
@@ -13671,7 +13704,7 @@ msgstr "工作"
 #: src/components/modals/EditProductCategoryModal/index.tsx:70
 #: src/components/modals/EditPromoCodeModal/index.tsx:84
 #: src/components/modals/EditQuestionModal/index.tsx:103
-#: src/components/modals/JoinWaitlistModal/index.tsx:188
+#: src/components/modals/JoinWaitlistModal/index.tsx:187
 #: src/components/modals/ManageAttendeeModal/index.tsx:230
 #: src/components/modals/ManageOrderModal/index.tsx:176
 #: src/components/routes/auth/Register/index.tsx:217
@@ -13766,7 +13799,7 @@ msgstr "您正在發出部分退款。客戶將獲得 {0} {1} 的退款。"
 msgid "You are offline"
 msgstr "您處於離線狀態"
 
-#: src/components/modals/SendMessageModal/index.tsx:178
+#: src/components/modals/SendMessageModal/index.tsx:229
 msgid "You can attach a maximum of {MAX_ATTACHMENTS} files"
 msgstr "最多可附加 {MAX_ATTACHMENTS} 個檔案"
 
@@ -13815,7 +13848,7 @@ msgstr "您已接受此邀請。請登錄以繼續。"
 msgid "You have no pending email change."
 msgstr "您沒有待處理的電子郵件更改。"
 
-#: src/components/modals/SendMessageModal/index.tsx:221
+#: src/components/modals/SendMessageModal/index.tsx:275
 msgid "You have reached your messaging limit."
 msgstr "您已達到訊息限制。"
 
@@ -13831,7 +13864,7 @@ msgstr "您已向免費產品添加了税費。您想要刪除它們嗎？"
 msgid "You keep {saved} more."
 msgstr "你多留住 {saved}。"
 
-#: src/components/modals/SendMessageModal/index.tsx:189
+#: src/components/modals/SendMessageModal/index.tsx:243
 msgid "You must acknowledge that this email is not promotional"
 msgstr "您必須確認此電子郵件並非促銷郵件"
 
@@ -13859,7 +13892,7 @@ msgstr "您必須至少有一個價格等級"
 msgid "You must verify your email address before you can update the organizer status."
 msgstr "在更新主辦單位狀態之前，您必須先驗證您的電郵地址。"
 
-#: src/components/modals/SendMessageModal/index.tsx:278
+#: src/components/modals/SendMessageModal/index.tsx:335
 msgid "You need to verify your account email before you can send messages."
 msgstr "您需要驗證您的帳户電子郵件才能發送消息。"
 
@@ -13888,7 +13921,7 @@ msgstr "您已加入候補名單！"
 msgid "You've been offered a spot!"
 msgstr "您已獲得一個名額！"
 
-#: src/components/modals/SendMessageModal/index.tsx:306
+#: src/components/modals/SendMessageModal/index.tsx:363
 msgid "Your account has messaging limits. To increase your limits, contact us at"
 msgstr "您的帳戶有訊息限制。要提高您的限制，請聯繫我們"
 
@@ -14155,32 +14188,3 @@ msgstr "郵政編碼"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:906
 msgid "ZIP or Postal Code"
 msgstr "郵政編碼"
-
-#: src/components/common/ErrorDisplay/index.tsx:23
-msgid "Oops, wrong trail!"
-msgstr "哎呀，行錯路喇！"
-
-#: src/components/common/ErrorDisplay/index.tsx:24
-msgid "Off trail"
-msgstr "偏離路線"
-
-#: src/components/common/ErrorDisplay/index.tsx:26
-msgid "This page doesn't exist, or it moved. The link may have been cut off when it was copied."
-msgstr "此頁面不存在，或已被移走。連結可能在複製時被截斷了。"
-
-#: src/components/common/ErrorDisplay/index.tsx:29
-#: src/components/common/GenericErrorPage/index.tsx:39
-msgid "Explore events"
-msgstr "瀏覽活動"
-
-#: src/components/common/ErrorDisplay/index.tsx:37
-msgid "Well, that slipped."
-msgstr "哎呀，出咗啲小意外。"
-
-#: src/components/common/GenericErrorPage/index.tsx:34
-msgid "This trail is closed."
-msgstr "呢條路線已經封咗。"
-
-#: src/components/common/ErrorScreen/index.tsx:103
-msgid "Requested address"
-msgstr "要求的地址"

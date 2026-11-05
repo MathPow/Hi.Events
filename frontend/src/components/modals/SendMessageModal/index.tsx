@@ -1,4 +1,4 @@
-import {Event, GenericModalProps, IdParam, MessageType, ProductType} from "../../../types.ts";
+import {Attendee, Event, GenericModalProps, IdParam, MessageType, ProductType} from "../../../types.ts";
 import {useParams} from "react-router";
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {useGetOrder} from "../../../queries/useGetOrder.ts";
@@ -36,8 +36,10 @@ import {t} from "@lingui/macro";
 import {Editor} from "../../common/Editor";
 import {useSendEventMessage} from "../../../mutations/useSendEventMessage.ts";
 import {ProductSelector} from "../../common/ProductSelector";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {useDebouncedValue} from "@mantine/hooks";
 import {useGetAccount} from "../../../queries/useGetAccount.ts";
+import {useGetAttendees} from "../../../queries/useGetAttendees.ts";
 import {getConfig} from "../../../utilites/config";
 import {utcToTz} from "../../../utilites/dates.ts";
 import {intlLocale} from "../../../utilites/intlLocale.ts";
@@ -103,6 +105,55 @@ const AttendeeField = ({orderId, eventId, attendeeId, form}: {
         />
     )
 }
+
+const MAX_INDIVIDUAL_ATTENDEES = 50;
+
+const attendeeLabel = (attendee: Attendee) =>
+    `${`${attendee.first_name} ${attendee.last_name}`.trim()} · ${attendee.email}`;
+
+// Searched on the server: an event can have thousands of attendees. The labels of the picked
+// ones are kept, so they still show once the search changes.
+const AttendeePicker = ({eventId, form}: { eventId: IdParam, form: UseFormReturnType<any> }) => {
+    const [search, setSearch] = useState('');
+    const [query] = useDebouncedValue(search.trim(), 300);
+    const {data, isFetching} = useGetAttendees(eventId, {pageNumber: 1, perPage: 20, query: query || undefined});
+    const pickedLabels = useRef<Record<string, string>>({});
+    const selected: string[] = form.values.attendee_ids;
+
+    const options = useMemo(() => {
+        const byId = new Map<string, string>();
+        selected.forEach(id => pickedLabels.current[id] && byId.set(id, pickedLabels.current[id]));
+        (data?.data || []).forEach(attendee => byId.set(String(attendee.id), attendeeLabel(attendee)));
+        return [...byId].map(([value, label]) => ({value, label}));
+    }, [data, selected]);
+
+    return (
+        <MultiSelect
+            label={t`Attendees`}
+            description={t`Search by name or email. Up to 50 attendees.`}
+            placeholder={t`Search attendees`}
+            data={options}
+            searchable
+            searchValue={search}
+            onSearchChange={setSearch}
+            filter={({options}) => options}
+            maxValues={MAX_INDIVIDUAL_ATTENDEES}
+            hidePickedOptions
+            nothingFoundMessage={isFetching ? undefined : t`No attendees found`}
+            value={selected}
+            error={form.errors.attendee_ids}
+            onChange={(values) => {
+                values.forEach(value => {
+                    const option = options.find(o => o.value === value);
+                    if (option) {
+                        pickedLabels.current[value] = option.label;
+                    }
+                });
+                form.setFieldValue('attendee_ids', values);
+            }}
+        />
+    );
+};
 
 const CUSTOM_PRESET = 'custom';
 const MAX_ATTACHMENTS = 5;
@@ -186,6 +237,9 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                 }
                 return null;
             },
+            attendee_ids: (ids, values) => values.message_type === MessageType.IndividualAttendees && !ids.length
+                ? t`Select at least one attendee`
+                : null,
             acknowledgement: (value) => value === true ? null : t`You must acknowledge that this email is not promotional`,
             scheduled_at: (value) => {
                 if (!isScheduled) return null;
@@ -229,6 +283,9 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
 
     useEffect(() => {
         form.setFieldValue('product_ids', []);
+        if (!attendeeId) {
+            form.setFieldValue('attendee_ids', []);
+        }
     }, [form.values.message_type]);
 
     /** Fills a reminder for every attendee, sent a week or a day before when that's still ahead. */
@@ -323,6 +380,10 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                             label: t`All attendees of this event`,
                                         },
                                         {
+                                            value: 'INDIVIDUAL_ATTENDEES',
+                                            label: t`Specific attendees`,
+                                        },
+                                        {
                                             value: 'ORDER_OWNERS_WITH_PRODUCT',
                                             label: t`Order owners with a specific product`,
                                         },
@@ -336,6 +397,10 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
 
                             {((form.values.message_type === MessageType.IndividualAttendees) && attendeeId && orderId) && (
                                 <AttendeeField eventId={eventId} orderId={orderId} attendeeId={attendeeId} form={form}/>
+                            )}
+
+                            {(form.values.message_type === MessageType.IndividualAttendees && !attendeeId && eventId) && (
+                                <AttendeePicker eventId={eventId} form={form}/>
                             )}
 
                             {((form.values.message_type === MessageType.TicketHolders && event.product_categories)) && (

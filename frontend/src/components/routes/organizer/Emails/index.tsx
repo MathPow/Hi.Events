@@ -7,7 +7,8 @@ import {EmailFooterCard} from "./EmailFooterCard.tsx";
 import {useGetOrganizerSettings} from "../../../../queries/useGetOrganizerSettings.ts";
 import classes from "./Emails.module.scss";
 
-// « Courriels », under « Gérer » like « Documents »: the automatic emails, exactly as they are sent.
+// « Courriels automatiques », under « Gérer » like « Documents »: the automatic emails, exactly as
+// they are sent. Not « Courriels » alone, which was confused with « Messages » (the emails you write).
 const Emails = () => {
     const {organizerId} = useParams();
     const {data: settings} = useGetOrganizerSettings(organizerId);
@@ -19,7 +20,7 @@ const Emails = () => {
     return (
         <PageBody>
             <PageTitle subheading={t`The emails your buyers and attendees receive automatically.`}>
-                {t`Emails`}
+                {t`Automatic emails`}
             </PageTitle>
             <AutomaticEmails key={organizerId} organizerId={organizerId}/>
             {settings && (

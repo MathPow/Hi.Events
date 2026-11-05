@@ -371,15 +371,15 @@ msgstr "≈ {estimate} για αυτή την περίοδο"
 msgid "0 minutes and 0 seconds"
 msgstr "0 λεπτά και 0 δευτερόλεπτα"
 
-#: src/components/modals/SendMessageModal/index.tsx:126
+#: src/components/modals/SendMessageModal/index.tsx:177
 msgid "1 day after end date"
 msgstr "1 ημέρα μετά την ημερομηνία λήξης"
 
-#: src/components/modals/SendMessageModal/index.tsx:120
+#: src/components/modals/SendMessageModal/index.tsx:171
 msgid "1 day after start date"
 msgstr "1 ημέρα μετά την ημερομηνία έναρξης"
 
-#: src/components/modals/SendMessageModal/index.tsx:118
+#: src/components/modals/SendMessageModal/index.tsx:169
 msgid "1 day before event"
 msgstr "1 ημέρα πριν την εκδήλωση"
 
@@ -387,7 +387,7 @@ msgstr "1 ημέρα πριν την εκδήλωση"
 msgid "1 hour"
 msgstr "1 ώρα"
 
-#: src/components/modals/SendMessageModal/index.tsx:119
+#: src/components/modals/SendMessageModal/index.tsx:170
 msgid "1 hour before event"
 msgstr "1 ώρα πριν την εκδήλωση"
 
@@ -417,7 +417,7 @@ msgstr "1 επερχόμενη εκδήλωση"
 msgid "1 upcoming ticket"
 msgstr ""
 
-#: src/components/modals/SendMessageModal/index.tsx:117
+#: src/components/modals/SendMessageModal/index.tsx:168
 msgid "1 week before event"
 msgstr "1 εβδομάδα πριν την εκδήλωση"
 
@@ -855,7 +855,7 @@ msgstr "Προσθήκη επιλογής"
 msgid "Add Option"
 msgstr "Προσθήκη Επιλογής"
 
-#: src/components/modals/SendMessageModal/index.tsx:411
+#: src/components/modals/SendMessageModal/index.tsx:476
 msgid "Add PDF files"
 msgstr "Προσθήκη αρχείων PDF"
 
@@ -1100,7 +1100,7 @@ msgstr ""
 msgid "All attendees"
 msgstr "Όλοι οι συμμετέχοντες"
 
-#: src/components/modals/SendMessageModal/index.tsx:323
+#: src/components/modals/SendMessageModal/index.tsx:380
 msgid "All attendees of this event"
 msgstr "Όλοι οι συμμετέχοντες αυτής της εκδήλωσης"
 
@@ -1277,7 +1277,7 @@ msgstr "Ένα email για συσχέτιση με αυτόν τον συνερ
 msgid "An error occurred while checking export status."
 msgstr "Παρουσιάστηκε σφάλμα κατά τον έλεγχο της κατάστασης εξαγωγής."
 
-#: src/components/common/ErrorDisplay/index.tsx:19
+#: src/components/common/ErrorDisplay/index.tsx:39
 msgid "An error occurred while loading the page"
 msgstr "Παρουσιάστηκε σφάλμα κατά τη φόρτωση της σελίδας"
 
@@ -1676,16 +1676,16 @@ msgstr "Το πολύ {0}."
 msgid "At payment"
 msgstr "Στην πληρωμή"
 
-#: src/components/modals/SendMessageModal/index.tsx:409
+#: src/components/modals/SendMessageModal/index.tsx:474
 #: src/components/routes/event/messages.tsx:108
 msgid "Attachments"
 msgstr "Συνημμένα"
 
-#: src/components/modals/SendMessageModal/index.tsx:181
+#: src/components/modals/SendMessageModal/index.tsx:232
 msgid "Attachments must be PDF files"
 msgstr "Τα συνημμένα πρέπει να είναι αρχεία PDF"
 
-#: src/components/modals/SendMessageModal/index.tsx:185
+#: src/components/modals/SendMessageModal/index.tsx:236
 msgid "Attachments must not exceed {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Τα συνημμένα δεν πρέπει να υπερβαίνουν συνολικά τα {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB"
 
@@ -1789,6 +1789,7 @@ msgstr ""
 #: src/components/common/EventCard/index.tsx:224
 #: src/components/common/StatBoxes/index.tsx:165
 #: src/components/modals/ManageOrderModal/index.tsx:127
+#: src/components/modals/SendMessageModal/index.tsx:132
 #: src/components/routes/admin/Messages/index.tsx:90
 #: src/components/routes/admin/Messages/index.tsx:139
 #: src/components/routes/event/EventDashboard/index.tsx:88
@@ -1820,7 +1821,7 @@ msgstr "Εγγεγραμμένοι συμμετέχοντες"
 msgid "Attendees who registered before you set the first numbers have no bib yet."
 msgstr "Όσοι εγγράφηκαν πριν ορίσετε τους πρώτους αριθμούς δεν έχουν ακόμη αριθμό συμμετοχής."
 
-#: src/components/modals/SendMessageModal/index.tsx:319
+#: src/components/modals/SendMessageModal/index.tsx:376
 msgid "Attendees with a specific ticket"
 msgstr "Συμμετέχοντες με συγκεκριμένο εισιτήριο"
 
@@ -1852,7 +1853,8 @@ msgstr "Αυτόματη Αλλαγή Μεγέθους"
 msgid "Auto-offer is enabled"
 msgstr "Η αυτόματη προσφορά είναι ενεργή"
 
-#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:238
+#: src/components/layouts/OrganizerLayout/index.tsx:163
+#: src/components/routes/organizer/Emails/index.tsx:23
 msgid "Automatic emails"
 msgstr "Αυτόματα email"
 
@@ -1895,7 +1897,7 @@ msgid "Awaiting"
 msgstr "Αναμένεται"
 
 #: src/components/common/OrderStatusBadge/index.tsx:11
-#: src/components/modals/SendMessageModal/index.tsx:367
+#: src/components/modals/SendMessageModal/index.tsx:432
 msgid "Awaiting offline payment"
 msgstr "Αναμονή πληρωμής εκτός σύνδεσης"
 
@@ -1948,6 +1950,9 @@ msgstr "Επιστροφή στην Εκδήλωση"
 msgid "Back to event page"
 msgstr "Επιστροφή στη σελίδα εκδήλωσης"
 
+#: src/components/common/ErrorDisplay/index.tsx:28
+#: src/components/common/ErrorDisplay/index.tsx:45
+#: src/components/common/GenericErrorPage/index.tsx:28
 #: src/components/layouts/AuthLayout/index.tsx:86
 msgid "Back to home"
 msgstr "Επιστροφή στην αρχική"
@@ -2602,7 +2607,7 @@ msgstr "Κλικ για αντιγραφή"
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:27
 #: src/components/common/CookieConsentBanner/index.tsx:135
-#: src/components/common/DehorsPopup/index.tsx:62
+#: src/components/common/DehorsPopup/index.tsx:61
 #: src/components/modals/CreateEventModal/index.tsx:235
 #: src/components/modals/JoinWaitlistModal/index.tsx:103
 #: src/components/modals/JoinWaitlistModal/index.tsx:130
@@ -2756,7 +2761,7 @@ msgstr "Ολοκληρώστε το προφίλ σας για να συμμετ
 
 #: src/components/common/OrdersTable/index.tsx:57
 #: src/components/common/OrderStatusBadge/index.tsx:8
-#: src/components/modals/SendMessageModal/index.tsx:366
+#: src/components/modals/SendMessageModal/index.tsx:431
 #: src/components/routes/organizer/OrganizerDashboard/index.tsx:229
 msgid "Completed"
 msgstr "Ολοκληρωμένο"
@@ -3338,7 +3343,7 @@ msgid "Create your free account"
 msgstr "Φτιάξε δωρεάν τον λογαριασμό σου"
 
 #: src/components/layouts/EventHomepage/EventNotAvailable/index.tsx:13
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:12
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:13
 msgid "Create your own event"
 msgstr "Δημιουργήστε τη δική σας εκδήλωση"
 
@@ -3402,7 +3407,7 @@ msgstr ""
 msgid "Custom Branding"
 msgstr ""
 
-#: src/components/modals/SendMessageModal/index.tsx:464
+#: src/components/modals/SendMessageModal/index.tsx:529
 msgid "Custom date and time"
 msgstr "Προσαρμοσμένη ημερομηνία και ώρα"
 
@@ -4016,7 +4021,7 @@ msgstr "Π.χ. μία είσοδος ανά πόρτα, η παράδοση μπ
 msgid "e.g., Get Tickets, Register Now"
 msgstr "π.χ., Αγορά Εισιτηρίων, Εγγραφή Τώρα"
 
-#: src/components/modals/SendMessageModal/index.tsx:393
+#: src/components/modals/SendMessageModal/index.tsx:458
 msgid "e.g., Important update about your tickets"
 msgstr "π.χ., Σημαντική ενημέρωση για τα εισιτήριά σας"
 
@@ -4243,7 +4248,7 @@ msgstr "Δικαιούται επίσημη φορολογική απόδειξ�
 #: src/components/forms/AffiliateForm/index.tsx:98
 #: src/components/modals/EditUserModal/index.tsx:80
 #: src/components/modals/InviteUserModal/index.tsx:61
-#: src/components/modals/JoinWaitlistModal/index.tsx:171
+#: src/components/modals/JoinWaitlistModal/index.tsx:170
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:147
 #: src/components/routes/admin/Dashboard/index.tsx:519
 #: src/components/routes/admin/PlatformRevenue/index.tsx:210
@@ -4345,11 +4350,6 @@ msgstr "Το email επαληθεύτηκε επιτυχώς!"
 #: src/components/routes/event/messages.tsx:244
 msgid "Email your attendees, now or later."
 msgstr "Γράψτε στους συμμετέχοντές σας, τώρα ή αργότερα."
-
-#: src/components/layouts/OrganizerLayout/index.tsx:163
-#: src/components/routes/organizer/Emails/index.tsx:22
-msgid "Emails"
-msgstr "Email"
 
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:90
 msgid "Emails you receive"
@@ -4830,6 +4830,11 @@ msgstr "Ημερομηνία Λήξης"
 msgid "Explain what the amount is for."
 msgstr "Εξηγήστε σε τι αντιστοιχεί το ποσό."
 
+#: src/components/common/ErrorDisplay/index.tsx:29
+#: src/components/common/GenericErrorPage/index.tsx:39
+msgid "Explore events"
+msgstr "Εξερευνήστε εκδηλώσεις"
+
 #: src/components/routes/event/Affiliates/index.tsx:85
 msgid "Export"
 msgstr "Εξαγωγή"
@@ -5273,7 +5278,7 @@ msgstr "Όνομα"
 #: src/components/common/QuestionsTable/index.tsx:215
 #: src/components/modals/EditUserModal/index.tsx:71
 #: src/components/modals/InviteUserModal/index.tsx:57
-#: src/components/modals/JoinWaitlistModal/index.tsx:161
+#: src/components/modals/JoinWaitlistModal/index.tsx:160
 #: src/components/routes/auth/AcceptInvitation/index.tsx:97
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:51
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:51
@@ -5516,10 +5521,6 @@ msgstr "Επιστροφή στην προεπιλεγμένη έκδοση αυ
 #: src/components/routes/product-widget/CollectInformation/index.tsx:645
 msgid "Go to Event Page"
 msgstr "Μετάβαση στη Σελίδα Εκδήλωσης"
-
-#: src/components/common/ErrorDisplay/index.tsx:67
-msgid "Go to home page"
-msgstr "Μετάβαση στην αρχική σελίδα"
 
 #: src/components/common/ThemeColorControls/index.tsx:44
 msgid "Good readability"
@@ -5818,7 +5819,7 @@ msgstr "https://ο-τομεας-σας.gr/webhook"
 msgid "Hungarian"
 msgstr "Ουγγρικά"
 
-#: src/components/modals/JoinWaitlistModal/index.tsx:177
+#: src/components/modals/JoinWaitlistModal/index.tsx:176
 msgid "I agree to receive email notifications related to this event"
 msgstr "Συμφωνώ να λαμβάνω ειδοποιήσεις email σχετικά με αυτή την εκδήλωση"
 
@@ -5826,7 +5827,7 @@ msgstr "Συμφωνώ να λαμβάνω ειδοποιήσεις email σχε
 msgid "I agree to the <0>terms and conditions</0>"
 msgstr "Συμφωνώ με τους <0>όρους και προϋποθέσεις</0>"
 
-#: src/components/modals/SendMessageModal/index.tsx:503
+#: src/components/modals/SendMessageModal/index.tsx:568
 msgid "I confirm this is a transactional message related to this event"
 msgstr "Επιβεβαιώνω ότι πρόκειται για συναλλακτικό μήνυμα σχετικό με αυτή την εκδήλωση"
 
@@ -6229,7 +6230,7 @@ msgid "Join from anywhere"
 msgstr "Συμμετοχή από οπουδήποτε"
 
 #: src/components/common/JoinWaitlistButton/index.tsx:30
-#: src/components/modals/JoinWaitlistModal/index.tsx:189
+#: src/components/modals/JoinWaitlistModal/index.tsx:188
 msgid "Join Waitlist"
 msgstr "Εγγραφή στη Λίστα Αναμονής"
 
@@ -6349,7 +6350,7 @@ msgstr "Επώνυμο"
 #: src/components/common/QuestionsTable/index.tsx:216
 #: src/components/modals/EditUserModal/index.tsx:72
 #: src/components/modals/InviteUserModal/index.tsx:58
-#: src/components/modals/JoinWaitlistModal/index.tsx:166
+#: src/components/modals/JoinWaitlistModal/index.tsx:165
 #: src/components/routes/auth/AcceptInvitation/index.tsx:102
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:58
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:58
@@ -6622,6 +6623,7 @@ msgstr "Αποσύνδεση"
 msgid "Look Up My Tickets"
 msgstr "Αναζήτηση Εισιτηρίων μου"
 
+#: src/components/common/ErrorScreen/index.tsx:119
 #: src/components/routes/auth/Login/index.tsx:127
 msgid "Looking for your tickets?"
 msgstr "Ψάχνετε τα εισιτήριά σας;"
@@ -6765,7 +6767,7 @@ msgstr ""
 
 #: src/components/common/ContactOrganizerModal/index.tsx:96
 #: src/components/common/OrdersTable/index.tsx:372
-#: src/components/modals/SendMessageModal/index.tsx:398
+#: src/components/modals/SendMessageModal/index.tsx:463
 #: src/components/routes/event/Settings/cards/InfoBlockCard.tsx:68
 msgid "Message"
 msgstr "Μήνυμα"
@@ -6778,7 +6780,7 @@ msgstr "Το μήνυμα εγκρίθηκε επιτυχώς"
 msgid "Message Attendees"
 msgstr "Αποστολή Μηνύματος σε Συμμετέχοντες"
 
-#: src/components/modals/SendMessageModal/index.tsx:343
+#: src/components/modals/SendMessageModal/index.tsx:408
 msgid "Message attendees with specific tickets"
 msgstr "Αποστολή μηνύματος σε συμμετέχοντες με συγκεκριμένα εισιτήρια"
 
@@ -6811,7 +6813,7 @@ msgstr "Λεπτομέρειες Μηνύματος"
 msgid "Message from your page"
 msgstr "Μήνυμα από τη σελίδα σας"
 
-#: src/components/modals/SendMessageModal/index.tsx:99
+#: src/components/modals/SendMessageModal/index.tsx:101
 msgid "Message individual attendees"
 msgstr "Αποστολή μηνύματος σε μεμονωμένους συμμετέχοντες"
 
@@ -6819,15 +6821,15 @@ msgstr "Αποστολή μηνύματος σε μεμονωμένους συμ
 msgid "Message is required"
 msgstr "Το μήνυμα είναι υποχρεωτικό"
 
-#: src/components/modals/SendMessageModal/index.tsx:355
+#: src/components/modals/SendMessageModal/index.tsx:420
 msgid "Message order owners with specific products"
 msgstr "Αποστολή μηνύματος σε κατόχους παραγγελιών με συγκεκριμένα προϊόντα"
 
-#: src/components/modals/SendMessageModal/index.tsx:215
+#: src/components/modals/SendMessageModal/index.tsx:269
 msgid "Message Scheduled"
 msgstr "Μήνυμα Προγραμματίστηκε"
 
-#: src/components/modals/SendMessageModal/index.tsx:215
+#: src/components/modals/SendMessageModal/index.tsx:269
 msgid "Message Sent"
 msgstr "Μήνυμα Εστάλη"
 
@@ -6872,11 +6874,6 @@ msgstr "Ελάχιστο ανά παραγγελία"
 #: src/components/forms/ProductForm/index.tsx:297
 msgid "Minimum Price"
 msgstr "Ελάχιστη Τιμή"
-
-#: src/components/routes/event/Settings/cards/DocumentsCard.tsx:51
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:791
-#~ msgid "Minors only"
-#~ msgstr ""
 
 #: src/components/routes/event/Settings/cards/CheckoutCard.tsx:35
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:21
@@ -7196,6 +7193,7 @@ msgstr "Όχι - Είμαι ιδιώτης ή επιχείρηση μη εγγε
 msgid "No account connected"
 msgstr "Δεν έχει συνδεθεί λογαριασμός"
 
+#: src/components/common/ErrorScreen/index.tsx:120
 #: src/components/routes/auth/Login/index.tsx:128
 #: src/components/routes/my-tickets/index.tsx:520
 msgid "No account needed: just the email you used at checkout."
@@ -7240,6 +7238,10 @@ msgstr ""
 #: src/components/common/QuestionsTable/index.tsx:426
 msgid "No attendee questions yet"
 msgstr "Δεν υπάρχουν ακόμα ερωτήσεις συμμετέχοντα"
+
+#: src/components/modals/SendMessageModal/index.tsx:142
+msgid "No attendees found"
+msgstr "Δεν βρέθηκαν συμμετέχοντες"
 
 #: src/components/common/AttendeeList/index.tsx:23
 msgid "No attendees found for this order."
@@ -7698,6 +7700,10 @@ msgstr "Νουνάβουτ"
 msgid "of"
 msgstr "από"
 
+#: src/components/common/ErrorDisplay/index.tsx:24
+msgid "Off trail"
+msgstr "Εκτός μονοπατιού"
+
 #: src/components/common/WaitlistTable/index.tsx:151
 #: src/components/modals/OfferWaitlistModal/index.tsx:219
 msgid "Offer"
@@ -7898,7 +7904,7 @@ msgstr ""
 msgid "Only free events? No need for Stripe."
 msgstr "Μόνο δωρεάν εκδηλώσεις; Δεν χρειάζεστε Stripe."
 
-#: src/components/modals/SendMessageModal/index.tsx:363
+#: src/components/modals/SendMessageModal/index.tsx:428
 msgid "Only send to orders with these statuses"
 msgstr "Αποστολή μόνο σε παραγγελίες με αυτές τις καταστάσεις"
 
@@ -7913,6 +7919,10 @@ msgstr ""
 #: src/constants/canadianProvinces.ts:13
 msgid "Ontario"
 msgstr "Οντάριο"
+
+#: src/components/common/ErrorDisplay/index.tsx:23
+msgid "Oops, wrong trail!"
+msgstr "Ωχ, λάθος μονοπάτι!"
 
 #: src/components/forms/CheckInListForm/index.tsx:96
 msgctxt "list hours"
@@ -8127,7 +8137,7 @@ msgstr "Σημειώσεις Παραγγελίας"
 msgid "Order owner"
 msgstr "Κάτοχος παραγγελίας"
 
-#: src/components/modals/SendMessageModal/index.tsx:327
+#: src/components/modals/SendMessageModal/index.tsx:388
 msgid "Order owners with a specific product"
 msgstr "Κάτοχοι παραγγελίας με συγκεκριμένο προϊόν"
 
@@ -8143,7 +8153,7 @@ msgstr "Σύνοψη"
 msgid "Order Refunded"
 msgstr "Παραγγελία Επιστράφηκε"
 
-#: src/components/modals/SendMessageModal/index.tsx:364
+#: src/components/modals/SendMessageModal/index.tsx:429
 msgid "Order statuses"
 msgstr "Καταστάσεις παραγγελίας"
 
@@ -8275,8 +8285,8 @@ msgstr "Ο διοργανωτής είναι υποχρεωτικός"
 msgid "Organizer Name"
 msgstr "Όνομα Διοργανωτή"
 
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:8
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:10
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
 msgid "Organizer Not Found"
 msgstr "Διοργανωτής Δεν Βρέθηκε"
 
@@ -8367,7 +8377,7 @@ msgstr "Σελίδα"
 msgid "Page no longer available"
 msgstr "Η σελίδα δεν είναι πλέον διαθέσιμη"
 
-#: src/components/common/ErrorDisplay/index.tsx:14
+#: src/components/common/ErrorDisplay/index.tsx:25
 msgid "Page not found"
 msgstr "Η σελίδα δεν βρέθηκε"
 
@@ -8652,7 +8662,7 @@ msgstr "Πληρωμές ανενεργές"
 msgid "Payments on"
 msgstr "Πληρωμές ενεργές"
 
-#: src/components/modals/SendMessageModal/index.tsx:410
+#: src/components/modals/SendMessageModal/index.tsx:475
 msgid "PDF only, up to {MAX_ATTACHMENTS} files and {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB in total"
 msgstr "Μόνο PDF, έως {MAX_ATTACHMENTS} αρχεία και {MAX_TOTAL_ATTACHMENT_SIZE_MB} MB συνολικά"
 
@@ -9197,7 +9207,7 @@ msgstr "Οι κωδικοί προσφοράς μπορούν να χρησιμ�
 msgid "Promo Codes Report"
 msgstr "Αναφορά Κωδικών Προσφοράς"
 
-#: src/components/modals/SendMessageModal/index.tsx:547
+#: src/components/modals/SendMessageModal/index.tsx:612
 msgid "Promotional emails may result in account suspension"
 msgstr "Τα προωθητικά email ενδέχεται να οδηγήσουν σε αναστολή λογαριασμού"
 
@@ -9454,7 +9464,7 @@ msgstr "Πρόσφατες Παραγγελίες"
 msgid "recipient"
 msgstr "παραλήπτης"
 
-#: src/components/modals/SendMessageModal/index.tsx:65
+#: src/components/modals/SendMessageModal/index.tsx:67
 msgid "Recipient"
 msgstr "Παραλήπτης"
 
@@ -9463,7 +9473,7 @@ msgid "recipients"
 msgstr "παραλήπτες"
 
 #: src/components/modals/MessageRecipientsModal/index.tsx:38
-#: src/components/modals/SendMessageModal/index.tsx:330
+#: src/components/modals/SendMessageModal/index.tsx:391
 #: src/components/routes/admin/Messages/index.tsx:166
 #: src/components/routes/admin/Messages/index.tsx:299
 msgid "Recipients"
@@ -9601,11 +9611,11 @@ msgstr "Ερωτήσεις Εγγραφής"
 msgid "Remaining Uses"
 msgstr "Υπόλοιπες Χρήσεις"
 
-#: src/components/modals/SendMessageModal/index.tsx:382
+#: src/components/modals/SendMessageModal/index.tsx:447
 msgid "Reminder a week before"
 msgstr "Υπενθύμιση μία εβδομάδα πριν"
 
-#: src/components/modals/SendMessageModal/index.tsx:386
+#: src/components/modals/SendMessageModal/index.tsx:451
 msgid "Reminder the day before"
 msgstr "Υπενθύμιση την προηγούμενη μέρα"
 
@@ -9647,7 +9657,7 @@ msgstr "Αφαίρεση εκπτωτικού κωδικού"
 msgid "Replace"
 msgstr "Αντικατάσταση"
 
-#: src/components/modals/SendMessageModal/index.tsx:240
+#: src/components/modals/SendMessageModal/index.tsx:297
 msgid "Replace the subject and the message with this template?"
 msgstr "Αντικατάσταση θέματος και μηνύματος με αυτό το πρότυπο;"
 
@@ -9675,6 +9685,10 @@ msgstr "Αναφορές"
 #: src/components/routes/my-tickets/index.tsx:527
 msgid "Request a new link"
 msgstr "Αίτημα νέου συνδέσμου"
+
+#: src/components/common/ErrorScreen/index.tsx:106
+msgid "Requested address"
+msgstr "Ζητούμενη διεύθυνση"
 
 #: src/components/routes/event/Settings/cards/InvoicingCard.tsx:110
 msgid "Requested at payment."
@@ -10047,11 +10061,11 @@ msgstr ""
 msgid "Scanner PIN"
 msgstr "PIN σαρωτή"
 
-#: src/components/modals/SendMessageModal/index.tsx:440
+#: src/components/modals/SendMessageModal/index.tsx:505
 msgid "Schedule for later"
 msgstr "Προγραμματισμός για αργότερα"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:579
 msgid "Schedule Message"
 msgstr "Προγραμματισμός Μηνύματος"
 
@@ -10065,7 +10079,7 @@ msgstr "Προγραμματισμένο"
 msgid "Scheduled"
 msgstr "Προγραμματισμένο"
 
-#: src/components/modals/SendMessageModal/index.tsx:470
+#: src/components/modals/SendMessageModal/index.tsx:535
 msgid "Scheduled time"
 msgstr "Προγραμματισμένη ώρα"
 
@@ -10093,6 +10107,7 @@ msgstr ""
 msgid "Search affiliates..."
 msgstr "Αναζήτηση συνεργατών..."
 
+#: src/components/modals/SendMessageModal/index.tsx:134
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:247
 #: src/components/routes/event/OrdersAndAttendees/index.tsx:166
 msgid "Search attendees"
@@ -10109,6 +10124,10 @@ msgstr "Αναζήτηση ανά τίτλο εκδήλωσης ή διοργα�
 #: src/components/routes/admin/FailedJobs/index.tsx:142
 msgid "Search by job name or exception..."
 msgstr "Αναζήτηση ανά όνομα εργασίας ή εξαίρεση..."
+
+#: src/components/modals/SendMessageModal/index.tsx:133
+msgid "Search by name or email. Up to 50 attendees."
+msgstr "Αναζήτηση με όνομα ή email. Έως 50 συμμετέχοντες."
 
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:82
 msgid "Search by name or email..."
@@ -10302,7 +10321,11 @@ msgstr "Επιλογή Λογαριασμού"
 msgid "Select All"
 msgstr "Επιλογή Όλων"
 
-#: src/components/modals/SendMessageModal/index.tsx:332
+#: src/components/modals/SendMessageModal/index.tsx:241
+msgid "Select at least one attendee"
+msgstr "Επιλέξτε τουλάχιστον έναν συμμετέχοντα"
+
+#: src/components/modals/SendMessageModal/index.tsx:393
 msgid "Select attendee group"
 msgstr "Επιλογή ομάδας συμμετεχόντων"
 
@@ -10339,7 +10362,7 @@ msgid "Select Product Tier"
 msgstr "Επιλογή Βαθμίδας Προϊόντος"
 
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:49
-#: src/components/modals/SendMessageModal/index.tsx:356
+#: src/components/modals/SendMessageModal/index.tsx:421
 msgid "Select products"
 msgstr "Επιλογή προϊόντων"
 
@@ -10363,7 +10386,7 @@ msgstr "Επιλέξτε τη βαθμίδα μηνυμάτων για αυτό 
 msgid "Select Ticket"
 msgstr "Επιλογή Εισιτηρίου"
 
-#: src/components/modals/SendMessageModal/index.tsx:344
+#: src/components/modals/SendMessageModal/index.tsx:409
 msgid "Select tickets"
 msgstr "Επιλογή εισιτηρίων"
 
@@ -10376,7 +10399,7 @@ msgstr "Επιλογή χρονικής περιόδου"
 msgid "Select timezone"
 msgstr "Επιλογή ζώνης ώρας"
 
-#: src/components/modals/SendMessageModal/index.tsx:331
+#: src/components/modals/SendMessageModal/index.tsx:392
 msgid "Select which attendees should receive this message"
 msgstr "Επιλέξτε ποιοι συμμετέχοντες πρέπει να λάβουν αυτό το μήνυμα"
 
@@ -10439,7 +10462,7 @@ msgstr "Πωλείται γρήγορα 🔥"
 msgid "Send"
 msgstr "Αποστολή"
 
-#: src/components/modals/SendMessageModal/index.tsx:266
+#: src/components/modals/SendMessageModal/index.tsx:323
 msgid "Send a message"
 msgstr "Αποστολή μηνύματος"
 
@@ -10447,7 +10470,7 @@ msgstr "Αποστολή μηνύματος"
 msgid "Send a test"
 msgstr "Αποστολή δοκιμής"
 
-#: src/components/modals/SendMessageModal/index.tsx:532
+#: src/components/modals/SendMessageModal/index.tsx:597
 msgid "Send as test"
 msgstr "Αποστολή ως δοκιμαστικό"
 
@@ -10459,16 +10482,16 @@ msgstr "Αποστολή με email"
 msgid "Send emails to attendees, ticket holders, or order owners. Messages can be sent immediately or scheduled for later."
 msgstr "Αποστολή email σε συμμετέχοντες, κατόχους εισιτηρίων ή κατόχους παραγγελιών. Τα μηνύματα μπορούν να αποσταλούν αμέσως ή να προγραμματιστούν."
 
-#: src/components/modals/SendMessageModal/index.tsx:540
+#: src/components/modals/SendMessageModal/index.tsx:605
 msgid "Send me a copy"
 msgstr "Αποστολή αντιγράφου σε εμένα"
 
 #: src/components/common/ContactOrganizerModal/index.tsx:118
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:579
 msgid "Send Message"
 msgstr "Αποστολή Μηνύματος"
 
-#: src/components/modals/SendMessageModal/index.tsx:432
+#: src/components/modals/SendMessageModal/index.tsx:497
 msgid "Send now"
 msgstr "Αποστολή τώρα"
 
@@ -10492,7 +10515,7 @@ msgstr "Αποστολή email ειδοποίησης επιστροφής"
 msgid "Send reset link"
 msgstr "Αποστολή συνδέσμου επαναφοράς"
 
-#: src/components/modals/SendMessageModal/index.tsx:514
+#: src/components/modals/SendMessageModal/index.tsx:579
 msgid "Send Test"
 msgstr "Αποστολή Δοκιμαστικού"
 
@@ -10887,7 +10910,7 @@ msgstr "Ορισμένες αλλαγές δεν ήταν δυνατό να δη
 msgid "Someone wrote to you with the Contact button. Click to read it."
 msgstr ""
 
-#: src/components/common/ErrorDisplay/index.tsx:15
+#: src/components/common/ErrorDisplay/index.tsx:38
 #: src/components/routes/auth/AcceptInvitation/index.tsx:48
 #: src/components/routes/product-widget/CollectInformation/index.tsx:654
 #: src/components/routes/product-widget/CollectInformation/OrderAddOns/index.tsx:51
@@ -10948,6 +10971,10 @@ msgstr "Πηγή"
 #: src/components/common/LanguageSwitcher/index.tsx:21
 msgid "Spanish"
 msgstr "Ισπανικά"
+
+#: src/components/modals/SendMessageModal/index.tsx:384
+msgid "Specific attendees"
+msgstr "Συγκεκριμένοι συμμετέχοντες"
 
 #: src/constants/eventTypes.ts:9
 msgid "Sport"
@@ -11142,7 +11169,7 @@ msgid "Stripe,<0/>what's that?"
 msgstr "Stripe,<0/>τι είναι;"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
-#: src/components/modals/SendMessageModal/index.tsx:392
+#: src/components/modals/SendMessageModal/index.tsx:457
 #: src/components/routes/admin/Messages/index.tsx:162
 #: src/components/routes/admin/Messages/index.tsx:272
 msgid "Subject"
@@ -11430,7 +11457,8 @@ msgstr "Το πρότυπο διαγράφηκε επιτυχώς"
 msgid "Template saved successfully"
 msgstr "Το πρότυπο αποθηκεύτηκε επιτυχώς"
 
-#: src/components/modals/SendMessageModal/index.tsx:379
+#: src/components/modals/SendMessageModal/index.tsx:444
+#: src/components/routes/organizer/Emails/AutomaticEmails.tsx:238
 msgid "Templates"
 msgstr "Πρότυπα"
 
@@ -11603,7 +11631,7 @@ msgstr "Δεν ήταν δυνατή η αποθήκευση του email. Δο�
 msgid "The email keeps its usual content, with the right amounts, dates and links. You can change its subject and add a message, shown at the top with your name."
 msgstr "Το email κρατά το συνηθισμένο περιεχόμενό του, με τα σωστά ποσά, ημερομηνίες και συνδέσμους. Μπορείτε να αλλάξετε το θέμα του και να προσθέσετε ένα μήνυμα, που εμφανίζεται στην κορυφή με το όνομά σας."
 
-#: src/components/routes/organizer/Emails/index.tsx:21
+#: src/components/routes/organizer/Emails/index.tsx:22
 msgid "The emails your buyers and attendees receive automatically."
 msgstr "Τα email που λαμβάνουν αυτόματα οι αγοραστές και οι συμμετέχοντές σας."
 
@@ -11688,8 +11716,8 @@ msgstr ""
 msgid "The organizer gives you the PIN. The scanner opens at the last digit."
 msgstr "Το PIN το δίνει ο διοργανωτής. Ο σαρωτής ανοίγει με το τελευταίο ψηφίο."
 
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:9
-#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:11
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:10
+#: src/components/layouts/PublicOrganizer/OrganizerNotFound/index.tsx:12
 msgid "The organizer you're looking for could not be found. The page may have been moved, deleted, or the URL might be incorrect."
 msgstr "Ο διοργανωτής που αναζητάτε δεν βρέθηκε. Η σελίδα μπορεί να μετακινήθηκε, διαγράφηκε ή το URL μπορεί να είναι λανθασμένο."
 
@@ -11708,10 +11736,6 @@ msgstr ""
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:22
 msgid "The page could not be read. Check the address and try again."
 msgstr "Δεν ήταν δυνατή η ανάγνωση της σελίδας. Ελέγξτε τη διεύθυνση και δοκιμάστε ξανά."
-
-#: src/components/common/ErrorDisplay/index.tsx:18
-msgid "The page you are looking for does not exist"
-msgstr "Η σελίδα που αναζητάτε δεν υπάρχει"
 
 #: src/components/common/QuestionsTable/index.tsx:306
 msgid "The participant form is already there"
@@ -11769,11 +11793,11 @@ msgstr "Η πλατφόρμα εισιτηρίων του Κεμπέκ, φτια
 msgid "The same price applies to every option. Please enter the price excluding taxes and fees."
 msgstr "Η ίδια τιμή ισχύει για κάθε επιλογή. Εισαγάγετε την τιμή χωρίς φόρους και χρεώσεις."
 
-#: src/components/modals/SendMessageModal/index.tsx:193
+#: src/components/modals/SendMessageModal/index.tsx:247
 msgid "The scheduled time is required"
 msgstr "Η προγραμματισμένη ώρα είναι υποχρεωτική"
 
-#: src/components/modals/SendMessageModal/index.tsx:194
+#: src/components/modals/SendMessageModal/index.tsx:248
 msgid "The scheduled time must be in the future"
 msgstr "Η προγραμματισμένη ώρα πρέπει να είναι στο μέλλον"
 
@@ -12008,6 +12032,10 @@ msgstr "Αυτό το προφίλ διοργανωτή δεν έχει δημο
 msgid "This organizer's sales are paid directly into its own Stripe account ({ownAccountId})."
 msgstr "Οι πωλήσεις αυτού του διοργανωτή καταβάλλονται απευθείας στον δικό του λογαριασμό Stripe ({ownAccountId})."
 
+#: src/components/common/ErrorDisplay/index.tsx:26
+msgid "This page doesn't exist, or it moved. The link may have been cut off when it was copied."
+msgstr "Αυτή η σελίδα δεν υπάρχει ή έχει μετακινηθεί. Ίσως ο σύνδεσμος κόπηκε κατά την αντιγραφή."
+
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:126
 msgid "This page is hosted by {platform}: its logo, color and networks were left out. Complete what is missing yourself."
 msgstr "Αυτή η σελίδα φιλοξενείται από το {platform}: το λογότυπο, το χρώμα και τα δίκτυα της πλατφόρμας παραλείφθηκαν. Συμπληρώστε μόνοι σας ό,τι λείπει."
@@ -12040,6 +12068,10 @@ msgstr "Αυτό το εισιτήριο δεν είναι σε αυτή τη λ
 #: src/components/layouts/CheckIn/index.tsx:244
 msgid "This ticket was just scanned. Please wait before scanning again."
 msgstr "Αυτό το εισιτήριο σαρώθηκε μόλις τώρα. Παρακαλώ περιμένετε πριν σαρώσετε ξανά."
+
+#: src/components/common/GenericErrorPage/index.tsx:34
+msgid "This trail is closed."
+msgstr "Αυτό το μονοπάτι είναι κλειστό."
 
 #: src/components/modals/EditUserModal/index.tsx:65
 msgid "This user is not active, as they have not accepted their invitation."
@@ -12295,7 +12327,7 @@ msgstr "Για επεξεργασία ρυθμίσεων, μεταβείτε σ�
 msgid "To handle"
 msgstr "Προς διευθέτηση"
 
-#: src/components/modals/SendMessageModal/index.tsx:292
+#: src/components/modals/SendMessageModal/index.tsx:349
 msgid "To increase your limits, contact us at"
 msgstr "Για να αυξήσετε τα όριά σας, επικοινωνήστε μαζί μας στο"
 
@@ -12478,6 +12510,7 @@ msgid "Trust and safety"
 msgstr "Εμπιστοσύνη και ασφάλεια"
 
 #: src/components/common/CheckIn/PhoneScanner.tsx:122
+#: src/components/common/ErrorDisplay/index.tsx:41
 msgid "Try again"
 msgstr "Δοκίμασε ξανά"
 
@@ -12615,10 +12648,6 @@ msgstr "Κάτω των {age} ετών"
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:820
 msgid "Under {ageLimit} on the day of the event, from the date of birth asked at checkout."
 msgstr "Κάτω των {ageLimit} ετών την ημέρα της εκδήλωσης, σύμφωνα με την ημερομηνία γέννησης που ζητείται κατά την αγορά."
-
-#: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:805
-#~ msgid "Under 18 on the day of the event, from the date of birth asked at checkout."
-#~ msgstr ""
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:810
 msgid "Under what age?"
@@ -13365,6 +13394,10 @@ msgstr "Καλώς ήρθατε, {0}!"
 msgid "Welcome, {name}!"
 msgstr "Καλώς όρισες, {name}!"
 
+#: src/components/common/ErrorDisplay/index.tsx:37
+msgid "Well, that slipped."
+msgstr "Ωχ, κάτι γλίστρησε."
+
 #: src/components/routes/event/Settings/cards/CheckoutCard.tsx:43
 msgid "What buyers fill in and how long they have to pay."
 msgstr "Τι συμπληρώνουν οι αγοραστές και πόσο χρόνο έχουν για να πληρώσουν."
@@ -13671,7 +13704,7 @@ msgstr "Εργασία"
 #: src/components/modals/EditProductCategoryModal/index.tsx:70
 #: src/components/modals/EditPromoCodeModal/index.tsx:84
 #: src/components/modals/EditQuestionModal/index.tsx:103
-#: src/components/modals/JoinWaitlistModal/index.tsx:188
+#: src/components/modals/JoinWaitlistModal/index.tsx:187
 #: src/components/modals/ManageAttendeeModal/index.tsx:230
 #: src/components/modals/ManageOrderModal/index.tsx:176
 #: src/components/routes/auth/Register/index.tsx:217
@@ -13766,7 +13799,7 @@ msgstr "Εκδίδετε μερική επιστροφή. Ο πελάτης θα
 msgid "You are offline"
 msgstr "Είστε εκτός σύνδεσης"
 
-#: src/components/modals/SendMessageModal/index.tsx:178
+#: src/components/modals/SendMessageModal/index.tsx:229
 msgid "You can attach a maximum of {MAX_ATTACHMENTS} files"
 msgstr "Μπορείτε να επισυνάψετε έως {MAX_ATTACHMENTS} αρχεία"
 
@@ -13815,7 +13848,7 @@ msgstr "Έχετε ήδη αποδεχτεί αυτή την πρόσκληση.
 msgid "You have no pending email change."
 msgstr "Δεν έχετε εκκρεμή αλλαγή email."
 
-#: src/components/modals/SendMessageModal/index.tsx:221
+#: src/components/modals/SendMessageModal/index.tsx:275
 msgid "You have reached your messaging limit."
 msgstr "Έχετε φτάσει το όριο μηνυμάτων σας."
 
@@ -13831,7 +13864,7 @@ msgstr "Έχετε φόρους και τέλη σε Δωρεάν Προϊόν. 
 msgid "You keep {saved} more."
 msgstr "Σου μένουν {saved} παραπάνω."
 
-#: src/components/modals/SendMessageModal/index.tsx:189
+#: src/components/modals/SendMessageModal/index.tsx:243
 msgid "You must acknowledge that this email is not promotional"
 msgstr "Πρέπει να αναγνωρίσετε ότι αυτό το email δεν είναι προωθητικό"
 
@@ -13859,7 +13892,7 @@ msgstr "Πρέπει να έχετε τουλάχιστον μία βαθμίδ�
 msgid "You must verify your email address before you can update the organizer status."
 msgstr "Πρέπει να επαληθεύσετε τη διεύθυνση email πριν ενημερώσετε την κατάσταση διοργανωτή."
 
-#: src/components/modals/SendMessageModal/index.tsx:278
+#: src/components/modals/SendMessageModal/index.tsx:335
 msgid "You need to verify your account email before you can send messages."
 msgstr "Πρέπει να επαληθεύσετε το email λογαριασμού πριν στείλετε μηνύματα."
 
@@ -13888,7 +13921,7 @@ msgstr "Είστε στη λίστα αναμονής!"
 msgid "You've been offered a spot!"
 msgstr "Σας προσφέρθηκε μια θέση!"
 
-#: src/components/modals/SendMessageModal/index.tsx:306
+#: src/components/modals/SendMessageModal/index.tsx:363
 msgid "Your account has messaging limits. To increase your limits, contact us at"
 msgstr "Ο λογαριασμός σας έχει όρια μηνυμάτων. Για αύξηση ορίων, επικοινωνήστε μαζί μας στο"
 
@@ -14155,32 +14188,3 @@ msgstr "ΤΚ ή Ταχυδρομικός Κωδικός"
 #: src/components/routes/product-widget/CollectInformation/index.tsx:906
 msgid "ZIP or Postal Code"
 msgstr "ΤΚ ή Ταχυδρομικός Κωδικός"
-
-#: src/components/common/ErrorDisplay/index.tsx:23
-msgid "Oops, wrong trail!"
-msgstr "Ωχ, λάθος μονοπάτι!"
-
-#: src/components/common/ErrorDisplay/index.tsx:24
-msgid "Off trail"
-msgstr "Εκτός μονοπατιού"
-
-#: src/components/common/ErrorDisplay/index.tsx:26
-msgid "This page doesn't exist, or it moved. The link may have been cut off when it was copied."
-msgstr "Αυτή η σελίδα δεν υπάρχει ή έχει μετακινηθεί. Ίσως ο σύνδεσμος κόπηκε κατά την αντιγραφή."
-
-#: src/components/common/ErrorDisplay/index.tsx:29
-#: src/components/common/GenericErrorPage/index.tsx:39
-msgid "Explore events"
-msgstr "Εξερευνήστε εκδηλώσεις"
-
-#: src/components/common/ErrorDisplay/index.tsx:37
-msgid "Well, that slipped."
-msgstr "Ωχ, κάτι γλίστρησε."
-
-#: src/components/common/GenericErrorPage/index.tsx:34
-msgid "This trail is closed."
-msgstr "Αυτό το μονοπάτι είναι κλειστό."
-
-#: src/components/common/ErrorScreen/index.tsx:103
-msgid "Requested address"
-msgstr "Ζητούμενη διεύθυνση"
