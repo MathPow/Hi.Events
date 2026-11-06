@@ -39,6 +39,7 @@ const TRUSTED_ORGANIZERS: Organizer[] = [
     {name: "Su'l Pace", logo: 'sulpace', ratio: 1008 / 585.56, url: '/events/3/sul-pace'},
     {name: 'Course en Blanc', logo: 'course-en-blanc', ratio: 496 / 372, url: '/events/4/melysa-bolduc'},
     {name: 'Ultratales', logo: 'ultratales', ratio: 1008 / 360, url: '/events/1/dehorsqc'},
+    {name: 'Rose en Piste', logo: 'rose-en-piste', ratio: 1429 / 790, scale: 1.3, url: '/events/5/la-course-rose-en-piste'},
 ];
 
 const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, children, ...props}: {
