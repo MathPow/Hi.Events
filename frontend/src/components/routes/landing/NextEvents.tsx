@@ -8,12 +8,13 @@ import {eventCoverImageUrl, eventHomepagePath} from "../../../utilites/urlHelper
 import {shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmationDates.ts";
 import classes from "./Landing.module.scss";
 import {useMarqueePace} from "./useMarqueePace.ts";
+import {useDragMarquee} from "./useDragMarquee.ts";
 import {ShakyText} from "./LandingButton.tsx";
 
 const COPIES = 4;
 // Enough events in a copy for it to be wider than a wide screen.
 const MIN_EVENTS_PER_COPY = 10;
-const SECONDS_PER_EVENT = 5;
+const SECONDS_PER_EVENT = 6;
 // Stopped under the mouse, for the event to be clicked.
 const HOVER_PACE = 0;
 
@@ -34,13 +35,15 @@ const EventCard = ({event}: { event: Event }) => {
 
 /**
  * The platform's next events under the hero, a photo and its title rolling to
- * the left: stopped under the mouse to be clicked, faster as the page scrolls,
- * then a link to all of them (/events). Nothing when no event is coming up.
+ * the left, about seven on screen: stopped under the mouse to be clicked,
+ * faster as the page scrolls, grabbed to be thrown either way, then a link to
+ * all of them (/events). Nothing when no event is coming up.
  */
 export const NextEvents = () => {
     const {data: events = []} = useGetUpcomingEventsPublic();
     const scroller = useRef<HTMLDivElement>(null);
     const hovering = useMarqueePace(scroller, classes.nextEventsTrack, HOVER_PACE, events.length > 0);
+    useDragMarquee(scroller, classes.nextEventsTrack, events.length > 0);
 
     if (!events.length) {
         return null;

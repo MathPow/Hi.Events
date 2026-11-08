@@ -1723,12 +1723,24 @@ $ridge-mobile: 10vw;
   }
 }
 
-// Clipped on the sides only: a hovered card rises a little. Without motion, it scrolls by hand.
+// Clipped on the sides only: a hovered card rises a little. Grabbed to be thrown
+// either way (useDragMarquee), a finger's vertical swipe still scrolling the page.
+// Without motion, it scrolls by hand.
 .nextEventsScroller {
+  container-type: inline-size;
   overflow: clip visible;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+
+  &[data-dragging] {
+    cursor: grabbing;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     overflow-x: auto;
+    touch-action: auto;
   }
 }
 
@@ -1755,22 +1767,30 @@ $ridge-mobile: 10vw;
 }
 
 .nextEvent {
+  // About seven across the row, never smaller than 12.5rem.
+  --next-event-width: max(12.5rem, (100cqi - 6rem) / 7);
+
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  width: 12.5rem;
+  width: var(--next-event-width);
   color: $brun;
   text-decoration: none;
+  cursor: inherit;
   transition: translate 0.25s $ease;
 
   &:hover {
     translate: 0 -0.125rem;
   }
+
+  .nextEventsScroller[data-dragging] & {
+    translate: none;
+  }
 }
 
 .nextEventPicture {
   position: relative;
-  height: 7.5rem;
+  aspect-ratio: 5 / 3;
   overflow: hidden;
   border-radius: 1rem;
   background: $orange-pale;
@@ -1790,7 +1810,7 @@ $ridge-mobile: 10vw;
   left: 0.5rem;
   padding: 0.3125rem 0.625rem;
   border-radius: 62rem;
-  font-size: 0.75rem;
+  font-size: clamp(0.75rem, var(--next-event-width) * 0.05, 0.875rem);
   font-weight: 700;
   line-height: normal;
   white-space: nowrap;
@@ -1802,7 +1822,7 @@ $ridge-mobile: 10vw;
   display: -webkit-box;
   overflow: hidden;
   font-family: $display;
-  font-size: 0.9375rem;
+  font-size: clamp(0.9375rem, var(--next-event-width) * 0.066, 1.25rem);
   line-height: 1.15;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1825,11 +1845,10 @@ $ridge-mobile: 10vw;
   }
 
   .nextEvent {
-    width: 10.5rem;
+    --next-event-width: 10.5rem;
   }
 
   .nextEventPicture {
-    height: 6.25rem;
     border-radius: 0.875rem;
   }
 
