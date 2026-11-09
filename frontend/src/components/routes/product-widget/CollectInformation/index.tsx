@@ -222,6 +222,14 @@ export const CollectInformation = () => {
     const canCopyToAttendee = (index: number) =>
         !lock && !isPerOrderCollection && (index === firstTicketIndex || allowCopyToAllAttendees);
 
+    // Quand chaque participant signe lui-meme, l'acheteur ne signe ici que son propre billet: celui
+    // qui reprend ses coordonnees, ou envoye a son courriel. Les autres recoivent un lien.
+    const participantsSignThemselves = !!event?.settings?.participants_sign_themselves && !isPerOrderCollection;
+    const sameEmail = (a?: string, b?: string) => !!a?.trim() && a.trim().toLowerCase() === b?.trim().toLowerCase();
+    const signsAtCheckout = (index: number) => !participantsSignThemselves
+        || copiedTargets.includes(index)
+        || sameEmail((form.values.products[index] as { email?: string } | undefined)?.email, form.values.order?.email);
+
     const handleSameAsBuyerChange = (index: number, checked: boolean) => {
         const others = copiedTargets.filter(target => target !== index);
         setCopiedIndices(checked ? [...others, index] : others);
@@ -770,7 +778,14 @@ export const CollectInformation = () => {
                         </>
                     )}
 
-                    {waiverText && productRequiresDetails && (
+                    {productRequiresDetails && !signsAtCheckout(currentProductIndex) && (waiverText || onlineDocuments.length > 0) && (
+                        <p className={classes.signLaterNote}>
+                            <PublicIcon name={'info'} size={16} className={classes.questionsNoteIcon}/>
+                            {t`This participant will receive a link by email to sign the waiver and documents, or will sign at the entrance.`}
+                        </p>
+                    )}
+
+                    {waiverText && productRequiresDetails && signsAtCheckout(currentProductIndex) && (
                         <WaiverSignature
                             waiverText={waiverText}
                             form={form}
@@ -781,6 +796,7 @@ export const CollectInformation = () => {
 
                     {linkedDocuments.length > 0 && productRequiresDetails && (
                         <DocumentSigning
+                            signLater={!signsAtCheckout(currentProductIndex)}
                             documents={linkedDocuments}
                             form={form}
                             path={`products.${currentProductIndex}`}

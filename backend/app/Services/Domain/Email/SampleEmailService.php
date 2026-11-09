@@ -282,6 +282,7 @@ class SampleEmailService
     private function sampleAttendee(OrderItemDomainObject $orderItem): AttendeeDomainObject
     {
         return (new AttendeeDomainObject())
+            ->setId(0)
             ->setShortId('a_sample')
             ->setPublicId('A-SAMPLE')
             ->setFirstName(self::SAMPLE_FIRST_NAME)

@@ -12,6 +12,10 @@ import {PublicPageFooter} from "../../../common/PublicPageFooter";
 import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
 import print from "../PrintOrder/PrintOrder.module.scss";
 import classes from './AttendeeProductAndInformation.module.scss';
+import {useGetParticipantSignatures} from "../../../../queries/useGetParticipantSignatures.ts";
+import {hasPendingSignatures, participantSignatureClientPublic} from "../../../../api/participantSignature.client.ts";
+import {ParticipantSigning} from "../../../common/ParticipantSigning";
+import {showSuccess} from "../../../../utilites/notifications.tsx";
 
 /**
  * A ticket's page (/product/<event>/<ticket>): the cream public page of the order confirmation and
@@ -33,6 +37,8 @@ export const AttendeeProductAndInformation = () => {
     const {eventId, attendeeShortId} = useParams();
     const {data: event, isError: eventError} = useGetEventPublic(eventId);
     const {data: attendee, isError: attendeeError} = useGetAttendeePublic(eventId, String(attendeeShortId));
+    // Ce que le participant a encore a signer lui-meme (le lien « Signer maintenant » de son courriel).
+    const signaturesQuery = useGetParticipantSignatures(eventId, String(attendeeShortId));
 
     if (eventError || attendeeError) {
         return (
@@ -77,6 +83,24 @@ export const AttendeeProductAndInformation = () => {
                 <h1 className={print.heroTitle}>{t`Your ticket`}</h1>
                 <p className={print.heroLine}>{event.title}</p>
             </header>
+
+            {hasPendingSignatures(signaturesQuery.data) && (
+                <section id="signer" className={`${classes.signCard} ${print.screenOnly}`} data-rough>
+                    <h2 className={classes.signTitle}>{t`To sign before the event`}</h2>
+                    <p className={classes.signIntro}>
+                        {t`Read and sign below. Without it, you sign at the entrance before being let in.`}
+                    </p>
+                    <ParticipantSigning
+                        pending={signaturesQuery.data!}
+                        submitLabel={t`Sign`}
+                        onSign={async (input) => {
+                            await participantSignatureClientPublic.signForTicket(eventId!, String(attendeeShortId), input);
+                            showSuccess(t`Thank you, it's signed. See you at the event!`);
+                            await signaturesQuery.refetch();
+                        }}
+                    />
+                </section>
+            )}
 
             <div className={classes.ticket}>
                 <AttendeeTicket

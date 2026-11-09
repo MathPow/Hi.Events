@@ -4,3 +4,31 @@
   flex-direction: column;
   gap: 24px;
 }
+
+// Ce qu'il reste a signer, au-dessus du billet: le lien « Signer maintenant » du courriel y mene (#signer).
+.signCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+  border-radius: 32px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+  scroll-margin-top: 16px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.signTitle {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.signIntro {
+  margin: 0 0 8px;
+  font-size: 15px;
+}

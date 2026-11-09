@@ -19,7 +19,7 @@ export const RegistrationTab = ({eventId, settings}: { eventId: IdParam, setting
     return (
         <div className={classes.grid}>
             <CheckoutCard eventId={eventId} settings={settings}/>
-            <DocumentsCard eventId={eventId}/>
+            <DocumentsCard eventId={eventId} settings={settings}/>
             <WaitlistCard eventId={eventId} settings={settings}/>
             <BibNumbersCard eventId={eventId}/>
             <CheckoutMessagesCard eventId={eventId} settings={settings}/>

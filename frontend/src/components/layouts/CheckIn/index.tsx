@@ -24,6 +24,8 @@ import {ScannerSelectionModal} from "../../common/CheckIn/ScannerSelectionModal"
 import {HidScannerStatus} from "../../common/CheckIn/HidScannerStatus";
 import {ListIntro, PinScreen} from "../../common/CheckIn/PinScreen";
 import {PhoneScanner, ScanResult} from "../../common/CheckIn/PhoneScanner";
+import {ParticipantSigning} from "../../common/ParticipantSigning";
+import {participantSignatureClientPublic, PendingSignatures} from "../../../api/participantSignature.client.ts";
 import scannerClasses from "../../common/CheckIn/Scanner.module.scss";
 import {DoorSaleModal} from "../../common/CheckIn/DoorSaleModal";
 import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/checkInPin.ts";
@@ -62,6 +64,12 @@ const CheckIn = () => {
     const [hasPin, setHasPin] = useState(() => Boolean(getCheckInPin(checkInListShortId)));
     const [doorSaleOpen, doorSaleHandlers] = useDisclosure(false);
     const [checkInModalOpen, checkInModalHandlers] = useDisclosure(false);
+    // Le participant qui n'a pas encore signe: il signe ici, sur l'appareil du benevole, puis entre.
+    const [signing, setSigning] = useState<{
+        attendee: Attendee,
+        action: 'check-in' | 'check-in-and-mark-order-as-paid',
+        pending: PendingSignatures,
+    } | null>(null);
     // On a phone the page is the scanner (Figma 552:3772); its X shows the whole list instead.
     const isPhone = useMediaQuery('(max-width: 767px)');
     const [phoneListOpen, setPhoneListOpen] = useState(false);
@@ -156,7 +164,18 @@ const CheckIn = () => {
             attendeePublicId: attendee.public_id,
             action: action,
         }, {
-            onSuccess: ({errors}) => {
+            onSuccess: (response) => {
+                const {errors} = response;
+                const signatureRequired = (response as { meta?: { signature_required?: string[] } }).meta?.signature_required ?? [];
+                if (signatureRequired.includes(attendee.public_id)) {
+                    participantSignatureClientPublic.getForCheckIn(checkInListShortId as string, attendee.public_id)
+                        .then((pending) => {
+                            checkInModalHandlers.close();
+                            setSigning({attendee, action, pending});
+                        })
+                        .catch(() => reportProblem(errors?.[attendee.public_id] ?? t`Unable to check in attendee`));
+                    return;
+                }
                 if (errors && errors[attendee.public_id]) {
                     reportProblem(errors[attendee.public_id]);
                     playErrorSound();
@@ -630,6 +649,29 @@ const CheckIn = () => {
                         />
                     </Modal.Content>
                 </Modal.Root>
+            )}
+            {signing && (
+                <Modal
+                    opened
+                    zIndex={400}
+                    size="lg"
+                    onClose={() => setSigning(null)}
+                    title={t`${signing.attendee.first_name} signs before coming in`}
+                >
+                    <p className={classes.signingIntro}>
+                        {t`Hand over the device: the participant reads and signs, then they are checked in.`}
+                    </p>
+                    <ParticipantSigning
+                        pending={signing.pending}
+                        submitLabel={t`Sign and check in`}
+                        onSign={async (input) => {
+                            await participantSignatureClientPublic.signForCheckIn(checkInListShortId as string, signing.attendee.public_id, input);
+                            const {attendee, action} = signing;
+                            setSigning(null);
+                            await handleCheckInAction(attendee, action);
+                        }}
+                    />
+                </Modal>
             )}
             {checkInList?.allow_door_sales && (
                 <DoorSaleModal

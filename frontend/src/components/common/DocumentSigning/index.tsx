@@ -39,6 +39,9 @@ interface DocumentSigningProps {
     askBirthDate: boolean;
     // Les champs automatiques connus a la caisse (nom du participant, evenement...).
     autoValues: Partial<Record<string, string>>;
+    // Le participant signera lui-meme plus tard: seule sa date de naissance (quels documents
+    // s'appliquent) est demandee ici.
+    signLater?: boolean;
 }
 
 /**
@@ -46,8 +49,8 @@ interface DocumentSigningProps {
  * lire, ses champs a remplir et sa signature (le nom complet tape); un parent
  * ou tuteur signe aussi pour un mineur. Les documents a imprimer sont annonces.
  */
-export const DocumentSigning = ({documents, form, path, isMinor, isUnder, askBirthDate, autoValues}: DocumentSigningProps) => {
-    const online = documents.filter(document => document.signing_mode === 'ONLINE');
+export const DocumentSigning = ({documents, form, path, isMinor, isUnder, askBirthDate, autoValues, signLater = false}: DocumentSigningProps) => {
+    const online = signLater ? [] : documents.filter(document => document.signing_mode === 'ONLINE');
     const toPrint = documents.filter(document => document.signing_mode === 'PRINT' && documentApplies(document, isUnder));
     const generalError = form.errors[`${path}.documents`];
 
