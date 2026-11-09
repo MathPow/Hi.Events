@@ -40,6 +40,7 @@ class CreateAttendeeCheckInPublicAction extends BaseAction
         return $this->resourceResponse(
             resource: AttendeeCheckInPublicResource::class,
             data: $checkIns->attendeeCheckIns,
+            meta: array_filter(['signature_required' => $checkIns->signatureRequired]),
             errors: $checkIns->errors->toArray()
         );
     }

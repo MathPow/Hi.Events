@@ -120,6 +120,8 @@ class PartialUpdateEventSettingsHandler
                 'waiver_text' => array_key_exists('waiver_text', $eventSettingsDTO->settings)
                     ? $eventSettingsDTO->settings['waiver_text']
                     : $existingSettings->getWaiverText(),
+                'participants_sign_themselves' => $eventSettingsDTO->settings['participants_sign_themselves']
+                    ?? $existingSettings->getParticipantsSignThemselves(),
 
                 // Invoice settings
                 'enable_invoicing' => $eventSettingsDTO->settings['enable_invoicing'] ?? $existingSettings->getEnableInvoicing(),

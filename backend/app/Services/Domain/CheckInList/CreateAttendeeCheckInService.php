@@ -2,6 +2,7 @@
 
 namespace HiEvents\Services\Domain\CheckInList;
 
+use HiEvents\Services\Domain\Waiver\PendingSignatureService;
 use Exception;
 use HiEvents\DataTransferObjects\ErrorBagDTO;
 use HiEvents\DomainObjects\AttendeeCheckInDomainObject;
@@ -33,6 +34,7 @@ class CreateAttendeeCheckInService
         private readonly EventSettingsRepositoryInterface   $eventSettingsRepository,
         private readonly ConnectionInterface                $db,
         private readonly MarkOrderAsPaidService             $markOrderAsPaidService,
+        private readonly PendingSignatureService            $pendingSignatureService,
     )
     {
     }
@@ -48,7 +50,9 @@ class CreateAttendeeCheckInService
     public function checkInAttendees(
         string     $checkInListUuid,
         string     $checkInUserIpAddress,
-        Collection $attendeesAndActions
+        Collection $attendeesAndActions,
+        // A participant who has yet to sign the waiver or a document is not let in: they sign at the door first.
+        bool       $requireSignatures = false,
     ): CreateAttendeeCheckInsResponseDTO
     {
         $checkInList = $this->checkInListDataService->getCheckInList($checkInListUuid);
@@ -64,7 +68,8 @@ class CreateAttendeeCheckInService
             $checkInList,
             $eventSettings,
             $existingCheckIns,
-            $checkInUserIpAddress
+            $checkInUserIpAddress,
+            $requireSignatures,
         );
     }
 
@@ -132,13 +137,25 @@ class CreateAttendeeCheckInService
         CheckInListDomainObject  $checkInList,
         EventSettingDomainObject $eventSettings,
         Collection               $existingCheckIns,
-        string                   $checkInUserIpAddress
+        string                   $checkInUserIpAddress,
+        bool                     $requireSignatures,
     ): CreateAttendeeCheckInsResponseDTO
     {
         $errors = new ErrorBagDTO();
         $checkIns = new Collection();
+        $signatureRequired = [];
 
         foreach ($attendees as $attendee) {
+            if ($requireSignatures
+                && !$this->getExistingCheckIn($existingCheckIns, $attendee)
+                && $this->pendingSignatureService->hasPending($attendee, $eventSettings)) {
+                $errors->addError($attendee->getPublicId(), __(':attendee_name has not signed yet: they sign before coming in.', [
+                    'attendee_name' => $attendee->getFullName(),
+                ]));
+                $signatureRequired[] = $attendee->getPublicId();
+                continue;
+            }
+
             $result = $this->processIndividualCheckIn(
                 $attendee,
                 $attendeesAndActions,
@@ -159,6 +176,7 @@ class CreateAttendeeCheckInService
         return new CreateAttendeeCheckInsResponseDTO(
             attendeeCheckIns: $checkIns,
             errors: $errors,
+            signatureRequired: $signatureRequired,
         );
     }
 

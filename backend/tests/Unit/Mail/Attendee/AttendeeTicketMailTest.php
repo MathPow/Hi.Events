@@ -13,6 +13,7 @@ use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Mail\Attendee\AttendeeTicketMail;
 use HiEvents\DomainObjects\DocumentSignatureDomainObject;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
+use HiEvents\Services\Domain\Waiver\PendingSignatureService;
 use HiEvents\Services\Domain\Document\DocumentBlocks;
 use Mockery as m;
 use Illuminate\Mail\Transport\ArrayTransport;
@@ -32,6 +33,7 @@ class AttendeeTicketMailTest extends TestCase
         $repository = m::mock(DocumentSignatureRepositoryInterface::class);
         $repository->shouldReceive('findWhereIn')->andReturnUsing(fn() => collect($this->documentCopies));
         $this->app->instance(DocumentSignatureRepositoryInterface::class, $repository);
+        $this->app->instance(PendingSignatureService::class, m::mock(PendingSignatureService::class)->shouldIgnoreMissing(false));
     }
 
     protected function tearDown(): void

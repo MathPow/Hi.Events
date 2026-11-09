@@ -17,6 +17,7 @@ use HiEvents\Services\Domain\Order\MarkOrderAsPaidService;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
+use HiEvents\Services\Domain\Waiver\PendingSignatureService;
 use Mockery;
 use PDOException;
 use Tests\TestCase;
@@ -99,7 +100,45 @@ class CreateAttendeeCheckInServiceTest extends TestCase
         $this->assertCount(1, $response->attendeeCheckIns);
     }
 
-    private function service(): CreateAttendeeCheckInService
+    public function test_a_participant_who_has_not_signed_is_turned_away_until_they_sign(): void
+    {
+        $this->attendeeCheckInRepository->shouldReceive('findWhereIn')->andReturn(collect());
+        $this->attendeeCheckInRepository->shouldNotReceive('create');
+
+        $pending = Mockery::mock(PendingSignatureService::class);
+        $pending->shouldReceive('hasPending')->andReturnTrue();
+
+        $response = $this->service($pending)->checkInAttendees(
+            checkInListUuid: 'cil_abc',
+            checkInUserIpAddress: '127.0.0.1',
+            attendeesAndActions: $this->attendeesAndActions(),
+            requireSignatures: true,
+        );
+
+        $this->assertCount(0, $response->attendeeCheckIns);
+        $this->assertCount(1, $response->signatureRequired);
+        $this->assertNotEmpty($response->errors->toArray());
+    }
+
+    public function test_door_sales_are_not_held_back_by_signatures(): void
+    {
+        $this->attendeeCheckInRepository->shouldReceive('findWhereIn')->andReturn(collect());
+        $this->attendeeCheckInRepository->shouldReceive('create')->once()->andReturn($this->existingCheckIn());
+
+        $pending = Mockery::mock(PendingSignatureService::class);
+        $pending->shouldNotReceive('hasPending');
+
+        $response = $this->service($pending)->checkInAttendees(
+            checkInListUuid: 'cil_abc',
+            checkInUserIpAddress: '127.0.0.1',
+            attendeesAndActions: $this->attendeesAndActions(),
+        );
+
+        $this->assertCount(1, $response->attendeeCheckIns);
+        $this->assertSame([], $response->signatureRequired);
+    }
+
+    private function service(?PendingSignatureService $pendingSignatureService = null): CreateAttendeeCheckInService
     {
         $connection = Mockery::mock(ConnectionInterface::class);
         $connection->shouldReceive('transaction')->andReturnUsing(static fn(callable $callback) => $callback());
@@ -118,6 +157,7 @@ class CreateAttendeeCheckInServiceTest extends TestCase
             eventSettingsRepository: $eventSettingsRepository,
             db: $connection,
             markOrderAsPaidService: Mockery::mock(MarkOrderAsPaidService::class)->shouldIgnoreMissing(),
+            pendingSignatureService: $pendingSignatureService ?? Mockery::mock(PendingSignatureService::class)->shouldIgnoreMissing(false),
         );
     }
 

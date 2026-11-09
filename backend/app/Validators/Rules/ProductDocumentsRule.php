@@ -37,6 +37,8 @@ class ProductDocumentsRule implements ValidationRule, ValidatorAwareRule
         private readonly EventDomainObject      $event,
         private readonly ?int                   $dateOfBirthQuestionId,
         private readonly DocumentSigningService $signingService,
+        // Whether this attendee signs at checkout (or later, from their ticket's link).
+        private readonly ?Closure               $signsAtCheckout = null,
     )
     {
     }
@@ -65,6 +67,11 @@ class ProductDocumentsRule implements ValidationRule, ValidatorAwareRule
                     $messages["products.$index.document_birth_date"][] = $error;
                     continue;
                 }
+            }
+
+            // Signed later by the participant: only the date of birth (which documents apply) is needed now.
+            if ($this->signsAtCheckout && !($this->signsAtCheckout)($attendee)) {
+                continue;
             }
 
             $isMinor = $this->signingService->isMinor($dateOfBirth, $this->event);

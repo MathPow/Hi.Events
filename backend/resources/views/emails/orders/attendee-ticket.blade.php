@@ -28,6 +28,10 @@
 <div style="margin: 16px 0;"><img src="{{ $message->embedData($ticket['qrCode'], $ticketAttendee->getPublicId() . '.png', 'image/png') }}" alt="{{ $ticketAttendee->getPublicId() }}" width="180" height="180" style="display: block; margin: 0 auto; width: 180px; height: 180px;"></div>
 <div style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(53, 41, 36, 0.6);">{{ __('Ticket ID') }}</div>
 <div style="font-family: monospace; font-size: 15px; font-weight: bold; letter-spacing: 1px; color: #352924;">{{ $ticketAttendee->getPublicId() }}</div>
+@if($ticket['signUrl'])
+<div style="margin-top: 16px; padding: 12px 14px; background-color: #fbf0e4; border-radius: 12px; font-size: 14px; color: #352924;">{{ __('Before the event, :name has to sign online (waiver and documents). It takes a minute.', ['name' => $ticketAttendee->getFirstName() ?: $ticketAttendee->getFullName()]) }}</div>
+<div style="margin-top: 12px;"><a href="{{ $ticket['signUrl'] }}" style="display: inline-block; padding: 12px 22px; border-radius: 999px; background-color: {{ $branding->accentDeepColor }}; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none;">{{ __('Sign now') }}</a></div>
+@endif
 <div style="margin-top: 14px;"><a href="{{ $ticket['ticketUrl'] }}" style="font-size: 14px; font-weight: bold; color: {{ $branding->accentDeepColor }};">{{ __('View this ticket online') }}</a></div>
 </td></tr></table>
 @endforeach

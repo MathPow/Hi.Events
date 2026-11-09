@@ -59,6 +59,7 @@ class UpdateEventSettingsDTO extends BaseDTO
         public readonly bool                    $allow_orders_awaiting_offline_payment_to_check_in = false,
         public readonly ?string                 $deposit_instructions = null,
         public readonly ?string                 $waiver_text = null,
+        public readonly bool                    $participants_sign_themselves = false,
         public readonly ?string                 $product_info_message = null,
         public readonly ?string                 $product_info_button_text = null,
         public readonly ?string                 $product_info_button_url = null,

@@ -71,6 +71,7 @@ class UpdateEventSettingsRequest extends BaseRequest
             'allow_orders_awaiting_offline_payment_to_check_in' => ['boolean'],
             'deposit_instructions' => ['string', 'nullable', 'max:5000'],
             'waiver_text' => ['string', 'nullable', 'max:20000'],
+            'participants_sign_themselves' => ['boolean'],
 
             // Invoice settings
             'enable_invoicing' => ['boolean'],

@@ -79,6 +79,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const LOCATION_LONGITUDE = 'location_longitude';
     final public const LOCATION_GEOCODED_FOR = 'location_geocoded_for';
     final public const LOCATION_REGION = 'location_region';
+    final public const PARTICIPANTS_SIGN_THEMSELVES = 'participants_sign_themselves';
 
     protected int $id;
     protected int $event_id;
@@ -149,6 +150,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?float $location_longitude = null;
     protected ?string $location_geocoded_for = null;
     protected ?string $location_region = null;
+    protected bool $participants_sign_themselves = false;
 
     public function toArray(): array
     {
@@ -222,6 +224,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'location_longitude' => $this->location_longitude ?? null,
                     'location_geocoded_for' => $this->location_geocoded_for ?? null,
                     'location_region' => $this->location_region ?? null,
+                    'participants_sign_themselves' => $this->participants_sign_themselves ?? null,
                 ];
     }
 
@@ -983,5 +986,16 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getLocationRegion(): ?string
     {
         return $this->location_region;
+    }
+
+    public function setParticipantsSignThemselves(bool $participants_sign_themselves): self
+    {
+        $this->participants_sign_themselves = $participants_sign_themselves;
+        return $this;
+    }
+
+    public function getParticipantsSignThemselves(): bool
+    {
+        return $this->participants_sign_themselves;
     }
 }

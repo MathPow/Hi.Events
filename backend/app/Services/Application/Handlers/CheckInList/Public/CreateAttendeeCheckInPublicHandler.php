@@ -32,6 +32,7 @@ class CreateAttendeeCheckInPublicHandler
             $checkInData->checkInListUuid,
             $checkInData->checkInUserIpAddress,
             $checkInData->attendeesAndActions,
+            requireSignatures: true,
         );
 
         $this->logger->info('Attendee check-ins created', [

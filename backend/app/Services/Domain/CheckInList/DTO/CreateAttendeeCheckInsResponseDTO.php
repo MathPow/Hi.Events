@@ -11,6 +11,8 @@ class CreateAttendeeCheckInsResponseDTO extends BaseDTO
     public function __construct(
         public Collection  $attendeeCheckIns,
         public ErrorBagDTO $errors,
+        // The participants turned away until they sign (public ids).
+        public array       $signatureRequired = [],
     )
     {
     }
