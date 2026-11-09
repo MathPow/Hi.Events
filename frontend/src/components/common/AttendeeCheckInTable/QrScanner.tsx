@@ -14,6 +14,8 @@ interface QRScannerComponentProps {
     isSoundOn?: boolean;
 }
 
+const RECENT_SCAN_MS = 6000;
+
 export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const qrScannerRef = useRef<QrScanner | null>(null);
@@ -26,6 +28,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const [processedAttendeeIds, setProcessedAttendeeIds] = useState<string[]>([]);
     const latestProcessedAttendeeIdsRef = useRef<string[]>([]);
     const inFlightAttendeeIdRef = useRef<string | null>(null);
+    const scannedAtRef = useRef(new Map<string, number>());
 
     const [currentAttendeeId, setCurrentAttendeeId] = useState<string | null>(null);
     const [debouncedAttendeeId] = useDebouncedValue(currentAttendeeId, 1000);
@@ -91,6 +94,12 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 return;
             }
 
+            // Le billet qu'on vient de traiter, encore devant la camera: l'ecran a deja repondu.
+            const scannedAt = scannedAtRef.current.get(debouncedAttendeeId);
+            if (alreadyScanned && scannedAt && Date.now() - scannedAt < RECENT_SCAN_MS) {
+                return;
+            }
+
             if (alreadyScanned) {
                 showError(t`You already scanned this ticket`);
 
@@ -113,6 +122,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 // reponse du serveur recue: pas de vert ni de son de reussite avant.
                 const scannedId = debouncedAttendeeId;
                 inFlightAttendeeIdRef.current = scannedId;
+                scannedAtRef.current.set(scannedId, Date.now());
                 setProcessedAttendeeIds(prevIds => [...prevIds, scannedId]);
                 setCurrentAttendeeId(null);
                 Promise.resolve(props.onAttendeeScanned(scannedId)).then((retryable) => {
@@ -121,6 +131,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                     }
                 }).finally(() => {
                     inFlightAttendeeIdRef.current = null;
+                    scannedAtRef.current.set(scannedId, Date.now());
                     setIsCheckingIn(false);
                 });
             }

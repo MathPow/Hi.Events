@@ -30,6 +30,9 @@ import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/c
 import {useDehorsAppTheme} from "../../../hooks/useDehorsAppTheme.ts";
 import {intlLocale} from "../../../utilites/intlLocale.ts";
 
+// Un billet traite (entre ou refuse) il y a moins que ca et relu par la camera: on se tait.
+const RECENT_SCAN_MS = 6000;
+
 const CheckIn = () => {
     useDehorsAppTheme();
     const networkStatus = useNetwork();
@@ -48,6 +51,7 @@ const CheckIn = () => {
     const barcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isProcessingRef = useRef(false);
     const processedBarcodesRef = useRef<Set<string>>(new Set());
+    const recentScansRef = useRef(new Map<string, number>());
     const lastScanTimeRef = useRef<number>(0);
     const scanSuccessAudioRef = useRef<HTMLAudioElement | null>(null);
     const scanErrorAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -240,8 +244,14 @@ const CheckIn = () => {
 
     // true: l'echec est passager (reseau, serveur), le scanner laissera rescanner ce billet.
     const handleQrCheckIn = useCallback(async (attendeePublicId: string): Promise<boolean> => {
-        // Prevent processing if already handling a request
+        // Occupe par un autre billet: celui-ci n'est pas traite, le scanner le relira.
         if (isProcessingRef.current) {
+            return true;
+        }
+
+        // Le billet qu'on vient de traiter, encore devant la camera: rien a redire.
+        const justCheckedInAt = recentScansRef.current.get(attendeePublicId);
+        if (justCheckedInAt && Date.now() - justCheckedInAt < RECENT_SCAN_MS) {
             return false;
         }
 
@@ -316,6 +326,8 @@ const CheckIn = () => {
         const retryable = await handleCheckInAction(attendee, 'check-in');
         if (retryable) {
             processedBarcodesRef.current.delete(attendeePublicId);
+        } else {
+            recentScansRef.current.set(attendeePublicId, Date.now());
         }
         isProcessingRef.current = false;
         return retryable;

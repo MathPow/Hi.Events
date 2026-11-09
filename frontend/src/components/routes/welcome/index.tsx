@@ -601,7 +601,12 @@ const Welcome = () => {
                 <p className={classes.subtitle}>{t`Something went wrong on our side. Your account is safe: try again in a moment.`}</p>
                 <div className={classes.actions}>
                     <Button className={classes.darkButton} loading={organizersQuery.isFetching}
-                            onClick={() => organizersQuery.refetch().finally(() => setOrganizerCreateFailed(false))}>
+                            onClick={() => organizersQuery.refetch().then((result) => {
+                                // Ne recreer que si la liste a bien ete relue (et qu'il n'y en a toujours pas).
+                                if (!result.isError) {
+                                    setOrganizerCreateFailed(false);
+                                }
+                            })}>
                         {t`Try again`}
                     </Button>
                 </div>

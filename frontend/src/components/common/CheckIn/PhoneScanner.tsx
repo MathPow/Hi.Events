@@ -26,7 +26,8 @@ interface PhoneScannerProps {
     // The matching attendees, while searching.
     searchResults: ReactNode;
     onSell?: () => void;
-    onScan: (code: string) => void;
+    // Resout a true quand le code n'a pas ete traite (occupe, panne passagere): il sera relu.
+    onScan: (code: string) => void | Promise<boolean | void>;
     onClose: () => void;
 }
 
@@ -68,11 +69,18 @@ export const PhoneScanner = ({
         // mount undone right away (React's strict mode) must not leave one behind.
         const timer = window.setTimeout(() => {
             scanner = new QrScanner(element, ({data}) => {
+                // Seule une lecture transmise ouvre la pause du meme code: tenir le billet ne la
+                // prolonge pas, et un code non traite peut etre relu tout de suite.
                 const now = Date.now();
                 const last = lastCode.current;
-                lastCode.current = {code: data, at: now};
                 if (!last || last.code !== data || now - last.at > SAME_CODE_MS) {
-                    onScanRef.current(data);
+                    const sent = {code: data, at: now};
+                    lastCode.current = sent;
+                    Promise.resolve(onScanRef.current(data)).then((retry) => {
+                        if (retry && lastCode.current === sent) {
+                            lastCode.current = null;
+                        }
+                    });
                 }
             }, {returnDetailedScanResult: true, maxScansPerSecond: 4, preferredCamera: 'environment'});
 

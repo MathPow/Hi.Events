@@ -6,7 +6,7 @@ import {isSsr} from "../utilites/helpers.ts";
 
 export const GET_ORDER_PUBLIC_QUERY_KEY = "getOrderPublic";
 
-const SETTLED_STATUSES = ['COMPLETED', 'CANCELLED', 'AWAITING_OFFLINE_PAYMENT', 'ABANDONED'];
+const SETTLED_STATUSES = ['COMPLETED', 'CANCELLED', 'AWAITING_OFFLINE_PAYMENT'];
 
 // Une reservation (meme abandonnee) peut encore etre payee jusqu'a son echeance; passe celle-ci,
 // le serveur rembourse tout paiement et refuse la commande (PaymentIntentSucceededHandler).
