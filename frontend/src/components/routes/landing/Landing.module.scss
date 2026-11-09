@@ -256,19 +256,19 @@ $ridge-mobile: 10vw;
   -webkit-user-select: none;
   -webkit-user-drag: none;
 
+  // The two poses flip with an attribute (useStickerTilt), the float only runs on screen: a
+  // filtered element animated in CSS is redrawn at every frame.
   @media (prefers-reduced-motion: no-preference) {
-    animation: sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
-    sticker-tilt 2.4s steps(1) var(--tilt-delay, 0s) infinite;
-  }
-}
-
-@keyframes sticker-tilt {
-  0% {
     transform: rotate(-2.5deg);
-  }
+    animation: sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate;
 
-  50%, 100% {
-    transform: rotate(2.5deg);
+    &[data-tilt] {
+      transform: rotate(2.5deg);
+    }
+
+    &:not([data-onscreen]) {
+      animation-play-state: paused;
+    }
   }
 }
 
@@ -324,7 +324,7 @@ $ridge-mobile: 10vw;
   // visible screen. Without a script to take it over, it steps aside.
   &:not([data-live]) {
     --mountain-width: min(8rem, calc(100vw - 4rem));
-    animation: opening-fallback 0.4s ease 10s both;
+    animation: opening-fallback 0.4s ease 2.5s both;
 
     &::after {
       content: '';
@@ -425,7 +425,7 @@ $ridge-mobile: 10vw;
 
   overflow: hidden;
   color: $creme;
-  background: $brun url('/landing/photos/hero-groupe.webp') center / cover;
+  background: $brun url('/landing/photos/hero-groupe-doux.webp') center / cover;
 }
 
 .heroVideo {
@@ -434,8 +434,6 @@ $ridge-mobile: 10vw;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  // A little dimmer and flatter, for the bright windows and shirts not to fight the headline.
-  filter: brightness(0.82) contrast(0.92) saturate(1.05);
 }
 
 // The video slides down a quarter of the scroll, so it seems to scroll slower
@@ -640,8 +638,13 @@ $ridge-mobile: 10vw;
     filter: url('#hero-sticker-edge');
   }
 
+  // Flipped by useStickerTilt, not a CSS animation: with its filter, it would be redrawn every frame.
   @media (prefers-reduced-motion: no-preference) {
-    animation: sticker-tilt 2.4s steps(1) var(--tilt-delay, 0s) infinite;
+    transform: rotate(-2.5deg);
+
+    &[data-tilt] {
+      transform: rotate(2.5deg);
+    }
   }
 }
 
@@ -712,16 +715,16 @@ $ridge-mobile: 10vw;
 }
 
 // While the opening waits, its window already shows the hero where the
-// entrance takes it from. Held 10s at most, like the opening without its
+// entrance takes it from. Held 2.5s at most, like the opening without its
 // script (.opening); with no script at all, the hero stays in place.
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .landing:not([data-entrance]) {
     .heroTitle h1 {
-      animation: hero-land-wait 1ms 10s backwards;
+      animation: hero-land-wait 1ms 2.5s backwards;
     }
 
     .heroWord, .heroSubtitle, .nav, .heroFooter, .scrollDownWrap {
-      animation: hero-converge-wait 1ms 10s backwards;
+      animation: hero-converge-wait 1ms 2.5s backwards;
     }
   }
 }
@@ -3003,4 +3006,17 @@ $footer-ridge-mobile: 13.205056%;
     }
   }
 
+}
+
+// With reduced motion, no hover or focus effect moves (hop, boiling outline, shaking letters,
+// arrows): the page's other animations already stop there.
+@media (prefers-reduced-motion: reduce) {
+  .landing :is(:hover, :focus-visible),
+  .landing :is(:hover, :focus-visible) *,
+  .landing :is(:hover, :focus-visible)::before,
+  .landing :is(:hover, :focus-visible)::after,
+  .landing :is(:hover, :focus-visible) *::before,
+  .landing :is(:hover, :focus-visible) *::after {
+    animation: none !important;
+  }
 }

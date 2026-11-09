@@ -18,9 +18,10 @@ import {glideTo, installSmoothScroll, onSmoothScroll} from "./smoothScroll.ts";
 import {useMatchWidth} from "./useMatchWidth.ts";
 import {useStackOnScroll} from "./useStackOnScroll.ts";
 import classes from "./Landing.module.scss";
+import {useStickerTilt} from "./useStickerTilt.ts";
 
 const ASSETS = '/landing';
-const HERO_VIDEO = `${ASSETS}/hero.mp4`;
+const HERO_PHOTO = `${ASSETS}/photos/hero-groupe-doux.webp`;
 const CONTACT_EMAIL = 'support@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
@@ -69,9 +70,11 @@ const STICKER_SIZES: Record<string, [number, number]> = {
  */
 const Sticker = ({name, className}: { name: string, className?: string }) => {
     const [width, height] = STICKER_SIZES[name] ?? [1, 1];
+    const element = useRef<HTMLImageElement>(null);
+    useStickerTilt(element);
 
     return (
-        <img className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/${name.includes('.') ? name : `${name}.webp`}`}
+        <img ref={element} className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/${name.includes('.') ? name : `${name}.webp`}`}
              width={width} height={height} alt="" aria-hidden="true" loading="lazy" decoding="async"
              draggable={false}/>
     );
@@ -238,28 +241,39 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
             return;
         }
         let frame: number | null = null;
-        // Where the nav sits in the layout, whatever its entrance or the opening's clip do to it on screen.
-        const update = () => {
-            frame = null;
+        let threshold = 0;
+        // Where the nav sits in the layout, whatever its entrance or the opening's clip do to it on
+        // screen. Measured once and on resize, never while scrolling: reading offsetTop at each frame
+        // makes the browser lay the page out again.
+        const measure = () => {
             let top = 0;
             for (let element: HTMLElement | null = nav; element; element = element.offsetParent as HTMLElement | null) {
                 top += element.offsetTop;
             }
-            setShown(window.scrollY > top + nav.offsetHeight);
+            threshold = top + nav.offsetHeight;
+        };
+        const update = () => {
+            frame = null;
+            setShown(window.scrollY > threshold);
         };
         const schedule = () => {
             if (frame === null) {
                 frame = requestAnimationFrame(update);
             }
         };
+        const resize = () => {
+            measure();
+            schedule();
+        };
 
+        measure();
         update();
         window.addEventListener('scroll', schedule, {passive: true});
-        window.addEventListener('resize', schedule, {passive: true});
+        window.addEventListener('resize', resize, {passive: true});
 
         return () => {
             window.removeEventListener('scroll', schedule);
-            window.removeEventListener('resize', schedule);
+            window.removeEventListener('resize', resize);
             if (frame !== null) {
                 cancelAnimationFrame(frame);
             }
@@ -480,22 +494,13 @@ const useRiseOnScroll = (root: RefObject<HTMLElement>) => {
     }, [root]);
 };
 
-const HeroVideo = () => {
-    const video = useRef<HTMLVideoElement>(null);
-
-    useEffect(() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            video.current?.pause();
-        }
-    }, []);
-
-    return (
-        <video ref={video} className={classes.heroVideo} autoPlay muted loop playsInline preload="metadata"
-               poster={`${ASSETS}/photos/hero-groupe.webp`} aria-hidden="true">
-            <source src={HERO_VIDEO} type="video/mp4"/>
-        </video>
-    );
-};
+// The hero's photo, already a little dimmer and flatter (hero-groupe-doux.webp) for the bright
+// windows and shirts not to fight the headline: no filter to redraw as it slides on scroll. No
+// video until one exists (hero.mp4 was never there: a request lost on each visit).
+const HeroVideo = () => (
+    <img className={classes.heroVideo} src={HERO_PHOTO} width={1920} height={1280} alt=""
+         aria-hidden="true" fetchPriority="high" decoding="async"/>
+);
 
 // How far the backdrop slides each way: the 2rem it overflows by (.feesRock).
 const BACKDROP_DRIFT = 32;
@@ -591,25 +596,49 @@ const FooterWordmark = () => {
         }
 
         const element = wordmark.current;
+        let frame: number | null = null;
+        let listening = false;
         const check = () => {
+            frame = null;
             const box = element.getBoundingClientRect();
             const page = element.closest('footer')?.previousElementSibling?.getBoundingClientRect();
             const top = Math.max(box.top, page?.bottom ?? -Infinity);
             const bottom = Math.min(box.bottom, window.innerHeight);
             if (box.height && (bottom - top) / box.height >= 0.3) {
                 setVisible(true);
-                window.removeEventListener('scroll', check);
-                window.removeEventListener('resize', check);
+                stop();
+                observer.disconnect();
             }
         };
-
-        window.addEventListener('scroll', check, {passive: true});
-        window.addEventListener('resize', check);
-        check();
+        const schedule = () => {
+            if (frame === null) {
+                frame = requestAnimationFrame(check);
+            }
+        };
+        const start = () => {
+            if (!listening) {
+                listening = true;
+                window.addEventListener('scroll', schedule, {passive: true});
+                window.addEventListener('resize', schedule);
+            }
+            schedule();
+        };
+        const stop = () => {
+            listening = false;
+            window.removeEventListener('scroll', schedule);
+            window.removeEventListener('resize', schedule);
+        };
+        // Measured only while the wordmark is near the screen, once a frame at most: reading its
+        // box at each scroll event lays the page out again, all the way down.
+        const observer = new IntersectionObserver(([entry]) => entry?.isIntersecting ? start() : stop(), {rootMargin: '200px 0px'});
+        observer.observe(element);
 
         return () => {
-            window.removeEventListener('scroll', check);
-            window.removeEventListener('resize', check);
+            observer.disconnect();
+            stop();
+            if (frame !== null) {
+                cancelAnimationFrame(frame);
+            }
         };
     }, [letters]);
 

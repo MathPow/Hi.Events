@@ -15,8 +15,8 @@ const INSCRIBED_RADIUS = 14;
 // before the wave fills it, then a pause, it draws in, and opens onto the page.
 const EMPTY_FOR = 100;
 const FILL_FOR = 450;
-// A slow network never holds the visitor on the opening.
-const MAX_WAIT = 8000;
+// A slow network never holds the visitor on the opening: the page shows by then, as it is.
+const MAX_WAIT = 1500;
 const PAUSE_FOR = 220;
 const SHRINK_FOR = 300;
 const SHRINK_SCALE = 0.7;
@@ -24,15 +24,16 @@ const SHRINK_SCALE = 0.7;
 const ZOOM_SPEED = 7;
 const RAMP_UP_FOR = 200;
 const FADE_FOR = 220;
-// The CSS steps the opening aside at 10s when no script took it over (.opening).
-const FALLBACK_AFTER = 10000;
+// The CSS steps the opening aside at 2.5s when no script took it over (.opening): on a slow
+// phone the script arrives late, and the page served is already there to read.
+const FALLBACK_AFTER = 2500;
 
 // The cream wave, in a 100 × 100 frame stretched over the mountain's.
 const WAVE_EMPTY = 'M 0 100 V 105 H 100 V 100 Z';
 const WAVE_FULL = 'M 0 0 H 100 V 100 H 0 Z';
 
 // What the window waits for, fetched with the page for the window to show it from the start.
-const POSTER = '/landing/photos/hero-groupe.webp';
+const POSTER = '/landing/photos/hero-groupe-doux.webp';
 
 const ICON_ID = 'landing-opening-icon';
 const SILHOUETTE_ID = 'landing-opening-silhouette';
@@ -93,7 +94,11 @@ export const Opening = memo(({onReveal, onDone}: { onReveal: () => void, onDone:
             }
         };
 
-        if (performance.now() > FALLBACK_AFTER) {
+        // A visitor who saves data, or on a slow connection, goes straight to the page.
+        const connection = (navigator as Navigator & { connection?: { saveData?: boolean, effectiveType?: string } }).connection;
+        const slowConnection = !!connection?.saveData || ['slow-2g', '2g', '3g'].includes(connection?.effectiveType ?? '');
+
+        if (performance.now() > FALLBACK_AFTER || slowConnection) {
             finish();
             return;
         }
