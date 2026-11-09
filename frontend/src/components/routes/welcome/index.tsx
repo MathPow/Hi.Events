@@ -600,7 +600,8 @@ const Welcome = () => {
                 <h1 className={classes.title}>{t`We couldn't set up your space`}</h1>
                 <p className={classes.subtitle}>{t`Something went wrong on our side. Your account is safe: try again in a moment.`}</p>
                 <div className={classes.actions}>
-                    <Button className={classes.darkButton} onClick={() => setOrganizerCreateFailed(false)}>
+                    <Button className={classes.darkButton} loading={organizersQuery.isFetching}
+                            onClick={() => organizersQuery.refetch().finally(() => setOrganizerCreateFailed(false))}>
                         {t`Try again`}
                     </Button>
                 </div>

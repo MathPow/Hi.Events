@@ -560,7 +560,7 @@ export const OrderSummaryAndProducts = () => {
             <HomepageInfoMessage
                 status="expired"
                 message={t`This order has expired`}
-                subtitle={t`Order #${order.public_id} was not completed and its tickets were released. You can start a new order from the event page.`}
+                subtitle={t`Order #${order.public_id} was not completed in time and its tickets were released. If you were charged, the payment is refunded automatically. You can start a new order from the event page.`}
                 link={eventHomepageUrl(event)}
                 linkText={t`Return to Event`}
             />

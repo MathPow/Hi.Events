@@ -25,6 +25,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const [cameraList, setCameraList] = useState<QrScanner.Camera[]>();
     const [processedAttendeeIds, setProcessedAttendeeIds] = useState<string[]>([]);
     const latestProcessedAttendeeIdsRef = useRef<string[]>([]);
+    const inFlightAttendeeIdRef = useRef<string | null>(null);
 
     const [currentAttendeeId, setCurrentAttendeeId] = useState<string | null>(null);
     const [debouncedAttendeeId] = useDebouncedValue(currentAttendeeId, 1000);
@@ -83,7 +84,10 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
             const latestProcessedAttendeeIds = latestProcessedAttendeeIdsRef.current;
             const alreadyScanned = latestProcessedAttendeeIds.includes(debouncedAttendeeId);
 
-            if (isScanFailed) {
+            // Occupe (ou ce billet est en cours d'enregistrement): on oublie cette lecture pour que
+            // le billet tenu devant la camera soit relu ensuite, sans faux « deja scanne ».
+            if (isScanFailed || isCheckingIn || inFlightAttendeeIdRef.current === debouncedAttendeeId) {
+                setCurrentAttendeeId(null);
                 return;
             }
 
@@ -91,7 +95,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 showError(t`You already scanned this ticket`);
 
                 setIsScanFailed(true);
-                setInterval(() => setIsScanFailed(false), 500);
+                setTimeout(() => setIsScanFailed(false), 500);
                 if (isSoundOn && scanErrorAudioRef.current) {
                     scanErrorAudioRef.current.play();
                 }
@@ -108,13 +112,17 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 // L'entree (ou son refus) est annoncee par l'ecran d'enregistrement, une fois la
                 // reponse du serveur recue: pas de vert ni de son de reussite avant.
                 const scannedId = debouncedAttendeeId;
+                inFlightAttendeeIdRef.current = scannedId;
                 setProcessedAttendeeIds(prevIds => [...prevIds, scannedId]);
                 setCurrentAttendeeId(null);
                 Promise.resolve(props.onAttendeeScanned(scannedId)).then((retryable) => {
                     if (retryable) {
                         setProcessedAttendeeIds(prevIds => prevIds.filter(id => id !== scannedId));
                     }
-                }).finally(() => setIsCheckingIn(false));
+                }).finally(() => {
+                    inFlightAttendeeIdRef.current = null;
+                    setIsCheckingIn(false);
+                });
             }
         }
     }, [debouncedAttendeeId]);

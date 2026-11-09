@@ -25,6 +25,8 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
             return;
         }
 
+        // Le meme refus deux fois de suite doit etre annonce de nouveau.
+        setMessage('');
         const {error} = await stripe.confirmPayment({
             elements,
             confirmParams: {
