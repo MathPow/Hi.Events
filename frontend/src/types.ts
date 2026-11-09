@@ -243,6 +243,8 @@ export interface EventSettings {
     attendee_details_collection_method?: AttendeeDetailsCollectionMethod;
     /** With a text, every ticket's attendee signs it at checkout (WaiverSignature). */
     waiver_text?: string | null;
+    // Chaque participant signe lui-meme (lien de son billet, ou a l'entree); l'acheteur, son billet seulement.
+    participants_sign_themselves?: boolean;
 
     // Payment settings
     offline_payment_instructions: string;

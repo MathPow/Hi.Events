@@ -131,6 +131,11 @@ class PendingSignatureService
      */
     private function pendingDocuments(AttendeeDomainObject $attendee): Collection
     {
+        // An example attendee (the email previews) has no copies.
+        if ($attendee->getId() === 0) {
+            return collect();
+        }
+
         return $this->documentSignatureRepository->findWhere([
             DocumentSignatureDomainObjectAbstract::ATTENDEE_ID => $attendee->getId(),
             DocumentSignatureDomainObjectAbstract::SIGNING_MODE => DocumentSigningMode::ONLINE->value,

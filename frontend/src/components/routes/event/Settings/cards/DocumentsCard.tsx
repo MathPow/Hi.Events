@@ -2,7 +2,9 @@ import {useState} from "react";
 import {Link} from "react-router";
 import {t} from "@lingui/macro";
 import {Button, Skeleton} from "@mantine/core";
-import {IdParam} from "../../../../../types.ts";
+import {EventSettings, IdParam} from "../../../../../types.ts";
+import {useUpdateEventSettings} from "../../../../../mutations/useUpdateEventSettings.ts";
+import {useAutosaveForm} from "../useAutosaveForm.ts";
 import {OrganizerDocument} from "../../../../../api/organizerDocument.client.ts";
 import {documentAgeLimit} from "../../../../common/OrganizerDocument/blocks.ts";
 import {useGetEvent} from "../../../../../queries/useGetEvent.ts";
@@ -18,7 +20,14 @@ import extra from "../EventSettings.module.scss";
  * « Documents à signer »: the organizer's documents (Documents page), each switched on or off for this
  * event, the same link as « Événements liés » in the document. Writing them stays in Documents.
  */
-export const DocumentsCard = ({eventId}: { eventId: IdParam }) => {
+export const DocumentsCard = ({eventId, settings}: { eventId: IdParam, settings: EventSettings }) => {
+    const updateSettings = useUpdateEventSettings();
+    const {form, choose} = useAutosaveForm<{ participants_sign_themselves: boolean }>({
+        key: 'documents-signing',
+        initialValues: {participants_sign_themselves: settings.participants_sign_themselves ?? false},
+        save: (changes) => updateSettings.mutateAsync({eventId, eventSettings: changes as Partial<EventSettings>}),
+    });
+    const perOrder = settings.attendee_details_collection_method === 'PER_ORDER';
     const {data: event} = useGetEvent(eventId);
     const organizerId = event?.organizer?.id ?? event?.organizer_id;
     const documentsQuery = useGetOrganizerDocuments(organizerId);
@@ -94,6 +103,17 @@ export const DocumentsCard = ({eventId}: { eventId: IdParam }) => {
                     />
                 ))
             )}
+
+            {/* Qui signe: l'acheteur pour tout le monde, ou chaque participant pour lui-meme. */}
+            <ToggleRow
+                label={t`Each participant signs for themselves`}
+                hint={perOrder
+                    ? t`Only when attendee information is asked for each ticket (At payment).`
+                    : t`The buyer signs only their own ticket. The other participants get a link by email to sign, or sign at the entrance before being checked in.`}
+                checked={!perOrder && form.values.participants_sign_themselves}
+                disabled={perOrder}
+                onChange={(checked) => choose('participants_sign_themselves', checked)}
+            />
         </SettingsCard>
     );
 };
