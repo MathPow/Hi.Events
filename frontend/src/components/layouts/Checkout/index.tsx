@@ -5,7 +5,7 @@ import {t} from "@lingui/macro";
 import {Countdown} from "../../common/Countdown";
 import {ActionIcon, Button, Group, Modal, Tooltip} from "@mantine/core";
 import {IconArrowLeft, IconPrinter, IconReceipt} from "@tabler/icons-react";
-import {eventHomepagePath, eventHomepageUrl} from "../../../utilites/urlHelper.ts";
+import {eventCheckoutPath, eventHomepagePath, eventHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {ShareComponent} from "../../common/ShareIcon";
 import {AddToEventCalendarButton} from "../../common/AddEventToCalendarButton";
 import {ProgressStepper} from "../../common/ProgressStepper";
@@ -32,7 +32,7 @@ const DEHORS_ACCENT = '#fa7853';
 
 const Checkout = () => {
     const {eventId, orderShortId} = useParams();
-    const {data: order} = useGetOrderPublic(eventId, orderShortId, ['event']);
+    const {data: order, refetch: refetchOrder} = useGetOrderPublic(eventId, orderShortId, ['event']);
     const event = order?.event;
     const {data: publicEvent} = useGetEventPublic(eventId, !!eventId);
     const navigate = useNavigate();
@@ -110,11 +110,25 @@ const Checkout = () => {
                 orderShortId: String(orderShortId),
             });
         } catch (error: any) {
-            // 409: la commande n'est deja plus reservee (annulee, mais la reponse s'est perdue, ou
-            // expiree): rien ne retient plus l'acheteur. Sinon elle tient toujours: on reste.
+            // 409: la commande n'est deja plus reservee. Payee entre-temps (autre onglet, webhook):
+            // on mene a la confirmation. Annulee (reponse perdue) ou expiree: rien ne retient plus
+            // l'acheteur. Toute autre erreur: elle tient toujours, on reste.
             if (error?.response?.status !== 409) {
                 showError(t`Failed to abandon order. Please try again.`);
                 setIsAbandoning(false);
+                return;
+            }
+
+            const {data: current} = await refetchOrder();
+            if (current?.status === 'COMPLETED' || current?.status === 'AWAITING_OFFLINE_PAYMENT') {
+                setShowAbandonDialog(false);
+                setIsAbandoning(false);
+                if (blocker.state === 'blocked') {
+                    blocker.reset();
+                }
+                setPendingNavigation(null);
+                showInfo(t`This order was already paid, so it was not cancelled.`);
+                navigate(eventCheckoutPath(eventId, orderShortId, 'summary'));
                 return;
             }
         }

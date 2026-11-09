@@ -285,10 +285,13 @@ const CheckIn = () => {
                 const {data} = await publicCheckInClient.getCheckInListAttendee(checkInListShortId, attendeePublicId);
                 attendee = data;
             } catch (error) {
-                const notOnList = (error as AxiosError)?.response?.status === 404;
+                const status = (error as AxiosError)?.response?.status;
+                const notOnList = status === 404;
+                // Comme pour l'enregistrement: seuls le reseau et les pannes du serveur se reessaient.
+                const transient = !status || status >= 500;
                 reportProblem(notOnList ? t`This ticket is not on this list.` : t`Unable to fetch attendee`);
                 playErrorSound();
-                return settle(notOnList ? 'done' : 'retry');
+                return settle(transient ? 'retry' : 'done');
             }
 
             if (!attendee) {

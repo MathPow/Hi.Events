@@ -33,6 +33,9 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
 
     const [currentAttendeeId, setCurrentAttendeeId] = useState<string | null>(null);
     const [debouncedAttendeeId] = useDebouncedValue(currentAttendeeId, 1000);
+    // Relance le traitement du billet tenu devant la camera (sa valeur ne change pas apres une
+    // pause ou un enregistrement en cours, donc le debounce seul ne le relirait jamais).
+    const [rescanTick, setRescanTick] = useState(0);
     const [isScanFailed, setIsScanFailed] = useState(false);
 
     const scanErrorAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -133,16 +136,20 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                     if (outcome === 'busy') {
                         forget();
                     } else if (outcome === 'retry') {
-                        setTimeout(forget, RETRY_PAUSE_MS);
+                        setTimeout(() => {
+                            forget();
+                            setRescanTick(tick => tick + 1);
+                        }, RETRY_PAUSE_MS);
                     }
                 }).finally(() => {
                     inFlightAttendeeIdRef.current = null;
                     scannedAtRef.current.set(scannedId, Date.now());
                     setIsCheckingIn(false);
+                    setRescanTick(tick => tick + 1);
                 });
             }
         }
-    }, [debouncedAttendeeId]);
+    }, [debouncedAttendeeId, rescanTick]);
 
     const stopScanner = () => {
         if (qrScannerRef.current) {
