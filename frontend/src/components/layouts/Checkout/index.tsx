@@ -119,15 +119,20 @@ const Checkout = () => {
                 return;
             }
 
-            const {data: current} = await refetchOrder();
-            if (current?.status === 'COMPLETED' || current?.status === 'AWAITING_OFFLINE_PAYMENT') {
+            // Relecture ratee: on ne sait pas, donc on ne dit pas « annulee »; la page de la commande
+            // se met a jour d'elle-meme et dira ce qu'il en est.
+            const {data: current, isError: reloadFailed} = await refetchOrder();
+            const paid = current?.status === 'COMPLETED' || current?.status === 'AWAITING_OFFLINE_PAYMENT';
+            if (paid || reloadFailed) {
                 setShowAbandonDialog(false);
                 setIsAbandoning(false);
                 if (blocker.state === 'blocked') {
                     blocker.reset();
                 }
                 setPendingNavigation(null);
-                showInfo(t`This order was already paid, so it was not cancelled.`);
+                if (paid) {
+                    showInfo(t`This order was already paid, so it was not cancelled.`);
+                }
                 navigate(eventCheckoutPath(eventId, orderShortId, 'summary'));
                 return;
             }

@@ -16,6 +16,7 @@ interface QRScannerComponentProps {
 
 const RECENT_SCAN_MS = 6000;
 const RETRY_PAUSE_MS = 2000;
+const BUSY_PAUSE_MS = 400;
 
 export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -30,6 +31,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const latestProcessedAttendeeIdsRef = useRef<string[]>([]);
     const inFlightAttendeeIdRef = useRef<string | null>(null);
     const scannedAtRef = useRef(new Map<string, number>());
+    const lastHandledIdRef = useRef<string | null>(null);
 
     const [currentAttendeeId, setCurrentAttendeeId] = useState<string | null>(null);
     const [debouncedAttendeeId] = useDebouncedValue(currentAttendeeId, 1000);
@@ -87,6 +89,9 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     };
 
     useEffect(() => {
+        if (!debouncedAttendeeId) {
+            lastHandledIdRef.current = null;
+        }
         if (debouncedAttendeeId) {
             const latestProcessedAttendeeIds = latestProcessedAttendeeIdsRef.current;
             const alreadyScanned = latestProcessedAttendeeIds.includes(debouncedAttendeeId);
@@ -102,6 +107,14 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
             const scannedAt = scannedAtRef.current.get(debouncedAttendeeId);
             if (alreadyScanned && scannedAt && Date.now() - scannedAt < RECENT_SCAN_MS) {
                 setCurrentAttendeeId(null);
+                return;
+            }
+
+            // Une relance (rescanTick) n'est pas une nouvelle lecture: pas de « deja scanne » pour un
+            // billet qui n'est peut-etre plus devant la camera.
+            const freshRead = lastHandledIdRef.current !== debouncedAttendeeId;
+            lastHandledIdRef.current = debouncedAttendeeId;
+            if (alreadyScanned && !freshRead) {
                 return;
             }
 
@@ -132,9 +145,14 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 setCurrentAttendeeId(null);
                 // Non traite: relu tout de suite; echec passager: relu apres une courte pause.
                 const forget = () => setProcessedAttendeeIds(prevIds => prevIds.filter(id => id !== scannedId));
+                let busy = false;
                 Promise.resolve(props.onAttendeeScanned(scannedId)).then((outcome) => {
                     if (outcome === 'busy') {
+                        // Un autre billet est en cours (lecteur USB): on relit un peu plus tard,
+                        // pas en boucle a chaque rendu.
+                        busy = true;
                         forget();
+                        setTimeout(() => setRescanTick(tick => tick + 1), BUSY_PAUSE_MS);
                     } else if (outcome === 'retry') {
                         setTimeout(() => {
                             forget();
@@ -145,7 +163,9 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                     inFlightAttendeeIdRef.current = null;
                     scannedAtRef.current.set(scannedId, Date.now());
                     setIsCheckingIn(false);
-                    setRescanTick(tick => tick + 1);
+                    if (!busy) {
+                        setRescanTick(tick => tick + 1);
+                    }
                 });
             }
         }
