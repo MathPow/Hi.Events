@@ -142,6 +142,21 @@ const Payment = () => {
         .map(attendee => `${attendee.first_name ?? ''} ${attendee.last_name ?? ''}`.trim())
         .filter(Boolean);
     const buyer = [`${order.first_name ?? ''} ${order.last_name ?? ''}`.trim(), order.email].filter(Boolean).join(' · ');
+    // Ou partira chaque billet, regroupe par courriel: une faute de frappe saute aux yeux avant
+    // de payer, sans champ de confirmation a remplir.
+    const ticketRecipients = Object.values((order.attendees ?? []).reduce((byEmail, attendee) => {
+        const email = (attendee.email ?? '').trim();
+        if (!email) {
+            return byEmail;
+        }
+        const key = email.toLowerCase();
+        const name = `${attendee.first_name ?? ''} ${attendee.last_name ?? ''}`.trim();
+        byEmail[key] = byEmail[key] ?? {email, names: []};
+        if (name) {
+            byEmail[key].names.push(name);
+        }
+        return byEmail;
+    }, {} as Record<string, { email: string, names: string[] }>));
     // Retour a l'etape des details, remplie avec ce qui a ete envoye (CompleteOrderHandler l'accepte
     // tant que rien n'est paye).
     const editDetails = (
@@ -157,7 +172,21 @@ const Payment = () => {
             <div className={classes.completedSteps}>
                 <CheckoutSection number={1} title={t`Your contact details`} subtitle={buyer} action={editDetails}/>
                 {attendeeNames.length > 0 && (
-                    <CheckoutSection number={2} title={t`Attendees`} subtitle={attendeeNames.join(', ')} action={editDetails}/>
+                    <CheckoutSection number={2} title={t`Attendees`} subtitle={attendeeNames.join(', ')} action={editDetails}>
+                        {ticketRecipients.length > 0 && (
+                            <div className={classes.recipients}>
+                                <p className={classes.recipientsTitle}>{t`Tickets will be sent to:`}</p>
+                                <ul className={classes.recipientsList}>
+                                    {ticketRecipients.map(({email, names}) => (
+                                        <li key={email}>
+                                            <span className={classes.recipientEmail}>{email}</span>
+                                            {names.length > 0 && <span className={classes.recipientNames}>{names.join(', ')}</span>}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </CheckoutSection>
                 )}
             </div>
 
