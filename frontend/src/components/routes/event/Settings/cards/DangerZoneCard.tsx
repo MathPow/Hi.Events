@@ -58,7 +58,10 @@ export const DangerZoneCard = ({eventId, event}: { eventId: IdParam, event: Even
             showSuccess(isArchived ? t`Event restored successfully` : t`Event archived successfully`);
             close();
         },
-        onError: (error: any) => showStatusChangeError(error, t`Failed to update event status`),
+        onError: (error: any) => showStatusChangeError(error, t`Failed to update event status`, {
+            eventId,
+            organizerId: event.organizer?.id ?? event.organizer_id,
+        }),
     });
 
     const remove = () => deleteMutation.mutate({eventId}, {

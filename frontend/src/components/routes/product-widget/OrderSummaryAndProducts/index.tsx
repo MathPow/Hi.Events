@@ -5,7 +5,7 @@ import {IconCheck} from "@tabler/icons-react";
 import {CSSProperties, ReactNode, useEffect, useState} from "react";
 import {useQueryClient} from "@tanstack/react-query";
 
-import {GET_ORDER_PUBLIC_QUERY_KEY, isOrderSettled, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
+import {GET_ORDER_PUBLIC_QUERY_KEY, isOrderLapsed, isOrderSettled, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {eventCheckoutPath, eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
 import {isSsr} from "../../../../utilites/helpers.ts";
 import {eventLocation, formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
@@ -553,6 +553,18 @@ export const OrderSummaryAndProducts = () => {
 
     if (paymentFailed) {
         return <LoadingMask/>;
+    }
+
+    if (isOrderLapsed(order)) {
+        return (
+            <HomepageInfoMessage
+                status="expired"
+                message={t`This order has expired`}
+                subtitle={t`Order #${order.public_id} was not completed and its tickets were released. You can start a new order from the event page.`}
+                link={eventHomepageUrl(event)}
+                linkText={t`Return to Event`}
+            />
+        );
     }
 
     if (!isOrderSettled(order)) {

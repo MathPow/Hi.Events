@@ -92,6 +92,19 @@ class EventPublishReadinessServiceTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function test_rejects_a_paid_event_with_no_payment_method(): void
+    {
+        $this->givenProductPriced(25);
+        $this->givenProviders([]);
+
+        try {
+            $this->service->assertCanPublish($this->event);
+            $this->fail('Expected EventNotReadyToPublishException');
+        } catch (EventNotReadyToPublishException $e) {
+            $this->assertSame(EventNotReadyToPublishException::NO_PAYMENT_METHOD, $e->reason);
+        }
+    }
+
     public function test_rejects_a_paid_event_when_nobody_can_be_paid(): void
     {
         $this->givenProductPriced(25);

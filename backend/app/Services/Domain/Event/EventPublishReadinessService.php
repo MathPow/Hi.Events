@@ -56,6 +56,13 @@ class EventPublishReadinessService
         $settings = $this->eventSettingsRepository->findFirstWhere(['event_id' => $event->getId()]);
         $providers = (array) ($settings?->getPaymentProviders() ?? [PaymentProviders::STRIPE->value]);
 
+        if ($providers === []) {
+            throw new EventNotReadyToPublishException(
+                __('Turn on a payment method for this event before publishing it: buyers could not pay for its tickets.'),
+                EventNotReadyToPublishException::NO_PAYMENT_METHOD,
+            );
+        }
+
         if (in_array(PaymentProviders::OFFLINE->value, $providers, true)
             || ! in_array(PaymentProviders::STRIPE->value, $providers, true)) {
             return;

@@ -8,7 +8,8 @@ import {QrScannerControls} from './QrScannerControls';
 import {PermissionDeniedMessage} from './PermissionDeniedMessage';
 
 interface QRScannerComponentProps {
-    onAttendeeScanned: (attendeePublicId: string) => void;
+    // true: echec passager, le billet peut etre rescanne.
+    onAttendeeScanned: (attendeePublicId: string) => void | Promise<boolean | void>;
     onClose: () => void;
     isSoundOn?: boolean;
 }
@@ -106,10 +107,14 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
 
                 // L'entree (ou son refus) est annoncee par l'ecran d'enregistrement, une fois la
                 // reponse du serveur recue: pas de vert ni de son de reussite avant.
-                props.onAttendeeScanned(debouncedAttendeeId);
-                setIsCheckingIn(false);
-                setProcessedAttendeeIds(prevIds => [...prevIds, debouncedAttendeeId]);
+                const scannedId = debouncedAttendeeId;
+                setProcessedAttendeeIds(prevIds => [...prevIds, scannedId]);
                 setCurrentAttendeeId(null);
+                Promise.resolve(props.onAttendeeScanned(scannedId)).then((retryable) => {
+                    if (retryable) {
+                        setProcessedAttendeeIds(prevIds => prevIds.filter(id => id !== scannedId));
+                    }
+                }).finally(() => setIsCheckingIn(false));
             }
         }
     }, [debouncedAttendeeId]);

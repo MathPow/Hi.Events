@@ -84,10 +84,6 @@ export const PaymentReturn = () => {
                 {!cannotConfirmPayment && (
                     <HomepageInfoMessage
                         status="processing"
-                        {...((!shouldPoll && paymentIntentQuery.isFetched) ? {
-                            link: eventCheckoutPath(eventId, orderShortId, 'payment'),
-                            linkText: t`Try again`,
-                        } : {})}
                         message={(
                             <>
                                 {(!shouldPoll && paymentIntentQuery.isFetched) && t`We could not process your payment. Please try again or contact support.`}

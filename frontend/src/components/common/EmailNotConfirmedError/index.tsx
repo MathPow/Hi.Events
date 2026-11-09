@@ -62,6 +62,13 @@ export const showStatusChangeError = (error: any, fallback: string, context: Sta
         return;
     }
 
+    if (code === 'no_payment_method') {
+        showError(<NotReadyNotice message={message} linkText={t`Payment settings`}
+                                  linkTo={context.eventId ? `/manage/event/${context.eventId}/settings/payment` : undefined}/>,
+            undefined, false);
+        return;
+    }
+
     if (code === 'payments_not_ready') {
         showError(<NotReadyNotice message={message} linkText={t`Connect Stripe`}
                                   linkTo={context.organizerId ? `/manage/organizer/${context.organizerId}/settings/payments` : undefined}/>,

@@ -6,10 +6,14 @@ import {isSsr} from "../utilites/helpers.ts";
 
 export const GET_ORDER_PUBLIC_QUERY_KEY = "getOrderPublic";
 
-const SETTLED_STATUSES = ['COMPLETED', 'CANCELLED', 'AWAITING_OFFLINE_PAYMENT'];
+const SETTLED_STATUSES = ['COMPLETED', 'CANCELLED', 'AWAITING_OFFLINE_PAYMENT', 'ABANDONED'];
+
+// Une commande abandonnee ne bougera plus: on arrete d'attendre. (Une reservation expiree reste
+// en attente: un paiement Stripe deja fait peut encore la confirmer.)
+export const isOrderLapsed = (order?: Order) => order?.status === 'ABANDONED';
 
 export const isOrderSettled = (order?: Order) => !!order
-    && (SETTLED_STATUSES.includes(order.status) || order.payment_status === 'PAYMENT_FAILED');
+    && (SETTLED_STATUSES.includes(order.status) || order.payment_status === 'PAYMENT_FAILED' || isOrderLapsed(order));
 
 const getSessionIdentifierFromUrl = (): string | null => {
     if (isSsr()) return null;

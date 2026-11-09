@@ -150,13 +150,15 @@ const CheckIn = () => {
         return [product, bib ? t`Bib ${bib}` : null].filter(Boolean).join(' · ');
     };
 
-    const handleCheckInAction = (attendee: Attendee, action: 'check-in' | 'check-in-and-mark-order-as-paid') => {
+    // Resout a true quand l'echec vient du reseau ou du serveur: le meme billet peut etre rescanne.
+    const handleCheckInAction = (attendee: Attendee, action: 'check-in' | 'check-in-and-mark-order-as-paid') => new Promise<boolean>((resolve) => {
         checkInMutation.mutate({
             checkInListShortId: checkInListShortId,
             attendeePublicId: attendee.public_id,
             action: action,
         }, {
             onSuccess: ({errors}) => {
+                resolve(false);
                 if (errors && errors[attendee.public_id]) {
                     reportProblem(errors[attendee.public_id]);
                     playErrorSound();
@@ -175,6 +177,9 @@ const CheckIn = () => {
             },
             onError: (error) => {
                 playErrorSound();
+                const retryable = !networkStatus.online || !(error instanceof AxiosError)
+                    || !error.response || error.response.status >= 500;
+                resolve(retryable);
                 if (!networkStatus.online) {
                     reportProblem(t`You are offline`);
                     return;
@@ -182,10 +187,12 @@ const CheckIn = () => {
 
                 if (error instanceof AxiosError) {
                     reportProblem(error?.response?.data?.message || t`Unable to check in attendee`);
+                } else {
+                    reportProblem(t`Unable to check in attendee`);
                 }
             }
         });
-    };
+    });
 
     const handleCheckInToggle = (attendee: Attendee) => {
         if (attendee.check_in) {
@@ -231,10 +238,11 @@ const CheckIn = () => {
         handleCheckInAction(attendee, 'check-in');
     };
 
-    const handleQrCheckIn = useCallback(async (attendeePublicId: string) => {
+    // true: l'echec est passager (reseau, serveur), le scanner laissera rescanner ce billet.
+    const handleQrCheckIn = useCallback(async (attendeePublicId: string): Promise<boolean> => {
         // Prevent processing if already handling a request
         if (isProcessingRef.current) {
-            return;
+            return false;
         }
 
         // Check if this barcode was recently processed (within last 3 seconds)
@@ -243,7 +251,7 @@ const CheckIn = () => {
             now - lastScanTimeRef.current < 3000) {
             reportProblem(t`This ticket was just scanned. Please wait before scanning again.`);
             playErrorSound();
-            return;
+            return false;
         }
 
         isProcessingRef.current = true;
@@ -257,19 +265,18 @@ const CheckIn = () => {
                 const {data} = await publicCheckInClient.getCheckInListAttendee(checkInListShortId, attendeePublicId);
                 attendee = data;
             } catch (error) {
-                reportProblem((error as AxiosError)?.response?.status === 404
-                    ? t`This ticket is not on this list.`
-                    : t`Unable to fetch attendee`);
+                const notOnList = (error as AxiosError)?.response?.status === 404;
+                reportProblem(notOnList ? t`This ticket is not on this list.` : t`Unable to fetch attendee`);
                 playErrorSound();
                 isProcessingRef.current = false;
-                return;
+                return !notOnList;
             }
 
             if (!attendee) {
                 reportProblem(t`Attendee not found`);
                 playErrorSound();
                 isProcessingRef.current = false;
-                return;
+                return false;
             }
         }
 
@@ -279,7 +286,7 @@ const CheckIn = () => {
             playErrorSound();
             processedBarcodesRef.current.add(attendeePublicId);
             isProcessingRef.current = false;
-            return;
+            return false;
         }
 
         const isAttendeeAwaitingPayment = attendee.status === 'AWAITING_PAYMENT';
@@ -288,14 +295,14 @@ const CheckIn = () => {
             setSelectedAttendee(attendee);
             checkInModalHandlers.open();
             isProcessingRef.current = false;
-            return;
+            return false;
         }
 
         if (!allowOrdersAwaitingOfflinePaymentToCheckIn && isAttendeeAwaitingPayment) {
             reportProblem(t`You cannot check in attendees with unpaid orders. This setting can be changed in the event settings.`);
             playErrorSound();
             isProcessingRef.current = false;
-            return;
+            return false;
         }
 
         // Add to processed set before making the request
@@ -306,8 +313,12 @@ const CheckIn = () => {
             processedBarcodesRef.current.delete(attendeePublicId);
         }, 10000);
 
-        await handleCheckInAction(attendee, 'check-in');
+        const retryable = await handleCheckInAction(attendee, 'check-in');
+        if (retryable) {
+            processedBarcodesRef.current.delete(attendeePublicId);
+        }
         isProcessingRef.current = false;
+        return retryable;
     }, [attendees, checkInListShortId, allowOrdersAwaitingOfflinePaymentToCheckIn, checkInModalHandlers, handleCheckInAction, playErrorSound]);
 
 
