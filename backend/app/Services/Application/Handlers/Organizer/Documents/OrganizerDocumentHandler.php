@@ -9,6 +9,7 @@ use HiEvents\DomainObjects\OrganizerDocumentDomainObject;
 use HiEvents\Repository\Interfaces\OrganizerDocumentRepositoryInterface;
 use HiEvents\Services\Domain\Document\DocumentBlocks;
 use HiEvents\Services\Domain\Document\DocumentTemplates;
+use HiEvents\Services\Domain\Document\Import\ImportedDocument;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
@@ -58,6 +59,25 @@ class OrganizerDocumentHandler
             OrganizerDocumentDomainObjectAbstract::SIGNING_MODE => DocumentSigningMode::ONLINE->value,
             OrganizerDocumentDomainObjectAbstract::AUDIENCE => $made['audience'],
             OrganizerDocumentDomainObjectAbstract::TEMPLATE => $template,
+        ]);
+
+        return $this->get($organizerId, $document->getId());
+    }
+
+    /**
+     * A document rebuilt from the organizer's PDF.
+     *
+     * @throws ValidationException
+     */
+    public function createImported(int $organizerId, ImportedDocument $imported): OrganizerDocumentDomainObject
+    {
+        $document = $this->documentRepository->create([
+            OrganizerDocumentDomainObjectAbstract::ORGANIZER_ID => $organizerId,
+            OrganizerDocumentDomainObjectAbstract::TITLE => mb_substr($imported->title, 0, self::TITLE_MAX_LENGTH),
+            OrganizerDocumentDomainObjectAbstract::BLOCKS => DocumentBlocks::normalize($imported->blocks),
+            OrganizerDocumentDomainObjectAbstract::SIGNING_MODE => DocumentSigningMode::ONLINE->value,
+            OrganizerDocumentDomainObjectAbstract::AUDIENCE => DocumentAudience::from($imported->audience)->value,
+            OrganizerDocumentDomainObjectAbstract::TEMPLATE => null,
         ]);
 
         return $this->get($organizerId, $document->getId());

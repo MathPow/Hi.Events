@@ -230,6 +230,68 @@
   font-weight: 700;
 }
 
+// « Import a PDF », under the templates of the « New document » popup.
+.importChoice {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem 1.125rem;
+  border: 2px dashed var(--dehors-trait, rgb(227 173 146 / 0.55));
+  border-radius: 20px;
+  color: var(--dehors-brun, #352924);
+  font: inherit;
+  text-align: left;
+  background: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgb(250 120 83 / 0.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dehors-orange, #fa7853);
+    outline-offset: 2px;
+  }
+
+  > svg:last-child {
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--dehors-terracotta, #c47762);
+  }
+}
+
+.importChoiceText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  span {
+    color: var(--dehors-texte-doux, rgb(53 41 36 / 0.7));
+    font-size: 0.875rem;
+  }
+}
+
+.importing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0 0.5rem;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.importingNote {
+  color: var(--dehors-texte-doux, rgb(53 41 36 / 0.7));
+  font-size: 0.875rem;
+}
+
 // Figma: a yellow box with a warning sign (no longer looks like an « add » button).
 .legal {
   display: flex;

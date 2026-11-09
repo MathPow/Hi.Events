@@ -7,13 +7,14 @@ import {
     IconDots,
     IconDownload,
     IconFileText,
+    IconFileUpload,
     IconAlertTriangle,
     IconPencil,
     IconPlus,
     IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import {useState} from "react";
+import {ChangeEvent, useRef, useState} from "react";
 import {PageBody} from "../../../common/PageBody";
 import {SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import {PageTitle} from "../../../common/PageTitle";
@@ -22,6 +23,7 @@ import {
     useCreateOrganizerDocument,
     useDeleteOrganizerDocument,
     useDuplicateOrganizerDocument,
+    useImportOrganizerDocumentPdf,
 } from "../../../../mutations/useOrganizerDocumentMutations.ts";
 import {DocumentTemplateKey, OrganizerDocument} from "../../../../api/organizerDocument.client.ts";
 import {exportDocumentPdf} from "./exportDocumentPdf.ts";
@@ -32,6 +34,8 @@ import {getClientLocale} from "../../../../locales.ts";
 import {Modal} from "../../../common/Modal";
 import {DocumentThumbnail} from "./DocumentThumbnail.tsx";
 import classes from "./Documents.module.scss";
+
+const MAX_PDF_BYTES = 10 * 1024 * 1024;
 
 const TEMPLATES: DocumentTemplateKey[] = ['parental_consent', 'liability_waiver', 'medical_form', 'photo_consent', 'blank'];
 
@@ -92,6 +96,9 @@ const Documents = () => {
     const {data: documents, isLoading} = useGetOrganizerDocuments(organizerId);
     const createDocument = useCreateOrganizerDocument();
     const [choosing, setChoosing] = useState(false);
+    const importPdf = useImportOrganizerDocumentPdf();
+    const [importedBlocks, setImportedBlocks] = useState(0);
+    const fileInput = useRef<HTMLInputElement>(null);
     // The template being created, for its card's spinner (undefined: none).
     const pendingKey = createDocument.isPending ? createDocument.variables?.template : undefined;
 
@@ -102,14 +109,58 @@ const Documents = () => {
         onError: () => showError(t`The document could not be created. Please try again.`),
     });
 
+    const pickPdf = () => fileInput.current?.click();
+
+    const onPdfChosen = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.currentTarget.files?.[0];
+        event.currentTarget.value = '';
+        if (!file) {
+            return;
+        }
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            showError(t`Choose a PDF file.`);
+            return;
+        }
+        if (file.size > MAX_PDF_BYTES) {
+            showError(t`The PDF must be 10 MB or less.`);
+            return;
+        }
+        setChoosing(false);
+        setImportedBlocks(0);
+        importPdf.mutate({organizerId, file, onProgress: setImportedBlocks}, {
+            onSuccess: (document) => {
+                showSuccess(t`Your PDF was rebuilt. Read it over before linking it to an event.`);
+                navigate(editorPath(document.id));
+            },
+            onError: (error) => showError(error.message || t`The PDF could not be imported. Please try again.`),
+        });
+    };
+
     return (
         <PageBody>
+            <input
+                ref={fileInput}
+                type="file"
+                accept="application/pdf,.pdf"
+                hidden
+                onChange={onPdfChosen}
+            />
             <PageTitle
                 subheading={t`Waivers, consent forms and other documents for your participants to sign.`}
                 actions={(
-                    <Button leftSection={<IconPlus size={18}/>} onClick={() => setChoosing(true)}>
-                        {t`New document`}
-                    </Button>
+                    <>
+                        <Button
+                            variant="outline"
+                            leftSection={<IconFileUpload size={18}/>}
+                            onClick={pickPdf}
+                            loading={importPdf.isPending}
+                        >
+                            {t`Import a PDF`}
+                        </Button>
+                        <Button leftSection={<IconPlus size={18}/>} onClick={() => setChoosing(true)}>
+                            {t`New document`}
+                        </Button>
+                    </>
                 )}
             >
                 {t`Documents`}
@@ -121,6 +172,34 @@ const Documents = () => {
                     <Trans>Start from a template, then adapt it to your event.</Trans>
                 </p>
                 <TemplateChoices onPick={create} pendingKey={pendingKey} compact/>
+                <button type="button" className={classes.importChoice} onClick={pickPdf}>
+                    <IconFileUpload size={22} stroke={1.5}/>
+                    <span className={classes.importChoiceText}>
+                        <strong>{t`Import a PDF`}</strong>
+                        <span>{t`You already have your form? The assistant rebuilds it here, ready to sign online.`}</span>
+                    </span>
+                    <IconArrowRight size={16}/>
+                </button>
+            </Modal>
+
+            {/* The assistant reads the PDF: it can take a minute, so the page waits with it. */}
+            <Modal
+                opened={importPdf.isPending}
+                onClose={() => undefined}
+                withCloseButton={false}
+                closeOnClickOutside={false}
+                closeOnEscape={false}
+                heading={t`Importing your PDF`}
+            >
+                <div className={classes.importing}>
+                    <Loader size="md" color="var(--dehors-brun)"/>
+                    <p>
+                        {importedBlocks > 0
+                            ? t`The assistant is rebuilding your document… ${importedBlocks} blocks so far.`
+                            : t`The assistant is reading your PDF… This can take up to a minute.`}
+                    </p>
+                    <p className={classes.importingNote}>{t`Keep this page open.`}</p>
+                </div>
             </Modal>
 
             <h2 className={classes.sectionTitle}>{t`Your documents`}</h2>
@@ -128,7 +207,7 @@ const Documents = () => {
             {!isLoading && !documents?.length && (
                 <div className={classes.empty}>
                     <IconFileText size={28} stroke={1.5}/>
-                    <p><Trans>No documents yet. Start from one of the templates below.</Trans></p>
+                    <p><Trans>No documents yet. Start from one of the templates below, or import your own PDF.</Trans></p>
                 </div>
             )}
             {!!documents?.length && (

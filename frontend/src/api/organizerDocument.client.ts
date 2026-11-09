@@ -2,6 +2,7 @@ import {JSONContent} from "@tiptap/core";
 import {api} from "./client";
 import {publicApi} from "./public-client.ts";
 import {IdParam} from "../types.ts";
+import {getConfig} from "../utilites/config.ts";
 
 // Les blocs d'un document, comme l'editeur les enregistre (DocumentBlocks cote serveur).
 export type DocumentBlockType =
@@ -91,6 +92,51 @@ export const organizerDocumentClient = {
     create: async (organizerId: IdParam, template: DocumentTemplateKey | null) => {
         const response = await api.post<{ data: OrganizerDocument }>(`organizers/${organizerId}/documents`, {template});
         return response.data.data;
+    },
+
+    // The assistant rebuilds the PDF as a document. The answer streams (NDJSON) so a long read
+    // isn't cut by the proxy: progress lines with the blocks written so far, then the document.
+    importPdf: async (organizerId: IdParam, file: File, onProgress: (blocks: number) => void): Promise<OrganizerDocument> => {
+        const body = new FormData();
+        body.append('file', file);
+        const response = await fetch(`${getConfig('VITE_API_URL_CLIENT')}/organizers/${organizerId}/documents/import`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {Accept: 'application/x-ndjson, application/json'},
+            body,
+        });
+        if (!response.ok || !response.body) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error?.errors?.file?.[0] ?? error?.message ?? '');
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        for (; ;) {
+            const {done, value} = await reader.read();
+            if (done) {
+                break;
+            }
+            buffer += decoder.decode(value, {stream: true});
+            let end: number;
+            while ((end = buffer.indexOf('\n')) >= 0) {
+                const line = buffer.slice(0, end).trim();
+                buffer = buffer.slice(end + 1);
+                if (!line) {
+                    continue;
+                }
+                const event = JSON.parse(line);
+                if (event.type === 'progres') {
+                    onProgress(event.blocs);
+                } else if (event.type === 'erreur') {
+                    throw new Error(event.texte);
+                } else if (event.type === 'fin') {
+                    return event.document as OrganizerDocument;
+                }
+            }
+        }
+        throw new Error('');
     },
 
     update: async (organizerId: IdParam, documentId: IdParam, changes: OrganizerDocumentChanges) => {

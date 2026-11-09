@@ -2566,6 +2566,10 @@ msgstr "Chinois (traditionnel)"
 msgid "Choose <0>Add to Home Screen</0>."
 msgstr "Choisissez <0>Sur l'écran d'accueil</0>."
 
+#: src/components/routes/organizer/Documents/index.tsx:121
+msgid "Choose a PDF file."
+msgstr "Choisissez un fichier PDF."
+
 #: src/components/modals/ChooseAccountModal/index.tsx:13
 msgid "Choose an account"
 msgstr "Choisissez un compte"
@@ -3618,7 +3622,7 @@ msgstr "Contributions Dehors"
 #: src/components/modals/EditProductModal/index.tsx:184
 #: src/components/routes/admin/FailedJobs/index.tsx:209
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:598
-#: src/components/routes/organizer/Documents/index.tsx:215
+#: src/components/routes/organizer/Documents/index.tsx:294
 #: src/components/routes/organizer/Messages/index.tsx:177
 #: src/components/routes/organizer/OrganizerHomepageDesigner/FaqSection.tsx:100
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
@@ -3626,7 +3630,7 @@ msgstr "Contributions Dehors"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: src/components/routes/organizer/Documents/index.tsx:208
+#: src/components/routes/organizer/Documents/index.tsx:287
 msgid "Delete « {title} »? Copies already signed stay with their participants."
 msgstr "Supprimer « {title} »? Les copies déjà signées restent avec leurs participants."
 
@@ -3852,11 +3856,11 @@ msgstr "Nom affiché"
 msgid "Distances 5–42 km"
 msgstr "Distances 5–42 km"
 
-#: src/components/routes/organizer/Documents/index.tsx:210
+#: src/components/routes/organizer/Documents/index.tsx:289
 msgid "Document deleted"
 msgstr "Document supprimé"
 
-#: src/components/routes/organizer/Documents/index.tsx:194
+#: src/components/routes/organizer/Documents/index.tsx:273
 msgid "Document duplicated"
 msgstr "Document dupliqué"
 
@@ -3874,7 +3878,7 @@ msgstr "Titre du document"
 
 #: src/components/common/AttendeeDetails/index.tsx:117
 #: src/components/layouts/OrganizerLayout/index.tsx:161
-#: src/components/routes/organizer/Documents/index.tsx:115
+#: src/components/routes/organizer/Documents/index.tsx:166
 msgid "Documents"
 msgstr "Documents"
 
@@ -4007,7 +4011,7 @@ msgstr "Sélection déroulante"
 
 #: src/components/common/ProductsTable/ProductRow.tsx:237
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:595
-#: src/components/routes/organizer/Documents/index.tsx:198
+#: src/components/routes/organizer/Documents/index.tsx:277
 #: src/components/routes/organizer/Events/index.tsx:96
 msgid "Duplicate"
 msgstr "Dupliquer"
@@ -4118,7 +4122,7 @@ msgstr "Obtenu le {earnedDate}"
 #: src/components/routes/admin/Accounts/AccountDetail/index.tsx:323
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:184
 #: src/components/routes/event/Settings/cards/DocumentsCard.tsx:98
-#: src/components/routes/organizer/Documents/index.tsx:190
+#: src/components/routes/organizer/Documents/index.tsx:269
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:295
 #: src/components/routes/organizer/Events/index.tsx:93
 #: src/components/routes/organizer/OrganizerHomepageDesigner/FaqSection.tsx:61
@@ -4136,7 +4140,7 @@ msgstr "Modifier {0}"
 msgid "Edit {0} Template"
 msgstr "Modifier le modèle {0}"
 
-#: src/components/routes/organizer/Documents/index.tsx:177
+#: src/components/routes/organizer/Documents/index.tsx:256
 msgid "Edit {title}"
 msgstr "Modifier {title}"
 
@@ -4886,7 +4890,7 @@ msgid "Export Answers"
 msgstr "Exporter les réponses"
 
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:840
-#: src/components/routes/organizer/Documents/index.tsx:201
+#: src/components/routes/organizer/Documents/index.tsx:280
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
 
@@ -5972,6 +5976,11 @@ msgstr "Usurpation d'identité démarrée"
 msgid "Impersonation stopped"
 msgstr "Usurpation d'identité arrêtée"
 
+#: src/components/routes/organizer/Documents/index.tsx:158
+#: src/components/routes/organizer/Documents/index.tsx:178
+msgid "Import a PDF"
+msgstr "Importer un PDF"
+
 #: src/constants/productInfoIcons.ts:52
 msgid "Important"
 msgstr "Important"
@@ -5979,6 +5988,10 @@ msgstr "Important"
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:76
 msgid "Important: Changing your email address will update the link to access this order. You will be redirected to the new order link after saving."
 msgstr "Important : La modification de votre adresse e-mail mettra à jour le lien d'accès à cette commande. Vous serez redirigé vers le nouveau lien de commande après l'enregistrement."
+
+#: src/components/routes/organizer/Documents/index.tsx:192
+msgid "Importing your PDF"
+msgstr "Importation de votre PDF"
 
 #: src/components/routes/my-tickets/index.tsx:108
 msgid "In {days} days"
@@ -6288,6 +6301,10 @@ msgstr "Inscrit"
 msgid "Keep me updated on news and events from {0}"
 msgstr "Recevoir les nouvelles de {0}"
 
+#: src/components/routes/organizer/Documents/index.tsx:201
+msgid "Keep this page open."
+msgstr "Gardez cette page ouverte."
+
 #: src/components/routes/event/Settings/cards/SeoCard.tsx:74
 #: src/components/routes/event/Settings/index.tsx:90
 #: src/components/routes/organizer/Settings/organization/SeoCard.tsx:76
@@ -6533,15 +6550,15 @@ msgstr "Événements liés"
 msgid "Linked promo code"
 msgstr "Code promo associé"
 
-#: src/components/routes/organizer/Documents/index.tsx:173
+#: src/components/routes/organizer/Documents/index.tsx:252
 msgid "Linked to {linkedCount} events"
 msgstr "Liée à {linkedCount} événements"
 
-#: src/components/routes/organizer/Documents/index.tsx:173
+#: src/components/routes/organizer/Documents/index.tsx:252
 msgid "Linked to 1 event"
 msgstr "Liée à 1 événement"
 
-#: src/components/routes/organizer/Documents/index.tsx:172
+#: src/components/routes/organizer/Documents/index.tsx:251
 msgid "Linked to no event"
 msgstr "Liée à aucun événement"
 
@@ -6938,7 +6955,7 @@ msgstr "Scanner mobile avec support hors ligne et suivi en temps réel"
 msgid "Model changed"
 msgstr "Modèle changé"
 
-#: src/components/routes/organizer/Documents/index.tsx:220
+#: src/components/routes/organizer/Documents/index.tsx:299
 msgid "modified on {modified}"
 msgstr "modifiée le {modified}"
 
@@ -6963,7 +6980,7 @@ msgstr "Rythme mensuel"
 msgid "Monthly pace: the cost over 30 days at the same rhythm, counted from the first call of the period. Busiest day: the most calls in one day, next to the daily limit. Click a column to sort."
 msgstr "Rythme mensuel : le coût sur 30 jours au même rythme, compté depuis le premier appel de la période. Jour le plus chargé : le plus d'appels en une journée, à côté de la limite quotidienne. Cliquez sur une colonne pour trier."
 
-#: src/components/routes/organizer/Documents/index.tsx:185
+#: src/components/routes/organizer/Documents/index.tsx:264
 msgid "More actions"
 msgstr "Plus d'actions"
 
@@ -7149,8 +7166,8 @@ msgid "New conversation"
 msgstr "Nouvelle conversation"
 
 #: src/components/routes/event/Settings/cards/DocumentsCard.tsx:76
-#: src/components/routes/organizer/Documents/index.tsx:111
-#: src/components/routes/organizer/Documents/index.tsx:119
+#: src/components/routes/organizer/Documents/index.tsx:161
+#: src/components/routes/organizer/Documents/index.tsx:170
 msgid "New document"
 msgstr "Nouveau document"
 
@@ -7337,9 +7354,13 @@ msgstr "Pas de rabais"
 msgid "No documents yet. Create one, then switch it on here."
 msgstr "Aucun document pour l'instant. Créez-en un, puis activez-le ici."
 
+#: src/components/routes/organizer/Documents/index.tsx:210
+msgid "No documents yet. Start from one of the templates below, or import your own PDF."
+msgstr "Aucun document pour l’instant. Partez d’un des modèles ci-dessous, ou importez votre propre PDF."
+
 #: src/components/routes/organizer/Documents/index.tsx:131
-msgid "No documents yet. Start from one of the templates below."
-msgstr "Aucun document pour l'instant. Partez d'un des modèles ci-dessous."
+#~ msgid "No documents yet. Start from one of the templates below."
+#~ msgstr "Aucun document pour l'instant. Partez d'un des modèles ci-dessous."
 
 #: src/components/common/NoEventsBlankSlate/index.tsx:20
 msgid "No ended events to show."
@@ -7900,7 +7921,7 @@ msgstr "Détails de l'événement en ligne"
 
 #: src/components/routes/event/Settings/cards/DocumentsCard.tsx:63
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:771
-#: src/components/routes/organizer/Documents/index.tsx:222
+#: src/components/routes/organizer/Documents/index.tsx:301
 msgid "Online signature"
 msgstr "Signature en ligne"
 
@@ -8734,7 +8755,7 @@ msgstr "Billets PDF"
 
 #: src/components/routes/event/Settings/cards/DocumentsCard.tsx:63
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:772
-#: src/components/routes/organizer/Documents/index.tsx:222
+#: src/components/routes/organizer/Documents/index.tsx:301
 msgid "PDF to print"
 msgstr "PDF à imprimer"
 
@@ -9008,7 +9029,7 @@ msgstr "Code postal"
 msgid "Powered by"
 msgstr "Propulsé par"
 
-#: src/components/routes/organizer/Documents/index.tsx:145
+#: src/components/routes/organizer/Documents/index.tsx:224
 msgid "Prepared by Billetterie Dehors. Pick one, then adapt it to your event."
 msgstr "Préparés par Billetterie Dehors. Choisissez-en un, puis adaptez-le à votre événement."
 
@@ -11093,7 +11114,7 @@ msgctxt "event date"
 msgid "Start"
 msgstr "Début"
 
-#: src/components/routes/organizer/Documents/index.tsx:57
+#: src/components/routes/organizer/Documents/index.tsx:61
 msgid "Start"
 msgstr "Commencer"
 
@@ -11102,7 +11123,7 @@ msgstr "Commencer"
 msgid "Start Date"
 msgstr "Date de début"
 
-#: src/components/routes/organizer/Documents/index.tsx:121
+#: src/components/routes/organizer/Documents/index.tsx:172
 msgid "Start from a template, then adapt it to your event."
 msgstr "Partez d'un modèle, puis adaptez-le à votre événement."
 
@@ -11118,7 +11139,7 @@ msgstr "Commencez par un brouillon, vous publierez quand vous serez prêt."
 msgid "Starting Line"
 msgstr "Ligne de départ"
 
-#: src/components/routes/organizer/Documents/index.tsx:143
+#: src/components/routes/organizer/Documents/index.tsx:222
 msgid "Starting templates"
 msgstr "Modèles de base"
 
@@ -11638,6 +11659,14 @@ msgstr "L'assistant a atteint sa limite du jour pour ce compte. Il revient demai
 msgid "The assistant is not available yet."
 msgstr "L'assistant n'est pas encore offert."
 
+#: src/components/routes/organizer/Documents/index.tsx:199
+msgid "The assistant is reading your PDF… This can take up to a minute."
+msgstr "L’assistant lit votre PDF… Cela peut prendre jusqu’à une minute."
+
+#: src/components/routes/organizer/Documents/index.tsx:198
+msgid "The assistant is rebuilding your document… {importedBlocks} blocks so far."
+msgstr "L’assistant refait votre document… {importedBlocks} blocs jusqu’ici."
+
 #: src/components/routes/admin/AssistantUsage/UsageTables.tsx:52
 msgid "The assistant was not used over this period"
 msgstr "L'assistant n'a pas été utilisé pendant cette période"
@@ -11700,15 +11729,15 @@ msgstr "Les courriels par défaut sont envoyés quand même."
 msgid "The default timezone for your events."
 msgstr "Le fuseau horaire par défaut pour vos événements."
 
-#: src/components/routes/organizer/Documents/index.tsx:102
+#: src/components/routes/organizer/Documents/index.tsx:109
 msgid "The document could not be created. Please try again."
 msgstr "Le document n'a pas pu être créé. Veuillez réessayer."
 
-#: src/components/routes/organizer/Documents/index.tsx:211
+#: src/components/routes/organizer/Documents/index.tsx:290
 msgid "The document could not be deleted."
 msgstr "Le document n'a pas pu être supprimé."
 
-#: src/components/routes/organizer/Documents/index.tsx:195
+#: src/components/routes/organizer/Documents/index.tsx:274
 msgid "The document could not be duplicated."
 msgstr "Le document n'a pas pu être dupliqué."
 
@@ -11864,6 +11893,14 @@ msgstr "Le formulaire de paiement n'a pas pu se charger. Vérifiez votre connexi
 msgid "The PDF could not be created. Please try again."
 msgstr "Le PDF n'a pas pu être créé. Veuillez réessayer."
 
+#: src/components/routes/organizer/Documents/index.tsx:135
+msgid "The PDF could not be imported. Please try again."
+msgstr "Le PDF n’a pas pu être importé. Veuillez réessayer."
+
+#: src/components/routes/organizer/Documents/index.tsx:125
+msgid "The PDF must be 10 MB or less."
+msgstr "Le PDF doit faire 10 Mo ou moins."
+
 #: src/components/routes/organizer/Settings/organization/AddressCard.tsx:68
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:52
 msgid "The place name and the city are shown on your public page."
@@ -11918,7 +11955,7 @@ msgstr "Les réglages de cet événement."
 msgid "The signature could not be saved. Check your connection and try again."
 msgstr "La signature n'a pas pu être enregistrée. Vérifiez votre connexion et réessayez."
 
-#: src/components/routes/organizer/Documents/index.tsx:155
+#: src/components/routes/organizer/Documents/index.tsx:234
 msgid "The templates are a starting point. Make sure they suit your activity before using them."
 msgstr "Les modèles sont un point de départ. Vérifiez qu'ils conviennent à votre activité avant de les utiliser."
 
@@ -12054,7 +12091,7 @@ msgstr "Cette invitation est liée à cette adresse."
 msgid "This invitation link is no longer valid. Ask for a new one."
 msgstr "Ce lien d'invitation n'est plus valide. Demandez-en un nouveau."
 
-#: src/components/routes/organizer/Documents/index.tsx:153
+#: src/components/routes/organizer/Documents/index.tsx:232
 msgid "This is not legal advice"
 msgstr "Ce n’est pas un avis juridique"
 
@@ -12945,7 +12982,7 @@ msgstr "Scanner USB en pause : cliquez n'importe où sur la page pour reprendre.
 msgid "USB/HID Scanner"
 msgstr "Scanner USB/HID"
 
-#: src/components/routes/organizer/Documents/index.tsx:57
+#: src/components/routes/organizer/Documents/index.tsx:61
 msgid "Use"
 msgstr "Utiliser"
 
@@ -13350,7 +13387,7 @@ msgstr "Décharge"
 msgid "Waiver text"
 msgstr "Texte de la décharge"
 
-#: src/components/routes/organizer/Documents/index.tsx:108
+#: src/components/routes/organizer/Documents/index.tsx:149
 msgid "Waivers, consent forms and other documents for your participants to sign."
 msgstr "Attestations, décharges et autres documents à faire signer à vos participants."
 
@@ -13922,6 +13959,10 @@ msgstr "Oui, supprime-les"
 msgid "Yesterday"
 msgstr "Hier"
 
+#: src/components/routes/organizer/Documents/index.tsx:179
+msgid "You already have your form? The assistant rebuilds it here, ready to sign online."
+msgstr "Vous avez déjà votre formulaire? L’assistant le refait ici, prêt à signer en ligne."
+
 #: src/components/common/AttendeeCheckInTable/QrScanner.tsx:122
 msgid "You already scanned this ticket"
 msgstr "Vous avez déjà scanné ce billet"
@@ -14099,7 +14140,7 @@ msgstr "Votre commande actuelle sera perdue."
 msgid "Your details, your language and your password."
 msgstr "Vos informations, votre langue et votre mot de passe."
 
-#: src/components/routes/organizer/Documents/index.tsx:126
+#: src/components/routes/organizer/Documents/index.tsx:205
 msgid "Your documents"
 msgstr "Vos documents"
 
@@ -14225,6 +14266,10 @@ msgstr "Votre paiement n'a pas abouti, veuillez réessayer."
 #: src/components/forms/StripeCheckoutForm/index.tsx:106
 msgid "Your payment was unsuccessful. Please try again."
 msgstr "Votre paiement a échoué. Veuillez réessayer."
+
+#: src/components/routes/organizer/Documents/index.tsx:132
+msgid "Your PDF was rebuilt. Read it over before linking it to an event."
+msgstr "Votre PDF a été refait. Relisez-le avant de le lier à un événement."
 
 #: src/components/common/Assistant/assistant.ts:244
 msgid "your profile"

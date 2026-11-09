@@ -14,7 +14,7 @@ export const Modal = (props: MantineModalProps & ModalProps) => {
         <MantineModal
             {...restProps}
             size={'xl'}
-            withCloseButton={true}
+            withCloseButton={restProps.withCloseButton ?? true}
             title={props.heading}
             classNames={props.classNames}
         >

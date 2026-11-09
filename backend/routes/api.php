@@ -150,6 +150,7 @@ use HiEvents\Http\Actions\Organizers\Public\SendOrganizerContactMessagePublicAct
 use HiEvents\Http\Actions\Organizers\Messages\DeleteOrganizerMessageAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerMessagesAction;
 use HiEvents\Http\Actions\Organizers\Documents\CreateOrganizerDocumentAction;
+use HiEvents\Http\Actions\Organizers\Documents\ImportOrganizerDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Documents\DeleteOrganizerDocumentAction;
 use HiEvents\Http\Actions\Organizers\Documents\DuplicateOrganizerDocumentAction;
 use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentAction;
@@ -387,6 +388,7 @@ $router->middleware(['auth:api'])->group(
         // Documents (attestations, decharges, formulaires) de l'organisateur
         $router->get('/organizers/{organizer_id}/documents', GetOrganizerDocumentsAction::class);
         $router->post('/organizers/{organizer_id}/documents', CreateOrganizerDocumentAction::class);
+        $router->post('/organizers/{organizer_id}/documents/import', ImportOrganizerDocumentPdfAction::class);
         $router->get('/organizers/{organizer_id}/documents/{document_id}', GetOrganizerDocumentAction::class);
         $router->patch('/organizers/{organizer_id}/documents/{document_id}', UpdateOrganizerDocumentAction::class);
         $router->delete('/organizers/{organizer_id}/documents/{document_id}', DeleteOrganizerDocumentAction::class);
