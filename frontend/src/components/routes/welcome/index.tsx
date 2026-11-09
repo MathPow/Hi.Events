@@ -541,6 +541,7 @@ const Welcome = () => {
     const creatingOrganizer = useRef(false);
     const hasTrackedSignup = useRef(false);
     const [step, setStep] = useState<'types' | 'page' | 'taxes' | 'start'>('types');
+    const [organizerCreateFailed, setOrganizerCreateFailed] = useState(false);
 
     const organizer = organizersQuery.data?.data?.[0];
     const requiresVerification = me
@@ -568,7 +569,8 @@ const Welcome = () => {
 
     // L'organisateur se cree tout seul: le nom de l'inscription, le courriel du compte, en CAD.
     useEffect(() => {
-        if (requiresVerification || !me || !account || !organizersQuery.isFetched || organizer || creatingOrganizer.current) {
+        if (requiresVerification || !me || !account || !organizersQuery.isFetched || organizer || creatingOrganizer.current
+            || organizerCreateFailed) {
             return;
         }
         creatingOrganizer.current = true;
@@ -583,13 +585,27 @@ const Welcome = () => {
             onSuccess: () => trackEvent(AnalyticsEvents.ORGANIZER_CREATED),
             onError: () => {
                 creatingOrganizer.current = false;
-                showError(t`Something went wrong. Please try again.`);
+                setOrganizerCreateFailed(true);
             },
         });
-    }, [requiresVerification, me, account, organizersQuery.isFetched, organizer]);
+    }, [requiresVerification, me, account, organizersQuery.isFetched, organizer, organizerCreateFailed]);
 
     if (requiresVerification) {
         return <ConfirmVerificationPin/>;
+    }
+
+    if (organizerCreateFailed && !organizer) {
+        return (
+            <OnboardingCard>
+                <h1 className={classes.title}>{t`We couldn't set up your space`}</h1>
+                <p className={classes.subtitle}>{t`Something went wrong on our side. Your account is safe: try again in a moment.`}</p>
+                <div className={classes.actions}>
+                    <Button className={classes.darkButton} onClick={() => setOrganizerCreateFailed(false)}>
+                        {t`Try again`}
+                    </Button>
+                </div>
+            </OnboardingCard>
+        );
     }
 
     if (!me || !account || !organizer) {

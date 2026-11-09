@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { matchRoutes, Navigate, Outlet, RouteObject, useLocation } from "react-router";
+import { matchRoutes, Navigate, Outlet, redirect, RouteObject, useLocation } from "react-router";
 import { setKnownRouteMatcher } from "./api/client.ts";
 import ErrorPage from "./error-page.tsx";
 import { useGetMe } from "./queries/useGetMe.ts";
@@ -562,11 +562,9 @@ const routes: RouteObject[] = [
         errorElement: <ErrorPage />,
     },
     {
+        // Ancien lien court: la page publique de l'evenement est sous /event/.
         path: "/e/:eventId/:eventSlug",
-        async lazy() {
-            const EventHomepage = await import("./components/layouts/EventHomepage");
-            return { Component: EventHomepage.default };
-        },
+        loader: ({params}) => redirect(`/event/${params.eventId}/${params.eventSlug}`),
         errorElement: <ErrorPage />,
     },
     {

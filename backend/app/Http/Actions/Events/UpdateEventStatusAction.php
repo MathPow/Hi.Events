@@ -4,6 +4,7 @@ namespace HiEvents\Http\Actions\Events;
 
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\Exceptions\AccountNotVerifiedException;
+use HiEvents\Exceptions\EventNotReadyToPublishException;
 use HiEvents\Http\Actions\BaseAction;
 use HiEvents\Http\Request\Event\UpdateEventStatusRequest;
 use HiEvents\Http\ResponseCodes;
@@ -33,6 +34,10 @@ class UpdateEventStatusAction extends BaseAction
         } catch (AccountNotVerifiedException $e) {
             return $this->errorResponse($e->getMessage(), ResponseCodes::HTTP_UNPROCESSABLE_ENTITY, [
                 'code' => 'email_not_confirmed',
+            ]);
+        } catch (EventNotReadyToPublishException $e) {
+            return $this->errorResponse($e->getMessage(), ResponseCodes::HTTP_UNPROCESSABLE_ENTITY, [
+                'code' => $e->reason,
             ]);
         }
 

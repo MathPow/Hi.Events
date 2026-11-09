@@ -5,7 +5,6 @@ import {Button, Checkbox, NativeSelect, Skeleton, TextInput} from "@mantine/core
 import {IconCircleCheck, IconClock} from "@tabler/icons-react";
 import {t, Trans} from "@lingui/macro";
 import {useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
 import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {useGetEventQuestionsPublic} from "../../../../queries/useGetEventQuestionsPublic.ts";
@@ -146,16 +145,6 @@ export const CollectInformation = () => {
             order: {
                 email_confirmation: (value, values) =>
                     value !== values.order.email ? t`Email addresses do not match` : null,
-            },
-            products: {
-                email_confirmation: (value, values, path) => {
-                    const index = parseInt(path.split('.')[1]);
-                    const product = values.products[index];
-                    if (product && product.email !== value) {
-                        return t`Email addresses do not match`;
-                    }
-                    return null;
-                },
             },
         },
         validateInputOnBlur: true,
@@ -317,14 +306,14 @@ export const CollectInformation = () => {
                 shouldScrollToError.current = true;
                 form.setErrors(toFullNameErrors(error.response.data.errors) as any);
             } else if (error?.response?.data?.message) {
-                notifications.show({
-                    message: error?.response?.data?.message,
-                });
+                showError(error.response.data.message);
 
                 // if it's a 409, we need to redirect to the event page as the order is no longer valid
                 if (error.response.status === 409) {
                     navigate(eventHomepagePath(event as Event));
                 }
+            } else {
+                showError(t`We couldn't save your details. Check your connection and try again.`);
             }
         }
     });
@@ -730,6 +719,7 @@ export const CollectInformation = () => {
                                 {...form.getInputProps(`products.${currentProductIndex}.full_name`)}
                             />
                             <TextInput
+                                className={checkoutClasses.fieldFull}
                                 withAsterisk
                                 type={"email"}
                                 label={t`Email`}
@@ -739,17 +729,6 @@ export const CollectInformation = () => {
                                 rightSection={isEmailValid(form.values.products[currentProductIndex]?.email || '') ?
                                     <EmailCheckIcon/> : null}
                                 {...form.getInputProps(`products.${currentProductIndex}.email`)}
-                            />
-                            <TextInput
-                                withAsterisk
-                                type={"email"}
-                                label={t`Confirm email`}
-                                placeholder={t`name@example.com`}
-                                autoComplete="off"
-                                disabled={isLocked('email')}
-                                rightSection={isEmailValid(form.values.products[currentProductIndex]?.email_confirmation || '') ?
-                                    <EmailCheckIcon/> : null}
-                                {...form.getInputProps(`products.${currentProductIndex}.email_confirmation`)}
                             />
                         </div>
                     )}

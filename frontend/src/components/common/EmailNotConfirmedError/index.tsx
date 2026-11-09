@@ -1,4 +1,5 @@
-import {Button, Stack, Text} from "@mantine/core";
+import {Anchor, Button, Stack, Text} from "@mantine/core";
+import {IdParam} from "../../../types.ts";
 import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {useResendEmailConfirmation} from "../../../mutations/useResendEmailConfirmation.ts";
@@ -31,11 +32,42 @@ const EmailNotConfirmedNotice = () => {
  * confirme, l'API refuse avec le code email_not_confirmed: la notification reste ouverte
  * et porte le bouton qui renvoie le lien, au lieu de dire d'aller le chercher dans le profil.
  */
-export const showStatusChangeError = (error: any, fallback: string) => {
-    if (error?.response?.data?.errors?.code === 'email_not_confirmed') {
+interface StatusChangeContext {
+    eventId?: IdParam;
+    organizerId?: IdParam;
+}
+
+// Publier un evenement sans billet, ou payant sans moyen d'etre paye: l'API refuse, et la
+// notification mene droit a ce qui manque.
+const NotReadyNotice = ({message, linkTo, linkText}: { message: string, linkTo?: string, linkText: string }) => (
+    <Stack gap={8} align={'flex-start'}>
+        <Text size={'sm'}>{message}</Text>
+        {linkTo && <Anchor href={linkTo} size={'sm'} fw={700}>{linkText}</Anchor>}
+    </Stack>
+);
+
+export const showStatusChangeError = (error: any, fallback: string, context: StatusChangeContext = {}) => {
+    const code = error?.response?.data?.errors?.code;
+    const message = error?.response?.data?.message || fallback;
+
+    if (code === 'email_not_confirmed') {
         showError(<EmailNotConfirmedNotice/>, undefined, false);
         return;
     }
 
-    showError(error?.response?.data?.message || fallback);
+    if (code === 'no_products') {
+        showError(<NotReadyNotice message={message} linkText={t`Add a ticket`}
+                                  linkTo={context.eventId ? `/manage/event/${context.eventId}/products#create-product` : undefined}/>,
+            undefined, false);
+        return;
+    }
+
+    if (code === 'payments_not_ready') {
+        showError(<NotReadyNotice message={message} linkText={t`Connect Stripe`}
+                                  linkTo={context.organizerId ? `/manage/organizer/${context.organizerId}/settings/payments` : undefined}/>,
+            undefined, false);
+        return;
+    }
+
+    showError(message);
 };

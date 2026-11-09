@@ -84,6 +84,10 @@ export const PaymentReturn = () => {
                 {!cannotConfirmPayment && (
                     <HomepageInfoMessage
                         status="processing"
+                        {...((!shouldPoll && paymentIntentQuery.isFetched) ? {
+                            link: eventCheckoutPath(eventId, orderShortId, 'payment'),
+                            linkText: t`Try again`,
+                        } : {})}
                         message={(
                             <>
                                 {(!shouldPoll && paymentIntentQuery.isFetched) && t`We could not process your payment. Please try again or contact support.`}
@@ -98,6 +102,9 @@ export const PaymentReturn = () => {
                     <HomepageInfoMessage
                         status="error"
                         message={t`We were unable to confirm your payment. Please try again or contact support.`}
+                        subtitle={t`If you were charged, your order will appear on its own once the payment is confirmed.`}
+                        link={eventCheckoutPath(eventId, orderShortId, 'summary')}
+                        linkText={t`Check my order`}
                     />
                 )}
             </div>

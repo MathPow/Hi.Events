@@ -218,7 +218,7 @@ const Payment = () => {
                     <Button
                         className={checkoutClasses.primaryButton}
                         loading={isLoading || isPaymentLoading}
-                        disabled={activePaymentMethod === 'STRIPE' && isStripeUnavailable}
+                        disabled={activePaymentMethod === 'STRIPE' && (isStripeUnavailable || !submitHandler)}
                         onClick={handleSubmit}
                         leftSection={<PublicIcon name={'cadenas'} size={20}/>}
                     >

@@ -5,6 +5,7 @@ import {IconMinus, IconPlus} from "@tabler/icons-react";
 import classes from './NumberSelector.module.scss';
 import classNames from "classnames";
 import _ from "lodash";
+import {t} from "@lingui/macro";
 
 interface NumberSelectorProps extends TextInputProps {
     formInstance: UseFormReturnType<any>;
@@ -12,17 +13,26 @@ interface NumberSelectorProps extends TextInputProps {
     min?: number;
     max?: number;
     sharedValues?: SharedValues;
+    itemLabel?: string;
 }
 
-export const NumberSelector = ({formInstance, fieldName, min, max, sharedValues}: NumberSelectorProps) => {
+export const NumberSelector = ({formInstance, fieldName, min, max, sharedValues, itemLabel}: NumberSelectorProps) => {
     const handlers = useRef<NumberInputHandlers>(null);
-    // Start with 0, ensuring it's treated as number for consistency
-    const [value, setValue] = useState<number>(0);
+    // Une carte refermee puis rouverte retrouve la quantite deja choisie (gardee dans le formulaire).
+    const [initialValue] = useState<number>(() => Number(_.get(formInstance.values, fieldName)) || 0);
+    const [value, setValue] = useState<number>(initialValue);
 
     const minValue = min || 0;
     const maxValue = max || 100;
 
-    const [sharedVals] = useState<SharedValues>(sharedValues ?? new SharedValues(maxValue));
+    const [sharedVals] = useState<SharedValues>(() => {
+        if (sharedValues) {
+            return sharedValues;
+        }
+        const own = new SharedValues(maxValue);
+        own.changeValue(initialValue);
+        return own;
+    });
 
     useEffect(() => {
         formInstance.setFieldValue(fieldName, value);
@@ -77,6 +87,7 @@ export const NumberSelector = ({formInstance, fieldName, min, max, sharedValues}
                 disabled={value === 0}
                 onMouseDown={(event) => event.preventDefault()}
                 className={classes.control}
+                aria-label={itemLabel ? t`Remove one: ${itemLabel}` : t`Remove one`}
             >
                 <IconMinus size="1rem" stroke={1.5}/>
             </ActionIcon>
@@ -91,6 +102,7 @@ export const NumberSelector = ({formInstance, fieldName, min, max, sharedValues}
                 hideControls
                 onChange={changeValue}
                 classNames={{input: classes.input}}
+                aria-label={itemLabel ? t`Quantity: ${itemLabel}` : t`Quantity`}
             />
 
             <ActionIcon
@@ -99,6 +111,7 @@ export const NumberSelector = ({formInstance, fieldName, min, max, sharedValues}
                 disabled={value >= maxValue || sharedVals.quantityRemaining == 0}
                 onMouseDown={(event) => event.preventDefault()}
                 className={classes.control}
+                aria-label={itemLabel ? t`Add one: ${itemLabel}` : t`Add one`}
             >
                 <IconPlus size="1rem" stroke={1.5}/>
             </ActionIcon>

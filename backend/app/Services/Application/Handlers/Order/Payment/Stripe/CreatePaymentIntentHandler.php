@@ -74,7 +74,7 @@ readonly class CreatePaymentIntentHandler
         }
 
         if ($order->getStatus() !== OrderStatus::RESERVED->name || $order->isReservedOrderExpired()) {
-            throw new ResourceConflictException(__('Sorry, is expired or not in a valid state.'));
+            throw new ResourceConflictException(__('This order has expired or can no longer be paid. Please start a new order.'));
         }
 
         $account = $this->accountRepository

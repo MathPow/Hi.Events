@@ -110,20 +110,23 @@ const Checkout = () => {
                 orderShortId: String(orderShortId),
             });
         } catch (error) {
+            // La commande tient toujours: la fenetre reste ouverte pour reessayer ou rester.
             showError(t`Failed to abandon order. Please try again.`);
-        } finally {
-            setShowAbandonDialog(false);
-            showInfo(t`Your order has been cancelled.`);
-
-            if (blocker.state === 'blocked') {
-                blocker.proceed();
-            } else if (pendingNavigation) {
-                navigate(pendingNavigation);
-            }
-
-            setPendingNavigation(null);
             setIsAbandoning(false);
+            return;
         }
+
+        setShowAbandonDialog(false);
+        showInfo(t`Your order has been cancelled.`);
+
+        if (blocker.state === 'blocked') {
+            blocker.proceed();
+        } else if (pendingNavigation) {
+            navigate(pendingNavigation);
+        }
+
+        setPendingNavigation(null);
+        setIsAbandoning(false);
     };
 
     const handleAbandonCancel = () => {

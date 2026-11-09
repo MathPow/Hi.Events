@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import {useParams} from "react-router";
 import * as stripeJs from "@stripe/stripe-js";
@@ -15,6 +15,9 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState<string | undefined>('');
+    // « Payer » reste inactif tant que le formulaire de carte n'est pas pret.
+    const [isElementReady, setIsElementReady] = useState(false);
+    const messageRef = useRef<HTMLDivElement>(null);
     const {data: order, isFetched: isOrderFetched} = useGetOrderPublic(eventId, orderShortId, ['event']);
 
     const handleSubmit = async () => {
@@ -68,11 +71,17 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
     }, [stripe]);
 
     useEffect(() => {
-        if (setSubmitHandler) {
+        if (setSubmitHandler && stripe && elements && isElementReady) {
             setSubmitHandler(() => handleSubmit);
         }
+    }, [setSubmitHandler, stripe, elements, isElementReady]);
 
-    }, [setSubmitHandler, stripe, elements]);
+    // Sur telephone, « Payer » est en bas de l'ecran: le refus de la carte vient a l'acheteur.
+    useEffect(() => {
+        if (message) {
+            messageRef.current?.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+    }, [message]);
 
     // Une commande deja payee ou qui n'attend plus de paiement: la page Paiement l'annonce elle-meme.
     if (!isOrderFetched || !order?.payment_status) {
@@ -95,12 +104,13 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
                     <Alert mb={20} color={'red'}>{t`Your payment was unsuccessful. Please try again.`}</Alert>
                 )}
 
-                {message !== '' && <Alert mb={20}>{message}</Alert>}
+                {message !== '' && <Alert ref={messageRef} mb={20} role={'alert'}>{message}</Alert>}
                 <LoadingMask/>
                 <PaymentElement
                     className={classes.stripeForElement}
                     id="payment-element"
                     options={paymentElementOptions}
+                    onReady={() => setIsElementReady(true)}
                 />
             </>
         </form>

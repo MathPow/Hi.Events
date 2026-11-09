@@ -12,7 +12,6 @@ import {
 } from "@mantine/core";
 import {useNavigate, useParams} from "react-router";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {notifications} from "@mantine/notifications";
 import {
     orderClientPublic,
     ProductFormPayload,
@@ -218,14 +217,16 @@ const SelectProducts = (props: SelectProductsProps) => {
             }),
 
         onError: (error: any) => {
-            if (error?.response?.data?.errors) {
-                form.setErrors(error.response.data.errors);
+            const errors = error?.response?.data?.errors;
+            if (errors) {
+                form.setErrors(errors);
             }
 
-            notifications.show({
-                message: error.response.data.errors?.products[0] || t`Unable to create product. Please check your details`,
-                color: 'red',
-            });
+            const firstError = (value: unknown): string | undefined => Array.isArray(value) ? value[0] : (typeof value === 'string' ? value : undefined);
+            showError(firstError(errors?.products)
+                ?? Object.values(errors ?? {}).map(firstError).find(Boolean)
+                ?? error?.response?.data?.message
+                ?? t`We couldn't reserve these tickets. Please try again.`);
         }
     });
 

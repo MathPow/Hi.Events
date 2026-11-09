@@ -95,7 +95,8 @@ export const CreateEventModal = ({onClose, organizerId}: CreateEventModalProps) 
             title: values.title.trim(),
             category: CATEGORY_OF_TYPE[values.type],
             start_date: values.start_date ?? undefined,
-            end_date: values.end_date ?? undefined,
+            // Sur telephone, la feuille ne montre pas la fin: on n'envoie pas une fin que personne n'a vue.
+            end_date: isMobile ? undefined : values.end_date ?? undefined,
             organizer_id: values.organizer_id,
             currency: organizer?.currency ?? account?.currency_code,
             timezone: organizer?.timezone ?? account?.timezone,

@@ -28,9 +28,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const [currentAttendeeId, setCurrentAttendeeId] = useState<string | null>(null);
     const [debouncedAttendeeId] = useDebouncedValue(currentAttendeeId, 1000);
     const [isScanFailed, setIsScanFailed] = useState(false);
-    const [isScanSucceeded, setIsScanSucceeded] = useState(false);
 
-    const scanSuccessAudioRef = useRef<HTMLAudioElement | null>(null);
     const scanErrorAudioRef = useRef<HTMLAudioElement | null>(null);
     const scanInProgressAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -84,7 +82,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
             const latestProcessedAttendeeIds = latestProcessedAttendeeIdsRef.current;
             const alreadyScanned = latestProcessedAttendeeIds.includes(debouncedAttendeeId);
 
-            if (isScanSucceeded || isScanFailed) {
+            if (isScanFailed) {
                 return;
             }
 
@@ -106,16 +104,12 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                     scanInProgressAudioRef.current.play();
                 }
 
+                // L'entree (ou son refus) est annoncee par l'ecran d'enregistrement, une fois la
+                // reponse du serveur recue: pas de vert ni de son de reussite avant.
                 props.onAttendeeScanned(debouncedAttendeeId);
                 setIsCheckingIn(false);
                 setProcessedAttendeeIds(prevIds => [...prevIds, debouncedAttendeeId]);
                 setCurrentAttendeeId(null);
-
-                setIsScanSucceeded(true);
-                setInterval(() => setIsScanSucceeded(false), 500);
-                if (isSoundOn && scanSuccessAudioRef.current) {
-                    scanSuccessAudioRef.current.play();
-                }
             }
         }
     }, [debouncedAttendeeId]);
@@ -205,11 +199,10 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 onClose={handleClose}
             />
 
-            <audio ref={scanSuccessAudioRef} src="/sounds/scan-success.wav"/>
             <audio ref={scanErrorAudioRef} src="/sounds/scan-error.wav"/>
             <audio ref={scanInProgressAudioRef} src="/sounds/scan-in-progress.wav"/>
             
-            <div className={`${classes.scannerOverlay} ${isScanSucceeded ? classes.success : ""} ${isScanFailed ? classes.failure : ""} ${isCheckingIn ? classes.checkingIn : ""}`}/>
+            <div className={`${classes.scannerOverlay} ${isScanFailed ? classes.failure : ""} ${isCheckingIn ? classes.checkingIn : ""}`}/>
         </div>
     );
 };

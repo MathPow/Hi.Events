@@ -5,8 +5,9 @@ import {IconCheck} from "@tabler/icons-react";
 import {CSSProperties, ReactNode, useEffect, useState} from "react";
 import {useQueryClient} from "@tanstack/react-query";
 
-import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
+import {GET_ORDER_PUBLIC_QUERY_KEY, isOrderSettled, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {eventCheckoutPath, eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
+import {isSsr} from "../../../../utilites/helpers.ts";
 import {eventLocation, formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
@@ -347,7 +348,7 @@ const EventCard = ({event, order, className}: { event: Event, order: Order, clas
 export const OrderSummaryAndProducts = () => {
     const {eventId, orderShortId} = useParams();
     const location = useLocation();
-    const {data: order, isFetched: orderIsFetched, isError} = useGetOrderPublic(eventId, orderShortId, ['event']);
+    const {data: order, isFetched: orderIsFetched, isError} = useGetOrderPublic(eventId, orderShortId, ['event'], true);
     const event = order?.event;
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -527,6 +528,14 @@ export const OrderSummaryAndProducts = () => {
         );
     };
 
+    const paymentFailed = !isSsr() && (window.location.search.includes('failed') || order?.payment_status === 'PAYMENT_FAILED');
+
+    useEffect(() => {
+        if (paymentFailed) {
+            navigate(eventCheckoutPath(eventId, orderShortId, 'payment') + '?payment_failed=true', {replace: true});
+        }
+    }, [paymentFailed]);
+
     if (isError) {
         return (
             <HomepageInfoMessage
@@ -541,17 +550,21 @@ export const OrderSummaryAndProducts = () => {
         return <LoadingMask/>;
     }
 
-    if (window?.location.search.includes('failed') || order?.payment_status === 'PAYMENT_FAILED') {
-        navigate(eventCheckoutPath(eventId, orderShortId, 'payment') + '?payment_failed=true');
-        return;
+    if (paymentFailed) {
+        return <LoadingMask/>;
     }
 
-    if (order?.status !== 'COMPLETED' && order?.status !== 'CANCELLED' && order?.status !== 'AWAITING_OFFLINE_PAYMENT') {
+    if (!isOrderSettled(order)) {
+        const isReserved = order.status === 'RESERVED';
         return (
             <HomepageInfoMessage
                 status="processing"
                 message={t`Processing order`}
-                subtitle={t`This order is being processed.`}
+                subtitle={isReserved
+                    ? t`Order #${order.public_id} is not paid yet.`
+                    : t`Order #${order.public_id} is being processed. This page updates on its own.`}
+                link={isReserved ? eventCheckoutPath(eventId, orderShortId, 'payment') : eventHomepageUrl(event)}
+                linkText={isReserved ? t`Continue to payment` : t`Return to Event`}
             />
         );
     }

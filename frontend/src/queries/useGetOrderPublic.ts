@@ -6,6 +6,11 @@ import {isSsr} from "../utilites/helpers.ts";
 
 export const GET_ORDER_PUBLIC_QUERY_KEY = "getOrderPublic";
 
+const SETTLED_STATUSES = ['COMPLETED', 'CANCELLED', 'AWAITING_OFFLINE_PAYMENT'];
+
+export const isOrderSettled = (order?: Order) => !!order
+    && (SETTLED_STATUSES.includes(order.status) || order.payment_status === 'PAYMENT_FAILED');
+
 const getSessionIdentifierFromUrl = (): string | null => {
     if (isSsr()) return null;
 
@@ -16,7 +21,8 @@ const getSessionIdentifierFromUrl = (): string | null => {
 export const useGetOrderPublic = (
     eventId: IdParam,
     orderShortId: IdParam,
-    includes: string[] = []
+    includes: string[] = [],
+    pollUntilSettled = false,
 ) => {
     const sessionIdentifier = useMemo(getSessionIdentifierFromUrl, []);
 
@@ -37,6 +43,10 @@ export const useGetOrderPublic = (
             return data;
         },
         refetchOnWindowFocus: false,
+        // Tant que le paiement n'est pas confirme, la page se met a jour d'elle-meme.
+        refetchInterval: pollUntilSettled
+            ? (query) => isOrderSettled(query.state.data) ? false : 5000
+            : false,
         staleTime: 500,
         retryOnMount: false,
         retry: false,

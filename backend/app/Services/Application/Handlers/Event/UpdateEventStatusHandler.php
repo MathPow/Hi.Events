@@ -4,9 +4,11 @@ namespace HiEvents\Services\Application\Handlers\Event;
 
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\Exceptions\AccountNotVerifiedException;
+use HiEvents\Exceptions\EventNotReadyToPublishException;
 use HiEvents\Repository\Interfaces\AccountRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Event\DTO\UpdateEventStatusDTO;
+use HiEvents\Services\Domain\Event\EventPublishReadinessService;
 use HiEvents\DomainObjects\Status\EventStatus;
 use HiEvents\Jobs\Event\Webhook\DispatchEventWebhookJob;
 use HiEvents\Services\Infrastructure\DomainEvents\Enums\DomainEventType;
@@ -21,6 +23,7 @@ readonly class UpdateEventStatusHandler
         private AccountRepositoryInterface $accountRepository,
         private LoggerInterface            $logger,
         private DatabaseManager            $databaseManager,
+        private EventPublishReadinessService $publishReadinessService,
     )
     {
     }
@@ -37,7 +40,7 @@ readonly class UpdateEventStatusHandler
     }
 
     /**
-     * @throws AccountNotVerifiedException
+     * @throws AccountNotVerifiedException|EventNotReadyToPublishException
      */
     private function updateEventStatus(UpdateEventStatusDTO $updateEventStatusDTO): EventDomainObject
     {
@@ -47,6 +50,17 @@ readonly class UpdateEventStatusHandler
             throw new AccountNotVerifiedException(
                 __('Please confirm your email address before changing an event\'s status. Open your profile page and click "Resend email confirmation" to receive the link again.'),
             );
+        }
+
+        if ($updateEventStatusDTO->status === EventStatus::LIVE->name) {
+            $currentEvent = $this->eventRepository->findFirstWhere([
+                'id' => $updateEventStatusDTO->eventId,
+                'account_id' => $updateEventStatusDTO->accountId,
+            ]);
+
+            if ($currentEvent !== null && $currentEvent->getStatus() !== EventStatus::LIVE->name) {
+                $this->publishReadinessService->assertCanPublish($currentEvent);
+            }
         }
 
         $this->eventRepository->updateWhere(

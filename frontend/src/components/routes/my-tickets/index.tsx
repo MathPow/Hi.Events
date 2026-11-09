@@ -480,7 +480,12 @@ const Hero = ({email, loading}: { email?: string, loading: boolean }) => (
 
 // Sans lien valide (page ouverte depuis « Mes billets », lien expire): le courriel de
 // l'achat, par-dessus le tableau de bord, et le lien part par courriel.
-const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }) => {
+const EmailOverlay = ({expired, message, onRetry, retrying}: {
+    expired: boolean,
+    message?: string,
+    onRetry?: () => void,
+    retrying?: boolean,
+}) => {
     const [sent, setSent] = useState(false);
     const navigate = useNavigate();
     const lookup = useSendTicketLookupEmail();
@@ -498,11 +503,18 @@ const EmailOverlay = ({expired, message}: { expired: boolean, message?: string }
         <div className={classes.overlay}>
             <div className={classes.dialogShadow}>
                 <section className={classes.dialog} data-rough aria-labelledby="my-tickets-lookup">
-                    {!expired && <p className={classes.kicker}>{t`See you outside!`}</p>}
+                    {!expired && !onRetry && <p className={classes.kicker}>{t`See you outside!`}</p>}
                     <h1 id="my-tickets-lookup" className={classes.title}>
-                        {expired ? t`Link Expired or Invalid` : t`My tickets`}
+                        {expired ? t`Link Expired or Invalid` : onRetry ? t`Your tickets didn't load` : t`My tickets`}
                     </h1>
-                    {sent ? (
+                    {onRetry && !sent ? (
+                        <>
+                            <p className={classes.line}>{t`Check your connection, then try again. Your link still works.`}</p>
+                            <Button onClick={onRetry} loading={retrying} className={classes.requestButton}>
+                                {t`Try again`}
+                            </Button>
+                        </>
+                    ) : sent ? (
                         <div className={classes.sent}>
                             <p>{t`Check your inbox! If tickets are associated with this email, you'll receive a link to view them.`}</p>
                             <UnstyledButton className={classes.resetLink} onClick={() => {
@@ -585,17 +597,18 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
  */
 export const MyTickets = () => {
     const {token} = useParams();
-    const {data: orders, isLoading, isError, error} = useGetOrdersByLookupToken(token);
+    const {data: orders, isLoading, isError, error, refetch, isRefetching} = useGetOrdersByLookupToken(token);
+    const linkRejected = isError && !!error?.linkRejected;
 
     // Un lien qui marche est retenu par l'appareil (myTicketsRouteLoader le rouvre); un lien
     // expire est oublie.
     useEffect(() => {
         if (token && orders) {
             saveTicketsLink(token);
-        } else if (token && isError && savedTicketsLink(document.cookie) === token) {
+        } else if (token && linkRejected && savedTicketsLink(document.cookie) === token) {
             forgetTicketsLink();
         }
-    }, [token, orders, isError]);
+    }, [token, orders, linkRejected]);
 
     const locked = !token || isError;
 
@@ -628,7 +641,9 @@ export const MyTickets = () => {
                 {locked ? (
                     <div className={classes.locked}>
                         <DashboardSkeleton locked/>
-                        <EmailOverlay expired={isError} message={error?.message}/>
+                        <EmailOverlay expired={linkRejected} message={error?.message || undefined}
+                                      onRetry={isError && !linkRejected ? () => refetch() : undefined}
+                                      retrying={isRefetching}/>
                     </div>
                 ) : (
                     <>

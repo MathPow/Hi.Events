@@ -212,8 +212,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     // Le rond sur la photo garde son bord decoupe; le bouton contour est une pilule nette.
     const shareButton = (className: string, withLabel: boolean) => (
         <ShareComponent
-            title={'Check out this event: ' + event.title}
-            text={'Check out this event: ' + event.title}
+            title={t`Check out this event: ${event.title}`}
+            text={t`Check out this event: ${event.title}`}
             url={eventHomepageUrl(event)}
             imageUrl={coverImage?.url}
         >
@@ -245,6 +245,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                     entityId={event.id}
                     currentStatus={event.status as 'DRAFT' | 'LIVE'}
                     entityName={event.title}
+                    organizerId={event.organizer?.id ?? event.organizer_id}
                     onSuccess={() =>
                         setTimeout(() => {
                             window.location.reload();
