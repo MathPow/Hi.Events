@@ -109,11 +109,14 @@ const Checkout = () => {
                 eventId: Number(eventId),
                 orderShortId: String(orderShortId),
             });
-        } catch (error) {
-            // La commande tient toujours: la fenetre reste ouverte pour reessayer ou rester.
-            showError(t`Failed to abandon order. Please try again.`);
-            setIsAbandoning(false);
-            return;
+        } catch (error: any) {
+            // 409: la commande n'est deja plus reservee (annulee, mais la reponse s'est perdue, ou
+            // expiree): rien ne retient plus l'acheteur. Sinon elle tient toujours: on reste.
+            if (error?.response?.status !== 409) {
+                showError(t`Failed to abandon order. Please try again.`);
+                setIsAbandoning(false);
+                return;
+            }
         }
 
         setShowAbandonDialog(false);

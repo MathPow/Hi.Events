@@ -4,17 +4,18 @@ import {useDebouncedValue} from '@mantine/hooks';
 import classes from './QrScanner.module.scss';
 import {showError} from "../../../utilites/notifications.tsx";
 import {t} from "@lingui/macro";
+import {ScanOutcome} from "../CheckIn/PhoneScanner";
 import {QrScannerControls} from './QrScannerControls';
 import {PermissionDeniedMessage} from './PermissionDeniedMessage';
 
 interface QRScannerComponentProps {
-    // true: echec passager, le billet peut etre rescanne.
-    onAttendeeScanned: (attendeePublicId: string) => void | Promise<boolean | void>;
+    onAttendeeScanned: (attendeePublicId: string) => void | Promise<ScanOutcome | void>;
     onClose: () => void;
     isSoundOn?: boolean;
 }
 
 const RECENT_SCAN_MS = 6000;
+const RETRY_PAUSE_MS = 2000;
 
 export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -97,6 +98,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
             // Le billet qu'on vient de traiter, encore devant la camera: l'ecran a deja repondu.
             const scannedAt = scannedAtRef.current.get(debouncedAttendeeId);
             if (alreadyScanned && scannedAt && Date.now() - scannedAt < RECENT_SCAN_MS) {
+                setCurrentAttendeeId(null);
                 return;
             }
 
@@ -125,9 +127,13 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 scannedAtRef.current.set(scannedId, Date.now());
                 setProcessedAttendeeIds(prevIds => [...prevIds, scannedId]);
                 setCurrentAttendeeId(null);
-                Promise.resolve(props.onAttendeeScanned(scannedId)).then((retryable) => {
-                    if (retryable) {
-                        setProcessedAttendeeIds(prevIds => prevIds.filter(id => id !== scannedId));
+                // Non traite: relu tout de suite; echec passager: relu apres une courte pause.
+                const forget = () => setProcessedAttendeeIds(prevIds => prevIds.filter(id => id !== scannedId));
+                Promise.resolve(props.onAttendeeScanned(scannedId)).then((outcome) => {
+                    if (outcome === 'busy') {
+                        forget();
+                    } else if (outcome === 'retry') {
+                        setTimeout(forget, RETRY_PAUSE_MS);
                     }
                 }).finally(() => {
                     inFlightAttendeeIdRef.current = null;

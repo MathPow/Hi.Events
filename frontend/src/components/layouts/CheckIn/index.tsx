@@ -23,7 +23,7 @@ import {CheckInOptionsModal} from "../../common/CheckIn/CheckInOptionsModal";
 import {ScannerSelectionModal} from "../../common/CheckIn/ScannerSelectionModal";
 import {HidScannerStatus} from "../../common/CheckIn/HidScannerStatus";
 import {ListIntro, PinScreen} from "../../common/CheckIn/PinScreen";
-import {PhoneScanner, ScanResult} from "../../common/CheckIn/PhoneScanner";
+import {PhoneScanner, ScanOutcome, ScanResult} from "../../common/CheckIn/PhoneScanner";
 import scannerClasses from "../../common/CheckIn/Scanner.module.scss";
 import {DoorSaleModal} from "../../common/CheckIn/DoorSaleModal";
 import {clearCheckInPin, getCheckInPin, setCheckInPin} from "../../../utilites/checkInPin.ts";
@@ -242,17 +242,27 @@ const CheckIn = () => {
         handleCheckInAction(attendee, 'check-in');
     };
 
-    // true: l'echec est passager (reseau, serveur), le scanner laissera rescanner ce billet.
-    const handleQrCheckIn = useCallback(async (attendeePublicId: string): Promise<boolean> => {
+    // busy: pas traite (un autre billet est en cours), a relire tout de suite; retry: echec passager
+    // (reseau, serveur), a relire apres une courte pause; done: entre ou refuse pour de bon.
+    const handleQrCheckIn = useCallback(async (attendeePublicId: string): Promise<ScanOutcome> => {
+        // Une reponse definitive ouvre le silence du billet tenu devant la camera.
+        const settle = (outcome: ScanOutcome): ScanOutcome => {
+            isProcessingRef.current = false;
+            if (outcome === 'done') {
+                recentScansRef.current.set(attendeePublicId, Date.now());
+            }
+            return outcome;
+        };
+
         // Occupe par un autre billet: celui-ci n'est pas traite, le scanner le relira.
         if (isProcessingRef.current) {
-            return true;
+            return 'busy';
         }
 
         // Le billet qu'on vient de traiter, encore devant la camera: rien a redire.
         const justCheckedInAt = recentScansRef.current.get(attendeePublicId);
         if (justCheckedInAt && Date.now() - justCheckedInAt < RECENT_SCAN_MS) {
-            return false;
+            return 'done';
         }
 
         // Check if this barcode was recently processed (within last 3 seconds)
@@ -261,7 +271,7 @@ const CheckIn = () => {
             now - lastScanTimeRef.current < 3000) {
             reportProblem(t`This ticket was just scanned. Please wait before scanning again.`);
             playErrorSound();
-            return false;
+            return 'done';
         }
 
         isProcessingRef.current = true;
@@ -278,15 +288,13 @@ const CheckIn = () => {
                 const notOnList = (error as AxiosError)?.response?.status === 404;
                 reportProblem(notOnList ? t`This ticket is not on this list.` : t`Unable to fetch attendee`);
                 playErrorSound();
-                isProcessingRef.current = false;
-                return !notOnList;
+                return settle(notOnList ? 'done' : 'retry');
             }
 
             if (!attendee) {
                 reportProblem(t`Attendee not found`);
                 playErrorSound();
-                isProcessingRef.current = false;
-                return false;
+                return settle('done');
             }
         }
 
@@ -295,8 +303,7 @@ const CheckIn = () => {
             reportProblem(<Trans>{attendee.first_name} {attendee.last_name} is already checked in</Trans>);
             playErrorSound();
             processedBarcodesRef.current.add(attendeePublicId);
-            isProcessingRef.current = false;
-            return false;
+            return settle('done');
         }
 
         const isAttendeeAwaitingPayment = attendee.status === 'AWAITING_PAYMENT';
@@ -304,15 +311,13 @@ const CheckIn = () => {
         if (allowOrdersAwaitingOfflinePaymentToCheckIn && isAttendeeAwaitingPayment) {
             setSelectedAttendee(attendee);
             checkInModalHandlers.open();
-            isProcessingRef.current = false;
-            return false;
+            return settle('done');
         }
 
         if (!allowOrdersAwaitingOfflinePaymentToCheckIn && isAttendeeAwaitingPayment) {
             reportProblem(t`You cannot check in attendees with unpaid orders. This setting can be changed in the event settings.`);
             playErrorSound();
-            isProcessingRef.current = false;
-            return false;
+            return settle('done');
         }
 
         // Add to processed set before making the request
@@ -326,11 +331,8 @@ const CheckIn = () => {
         const retryable = await handleCheckInAction(attendee, 'check-in');
         if (retryable) {
             processedBarcodesRef.current.delete(attendeePublicId);
-        } else {
-            recentScansRef.current.set(attendeePublicId, Date.now());
         }
-        isProcessingRef.current = false;
-        return retryable;
+        return settle(retryable ? 'retry' : 'done');
     }, [attendees, checkInListShortId, allowOrdersAwaitingOfflinePaymentToCheckIn, checkInModalHandlers, handleCheckInAction, playErrorSound]);
 
 
