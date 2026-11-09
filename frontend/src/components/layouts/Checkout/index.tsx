@@ -132,6 +132,8 @@ const Checkout = () => {
                 setPendingNavigation(null);
                 if (paid) {
                     showInfo(t`This order was already paid, so it was not cancelled.`);
+                } else {
+                    showError(t`We couldn't check this order. Its page will update as soon as the connection is back.`);
                 }
                 navigate(eventCheckoutPath(eventId, orderShortId, 'summary'));
                 return;

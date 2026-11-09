@@ -132,7 +132,8 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
 
             if (!isCheckingIn && !alreadyScanned) {
                 setIsCheckingIn(true);
-                if (isSoundOn && scanInProgressAudioRef.current) {
+                // Une relance (occupe, echec passager) ne rejoue pas le son: un bip par billet lu.
+                if (freshRead && isSoundOn && scanInProgressAudioRef.current) {
                     scanInProgressAudioRef.current.play();
                 }
 
