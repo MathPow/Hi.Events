@@ -77,6 +77,7 @@ class UpdateEventSettingsHandler
                     'allow_orders_awaiting_offline_payment_to_check_in' => $settings->allow_orders_awaiting_offline_payment_to_check_in,
                     'deposit_instructions' => $this->purifier->purify($settings->deposit_instructions),
                     'waiver_text' => $this->purifier->purify($settings->waiver_text),
+                    'participants_sign_themselves' => $settings->participants_sign_themselves,
 
                     // Invoice settings
                     'enable_invoicing' => $settings->enable_invoicing,

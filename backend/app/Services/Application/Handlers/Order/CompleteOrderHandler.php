@@ -41,6 +41,7 @@ use HiEvents\Services\Domain\Payment\Stripe\EventHandlers\PaymentIntentSucceeded
 use HiEvents\Services\Domain\Product\ProductQuantityUpdateService;
 use HiEvents\Services\Domain\Waiver\WaiverService;
 use HiEvents\Services\Domain\Document\OrderDocumentCopyService;
+use HiEvents\Services\Domain\Waiver\ParticipantSigningPolicy;
 use HiEvents\Services\Infrastructure\DomainEvents\DomainEventDispatcherService;
 use HiEvents\Services\Infrastructure\Session\CheckoutSessionManagementService;
 use HiEvents\Services\Infrastructure\DomainEvents\Enums\DomainEventType;
@@ -67,6 +68,7 @@ class CompleteOrderHandler
         private readonly CheckoutSessionManagementService  $sessionManagementService,
         private readonly WaiverService                     $waiverService,
         private readonly OrderDocumentCopyService          $orderDocumentCopyService,
+        private readonly ParticipantSigningPolicy          $signingPolicy,
     )
     {
     }
@@ -196,7 +198,12 @@ class CompleteOrderHandler
                 AttendeeDomainObjectAbstract::PUBLIC_ID => IdHelper::publicId(IdHelper::ATTENDEE_PREFIX),
                 AttendeeDomainObjectAbstract::SHORT_ID => $shortId,
                 AttendeeDomainObjectAbstract::LOCALE => $order->getLocale(),
-                ...$this->waiverSignature($attendee, $waiver, $ipAddress),
+                // Signe plus tard par le participant lui-meme: rien n'est garde de ce que l'acheteur aurait envoye.
+                ...$this->waiverSignature(
+                    $attendee,
+                    $this->signingPolicy->signsAtCheckout($eventSettings, $orderDTO->email, $isPerOrderCollection ? $orderDTO->email : $attendee->email) ? $waiver : null,
+                    $ipAddress,
+                ),
             ];
 
             $createdProductData->push(new CreatedProductDataDTO(
@@ -216,7 +223,12 @@ class CompleteOrderHandler
         );
 
         // Each attendee's copy of the organizer's documents: signed online, or to print.
-        $this->orderDocumentCopyService->createForOrder($order, $createdProductData, $ipAddress);
+        $this->orderDocumentCopyService->createForOrder(
+            $order,
+            $createdProductData,
+            $ipAddress,
+            fn(?string $attendeeEmail) => $this->signingPolicy->signsAtCheckout($eventSettings, $orderDTO->email, $attendeeEmail),
+        );
     }
 
     /**

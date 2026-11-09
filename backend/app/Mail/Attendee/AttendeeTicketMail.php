@@ -2,6 +2,7 @@
 
 namespace HiEvents\Mail\Attendee;
 
+use HiEvents\Services\Domain\Waiver\PendingSignatureService;
 use Carbon\Carbon;
 use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\EventDomainObject;
@@ -89,6 +90,7 @@ class AttendeeTicketMail extends BaseMail
                 'renderedBody' => $this->renderedTemplate->body,
                 'renderedCta' => $this->renderedTemplate->cta,
                 'eventSettings' => $this->eventSettings,
+                'signatureLinks' => $this->signatureLinks(),
             ]);
         }
 
@@ -102,6 +104,7 @@ class AttendeeTicketMail extends BaseMail
                 $this->event->getId(),
                 $attendee->getShortId(),
             ),
+            'signUrl' => $this->signUrl($attendee),
         ]);
 
         return $this->brandedContent('emails.orders.attendee-ticket', [
@@ -117,6 +120,35 @@ class AttendeeTicketMail extends BaseMail
                 $this->attendee->getShortId(),
             )
         ]);
+    }
+
+    /**
+     * The link to the participant's ticket page, where they sign what they still have to; null
+     * when nothing is left to sign.
+     */
+    private function signUrl(AttendeeDomainObject $attendee): ?string
+    {
+        if (!app(PendingSignatureService::class)->hasPending($attendee, $this->eventSettings)) {
+            return null;
+        }
+
+        return sprintf(
+            Url::getFrontEndUrlFromConfig(Url::ATTENDEE_TICKET),
+            $this->event->getId(),
+            $attendee->getShortId(),
+        ) . '#signer';
+    }
+
+    /**
+     * @return array<int, array{name: string, url: string}>
+     */
+    private function signatureLinks(): array
+    {
+        return $this->allAttendees()
+            ->map(fn(AttendeeDomainObject $attendee) => ['name' => $attendee->getFullName(), 'url' => $this->signUrl($attendee)])
+            ->filter(fn(array $link) => $link['url'] !== null)
+            ->values()
+            ->all();
     }
 
     protected function emailTemplateType(): EmailTemplateType

@@ -3,6 +3,12 @@
 <x-mail::event-message :branding="$branding" :footer="$eventSettings->getGetEmailFooterHtml()">
 {!! $renderedBody !!}
 
+@foreach($signatureLinks ?? [] as $link)
+<x-mail::button :url="$link['url']">
+{{ __('Sign for :name', ['name' => $link['name']]) }}
+</x-mail::button>
+@endforeach
+
 @if(isset($renderedCta))
 <x-mail::button :url="$renderedCta['url']">
 {{ $renderedCta['label'] }}

@@ -32,6 +32,8 @@ class ProductWaiverRule implements ValidationRule, ValidatorAwareRule
         private readonly EventDomainObject $event,
         private readonly ?int              $dateOfBirthQuestionId,
         private readonly WaiverService     $waiverService,
+        // Whether this attendee signs at checkout (or later, from their ticket's link).
+        private readonly ?Closure          $signsAtCheckout = null,
     )
     {
     }
@@ -49,6 +51,10 @@ class ProductWaiverRule implements ValidationRule, ValidatorAwareRule
 
         foreach ((array)$value as $index => $attendee) {
             if (!is_array($attendee) || !$this->isTicket($attendee['product_id'] ?? null)) {
+                continue;
+            }
+
+            if ($this->signsAtCheckout && !($this->signsAtCheckout)($attendee)) {
                 continue;
             }
 

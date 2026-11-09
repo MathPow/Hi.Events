@@ -16,6 +16,7 @@ use HiEvents\Repository\Interfaces\QuestionRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Order\DTO\CompleteOrderProductDataDTO;
 use HiEvents\Services\Application\Handlers\Order\DTO\CreatedProductDataDTO;
 use HiEvents\Services\Application\Handlers\Order\DTO\OrderQuestionsDTO;
+use Closure;
 use Illuminate\Support\Collection;
 
 /**
@@ -38,8 +39,9 @@ class OrderDocumentCopyService
 
     /**
      * @param Collection<int, CreatedProductDataDTO> $createdProducts The order's lines, with the short id of each ticket's attendee.
+     * @param Closure|null $signsAtCheckout Given an attendee's email, whether they sign now (or later, from their ticket's link).
      */
-    public function createForOrder(OrderDomainObject $order, Collection $createdProducts, ?string $ipAddress): void
+    public function createForOrder(OrderDomainObject $order, Collection $createdProducts, ?string $ipAddress, ?Closure $signsAtCheckout = null): void
     {
         $documents = $this->documentRepository->findForEvent($order->getEventId());
         $tickets = $createdProducts->filter(fn(CreatedProductDataDTO $created) => $created->shortId !== null);
@@ -81,6 +83,7 @@ class OrderDocumentCopyService
                     ->all(),
                 ipAddress: $ipAddress,
                 locale: $order->getLocale() ?: app()->getLocale(),
+                signNow: $signsAtCheckout === null || $signsAtCheckout($attendee->getEmail()),
             );
         }
     }

@@ -128,6 +128,10 @@ use HiEvents\Http\Actions\Orders\Public\TransitionOrderToOfflinePaymentPublicAct
 use HiEvents\Http\Actions\Orders\ResendOrderConfirmationAction;
 use HiEvents\Http\Actions\Organizers\CreateOrganizerAction;
 use HiEvents\Http\Actions\SelfService\EditAttendeePublicAction;
+use HiEvents\Http\Actions\Attendees\Public\GetParticipantSignaturesPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\SignParticipantSignaturesPublicAction;
+use HiEvents\Http\Actions\CheckInLists\Public\GetCheckInAttendeeSignaturesPublicAction;
+use HiEvents\Http\Actions\CheckInLists\Public\SignCheckInAttendeeSignaturesPublicAction;
 use HiEvents\Http\Actions\SelfService\EditOrderPublicAction;
 use HiEvents\Http\Actions\SelfService\ResendAttendeeTicketPublicAction;
 use HiEvents\Http\Actions\SelfService\ResendOrderConfirmationPublicAction;
@@ -663,6 +667,11 @@ $router->prefix('/public')->group(
 
         // Attendees
         $router->get('/events/{event_id}/attendees/{attendee_short_id}', GetAttendeeActionPublic::class);
+        // Ce qu'un participant signe lui-meme apres l'achat, depuis le lien de son billet.
+        $router->get('/events/{event_id}/attendees/{attendee_short_id}/signatures', GetParticipantSignaturesPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->post('/events/{event_id}/attendees/{attendee_short_id}/signatures', SignParticipantSignaturesPublicAction::class)
+            ->middleware('throttle:self-service-edit');
 
         // Waitlist
         $router->post('/events/{event_id}/waitlist', CreateWaitlistEntryActionPublic::class)
@@ -699,6 +708,9 @@ $router->prefix('/public')->group(
             $router->get('/check-in-lists/{check_in_list_short_id}/attendees', GetCheckInListAttendeesPublicAction::class);
             $router->get('/check-in-lists/{check_in_list_short_id}/attendees/{attendee_public_id}', GetCheckInListAttendeePublicAction::class);
             $router->post('/check-in-lists/{check_in_list_short_id}/check-ins', CreateAttendeeCheckInPublicAction::class);
+            // Le participant qui n'a pas encore signe le fait a l'entree, sur l'appareil du benevole.
+            $router->get('/check-in-lists/{check_in_list_short_id}/attendees/{attendee_public_id}/signatures', GetCheckInAttendeeSignaturesPublicAction::class);
+            $router->post('/check-in-lists/{check_in_list_short_id}/attendees/{attendee_public_id}/signatures', SignCheckInAttendeeSignaturesPublicAction::class);
             $router->delete('/check-in-lists/{check_in_list_short_id}/check-ins/{check_in_short_id}', DeleteAttendeeCheckInPublicAction::class);
 
             // Selling at the door. Off unless the organiser enabled it on the list.

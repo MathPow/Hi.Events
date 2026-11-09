@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
+use HiEvents\Services\Domain\Waiver\ParticipantSigningPolicy;
 use Mockery;
 use Mockery\MockInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -99,6 +100,7 @@ class CompleteOrderHandlerTest extends TestCase
             $this->sessionManagementService,
             $this->waiverService,
             $this->orderDocumentCopyService,
+            new ParticipantSigningPolicy(),
         );
     }
 

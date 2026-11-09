@@ -146,6 +146,8 @@ class DocumentSigningService
         array                $entries,
         ?string              $ipAddress,
         string               $locale,
+        // False: the online copies wait for the participant's own signature.
+        bool                 $signNow = true,
     ): void
     {
         $isMinor = $this->isMinor($dateOfBirth, $event);
@@ -165,7 +167,8 @@ class DocumentSigningService
 
             $blocks = $document->getBlocks();
             $online = $document->getSigningMode() === DocumentSigningMode::ONLINE->value;
-            $answers = $online ? $this->answers($blocks, $entries[$document->getId()] ?? [], $this->guardianSigns($document->getAudience(), $isMinor)) : null;
+            $signed = $online && $signNow;
+            $answers = $signed ? $this->answers($blocks, $entries[$document->getId()] ?? [], $this->guardianSigns($document->getAudience(), $isMinor)) : null;
 
             $this->documentSignatureRepository->create([
                 DocumentSignatureDomainObjectAbstract::ORGANIZER_DOCUMENT_ID => $document->getId(),
@@ -179,12 +182,30 @@ class DocumentSigningService
                 DocumentSignatureDomainObjectAbstract::ANSWERS => $answers,
                 // Whether the participant was a minor stays with the copy: a parent signs it on paper too.
                 DocumentSignatureDomainObjectAbstract::AUTO_VALUES => [...$autoValues, 'is_minor' => $isMinor],
-                DocumentSignatureDomainObjectAbstract::SIGNER_NAME => $online ? $this->signerName($blocks, $answers, DocumentBlocks::SIGNER_PARTICIPANT) : null,
-                DocumentSignatureDomainObjectAbstract::GUARDIAN_NAME => $online ? $this->signerName($blocks, $answers, DocumentBlocks::SIGNER_GUARDIAN) : null,
-                DocumentSignatureDomainObjectAbstract::SIGNED_AT => $online ? $now : null,
-                DocumentSignatureDomainObjectAbstract::IP_ADDRESS => $online ? $ipAddress : null,
+                DocumentSignatureDomainObjectAbstract::SIGNER_NAME => $signed ? $this->signerName($blocks, $answers, DocumentBlocks::SIGNER_PARTICIPANT) : null,
+                DocumentSignatureDomainObjectAbstract::GUARDIAN_NAME => $signed ? $this->signerName($blocks, $answers, DocumentBlocks::SIGNER_GUARDIAN) : null,
+                DocumentSignatureDomainObjectAbstract::SIGNED_AT => $signed ? $now : null,
+                DocumentSignatureDomainObjectAbstract::IP_ADDRESS => $signed ? $ipAddress : null,
             ]);
         }
+    }
+
+    /**
+     * The columns of an online copy once its participant signs it: the answers
+     * worth keeping and who signed.
+     *
+     * @return array<string, mixed>
+     */
+    public function signedFields(OrganizerDocumentDomainObject $document, mixed $entry, bool $isMinor): array
+    {
+        $blocks = $document->getBlocks();
+        $answers = $this->answers($blocks, $entry, $this->guardianSigns($document->getAudience(), $isMinor));
+
+        return [
+            DocumentSignatureDomainObjectAbstract::ANSWERS => $answers,
+            DocumentSignatureDomainObjectAbstract::SIGNER_NAME => $this->signerName($blocks, $answers, DocumentBlocks::SIGNER_PARTICIPANT),
+            DocumentSignatureDomainObjectAbstract::GUARDIAN_NAME => $this->signerName($blocks, $answers, DocumentBlocks::SIGNER_GUARDIAN),
+        ];
     }
 
     /**

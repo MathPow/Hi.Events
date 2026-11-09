@@ -24,6 +24,7 @@ use HiEvents\Validators\Rules\ProductWaiverRule;
 use HiEvents\Validators\Rules\ProductDocumentsRule;
 use HiEvents\Repository\Interfaces\OrganizerDocumentRepositoryInterface;
 use HiEvents\Services\Domain\Document\DocumentSigningService;
+use HiEvents\Services\Domain\Waiver\ParticipantSigningPolicy;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 
@@ -38,6 +39,7 @@ class CompleteOrderValidator extends BaseValidator
         private readonly WaiverService                    $waiverService,
         private readonly OrganizerDocumentRepositoryInterface $documentRepository,
         private readonly DocumentSigningService           $documentSigningService,
+        private readonly ParticipantSigningPolicy         $signingPolicy,
     )
     {
     }
@@ -96,7 +98,7 @@ class CompleteOrderValidator extends BaseValidator
                     $eventSettings->getAttendeeDetailsCollectionMethod(),
                 ),
                 ...$this->waiverRules($eventSettings, $productQuestions, $products),
-                ...$this->documentRules($productQuestions, $products),
+                ...$this->documentRules($eventSettings, $productQuestions, $products),
             ],
             ...$addressRules
         ];
@@ -120,13 +122,14 @@ class CompleteOrderValidator extends BaseValidator
             event: $this->eventRepository->findById((int)$this->route->parameter('event_id')),
             dateOfBirthQuestionId: $dateOfBirthQuestion?->getId(),
             waiverService: $this->waiverService,
+            signsAtCheckout: $this->signsAtCheckout($eventSettings),
         )];
     }
 
     /**
      * The organizer's documents linked to the event: each ticket's attendee signs the online ones.
      */
-    private function documentRules(Collection $productQuestions, Collection $products): array
+    private function documentRules(EventSettingDomainObject $eventSettings, Collection $productQuestions, Collection $products): array
     {
         $eventId = (int)$this->route->parameter('event_id');
         $documents = $this->documentRepository->findForEvent($eventId);
@@ -145,7 +148,23 @@ class CompleteOrderValidator extends BaseValidator
             event: $this->eventRepository->findById($eventId),
             dateOfBirthQuestionId: $dateOfBirthQuestion?->getId(),
             signingService: $this->documentSigningService,
+            signsAtCheckout: $this->signsAtCheckout($eventSettings),
         )];
+    }
+
+    /**
+     * Whether an attendee of this order signs at checkout: always, unless the event asks each
+     * participant to sign for themselves (then only the tickets sent to the buyer's email).
+     */
+    private function signsAtCheckout(EventSettingDomainObject $eventSettings): \Closure
+    {
+        $buyerEmail = request()->input('order.email');
+
+        return fn(array $attendee) => $this->signingPolicy->signsAtCheckout(
+            $eventSettings,
+            is_string($buyerEmail) ? $buyerEmail : null,
+            is_string($attendee['email'] ?? null) ? $attendee['email'] : null,
+        );
     }
 
     public function messages(): array
