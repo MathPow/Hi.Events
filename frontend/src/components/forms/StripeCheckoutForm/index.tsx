@@ -111,6 +111,7 @@ export default function StripeCheckoutForm({setSubmitHandler}: {
                     id="payment-element"
                     options={paymentElementOptions}
                     onReady={() => setIsElementReady(true)}
+                    onLoadError={() => setMessage(t`The payment form couldn't load. Check your connection or turn off your ad blocker, then reload the page.`)}
                 />
             </>
         </form>

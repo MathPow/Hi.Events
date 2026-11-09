@@ -536,7 +536,8 @@ export const OrderSummaryAndProducts = () => {
         }
     }, [paymentFailed]);
 
-    if (isError) {
+    // Une requete ratee pendant l'attente ne fait pas disparaitre une commande deja affichee.
+    if (isError && !order) {
         return (
             <HomepageInfoMessage
                 status="not_found"
@@ -560,11 +561,9 @@ export const OrderSummaryAndProducts = () => {
             <HomepageInfoMessage
                 status="processing"
                 message={t`Processing order`}
-                subtitle={isReserved
-                    ? t`Order #${order.public_id} is not paid yet.`
-                    : t`Order #${order.public_id} is being processed. This page updates on its own.`}
+                subtitle={t`Order #${order.public_id} is waiting for payment confirmation. This page updates on its own.`}
                 link={isReserved ? eventCheckoutPath(eventId, orderShortId, 'payment') : eventHomepageUrl(event)}
-                linkText={isReserved ? t`Continue to payment` : t`Return to Event`}
+                linkText={isReserved ? t`I haven't paid yet` : t`Return to Event`}
             />
         );
     }

@@ -437,7 +437,12 @@ export const CollectInformation = () => {
         mutation.mutate({
             ...values,
             order: {...orderValues, ...splitFullName(orderFullName)},
-            products: values.products.map(({full_name, ...product}: any) => ({...product, ...splitFullName(full_name)})),
+            // Le participant ne retape plus son courriel: la confirmation que l'API attend, c'est lui.
+            products: values.products.map(({full_name, ...product}: any) => ({
+                ...product,
+                email_confirmation: product.email,
+                ...splitFullName(full_name),
+            })),
         });
     };
 

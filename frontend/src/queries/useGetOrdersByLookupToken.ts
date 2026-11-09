@@ -13,7 +13,7 @@ export class TicketLookupError extends Error {
     }
 
     get linkRejected() {
-        return !!this.status && this.status >= 400 && this.status < 500;
+        return !!this.status && this.status >= 400 && this.status < 500 && ![408, 429].includes(this.status);
     }
 }
 

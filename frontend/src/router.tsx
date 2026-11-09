@@ -564,7 +564,7 @@ const routes: RouteObject[] = [
     {
         // Ancien lien court: la page publique de l'evenement est sous /event/.
         path: "/e/:eventId/:eventSlug",
-        loader: ({params}) => redirect(`/event/${params.eventId}/${params.eventSlug}`),
+        loader: ({params, request}) => redirect(`/event/${params.eventId}/${params.eventSlug}${new URL(request.url).search}`),
         errorElement: <ErrorPage />,
     },
     {

@@ -122,11 +122,9 @@ export const StripePaymentMethod = ({enabled, setSubmitHandler, onUnavailableCha
                 <p className={classes.stripeErrorTitle}>
                     {(stripePaymentIntentError as any).response?.data?.message || t`Something went wrong`}
                 </p>
-                <p>
-                    {(stripePaymentIntentError as any).response?.status === 409
-                        ? t`Please restart the checkout process.`
-                        : t`Please contact the organizer, or try again later.`}
-                </p>
+                {(stripePaymentIntentError as any).response?.status !== 409 && (
+                    <p>{t`Please contact the organizer, or try again later.`}</p>
+                )}
                 <a href={eventHomepagePath(event)}>{t`Return to Event`}</a>
             </div>
         );
