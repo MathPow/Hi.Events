@@ -644,7 +644,8 @@ const SelectProducts = (props: SelectProductsProps) => {
                                             const description = product.description && (
                                                 <div
                                                     className={'hi-product-description-row'}>
-                                                    <Spoiler maxHeight={87} showLabel={t`Show more`}
+                                                    {/* Assez pour une image entiere et quelques lignes avant « Voir plus ». */}
+                                                    <Spoiler maxHeight={360} showLabel={t`Show more`}
                                                              hideLabel={t`Hide`}>
                                                         <div dangerouslySetInnerHTML={{
                                                             __html: product.description

@@ -426,6 +426,15 @@ $deplie: 0.45s cubic-bezier(0.33, 1, 0.68, 1);
         p + p::before {
           content: ' ';
         }
+
+        // Une image de la description, entiere a la largeur de la carte comme une fois ouverte,
+        // jamais a sa taille d'origine (rognee, comme agrandie).
+        img {
+          display: block;
+          max-width: 100%;
+          height: auto;
+          margin: 8px 0;
+        }
       }
 
       .hi-product-head-price {
@@ -484,6 +493,11 @@ $deplie: 0.45s cubic-bezier(0.33, 1, 0.68, 1);
       .hi-product-description-row {
         font-size: 14px;
         line-height: 1.4;
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
 
         p:not(:last-child) {
           margin-bottom: 0.5em;
