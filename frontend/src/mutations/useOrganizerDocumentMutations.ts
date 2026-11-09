@@ -27,6 +27,19 @@ export const useCreateOrganizerDocument = () => {
     });
 };
 
+export const useImportOrganizerDocumentPdf = () => {
+    const refresh = useRefreshList();
+
+    return useMutation({
+        mutationFn: ({organizerId, file, onProgress}: {
+            organizerId: IdParam,
+            file: File,
+            onProgress: (blocks: number) => void,
+        }) => organizerDocumentClient.importPdf(organizerId, file, onProgress),
+        onSuccess: (_, {organizerId}) => refresh(organizerId),
+    });
+};
+
 export const useUpdateOrganizerDocument = () => {
     const queryClient = useQueryClient();
     const refresh = useRefreshList();
