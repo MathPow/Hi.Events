@@ -103,6 +103,7 @@ const DocumentEditor = () => {
     const {organizerId, documentId} = useParams();
     const documentQuery = useGetOrganizerDocument(organizerId, documentId);
     const {data: organizer} = useGetOrganizer(organizerId);
+    const organizerLogo = organizer?.images?.find(image => image.type === 'ORGANIZER_LOGO')?.url;
     const [draft, setDraft] = useState<DocumentDraft | null>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [settingsOpen, setSettingsOpen] = useState(false);
@@ -328,7 +329,9 @@ const DocumentEditor = () => {
                         }
                     }}>
                         <div className={classes.paperHeader}>
-                            <span className={classes.paperInitial}>{(organizer?.name ?? '?').slice(0, 1).toUpperCase()}</span>
+                            {organizerLogo
+                                ? <img className={classes.paperLogo} src={organizerLogo} alt=""/>
+                                : <span className={classes.paperInitial}>{(organizer?.name ?? '?').slice(0, 1).toUpperCase()}</span>}
                             <span className={classes.paperOrganizer}>{organizer?.name}</span>
                         </div>
 
