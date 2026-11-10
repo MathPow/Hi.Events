@@ -49,6 +49,7 @@ import {
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {PageBody} from "../../../../common/PageBody";
+import {PAGE_GAP, usePaperPages} from "./usePaperPages.ts";
 import {useGetOrganizer} from "../../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerDocument} from "../../../../../queries/useGetOrganizerDocuments.ts";
 import {useGetOrganizerEvents} from "../../../../../queries/useGetOrganizerEvents.ts";
@@ -103,6 +104,7 @@ const DocumentEditor = () => {
     const {organizerId, documentId} = useParams();
     const documentQuery = useGetOrganizerDocument(organizerId, documentId);
     const {data: organizer} = useGetOrganizer(organizerId);
+    const paperPages = usePaperPages();
     const organizerLogo = organizer?.images?.find(image => image.type === 'ORGANIZER_LOGO')?.url;
     const [draft, setDraft] = useState<DocumentDraft | null>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -323,12 +325,33 @@ const DocumentEditor = () => {
                 </aside>
 
                 <div className={classes.desk}>
-                    <div className={classes.paper} onMouseDown={(event) => {
+                    <div
+                        ref={paperPages.paperRef}
+                        className={classes.paper}
+                        style={paperPages.pageHeight ? {
+                            padding: `${paperPages.marginTop}px ${paperPages.marginSide}px`,
+                            minHeight: paperPages.pageCount * (paperPages.pageHeight + PAGE_GAP) - PAGE_GAP,
+                        } : undefined}
+                        onMouseDown={(event) => {
                         if (event.target === event.currentTarget) {
                             setSelectedId(null);
                         }
                     }}>
-                        <div className={classes.paperHeader}>
+                        {/* The A4 pages of the PDF, behind the blocks. */}
+                        {paperPages.pageHeight > 0 && Array.from({length: paperPages.pageCount}, (_, page) => (
+                            <div
+                                key={page}
+                                className={classes.sheet}
+                                style={{top: page * (paperPages.pageHeight + PAGE_GAP), height: paperPages.pageHeight}}
+                                aria-hidden
+                            >
+                                {paperPages.pageCount > 1 && (
+                                    <span className={classes.sheetNumber}>{page + 1} / {paperPages.pageCount}</span>
+                                )}
+                            </div>
+                        ))}
+
+                        <div className={classes.paperHeader} data-page-item="header">
                             {organizerLogo
                                 ? <img className={classes.paperLogo} src={organizerLogo} alt=""/>
                                 : <span className={classes.paperInitial}>{(organizer?.name ?? '?').slice(0, 1).toUpperCase()}</span>}
@@ -346,6 +369,7 @@ const DocumentEditor = () => {
                                             key={block.id}
                                             block={block}
                                             clauseNumber={clauseNumber}
+                                            pushTop={paperPages.pushes[block.id]}
                                             selected={selectedId === block.id}
                                             isFirst={index === 0}
                                             isLast={index === blocks.length - 1}
@@ -504,6 +528,8 @@ const SaveIndicator = ({status, savedAt, onRetry}: { status: SaveStatus, savedAt
 interface SortableBlockProps {
     block: DocumentBlock;
     clauseNumber: number;
+    // Pixels down to the next page, when the block would cross the bottom of its page.
+    pushTop?: number;
     selected: boolean;
     isFirst: boolean;
     isLast: boolean;
@@ -520,6 +546,7 @@ interface SortableBlockProps {
 const SortableBlock = ({
                            block,
                            clauseNumber,
+                           pushTop,
                            selected,
                            isFirst,
                            isLast,
@@ -561,7 +588,8 @@ const SortableBlock = ({
             data-type={block.type}
             data-selected={selected || undefined}
             data-dragging={isDragging || undefined}
-            style={{transform: CSS.Transform.toString(transform), transition}}
+            data-page-item={block.id}
+            style={{transform: CSS.Transform.toString(transform), transition, marginTop: pushTop || undefined}}
             onMouseDown={onSelect}
             onFocusCapture={onSelect}
         >
