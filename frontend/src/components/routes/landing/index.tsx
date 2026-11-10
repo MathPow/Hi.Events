@@ -894,7 +894,7 @@ const Landing = () => {
                             {/* Deux publics: a gauche, ceux qui sortent (les evenements, leurs billets), sans
                                 compte; a droite, les organisateurs. Le hero seulement, pas la barre qui suit. */}
                             <div className={classes.navStart}>
-                                <NavLink to="/" className={classes.brand}>Billetterie<br/>Dehors</NavLink>
+                                <NavLink to="/" className={classes.brand} aria-label="Billetterie Dehors"><img src="/logos/billetterie-dehors-wordmark.svg" alt=""/></NavLink>
                                 <div className={classes.navLinks}>
                                     <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`}/>
                                     <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>

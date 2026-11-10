@@ -119,7 +119,7 @@ class EventMessageTest extends TestCase
             addressLine: null,
             supportEmail: 'info@example.com',
             assetsUrl: 'https://billets.example.com',
-            platformLogoUrl: 'https://billets.example.com/logos/dehors-billetterie-clair.png',
+            platformLogoUrl: 'https://billets.example.com/logos/billetterie-dehors-wordmark.png',
             platformUrl: 'https://example.com',
         );
     }

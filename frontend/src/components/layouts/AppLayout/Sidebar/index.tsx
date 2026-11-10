@@ -128,8 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <div className={classes.brand}>
                     <NavLink to="/manage/events" className={classes.wordmark} tabIndex={collapsed ? -1 : undefined}
                              aria-hidden={collapsed || undefined}>
-                        <span>{'Billetterie'}</span>
-                        <span>{'Dehors'}</span>
+                        <img src="/logos/billetterie-dehors-wordmark.svg" alt="Billetterie Dehors"/>
                     </NavLink>
                     <UnstyledButton
                         className={classes.collapseButton}

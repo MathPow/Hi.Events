@@ -67,7 +67,7 @@ class EventEmailBrandingService
             addressLine: $settings?->getIsOnlineEvent() ? null : $this->addressLine($location),
             supportEmail: $settings?->getSupportEmail() ?: $organizer?->getEmail(),
             assetsUrl: $frontendUrl,
-            platformLogoUrl: $frontendUrl . '/logos/dehors-billetterie-clair.png',
+            platformLogoUrl: $frontendUrl . '/logos/billetterie-dehors-wordmark.png',
             platformUrl: (string)$this->config->get('app.email_logo_link_url', $frontendUrl),
         );
     }
