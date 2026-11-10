@@ -318,6 +318,9 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
     }, [menuOpen, onMenuClose]);
 
     return (
+        <>
+        {/* Under the open menu, the page darkens, as under the DEHORS shop's cart. A press on it closes the menu. */}
+        <div className={`${classes.menuOverlay} ${menuOpen ? classes.menuOverlayShown : ''}`} aria-hidden="true"/>
         <header ref={header} className={`${classes.scrolledNav} ${shown || menuOpen ? classes.scrolledNavShown : ''} `
             + `${menuOpen ? classes.scrolledNavOpen : ''}`}>
             <a href="#top" className={classes.scrolledNavBrand} aria-label="Billetterie Dehors" onClick={(event) => {
@@ -338,6 +341,7 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
             <MenuButton open={menuOpen} onToggle={onMenuToggle} buttonRef={menuButton}/>
             <MobileMenu open={menuOpen} onClose={onMenuClose}/>
         </header>
+        </>
     );
 };
 
