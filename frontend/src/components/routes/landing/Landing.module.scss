@@ -911,6 +911,29 @@ $ridge-mobile: 10vw;
   }
 }
 
+.menuOverlay {
+  position: fixed;
+  z-index: 49;
+  inset: 0;
+  background: rgb(36 28 21 / 0.45);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.menuOverlayShown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.3s ease, visibility 0s;
+}
+
 .scrolledNavShown {
   translate: -50% 0;
   visibility: visible;
