@@ -248,7 +248,10 @@ $teinte: rgb(250 120 83 / 0.14);
   }
 }
 
+// The sheet: its A4 pages (.sheet) lie behind the blocks, with the desk showing between them.
 .paper {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -256,17 +259,33 @@ $teinte: rgb(250 120 83 / 0.14);
   max-width: 720px;
   min-height: 560px;
   padding: 2.5rem 2.75rem 3rem;
-  border-radius: 4px;
   color: $brun;
   font-size: 0.9375rem;
   line-height: 1.55;
-  background: #fff;
-  box-shadow: 0 2px 14px rgb(55 39 33 / 0.08);
 
   @include mixins.respond-below(md) {
     min-height: 420px;
     padding: 1.5rem 1rem 2rem;
   }
+}
+
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 14px rgb(55 39 33 / 0.08);
+  pointer-events: none;
+}
+
+.sheetNumber {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.625rem;
+  color: $doux;
+  font-size: 0.75rem;
 }
 
 .paperHeader {
