@@ -79,8 +79,7 @@ export const ErrorScreen = ({
 
                     <header className={classes.top}>
                         <Link to="/" className={classes.wordmark} aria-label="Billetterie Dehors">
-                            <span>BILLETTERIE</span>
-                            <span>DEHORS</span>
+                            <img src="/logos/billetterie-dehors-wordmark.svg" alt=""/>
                         </Link>
                     </header>
 
@@ -90,11 +89,11 @@ export const ErrorScreen = ({
                         {notFound ? (
                             <div className={classes.code} aria-hidden>
                                 <span>4</span>
-                                <img src="/landing/billet-montagne.svg" alt="" className={classes.ticket}/>
+                                <img src="/logos/billetterie-dehors-logomark.svg" alt="" className={classes.ticket}/>
                                 <span>4</span>
                             </div>
                         ) : (
-                            <img src="/landing/billet-montagne.svg" alt="" aria-hidden
+                            <img src="/logos/billetterie-dehors-logomark.svg" alt="" aria-hidden
                                  className={classes.ticketAlone}/>
                         )}
 

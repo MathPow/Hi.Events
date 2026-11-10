@@ -489,11 +489,13 @@ $ridge-mobile: 10vw;
 }
 
 .brand {
-  font-family: $display;
-  font-size: 1.35rem;
-  line-height: 0.95;
-  text-transform: uppercase;
-  text-align: center;
+  display: block;
+
+  img {
+    display: block;
+    width: auto;
+    height: 3rem;
+  }
 }
 
 // A gauche, le logo et ce qui sert a ceux qui sortent (les evenements, leurs billets); a droite,
@@ -948,7 +950,7 @@ $ridge-mobile: 10vw;
     display: block;
     aspect-ratio: 1;
     background: $orange;
-    mask: url('/landing/billet-montagne.svg') center / contain no-repeat;
+    mask: url('/logos/billetterie-dehors-logomark.svg') center / contain no-repeat;
   }
 }
 
@@ -2949,8 +2951,8 @@ $footer-ridge-mobile: 13.205056%;
     padding-inline: 1rem;
   }
 
-  .brand {
-    font-size: 1.1rem;
+  .brand img {
+    height: 2.5rem;
   }
 
   .navActions .button {

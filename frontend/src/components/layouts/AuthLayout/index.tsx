@@ -87,8 +87,7 @@ const AuthLayout = () => {
                             <span className={classes.backShort}>{t`Home`}</span>
                         </Link>
                         <Link to={'/'} className={classes.wordmark} data-rough aria-label={'Billetterie Dehors'}>
-                            <span>BILLETTERIE</span>
-                            <span>DEHORS</span>
+                            <img src="/logos/billetterie-dehors-wordmark.svg" alt=""/>
                         </Link>
                     </div>
 

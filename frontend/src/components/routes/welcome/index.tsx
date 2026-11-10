@@ -39,8 +39,7 @@ const OnboardingCard = ({step, children}: { step?: 1 | 2 | 3 | 4, children: Reac
             <div className={classes.card} data-rough>
                 <div className={classes.topBar}>
                     <Link to={'/'} className={classes.wordmark} aria-label={'Billetterie Dehors'}>
-                        <span>BILLETTERIE</span>
-                        <span>DEHORS</span>
+                        <img src="/logos/billetterie-dehors-wordmark.svg" alt=""/>
                     </Link>
                     {step && (
                         <div className={classes.progress}>

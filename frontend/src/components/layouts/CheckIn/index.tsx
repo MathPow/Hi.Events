@@ -550,8 +550,7 @@ const CheckIn = () => {
             {!showPhoneScanner && <div className={classes.inner}>
                 <header className={classes.top}>
                     <span className={classes.wordmark} aria-hidden>
-                        <span>{'Billetterie'}</span>
-                        <span>{'Dehors'}</span>
+                        <img src="/logos/billetterie-dehors-wordmark.svg" alt=""/>
                     </span>
                     <div className={classes.topActions}>
                         {!networkStatus.online && (
