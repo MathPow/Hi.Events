@@ -779,6 +779,143 @@ $ridge-mobile: 10vw;
   text-transform: uppercase;
 }
 
+// The hero's stickers, around the title as on the DEHORS shop: over the hero's
+// edges rather than clipped by them, under the scroll arrow (z-index 4).
+.heroStickers {
+  position: absolute;
+  z-index: 3;
+  inset: 1.25rem $gutter 0;
+  pointer-events: none;
+
+  .sticker {
+    pointer-events: none;
+  }
+}
+
+.heroStickerCamera {
+  --w: clamp(5.5rem, 10vw, 9rem);
+  top: -2.25rem;
+  left: calc(50% - var(--w) / 2);
+  width: var(--w);
+  rotate: -6deg;
+  --tilt-delay: -0.6s;
+  --float-delay: -2s;
+  --pop-delay: 0.1s;
+
+  // Beside the full nav (links, languages, log in), it would sit on the buttons.
+  @media (min-width: 1151px) and (max-width: 1439px) {
+    display: none;
+  }
+}
+
+.heroStickerQuebec {
+  top: 22%;
+  left: -1rem;
+  width: clamp(5rem, 11vw, 9.5rem);
+  rotate: -8deg;
+  --tilt-delay: -1.2s;
+  --float-delay: -4s;
+  --pop-delay: 0.2s;
+}
+
+.heroStickerDehors {
+  top: 20%;
+  right: -1rem;
+  width: clamp(5rem, 11vw, 9.5rem);
+  rotate: 7deg;
+  --float-delay: -1s;
+  --pop-delay: 0.3s;
+}
+
+.heroStickerCrocs {
+  bottom: 17%;
+  left: 3%;
+  width: clamp(8rem, 18vw, 14.5rem);
+  rotate: -6deg;
+  --tilt-delay: -0.4s;
+  --float-delay: -3s;
+  --pop-delay: 0.4s;
+}
+
+.heroStickerBoing {
+  bottom: 13%;
+  right: 3%;
+  width: clamp(7rem, 14vw, 11.5rem);
+  rotate: 5deg;
+  --tilt-delay: -1.6s;
+  --float-delay: -5s;
+  --pop-delay: 0.5s;
+}
+
+// Behind the scroll arrow, its tip above it.
+.heroStickerPine {
+  --w: clamp(4.5rem, 7.5vw, 6.5rem);
+  bottom: -1rem;
+  left: calc(50% - var(--w) / 2);
+  width: var(--w);
+  rotate: 3deg;
+  --tilt-delay: -0.8s;
+  --float-delay: -2.5s;
+  --pop-delay: 0.6s;
+}
+
+// On a phone, the title takes the whole width: the stickers keep to the corners.
+@media (max-width: $mobile) {
+  .heroStickerCamera {
+    display: none;
+  }
+
+  .heroStickerQuebec, .heroStickerDehors {
+    top: 14%;
+    width: 5rem;
+  }
+
+  .heroStickerQuebec {
+    left: -0.5rem;
+  }
+
+  .heroStickerDehors {
+    right: -0.5rem;
+  }
+
+  .heroStickerCrocs {
+    bottom: 13%;
+    width: 6.5rem;
+  }
+
+  .heroStickerBoing {
+    bottom: 12%;
+    width: 5.5rem;
+  }
+}
+
+// They land once the title has, one after the other.
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .landing[data-entrance] .heroStickers .sticker {
+    animation:
+      sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
+      hero-sticker-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(1.6s + var(--pop-delay, 0s)) both;
+  }
+
+  .landing:not([data-entrance]) .heroStickers .sticker {
+    animation:
+      sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
+      hero-sticker-pop-wait 1ms 2.5s backwards;
+  }
+}
+
+@keyframes hero-sticker-pop {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes hero-sticker-pop-wait {
+  from {
+    scale: 0;
+  }
+}
+
 .scrollDownWrap {
   position: absolute;
   z-index: 4;

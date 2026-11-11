@@ -456,13 +456,13 @@ const DashboardSkeleton = ({locked = false}: { locked?: boolean }) => (
 // L'en-tete ne depend pas des billets: il s'affiche tout de suite, seul le courriel attend la commande.
 const Hero = ({email, loading}: { email?: string, loading: boolean }) => (
     <header className={`${shell.card} ${classes.hero}`} data-rough>
-        <img src={'/landing/stickers/autocollant-sapin.webp'} alt="" aria-hidden
+        <img src={'/landing/stickers/autocollant-billet.svg'} alt="" aria-hidden
              className={classes.stickerPine}/>
         <p className={classes.kicker}>{t`See you outside!`}</p>
         <h1 className={classes.title}>
             <span className={classes.titleText}>
                 {t`My tickets`}
-                <img src={'/landing/stickers/autocollant-drapeau-dehors.webp'} alt="" aria-hidden
+                <img src={'/landing/stickers/autocollant-dossard.svg'} alt="" aria-hidden
                      className={classes.stickerFlag}/>
             </span>
         </h1>

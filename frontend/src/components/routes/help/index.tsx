@@ -28,13 +28,13 @@ const HelpCenter = () => {
         <HelpPage title={t`Help center · Billetterie Dehors`}
                   description={t`Step-by-step guides, answers to frequent questions and an assistant for the rest.`}>
             <header className={directory.hero}>
-                <img src={'/landing/stickers/autocollant-sac-a-dos.svg'} alt="" aria-hidden
+                <img src={'/landing/stickers/autocollant-compass.svg'} alt="" aria-hidden
                      className={`${directory.stickerCamera} ${classes.stickerBackpack}`}/>
                 <p className={directory.kicker}>{t`How can we help?`}</p>
                 <h1 className={directory.title}>
                     <span className={directory.titleText}>
                         {t`Help center`}
-                        <img src={'/landing/stickers/autocollant-feu-de-camp.svg'} alt="" aria-hidden
+                        <img src={'/landing/stickers/autocollant-billet.svg'} alt="" aria-hidden
                              className={directory.stickerFlag}/>
                     </span>
                 </h1>

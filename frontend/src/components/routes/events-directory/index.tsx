@@ -140,13 +140,13 @@ export const EventsDirectory = () => {
                 </div>
 
                 <header className={classes.hero}>
-                    <img src={'/landing/stickers/autocollant-appareil-photo.webp'} alt="" aria-hidden
+                    <img src={'/landing/stickers/autocollant-calendrier.svg'} alt="" aria-hidden
                          className={classes.stickerCamera}/>
                     <p className={classes.kicker}>{t`Find your next outing`}</p>
                     <h1 className={classes.title}>
                         <span className={classes.titleText}>
                             {t`Events`}
-                            <img src={'/landing/stickers/autocollant-drapeau-dehors.webp'} alt="" aria-hidden
+                            <img src={'/landing/stickers/autocollant-logo.svg'} alt="" aria-hidden
                                  className={classes.stickerFlag}/>
                         </span>
                     </h1>
