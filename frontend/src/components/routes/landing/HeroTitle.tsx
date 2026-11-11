@@ -107,9 +107,14 @@ export const HeroTitle = () => {
             <p className={classes.heroSubtitle}>{t`The Quebec ticketing platform built for the sports community.`}</p>
             {/* Roughens the stickers' cream outline (.stickerWord::before). */}
             <svg className={classes.stickerWordFilter} aria-hidden="true" focusable="false">
-                <filter id={EDGE_FILTER} x="-10%" y="-20%" width="120%" height="140%">
+                <filter id={EDGE_FILTER} x="-10%" y="-20%" width="120%" height="140%" colorInterpolationFilters="sRGB">
                     <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7"/>
                     <feDisplacementMap in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+                    {/* The displacement leaves a jagged edge: softened, then cut sharp again, without the steps. */}
+                    <feGaussianBlur stdDeviation="0.9"/>
+                    <feComponentTransfer>
+                        <feFuncA type="linear" slope="3" intercept="-1"/>
+                    </feComponentTransfer>
                 </filter>
             </svg>
         </div>
