@@ -2655,18 +2655,26 @@ $ridge-mobile: 10vw;
 
 // In the cream frame of the features' picture (.featureFrame): a mat, cut by hand.
 .communityPhoto1, .communityPhoto2, .communityPhoto3 {
+  --mat: 0.75rem;
+  position: relative;
   aspect-ratio: 350 / 405;
-  padding: 0.75rem;
   border-radius: 1.5rem;
   background: $creme;
   transition: rotate 0.4s $ease;
 
+  // Placed in the mat rather than sized by padding: Safari resolves the
+  // picture's 100% height against the whole frame of an aspect-ratio box, so
+  // it spilled over the mat at the bottom.
   img {
+    position: absolute;
+    inset: var(--mat);
+    width: calc(100% - 2 * var(--mat));
+    height: calc(100% - 2 * var(--mat));
     border-radius: 0.75rem;
   }
 
   @media (max-width: $mobile) {
-    padding: 0.5rem;
+    --mat: 0.5rem;
     border-radius: 1.1rem;
 
     img {
