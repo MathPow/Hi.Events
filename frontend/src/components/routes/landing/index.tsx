@@ -56,28 +56,17 @@ const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, c
     return <Component ref={ref} className={className} {...props}>{children}</Component>;
 };
 
-// Each file's size. A sticker is a WebP unless its name gives another extension.
-const STICKER_SIZES: Record<string, [number, number]> = {
-    'autocollant-drapeau-dehors': [288, 288],
-    'autocollant-drapeau': [289, 288],
-    'autocollant-appareil-photo': [289, 289],
-    'autocollant-crocs': [361, 216],
-    'autocollant-boing': [289, 216],
-    'autocollant-sapin': [217, 288],
-};
-
 /**
- * A sticker that tilts from one pose to the other, like the "Ce qui nous guide"
- * stickers of the DEHORS shop (.sticker).
+ * One of the brand's stickers (public/landing/stickers, 144px squares), tilting
+ * from one pose to the other like the "Ce qui nous guide" stickers of the DEHORS shop (.sticker).
  */
 const Sticker = ({name, className, eager}: { name: string, className?: string, eager?: boolean }) => {
-    const [width, height] = STICKER_SIZES[name] ?? (name.endsWith('.svg') ? [144, 144] : [1, 1]);
     const element = useRef<HTMLImageElement>(null);
     useStickerTilt(element);
 
     return (
-        <img ref={element} className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/${name.includes('.') ? name : `${name}.webp`}`}
-             width={width} height={height} alt="" aria-hidden="true" loading={eager ? 'eager' : 'lazy'} decoding="async"
+        <img ref={element} className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/autocollant-${name}.svg`}
+             width={144} height={144} alt="" aria-hidden="true" loading={eager ? 'eager' : 'lazy'} decoding="async"
              draggable={false}/>
     );
 };
@@ -926,6 +915,14 @@ const Landing = () => {
                     <Rough className={classes.hero} amplitude={2} step={56}>
                         <HeroVideo/>
                         <div className={classes.heroShade}/>
+                        <div className={classes.heroStickers}>
+                            <Sticker name="photo" className={classes.heroStickerTop} eager/>
+                            <Sticker name="logo" className={classes.heroStickerLeft} eager/>
+                            <Sticker name="compass" className={classes.heroStickerRight} eager/>
+                            <Sticker name="soulier" className={classes.heroStickerBottomLeft} eager/>
+                            <Sticker name="dossard" className={classes.heroStickerBottomRight} eager/>
+                            <Sticker name="tente" className={classes.heroStickerBottom} eager/>
+                        </div>
                         <header ref={heroNav} className={classes.nav}>
                             {/* Deux publics: a gauche, ceux qui sortent (les evenements, leurs billets), sans
                                 compte; a droite, les organisateurs. Le hero seulement, pas la barre qui suit. */}
@@ -959,14 +956,6 @@ const Landing = () => {
                             <span>{t`2.5% + Stripe fees`}</span>
                         </div>
                     </Rough>
-                    <div className={classes.heroStickers}>
-                        <Sticker name="autocollant-appareil-photo" className={classes.heroStickerCamera} eager/>
-                        <Sticker name="autocollant-drapeau" className={classes.heroStickerQuebec} eager/>
-                        <Sticker name="autocollant-drapeau-dehors" className={classes.heroStickerDehors} eager/>
-                        <Sticker name="autocollant-crocs" className={classes.heroStickerCrocs} eager/>
-                        <Sticker name="autocollant-boing" className={classes.heroStickerBoing} eager/>
-                        <Sticker name="autocollant-sapin" className={classes.heroStickerPine} eager/>
-                    </div>
                     <ScrollDown/>
                 </section>
 
@@ -987,7 +976,7 @@ const Landing = () => {
                     </div>
                     <div className={classes.introPhotoLarge} data-rise>
                         <Photo name="photo-c"/>
-                        <Sticker name="autocollant-tente.svg" className={classes.stickerBackpack}/>
+                        <Sticker name="billet" className={classes.stickerBackpack}/>
                     </div>
                 </section>
 
@@ -1017,7 +1006,7 @@ const Landing = () => {
                             <Rough className={classes.feesCard} amplitude={1.8} step={36}>
                                 <FeesComparator/>
                             </Rough>
-                            <Sticker name="autocollant-tirelire.svg" className={classes.stickerCampfire}/>
+                            <Sticker name="tirelire" className={classes.stickerCampfire}/>
                             <p className={classes.feesNote}>{t`Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price.`}</p>
                         </div>
                     </Rough>
@@ -1084,8 +1073,8 @@ const Landing = () => {
                             <Photo name="photo-b" className={classes.communityPhoto1}/>
                             <Photo name="photo-c" className={classes.communityPhoto2}/>
                             <Photo name="photo-a" className={classes.communityPhoto3}/>
-                            <Sticker name="autocollant-photo.svg" className={classes.stickerCommunityLeft}/>
-                            <Sticker name="autocollant-coin.svg" className={classes.stickerCommunityRight}/>
+                            <Sticker name="calendrier" className={classes.stickerCommunityLeft}/>
+                            <Sticker name="coin" className={classes.stickerCommunityRight}/>
                         </div>
                     </section>
 

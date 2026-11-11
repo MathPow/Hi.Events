@@ -779,22 +779,23 @@ $ridge-mobile: 10vw;
   text-transform: uppercase;
 }
 
-// The hero's stickers, around the title as on the DEHORS shop: over the hero's
-// edges rather than clipped by them, under the scroll arrow (z-index 4).
+// The hero's stickers, around the title as in the mockup: inside the hero,
+// cut by its edges, over the shade and under the nav and the title.
 .heroStickers {
   position: absolute;
-  z-index: 3;
-  inset: 1.25rem $gutter 0;
+  z-index: 1;
+  inset: 0;
   pointer-events: none;
 
   .sticker {
+    z-index: auto;
     pointer-events: none;
   }
 }
 
-.heroStickerCamera {
+.heroStickerTop {
   --w: clamp(5.5rem, 10vw, 9rem);
-  top: -2.25rem;
+  top: -1.5rem;
   left: calc(50% - var(--w) / 2);
   width: var(--w);
   rotate: -6deg;
@@ -808,49 +809,49 @@ $ridge-mobile: 10vw;
   }
 }
 
-.heroStickerQuebec {
-  top: 22%;
-  left: -1rem;
-  width: clamp(5rem, 11vw, 9.5rem);
-  rotate: -8deg;
+.heroStickerLeft {
+  top: 21%;
+  left: -2.25rem;
+  width: clamp(6rem, 12vw, 10.5rem);
+  rotate: -10deg;
   --tilt-delay: -1.2s;
   --float-delay: -4s;
   --pop-delay: 0.2s;
 }
 
-.heroStickerDehors {
-  top: 20%;
-  right: -1rem;
-  width: clamp(5rem, 11vw, 9.5rem);
-  rotate: 7deg;
+.heroStickerRight {
+  top: 19%;
+  right: -1.75rem;
+  width: clamp(6rem, 11vw, 9.5rem);
+  rotate: 8deg;
   --float-delay: -1s;
   --pop-delay: 0.3s;
 }
 
-.heroStickerCrocs {
-  bottom: 17%;
+.heroStickerBottomLeft {
+  bottom: 14%;
   left: 3%;
-  width: clamp(8rem, 18vw, 14.5rem);
-  rotate: -6deg;
+  width: clamp(7rem, 15vw, 12rem);
+  rotate: -8deg;
   --tilt-delay: -0.4s;
   --float-delay: -3s;
   --pop-delay: 0.4s;
 }
 
-.heroStickerBoing {
+.heroStickerBottomRight {
   bottom: 13%;
   right: 3%;
-  width: clamp(7rem, 14vw, 11.5rem);
-  rotate: 5deg;
+  width: clamp(6.5rem, 13vw, 10.5rem);
+  rotate: 6deg;
   --tilt-delay: -1.6s;
   --float-delay: -5s;
   --pop-delay: 0.5s;
 }
 
-// Behind the scroll arrow, its tip above it.
-.heroStickerPine {
-  --w: clamp(4.5rem, 7.5vw, 6.5rem);
-  bottom: -1rem;
+// Cut by the hero's bottom edge, above the scroll arrow.
+.heroStickerBottom {
+  --w: clamp(5rem, 8vw, 7rem);
+  bottom: -0.25rem;
   left: calc(50% - var(--w) / 2);
   width: var(--w);
   rotate: 3deg;
@@ -861,31 +862,31 @@ $ridge-mobile: 10vw;
 
 // On a phone, the title takes the whole width: the stickers keep to the corners.
 @media (max-width: $mobile) {
-  .heroStickerCamera {
+  .heroStickerTop {
     display: none;
   }
 
-  .heroStickerQuebec, .heroStickerDehors {
+  .heroStickerLeft, .heroStickerRight {
     top: 14%;
     width: 5rem;
   }
 
-  .heroStickerQuebec {
-    left: -0.5rem;
+  .heroStickerLeft {
+    left: -1.25rem;
   }
 
-  .heroStickerDehors {
-    right: -0.5rem;
+  .heroStickerRight {
+    right: -1.25rem;
   }
 
-  .heroStickerCrocs {
-    bottom: 13%;
-    width: 6.5rem;
-  }
-
-  .heroStickerBoing {
+  .heroStickerBottomLeft {
     bottom: 12%;
     width: 5.5rem;
+  }
+
+  .heroStickerBottomRight {
+    bottom: 12%;
+    width: 5rem;
   }
 }
 
