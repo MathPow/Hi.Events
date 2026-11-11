@@ -1036,6 +1036,7 @@ const Landing = () => {
                                 </div>
                             </Rough>
                         </div>
+                        <Sticker name="coin" className={classes.stickerStripe}/>
                     </div>
                 </section>
 
@@ -1073,8 +1074,8 @@ const Landing = () => {
                             <Photo name="photo-b" className={classes.communityPhoto1}/>
                             <Photo name="photo-c" className={classes.communityPhoto2}/>
                             <Photo name="photo-a" className={classes.communityPhoto3}/>
-                            <Sticker name="calendrier" className={classes.stickerCommunityLeft}/>
-                            <Sticker name="coin" className={classes.stickerCommunityRight}/>
+                            <Sticker name="calendrier-creme" className={classes.stickerCommunityLeft}/>
+                            <Sticker name="social" className={classes.stickerCommunityRight}/>
                         </div>
                     </section>
 

@@ -1,7 +1,6 @@
 import {CSSProperties, useRef} from "react";
 import {Link} from "react-router";
 import {t} from "@lingui/macro";
-import {IconArrowRight} from "@tabler/icons-react";
 import {Event} from "../../../types.ts";
 import {useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
 import {eventCoverImageUrl, eventHomepagePath} from "../../../utilites/urlHelper.ts";
@@ -9,7 +8,7 @@ import {shortDayLabel} from "../product-widget/OrderSummaryAndProducts/confirmat
 import classes from "./Landing.module.scss";
 import {useMarqueePace} from "./useMarqueePace.ts";
 import {useDragMarquee} from "./useDragMarquee.ts";
-import {ShakyText} from "./LandingButton.tsx";
+import {LandingButton} from "./LandingButton.tsx";
 
 const COPIES = 4;
 // Enough events in a copy for it to be wider than a wide screen.
@@ -53,7 +52,7 @@ export const NextEvents = () => {
 
     return (
         <section className={classes.nextEvents} aria-labelledby="next-events-title">
-            <h2 id="next-events-title" className={classes.nextEventsTitle}>{t`Things are moving on the box office!`}</h2>
+            <h2 id="next-events-title" className={classes.visuallyHidden}>{t`Things are moving on the box office!`}</h2>
             <ul className={`${classes.visuallyHidden} ${classes.nextEventsNames}`}>
                 {events.map((event) => (
                     <li key={event.id}><Link to={eventHomepagePath(event)}>{event.title}</Link></li>
@@ -74,10 +73,7 @@ export const NextEvents = () => {
                 </div>
             </div>
             <div className={classes.nextEventsMore}>
-                <Link to="/events" className={classes.nextEventsLink}>
-                    <ShakyText text={t`See all events`}/>
-                    <IconArrowRight size={22} stroke={2.4} aria-hidden="true"/>
-                </Link>
+                <LandingButton as={Link} to="/events" variant="dark" label={t`See all events`}/>
             </div>
         </section>
     );
