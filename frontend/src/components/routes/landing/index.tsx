@@ -25,7 +25,7 @@ const CONTACT_EMAIL = 'support@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
 // The followers of DEHORS_INSTAGRAM, rounded down to the hundred.
-const ATHLETES = 2500;
+const ATHLETES = 3000;
 
 const athletesLabel = () => {
     const athletes = i18n.number(ATHLETES);
