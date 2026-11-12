@@ -1,12 +1,12 @@
 import {useState} from "react";
 import {t} from "@lingui/macro";
 import {Button, Menu} from "@mantine/core";
-import {IconDotsVertical, IconMail, IconMailOff, IconPencil, IconSend, IconX} from "@tabler/icons-react";
+import {IconCheck, IconDotsVertical, IconMail, IconPencil, IconReceipt, IconSend, IconX} from "@tabler/icons-react";
 import {User} from "../../../../../types.ts";
 import {useGetUsers} from "../../../../../queries/useGetUsers.ts";
 import {useResendUserInvitation} from "../../../../../mutations/useResendUserInvitation.ts";
 import {useDeleteUserInvitation} from "../../../../../mutations/useDeleteUserInvitation.ts";
-import {useUpdateUserMessageEmails} from "../../../../../mutations/useUpdateUserMessageEmails.ts";
+import {NotificationEmailSettings, useUpdateUserNotificationEmails} from "../../../../../mutations/useUpdateUserNotificationEmails.ts";
 import {getInitials} from "../../../../../utilites/helpers.ts";
 import {relativeDate} from "../../../../../utilites/dates.ts";
 import {showError, showSuccess} from "../../../../../utilites/notifications.tsx";
@@ -27,7 +27,7 @@ export const MembersCard = () => {
     const usersQuery = useGetUsers();
     const resendMutation = useResendUserInvitation();
     const revokeMutation = useDeleteUserInvitation();
-    const messageEmailsMutation = useUpdateUserMessageEmails();
+    const notificationEmailsMutation = useUpdateUserNotificationEmails();
     const [inviting, setInviting] = useState(false);
     const [editing, setEditing] = useState<User | null>(null);
     const users = usersQuery.data?.data ?? [];
@@ -42,15 +42,26 @@ export const MembersCard = () => {
         onError: () => showError(t`Something went wrong! Please try again`),
     });
 
-    // A copy of each visitor message (« Contacter ») by email, on top of the contact email.
-    const toggleMessageEmails = (user: User) => {
-        const enabled = !user.receives_organizer_messages;
-        messageEmailsMutation.mutate({userId: user.id, enabled}, {
-            onSuccess: () => showSuccess(enabled
-                ? t`${user.first_name} will receive visitor messages by email.`
-                : t`${user.first_name} will no longer receive visitor messages by email.`),
+    // A copy by email, on top of the contact email: of each visitor message (« Contacter »), of each sale.
+    const updateNotificationEmails = (user: User, settings: NotificationEmailSettings, confirmation: string) => {
+        notificationEmailsMutation.mutate({userId: user.id, settings}, {
+            onSuccess: () => showSuccess(confirmation),
             onError: () => showError(t`Something went wrong! Please try again`),
         });
+    };
+
+    const toggleMessageEmails = (user: User) => {
+        const enabled = !user.receives_organizer_messages;
+        updateNotificationEmails(user, {organizer_messages: enabled}, enabled
+            ? t`${user.first_name} will receive visitor messages by email.`
+            : t`${user.first_name} will no longer receive visitor messages by email.`);
+    };
+
+    const toggleOrderEmails = (user: User) => {
+        const enabled = !user.receives_order_notifications;
+        updateNotificationEmails(user, {new_orders: enabled}, enabled
+            ? t`${user.first_name} will receive an email for each sale.`
+            : t`${user.first_name} will no longer receive an email for each sale.`);
     };
 
     return (
@@ -82,6 +93,12 @@ export const MembersCard = () => {
                                 <IconMail size={16}/>
                             </span>
                         )}
+                        {user.receives_order_notifications && (
+                            <span className={classes.mailBadge} title={t`Receives an email for each sale`}
+                                  aria-label={t`Receives an email for each sale`}>
+                                <IconReceipt size={16}/>
+                            </span>
+                        )}
                         <Tag tone={user.role === 'ORGANIZER' ? 'neutral' : 'ink'}>{roleLabel(user.role)}</Tag>
                         <Menu position="bottom-end" withinPortal>
                             <Menu.Target>
@@ -93,13 +110,25 @@ export const MembersCard = () => {
                                 <Menu.Item leftSection={<IconPencil size={16}/>} onClick={() => setEditing(user)}>
                                     {t`Edit user`}
                                 </Menu.Item>
+                                <Menu.Divider/>
+                                <Menu.Label>{t`Emails`}</Menu.Label>
                                 <Menu.Item
-                                    leftSection={user.receives_organizer_messages ? <IconMailOff size={16}/> : <IconMail size={16}/>}
+                                    leftSection={<IconMail size={16}/>}
+                                    rightSection={user.receives_organizer_messages ? <IconCheck size={16}/> : undefined}
                                     onClick={() => toggleMessageEmails(user)}
+                                    aria-checked={!!user.receives_organizer_messages}
+                                    role="menuitemcheckbox"
                                 >
-                                    {user.receives_organizer_messages
-                                        ? t`Stop emailing visitor messages`
-                                        : t`Email visitor messages`}
+                                    {t`Email for each message`}
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={<IconReceipt size={16}/>}
+                                    rightSection={user.receives_order_notifications ? <IconCheck size={16}/> : undefined}
+                                    onClick={() => toggleOrderEmails(user)}
+                                    aria-checked={!!user.receives_order_notifications}
+                                    role="menuitemcheckbox"
+                                >
+                                    {t`Email for each sale`}
                                 </Menu.Item>
                                 {user.status === 'INVITED' && (
                                     <>

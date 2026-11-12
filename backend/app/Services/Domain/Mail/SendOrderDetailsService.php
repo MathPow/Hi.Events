@@ -17,7 +17,10 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Services\Domain\Attendee\SendAttendeeTicketService;
 use HiEvents\Services\Domain\Email\MailBuilderService;
+use HiEvents\Services\Domain\Organizer\TeamEmailRecipientService;
 use Illuminate\Mail\Mailer;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 class SendOrderDetailsService
 {
@@ -27,6 +30,8 @@ class SendOrderDetailsService
         private readonly Mailer                    $mailer,
         private readonly SendAttendeeTicketService $sendAttendeeTicketService,
         private readonly MailBuilderService        $mailBuilderService,
+        private readonly TeamEmailRecipientService $teamEmailRecipientService,
+        private readonly LoggerInterface           $logger,
     )
     {
     }
@@ -123,5 +128,19 @@ class SendOrderDetailsService
         $this->mailer
             ->to($event->getOrganizer()->getEmail())
             ->send(new OrderSummaryForOrganizer($order, $event));
+
+        // Une copie a chaque membre de l'equipe qui l'a demandee (« Courriel a chaque vente »).
+        try {
+            foreach ($this->teamEmailRecipientService->newOrderCopies($event->getOrganizer()) as $member) {
+                $this->mailer
+                    ->to($member->getEmail(), $member->getFullName())
+                    ->send(new OrderSummaryForOrganizer($order, $event));
+            }
+        } catch (Throwable $exception) {
+            $this->logger->error('New order copies to team members failed', [
+                'order_id' => $order->getId(),
+                'error' => $exception->getMessage(),
+            ]);
+        }
     }
 }

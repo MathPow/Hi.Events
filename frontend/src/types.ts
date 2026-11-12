@@ -115,6 +115,7 @@ export interface User {
     role?: 'ADMIN' | 'ORGANIZER' | 'SUPERADMIN';
     is_account_owner?: boolean;
     receives_organizer_messages?: boolean;
+    receives_order_notifications?: boolean;
     locale?: SupportedLocales;
     marketing_opted_in_at?: string | null;
 }

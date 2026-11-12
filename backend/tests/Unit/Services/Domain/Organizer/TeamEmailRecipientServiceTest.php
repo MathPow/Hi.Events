@@ -8,16 +8,16 @@ use HiEvents\DomainObjects\Status\UserStatus;
 use HiEvents\DomainObjects\UserDomainObject;
 use HiEvents\Repository\Interfaces\AccountUserRepositoryInterface;
 use HiEvents\Repository\Interfaces\UserRepositoryInterface;
-use HiEvents\Services\Domain\Organizer\OrganizerMessageRecipientService;
+use HiEvents\Services\Domain\Organizer\TeamEmailRecipientService;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
-class OrganizerMessageRecipientServiceTest extends TestCase
+class TeamEmailRecipientServiceTest extends TestCase
 {
     private AccountUserRepositoryInterface|MockInterface $accountUserRepository;
     private UserRepositoryInterface|MockInterface $userRepository;
-    private OrganizerMessageRecipientService $service;
+    private TeamEmailRecipientService $service;
 
     protected function setUp(): void
     {
@@ -25,7 +25,7 @@ class OrganizerMessageRecipientServiceTest extends TestCase
 
         $this->accountUserRepository = Mockery::mock(AccountUserRepositoryInterface::class);
         $this->userRepository = Mockery::mock(UserRepositoryInterface::class);
-        $this->service = new OrganizerMessageRecipientService($this->accountUserRepository, $this->userRepository);
+        $this->service = new TeamEmailRecipientService($this->accountUserRepository, $this->userRepository);
     }
 
     protected function tearDown(): void
@@ -46,7 +46,7 @@ class OrganizerMessageRecipientServiceTest extends TestCase
             $this->user(11, 'mathys@example.com'),
         ]));
 
-        $emails = $this->service->memberCopies($this->organizer())->map(fn(UserDomainObject $user) => $user->getEmail())->all();
+        $emails = $this->service->visitorMessageCopies($this->organizer())->map(fn(UserDomainObject $user) => $user->getEmail())->all();
 
         $this->assertSame(['felix@example.com', 'mathys@example.com'], $emails);
     }
@@ -62,7 +62,7 @@ class OrganizerMessageRecipientServiceTest extends TestCase
             $this->user(12, 'FELIX@example.com'),
         ]));
 
-        $emails = $this->service->memberCopies($this->organizer())->map(fn(UserDomainObject $user) => $user->getEmail())->all();
+        $emails = $this->service->visitorMessageCopies($this->organizer())->map(fn(UserDomainObject $user) => $user->getEmail())->all();
 
         $this->assertSame(['felix@example.com'], $emails);
     }
@@ -72,7 +72,22 @@ class OrganizerMessageRecipientServiceTest extends TestCase
         $this->accountUserRepository->shouldReceive('findWhere')->andReturn(collect());
         $this->userRepository->shouldNotReceive('findWhereIn');
 
-        $this->assertTrue($this->service->memberCopies($this->organizer())->isEmpty());
+        $this->assertTrue($this->service->visitorMessageCopies($this->organizer())->isEmpty());
+    }
+
+    public function testNewOrderCopiesReadTheirOwnSetting(): void
+    {
+        $this->accountUserRepository->shouldReceive('findWhere')->once()->with([
+            'account_id' => 3,
+            'status' => UserStatus::ACTIVE->name,
+            'receives_order_notifications' => true,
+        ])->andReturn(collect([$this->accountUser(10)]));
+        $this->userRepository->shouldReceive('findWhereIn')->once()->with('id', [10])
+            ->andReturn(collect([$this->user(10, 'felix@example.com')]));
+
+        $emails = $this->service->newOrderCopies($this->organizer())->map(fn(UserDomainObject $user) => $user->getEmail())->all();
+
+        $this->assertSame(['felix@example.com'], $emails);
     }
 
     private function organizer(): OrganizerDomainObject

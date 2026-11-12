@@ -47,6 +47,7 @@ class UserResource extends BaseResource
                 'last_login_at' => $this->getCurrentAccountUser()?->getLastLoginAt(),
                 'status' => $this->getCurrentAccountUser()?->getStatus(),
                 'receives_organizer_messages' => $this->getCurrentAccountUser()?->getReceivesOrganizerMessages(),
+                'receives_order_notifications' => $this->getCurrentAccountUser()?->getReceivesOrderNotifications(),
                 'account_id' => $this->getCurrentAccountUser()?->getAccountId(),
             ]),
             $this->mergeWhen($this->getPendingEmail() !== null, [

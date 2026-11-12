@@ -105,11 +105,19 @@ msgstr "{0} billets"
 msgid "{0} updated successfully"
 msgstr "{0} mis à jour avec succès"
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:51
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:64
+msgid "{0} will no longer receive an email for each sale."
+msgstr "{0} ne recevra plus de courriel à chaque vente."
+
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:57
 msgid "{0} will no longer receive visitor messages by email."
 msgstr "{0} ne recevra plus les messages des visiteurs par courriel."
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:50
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:63
+msgid "{0} will receive an email for each sale."
+msgstr "{0} recevra un courriel à chaque vente."
+
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:56
 msgid "{0} will receive visitor messages by email."
 msgstr "{0} recevra les messages des visiteurs par courriel."
 
@@ -731,7 +739,7 @@ msgstr "Action requise : Informations TVA nécessaires"
 #: src/components/routes/event/CheckInLists/index.tsx:149
 #: src/components/routes/event/Deposits/index.tsx:367
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:68
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:88
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:105
 msgid "Actions"
 msgstr "Actions"
 
@@ -1268,7 +1276,7 @@ msgid "Amount retained"
 msgstr "Montant retenu"
 
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:142
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:60
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:71
 msgid "An Administrator has access to everything; an Organizer manages the events and the tickets."
 msgstr "Un Administrateur a accès à tout; un Organisateur gère les événements et les billets."
 
@@ -4206,7 +4214,7 @@ msgstr "Modifier le produit"
 msgid "Edit the ticket"
 msgstr "Modifier le billet"
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:94
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:111
 msgid "Edit user"
 msgstr "Modifier l'utilisateur"
 
@@ -4320,6 +4328,14 @@ msgstr "E-mail de confirmation renvoyé avec succès"
 msgid "Email footer"
 msgstr "Pied de page des courriels"
 
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:122
+msgid "Email for each message"
+msgstr "Courriel à chaque message"
+
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:131
+msgid "Email for each sale"
+msgstr "Courriel à chaque vente"
+
 #: src/components/common/ContactOrganizerModal/index.tsx:43
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:31
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:31
@@ -4363,12 +4379,16 @@ msgid "Email verified successfully!"
 msgstr "E-mail vérifié avec succès !"
 
 #: src/components/routes/organizer/Settings/team/MembersCard.tsx:102
-msgid "Email visitor messages"
-msgstr "Recevoir les messages par courriel"
+#~ msgid "Email visitor messages"
+#~ msgstr "Recevoir les messages par courriel"
 
 #: src/components/routes/event/messages.tsx:244
 msgid "Email your attendees, now or later."
 msgstr "Écrivez à vos participants, maintenant ou plus tard."
+
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:114
+msgid "Emails"
+msgstr "Courriels"
 
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:90
 msgid "Emails you receive"
@@ -5995,7 +6015,7 @@ msgstr "À vos couleurs, comme vos pages d'événement. Envoyés pour tous vos �
 #: src/components/forms/CapaciyAssigmentForm/index.tsx:25
 #: src/components/modals/EditUserModal/index.tsx:111
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:57
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:78
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:89
 msgid "Inactive"
 msgstr "Inactif"
 
@@ -6135,11 +6155,11 @@ msgstr "Inviter un membre de l'équipe"
 msgid "Invite Team Member"
 msgstr "Inviter un membre de l'équipe"
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:63
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:74
 msgid "Invite User"
 msgstr "Inviter un utilisateur"
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:77
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:88
 msgid "Invited"
 msgstr "Invité"
 
@@ -9490,8 +9510,13 @@ msgstr "Recevoir les paiements des billets directement dans le compte Stripe."
 msgid "Received"
 msgstr "Reçu"
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:80
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:81
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:97
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:98
+msgid "Receives an email for each sale"
+msgstr "Reçoit un courriel à chaque vente"
+
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:91
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:92
 msgid "Receives visitor messages by email"
 msgstr "Reçoit les messages des visiteurs par courriel"
 
@@ -9774,7 +9799,7 @@ msgstr "Renvoyer l'e-mail de confirmation"
 msgid "Resend in {resendCooldown}s"
 msgstr "Renvoyer dans {resendCooldown}s"
 
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:107
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:136
 msgid "Resend invitation"
 msgstr "Renvoyer l'invitation"
 
@@ -9939,7 +9964,7 @@ msgid "Revoke {tokenName}? Any application using it will stop working immediatel
 msgstr "Révoquer {tokenName}? Toute application qui l'utilise cessera de fonctionner immédiatement."
 
 #: src/components/routes/admin/RegistrationInvites/index.tsx:151
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:110
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:139
 msgid "Revoke invitation"
 msgstr "Révoquer l'invitation"
 
@@ -10976,7 +11001,7 @@ msgstr "Une erreur s'est produite, veuillez réessayer ou contacter le support s
 
 #: src/components/routes/organizer/Settings/team/MembersCard.tsx:37
 #: src/components/routes/organizer/Settings/team/MembersCard.tsx:42
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:52
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:49
 msgid "Something went wrong! Please try again"
 msgstr "Quelque chose s'est mal passé ! Veuillez réessayer"
 
@@ -11157,8 +11182,8 @@ msgid "Stop"
 msgstr "Arrêter"
 
 #: src/components/routes/organizer/Settings/team/MembersCard.tsx:101
-msgid "Stop emailing visitor messages"
-msgstr "Ne plus recevoir les messages par courriel"
+#~ msgid "Stop emailing visitor messages"
+#~ msgstr "Ne plus recevoir les messages par courriel"
 
 #: src/components/common/GlobalMenu/index.tsx:49
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:199
@@ -11488,7 +11513,7 @@ msgstr "Équipe"
 
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:141
 #: src/components/routes/organizer/Settings/tabs/TeamTab.tsx:24
-#: src/components/routes/organizer/Settings/team/MembersCard.tsx:59
+#: src/components/routes/organizer/Settings/team/MembersCard.tsx:70
 msgid "Team members"
 msgstr "Membres de l'équipe"
 
