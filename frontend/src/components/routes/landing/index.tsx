@@ -922,6 +922,10 @@ const Landing = () => {
                             <Sticker name="soulier" className={classes.heroStickerBottomLeft} eager/>
                             <Sticker name="dossard" className={classes.heroStickerBottomRight} eager/>
                             <Sticker name="tente" className={classes.heroStickerBottom} eager/>
+                            <Sticker name="calendrier" className={classes.heroStickerTopLeft} eager/>
+                            <Sticker name="toilette" className={classes.heroStickerMiddleLeft} eager/>
+                            <Sticker name="autre" className={classes.heroStickerUpperRight} eager/>
+                            <Sticker name="billet" className={classes.heroStickerLowerRight} eager/>
                         </div>
                         <header ref={heroNav} className={classes.nav}>
                             {/* Deux publics: a gauche, ceux qui sortent (les evenements, leurs billets), sans
@@ -1066,6 +1070,8 @@ const Landing = () => {
                                 </div>
                             </div>
                         </div>
+                        <Sticker name="entrepreneuriat" className={classes.stickerFeaturesLeft}/>
+                        <Sticker name="tirelire" className={classes.stickerFeaturesRight}/>
                     </section>
 
                     <section id="visibility" className={classes.community}>
