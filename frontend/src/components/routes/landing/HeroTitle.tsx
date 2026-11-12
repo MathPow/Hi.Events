@@ -12,7 +12,6 @@ const WORD_FROM = ['-45%', '105%', '-105%', '100%', '-90%', '60%'];
 // first is a light red sticker, the second a green one.
 const STICKER_WORD = /^\[(.+)]$/;
 const STICKER_COLOURS = [classes.stickerWordFewer, classes.stickerWordMore];
-const EDGE_FILTER = 'hero-sticker-edge';
 
 /**
  * The hero headline and its subtitle. On scroll, each word rises at its own
@@ -105,18 +104,6 @@ export const HeroTitle = () => {
                 <span className={classes.visuallyHidden}>{t`Fewer fees, more people.`}</span>
             </h1>
             <p className={classes.heroSubtitle}>{t`The Quebec ticketing platform built for the sports community.`}</p>
-            {/* Roughens the stickers' cream outline (.stickerWord::before). */}
-            <svg className={classes.stickerWordFilter} aria-hidden="true" focusable="false">
-                <filter id={EDGE_FILTER} x="-10%" y="-20%" width="120%" height="140%" colorInterpolationFilters="sRGB">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7"/>
-                    <feDisplacementMap in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-                    {/* The displacement leaves a jagged edge: softened, then cut sharp again, without the steps. */}
-                    <feGaussianBlur stdDeviation="0.9"/>
-                    <feComponentTransfer>
-                        <feFuncA type="linear" slope="3" intercept="-1"/>
-                    </feComponentTransfer>
-                </filter>
-            </svg>
         </div>
     );
 };
