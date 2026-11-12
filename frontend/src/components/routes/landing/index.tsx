@@ -1069,7 +1069,7 @@ const Landing = () => {
                                 </div>
                             </div>
                         </div>
-                        <Sticker name="entrepreneuriat" className={classes.stickerFeaturesLeft}/>
+                        <Sticker name="entrepreneuriat" className={classes.stickerFeatures}/>
                     </section>
 
                     <section id="visibility" className={classes.community}>

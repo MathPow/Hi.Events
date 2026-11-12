@@ -2328,7 +2328,7 @@ $ridge-mobile: 10vw;
 // The coin beside the title, off the card.
 .stickerStripe {
   top: -2.5rem;
-  right: -1rem;
+  right: 2.5rem;
   width: clamp(5rem, 8vw, 7rem);
   rotate: 12deg;
   --tilt-delay: -0.6s;
@@ -2883,12 +2883,13 @@ $ridge-mobile: 10vw;
   translate: 0 1rem;
 }
 
-// In the orange margin beside the list, only where there is room.
-.stickerFeaturesLeft {
-  bottom: 18%;
-  left: 3.5%;
+// In the orange margin beside the photo, only where there is room.
+.stickerFeatures {
+  top: 26%;
+  right: 4%;
   width: clamp(6rem, 8vw, 8.5rem);
-  rotate: -10deg;
+  rotate: 8deg;
+  --tilt-delay: -1.2s;
 
   @media (max-width: 1399px) {
     display: none;
