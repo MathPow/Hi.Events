@@ -2168,6 +2168,7 @@ $ridge-mobile: 10vw;
 }
 
 .feesCompare {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -2255,12 +2256,14 @@ $ridge-mobile: 10vw;
   }
 }
 
+// Always on one line: smaller in a narrow card (cqi, the card's width) rather than wrapping.
 .feesTotal {
   display: block;
   font-family: $display;
   font-weight: 400;
-  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-size: min(clamp(2.25rem, 4vw, 3.25rem), 7.8cqi);
   line-height: 1;
+  white-space: nowrap;
 }
 
 .feesNote {
