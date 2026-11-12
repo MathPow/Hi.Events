@@ -3,8 +3,8 @@
 @php
     $brown = '#352924';
     $muted = 'rgba(53, 41, 36, 0.7)';
-    $display = "FatFrank, 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif";
-    $text = "Allotrope, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    $display = "DehorsFatFrank, 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    $text = "DehorsAllotrope, 'Helvetica Neue', Helvetica, Arial, sans-serif";
     $initial = mb_strtoupper(mb_substr((string)$branding->organizerName, 0, 1));
     $rows = array_filter([
         $branding->dateLine ? ['icon' => 'calendrier', 'main' => $branding->dateLine, 'sub' => $branding->timezoneLine] : null,

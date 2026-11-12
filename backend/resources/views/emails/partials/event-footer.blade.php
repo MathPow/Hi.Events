@@ -2,7 +2,7 @@
 @php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
 @php
     $brown = '#352924';
-    $text = "Allotrope, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    $text = "DehorsAllotrope, 'Helvetica Neue', Helvetica, Arial, sans-serif";
     $link = "color: {$brown}; font-family: {$text}; font-weight: bold; text-decoration: none;";
 @endphp
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
