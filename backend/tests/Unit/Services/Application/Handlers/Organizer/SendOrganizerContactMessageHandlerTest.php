@@ -12,6 +12,8 @@ use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\DTO\SendOrganizerContactMessageDTO;
 use HiEvents\Services\Application\Handlers\Organizer\SendOrganizerContactMessageHandler;
+use HiEvents\Services\Domain\Organizer\OrganizerMessageRecipientService;
+use HiEvents\DomainObjects\UserDomainObject;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Illuminate\Mail\Mailer;
 use Illuminate\Support\Facades\Bus;
@@ -29,6 +31,7 @@ class SendOrganizerContactMessageHandlerTest extends TestCase
     private OrganizerMessageRepositoryInterface|MockInterface $messageRepository;
     private EventRepositoryInterface|MockInterface $eventRepository;
     private LoggerInterface|MockInterface $logger;
+    private OrganizerMessageRecipientService|MockInterface $recipientService;
     private SendOrganizerContactMessageHandler $handler;
 
     protected function setUp(): void
@@ -41,6 +44,8 @@ class SendOrganizerContactMessageHandlerTest extends TestCase
         $this->messageRepository = Mockery::mock(OrganizerMessageRepositoryInterface::class);
         $this->eventRepository = Mockery::mock(EventRepositoryInterface::class);
         $this->logger = Mockery::mock(LoggerInterface::class);
+        $this->recipientService = Mockery::mock(OrganizerMessageRecipientService::class);
+        $this->recipientService->shouldReceive('memberCopies')->andReturn(collect())->byDefault();
         $purifier = Mockery::mock(HtmlPurifierService::class);
         $purifier->shouldReceive('purify')->andReturnUsing(fn(string $html) => $html);
 
@@ -51,6 +56,7 @@ class SendOrganizerContactMessageHandlerTest extends TestCase
             $this->messageRepository,
             $this->eventRepository,
             $this->logger,
+            $this->recipientService,
         );
     }
 
@@ -105,6 +111,33 @@ class SendOrganizerContactMessageHandlerTest extends TestCase
         $this->handler->handle($this->dto());
 
         Bus::assertDispatched(SendOrganizerMessagePushJob::class);
+    }
+
+    public function testSendsACopyToEachMemberWhoAskedForOne(): void
+    {
+        $this->organizerRepository->shouldReceive('findById')->andReturn($this->organizer());
+        $this->messageRepository->shouldReceive('create')->once()->andReturn((new OrganizerMessageDomainObject())->setId(42));
+        $this->recipientService->shouldReceive('memberCopies')->andReturn(collect([
+            (new UserDomainObject())->setFirstName('Félix')->setLastName('C')->setEmail('felix@example.com'),
+        ]));
+        $this->mailer->shouldReceive('to')->once()->with('club@example.com', 'Club')->andReturnSelf();
+        $this->mailer->shouldReceive('to')->once()->with('felix@example.com', 'Félix C')->andReturnSelf();
+        $this->mailer->shouldReceive('send')->twice();
+
+        $this->handler->handle($this->dto());
+
+        Bus::assertDispatched(SendOrganizerMessagePushJob::class);
+    }
+
+    public function testStillEmailsTheContactWhenTheMemberLookupFails(): void
+    {
+        $this->organizerRepository->shouldReceive('findById')->andReturn($this->organizer());
+        $this->messageRepository->shouldReceive('create')->once()->andReturn((new OrganizerMessageDomainObject())->setId(42));
+        $this->recipientService->shouldReceive('memberCopies')->andThrow(new RuntimeException('db down'));
+        $this->logger->shouldReceive('error')->once();
+        $this->expectEmail();
+
+        $this->handler->handle($this->dto());
     }
 
     public function testRefusesAnOrganizerThatIsNotLive(): void

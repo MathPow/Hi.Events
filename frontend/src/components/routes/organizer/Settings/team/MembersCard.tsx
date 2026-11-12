@@ -1,11 +1,12 @@
 import {useState} from "react";
 import {t} from "@lingui/macro";
 import {Button, Menu} from "@mantine/core";
-import {IconDotsVertical, IconPencil, IconSend, IconX} from "@tabler/icons-react";
+import {IconDotsVertical, IconMail, IconMailOff, IconPencil, IconSend, IconX} from "@tabler/icons-react";
 import {User} from "../../../../../types.ts";
 import {useGetUsers} from "../../../../../queries/useGetUsers.ts";
 import {useResendUserInvitation} from "../../../../../mutations/useResendUserInvitation.ts";
 import {useDeleteUserInvitation} from "../../../../../mutations/useDeleteUserInvitation.ts";
+import {useUpdateUserMessageEmails} from "../../../../../mutations/useUpdateUserMessageEmails.ts";
 import {getInitials} from "../../../../../utilites/helpers.ts";
 import {relativeDate} from "../../../../../utilites/dates.ts";
 import {showError, showSuccess} from "../../../../../utilites/notifications.tsx";
@@ -26,6 +27,7 @@ export const MembersCard = () => {
     const usersQuery = useGetUsers();
     const resendMutation = useResendUserInvitation();
     const revokeMutation = useDeleteUserInvitation();
+    const messageEmailsMutation = useUpdateUserMessageEmails();
     const [inviting, setInviting] = useState(false);
     const [editing, setEditing] = useState<User | null>(null);
     const users = usersQuery.data?.data ?? [];
@@ -39,6 +41,17 @@ export const MembersCard = () => {
         onSuccess: () => showSuccess(t`Invitation revoked!`),
         onError: () => showError(t`Something went wrong! Please try again`),
     });
+
+    // A copy of each visitor message (« Contacter ») by email, on top of the contact email.
+    const toggleMessageEmails = (user: User) => {
+        const enabled = !user.receives_organizer_messages;
+        messageEmailsMutation.mutate({userId: user.id, enabled}, {
+            onSuccess: () => showSuccess(enabled
+                ? t`${user.first_name} will receive visitor messages by email.`
+                : t`${user.first_name} will no longer receive visitor messages by email.`),
+            onError: () => showError(t`Something went wrong! Please try again`),
+        });
+    };
 
     return (
         <SettingsCard
@@ -63,6 +76,12 @@ export const MembersCard = () => {
                         </span>
                         {user.status === 'INVITED' && <Tag tone="yellow">{t`Invited`}</Tag>}
                         {user.status === 'INACTIVE' && <Tag tone="neutral">{t`Inactive`}</Tag>}
+                        {user.receives_organizer_messages && (
+                            <span className={classes.mailBadge} title={t`Receives visitor messages by email`}
+                                  aria-label={t`Receives visitor messages by email`}>
+                                <IconMail size={16}/>
+                            </span>
+                        )}
                         <Tag tone={user.role === 'ORGANIZER' ? 'neutral' : 'ink'}>{roleLabel(user.role)}</Tag>
                         <Menu position="bottom-end" withinPortal>
                             <Menu.Target>
@@ -73,6 +92,14 @@ export const MembersCard = () => {
                             <Menu.Dropdown>
                                 <Menu.Item leftSection={<IconPencil size={16}/>} onClick={() => setEditing(user)}>
                                     {t`Edit user`}
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={user.receives_organizer_messages ? <IconMailOff size={16}/> : <IconMail size={16}/>}
+                                    onClick={() => toggleMessageEmails(user)}
+                                >
+                                    {user.receives_organizer_messages
+                                        ? t`Stop emailing visitor messages`
+                                        : t`Email visitor messages`}
                                 </Menu.Item>
                                 {user.status === 'INVITED' && (
                                     <>

@@ -9,6 +9,7 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\DTO\SendOrganizerContactMessageDTO;
+use HiEvents\Services\Domain\Organizer\OrganizerMessageRecipientService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Illuminate\Mail\Mailer;
 use Psr\Log\LoggerInterface;
@@ -24,6 +25,7 @@ class SendOrganizerContactMessageHandler
         private readonly OrganizerMessageRepositoryInterface $messageRepository,
         private readonly EventRepositoryInterface            $eventRepository,
         private readonly LoggerInterface                     $logger,
+        private readonly OrganizerMessageRecipientService    $recipientService,
     )
     {
     }
@@ -58,21 +60,37 @@ class SendOrganizerContactMessageHandler
         ]);
 
         // Le message est garde: un courriel qui echoue ne fait plus echouer l'envoi du visiteur.
+        // Au courriel de contact, puis a chaque membre qui en a demande une copie.
+        $messageContent = $this->purifier->purify($dto->message);
+        $recipients = [[$organizer->getEmail(), $organizer->getName()]];
         try {
-            $this->mailer
-                ->to($organizer->getEmail(), $organizer->getName())
-                ->send(new OrganizerContactEmail(
-                    organizer: $organizer,
-                    senderName: $dto->name,
-                    senderEmail: $dto->email,
-                    messageContent: $this->purifier->purify($dto->message),
-                ));
+            foreach ($this->recipientService->memberCopies($organizer) as $member) {
+                $recipients[] = [$member->getEmail(), $member->getFullName()];
+            }
         } catch (Throwable $exception) {
-            $this->logger->error('Organizer contact email failed', [
+            $this->logger->error('Organizer message recipients lookup failed', [
                 'organizer_id' => $organizer->getId(),
-                'organizer_message_id' => $message->getId(),
                 'error' => $exception->getMessage(),
             ]);
+        }
+
+        foreach ($recipients as [$email, $name]) {
+            try {
+                $this->mailer
+                    ->to($email, $name)
+                    ->send(new OrganizerContactEmail(
+                        organizer: $organizer,
+                        senderName: $dto->name,
+                        senderEmail: $dto->email,
+                        messageContent: $messageContent,
+                    ));
+            } catch (Throwable $exception) {
+                $this->logger->error('Organizer contact email failed', [
+                    'organizer_id' => $organizer->getId(),
+                    'organizer_message_id' => $message->getId(),
+                    'error' => $exception->getMessage(),
+                ]);
+            }
         }
 
         SendOrganizerMessagePushJob::dispatch($message->getId());

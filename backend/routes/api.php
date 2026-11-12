@@ -230,6 +230,7 @@ use HiEvents\Http\Actions\Users\ResendEmailConfirmationAction;
 use HiEvents\Http\Actions\Users\ResendInvitationAction;
 use HiEvents\Http\Actions\Users\UpdateMeAction;
 use HiEvents\Http\Actions\Users\UpdateUserAction;
+use HiEvents\Http\Actions\Users\UpdateUserMessageEmailsAction;
 use HiEvents\Http\Actions\Admin\Accounts\AssignConfigurationAction;
 use HiEvents\Http\Actions\Admin\Assistant\GetAssistantUsageAction;
 use HiEvents\Http\Actions\Admin\Assistant\UpdateAssistantModelAction;
@@ -331,6 +332,7 @@ $router->middleware(['auth:api'])->group(
         $router->get('/users', GetUsersAction::class);
         $router->get('/users/{user_id}', GetUserAction::class);
         $router->put('/users/{user_id}', UpdateUserAction::class);
+        $router->put('/users/{user_id}/organizer-message-emails', UpdateUserMessageEmailsAction::class);
         $router->post('/users/{user_id}/email-change/{changeToken}', ConfirmEmailChangeAction::class);
         $router->post('/users/{user_id}/invitation', ResendInvitationAction::class);
         $router->delete('/users/{user_id}/invitation', DeleteInvitationAction::class);

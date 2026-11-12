@@ -21,6 +21,7 @@ abstract class AccountUserDomainObjectAbstract extends \HiEvents\DomainObjects\A
     final public const IS_ACCOUNT_OWNER = 'is_account_owner';
     final public const LAST_LOGIN_AT = 'last_login_at';
     final public const STATUS = 'status';
+    final public const RECEIVES_ORGANIZER_MESSAGES = 'receives_organizer_messages';
 
     protected int $id;
     protected int $account_id;
@@ -33,6 +34,7 @@ abstract class AccountUserDomainObjectAbstract extends \HiEvents\DomainObjects\A
     protected bool $is_account_owner = false;
     protected ?string $last_login_at = null;
     protected string $status = 'INVITED';
+    protected bool $receives_organizer_messages = false;
 
     public function toArray(): array
     {
@@ -48,6 +50,7 @@ abstract class AccountUserDomainObjectAbstract extends \HiEvents\DomainObjects\A
                     'is_account_owner' => $this->is_account_owner ?? null,
                     'last_login_at' => $this->last_login_at ?? null,
                     'status' => $this->status ?? null,
+                    'receives_organizer_messages' => $this->receives_organizer_messages ?? null,
                 ];
     }
 
@@ -170,5 +173,16 @@ abstract class AccountUserDomainObjectAbstract extends \HiEvents\DomainObjects\A
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function setReceivesOrganizerMessages(bool $receives_organizer_messages): self
+    {
+        $this->receives_organizer_messages = $receives_organizer_messages;
+        return $this;
+    }
+
+    public function getReceivesOrganizerMessages(): bool
+    {
+        return $this->receives_organizer_messages;
     }
 }
