@@ -114,6 +114,7 @@ export interface User {
     status?: 'ACTIVE' | 'INACTIVE' | 'INVITED';
     role?: 'ADMIN' | 'ORGANIZER' | 'SUPERADMIN';
     is_account_owner?: boolean;
+    receives_organizer_messages?: boolean;
     locale?: SupportedLocales;
     marketing_opted_in_at?: string | null;
 }
