@@ -1060,10 +1060,10 @@ const Landing = () => {
                                 </ul>
                                 <div ref={featuresAside} className={classes.featuresAside}>
                                     <FeatureFrame pictures={featurePictures} shown={openFeature}/>
+                                    <Sticker name="entrepreneuriat" className={classes.stickerFeatures}/>
                                 </div>
                             </div>
                         </div>
-                        <Sticker name="entrepreneuriat" className={classes.stickerFeatures}/>
                     </section>
 
                     <section id="visibility" className={classes.community}>
