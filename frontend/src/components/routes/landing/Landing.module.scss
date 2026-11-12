@@ -2275,14 +2275,6 @@ $ridge-mobile: 10vw;
   }
 }
 
-.stickerCampfire {
-  top: -3.25rem;
-  right: -2.5rem;
-  width: clamp(5.5rem, 9vw, 8rem);
-  rotate: 8deg;
-  --tilt-delay: -1.8s;
-}
-
 // --- Stripe ---
 
 // It stops under the features (data-stack): its air above is padding, so
@@ -2301,6 +2293,7 @@ $ridge-mobile: 10vw;
 }
 
 .stripeText {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -2332,16 +2325,18 @@ $ridge-mobile: 10vw;
   }
 }
 
-// The coin on the card's top corner, upright against the tilted card.
+// The coin beside the title, off the card.
 .stickerStripe {
-  top: -3rem;
-  right: -2.5rem;
+  top: -2.5rem;
+  right: -1rem;
   width: clamp(5rem, 8vw, 7rem);
   rotate: 12deg;
   --tilt-delay: -0.6s;
 
   @media (max-width: $mobile) {
-    right: -0.75rem;
+    top: -1rem;
+    right: 0;
+    width: 4.5rem;
   }
 }
 
@@ -2888,27 +2883,16 @@ $ridge-mobile: 10vw;
   translate: 0 1rem;
 }
 
-// In the orange margins beside the list and the photo, only where there is room.
-.stickerFeaturesLeft,
-.stickerFeaturesRight {
+// In the orange margin beside the list, only where there is room.
+.stickerFeaturesLeft {
+  bottom: 18%;
+  left: 3.5%;
   width: clamp(6rem, 8vw, 8.5rem);
+  rotate: -10deg;
 
   @media (max-width: 1399px) {
     display: none;
   }
-}
-
-.stickerFeaturesLeft {
-  bottom: 18%;
-  left: 3.5%;
-  rotate: -10deg;
-}
-
-.stickerFeaturesRight {
-  top: 26%;
-  right: 4%;
-  rotate: 8deg;
-  --tilt-delay: -1.2s;
 }
 
 .stickerCommunityLeft {
@@ -3208,10 +3192,6 @@ $footer-ridge-mobile: 13.205056%;
 
   .stepCardBody {
     min-height: 14rem;
-  }
-
-  .stickerCampfire {
-    right: -0.5rem;
   }
 
   // The FAQ's phone layout, 20px corners; the badge goes under the name.

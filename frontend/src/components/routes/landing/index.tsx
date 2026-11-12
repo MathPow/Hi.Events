@@ -1010,7 +1010,6 @@ const Landing = () => {
                             <Rough className={classes.feesCard} amplitude={1.8} step={36}>
                                 <FeesComparator/>
                             </Rough>
-                            <Sticker name="tirelire" className={classes.stickerCampfire}/>
                             <p className={classes.feesNote}>{t`Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price.`}</p>
                         </div>
                     </Rough>
@@ -1018,6 +1017,7 @@ const Landing = () => {
 
                 <section id="payments" className={classes.stripe} data-stack>
                     <div className={classes.stripeText} data-rise>
+                        <Sticker name="coin" className={classes.stickerStripe}/>
                         <h2><Trans>Stripe,<br/>what's that?</Trans></h2>
                         <p>{t`Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do.`}</p>
                         <LandingButton as="a" href={stripeSite(i18n.locale)} target="_blank" rel="noopener" variant="dark"
@@ -1040,7 +1040,6 @@ const Landing = () => {
                                 </div>
                             </Rough>
                         </div>
-                        <Sticker name="coin" className={classes.stickerStripe}/>
                     </div>
                 </section>
 
@@ -1071,7 +1070,6 @@ const Landing = () => {
                             </div>
                         </div>
                         <Sticker name="entrepreneuriat" className={classes.stickerFeaturesLeft}/>
-                        <Sticker name="tirelire" className={classes.stickerFeaturesRight}/>
                     </section>
 
                     <section id="visibility" className={classes.community}>
