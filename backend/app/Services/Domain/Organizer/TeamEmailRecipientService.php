@@ -12,10 +12,10 @@ use HiEvents\Repository\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
- * The team members who asked for a copy of the visitors' messages by email (the « ⋮ » of
- * « Membres de l'équipe »), on top of the organizer's contact email.
+ * The team members who asked for a copy by email (the « ⋮ » of « Membres de l'équipe »), on top
+ * of the organizer's contact email: of the visitors' messages, of each new order.
  */
-class OrganizerMessageRecipientService
+class TeamEmailRecipientService
 {
     public function __construct(
         private readonly AccountUserRepositoryInterface $accountUserRepository,
@@ -27,12 +27,28 @@ class OrganizerMessageRecipientService
     /**
      * @return Collection<int, UserDomainObject>
      */
-    public function memberCopies(OrganizerDomainObject $organizer): Collection
+    public function visitorMessageCopies(OrganizerDomainObject $organizer): Collection
+    {
+        return $this->copies($organizer, AccountUserDomainObjectAbstract::RECEIVES_ORGANIZER_MESSAGES);
+    }
+
+    /**
+     * @return Collection<int, UserDomainObject>
+     */
+    public function newOrderCopies(OrganizerDomainObject $organizer): Collection
+    {
+        return $this->copies($organizer, AccountUserDomainObjectAbstract::RECEIVES_ORDER_NOTIFICATIONS);
+    }
+
+    /**
+     * @return Collection<int, UserDomainObject>
+     */
+    private function copies(OrganizerDomainObject $organizer, string $setting): Collection
     {
         $userIds = $this->accountUserRepository->findWhere([
             AccountUserDomainObjectAbstract::ACCOUNT_ID => $organizer->getAccountId(),
             AccountUserDomainObjectAbstract::STATUS => UserStatus::ACTIVE->name,
-            AccountUserDomainObjectAbstract::RECEIVES_ORGANIZER_MESSAGES => true,
+            $setting => true,
         ])->map(fn(AccountUserDomainObject $accountUser) => $accountUser->getUserId())->unique()->values();
 
         if ($userIds->isEmpty()) {

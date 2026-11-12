@@ -57,8 +57,8 @@ export const userClient = {
         const response = await api.post(`users/${userId}/invitation`);
         return response.data;
     },
-    updateOrganizerMessageEmails: async (userId: IdParam, enabled: boolean) => {
-        const response = await api.put<GenericDataResponse<User>>(`users/${userId}/organizer-message-emails`, {enabled});
+    updateNotificationEmails: async (userId: IdParam, settings: { organizer_messages?: boolean, new_orders?: boolean }) => {
+        const response = await api.put<GenericDataResponse<User>>(`users/${userId}/notification-emails`, settings);
         return response.data;
     },
     findByID: async (userId: IdParam) => {

@@ -13,6 +13,10 @@ use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Services\Domain\Attendee\SendAttendeeTicketService;
 use HiEvents\Services\Domain\Email\MailBuilderService;
 use HiEvents\Services\Domain\Mail\SendOrderDetailsService;
+use HiEvents\Services\Domain\Organizer\TeamEmailRecipientService;
+use HiEvents\DomainObjects\UserDomainObject;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Illuminate\Mail\Mailer;
 use Illuminate\Mail\PendingMail;
 use Illuminate\Support\Collection;
@@ -27,11 +31,20 @@ class SendOrderDetailsServiceTest extends TestCase
 
     private SendOrderDetailsService $service;
 
+    private TeamEmailRecipientService $teamEmailRecipientService;
+
+    private bool $notifyOrganizer = false;
+
+    /** @var string[] */
+    private array $sentTo = [];
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->sendAttendeeTicketService = Mockery::mock(SendAttendeeTicketService::class);
+        $this->teamEmailRecipientService = Mockery::mock(TeamEmailRecipientService::class);
+        $this->teamEmailRecipientService->shouldReceive('newOrderCopies')->andReturn(collect())->byDefault();
 
         $this->service = new SendOrderDetailsService(
             eventRepository: $this->eventRepository(),
@@ -39,6 +52,8 @@ class SendOrderDetailsServiceTest extends TestCase
             mailer: $this->mailer(),
             sendAttendeeTicketService: $this->sendAttendeeTicketService,
             mailBuilderService: Mockery::mock(MailBuilderService::class)->shouldIgnoreMissing(),
+            teamEmailRecipientService: $this->teamEmailRecipientService,
+            logger: Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing(),
         );
     }
 
@@ -118,6 +133,44 @@ class SendOrderDetailsServiceTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function test_it_sends_the_new_order_email_to_the_contact_and_each_member_who_asked(): void
+    {
+        $this->notifyOrganizer = true;
+        $this->attendees = collect([$this->attendee(1, 'alex@example.com')]);
+        $this->sendAttendeeTicketService->shouldReceive('send');
+        $this->teamEmailRecipientService->shouldReceive('newOrderCopies')->andReturn(collect([
+            (new UserDomainObject())->setFirstName('Félix')->setLastName('C')->setEmail('felix@example.com'),
+        ]));
+
+        $this->service->sendOrderSummaryAndTicketEmails($this->order());
+
+        $this->assertContains('o@example.com', $this->sentTo);
+        $this->assertContains('felix@example.com', $this->sentTo);
+    }
+
+    public function test_it_sends_no_copy_when_new_order_emails_are_off_for_the_event(): void
+    {
+        $this->attendees = collect([$this->attendee(1, 'alex@example.com')]);
+        $this->sendAttendeeTicketService->shouldReceive('send');
+        $this->teamEmailRecipientService->shouldNotReceive('newOrderCopies');
+
+        $this->service->sendOrderSummaryAndTicketEmails($this->order());
+
+        $this->assertNotContains('o@example.com', $this->sentTo);
+    }
+
+    public function test_the_contact_still_gets_it_when_the_member_lookup_fails(): void
+    {
+        $this->notifyOrganizer = true;
+        $this->attendees = collect([$this->attendee(1, 'alex@example.com')]);
+        $this->sendAttendeeTicketService->shouldReceive('send');
+        $this->teamEmailRecipientService->shouldReceive('newOrderCopies')->andThrow(new RuntimeException('db down'));
+
+        $this->service->sendOrderSummaryAndTicketEmails($this->order());
+
+        $this->assertContains('o@example.com', $this->sentTo);
+    }
+
     private function order(): OrderDomainObject
     {
         return (new OrderDomainObject())
@@ -168,12 +221,16 @@ class SendOrderDetailsServiceTest extends TestCase
             (new OrganizerDomainObject())->setId(1)->setAccountId(1)->setName('DEHORS')->setEmail('o@example.com')
         );
         $event->setEventSettings(
-            (new EventSettingDomainObject())->setId(1)->setEventId(1)->setNotifyOrganizerOfNewOrders(false)
+            (new EventSettingDomainObject())->setId(1)->setEventId(1)->setNotifyOrganizerOfNewOrders($this->notifyOrganizer)
         );
 
         $repository = Mockery::mock(EventRepositoryInterface::class);
         $repository->shouldReceive('loadRelation')->andReturnSelf();
-        $repository->shouldReceive('findById')->andReturn($event);
+        $repository->shouldReceive('findById')->andReturnUsing(function () use ($event) {
+            $event->getEventSettings()->setNotifyOrganizerOfNewOrders($this->notifyOrganizer);
+
+            return $event;
+        });
 
         return $repository;
     }
@@ -185,7 +242,11 @@ class SendOrderDetailsServiceTest extends TestCase
         $pendingMail->shouldReceive('send')->andReturnNull();
 
         $mailer = Mockery::mock(Mailer::class);
-        $mailer->shouldReceive('to')->andReturn($pendingMail);
+        $mailer->shouldReceive('to')->andReturnUsing(function ($email) use ($pendingMail) {
+            $this->sentTo[] = is_string($email) ? $email : 'other';
+
+            return $pendingMail;
+        });
 
         return $mailer;
     }

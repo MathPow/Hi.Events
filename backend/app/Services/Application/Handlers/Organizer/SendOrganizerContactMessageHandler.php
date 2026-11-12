@@ -9,7 +9,7 @@ use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Services\Application\Handlers\Organizer\DTO\SendOrganizerContactMessageDTO;
-use HiEvents\Services\Domain\Organizer\OrganizerMessageRecipientService;
+use HiEvents\Services\Domain\Organizer\TeamEmailRecipientService;
 use HiEvents\Services\Infrastructure\HtmlPurifier\HtmlPurifierService;
 use Illuminate\Mail\Mailer;
 use Psr\Log\LoggerInterface;
@@ -25,7 +25,7 @@ class SendOrganizerContactMessageHandler
         private readonly OrganizerMessageRepositoryInterface $messageRepository,
         private readonly EventRepositoryInterface            $eventRepository,
         private readonly LoggerInterface                     $logger,
-        private readonly OrganizerMessageRecipientService    $recipientService,
+        private readonly TeamEmailRecipientService           $recipientService,
     )
     {
     }
@@ -64,7 +64,7 @@ class SendOrganizerContactMessageHandler
         $messageContent = $this->purifier->purify($dto->message);
         $recipients = [[$organizer->getEmail(), $organizer->getName()]];
         try {
-            foreach ($this->recipientService->memberCopies($organizer) as $member) {
+            foreach ($this->recipientService->visitorMessageCopies($organizer) as $member) {
                 $recipients[] = [$member->getEmail(), $member->getFullName()];
             }
         } catch (Throwable $exception) {
