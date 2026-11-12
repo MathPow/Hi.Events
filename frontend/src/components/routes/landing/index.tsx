@@ -916,16 +916,9 @@ const Landing = () => {
                         <HeroVideo/>
                         <div className={classes.heroShade}/>
                         <div className={classes.heroStickers}>
-                            <Sticker name="photo" className={classes.heroStickerTop} eager/>
-                            <Sticker name="logo" className={classes.heroStickerLeft} eager/>
-                            <Sticker name="compass" className={classes.heroStickerRight} eager/>
-                            <Sticker name="soulier" className={classes.heroStickerBottomLeft} eager/>
-                            <Sticker name="dossard" className={classes.heroStickerBottomRight} eager/>
-                            <Sticker name="tente" className={classes.heroStickerBottom} eager/>
                             <Sticker name="calendrier" className={classes.heroStickerTopLeft} eager/>
                             <Sticker name="toilette" className={classes.heroStickerMiddleLeft} eager/>
                             <Sticker name="autre" className={classes.heroStickerUpperRight} eager/>
-                            <Sticker name="billet" className={classes.heroStickerLowerRight} eager/>
                         </div>
                         <header ref={heroNav} className={classes.nav}>
                             {/* Deux publics: a gauche, ceux qui sortent (les evenements, leurs billets), sans
@@ -1010,6 +1003,7 @@ const Landing = () => {
                             <Rough className={classes.feesCard} amplitude={1.8} step={36}>
                                 <FeesComparator/>
                             </Rough>
+                            <Sticker name="tirelire" className={classes.stickerFees}/>
                             <p className={classes.feesNote}>{t`Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price.`}</p>
                         </div>
                     </Rough>

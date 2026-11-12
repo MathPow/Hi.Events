@@ -815,84 +815,11 @@ $ridge-mobile: 10vw;
   }
 }
 
-.heroStickerTop {
-  --w: clamp(5.5rem, 10vw, 9rem);
-  top: -1.5rem;
-  left: calc(50% - var(--w) / 2);
-  width: var(--w);
-  rotate: -6deg;
-  --tilt-delay: -0.6s;
-  --float-delay: -2s;
-  --pop-delay: 0.1s;
-
-  // Beside the full nav (links, languages, log in), it would sit on the buttons.
-  @media (min-width: 1151px) and (max-width: 1439px) {
-    display: none;
-  }
-}
-
-.heroStickerLeft {
-  top: 21%;
-  left: -2.25rem;
-  width: clamp(6rem, 12vw, 10.5rem);
-  rotate: -10deg;
-  --tilt-delay: -1.2s;
-  --float-delay: -4s;
-  --pop-delay: 0.2s;
-}
-
-.heroStickerRight {
-  top: 19%;
-  right: -1.75rem;
-  width: clamp(6rem, 11vw, 9.5rem);
-  rotate: 8deg;
-  --float-delay: -1s;
-  --pop-delay: 0.3s;
-}
-
-.heroStickerBottomLeft {
-  bottom: 14%;
-  left: 3%;
-  width: clamp(7rem, 15vw, 12rem);
-  rotate: -8deg;
-  --tilt-delay: -0.4s;
-  --float-delay: -3s;
-  --pop-delay: 0.4s;
-}
-
-.heroStickerBottomRight {
-  bottom: 13%;
-  right: 3%;
-  width: clamp(6.5rem, 13vw, 10.5rem);
-  rotate: 6deg;
-  --tilt-delay: -1.6s;
-  --float-delay: -5s;
-  --pop-delay: 0.5s;
-}
-
-// Cut by the hero's bottom edge, above the scroll arrow.
-.heroStickerBottom {
-  --w: clamp(5rem, 8vw, 7rem);
-  bottom: -0.25rem;
-  left: calc(50% - var(--w) / 2);
-  width: var(--w);
-  rotate: 3deg;
-  --tilt-delay: -0.8s;
-  --float-delay: -2.5s;
-  --pop-delay: 0.6s;
-}
-
-// Four more in the gaps around the title, only on wide screens: narrower, they would
-// sit on the navigation or the title.
+// Three in the gaps around the title.
 .heroStickerTopLeft,
 .heroStickerMiddleLeft,
-.heroStickerUpperRight,
-.heroStickerLowerRight {
-  width: clamp(5.5rem, 7.5vw, 8rem);
-
-  @media (max-width: 1279px) {
-    display: none;
-  }
+.heroStickerUpperRight {
+  width: clamp(4.5rem, 7.5vw, 8rem);
 }
 
 .heroStickerTopLeft {
@@ -901,11 +828,12 @@ $ridge-mobile: 10vw;
   rotate: 7deg;
   --tilt-delay: -0.9s;
   --float-delay: -3.5s;
-  --pop-delay: 0.35s;
+  --pop-delay: 0.1s;
 
-  // Beside the full nav, it would sit on the links.
+  // Beside the full nav it would sit on the links: lower, above the title.
   @media (max-width: 1439px) {
-    display: none;
+    top: 15%;
+    left: 26%;
   }
 }
 
@@ -915,7 +843,13 @@ $ridge-mobile: 10vw;
   rotate: -7deg;
   --tilt-delay: -1.4s;
   --float-delay: -1.5s;
-  --pop-delay: 0.45s;
+  --pop-delay: 0.25s;
+
+  @media (max-width: 1279px) {
+    top: auto;
+    bottom: 16%;
+    left: 5%;
+  }
 }
 
 .heroStickerUpperRight {
@@ -924,45 +858,30 @@ $ridge-mobile: 10vw;
   rotate: 9deg;
   --tilt-delay: -0.3s;
   --float-delay: -4.5s;
-  --pop-delay: 0.55s;
-}
+  --pop-delay: 0.4s;
 
-.heroStickerLowerRight {
-  bottom: 10%;
-  right: 22%;
-  rotate: -5deg;
-  --tilt-delay: -1.8s;
-  --float-delay: -2.2s;
-  --pop-delay: 0.65s;
+  @media (max-width: 1279px) {
+    top: 16%;
+    right: 5%;
+  }
 }
 
 // On a phone, the title takes the whole width: the stickers keep to the corners.
 @media (max-width: $mobile) {
-  .heroStickerTop {
-    display: none;
+  .heroStickerTopLeft {
+    top: 13%;
+    left: 6%;
   }
 
-  .heroStickerLeft, .heroStickerRight {
-    top: 14%;
-    width: 5rem;
+  .heroStickerMiddleLeft {
+    bottom: 13%;
+    left: 6%;
   }
 
-  .heroStickerLeft {
-    left: -1.25rem;
-  }
-
-  .heroStickerRight {
-    right: -1.25rem;
-  }
-
-  .heroStickerBottomLeft {
-    bottom: 12%;
-    width: 5.5rem;
-  }
-
-  .heroStickerBottomRight {
-    bottom: 12%;
-    width: 5rem;
+  .heroStickerUpperRight {
+    top: auto;
+    bottom: 15%;
+    right: 6%;
   }
 }
 
@@ -2275,6 +2194,19 @@ $ridge-mobile: 10vw;
 
   &::before {
     content: '* ';
+  }
+}
+
+// The piggy bank on the calculator's top corner.
+.stickerFees {
+  top: -3.25rem;
+  right: -2.5rem;
+  width: clamp(5.5rem, 9vw, 8rem);
+  rotate: 8deg;
+  --tilt-delay: -1.8s;
+
+  @media (max-width: $mobile) {
+    right: -0.5rem;
   }
 }
 
