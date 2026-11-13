@@ -29,6 +29,7 @@ class EventResource extends BaseResource
             'currency' => $this->getCurrency(),
             'timezone' => $this->getTimezone(),
             'slug' => $this->getSlug(),
+            'series_id' => $this->getSeriesId(),
             'products' => $this->when(
                 condition: (bool)$this->getProducts(),
                 value: fn() => ProductResource::collection($this->getProducts()),

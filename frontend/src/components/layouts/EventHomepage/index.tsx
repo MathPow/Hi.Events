@@ -41,6 +41,7 @@ import {findDefaultTicket, StickyBuyBar} from "./StickyBuyBar";
 import {TicketsCard} from "./TicketsCard";
 import {EventLocationMap} from "./EventLocationMap";
 import {CollapsibleDescription} from "./CollapsibleDescription";
+import {OtherDates} from "./OtherDates";
 
 const TICKETS_FORM_ID = 'event-tickets-form';
 
@@ -381,6 +382,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                     </div>
                                 )}
                             </section>
+
+                            <OtherDates event={event}/>
 
                             {event.description && (
                                 <section className={`${classes.card} ${classes.section} ${classes.about}`} data-rough>

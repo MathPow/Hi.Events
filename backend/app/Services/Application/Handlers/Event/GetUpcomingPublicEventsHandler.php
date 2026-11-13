@@ -25,6 +25,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * soonest first: the landing page's banner, the events to discover on « Mes billets »,
  * and, up to MAX_LIMIT of them, the events directory.
  * Their products come along, as on an organizer's page, for the cards' price and spots.
+ * A repeated event shows up once, at its next date: its page lists the other ones.
  */
 class GetUpcomingPublicEventsHandler
 {
@@ -69,7 +70,7 @@ class GetUpcomingPublicEventsHandler
                     sort_by: EventDomainObjectAbstract::START_DATE,
                     sort_direction: 'asc',
                     filter_fields: collect(),
-                    query_params: collect(['eventsStatus' => 'upcoming']),
+                    query_params: collect(['eventsStatus' => 'upcoming', 'onePerSeries' => true]),
                 ),
             );
     }

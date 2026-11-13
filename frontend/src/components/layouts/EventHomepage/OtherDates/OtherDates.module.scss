@@ -1,0 +1,48 @@
+@use "../../../../styles/mixins";
+
+// After the date and place; on one column, after the tickets.
+.otherDates {
+  @include mixins.respond-below(lg) {
+    order: 4;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--public-accent-doux);
+  color: var(--dehors-brun);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: var(--public-accent);
+    color: var(--public-sur-accent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--public-accent-fonce);
+    outline-offset: 2px;
+  }
+
+  @include mixins.respond-below(md) {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+}

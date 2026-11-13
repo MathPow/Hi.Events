@@ -26,6 +26,7 @@ use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
 use HiEvents\Services\Domain\CapacityAssignment\CreateCapacityAssignmentService;
 use HiEvents\Services\Domain\CheckInList\CreateCheckInListService;
 use HiEvents\Services\Domain\CreateWebhookService;
+use HiEvents\Services\Domain\Event\RecurringEvent\RecurringEventDateService;
 use HiEvents\Services\Domain\Product\CreateProductService;
 use HiEvents\Services\Domain\ProductCategory\CreateProductCategoryService;
 use HiEvents\Services\Domain\PromoCode\CreatePromoCodeService;
@@ -50,6 +51,7 @@ class DuplicateEventService
         private readonly CreateProductCategoryService    $createProductCategoryService,
         private readonly CreateWebhookService            $createWebhookService,
         private readonly AffiliateRepositoryInterface    $affiliateRepository,
+        private readonly RecurringEventDateService       $recurringEventDateService,
     )
     {
     }
@@ -74,12 +76,17 @@ class DuplicateEventService
         bool    $duplicateAffiliates = true,
         ?string $description = null,
         ?string $endDate = null,
+        bool    $shiftRelatedDates = false,
     ): EventDomainObject
     {
         try {
             $this->databaseManager->beginTransaction();
 
             $event = $this->getEventWithRelations($eventId, $accountId);
+
+            if ($shiftRelatedDates) {
+                $this->recurringEventDateService->shiftRelatedDates($event, $startDate);
+            }
 
             $event
                 ->setTitle(StringHelper::stripControlCharacters($title))

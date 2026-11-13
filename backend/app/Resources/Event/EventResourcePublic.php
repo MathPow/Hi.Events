@@ -79,6 +79,16 @@ class EventResourcePublic extends BaseResource
                 condition: !is_null($this->getOrganizer()),
                 value: fn() => new OrganizerResourcePublic($this->getOrganizer()),
             ),
+            'series_occurrences' => $this->when(
+                condition: !is_null($this->getSeriesOccurrences()),
+                value: fn() => $this->getSeriesOccurrences()->map(fn(EventDomainObject $occurrence) => [
+                    'id' => $occurrence->getId(),
+                    'slug' => $occurrence->getSlug(),
+                    'start_date' => $occurrence->getStartDate(),
+                    'end_date' => $occurrence->getEndDate(),
+                    'timezone' => $occurrence->getTimezone(),
+                ])->values(),
+            ),
         ];
     }
 }

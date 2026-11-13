@@ -4,6 +4,7 @@ namespace HiEvents\Services\Application\Handlers\Event;
 
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
+use HiEvents\DomainObjects\Generated\EventDomainObjectAbstract;
 use HiEvents\DomainObjects\Generated\PromoCodeDomainObjectAbstract;
 use HiEvents\DomainObjects\ImageDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
@@ -12,6 +13,7 @@ use HiEvents\DomainObjects\ProductCategoryDomainObject;
 use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\PromoCodeDomainObject;
+use HiEvents\DomainObjects\Status\EventStatus;
 use HiEvents\DomainObjects\TaxAndFeesDomainObject;
 use HiEvents\Repository\Eloquent\Value\OrderAndDirection;
 use HiEvents\Repository\Eloquent\Value\Relationship;
@@ -21,9 +23,12 @@ use HiEvents\Services\Application\Handlers\Event\DTO\GetPublicEventDTO;
 use HiEvents\Services\Domain\Event\EventPageViewIncrementService;
 use HiEvents\Services\Domain\Organizer\PlatformSupportService;
 use HiEvents\Services\Domain\Product\ProductFilterService;
+use Illuminate\Support\Collection;
 
 class GetPublicEventHandler
 {
+    public const MAX_SERIES_OCCURRENCES = 6;
+
     public function __construct(
         private readonly EventRepositoryInterface      $eventRepository,
         private readonly PromoCodeRepositoryInterface  $promoCodeRepository,
@@ -79,9 +84,41 @@ class GetPublicEventHandler
             $this->eventPageViewIncrementService->increment($data->eventId, $data->ipAddress);
         }
 
+        if ($event->getSeriesId() !== null) {
+            $event->setSeriesOccurrences($this->getUpcomingSeriesOccurrences($event));
+        }
+
         return $event->setProductCategories($this->productFilterService->filter(
             productsCategories: $event->getProductCategories(),
             promoCode: $promoCodeDomainObject
         ));
+    }
+
+    /**
+     * « Autres dates »: the next live dates of the event's series, the event itself left out.
+     */
+    private function getUpcomingSeriesOccurrences(EventDomainObject $event): Collection
+    {
+        return $this->eventRepository
+            ->findWhere(
+                where: [
+                    EventDomainObjectAbstract::SERIES_ID => $event->getSeriesId(),
+                    EventDomainObjectAbstract::STATUS => EventStatus::LIVE->name,
+                    [EventDomainObjectAbstract::ID, '!=', $event->getId()],
+                    [EventDomainObjectAbstract::START_DATE, '>', now()],
+                ],
+                columns: [
+                    EventDomainObjectAbstract::ID,
+                    EventDomainObjectAbstract::TITLE,
+                    EventDomainObjectAbstract::START_DATE,
+                    EventDomainObjectAbstract::END_DATE,
+                    EventDomainObjectAbstract::TIMEZONE,
+                ],
+                orderAndDirections: [
+                    new OrderAndDirection(EventDomainObjectAbstract::START_DATE, 'asc'),
+                ],
+            )
+            ->take(self::MAX_SERIES_OCCURRENCES)
+            ->values();
     }
 }

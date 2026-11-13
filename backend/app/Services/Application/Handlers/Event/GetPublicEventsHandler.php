@@ -9,6 +9,7 @@ use HiEvents\DomainObjects\ProductDomainObject;
 use HiEvents\DomainObjects\ProductPriceDomainObject;
 use HiEvents\DomainObjects\Status\EventStatus;
 use HiEvents\DomainObjects\TaxAndFeesDomainObject;
+use HiEvents\Http\DTO\QueryParamsDTO;
 use HiEvents\Repository\Eloquent\Value\OrderAndDirection;
 use HiEvents\Repository\Eloquent\Value\Relationship;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
@@ -46,12 +47,14 @@ class GetPublicEventsHandler
             ->loadRelation(new Relationship(EventSettingDomainObject::class))
             ->loadRelation(new Relationship(ImageDomainObject::class));
 
+        $params = $this->withOnePerSeries($dto->queryParams);
+
         // If the organizer is viewing their own profile, we show all events, even those in draft
         if ($dto->authenticatedAccountId && $organizer->getAccountId() === $dto->authenticatedAccountId) {
             return $query->findEventsForOrganizer(
                 organizerId: $dto->organizerId,
                 accountId: $dto->authenticatedAccountId,
-                params: $dto->queryParams
+                params: $params
             );
         }
 
@@ -60,7 +63,22 @@ class GetPublicEventsHandler
                 'organizer_id' => $dto->organizerId,
                 'status' => EventStatus::LIVE->name,
             ],
-            params: $dto->queryParams
+            params: $params
+        );
+    }
+
+    // A repeated event shows up once among the upcoming ones, at its next date: its page lists the other ones.
+    private function withOnePerSeries(QueryParamsDTO $params): QueryParamsDTO
+    {
+        return new QueryParamsDTO(
+            page: $params->page,
+            per_page: $params->per_page,
+            sort_by: $params->sort_by,
+            sort_direction: $params->sort_direction,
+            query: $params->query,
+            filter_fields: $params->filter_fields,
+            includes: $params->includes,
+            query_params: collect($params->query_params)->put('onePerSeries', true),
         );
     }
 }

@@ -34,6 +34,8 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
 
     private ?Collection $affiliates = null;
 
+    private ?Collection $seriesOccurrences = null;
+
     private ?EventSettingDomainObject $settings = null;
 
     private ?OrganizerDomainObject $organizer = null;
@@ -315,6 +317,17 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
     public function setAffiliates(?Collection $affiliates): EventDomainObject
     {
         $this->affiliates = $affiliates;
+        return $this;
+    }
+
+    public function getSeriesOccurrences(): ?Collection
+    {
+        return $this->seriesOccurrences;
+    }
+
+    public function setSeriesOccurrences(?Collection $seriesOccurrences): EventDomainObject
+    {
+        $this->seriesOccurrences = $seriesOccurrences;
         return $this;
     }
 }

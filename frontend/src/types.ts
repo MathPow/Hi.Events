@@ -363,7 +363,13 @@ export interface Event extends EventBase {
     location_details?: VenueAddress;
     statistics?: EventStatistics;
     has_promo_codes?: boolean;
+    // The first event of its series of dates (« Répéter cet événement »).
+    series_id?: IdParam | null;
+    // « Autres dates »: the next live dates of the series, on the public page.
+    series_occurrences?: EventSeriesOccurrence[];
 }
+
+export type EventSeriesOccurrence = Pick<Event, 'id' | 'slug' | 'start_date' | 'end_date' | 'timezone'>;
 
 export interface EventStatistics {
     unique_views: number;

@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class GetUpcomingPublicEventsHandlerTest extends TestCase
 {
-    public function testHandleReturnsTheNextLiveEventsSoonestFirst(): void
+    public function testHandleReturnsTheNextLiveEventsSoonestFirstAndEachSeriesOnce(): void
     {
         $repository = m::mock(EventRepositoryInterface::class);
         $events = new LengthAwarePaginator([], 0, GetUpcomingPublicEventsHandler::LIMIT);
@@ -26,7 +26,8 @@ class GetUpcomingPublicEventsHandlerTest extends TestCase
                     && $params->per_page === GetUpcomingPublicEventsHandler::LIMIT
                     && $params->sort_by === 'start_date'
                     && $params->sort_direction === 'asc'
-                    && $params->query_params->get('eventsStatus') === 'upcoming';
+                    && $params->query_params->get('eventsStatus') === 'upcoming'
+                    && $params->query_params->get('onePerSeries') === true;
             })
             ->andReturn($events);
 
