@@ -186,6 +186,36 @@ class RecurringEventDateServiceTest extends TestCase
         $this->assertSame('2026-11-03 17:00:00', $this->toUtc($product->getSaleEndDate()));
     }
 
+    public function testAPlainDuplicateKeepsTheSameMomentsAsLocalTimes(): void
+    {
+        $event = $this->event(start: '2026-10-27 22:00:00', end: '2026-10-28 00:00:00');
+        $product = (new ProductDomainObject())
+            ->setSaleStartDate('2026-10-19 13:00:00')
+            ->setSaleEndDate('2026-11-27 17:00:00')
+            ->setProductPrices(collect());
+        $category = new ProductCategoryDomainObject();
+        $category->setProducts(collect([$product]));
+        $promoCode = (new PromoCodeDomainObject())->setExpiryDate('2026-10-26 03:59:00');
+        $checkInList = (new CheckInListDomainObject())->setActivatesAt('2026-10-27 21:00:00');
+        $event
+            ->setProductCategories(collect([$category]))
+            ->setPromoCodes(collect([$promoCode]))
+            ->setCheckInLists(collect([$checkInList]));
+
+        $this->service->keepRelatedDates($event);
+
+        // Toronto time, ready for the create services, which read them as local times
+        $this->assertSame('2026-10-19 09:00:00', $product->getSaleStartDate());
+        $this->assertSame('2026-11-27 12:00:00', $product->getSaleEndDate());
+        $this->assertSame('2026-10-25 23:59:00', $promoCode->getExpiryDate());
+        $this->assertSame('2026-10-27 17:00:00', $checkInList->getActivatesAt());
+
+        // Back to UTC, they are the very same moments, on both sides of the change of time
+        $this->assertSame('2026-10-19 13:00:00', $this->toUtc($product->getSaleStartDate()));
+        $this->assertSame('2026-11-27 17:00:00', $this->toUtc($product->getSaleEndDate()));
+        $this->assertSame('2026-10-26 03:59:00', $this->toUtc($promoCode->getExpiryDate()));
+    }
+
     public function testShiftsNothingWhenTheEventHasNoRelatedDates(): void
     {
         $event = $this->event(start: '2026-10-27 22:00:00', end: null);

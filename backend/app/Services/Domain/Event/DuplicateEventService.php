@@ -88,6 +88,8 @@ class DuplicateEventService
 
             if ($shiftRelatedDates) {
                 $this->recurringEventDateService->shiftRelatedDates($event, $startDate);
+            } else {
+                $this->recurringEventDateService->keepRelatedDates($event);
             }
 
             $event

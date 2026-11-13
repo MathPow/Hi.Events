@@ -58,6 +58,11 @@ class DuplicateEventServiceRouteFilesTest extends TestCase
         $routeFileService = m::mock(EventRouteFileService::class);
         $routeFileService->shouldReceive('duplicateForEvent')->once()->with(12, 34);
 
+        // A plain duplicate keeps the related dates where they are, as local times
+        $recurringEventDateService = m::mock(RecurringEventDateService::class);
+        $recurringEventDateService->shouldReceive('keepRelatedDates')->once()->with($source);
+        $recurringEventDateService->shouldNotReceive('shiftRelatedDates');
+
         $service = new DuplicateEventService(
             eventRepository: $eventRepository,
             createEventService: $createEventService,
@@ -72,7 +77,7 @@ class DuplicateEventServiceRouteFilesTest extends TestCase
             createProductCategoryService: $categoryService,
             createWebhookService: m::mock(CreateWebhookService::class),
             affiliateRepository: m::mock(AffiliateRepositoryInterface::class),
-            recurringEventDateService: m::mock(RecurringEventDateService::class),
+            recurringEventDateService: $recurringEventDateService,
             eventRouteFileService: $routeFileService,
         );
 

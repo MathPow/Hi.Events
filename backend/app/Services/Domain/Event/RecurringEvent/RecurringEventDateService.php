@@ -87,8 +87,24 @@ class RecurringEventDateService
      */
     public function shiftRelatedDates(EventDomainObject $event, string $newStartDate): void
     {
+        $this->moveRelatedDates(
+            $event,
+            $this->wallClockShiftInSeconds($this->toWallClock($event->getStartDate(), $event->getTimezone()), $newStartDate),
+        );
+    }
+
+    /**
+     * The same dates, unmoved, as wall-clock times in the event's timezone: a plain duplicate keeps
+     * them where they are instead of letting the create services read UTC as local time.
+     */
+    public function keepRelatedDates(EventDomainObject $event): void
+    {
+        $this->moveRelatedDates($event, 0);
+    }
+
+    private function moveRelatedDates(EventDomainObject $event, int $seconds): void
+    {
         $timezone = $event->getTimezone();
-        $seconds = $this->wallClockShiftInSeconds($this->toWallClock($event->getStartDate(), $timezone), $newStartDate);
         $shift = fn(?string $date) => $this->shiftDate($date, $timezone, $seconds);
 
         $event->getProductCategories()?->each(function (ProductCategoryDomainObject $category) use ($shift) {
