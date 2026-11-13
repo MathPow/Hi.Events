@@ -8,6 +8,7 @@ import {InfoBlockCard} from "../cards/InfoBlockCard.tsx";
 import {WaiverCard} from "../cards/WaiverCard.tsx";
 import {BibNumbersCard} from "../cards/BibNumbersCard.tsx";
 import {DocumentsCard} from "../cards/DocumentsCard.tsx";
+import {TicketTransferCard} from "../cards/TicketTransferCard.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 
 // « Inscription »: the checkout, the documents to sign, the waitlist, the bibs, the messages and the
@@ -22,6 +23,7 @@ export const RegistrationTab = ({eventId, settings}: { eventId: IdParam, setting
             <DocumentsCard eventId={eventId} settings={settings}/>
             <WaitlistCard eventId={eventId} settings={settings}/>
             <BibNumbersCard eventId={eventId}/>
+            <TicketTransferCard eventId={eventId} settings={settings}/>
             <CheckoutMessagesCard eventId={eventId} settings={settings}/>
             <InfoBlockCard eventId={eventId} settings={settings}/>
             {hasWaiver && <WaiverCard eventId={eventId} settings={settings}/>}

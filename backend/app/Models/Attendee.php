@@ -32,4 +32,9 @@ class Attendee extends BaseModel
     {
         return $this->hasMany(AttendeeCheckIn::class);
     }
+
+    public function transfers(): HasMany
+    {
+        return $this->hasMany(AttendeeTransfer::class)->orderBy('id');
+    }
 }

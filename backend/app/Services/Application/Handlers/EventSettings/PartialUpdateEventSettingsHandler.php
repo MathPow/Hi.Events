@@ -122,6 +122,10 @@ class PartialUpdateEventSettingsHandler
                     : $existingSettings->getWaiverText(),
                 'participants_sign_themselves' => $eventSettingsDTO->settings['participants_sign_themselves']
                     ?? $existingSettings->getParticipantsSignThemselves(),
+                'allow_ticket_transfer' => $eventSettingsDTO->settings['allow_ticket_transfer']
+                    ?? $existingSettings->getAllowTicketTransfer(),
+                'ticket_transfer_cutoff_hours' => $eventSettingsDTO->settings['ticket_transfer_cutoff_hours']
+                    ?? $existingSettings->getTicketTransferCutoffHours(),
 
                 // Invoice settings
                 'enable_invoicing' => $eventSettingsDTO->settings['enable_invoicing'] ?? $existingSettings->getEnableInvoicing(),

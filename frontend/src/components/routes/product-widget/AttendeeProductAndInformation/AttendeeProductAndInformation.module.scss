@@ -33,6 +33,40 @@
   font-size: 15px;
 }
 
+// Giving the ticket to someone else, under the ticket.
+.transferCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 24px 32px;
+  border-radius: 32px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.transferTitle {
+  margin: 0 0 4px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.transferText {
+  margin: 0;
+  font-size: 15px;
+}
+
+.transferButton {
+  flex-shrink: 0;
+}
+
 // « Parcours »: the GPX courses under the ticket, as wide as it.
 .routeCard {
   display: flex;

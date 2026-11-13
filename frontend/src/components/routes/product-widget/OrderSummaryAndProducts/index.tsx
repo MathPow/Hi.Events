@@ -27,6 +27,7 @@ import {PublicIcon, PublicIconName} from "../../../common/PublicIcon";
 import {platformSupportLabel} from "../../../common/PlatformSupportInput";
 import {EditAttendeeModal} from "./EditAttendeeModal";
 import {EditOrderModal} from "./EditOrderModal";
+import {isTransferWindowOpen, TransferTicketModal} from "../../../modals/TransferTicketModal";
 import {ConfirmationTicket} from "./ConfirmationTicket";
 import {OtherEvents} from "./OtherEvents";
 import {eventRangeLabel, timezoneLabel} from "./confirmationDates.ts";
@@ -355,6 +356,7 @@ export const OrderSummaryAndProducts = () => {
     const emailUpdated = location.state?.emailUpdated === true;
 
     const [editingAttendee, setEditingAttendee] = useState<Attendee | null>(null);
+    const [transferringAttendee, setTransferringAttendee] = useState<Attendee | null>(null);
     const [editOrderModalOpened, setEditOrderModalOpened] = useState(false);
     const [wallet, setWallet] = useState<WalletPlatform | null>(null);
     const [contactOpened, setContactOpened] = useState(false);
@@ -595,6 +597,8 @@ export const OrderSummaryAndProducts = () => {
     const canAddToWallet = isCompleted && activeAttendees.length > 0 && !!wallet && !!order.wallet_passes?.[wallet];
     const showResendTicket = canSelfEdit && activeAttendees.length > 0
         && (activeAttendees.length > 1 || activeAttendees[0].email !== order.email);
+    const canTransfer = isCompleted && activeAttendees.length > 0 && !!event.settings?.allow_ticket_transfer
+        && isTransferWindowOpen(event.start_date, event.settings?.ticket_transfer_cutoff_hours);
 
     // Seule la couleur principale suit le theme de l'evenement (toujours calculee en mode clair):
     // le creme, le texte fonce et la police restent ceux de Dehors.
@@ -649,6 +653,15 @@ export const OrderSummaryAndProducts = () => {
                 icon={'courriel'}
                 label={t`Resend Confirmation`}
                 onClick={handleResendOrderConfirmation}
+            />
+        ),
+        canTransfer && (
+            <AttendeeAction
+                key="transfer-ticket"
+                icon={'fleche'}
+                label={t`Transfer a ticket`}
+                attendees={activeAttendees}
+                onPick={setTransferringAttendee}
             />
         ),
         showResendTicket && (
@@ -811,6 +824,20 @@ export const OrderSummaryAndProducts = () => {
                     attendee={editingAttendee}
                     onSuccess={(values: any) => {
                         handleEditAttendee(editingAttendee, values);
+                    }}
+                />
+            )}
+
+            {transferringAttendee && (
+                <TransferTicketModal
+                    eventId={eventId!}
+                    timezone={event.timezone || 'UTC'}
+                    attendee={transferringAttendee}
+                    onClose={() => setTransferringAttendee(null)}
+                    onTransferred={(name) => {
+                        setTransferringAttendee(null);
+                        queryClient.invalidateQueries({queryKey: [GET_ORDER_PUBLIC_QUERY_KEY]});
+                        showSuccess(t`The ticket has been transferred to ${name}.`);
                     }}
                 />
             )}

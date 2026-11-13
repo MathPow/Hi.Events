@@ -78,6 +78,8 @@ class UpdateEventSettingsHandler
                     'deposit_instructions' => $this->purifier->purify($settings->deposit_instructions),
                     'waiver_text' => $this->purifier->purify($settings->waiver_text),
                     'participants_sign_themselves' => $settings->participants_sign_themselves,
+                    'allow_ticket_transfer' => $settings->allow_ticket_transfer,
+                    'ticket_transfer_cutoff_hours' => $settings->ticket_transfer_cutoff_hours,
 
                     // Invoice settings
                     'enable_invoicing' => $settings->enable_invoicing,

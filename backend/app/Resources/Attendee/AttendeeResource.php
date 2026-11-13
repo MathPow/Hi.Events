@@ -45,6 +45,10 @@ class AttendeeResource extends JsonResource
                 condition: $this->getCheckIns() !== null,
                 value: fn() => AttendeeCheckInResource::collection($this->getCheckIns()),
             ),
+            'transfers' => $this->when(
+                condition: $this->getTransfers() !== null,
+                value: fn() => AttendeeTransferResource::collection($this->getTransfers()),
+            ),
             'order' => $this->when(
                 condition: !is_null($this->getOrder()),
                 value: fn() => new OrderResource($this->getOrder())

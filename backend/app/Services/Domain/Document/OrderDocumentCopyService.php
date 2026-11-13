@@ -3,10 +3,13 @@
 namespace HiEvents\Services\Domain\Document;
 
 use HiEvents\DomainObjects\AttendeeDomainObject;
+use HiEvents\DomainObjects\DocumentSignatureDomainObject;
 use HiEvents\DomainObjects\Enums\QuestionBelongsTo;
 use HiEvents\DomainObjects\Enums\QuestionPresetKey;
 use HiEvents\DomainObjects\Generated\AttendeeDomainObjectAbstract;
+use HiEvents\DomainObjects\Generated\DocumentSignatureDomainObjectAbstract;
 use HiEvents\DomainObjects\OrderDomainObject;
+use HiEvents\DomainObjects\OrganizerDocumentDomainObject;
 use HiEvents\Repository\Interfaces\AttendeeRepositoryInterface;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
@@ -91,6 +94,51 @@ class OrderDocumentCopyService
     public function deleteForOrder(int $orderId): void
     {
         $this->documentSignatureRepository->deleteWhere(['order_id' => $orderId]);
+    }
+
+    public function deleteForAttendee(int $attendeeId): void
+    {
+        $this->documentSignatureRepository->deleteWhere([DocumentSignatureDomainObjectAbstract::ATTENDEE_ID => $attendeeId]);
+    }
+
+    /**
+     * The copies of whoever holds the ticket now: the ones they have not signed are made again from
+     * the event's documents, for their name and age, and wait for their own signature.
+     */
+    public function replaceUnsignedForAttendee(AttendeeDomainObject $attendee, ?string $dateOfBirth, string $locale): void
+    {
+        $this->documentSignatureRepository->deleteWhere([
+            DocumentSignatureDomainObjectAbstract::ATTENDEE_ID => $attendee->getId(),
+            [DocumentSignatureDomainObjectAbstract::SIGNED_AT, 'null', null],
+        ]);
+
+        $signedDocumentIds = $this->documentSignatureRepository
+            ->findWhere([DocumentSignatureDomainObjectAbstract::ATTENDEE_ID => $attendee->getId()])
+            ->map(fn(DocumentSignatureDomainObject $copy) => $copy->getOrganizerDocumentId())
+            ->all();
+
+        $documents = $this->documentRepository
+            ->findForEvent($attendee->getEventId())
+            ->reject(fn(OrganizerDocumentDomainObject $document) => in_array($document->getId(), $signedDocumentIds, true))
+            ->values();
+
+        if ($documents->isEmpty()) {
+            return;
+        }
+
+        $event = $this->eventRepository->findById($attendee->getEventId());
+
+        $this->signingService->createCopies(
+            documents: $documents,
+            attendee: $attendee,
+            event: $event,
+            organizerName: (string)$this->organizerRepository->findById($event->getOrganizerId())->getName(),
+            dateOfBirth: $dateOfBirth,
+            entries: [],
+            ipAddress: null,
+            locale: $locale,
+            signNow: false,
+        );
     }
 
     private function dateOfBirth(CompleteOrderProductDataDTO $data, ?int $dateOfBirthQuestionId): ?string

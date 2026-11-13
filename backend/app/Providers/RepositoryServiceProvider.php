@@ -41,6 +41,7 @@ use HiEvents\Repository\Eloquent\OrganizerMessageRepository;
 use HiEvents\Repository\Eloquent\OrganizerMessageReplyRepository;
 use HiEvents\Repository\Eloquent\OrganizerDocumentRepository;
 use HiEvents\Repository\Eloquent\DocumentSignatureRepository;
+use HiEvents\Repository\Eloquent\AttendeeTransferRepository;
 use HiEvents\Repository\Eloquent\PushSubscriptionRepository;
 use HiEvents\Repository\Eloquent\OrganizerRepository;
 use HiEvents\Repository\Eloquent\OrganizerSettingsRepository;
@@ -101,6 +102,7 @@ use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageReplyRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerDocumentRepositoryInterface;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
+use HiEvents\Repository\Interfaces\AttendeeTransferRepositoryInterface;
 use HiEvents\Repository\Interfaces\PushSubscriptionRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
@@ -175,6 +177,7 @@ class RepositoryServiceProvider extends ServiceProvider
         OrganizerMessageReplyRepositoryInterface::class => OrganizerMessageReplyRepository::class,
         OrganizerDocumentRepositoryInterface::class => OrganizerDocumentRepository::class,
         DocumentSignatureRepositoryInterface::class => DocumentSignatureRepository::class,
+        AttendeeTransferRepositoryInterface::class => AttendeeTransferRepository::class,
         PushSubscriptionRepositoryInterface::class => PushSubscriptionRepository::class,
         OrderPaymentPlatformFeeRepositoryInterface::class => OrderPaymentPlatformFeeRepository::class,
         StripePayoutsRepositoryInterface::class => StripePayoutsRepository::class,

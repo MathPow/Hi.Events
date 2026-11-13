@@ -131,6 +131,10 @@ use HiEvents\Http\Actions\Organizers\CreateOrganizerAction;
 use HiEvents\Http\Actions\SelfService\EditAttendeePublicAction;
 use HiEvents\Http\Actions\Attendees\Public\GetParticipantSignaturesPublicAction;
 use HiEvents\Http\Actions\Attendees\Public\SignParticipantSignaturesPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\GetTicketTransferPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\TransferTicketPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\GetTransferredHolderDetailsPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\SaveTransferredHolderDetailsPublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\GetCheckInAttendeeSignaturesPublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\SignCheckInAttendeeSignaturesPublicAction;
 use HiEvents\Http\Actions\SelfService\EditOrderPublicAction;
@@ -688,6 +692,15 @@ $router->prefix('/public')->group(
         $router->get('/events/{event_id}/attendees/{attendee_short_id}/signatures', GetParticipantSignaturesPublicAction::class)
             ->middleware('throttle:self-service-edit');
         $router->post('/events/{event_id}/attendees/{attendee_short_id}/signatures', SignParticipantSignaturesPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        // A participant gives their ticket to someone else, within the organizer's rules.
+        $router->get('/events/{event_id}/attendees/{attendee_short_id}/transfer', GetTicketTransferPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->post('/events/{event_id}/attendees/{attendee_short_id}/transfer', TransferTicketPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->get('/events/{event_id}/attendees/{attendee_short_id}/details', GetTransferredHolderDetailsPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->post('/events/{event_id}/attendees/{attendee_short_id}/details', SaveTransferredHolderDetailsPublicAction::class)
             ->middleware('throttle:self-service-edit');
 
         // Waitlist

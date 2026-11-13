@@ -247,6 +247,9 @@ export interface EventSettings {
     waiver_text?: string | null;
     // Chaque participant signe lui-meme (lien de son billet, ou a l'entree); l'acheteur, son billet seulement.
     participants_sign_themselves?: boolean;
+    /** Participants may give their ticket to someone else, until this many hours before the start. */
+    allow_ticket_transfer?: boolean;
+    ticket_transfer_cutoff_hours?: number;
 
     // Payment settings
     offline_payment_instructions: string;
@@ -716,6 +719,19 @@ export interface Attendee {
     waiver_signed_name?: string | null;
     waiver_guardian_name?: string | null;
     waiver_signed_at?: string | null;
+    /** Who held this ticket before (admin only). */
+    transfers?: AttendeeTransfer[];
+}
+
+export interface AttendeeTransfer {
+    id: number;
+    from_first_name: string;
+    from_last_name: string;
+    from_email: string;
+    to_first_name: string;
+    to_last_name: string;
+    to_email: string;
+    created_at: string;
 }
 
 export type PublicCheckIn = Pick<AttendeeCheckIn, 'id' | 'order_id' | 'attendee_id' | 'check_in_list_id' | 'product_id' | 'event_id'>;
