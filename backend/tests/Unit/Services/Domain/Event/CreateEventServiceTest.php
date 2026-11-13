@@ -172,6 +172,7 @@ class CreateEventServiceTest extends TestCase
                 return $arg['event_id'] === $eventData->getId() &&
                     $arg['homepage_background_type'] === HomepageBackgroundType::COLOR->name &&
                     $arg['support_email'] === $organizer->getEmail() &&
+                    $arg['enable_invoicing'] === true &&
                     $arg['location_details'] === $eventData->getLocationDetails();
             }));
 
