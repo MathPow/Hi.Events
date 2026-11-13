@@ -102,6 +102,19 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   &:hover {
     background: #4a3830 !important;
   }
+
+  // Sur telephone le libelle passe a la ligne plutot que d'etre coupe.
+  @include mixins.respond-below(sm) {
+    height: auto !important;
+    min-height: 52px;
+    padding: 10px 18px !important;
+    font-size: 16px !important;
+
+    :global(.mantine-Button-label) {
+      white-space: normal;
+      line-height: 1.25;
+    }
+  }
 }
 
 .helpText {
