@@ -12,6 +12,9 @@ use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\Status\OrderStatus;
 use HiEvents\Mail\Attendee\AttendeeTicketMail;
 use HiEvents\DomainObjects\DocumentSignatureDomainObject;
+use HiEvents\DomainObjects\EventRouteFileDomainObject;
+use HiEvents\Services\Domain\Email\DTO\RenderedEmailTemplateDTO;
+use HiEvents\Services\Domain\Event\RouteFile\EventRouteFileService;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
 use HiEvents\Services\Domain\Waiver\PendingSignatureService;
 use HiEvents\Services\Domain\Document\DocumentBlocks;
@@ -26,6 +29,9 @@ class AttendeeTicketMailTest extends TestCase
     /** @var DocumentSignatureDomainObject[] The attendees' copies of the organizer's documents. */
     private array $documentCopies = [];
 
+    /** @var EventRouteFileDomainObject[] The event's GPX courses. */
+    private array $routeFiles = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,6 +40,10 @@ class AttendeeTicketMailTest extends TestCase
         $repository->shouldReceive('findWhereIn')->andReturnUsing(fn() => collect($this->documentCopies));
         $this->app->instance(DocumentSignatureRepositoryInterface::class, $repository);
         $this->app->instance(PendingSignatureService::class, m::mock(PendingSignatureService::class)->shouldIgnoreMissing(false));
+
+        $routeFileService = m::mock(EventRouteFileService::class);
+        $routeFileService->shouldReceive('forEvent')->with(1)->andReturnUsing(fn() => collect($this->routeFiles));
+        $this->app->instance(EventRouteFileService::class, $routeFileService);
     }
 
     protected function tearDown(): void
@@ -167,6 +177,47 @@ class AttendeeTicketMailTest extends TestCase
         $this->assertStringNotContainsString('18:00', $html);
     }
 
+    public function test_it_links_each_course_of_the_event(): void
+    {
+        config(['app.frontend_url' => 'https://billets.example.com']);
+        $this->routeFiles = [$this->routeFile(5, '10 km'), $this->routeFile(6, 'Demi-marathon')];
+
+        $html = $this->send($this->buildMail())->getHtmlBody();
+
+        $this->assertStringContainsString('https://billets.example.com/api/public/events/1/route-files/5', $html);
+        $this->assertStringContainsString('https://billets.example.com/api/public/events/1/route-files/6', $html);
+        $this->assertStringContainsString(e(__('Download the route · :label', ['label' => '10 km'])), $html);
+        $this->assertStringContainsString(e(__('Download the route · :label', ['label' => 'Demi-marathon'])), $html);
+    }
+
+    public function test_without_courses_the_email_has_no_course_block(): void
+    {
+        $html = $this->send($this->buildMail())->getHtmlBody();
+
+        $this->assertStringNotContainsString('route-files', $html);
+        $this->assertStringNotContainsString(e(__('Load it into your watch or phone (GPX file).')), $html);
+    }
+
+    public function test_a_custom_ticket_email_links_the_courses_too(): void
+    {
+        config(['app.frontend_url' => 'https://billets.example.com']);
+        $this->routeFiles = [$this->routeFile(5, '10 km')];
+
+        $mail = new AttendeeTicketMail(
+            order: $this->order(),
+            attendee: $this->attendee('A-AAAAAAA', 'Alex'),
+            event: $this->event(),
+            eventSettings: $this->eventSettings(),
+            organizer: $this->organizer(),
+            renderedTemplate: new RenderedEmailTemplateDTO(subject: 'Ton billet', body: '<p>Bonjour Alex</p>', cta: null),
+        );
+
+        $html = $this->send($mail)->getHtmlBody();
+
+        $this->assertStringContainsString('Bonjour Alex', $html);
+        $this->assertStringContainsString('https://billets.example.com/api/public/events/1/route-files/5', $html);
+    }
+
     public function test_the_subject_names_the_event(): void
     {
         $this->assertStringContainsString('Summer Fest', $this->buildMail()->envelope()->subject);
@@ -231,6 +282,18 @@ class AttendeeTicketMailTest extends TestCase
             organizer: $this->organizer(),
             additionalAttendees: $additionalAttendees,
         );
+    }
+
+    private function routeFile(int $id, string $label): EventRouteFileDomainObject
+    {
+        return (new EventRouteFileDomainObject())
+            ->setId($id)
+            ->setEventId(1)
+            ->setLabel($label)
+            ->setOriginalFilename($label . '.gpx')
+            ->setDisk('public')
+            ->setPath('events/1/routes/' . $id . '.gpx')
+            ->setSize(1024);
     }
 
     private function order(): OrderDomainObject

@@ -159,6 +159,12 @@ use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentsAction;
 use HiEvents\Http\Actions\Organizers\Documents\UpdateOrganizerDocumentAction;
 use HiEvents\Http\Actions\Events\GetEventDocumentsPublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\DeleteEventRouteFileAction;
+use HiEvents\Http\Actions\Events\RouteFiles\DownloadEventRouteFilePublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesAction;
+use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesPublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\UpdateEventRouteFileAction;
+use HiEvents\Http\Actions\Events\RouteFiles\UploadEventRouteFileAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentsAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerUnreadMessagesCountAction;
@@ -517,6 +523,12 @@ $router->middleware(['auth:api'])->group(
         $router->get('/events/{event_id}/images', GetEventImagesAction::class);
         $router->delete('/events/{event_id}/images/{image_id}', DeleteEventImageAction::class);
 
+        // GPX courses, downloaded by participants from their ticket
+        $router->get('/events/{event_id}/route-files', GetEventRouteFilesAction::class);
+        $router->post('/events/{event_id}/route-files', UploadEventRouteFileAction::class);
+        $router->patch('/events/{event_id}/route-files/{route_file_id}', UpdateEventRouteFileAction::class);
+        $router->delete('/events/{event_id}/route-files/{route_file_id}', DeleteEventRouteFileAction::class);
+
         // Promo Codes
         $router->post('/events/{event_id}/promo-codes', CreatePromoCodeAction::class);
         $router->put('/events/{event_id}/promo-codes/{promo_code_id}', UpdatePromoCodeAction::class);
@@ -642,6 +654,9 @@ $router->prefix('/public')->group(
         $router->get('/events/{event_id}/map-location', GetEventMapLocationPublicAction::class)
             ->middleware('throttle:30,1');
         $router->get('/events/{event_id}/documents', GetEventDocumentsPublicAction::class);
+        $router->get('/events/{event_id}/route-files', GetEventRouteFilesPublicAction::class);
+        $router->get('/events/{event_id}/route-files/{route_file_id}', DownloadEventRouteFilePublicAction::class)
+            ->middleware('throttle:60,1');
 
         // Organizers
         $router->get('/organizers/{organizer_id}', GetPublicOrganizerAction::class);

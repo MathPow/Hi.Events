@@ -9,6 +9,12 @@
 </x-mail::button>
 @endforeach
 
+@foreach($routeFiles ?? [] as $routeFile)
+<x-mail::button :url="$routeFile->getDownloadUrl()">
+{{ __('Download the route · :label', ['label' => $routeFile->getLabel()]) }}
+</x-mail::button>
+@endforeach
+
 @if(isset($renderedCta))
 <x-mail::button :url="$renderedCta['url']">
 {{ $renderedCta['label'] }}

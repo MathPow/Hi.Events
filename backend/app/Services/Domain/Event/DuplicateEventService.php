@@ -27,6 +27,7 @@ use HiEvents\Services\Domain\CapacityAssignment\CreateCapacityAssignmentService;
 use HiEvents\Services\Domain\CheckInList\CreateCheckInListService;
 use HiEvents\Services\Domain\CreateWebhookService;
 use HiEvents\Services\Domain\Event\RecurringEvent\RecurringEventDateService;
+use HiEvents\Services\Domain\Event\RouteFile\EventRouteFileService;
 use HiEvents\Services\Domain\Product\CreateProductService;
 use HiEvents\Services\Domain\ProductCategory\CreateProductCategoryService;
 use HiEvents\Services\Domain\PromoCode\CreatePromoCodeService;
@@ -52,6 +53,7 @@ class DuplicateEventService
         private readonly CreateWebhookService            $createWebhookService,
         private readonly AffiliateRepositoryInterface    $affiliateRepository,
         private readonly RecurringEventDateService       $recurringEventDateService,
+        private readonly EventRouteFileService           $eventRouteFileService,
     )
     {
     }
@@ -132,6 +134,8 @@ class DuplicateEventService
             if ($duplicateAffiliates) {
                 $this->duplicateAffiliates($event, $newEvent);
             }
+
+            $this->duplicateRouteFiles($event, $newEvent);
 
             $this->databaseManager->commit();
 
@@ -420,5 +424,10 @@ class DuplicateEventService
                 'status' => $affiliate->getStatus(),
             ]);
         });
+    }
+
+    private function duplicateRouteFiles(EventDomainObject $event, EventDomainObject $newEvent): void
+    {
+        $this->eventRouteFileService->duplicateForEvent($event->getId(), $newEvent->getId());
     }
 }

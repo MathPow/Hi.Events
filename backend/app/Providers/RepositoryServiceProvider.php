@@ -22,6 +22,7 @@ use HiEvents\Repository\Eloquent\CheckInListRepository;
 use HiEvents\Repository\Eloquent\EmailTemplateRepository;
 use HiEvents\Repository\Eloquent\EventDailyStatisticRepository;
 use HiEvents\Repository\Eloquent\EventRepository;
+use HiEvents\Repository\Eloquent\EventRouteFileRepository;
 use HiEvents\Repository\Eloquent\EventSettingsRepository;
 use HiEvents\Repository\Eloquent\EventStatisticRepository;
 use HiEvents\Repository\Eloquent\ImageRepository;
@@ -81,6 +82,7 @@ use HiEvents\Repository\Interfaces\CheckInListRepositoryInterface;
 use HiEvents\Repository\Interfaces\EmailTemplateRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventDailyStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventRouteFileRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
@@ -134,6 +136,7 @@ class RepositoryServiceProvider extends ServiceProvider
         AccountRepositoryInterface::class => AccountRepository::class,
         AccountAttributionRepositoryInterface::class => AccountAttributionRepository::class,
         EventRepositoryInterface::class => EventRepository::class,
+        EventRouteFileRepositoryInterface::class => EventRouteFileRepository::class,
         ProductRepositoryInterface::class => ProductRepository::class,
         OrderRepositoryInterface::class => OrderRepository::class,
         AttendeeRepositoryInterface::class => AttendeeRepository::class,

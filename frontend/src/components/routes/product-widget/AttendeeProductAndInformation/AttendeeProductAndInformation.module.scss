@@ -32,3 +32,67 @@
   margin: 0 0 8px;
   font-size: 15px;
 }
+
+// « Parcours »: the GPX courses under the ticket, as wide as it.
+.routeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 28px;
+  border-radius: 32px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+  scroll-margin-top: 16px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 28px;
+  }
+}
+
+.routeTitle {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.routeIntro {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.routeButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.routeButton {
+  justify-content: flex-start;
+  height: auto;
+  min-height: 56px;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-decoration: none;
+  white-space: normal;
+}
+
+// The name may be long (« Demi-marathon des Laurentides »): it wraps, the format under it.
+.routeButtonText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.routeFormat {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.7;
+}

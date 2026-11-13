@@ -68,6 +68,8 @@ return [
         'organizer_order_summary' => '/manage/event/%d/orders#order-%d',
         'ticket_lookup' => '/my-tickets/%s',
         'registration_invite' => '/auth/register?registration_token=%s',
+        // The API answers under the site's address too (/api), so the link works from an email.
+        'event_route_file_download' => '/api/public/events/%d/route-files/%d',
     ],
 
     /**

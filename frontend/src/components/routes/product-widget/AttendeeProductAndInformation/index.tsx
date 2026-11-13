@@ -16,6 +16,7 @@ import {useGetParticipantSignatures} from "../../../../queries/useGetParticipant
 import {hasPendingSignatures, participantSignatureClientPublic} from "../../../../api/participantSignature.client.ts";
 import {ParticipantSigning} from "../../../common/ParticipantSigning";
 import {showSuccess} from "../../../../utilites/notifications.tsx";
+import {RouteDownloads} from "./RouteDownloads.tsx";
 
 /**
  * A ticket's page (/product/<event>/<ticket>): the cream public page of the order confirmation and
@@ -109,6 +110,7 @@ export const AttendeeProductAndInformation = () => {
                     event={event}
                     showPoweredBy
                 />
+                <RouteDownloads eventId={eventId}/>
                 {event?.settings?.is_online_event && <OnlineEventDetails eventSettings={event.settings}/>}
             </div>
 
