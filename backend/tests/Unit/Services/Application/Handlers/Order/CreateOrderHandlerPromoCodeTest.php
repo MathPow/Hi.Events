@@ -55,6 +55,7 @@ class CreateOrderHandlerPromoCodeTest extends TestCase
 
         $event = Mockery::mock(EventDomainObject::class);
         $event->shouldReceive('isEventInPast')->andReturn(false);
+        $event->shouldReceive('isCancelled')->andReturn(false);
         $event->shouldReceive('getEventSettings')->andReturn($eventSettings);
         $event->shouldReceive('getCurrency')->andReturn('USD');
         $event->shouldReceive('getAccountId')->andReturn(1);

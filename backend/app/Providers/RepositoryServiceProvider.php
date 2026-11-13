@@ -35,6 +35,9 @@ use HiEvents\Repository\Eloquent\WaiverRepository;
 use HiEvents\Repository\Eloquent\OrderItemRepository;
 use HiEvents\Repository\Eloquent\OrderPaymentPlatformFeeRepository;
 use HiEvents\Repository\Eloquent\OrderRefundRepository;
+use HiEvents\Repository\Eloquent\EventCancellationRepository;
+use HiEvents\Repository\Eloquent\EventChangeRefundRepository;
+use HiEvents\Repository\Eloquent\EventDateChangeRepository;
 use HiEvents\Repository\Eloquent\OrderRepository;
 use HiEvents\Repository\Eloquent\OrganizerAchievementRepository;
 use HiEvents\Repository\Eloquent\OrganizerMessageRepository;
@@ -96,6 +99,9 @@ use HiEvents\Repository\Interfaces\WaiverRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderItemRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderPaymentPlatformFeeRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRefundRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventCancellationRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventChangeRefundRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventDateChangeRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerAchievementRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
@@ -167,6 +173,9 @@ class RepositoryServiceProvider extends ServiceProvider
         DonationReceiptRepositoryInterface::class => DonationReceiptRepository::class,
         InvoiceRepositoryInterface::class => InvoiceRepository::class,
         OrderRefundRepositoryInterface::class => OrderRefundRepository::class,
+        EventDateChangeRepositoryInterface::class => EventDateChangeRepository::class,
+        EventCancellationRepositoryInterface::class => EventCancellationRepository::class,
+        EventChangeRefundRepositoryInterface::class => EventChangeRefundRepository::class,
         WebhookRepositoryInterface::class => WebhookRepository::class,
         WebhookLogRepositoryInterface::class => WebhookLogRepository::class,
         OrderApplicationFeeRepositoryInterface::class => OrderApplicationFeeRepository::class,

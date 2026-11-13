@@ -172,6 +172,9 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     // apres son debut); la date de fin, pour une page restee ouverte.
     const hasEnded = event.lifecycle_status === EventLifecycleStatus.ENDED
         || (!!event.end_date && isDateInPast(event.end_date));
+    // « Annuler l'événement »: a banner, nothing to buy.
+    const isCancelled = !!event.cancelled_at;
+    const sellsTickets = !hasEnded && !isCancelled;
 
     const products = event.products || event.product_categories?.flatMap(c => c.products || []) || [];
     const defaultTicket = findDefaultTicket(event);
@@ -268,13 +271,25 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                 <div className={classes.halo} aria-hidden/>
 
-                <div className={hasEnded ? `${classes.content} ${classes.withoutBuyBar}` : classes.content}>
+                <div className={sellsTickets ? classes.content : `${classes.content} ${classes.withoutBuyBar}`}>
                     <div className={classes.bar}>
                         <PublicPageBar left={backLink}/>
                     </div>
 
                     <div className={classes.columns}>
                         <div className={classes.eventColumn}>
+                            {isCancelled && (
+                                <section className={`${classes.card} ${classes.cancelledBanner}`} data-rough role="status">
+                                    <span className={classes.detailIcon} data-rough><PublicIcon name={'info'} size={20}/></span>
+                                    <div className={classes.detailText}>
+                                        <span className={classes.detailPrimary}>{t`Event cancelled`}</span>
+                                        <span className={classes.detailSecondary}>
+                                            {t`The organizer cancelled this event. Tickets are no longer on sale.`}
+                                        </span>
+                                    </div>
+                                </section>
+                            )}
+
                             <section className={`${classes.card} ${classes.presentation}`} data-rough>
                                 {coverImage && (
                                     <div
@@ -337,15 +352,17 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                             {formatEventTimezone(event, i18n.locale)}
                                         </span>
                                     </div>
-                                    <CalendarOptionsPopover event={event}>
-                                        <button type="button" className={classes.detailLink}>
-                                            {t`Add to Calendar`}
-                                            <PublicIcon name={'fleche'} size={16}/>
-                                        </button>
-                                    </CalendarOptionsPopover>
+                                    {!isCancelled && (
+                                        <CalendarOptionsPopover event={event}>
+                                            <button type="button" className={classes.detailLink}>
+                                                {t`Add to Calendar`}
+                                                <PublicIcon name={'fleche'} size={16}/>
+                                            </button>
+                                        </CalendarOptionsPopover>
+                                    )}
                                 </div>
 
-                                {hasEnded && (
+                                {hasEnded && !isCancelled && (
                                     <div className={classes.detail}>
                                         <span className={classes.detailIcon} data-rough><PublicIcon name={'horloge'} size={20}/></span>
                                         <div className={classes.detailText}>
@@ -463,13 +480,14 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                             formId={TICKETS_FORM_ID}
                             onSelectionChange={setSelection}
                             ended={hasEnded}
+                            cancelled={isCancelled}
                         />
                     </div>
 
                     <PublicPageFooter/>
                 </div>
 
-                {!hasEnded && (
+                {sellsTickets && (
                     <StickyBuyBar
                         event={event}
                         formId={TICKETS_FORM_ID}

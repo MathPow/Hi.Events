@@ -370,6 +370,8 @@ export interface Event extends EventBase {
     series_id?: IdParam | null;
     // « Autres dates »: the next live dates of the series, on the public page.
     series_occurrences?: EventSeriesOccurrence[];
+    // « Annuler l'événement »: no more sales, a banner on its page.
+    cancelled_at?: string | null;
 }
 
 export type EventSeriesOccurrence = Pick<Event, 'id' | 'slug' | 'start_date' | 'end_date' | 'timezone'>;

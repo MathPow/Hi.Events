@@ -129,6 +129,12 @@ class CreateOrderHandler
 
     public function validateEventStatus(EventDomainObject $event, CreateOrderPublicDTO $createOrderPublicDTO): void
     {
+        if ($event->isCancelled()) {
+            throw ValidationException::withMessages([
+                'products' => __('This event has been cancelled. Tickets are no longer on sale.'),
+            ]);
+        }
+
         if (!$createOrderPublicDTO->is_user_authenticated && $event->getStatus() !== EventStatus::LIVE->name) {
             throw new UnauthorizedException(
                 __('This event is not live.')

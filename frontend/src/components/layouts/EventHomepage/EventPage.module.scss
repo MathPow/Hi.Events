@@ -138,6 +138,42 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   box-shadow: var(--dehors-ombre-carte);
 }
 
+// « Événement annulé », au-dessus de tout
+.cancelledBanner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  padding: 20px 24px;
+  border: 2px solid #e7a79c;
+  border-radius: 28px;
+  background: #fbe6e1;
+  color: #a63a2b;
+
+  @include mixins.respond-below(lg) {
+    order: 0;
+  }
+
+  @include mixins.respond-below(md) {
+    column-gap: 12px;
+    padding: 16px 18px;
+    border-radius: 24px;
+  }
+
+  .detailIcon {
+    background: #f9d9d3;
+    color: #a63a2b;
+
+    @include mixins.respond-below(md) {
+      grid-row: auto;
+    }
+  }
+
+  .detailSecondary {
+    color: var(--dehors-brun);
+  }
+}
+
 // Presentation: image, organisateur, partage, titre, etiquettes
 .presentation {
   display: flex;

@@ -1,0 +1,126 @@
+@use "../../../../styles/mixins";
+
+.main {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+  padding: 32px;
+  border-radius: 32px;
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
+
+  @include mixins.respond-below(md) {
+    gap: 16px;
+    padding: 22px;
+    border-radius: 28px;
+  }
+}
+
+.overline {
+  margin: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+
+  @include mixins.respond-below(md) {
+    font-size: 24px;
+  }
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: var(--dehors-creme);
+}
+
+.fact {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 15px;
+
+  dt {
+    color: var(--dehors-texte-doux);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+}
+
+.amount dd {
+  font-size: 18px;
+}
+
+.notice {
+  margin: 0;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #fbe7b5;
+  color: #5c3e00;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.success {
+  background: #ddeed8;
+  color: #24532d;
+}
+
+.confirm {
+  :global(.mantine-Checkbox-label) {
+    font-size: 15px;
+    font-weight: 700;
+  }
+}
+
+.button:global(.mantine-Button-root) {
+  height: 52px;
+  border: none;
+  border-radius: 16px;
+  background: var(--dehors-brun);
+  color: var(--dehors-creme);
+  font-size: 17px;
+  font-weight: 700;
+
+  &:disabled {
+    background: rgb(55 39 33 / 0.35);
+    color: var(--dehors-creme);
+  }
+}
+
+.link {
+  color: inherit;
+  font-weight: 700;
+}

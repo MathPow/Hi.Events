@@ -3,6 +3,7 @@
 namespace HiEvents\Services\Application\Handlers\Event;
 
 use HiEvents\DomainObjects\EventSettingDomainObject;
+use HiEvents\DomainObjects\Generated\EventDomainObjectAbstract;
 use HiEvents\DomainObjects\ImageDomainObject;
 use HiEvents\DomainObjects\ProductCategoryDomainObject;
 use HiEvents\DomainObjects\ProductDomainObject;
@@ -62,6 +63,7 @@ class GetPublicEventsHandler
             where: [
                 'organizer_id' => $dto->organizerId,
                 'status' => EventStatus::LIVE->name,
+                [EventDomainObjectAbstract::CANCELLED_AT, 'null', null],
             ],
             params: $params
         );

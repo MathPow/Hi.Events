@@ -64,6 +64,11 @@ use HiEvents\Http\Actions\Events\GetEventsAction;
 use HiEvents\Http\Actions\Events\GetOrganizerEventsPublicAction;
 use HiEvents\Http\Actions\Events\GetUpcomingEventsPublicAction;
 use HiEvents\Http\Actions\Events\RepeatEventAction;
+use HiEvents\Http\Actions\EventChange\CancelEventAction;
+use HiEvents\Http\Actions\EventChange\GetEventChangeStatusAction;
+use HiEvents\Http\Actions\EventChange\PostponeEventAction;
+use HiEvents\Http\Actions\EventChange\Public\GetRefundRequestPublicAction;
+use HiEvents\Http\Actions\EventChange\Public\SubmitRefundRequestPublicAction;
 use HiEvents\Http\Actions\Events\Images\CreateEventImageAction;
 use HiEvents\Http\Actions\Events\Images\DeleteEventImageAction;
 use HiEvents\Http\Actions\Events\Images\GetEventImagesAction;
@@ -467,6 +472,11 @@ $router->middleware(['auth:api'])->group(
         $router->delete('/events/{event_id}/products/{ticket_id}', DeleteProductAction::class);
         $router->get('/events/{event_id}/products', GetProductsAction::class);
 
+        // « Mauvaise météo ? »: postpone or cancel the event, participants told and refunded
+        $router->get('/events/{event_id}/weather', GetEventChangeStatusAction::class);
+        $router->post('/events/{event_id}/postpone', PostponeEventAction::class);
+        $router->post('/events/{event_id}/cancel', CancelEventAction::class);
+
         // Stats
         $router->get('/events/{event_id}/stats', GetEventStatsAction::class);
         $router->get('/events/{event_id}/check_in_stats', GetEventCheckInStatsAction::class);
@@ -702,6 +712,12 @@ $router->prefix('/public')->group(
             ->middleware('throttle:self-service-edit');
         $router->post('/events/{event_id}/attendees/{attendee_short_id}/details', SaveTransferredHolderDetailsPublicAction::class)
             ->middleware('throttle:self-service-edit');
+
+        // A postponed event: the participant who can no longer come cancels and gets refunded
+        $router->get('/events/{event_id}/order/{order_short_id}/refund-request', GetRefundRequestPublicAction::class)
+            ->middleware('throttle:30,1');
+        $router->post('/events/{event_id}/order/{order_short_id}/refund-request', SubmitRefundRequestPublicAction::class)
+            ->middleware('throttle:10,1');
 
         // Waitlist
         $router->post('/events/{event_id}/waitlist', CreateWaitlistEntryActionPublic::class)

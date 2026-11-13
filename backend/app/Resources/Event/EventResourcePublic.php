@@ -47,6 +47,7 @@ class EventResourcePublic extends BaseResource
             'status' => $this->getStatus(),
             'lifecycle_status' => $this->getLifecycleStatus(),
             'timezone' => $this->getTimezone(),
+            'cancelled_at' => $this->getCancelledAt(),
             'location_details' => $this->when((bool)$this->getLocationDetails(), fn() => $this->getLocationDetails()),
             'product_categories' => $this->when(
                 condition: !is_null($this->getProductCategories()) && $this->getProductCategories()->isNotEmpty(),

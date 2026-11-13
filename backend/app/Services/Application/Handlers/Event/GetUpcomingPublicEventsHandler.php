@@ -63,6 +63,7 @@ class GetUpcomingPublicEventsHandler
                         'organizer',
                         static fn(Builder $organizer) => $organizer->where(OrganizerDomainObjectAbstract::STATUS, OrganizerStatus::LIVE->name),
                     ),
+                    [EventDomainObjectAbstract::CANCELLED_AT, 'null', null],
                 ],
                 params: new QueryParamsDTO(
                     page: 1,

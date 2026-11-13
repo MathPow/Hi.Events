@@ -638,6 +638,15 @@ const routes: RouteObject[] = [
         ]
     },
     {
+        // From the email of a postponed event: the participant who can no longer come gets refunded.
+        path: "/order/:eventId/:orderShortId/refund-request",
+        async lazy() {
+            const RefundRequest = await import("./components/routes/product-widget/RefundRequest");
+            return { Component: RefundRequest.default };
+        },
+        errorElement: <ErrorPage />
+    },
+    {
         path: "/order/:eventId/:orderShortId/print",
         async lazy() {
             const PrintOrder = await import("./components/routes/product-widget/PrintOrder");

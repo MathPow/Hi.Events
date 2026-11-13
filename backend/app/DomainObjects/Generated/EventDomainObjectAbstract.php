@@ -31,6 +31,7 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     final public const TICKET_QUANTITY_AVAILABLE = 'ticket_quantity_available';
     final public const CATEGORY = 'category';
     final public const SERIES_ID = 'series_id';
+    final public const CANCELLED_AT = 'cancelled_at';
 
     protected int $id;
     protected int $account_id;
@@ -53,6 +54,7 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     protected ?int $ticket_quantity_available = null;
     protected string $category = 'OTHER';
     protected ?int $series_id = null;
+    protected ?string $cancelled_at = null;
 
     public function toArray(): array
     {
@@ -78,6 +80,7 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
                     'ticket_quantity_available' => $this->ticket_quantity_available ?? null,
                     'category' => $this->category ?? null,
                     'series_id' => $this->series_id ?? null,
+                    'cancelled_at' => $this->cancelled_at ?? null,
                 ];
     }
 
@@ -310,5 +313,16 @@ abstract class EventDomainObjectAbstract extends \HiEvents\DomainObjects\Abstrac
     public function getSeriesId(): ?int
     {
         return $this->series_id;
+    }
+
+    public function setCancelledAt(?string $cancelled_at): self
+    {
+        $this->cancelled_at = $cancelled_at;
+        return $this;
+    }
+
+    public function getCancelledAt(): ?string
+    {
+        return $this->cancelled_at;
     }
 }

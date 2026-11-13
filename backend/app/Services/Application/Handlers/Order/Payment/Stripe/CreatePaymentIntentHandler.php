@@ -77,6 +77,10 @@ readonly class CreatePaymentIntentHandler
             throw new ResourceConflictException(__('This order has expired or can no longer be paid. Please start a new order.'));
         }
 
+        if ($order->getEvent()?->isCancelled()) {
+            throw new ResourceConflictException(__('This event has been cancelled. Tickets are no longer on sale.'));
+        }
+
         $account = $this->accountRepository
             ->loadRelation(new Relationship(
                 domainObject: AccountConfigurationDomainObject::class,

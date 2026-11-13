@@ -20,6 +20,7 @@ interface TicketsCardProps {
     formId: string;
     onSelectionChange: (summary: ProductSelectionSummary) => void;
     ended?: boolean;
+    cancelled?: boolean;
     className?: string;
 }
 
@@ -36,6 +37,7 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
                                                                           formId,
                                                                           onSelectionChange,
                                                                           ended,
+                                                                          cancelled,
                                                                           className,
                                                                       }, ref) => {
     const cardRef = useRef<HTMLElement>(null);
@@ -106,10 +108,16 @@ export const TicketsCard = forwardRef<HTMLElement, TicketsCardProps>(({
         >
             <div className={classes.header}>
                 <h2 className={classes.title}>{t`Tickets`}</h2>
-                {hasLimitedSpots && !ended && <span className={classes.pill} data-rough>{t`Limited spots`}</span>}
+                {hasLimitedSpots && !ended && !cancelled && <span className={classes.pill} data-rough>{t`Limited spots`}</span>}
             </div>
 
-            {ended ? (
+            {cancelled ? (
+                <div className={classes.ended} data-rough>
+                    <PublicIcon name={'info'} size={24}/>
+                    <p>{t`Event cancelled`}</p>
+                    <span>{t`Tickets are no longer on sale.`}</span>
+                </div>
+            ) : ended ? (
                 <div className={classes.ended} data-rough>
                     <PublicIcon name={'horloge'} size={24}/>
                     <p>{t`This event has ended`}</p>

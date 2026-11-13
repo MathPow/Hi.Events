@@ -182,6 +182,11 @@ class EventDomainObject extends Generated\EventDomainObjectAbstract implements I
         return StringHelper::previewFromHtml($this->getDescription());
     }
 
+    public function isCancelled(): bool
+    {
+        return $this->getCancelledAt() !== null;
+    }
+
     public function isEventInPast(): bool
     {
         $endDate = $this->getEffectiveEndDate();

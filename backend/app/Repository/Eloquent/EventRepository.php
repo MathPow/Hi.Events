@@ -211,6 +211,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             ->join('event_settings', 'events.id', '=', 'event_settings.event_id')
             ->where('events.' . EventDomainObjectAbstract::STATUS, EventStatus::LIVE->name)
             ->where('event_settings.' . EventSettingDomainObjectAbstract::ALLOW_SEARCH_ENGINE_INDEXING, true)
+            ->whereNull('events.' . EventDomainObjectAbstract::CANCELLED_AT)
             ->whereNull('events.' . EventDomainObjectAbstract::DELETED_AT)
             ->orderBy('events.' . EventDomainObjectAbstract::ID)
             ->paginate($perPage, ['*'], 'page', $page));
@@ -223,6 +224,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             ->join('event_settings', 'events.id', '=', 'event_settings.event_id')
             ->where('events.' . EventDomainObjectAbstract::STATUS, EventStatus::LIVE->name)
             ->where('event_settings.' . EventSettingDomainObjectAbstract::ALLOW_SEARCH_ENGINE_INDEXING, true)
+            ->whereNull('events.' . EventDomainObjectAbstract::CANCELLED_AT)
             ->whereNull('events.' . EventDomainObjectAbstract::DELETED_AT)
             ->count();
     }
