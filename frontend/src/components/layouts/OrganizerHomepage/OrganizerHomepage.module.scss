@@ -332,6 +332,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 .actions {
   display: flex;
   flex-shrink: 0;
+  // En bas a droite, sur la ligne du lieu et des reseaux: le logo tient le haut, les boutons ferment le bloc.
+  align-self: flex-end;
   gap: 12px;
 
   @include mixins.respond-below(md) {
