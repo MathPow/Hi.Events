@@ -2,10 +2,7 @@
 
 // Design tokens
 $font-display: Allotrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-$radius-lg: 20px;
-$radius-md: 14px;
-$radius-sm: 10px;
-$transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+$police-titre: FatFrank, 'Arial Black', sans-serif;
 
 .container {
   display: flex;
@@ -18,16 +15,29 @@ $transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
 .card {
   width: 100%;
-  max-width: 420px;
-  background: var(--content-bg-color, var(--checkout-surface, #FFFFFF));
-  border: 1px solid var(--border-color, var(--checkout-border, #E5E7EB));
-  border-radius: $radius-lg;
-  padding: 40px 32px;
+  max-width: 440px;
+  padding: 40px 36px 36px;
+  border-radius: 32px;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  color: var(--dehors-brun);
+  background: var(--dehors-carte);
+  box-shadow: var(--dehors-ombre-carte);
 
   @include mixins.respond-below(sm) {
-    padding: 32px 24px;
+    padding: 32px 22px 24px;
+  }
+}
+
+.sticker {
+  display: block;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 20px;
+  rotate: -6deg;
+
+  @include mixins.respond-below(sm) {
+    width: 92px;
+    height: 92px;
   }
 }
 
@@ -57,41 +67,40 @@ $transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .title {
-  font-family: $font-display;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--primary-text-color, var(--checkout-text-primary, #111827));
-  margin: 0 0 8px 0;
-  line-height: 1.4;
+  margin: 0 0 8px;
+  font-family: $police-titre;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--dehors-brun);
 
   @include mixins.respond-below(sm) {
-    font-size: 18px;
+    font-size: 26px;
   }
 }
 
 .subtitle {
-  font-size: 15px;
-  color: var(--secondary-color, var(--checkout-text-secondary, #6B7280));
-  margin: 0 0 24px 0;
-  line-height: 1.5;
+  margin: 0 0 24px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--dehors-brun) 72%, transparent);
 }
 
+// Le bouton plein des pages publiques: brun, texte creme, en pilule (bord rugueux par useRoughEdges).
 .button {
   width: 100%;
-  height: 44px;
-  border-radius: $radius-sm !important;
-  font-family: $font-display;
-  font-weight: 600 !important;
-  font-size: 15px !important;
-  margin-top: 16px;
-  background: var(--primary-color, var(--checkout-accent, var(--mantine-primary-color-filled))) !important;
-  color: var(--accent-contrast, var(--checkout-accent-contrast, #FFFFFF)) !important;
-  transition: transform $transition-fast, box-shadow $transition-fast;
+  height: 52px !important;
+  margin-top: 8px;
+  border: 0 !important;
+  border-radius: 16px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--dehors-creme) !important;
+  background: var(--dehors-brun) !important;
 
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px var(--accent-soft, var(--checkout-accent-soft, rgba(0, 0, 0, 0.15)));
-    filter: brightness(1.05);
+    background: #4a3830 !important;
   }
 }
 

@@ -254,55 +254,72 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   }
 }
 
+// Une seule ligne discrete: lieu, site, puis les reseaux en petites icones.
 .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  align-items: center;
+  gap: 6px 18px;
+  margin-top: 2px;
 
   @include mixins.respond-below(md) {
     grid-column: 1 / -1;
-    gap: 6px;
+    gap: 6px 14px;
   }
 }
 
-.pill {
+.metaLink {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   line-height: normal;
-  color: var(--dehors-brun);
+  color: color-mix(in srgb, var(--dehors-brun) 80%, transparent);
   text-decoration: none;
-  background: var(--public-accent-doux);
 
   &:hover {
+    color: var(--dehors-brun);
     text-decoration: underline;
   }
 
   @include mixins.respond-below(md) {
-    gap: 5px;
-    padding: 6px 11px;
-    font-size: 13px;
-
-    > :first-child {
-      width: 15px !important;
-      height: 15px !important;
-    }
+    font-size: 14px;
   }
 }
 
-// Les autres reseaux sociaux (pas dans la maquette): une pastille ronde avec l'icone seule.
-.iconPill {
-  padding: 7px;
+.metaIcon {
+  flex-shrink: 0;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--public-accent);
+}
 
-  @include mixins.respond-below(md) {
-    padding: 6px;
+.socials {
+  display: flex;
+  gap: 2px;
+  margin: 0 0 0 -6px;
+  padding: 0;
+  list-style: none;
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  color: var(--public-accent);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--public-accent-doux);
+  }
+
+  > * {
+    width: 18px !important;
+    height: 18px !important;
   }
 }
 

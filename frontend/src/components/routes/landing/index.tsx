@@ -916,7 +916,7 @@ const Landing = () => {
                         <HeroVideo/>
                         <div className={classes.heroShade}/>
                         <div className={classes.heroStickers}>
-                            <Sticker name="calendrier" className={classes.heroStickerTopLeft} eager/>
+                            <Sticker name="compass" className={classes.heroStickerTopLeft} eager/>
                             <Sticker name="toilette" className={classes.heroStickerMiddleLeft} eager/>
                             <Sticker name="autre" className={classes.heroStickerUpperRight} eager/>
                         </div>
