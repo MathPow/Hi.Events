@@ -202,7 +202,9 @@ export const OrganizerHomepage = ({
                                             <a href={websiteUrl} target="_blank" rel="noopener noreferrer"
                                                className={classes.metaLink}>
                                                 <PublicIcon name={'globe'} className={classes.metaIcon}/>
-                                                {websiteLabel(websiteUrl)}
+                                                {/* Sur telephone, « Site web ↗ »: la ligne d'infos tient sans couper le domaine. */}
+                                                <span className={classes.longLabel}>{websiteLabel(websiteUrl)}</span>
+                                                <span className={classes.shortLabel}>{t`Website`} ↗</span>
                                             </a>
                                         )}
                                         {donationUrl && (
@@ -238,9 +240,11 @@ export const OrganizerHomepage = ({
                                         text={organizer.name}
                                         url={organizerHomepageUrl(organizer)}
                                     >
-                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
+                                        {/* Sur telephone, l'icone seule: Contacter prend la largeur. */}
+                                        <button type="button" className={`${classes.button} ${classes.buttonOutline} ${classes.shareButton}`}
+                                                data-rough="button" aria-label={t`Share`}>
                                             <PublicIcon name={'partager'} size={20}/>
-                                            {t`Share`}
+                                            <span className={classes.longLabel}>{t`Share`}</span>
                                         </button>
                                     </ShareComponent>
                                 </div>

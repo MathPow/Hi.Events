@@ -282,13 +282,16 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   gap: 6px 18px;
   margin-top: 2px;
 
+  // Sur telephone: lieu et site sur une ligne, les reseaux sur la suivante.
   @include mixins.respond-below(md) {
     grid-column: 1 / -1;
-    gap: 6px 14px;
+    gap: 6px 16px;
   }
 }
 
 .metaLink {
+  white-space: nowrap;
+
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -321,6 +324,13 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   margin: 0 0 0 -6px;
   padding: 0;
   list-style: none;
+
+  @include mixins.respond-below(md) {
+    flex-basis: 100%;
+    gap: 0;
+    // Zones de 44px: la premiere icone reste alignee sur le texte au-dessus.
+    margin: 0 0 0 -13px;
+  }
 }
 
 .social {
@@ -341,6 +351,16 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
     width: 18px !important;
     height: 18px !important;
   }
+
+  // Une zone de 44px au doigt, l'icone garde sa taille, sans pastille.
+  @include mixins.respond-below(md) {
+    width: 44px;
+    height: 44px;
+
+    &:hover {
+      background: none;
+    }
+  }
 }
 
 .pillIcon {
@@ -360,9 +380,18 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
     grid-column: 1 / -1;
     gap: 10px;
 
-    > * {
+    // Partager en carre de 48px a gauche, Contacter prend le reste (sous le pouce, a droite).
+    > :last-child {
       flex: 1 1 0;
     }
+  }
+}
+
+// Plus specifique que .button (declare plus bas) pour garder le carre.
+.button.shareButton {
+  @include mixins.respond-below(md) {
+    width: 48px;
+    padding: 0;
   }
 }
 
