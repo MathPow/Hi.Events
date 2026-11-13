@@ -40,7 +40,7 @@ class TicketTransferPolicy
         return new TicketTransferEligibilityDTO(
             enabled: $enabled,
             deadline: $deadline?->setTimezone('UTC')->toDateTimeString(),
-            refusal: $enabled ? $this->refusal($attendee, $order, $deadline) : TicketTransferRefusal::DISABLED,
+            refusal: $enabled ? $this->refusal($attendee, $order, $event, $deadline) : TicketTransferRefusal::DISABLED,
         );
     }
 
@@ -82,9 +82,14 @@ class TicketTransferPolicy
         return $hours % 24 === 0 ? $start->subDays(intdiv($hours, 24)) : $start->subHours($hours);
     }
 
-    private function refusal(AttendeeDomainObject $attendee, OrderDomainObject $order, ?CarbonImmutable $deadline): ?TicketTransferRefusal
+    private function refusal(
+        AttendeeDomainObject $attendee,
+        OrderDomainObject    $order,
+        EventDomainObject    $event,
+        ?CarbonImmutable     $deadline,
+    ): ?TicketTransferRefusal
     {
-        if ($attendee->getStatus() === AttendeeStatus::CANCELLED->name) {
+        if ($event->getCancelledAt() !== null || $attendee->getStatus() === AttendeeStatus::CANCELLED->name) {
             return TicketTransferRefusal::TICKET_NOT_ACTIVE;
         }
 

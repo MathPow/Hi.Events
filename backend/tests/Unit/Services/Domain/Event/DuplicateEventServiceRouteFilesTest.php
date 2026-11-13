@@ -11,6 +11,7 @@ use HiEvents\Services\Domain\CheckInList\CreateCheckInListService;
 use HiEvents\Services\Domain\CreateWebhookService;
 use HiEvents\Services\Domain\Event\CreateEventService;
 use HiEvents\Services\Domain\Event\DuplicateEventService;
+use HiEvents\Services\Domain\Event\RecurringEvent\RecurringEventDateService;
 use HiEvents\Services\Domain\Event\RouteFile\EventRouteFileService;
 use HiEvents\Services\Domain\Product\CreateProductService;
 use HiEvents\Services\Domain\ProductCategory\CreateProductCategoryService;
@@ -71,6 +72,7 @@ class DuplicateEventServiceRouteFilesTest extends TestCase
             createProductCategoryService: $categoryService,
             createWebhookService: m::mock(CreateWebhookService::class),
             affiliateRepository: m::mock(AffiliateRepositoryInterface::class),
+            recurringEventDateService: m::mock(RecurringEventDateService::class),
             eventRouteFileService: $routeFileService,
         );
 

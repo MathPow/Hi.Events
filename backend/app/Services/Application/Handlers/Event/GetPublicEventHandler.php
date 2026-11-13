@@ -95,7 +95,7 @@ class GetPublicEventHandler
     }
 
     /**
-     * « Autres dates »: the next live dates of the event's series, the event itself left out.
+     * « Autres dates »: the next live, not cancelled dates of the event's series, the event itself left out.
      */
     private function getUpcomingSeriesOccurrences(EventDomainObject $event): Collection
     {
@@ -106,6 +106,7 @@ class GetPublicEventHandler
                     EventDomainObjectAbstract::STATUS => EventStatus::LIVE->name,
                     [EventDomainObjectAbstract::ID, '!=', $event->getId()],
                     [EventDomainObjectAbstract::START_DATE, '>', now()],
+                    [EventDomainObjectAbstract::CANCELLED_AT, 'null', null],
                 ],
                 columns: [
                     EventDomainObjectAbstract::ID,

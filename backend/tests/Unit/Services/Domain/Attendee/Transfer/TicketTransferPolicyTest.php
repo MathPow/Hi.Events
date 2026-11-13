@@ -139,6 +139,16 @@ class TicketTransferPolicyTest extends TestCase
         );
     }
 
+    public function test_refused_once_the_event_is_cancelled(): void
+    {
+        $event = $this->event()->setCancelledAt('2026-11-10 12:00:00');
+
+        $this->assertSame(
+            TicketTransferRefusal::TICKET_NOT_ACTIVE,
+            $this->policy->eligibility($this->attendee(), $this->order(), $event, $this->settings())->refusal,
+        );
+    }
+
     public function test_refused_for_a_ticket_scanned_at_the_entrance(): void
     {
         $this->checkIns->shouldReceive('countWhere')->with(['attendee_id' => 10])->andReturn(1);

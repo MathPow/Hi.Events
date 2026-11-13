@@ -117,8 +117,8 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
     }
 
     /**
-     * Keeps a repeated event (same series_id) once, at its next upcoming date: no other upcoming
-     * date of the series with the same status starts before it.
+     * Keeps a repeated event (same series_id) once, at its next upcoming date: no other upcoming,
+     * not cancelled date of the series with the same status starts before it.
      */
     private static function nextOccurrenceOfEachSeries(CarbonInterface $defaultEndThreshold): Closure
     {
@@ -131,6 +131,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
                             ->whereColumn('earlier.series_id', 'events.series_id')
                             ->whereColumn('earlier.status', 'events.status')
                             ->whereNull('earlier.deleted_at')
+                            ->whereNull('earlier.cancelled_at')
                             ->where(function ($upcoming) use ($defaultEndThreshold) {
                                 $upcoming->where('earlier.end_date', '>=', now())
                                     ->orWhere(function ($withoutEnd) use ($defaultEndThreshold) {
