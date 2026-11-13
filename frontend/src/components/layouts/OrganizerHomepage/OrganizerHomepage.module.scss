@@ -128,21 +128,45 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 .profile {
-  display: flex;
-  flex-wrap: wrap;
-  // En haut: le logo et les boutons restent a cote du nom quand la description s'ouvre.
-  align-items: flex-start;
-  gap: 28px;
+  // Le logo en haut a gauche; le nom puis la description sur toute la largeur; en bas, le
+  // lieu et les reseaux a gauche, les boutons a droite.
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+  grid-template-areas:
+    'logo name name'
+    'logo desc desc'
+    'logo meta actions';
+  align-items: start;
+  gap: 10px 28px;
   padding: 22px 12px 12px;
 
   @include mixins.respond-below(md) {
-    display: grid;
     grid-template-columns: 60px minmax(0, 1fr);
+    grid-template-areas: none;
     gap: 12px 14px;
   }
 }
 
+// Sur telephone, sans zones: le logo et le nom cote a cote, le reste sur toute la largeur.
+// (Une specificite de plus que les grid-area ci-dessous.)
+@include mixins.respond-below(md) {
+  .profile .logo {
+    grid-area: 1 / 1;
+  }
+
+  .profile .name {
+    grid-area: 1 / 2;
+  }
+
+  .profile .descriptionBlock,
+  .profile .meta,
+  .profile .actions {
+    grid-area: auto / 1 / auto / -1;
+  }
+}
+
 .logo {
+  grid-area: logo;
   flex-shrink: 0;
   width: 104px;
   height: 104px;
@@ -179,20 +203,12 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 .infos {
-  display: flex;
-  flex: 1 1 320px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  min-width: 0;
-
-  @include mixins.respond-below(md) {
-    display: contents;
-  }
+  display: contents;
 }
 
 // Two lines at most, cut with an ellipsis (the full name on hover).
 .name {
+  grid-area: name;
   display: -webkit-box;
   margin: 0;
   overflow: hidden;
@@ -218,8 +234,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  grid-area: desc;
   gap: 6px;
-  max-width: 620px;
 
   @include mixins.respond-below(md) {
     grid-column: 1 / -1;
@@ -227,7 +243,6 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 }
 
 .description {
-  max-width: 620px;
   font-size: 17px;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -257,6 +272,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 
 // Une seule ligne discrete: lieu, site, puis les reseaux en petites icones.
 .meta {
+  grid-area: meta;
+  align-self: center;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -333,7 +350,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   display: flex;
   flex-shrink: 0;
   // En bas a droite, sur la ligne du lieu et des reseaux: le logo tient le haut, les boutons ferment le bloc.
-  align-self: flex-end;
+  grid-area: actions;
+  align-self: end;
   gap: 12px;
 
   @include mixins.respond-below(md) {
