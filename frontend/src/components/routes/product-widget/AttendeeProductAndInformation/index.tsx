@@ -5,13 +5,13 @@ import {AttendeeTicket} from "../../../common/AttendeeTicket";
 import {Attendee, Product} from "../../../../types.ts";
 import {t} from "@lingui/macro";
 import {CSSProperties, useState} from "react";
-import {Button} from "@mantine/core";
 import {OnlineEventDetails} from "../../../common/OnlineEventDetails";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {PublicBarLink, PublicPageBar} from "../../../common/PublicPageBar";
 import {PublicPageFooter} from "../../../common/PublicPageFooter";
 import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
 import print from "../PrintOrder/PrintOrder.module.scss";
+import shell from "../../../layouts/OrganizerHomepage/OrganizerHomepage.module.scss";
 import classes from './AttendeeProductAndInformation.module.scss';
 import {useGetParticipantSignatures} from "../../../../queries/useGetParticipantSignatures.ts";
 import {hasPendingSignatures, participantSignatureClientPublic} from "../../../../api/participantSignature.client.ts";
@@ -147,28 +147,28 @@ export const AttendeeProductAndInformation = () => {
                     showPoweredBy
                 />
                 <RouteDownloads eventId={eventId}/>
+                {showTransfer && (
+                    <section className={`${classes.transferCard} ${print.screenOnly}`} data-rough>
+                        <div>
+                            <h2 className={classes.transferTitle}>{t`Can't make it?`}</h2>
+                            <p className={classes.transferText}>
+                                {transfer!.can_transfer
+                                    ? (transferDeadline
+                                        ? t`Give your ticket to someone else, until ${transferDeadline}.`
+                                        : t`Give your ticket to someone else.`)
+                                    : transfer!.refusal_message}
+                            </p>
+                        </div>
+                        {transfer!.can_transfer && (
+                            <button type="button" className={`${shell.button} ${shell.buttonFilled} ${classes.transferButton}`}
+                                    onClick={() => setTransferOpened(true)}>
+                                {t`Transfer my ticket`}
+                            </button>
+                        )}
+                    </section>
+                )}
                 {event?.settings?.is_online_event && <OnlineEventDetails eventSettings={event.settings}/>}
             </div>
-
-            {showTransfer && (
-                <section className={`${classes.transferCard} ${print.screenOnly}`} data-rough>
-                    <div>
-                        <h2 className={classes.transferTitle}>{t`Can't make it?`}</h2>
-                        <p className={classes.transferText}>
-                            {transfer!.can_transfer
-                                ? (transferDeadline
-                                    ? t`Give your ticket to someone else, until ${transferDeadline}.`
-                                    : t`Give your ticket to someone else.`)
-                                : transfer!.refusal_message}
-                        </p>
-                    </div>
-                    {transfer!.can_transfer && (
-                        <Button className={classes.transferButton} onClick={() => setTransferOpened(true)}>
-                            {t`Transfer my ticket`}
-                        </Button>
-                    )}
-                </section>
-            )}
 
             {transferOpened && (
                 <TransferTicketModal

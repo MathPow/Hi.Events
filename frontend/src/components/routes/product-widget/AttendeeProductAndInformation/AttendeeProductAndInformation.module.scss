@@ -36,17 +36,14 @@
 // Giving the ticket to someone else, under the ticket.
 .transferCard {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px 24px;
-  padding: 24px 32px;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
   border-radius: 32px;
   background: var(--dehors-carte);
   box-shadow: var(--dehors-ombre-carte);
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
     padding: 20px;
     border-radius: 28px;
   }
@@ -64,7 +61,7 @@
 }
 
 .transferButton {
-  flex-shrink: 0;
+  align-self: flex-start;
 }
 
 // « Parcours »: the GPX courses under the ticket, as wide as it.
