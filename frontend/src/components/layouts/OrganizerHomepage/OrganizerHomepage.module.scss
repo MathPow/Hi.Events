@@ -130,7 +130,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
 .profile {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  // En haut: le logo et les boutons restent a cote du nom quand la description s'ouvre.
+  align-items: flex-start;
   gap: 28px;
   padding: 22px 12px 12px;
 
