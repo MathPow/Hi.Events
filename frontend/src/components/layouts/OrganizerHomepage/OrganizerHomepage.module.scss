@@ -236,6 +236,8 @@ $police-titre: FatFrank, 'Arial Black', sans-serif;
   align-items: flex-start;
   grid-area: desc;
   gap: 6px;
+  // Pleine zone au-dessus des boutons, mais des lignes d'environ 75 caracteres pour rester lisible.
+  max-width: 75ch;
 
   @include mixins.respond-below(md) {
     grid-column: 1 / -1;
