@@ -18,6 +18,7 @@ import {glideTo, installSmoothScroll, onSmoothScroll} from "./smoothScroll.ts";
 import {useMatchWidth} from "./useMatchWidth.ts";
 import {useStackOnScroll} from "./useStackOnScroll.ts";
 import classes from "./Landing.module.scss";
+import {openCookieSettings} from "../../common/CookieConsentBanner";
 import {useStickerTilt} from "./useStickerTilt.ts";
 
 const ASSETS = '/landing';
@@ -1110,6 +1111,9 @@ const Landing = () => {
                     </div>
                     <div className={classes.footerLegal}>
                         <span>© {new Date().getFullYear()} Billetterie Dehors</span>
+                        <button type="button" className={classes.footerCookies} onClick={openCookieSettings}>
+                            {t`Cookies`}
+                        </button>
                         <a className={classes.footerCredit} href="https://melonstudio.ca/" target="_blank" rel="noopener">
                             <Trans>Designed with the help of <strong>MelonStudio</strong></Trans>
                         </a>

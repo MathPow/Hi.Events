@@ -2981,6 +2981,21 @@ $footer-ridge-mobile: 13.205056%;
   }
 }
 
+// Reopens the cookie choice (the floating biscuit goes away once chosen).
+.footerCookies {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    color: $creme;
+    text-decoration: underline;
+  }
+}
+
 // The studio's name stands out of the muted line, and underlines on hover.
 .footerCredit {
   strong {
