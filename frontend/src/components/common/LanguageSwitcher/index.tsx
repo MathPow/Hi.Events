@@ -116,6 +116,8 @@ export const LanguageSwitcher = ({
                     ? {width: 'max-content', position: 'bottom-end', offset: 8, ...comboboxProps}
                     : comboboxProps}
                 checkIconPosition={dehorsList ? 'right' : checkIconPosition}
+                // Deux langues, la courante deja surlignee: pas de case a cocher (OptionRow) ici.
+                renderOption={dehorsList ? ({option}) => option.label : undefined}
                 onDropdownOpen={dehorsList ? cutList : onDropdownOpen}
                 aria-label={t`Language`}
                 width={180}
