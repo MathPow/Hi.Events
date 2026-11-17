@@ -3,6 +3,7 @@
 namespace HiEvents\Services\Domain\Assistant;
 
 use HiEvents\Repository\Interfaces\AssistantUsageRepositoryInterface;
+use HiEvents\Repository\Interfaces\PlatformSettingRepositoryInterface;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Carbon;
@@ -13,15 +14,20 @@ use Illuminate\Support\Carbon;
  * demande un de plus ; le compteur repart a minuit, heure de Quebec), et un
  * budget en dollars par semaine (le cout deja enregistre depuis lundi minuit).
  * Le tour qui franchit le budget va jusqu'au bout ; le suivant est refuse.
+ * Le super admin regle le budget dans l'administration ; sans reglage, la
+ * configuration du serveur (ASSISTANT_WEEKLY_BUDGET_USD) s'applique.
  */
 class AssistantQuotaService
 {
+    public const BUDGET_SETTING = 'assistant_weekly_budget_usd';
+
     private const TIMEZONE = 'America/Toronto';
 
     public function __construct(
         private readonly Cache                             $cache,
         private readonly Repository                        $config,
-        private readonly AssistantUsageRepositoryInterface $usageRepository,
+        private readonly AssistantUsageRepositoryInterface  $usageRepository,
+        private readonly PlatformSettingRepositoryInterface $settingRepository,
     )
     {
     }
@@ -34,7 +40,27 @@ class AssistantQuotaService
     /** Dollars americains par compte et par semaine ; 0 : pas de plafond. */
     public function weeklyBudget(): float
     {
+        $chosen = $this->settingRepository->getValue(self::BUDGET_SETTING);
+
+        return $chosen !== null && is_numeric($chosen) ? max(0.0, (float)$chosen) : $this->defaultWeeklyBudget();
+    }
+
+    /** Celui de la configuration du serveur. */
+    public function defaultWeeklyBudget(): float
+    {
         return max(0.0, (float)$this->config->get('services.anthropic.assistant_weekly_budget_usd'));
+    }
+
+    /** Un montant en dollars (0 : sans plafond), ou null pour revenir a celui du serveur. */
+    public function chooseWeeklyBudget(?float $budget): void
+    {
+        $this->settingRepository->setValue(self::BUDGET_SETTING, $budget === null ? null : (string)round(max(0.0, $budget), 2));
+    }
+
+    /** Lundi minuit, heure de Quebec, en UTC. */
+    public function weekStart(): Carbon
+    {
+        return Carbon::now(self::TIMEZONE)->startOfWeek(Carbon::MONDAY)->utc();
     }
 
     public function isOverWeeklyBudget(int $accountId): bool
@@ -44,9 +70,7 @@ class AssistantQuotaService
             return false;
         }
 
-        $since = Carbon::now(self::TIMEZONE)->startOfWeek(Carbon::MONDAY)->utc();
-
-        return $this->usageRepository->getAccountCostSince($accountId, $since) >= $budget;
+        return $this->usageRepository->getAccountCostSince($accountId, $this->weekStart()) >= $budget;
     }
 
     public function remaining(int $accountId): int

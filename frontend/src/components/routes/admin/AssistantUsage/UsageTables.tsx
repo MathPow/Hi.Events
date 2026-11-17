@@ -7,13 +7,14 @@ import dayjs from "dayjs";
 import {AssistantUsageByAccount, AssistantUsageByUser} from "../../../../api/admin.client";
 import {formatCompact, formatUsd} from "./format";
 
-type AccountSort = 'cost_usd' | 'monthly_rate' | 'turns' | 'cost_per_turn' | 'busiest_day_turns';
+type AccountSort = 'cost_usd' | 'monthly_rate' | 'turns' | 'cost_per_turn' | 'busiest_day_turns' | 'week_cost_usd';
 type UserSort = 'cost_usd' | 'turns' | 'cost_per_turn';
 
 interface UsageTablesProps {
     accounts: AssistantUsageByAccount[];
     users: AssistantUsageByUser[];
     dailyLimit: number;
+    weeklyBudget: number;
 }
 
 // eslint-disable-next-line lingui/no-unlocalized-strings
@@ -35,7 +36,7 @@ const SortHeader = <K extends string>({column, label, sort, onSort}: {
     </Table.Th>
 );
 
-export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => {
+export const UsageTables = ({accounts, users, dailyLimit, weeklyBudget}: UsageTablesProps) => {
     const [accountSort, setAccountSort] = useState<AccountSort>('cost_usd');
     const [userSort, setUserSort] = useState<UserSort>('cost_usd');
 
@@ -66,7 +67,7 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
             <Paper shadow="sm" radius="md" withBorder>
                 <Tabs.Panel value="accounts">
                     {sortedAccounts.length === 0 ? empty : (
-                        <Table.ScrollContainer minWidth={1000}>
+                        <Table.ScrollContainer minWidth={1100}>
                             <Table striped highlightOnHover>
                                 <Table.Thead>
                                     <Table.Tr>
@@ -80,6 +81,7 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
                                         <SortHeader column="cost_usd" label={t`Cost`} sort={accountSort} onSort={setAccountSort}/>
                                         <Table.Th ta="right">{t`% of total`}</Table.Th>
                                         <SortHeader column="monthly_rate" label={t`Monthly pace`} sort={accountSort} onSort={setAccountSort}/>
+                                        <SortHeader column="week_cost_usd" label={t`This week`} sort={accountSort} onSort={setAccountSort}/>
                                         <Table.Th ta="right">{t`Last call`}</Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
@@ -117,6 +119,20 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
                                             <Table.Td ta="right"><Text fw={600} size="sm">{formatUsd(row.cost_usd)}</Text></Table.Td>
                                             <Table.Td ta="right">{row.share.toLocaleString()} %</Table.Td>
                                             <Table.Td ta="right">{formatUsd(row.monthly_rate)}</Table.Td>
+                                            <Table.Td ta="right" style={{whiteSpace: 'nowrap'}}>
+                                                {weeklyBudget > 0 && row.week_cost_usd >= weeklyBudget ? (
+                                                    <Badge color="red" variant="light" title={t`Closed until Monday`}>
+                                                        {formatUsd(row.week_cost_usd)} / {formatUsd(weeklyBudget)}
+                                                    </Badge>
+                                                ) : (
+                                                    <>
+                                                        {formatUsd(row.week_cost_usd)}
+                                                        {weeklyBudget > 0 && (
+                                                            <Text span size="xs" c="dimmed"> / {formatUsd(weeklyBudget)}</Text>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Table.Td>
                                             <Table.Td ta="right" style={{whiteSpace: 'nowrap'}}>
                                                 <Text size="xs" c="dimmed">{formatDate(row.last_used_at)}</Text>
                                             </Table.Td>

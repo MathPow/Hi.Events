@@ -4,6 +4,7 @@ namespace Tests\Unit\Services\Domain\Assistant;
 
 use Carbon\Carbon;
 use HiEvents\Repository\Interfaces\AssistantUsageRepositoryInterface;
+use HiEvents\Repository\Interfaces\PlatformSettingRepositoryInterface;
 use HiEvents\Services\Domain\Assistant\AssistantQuotaService;
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Cache\Repository as Cache;
@@ -19,7 +20,15 @@ class AssistantQuotaServiceTest extends TestCase
         parent::tearDown();
     }
 
-    private function service(int $limit, float $budget = 0, float $spent = 0): AssistantQuotaService
+    private function settings(?string $budget = null): PlatformSettingRepositoryInterface
+    {
+        $settings = m::mock(PlatformSettingRepositoryInterface::class);
+        $settings->shouldReceive('getValue')->with(AssistantQuotaService::BUDGET_SETTING)->andReturn($budget);
+
+        return $settings;
+    }
+
+    private function service(int $limit, float $budget = 0, float $spent = 0, ?string $chosenBudget = null): AssistantQuotaService
     {
         $usage = m::mock(AssistantUsageRepositoryInterface::class);
         $usage->shouldReceive('getAccountCostSince')->andReturn($spent);
@@ -31,6 +40,7 @@ class AssistantQuotaServiceTest extends TestCase
                 'assistant_weekly_budget_usd' => $budget,
             ]]]),
             $usage,
+            $this->settings($chosenBudget),
         );
     }
 
@@ -97,8 +107,42 @@ class AssistantQuotaServiceTest extends TestCase
             new Cache(new ArrayStore()),
             new Repository(['services' => ['anthropic' => ['assistant_daily_limit' => 1, 'assistant_weekly_budget_usd' => 6]]]),
             $usage,
+            $this->settings(),
         );
 
         $this->assertFalse($service->isOverWeeklyBudget(1));
+    }
+
+    public function testTheBudgetChosenInTheAdminWinsOverTheServerOne(): void
+    {
+        $service = $this->service(200, budget: 6, spent: 7, chosenBudget: '10');
+
+        $this->assertSame(10.0, $service->weeklyBudget());
+        $this->assertSame(6.0, $service->defaultWeeklyBudget());
+        $this->assertFalse($service->isOverWeeklyBudget(1));
+    }
+
+    public function testAChosenZeroBudgetRemovesTheCap(): void
+    {
+        $service = $this->service(200, budget: 6, spent: 50, chosenBudget: '0');
+
+        $this->assertFalse($service->isOverWeeklyBudget(1));
+    }
+
+    public function testChoosingABudgetStoresItRounded(): void
+    {
+        $settings = m::mock(PlatformSettingRepositoryInterface::class);
+        $settings->shouldReceive('setValue')->once()->with(AssistantQuotaService::BUDGET_SETTING, '7.5');
+        $settings->shouldReceive('setValue')->once()->with(AssistantQuotaService::BUDGET_SETTING, null);
+
+        $service = new AssistantQuotaService(
+            new Cache(new ArrayStore()),
+            new Repository([]),
+            m::mock(AssistantUsageRepositoryInterface::class),
+            $settings,
+        );
+
+        $service->chooseWeeklyBudget(7.499);
+        $service->chooseWeeklyBudget(null);
     }
 }

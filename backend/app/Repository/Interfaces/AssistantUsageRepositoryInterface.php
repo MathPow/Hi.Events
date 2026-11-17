@@ -25,4 +25,7 @@ interface AssistantUsageRepositoryInterface extends RepositoryInterface
 
     /** What one account's calls have cost since a date, in US dollars. */
     public function getAccountCostSince(int $accountId, Carbon $since): float;
+
+    /** @return array<int, float> what each account's calls have cost since a date, by account id */
+    public function getCostByAccountSince(Carbon $since): array;
 }
