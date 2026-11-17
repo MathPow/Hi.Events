@@ -74,8 +74,8 @@ const AuthLayout = () => {
         return <Navigate to={'/manage/events'} />
     }
 
-    // Sur ordi, seul le formulaire defile: la molette sur la photo le fait defiler aussi.
-    const scrollFormFromPhoto = (event: WheelEvent<HTMLDivElement>) => {
+    // Sur ordi, seul le formulaire defile: la molette n'importe ou sur la page le fait defiler.
+    const scrollFormFromAnywhere = (event: WheelEvent<HTMLDivElement>) => {
         const column = formColumnRef.current;
         if (column && !column.contains(event.target as Node) && column.scrollHeight > column.clientHeight) {
             column.scrollBy({top: event.deltaY});
@@ -85,8 +85,8 @@ const AuthLayout = () => {
     // Une grande carte creme sur l'orange: le formulaire a gauche, la photo a
     // droite. Sur mobile, la photo passe en haut et porte le retour et le logo.
     return (
-        <div className={classes.authLayout}>
-            <div className={classes.card} data-rough onWheel={scrollFormFromPhoto}>
+        <div className={classes.authLayout} onWheel={scrollFormFromAnywhere}>
+            <div className={classes.card} data-rough>
                 <div className={classes.formColumn} ref={formColumnRef}>
                     <div className={classes.top}>
                         <Link to={'/'} className={classes.backHome} data-rough>

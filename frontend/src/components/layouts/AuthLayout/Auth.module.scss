@@ -58,8 +58,12 @@
   @include mixins.respond-above(lg) {
     overflow-y: auto;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--dehors-sable) transparent;
+    // Sans barre de defilement: la molette, le pave et le clavier suffisent.
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   @include mixins.respond-below(lg) {
