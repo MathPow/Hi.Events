@@ -21,11 +21,14 @@ class GetAssistantAction extends BaseAction
 
     public function __invoke(): JsonResponse
     {
+        $accountId = $this->getAuthenticatedAccountId();
+
         return $this->jsonResponse([
             'ready' => $this->clientFactory->isConfigured(),
             'model' => $this->turnHandler->model(),
-            'remaining' => $this->quotaService->remaining($this->getAuthenticatedAccountId()),
+            'remaining' => $this->quotaService->remaining($accountId),
             'limit' => $this->quotaService->limit(),
+            'over_weekly_budget' => $this->quotaService->isOverWeeklyBudget($accountId),
         ]);
     }
 }

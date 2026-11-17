@@ -115,6 +115,11 @@ class AssistantUsageRepository extends BaseRepository implements AssistantUsageR
             ->get();
     }
 
+    public function getAccountCostSince(int $accountId, Carbon $since): float
+    {
+        return (float)$this->usagesSince($since)->where('u.account_id', $accountId)->sum('u.cost_usd');
+    }
+
     private function usagesSince(Carbon $since): Builder
     {
         return DB::table('assistant_usages as u')->where('u.created_at', '>=', $since);

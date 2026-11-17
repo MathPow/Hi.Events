@@ -38,12 +38,15 @@ return [
     ],
 
     // L'assistant des organisateurs (Claude). Sans cle, il reste ferme. La
-    // limite compte les appels au modele par compte et par jour.
+    // limite compte les appels au modele par compte et par jour, le budget
+    // plafonne leur cout par compte et par semaine.
     'anthropic' => [
         'api_key' => env('ANTHROPIC_API_KEY'),
         'assistant_model' => env('ASSISTANT_MODEL', 'claude-sonnet-5-5'),
         'assistant_effort' => env('ASSISTANT_EFFORT', 'medium'),
         'assistant_daily_limit' => env('ASSISTANT_DAILY_LIMIT', 200),
+        // Ce qu'un compte peut couter par semaine (lundi minuit, heure de Quebec), en dollars americains. 0 : sans plafond.
+        'assistant_weekly_budget_usd' => env('ASSISTANT_WEEKLY_BUDGET_USD', 6),
     ],
 
     'stripe' => [
