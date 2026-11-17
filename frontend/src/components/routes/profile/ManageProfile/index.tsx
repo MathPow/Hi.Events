@@ -13,7 +13,7 @@ import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorRespons
 import {useResendEmailConfirmation} from "../../../../mutations/useResendEmailConfirmation.ts";
 import {useConfirmEmailAddress} from "../../../../mutations/useConfirmEmailAddress.ts";
 import {useConfirmEmailChange} from "../../../../mutations/useConfirmEmailChange.ts";
-import {availableLocales, localeToFlagEmojiMap, localeToNameMap, SupportedLocales} from "../../../../locales.ts";
+import {availableLocales, getClientLocale, localeToFlagEmojiMap, localeToNameMap, SupportedLocales} from "../../../../locales.ts";
 import {getConfig} from "../../../../utilites/config.ts";
 import {usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
 import {Modal} from "../../../common/Modal";
@@ -69,14 +69,18 @@ export const ManageProfile = () => {
     });
 
     useEffect(() => {
-        profileForm.setValues({
+        // La langue affichee est celle du temoin (le choix FR | EN des pages publiques), pas toujours
+        // celle du profil: le champ montre celle qu'on voit, pour qu'en choisir une autre la change.
+        const values = {
             first_name: me?.first_name,
             last_name: me?.last_name,
             email: me?.email,
             timezone: me?.timezone,
-            locale: me?.locale,
+            locale: (getClientLocale() ?? me?.locale) as SupportedLocales | undefined,
             marketing_opt_in: me?.marketing_opted_in_at !== null,
-        });
+        };
+        profileForm.setInitialValues(values);
+        profileForm.setValues(values);
     }, [me]);
 
     const clearParam = (name: string) => setSearchParams(params => {
@@ -98,8 +102,8 @@ export const ManageProfile = () => {
     }, [confirmEmailToken, me?.id]);
 
     const handleProfileFormSubmit = (formValues: Partial<UserMeRequest>, form: UseFormReturnType<any>) => {
-        // Compare a la langue enregistree, lu avant l'envoi: la page se recharge dans la nouvelle.
-        const localeChanged = !!formValues.locale && formValues.locale !== me?.locale;
+        // Compare a la langue affichee, lu avant l'envoi: la page se recharge dans la nouvelle.
+        const localeChanged = !!formValues.locale && formValues.locale !== getClientLocale();
 
         mutation.mutate({
             userData: formValues,
