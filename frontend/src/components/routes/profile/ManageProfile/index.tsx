@@ -98,15 +98,23 @@ export const ManageProfile = () => {
     }, [confirmEmailToken, me?.id]);
 
     const handleProfileFormSubmit = (formValues: Partial<UserMeRequest>, form: UseFormReturnType<any>) => {
+        // Compare a la langue enregistree, lu avant l'envoi: la page se recharge dans la nouvelle.
+        const localeChanged = !!formValues.locale && formValues.locale !== me?.locale;
+
         mutation.mutate({
             userData: formValues,
         }, {
             onSuccess: () => {
-                form.reset();
+                // Le profil garde ce qui vient d'etre enregistre; le mot de passe se vide.
+                if (formValues.locale) {
+                    form.resetDirty();
+                    document.cookie = `locale=${formValues.locale};path=/;max-age=31536000`;
+                } else {
+                    form.reset();
+                }
                 showSuccess(t`Profile updated successfully`);
-                document.cookie = `locale=${formValues.locale};path=/;max-age=31536000`;
 
-                if (form.isDirty('locale')) {
+                if (localeChanged) {
                     window.location.reload();
                 }
             },
