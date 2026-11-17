@@ -133,9 +133,6 @@ export const Register = () => {
 
             </header>
 
-            {/* Un acheteur arrive ici en cherchant ses billets: le lien lui est envoye, sans compte. */}
-            <TicketLookupCard/>
-
             <form className={classes.registerForm} onSubmit={form.onSubmit(registerUser)}>
                 <TextInput
                     {...form.getInputProps('organization_name')}
@@ -232,6 +229,9 @@ export const Register = () => {
                     </Trans>
                 </footer>
             </form>
+
+            {/* Un acheteur arrive ici en cherchant ses billets: le lien lui est envoye, sans compte. */}
+            <TicketLookupCard/>
         </div>
     )
 }
