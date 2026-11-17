@@ -97,7 +97,7 @@ const ScrollDown = () => {
 };
 
 const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) => (
-    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Create my account`}/>
+    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Create my organizer account`}/>
 );
 
 const sectionLinks = () => [
@@ -190,7 +190,7 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
                 }}><ShakyText text={link.label}/></a>
             ))}
             <div className={classes.menuActions}>
-                <LandingButton as={NavLink} to="/auth/register" label={t`Create my account`} onClick={onClose}/>
+                <LandingButton as={NavLink} to="/auth/register" label={t`Create my organizer account`} onClick={onClose}/>
                 <LandingButton as={NavLink} to="/auth/login" variant="dark" label={t`Log in`} onClick={onClose}/>
                 <div className={classes.menuVisitors}>
                     <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`} onClick={onClose}/>

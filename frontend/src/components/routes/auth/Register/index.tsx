@@ -120,13 +120,19 @@ export const Register = () => {
     return (
         <div className={classes.stack}>
             <header className={classes.header}>
-                <h2>{t`Create an account`}</h2>
+                <h2>{t`Create an organizer account`}</h2>
                 <p>
                     <Trans>
                         Already have an account?{' '}
                         <NavLink to={`/auth/login${location.search}`}>
                             {t`Log in`}
                         </NavLink>
+                    </Trans>
+                </p>
+                <p>
+                    <Trans>
+                        Looking for your tickets? No account needed:{' '}
+                        <NavLink to="/my-tickets">{t`My tickets`}</NavLink>
                     </Trans>
                 </p>
             </header>
