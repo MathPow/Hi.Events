@@ -5,6 +5,7 @@ import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorRespons
 import {useRegisterAccount} from "../../../../mutations/useRegisterAccount.ts";
 import {NavLink, useLocation, useNavigate} from "react-router";
 import {t, Trans} from "@lingui/macro";
+import {TicketLookupCard} from "../../../common/TicketLookupCard";
 import classes from "./Register.module.scss";
 import {getClientLocale} from "../../../../locales.ts";
 import {useEffect, useState} from "react";
@@ -129,13 +130,11 @@ export const Register = () => {
                         </NavLink>
                     </Trans>
                 </p>
-                <p>
-                    <Trans>
-                        Looking for your tickets? No account needed:{' '}
-                        <NavLink to="/my-tickets">{t`My tickets`}</NavLink>
-                    </Trans>
-                </p>
+
             </header>
+
+            {/* Un acheteur arrive ici en cherchant ses billets: le lien lui est envoye, sans compte. */}
+            <TicketLookupCard/>
 
             <form className={classes.registerForm} onSubmit={form.onSubmit(registerUser)}>
                 <TextInput

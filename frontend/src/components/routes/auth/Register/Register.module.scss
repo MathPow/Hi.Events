@@ -27,22 +27,15 @@
   gap: 18px;
 }
 
-// Cote a cote sur ordi, l'indice dessous; l'un sous l'autre sur mobile, l'indice entre les deux.
+// L'un sous l'autre, l'indice entre les deux.
 .passwords {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "password confirmation"
-    "hint hint";
-  gap: 18px 16px;
-
-  @include mixins.respond-below(lg) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "password"
-      "hint"
-      "confirmation";
-  }
+    "password"
+    "hint"
+    "confirmation";
+  gap: 18px;
 }
 
 .password {

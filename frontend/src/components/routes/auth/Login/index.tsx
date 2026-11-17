@@ -1,5 +1,5 @@
-import {Button, PasswordInput, TextInput, Collapse, UnstyledButton} from "@mantine/core";
-import {NavLink, useLocation, useNavigate} from "react-router";
+import {Button, PasswordInput, TextInput} from "@mantine/core";
+import {NavLink, useLocation} from "react-router";
 import {useMutation} from "@tanstack/react-query";
 import {notifications} from '@mantine/notifications';
 import {authClient} from "../../../../api/auth.client.ts";
@@ -10,12 +10,10 @@ import classes from "./Login.module.scss";
 import {t, Trans} from "@lingui/macro";
 import {useEffect, useState} from "react";
 import {ChooseAccountModal} from "../../../modals/ChooseAccountModal";
-import {useSendTicketLookupEmail} from "../../../../mutations/useSendTicketLookupEmail.ts";
-import {showError} from "../../../../utilites/notifications.tsx";
+import {TicketLookupCard} from "../../../common/TicketLookupCard";
 
 const Login = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const form = useForm({
         initialValues: {
             email: '',
@@ -24,14 +22,6 @@ const Login = () => {
         }
     });
     const [showChooseAccount, setShowChooseAccount] = useState(false);
-    const [ticketLookupOpen, setTicketLookupOpen] = useState(false);
-
-    const ticketLookupForm = useForm({
-        initialValues: {
-            email: '',
-        }
-    });
-    const [ticketLookupSuccess, setTicketLookupSuccess] = useState(false);
 
     const {mutate: loginUser, isPending, data} = useMutation({
         mutationFn: (userData: LoginData) => authClient.login(userData),
@@ -57,27 +47,9 @@ const Login = () => {
         }
     });
 
-    const ticketLookupMutation = useSendTicketLookupEmail();
-
     useEffect(() => {
         form.values.account_id && loginUser(form.values);
     }, [form.values.account_id]);
-
-    const handleTicketLookup = (values: { email: string }) => {
-        ticketLookupMutation.mutate(values.email, {
-            onSuccess: ({token}) => {
-                // Sur dev, sans courriel, l'API rend le lien: on y va directement.
-                if (token) {
-                    navigate(`/my-tickets/${token}`);
-                    return;
-                }
-                setTicketLookupSuccess(true);
-            },
-            onError: () => {
-                showError(t`Something went wrong. Please try again.`);
-            }
-        });
-    };
 
     return (
         <div className={classes.stack}>
@@ -117,58 +89,7 @@ const Login = () => {
             </form>
 
             {/* Les acheteurs n'ont pas de compte: on leur envoie le lien de leurs billets par courriel. */}
-            <div className={classes.ticketLookup} data-rough data-expanded={ticketLookupOpen}>
-                <UnstyledButton
-                    className={classes.ticketLookupTrigger}
-                    onClick={() => setTicketLookupOpen(!ticketLookupOpen)}
-                    aria-expanded={ticketLookupOpen}
-                >
-                    <span className={classes.ticketLookupText}>
-                        <strong>{t`Looking for your tickets?`}</strong>
-                        <span>{t`No account needed: just the email you used at checkout.`}</span>
-                    </span>
-                    <img src={'/interface/fleche-suite.svg'} alt={''} className={classes.arrow}/>
-                </UnstyledButton>
-
-                <Collapse in={ticketLookupOpen}>
-                    <div className={classes.ticketLookupContent}>
-                        {ticketLookupSuccess ? (
-                            <div className={classes.successMessage}>
-                                <p>{t`Check your inbox! If tickets are associated with this email, you'll receive a link to view them.`}</p>
-                                <UnstyledButton
-                                    className={classes.resetLink}
-                                    onClick={() => {
-                                        setTicketLookupSuccess(false);
-                                        ticketLookupForm.reset();
-                                    }}
-                                >
-                                    {t`Try another email`}
-                                </UnstyledButton>
-                            </div>
-                        ) : (
-                            <form onSubmit={ticketLookupForm.onSubmit(handleTicketLookup)}>
-                                <div className={classes.ticketLookupForm}>
-                                    <TextInput
-                                        {...ticketLookupForm.getInputProps('email')}
-                                        type="email"
-                                        placeholder={t`Enter your email`}
-                                        aria-label={t`Email`}
-                                        required
-                                        className={classes.ticketEmailInput}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        loading={ticketLookupMutation.isPending}
-                                        disabled={ticketLookupMutation.isPending}
-                                    >
-                                        {t`Send`}
-                                    </Button>
-                                </div>
-                            </form>
-                        )}
-                    </div>
-                </Collapse>
-            </div>
+            <TicketLookupCard/>
 
             {(showChooseAccount && data) && <ChooseAccountModal onAccountChosen={(accountId) => {
                 form.setFieldValue('account_id', accountId as string);
