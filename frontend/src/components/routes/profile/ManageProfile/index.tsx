@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {useSearchParams} from "react-router";
 import {t, Trans} from "@lingui/macro";
 import {useGetMe} from "../../../../queries/useGetMe.ts";
-import {timezones} from "../../../../../data/timezones.ts";
+import {timezoneComboboxProps, timezones} from "../../../../../data/timezones.ts";
 import {useUpdateMe} from "../../../../mutations/useUpdateMe.ts";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {UserMeRequest} from "../../../../api/user.client.ts";
@@ -219,7 +219,7 @@ export const ManageProfile = () => {
                 <SettingsCard title={t`Regional Settings`}>
                     <fieldset className={classes.fieldset} disabled={isFetching}>
                         <div className={settings.fields}>
-                            <Select className={settings.field} required searchable data={timezones}
+                            <Select className={settings.field} required searchable data={timezones} comboboxProps={timezoneComboboxProps}
                                     label={t`Timezone`} placeholder={t`UTC`}
                                     {...profileForm.getInputProps('timezone')}/>
                             <Select className={settings.field} required data={localeSelectData} label={t`Language`}

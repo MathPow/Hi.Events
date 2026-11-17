@@ -5,7 +5,7 @@ import {useForm} from "@mantine/form";
 import {Account} from "../../../../../types.ts";
 import {useUpdateAccount} from "../../../../../mutations/useUpdateAccount.ts";
 import {currencies} from "../../../../../../data/currencies.ts";
-import {timezones} from "../../../../../../data/timezones.ts";
+import {timezoneComboboxProps, timezones} from "../../../../../../data/timezones.ts";
 import {useSectionAutosave} from "../../../../layouts/AppLayout/PageStatus.tsx";
 import {currencyName, SettingsCard, showServerErrors} from "../SettingsUi.tsx";
 import classes from "../Settings.module.scss";
@@ -76,7 +76,7 @@ export const AccountCard = ({account, isAdmin}: { account: Account, isAdmin: boo
                 searchable
                 allowDeselect={false}
                 disabled={!isAdmin}
-                data={timezones}
+                data={timezones} comboboxProps={timezoneComboboxProps}
                 value={form.values.timezone}
                 error={form.errors.timezone}
                 onChange={(value) => select('timezone', value)}

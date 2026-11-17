@@ -7,7 +7,7 @@ import {LoadingContainer} from "../../common/LoadingContainer";
 import {t} from "@lingui/macro";
 import {Button, Select, Stack, TextInput} from "@mantine/core";
 import {currencies} from "../../../../data/currencies.ts";
-import {timezones} from "../../../../data/timezones.ts";
+import {timezoneComboboxProps, timezones} from "../../../../data/timezones.ts";
 import {useFormErrorResponseHandler} from "../../../hooks/useFormErrorResponseHandler.tsx";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {IconBuilding} from "@tabler/icons-react";
@@ -55,7 +55,7 @@ export const OrganizerForm = ({form}: { form: UseFormReturnType<Partial<Organize
                     {...form.getInputProps('timezone')}
                     searchable
                     required
-                    data={timezones}
+                    data={timezones} comboboxProps={timezoneComboboxProps}
                     label={t`Timezone`}
                     placeholder={t`Select timezone`}
                     size="lg"

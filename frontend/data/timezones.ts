@@ -420,3 +420,6 @@ export const timezones = [
     "Pacific/Wallis",
     "UTC"
 ];
+// Their list is as wide as the longest name (America/Argentina/ComodRivadavia), instead of the
+// field's width with a sideways scroll.
+export const timezoneComboboxProps = {width: 'max-content', position: 'bottom-start'} as const;

@@ -6,7 +6,7 @@ import {Event, IdParam} from "../../../../../types.ts";
 import {useUpdateEvent} from "../../../../../mutations/useUpdateEvent.ts";
 import {utcToTz} from "../../../../../utilites/dates.ts";
 import {timezoneLabel} from "../../../../../utilites/timezoneLabel.ts";
-import {timezones} from "../../../../../../data/timezones.ts";
+import {timezoneComboboxProps, timezones} from "../../../../../../data/timezones.ts";
 import {CATEGORY_OF_TYPE, EVENT_TYPES, eventTypeLabel, typeOfCategory} from "../../../../../constants/eventTypes.ts";
 import {Editor} from "../../../../common/Editor";
 import {DateTimeField} from "../../../../common/DateTimeField";
@@ -124,7 +124,7 @@ export const DetailsCard = ({eventId, event}: { eventId: IdParam, event: Event }
                         label={t`Timezone`}
                         searchable
                         allowDeselect={false}
-                        data={timezoneOptions}
+                        data={timezoneOptions} comboboxProps={timezoneComboboxProps}
                         leftSection={fieldIcon('globe')}
                         leftSectionWidth={48}
                         {...FIELD_CHEVRON}
