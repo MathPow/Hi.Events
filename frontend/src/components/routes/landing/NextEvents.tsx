@@ -13,7 +13,7 @@ import {LandingButton} from "./LandingButton.tsx";
 const COPIES = 4;
 // Enough events in a copy for it to be wider than a wide screen.
 const MIN_EVENTS_PER_COPY = 10;
-const SECONDS_PER_EVENT = 6;
+const SECONDS_PER_EVENT = 10;
 // Stopped under the mouse, for the event to be clicked.
 const HOVER_PACE = 0;
 
