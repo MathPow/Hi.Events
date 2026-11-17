@@ -53,7 +53,7 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
     );
 
     return (
-    <Tabs defaultValue="accounts">
+        <Tabs defaultValue="accounts">
             <Tabs.List mb="sm">
                 <Tabs.Tab value="accounts" leftSection={<IconBuilding size={16}/>}>
                     {t`By account`} ({accounts.length})
@@ -61,7 +61,7 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
                 <Tabs.Tab value="users" leftSection={<IconUser size={16}/>}>
                     {t`By person`} ({users.length})
                 </Tabs.Tab>
-                </Tabs.List>
+            </Tabs.List>
 
             <Paper shadow="sm" radius="md" withBorder>
                 <Tabs.Panel value="accounts">
