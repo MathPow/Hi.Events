@@ -57,18 +57,14 @@ const Accounts = () => {
                 <Title order={1}>{t`Accounts`}</Title>
 
                 <TextInput
-                    placeholder={t`Search by account name or email...`}
+                    placeholder={t`Search by name, email, organizer, event or #id…`}
                     leftSection={<IconSearch size={16} />}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
 
                 {isLoading ? (
-                    <Stack gap="md">
-                        <Skeleton height={180} radius="md" />
-                        <Skeleton height={180} radius="md" />
-                        <Skeleton height={180} radius="md" />
-                    </Stack>
+                    <Skeleton height={480} radius="md" />
                 ) : (
                     <AdminAccountsTable
                         accounts={accountsData?.data || []}

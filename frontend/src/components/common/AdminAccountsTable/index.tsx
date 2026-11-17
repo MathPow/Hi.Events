@@ -1,10 +1,10 @@
-import {Badge, Button, Stack, Text} from "@mantine/core";
+import {ActionIcon, Anchor, Badge, Button, Group, Menu, Table, Text, Tooltip} from "@mantine/core";
 import {t} from "@lingui/macro";
+import {IconChevronDown, IconChevronRight, IconUserShare} from "@tabler/icons-react";
+import {Link, useNavigate} from "react-router";
 import {AdminAccount} from "../../../api/admin.client";
-import {IconCalendar, IconWorld, IconBuildingBank, IconUsers, IconEye, IconMessage} from "@tabler/icons-react";
-import classes from "./AdminAccountsTable.module.scss";
 import {IdParam} from "../../../types";
-import {useNavigate} from "react-router";
+import classes from "./AdminAccountsTable.module.scss";
 
 interface AdminAccountsTableProps {
     accounts: AdminAccount[];
@@ -12,6 +12,19 @@ interface AdminAccountsTableProps {
     isLoading?: boolean;
 }
 
+const tierColor = (tierName?: string) => {
+    const name = (tierName ?? '').toLowerCase();
+    if (name.includes('premium')) return 'green';
+    if (name === 'trusted') return 'blue';
+    return 'gray';
+};
+
+const formatDate = (dateString?: string) => dateString
+    ? new Date(dateString).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'})
+    : '-';
+
+// One line per account: who it is, how far it got, its messaging tier. The whole row opens the
+// account; « Impersonate » goes straight into it as its owner (a menu when it has several people).
 const AdminAccountsTable = ({accounts, onImpersonate, isLoading}: AdminAccountsTableProps) => {
     const navigate = useNavigate();
 
@@ -23,151 +36,110 @@ const AdminAccountsTable = ({accounts, onImpersonate, isLoading}: AdminAccountsT
         );
     }
 
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return '-';
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
-    };
-
-    const getRoleBadgeColor = (role: string) => {
-        switch (role) {
-            case 'ADMIN':
-                return 'blue';
-            case 'ORGANIZER':
-                return 'green';
-            case 'SUPERADMIN':
-                return 'red';
-            default:
-                return 'gray';
-        }
-    };
-
-    const canImpersonate = (role: string) => {
-        return role !== 'SUPERADMIN';
-    };
-
-    const getTierBadgeColor = (tierName?: string) => {
-        if (!tierName) return 'gray';
-        const name = tierName.toLowerCase();
-        if (name.includes('premium')) return 'green';
-        if (name.includes('trusted')) return 'blue';
-        return 'gray';
-    };
-
-
     return (
-        <div className={classes.cardsContainer}>
-            {accounts.map((account) => (
-                <div key={account.id} className={classes.accountCard}>
-                    <div className={classes.cardHeader}>
-                        <div className={classes.accountInfo}>
-                            <h3 className={classes.accountName}>
-                                {account.name}
-                                {account.suspended_at && (
-                                    <Badge color="red" size="sm" ml="xs">{t`Suspended`}</Badge>
-                                )}
-                            </h3>
-                            <span className={classes.accountEmail}>{account.email}</span>
-                        </div>
-                        <Button
-                            size="xs"
-                            variant="light"
-                            leftSection={<IconEye size={14} />}
-                            onClick={() => navigate(`/admin/accounts/${account.id}`)}
-                        >
-                            {t`View Details`}
-                        </Button>
-                    </div>
+        <div className={classes.tableCard}>
+            <Table.ScrollContainer minWidth={820}>
+                <Table highlightOnHover verticalSpacing="sm" className={classes.table}>
+                    <Table.Thead>
+                        <Table.Tr>
+                            <Table.Th>{t`Account`}</Table.Th>
+                            <Table.Th>{t`Owner`}</Table.Th>
+                            <Table.Th ta="right">{t`Events`}</Table.Th>
+                            <Table.Th ta="right">{t`Users`}</Table.Th>
+                            <Table.Th>{t`Messaging Tier`}</Table.Th>
+                            <Table.Th>{t`Created`}</Table.Th>
+                            <Table.Th/>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                        {accounts.map((account) => {
+                            const people = (account.users ?? []).filter(user => user.role !== 'SUPERADMIN');
+                            const owner = people.find(user => user.role === 'ADMIN') ?? people[0];
+                            const detailsPath = `/admin/accounts/${account.id}`;
 
-                    <div className={classes.cardBody}>
-                        <div className={classes.statsGrid}>
-                            <div className={classes.statItem}>
-                                <IconBuildingBank size={18} />
-                                <Stack gap={2}>
-                                    <Text size="xs" c="dimmed">{t`Events`}</Text>
-                                    <Text size="lg" fw={600}>{account.events_count}</Text>
-                                </Stack>
-                            </div>
-                            <div className={classes.statItem}>
-                                <IconUsers size={18} />
-                                <Stack gap={2}>
-                                    <Text size="xs" c="dimmed">{t`Users`}</Text>
-                                    <Text size="lg" fw={600}>{account.users_count}</Text>
-                                </Stack>
-                            </div>
-                            <div className={classes.statItem}>
-                                <IconMessage size={18} />
-                                <Stack gap={2}>
-                                    <Text size="xs" c="dimmed">{t`Messaging Tier`}</Text>
-                                    <Badge
-                                        size="sm"
-                                        color={getTierBadgeColor(account.messaging_tier?.name)}
-                                    >
-                                        {account.messaging_tier?.name || t`Untrusted`}
-                                    </Badge>
-                                </Stack>
-                            </div>
-                        </div>
-
-                        {account.users && account.users.length > 0 && (
-                            <div className={classes.usersSection}>
-                                <Text size="sm" fw={600} mb="xs">{t`Users`}</Text>
-                                <div className={classes.usersList}>
-                                    {account.users.map((user) => (
-                                        <div key={user.id} className={classes.userItem}>
-                                            <div className={classes.userDetails}>
-                                                <Text size="sm" fw={500}>
-                                                    {user.first_name} {user.last_name}
-                                                </Text>
-                                                <Text size="xs" c="dimmed">{user.email}</Text>
-                                                <Badge
-                                                    size="xs"
-                                                    color={getRoleBadgeColor(user.role)}
-                                                    mt={4}
-                                                >
-                                                    {user.role}
-                                                </Badge>
-                                            </div>
-                                            {canImpersonate(user.role) && (
-                                                <Button
-                                                    size="xs"
-                                                    variant="light"
-                                                    onClick={() => onImpersonate(user.id, account.id)}
-                                                    disabled={isLoading}
-                                                >
+                            return (
+                                <Table.Tr key={account.id} className={classes.row}
+                                          onClick={() => navigate(detailsPath)}>
+                                    <Table.Td>
+                                        <Group gap={6} wrap="nowrap">
+                                            <Anchor component={Link} to={detailsPath} fw={700} size="sm"
+                                                    onClick={(event) => event.stopPropagation()}>
+                                                {account.name}
+                                            </Anchor>
+                                            {account.suspended_at && (
+                                                <Badge color="red" size="xs" variant="light">{t`Suspended`}</Badge>
+                                            )}
+                                        </Group>
+                                        <Text size="xs" c="dimmed" lineClamp={1}>{account.email}</Text>
+                                    </Table.Td>
+                                    <Table.Td>
+                                        {owner ? (
+                                            <>
+                                                <Text size="sm" lineClamp={1}>{owner.first_name} {owner.last_name}</Text>
+                                                {people.length > 1 && (
+                                                    <Text size="xs" c="dimmed">{t`+ ${people.length - 1} more`}</Text>
+                                                )}
+                                            </>
+                                        ) : <Text size="sm" c="dimmed">-</Text>}
+                                    </Table.Td>
+                                    <Table.Td ta="right">
+                                        <Text size="sm" fw={account.events_count > 0 ? 700 : 400}
+                                              c={account.events_count > 0 ? undefined : 'dimmed'}>
+                                            {account.events_count}
+                                        </Text>
+                                    </Table.Td>
+                                    <Table.Td ta="right"><Text size="sm">{account.users_count}</Text></Table.Td>
+                                    <Table.Td>
+                                        <Badge size="sm" variant="light" color={tierColor(account.messaging_tier?.name)}>
+                                            {account.messaging_tier?.name || t`Untrusted`}
+                                        </Badge>
+                                    </Table.Td>
+                                    <Table.Td style={{whiteSpace: 'nowrap'}}>
+                                        <Text size="sm" c="dimmed">{formatDate(account.created_at)}</Text>
+                                    </Table.Td>
+                                    <Table.Td onClick={(event) => event.stopPropagation()}>
+                                        <Group gap={4} justify="flex-end" wrap="nowrap">
+                                            {people.length === 1 && (
+                                                <Button size="xs" variant="light" disabled={isLoading}
+                                                        leftSection={<IconUserShare size={14}/>}
+                                                        onClick={() => onImpersonate(people[0].id, account.id)}>
                                                     {t`Impersonate`}
                                                 </Button>
                                             )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        <div className={classes.cardFooter}>
-                            <div className={classes.footerInfo}>
-                                <div className={classes.footerItem}>
-                                    <IconCalendar size={14} />
-                                    <span>{formatDate(account.created_at)}</span>
-                                </div>
-                                {account.timezone && (
-                                    <div className={classes.footerItem}>
-                                        <IconWorld size={14} />
-                                        <span>{account.timezone}</span>
-                                    </div>
-                                )}
-                                {account.currency_code && (
-                                    <div className={classes.footerItem}>
-                                        <Badge size="sm" variant="light">
-                                            {account.currency_code}
-                                        </Badge>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ))}
+                                            {people.length > 1 && (
+                                                <Menu position="bottom-end" withinPortal>
+                                                    <Menu.Target>
+                                                        <Button size="xs" variant="light" disabled={isLoading}
+                                                                leftSection={<IconUserShare size={14}/>}
+                                                                rightSection={<IconChevronDown size={14}/>}>
+                                                            {t`Impersonate`}
+                                                        </Button>
+                                                    </Menu.Target>
+                                                    <Menu.Dropdown>
+                                                        {people.map(user => (
+                                                            <Menu.Item key={user.id}
+                                                                       onClick={() => onImpersonate(user.id, account.id)}>
+                                                                <Text size="sm">{user.first_name} {user.last_name}</Text>
+                                                                <Text size="xs" c="dimmed">{user.email} · {user.role}</Text>
+                                                            </Menu.Item>
+                                                        ))}
+                                                    </Menu.Dropdown>
+                                                </Menu>
+                                            )}
+                                            <Tooltip label={t`View Details`}>
+                                                <ActionIcon variant="subtle" component={Link} to={detailsPath}
+                                                            aria-label={t`View Details`}>
+                                                    <IconChevronRight size={18}/>
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        </Group>
+                                    </Table.Td>
+                                </Table.Tr>
+                            );
+                        })}
+                    </Table.Tbody>
+                </Table>
+            </Table.ScrollContainer>
         </div>
     );
 };

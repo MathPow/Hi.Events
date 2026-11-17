@@ -51,13 +51,42 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                 'messagingTier',
             ]);
 
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('accounts.name', 'like', "{$search}%")
-                    ->orWhere('accounts.email', 'like', "{$search}%")
-                    ->orWhereHas('users', function ($userQuery) use ($search) {
-                        $userQuery->where('users.email', 'like', "{$search}%");
+        // Chaque mot cherche doit se trouver quelque part : le compte, ses personnes (nom, prenom,
+        // courriel), ses organisateurs ou ses evenements. « #12 » ou « 12 » trouve aussi le compte 12.
+        $terms = preg_split('/\s+/', trim((string)$search), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        foreach ($terms as $term) {
+            $like = '%' . addcslashes($term, '%_\\') . '%';
+            $id = ctype_digit(ltrim($term, '#')) ? (int)ltrim($term, '#') : null;
+
+            $query->where(function ($q) use ($like, $id) {
+                $q->where('accounts.name', 'ilike', $like)
+                    ->orWhere('accounts.email', 'ilike', $like)
+                    ->orWhereHas('users', function ($users) use ($like) {
+                        $users->where(function ($user) use ($like) {
+                            $user->where('users.email', 'ilike', $like)
+                                ->orWhere('users.first_name', 'ilike', $like)
+                                ->orWhere('users.last_name', 'ilike', $like);
+                        });
+                    })
+                    ->orWhereExists(function ($organizers) use ($like) {
+                        $organizers->selectRaw('1')->from('organizers')
+                            ->whereColumn('organizers.account_id', 'accounts.id')
+                            ->whereNull('organizers.deleted_at')
+                            ->where(function ($organizer) use ($like) {
+                                $organizer->where('organizers.name', 'ilike', $like)
+                                    ->orWhere('organizers.email', 'ilike', $like);
+                            });
+                    })
+                    ->orWhereExists(function ($events) use ($like) {
+                        $events->selectRaw('1')->from('events')
+                            ->whereColumn('events.account_id', 'accounts.id')
+                            ->whereNull('events.deleted_at')
+                            ->where('events.title', 'ilike', $like);
                     });
+
+                if ($id !== null) {
+                    $q->orWhere('accounts.id', $id);
+                }
             });
         }
 
