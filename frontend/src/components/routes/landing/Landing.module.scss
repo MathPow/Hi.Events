@@ -3239,16 +3239,18 @@ $footer-ridge-mobile: 13.205056%;
   border-radius: 50%;
   background: $orange;
   box-shadow: 0 0.375rem 1.25rem rgb(53 41 36 / 0.22);
-  transition: transform 0.25s $ease;
 
   img {
     width: 82%;
     height: 82%;
+    transition: transform 0.25s $ease;
   }
 
   &:hover,
   &:focus-visible {
-    transform: rotate(-8deg) scale(1.06);
+    img {
+      transform: rotate(-10deg) scale(1.08);
+    }
 
     .pastilleLabel {
       opacity: 1;
@@ -3287,7 +3289,7 @@ $footer-ridge-mobile: 13.205056%;
 
 @media (prefers-reduced-motion: reduce) {
   .pastilles,
-  .pastille,
+  .pastille img,
   .pastilleLabel {
     transition: none;
   }
