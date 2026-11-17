@@ -53,17 +53,17 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
     );
 
     return (
-        <Paper shadow="sm" radius="md" withBorder>
-            <Tabs defaultValue="accounts">
-                <Tabs.List px="md" pt="xs">
-                    <Tabs.Tab value="accounts" leftSection={<IconBuilding size={16}/>}>
-                        {t`By account`} ({accounts.length})
-                    </Tabs.Tab>
-                    <Tabs.Tab value="users" leftSection={<IconUser size={16}/>}>
-                        {t`By person`} ({users.length})
-                    </Tabs.Tab>
+    <Tabs defaultValue="accounts">
+            <Tabs.List mb="sm">
+                <Tabs.Tab value="accounts" leftSection={<IconBuilding size={16}/>}>
+                    {t`By account`} ({accounts.length})
+                </Tabs.Tab>
+                <Tabs.Tab value="users" leftSection={<IconUser size={16}/>}>
+                    {t`By person`} ({users.length})
+                </Tabs.Tab>
                 </Tabs.List>
 
+            <Paper shadow="sm" radius="md" withBorder>
                 <Tabs.Panel value="accounts">
                     {sortedAccounts.length === 0 ? empty : (
                         <Table.ScrollContainer minWidth={1000}>
@@ -173,7 +173,7 @@ export const UsageTables = ({accounts, users, dailyLimit}: UsageTablesProps) => 
                         </Table.ScrollContainer>
                     )}
                 </Tabs.Panel>
-            </Tabs>
-        </Paper>
+            </Paper>
+        </Tabs>
     );
 };
