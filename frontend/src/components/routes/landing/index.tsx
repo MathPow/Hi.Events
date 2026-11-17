@@ -327,29 +327,56 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
                 ))}
             </nav>
             <div className={classes.scrolledNavActions}>
+                <nav className={classes.scrolledNavShortcuts} aria-label={t`Shortcuts`}>
+                    {shortcuts().map(({to, label, Icon}) => (
+                        <NavLink key={to} to={to} aria-label={label}>
+                            <Icon/>
+                            <span className={classes.shortcutLabel} aria-hidden="true">{label}</span>
+                        </NavLink>
+                    ))}
+                </nav>
                 <NavLink to="/auth/login" className={classes.scrolledNavLogin}><ShakyText text={t`Log in`}/></NavLink>
                 <RegisterButton/>
             </div>
             <MenuButton open={menuOpen} onToggle={onMenuToggle} buttonRef={menuButton}/>
             <MobileMenu open={menuOpen} onClose={onMenuClose}/>
         </header>
-        {/* Once the hero is passed, its two links stay at hand, bottom left. */}
-        <nav className={`${classes.pastilles} ${shown && !menuOpen ? classes.pastillesShown : ''}`}
+        {/* On a phone, once the hero is passed, its two links at the bottom of the screen. */}
+        <nav className={`${classes.bottomLinks} ${shown && !menuOpen ? classes.bottomLinksShown : ''}`}
              aria-label={t`Shortcuts`} aria-hidden={!shown || menuOpen || undefined}>
-            {[
-                {to: '/events', label: t`Events`, icon: '/logos/pastille-tente.svg'},
-                {to: '/my-tickets', label: t`My tickets`, icon: '/logos/pastille-billet.svg'},
-            ].map(({to, label, icon}) => (
-                <NavLink key={to} to={to} className={classes.pastille} aria-label={label}
-                         tabIndex={shown && !menuOpen ? undefined : -1}>
-                    <img src={icon} alt=""/>
-                    <span className={classes.pastilleLabel} aria-hidden="true">{label}</span>
-                </NavLink>
+            {shortcuts().map(({to, label}) => (
+                <NavLink key={to} to={to} tabIndex={shown && !menuOpen ? undefined : -1}>{label}</NavLink>
             ))}
         </nav>
         </>
     );
 };
+
+// Lucide's « tent » and « ticket » (ISC), drawn inline.
+const LucideIcon = ({children}: { children: ReactNode }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {children}
+    </svg>
+);
+
+const TentIcon = () => (
+    <LucideIcon>
+        <path d="M3.5 21 14 3"/><path d="M20.5 21 10 3"/><path d="M15.5 21 12 15l-3.5 6"/><path d="M2 21h20"/>
+    </LucideIcon>
+);
+
+const TicketIcon = () => (
+    <LucideIcon>
+        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+        <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+    </LucideIcon>
+);
+
+const shortcuts = () => [
+    {to: '/events', label: t`Events`, Icon: TentIcon},
+    {to: '/my-tickets', label: t`My tickets`, Icon: TicketIcon},
+];
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
