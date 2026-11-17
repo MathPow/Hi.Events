@@ -96,8 +96,8 @@ const ScrollDown = () => {
     );
 };
 
-const RegisterButton = ({variant = 'orange', label}: { variant?: 'orange' | 'dark', label?: string }) => (
-    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={label ?? t`Sell tickets`}/>
+const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) => (
+    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Sell tickets`}/>
 );
 
 const sectionLinks = () => [
@@ -119,26 +119,8 @@ const chooseLanguage = (locale: string) => {
         window.location.href = window.location.pathname + window.location.search;
     });
 };
-// Wider than this, the sections' links are back in the scrolled bar (beside the same right side
-// as the hero's: the language, « Mes billets », « Se connecter » and the button).
-const MENU_UP_TO = 1440;
-
-/** FR | EN: the current language full, the other faded. The other reloads the page in it. */
-const LanguageToggle = () => (
-    <div className={classes.navLanguages} role="group" aria-label={t`Language`}>
-        {LANGUAGES.map(({locale, name}) => (
-            <button key={locale} type="button" lang={locale} aria-label={name}
-                    aria-pressed={i18n.locale.startsWith(locale)}
-                    onClick={() => !i18n.locale.startsWith(locale) && chooseLanguage(locale)}>
-                {locale.toUpperCase()}
-            </button>
-        ))}
-    </div>
-);
-
-// Where the reader is, for the scrolled bar: its link underlined, and from the features on, the
-// button asks to create the account.
-const SIGN_UP_SECTIONS = ['#features', '#visibility'];
+// Wider than this, the sections' links are back in the bar.
+const MENU_UP_TO = 1150;
 
 /** The shop's menu button (EnteteSite.vue): two strokes that turn into a cross. */
 const MenuButton = ({open, onToggle, buttonRef}: {
@@ -242,7 +224,6 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
     onMenuClose: () => void;
 }) => {
     const [shown, setShown] = useState(false);
-    const [active, setActive] = useState<string | null>(null);
     const header = useRef<HTMLElement>(null);
     const menuButton = useRef<HTMLButtonElement>(null);
 
@@ -253,7 +234,6 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
         }
         let frame: number | null = null;
         let threshold = 0;
-        let sections: { href: string, top: number }[] = [];
         // Where the nav sits in the layout, whatever its entrance or the opening's clip do to it on
         // screen. Measured once and on resize, never while scrolling: reading offsetTop at each frame
         // makes the browser lay the page out again.
@@ -263,20 +243,10 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
                 top += element.offsetTop;
             }
             threshold = top + nav.offsetHeight;
-            sections = sectionLinks()
-                .map(({href}) => ({href, element: document.querySelector<HTMLElement>(href)}))
-                .filter((section): section is { href: string, element: HTMLElement } => !!section.element)
-                .map(({href, element}) => ({href, top: layoutTop(element)}));
         };
         const update = () => {
             frame = null;
-            const y = window.scrollY;
-            setShown(y > threshold);
-            // The section whose top has passed the upper third of the screen.
-            const line = y + window.innerHeight * 0.35;
-            setActive(sections.filter(section => section.top <= line).pop()?.href ?? null);
-            const end = document.documentElement.scrollHeight - window.innerHeight;
-            header.current?.style.setProperty('--progress', String(end > 0 ? Math.min(1, y / end) : 0));
+            setShown(window.scrollY > threshold);
         };
         const schedule = () => {
             if (frame === null) {
@@ -339,9 +309,6 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
         };
     }, [menuOpen, onMenuClose]);
 
-    const activeLabel = sectionLinks().find(link => link.href === active)?.label;
-    const signUpTime = active !== null && SIGN_UP_SECTIONS.includes(active);
-
     return (
         <>
         {/* Under the open menu, the page darkens, as under the DEHORS shop's cart. A press on it closes the menu. */}
@@ -356,29 +323,30 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
             </a>
             <nav className={classes.scrolledNavLinks}>
                 {sectionLinks().map((link) => (
-                    <a key={link.href} href={link.href} onClick={smoothScrollTo}
-                       aria-current={active === link.href ? 'location' : undefined}><ShakyText text={link.label}/></a>
+                    <a key={link.href} href={link.href} onClick={smoothScrollTo}><ShakyText text={link.label}/></a>
                 ))}
             </nav>
-            {/* Without the links (narrower screens), the section being read, beside the mountain. */}
-            {activeLabel && <span className={classes.scrolledNavCurrent} aria-hidden="true">{activeLabel}</span>}
             <div className={classes.scrolledNavActions}>
-                <LanguageToggle/>
-                <NavLink to="/my-tickets" className={classes.scrolledNavLogin}><ShakyText text={t`My tickets`}/></NavLink>
                 <NavLink to="/auth/login" className={classes.scrolledNavLogin}><ShakyText text={t`Log in`}/></NavLink>
-                <RegisterButton label={signUpTime ? t`Create my account` : undefined}/>
+                <RegisterButton/>
             </div>
             <MenuButton open={menuOpen} onToggle={onMenuToggle} buttonRef={menuButton}/>
             <MobileMenu open={menuOpen} onClose={onMenuClose}/>
-            <span className={classes.scrolledNavProgress} aria-hidden="true"/>
         </header>
-        {/* On a phone, the two things people come for, under the thumb once the hero is passed. */}
-        <div className={`${classes.bottomBar} ${shown && !menuOpen ? classes.bottomBarShown : ''}`} data-rough
-             aria-hidden={!shown || menuOpen || undefined}>
-            <LandingButton as={NavLink} to="/my-tickets" variant="dark" label={t`My tickets`}
-                           tabIndex={shown && !menuOpen ? undefined : -1}/>
-            <RegisterButton/>
-        </div>
+        {/* Once the hero is passed, its two links stay at hand, bottom left. */}
+        <nav className={`${classes.pastilles} ${shown && !menuOpen ? classes.pastillesShown : ''}`}
+             aria-label={t`Shortcuts`} aria-hidden={!shown || menuOpen || undefined}>
+            {[
+                {to: '/my-tickets', label: t`My tickets`, icon: '/logos/pastille-billet.svg'},
+                {to: '/events', label: t`Events`, icon: '/logos/pastille-tente.svg'},
+            ].map(({to, label, icon}) => (
+                <NavLink key={to} to={to} className={classes.pastille} aria-label={label}
+                         tabIndex={shown && !menuOpen ? undefined : -1}>
+                    <img src={icon} alt=""/>
+                    <span className={classes.pastilleLabel} aria-hidden="true">{label}</span>
+                </NavLink>
+            ))}
+        </nav>
         </>
     );
 };
@@ -974,13 +942,19 @@ const Landing = () => {
                                 <NavLink to="/" className={classes.brand} aria-label="Billetterie Dehors"><img src="/logos/billetterie-dehors-wordmark-creme.svg" alt=""/></NavLink>
                                 <div className={classes.navLinks}>
                                     <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`}/>
+                                    <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>
                                 </div>
                             </div>
-                            {/* Le meme cote droit que la barre qui suit: rien ne saute au defilement. */}
                             <div className={classes.navActions}>
-                                <LanguageToggle/>
-                                <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}
-                                               className={classes.navTickets}/>
+                                <div className={classes.navLanguages} role="group" aria-label={t`Language`}>
+                                    {LANGUAGES.map(({locale, name}) => (
+                                        <button key={locale} type="button" lang={locale} aria-label={name}
+                                                aria-pressed={i18n.locale.startsWith(locale)}
+                                                onClick={() => !i18n.locale.startsWith(locale) && chooseLanguage(locale)}>
+                                            {locale.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
                                 <LandingButton as={NavLink} to="/auth/login" variant="ghost" label={t`Log in`}/>
                                 <RegisterButton/>
                                 <MenuButton open={menuOpen} onToggle={toggleMenu}/>
