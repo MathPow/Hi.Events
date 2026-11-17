@@ -337,8 +337,8 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
         <nav className={`${classes.pastilles} ${shown && !menuOpen ? classes.pastillesShown : ''}`}
              aria-label={t`Shortcuts`} aria-hidden={!shown || menuOpen || undefined}>
             {[
-                {to: '/my-tickets', label: t`My tickets`, icon: '/logos/pastille-billet.svg'},
                 {to: '/events', label: t`Events`, icon: '/logos/pastille-tente.svg'},
+                {to: '/my-tickets', label: t`My tickets`, icon: '/logos/pastille-billet.svg'},
             ].map(({to, label, icon}) => (
                 <NavLink key={to} to={to} className={classes.pastille} aria-label={label}
                          tabIndex={shown && !menuOpen ? undefined : -1}>
