@@ -52,12 +52,12 @@ export const PublicPageBar = ({left, action}: { left: ReactNode, action?: ReactN
                     <>
                         {!onEvents && (
                             <PublicBarLink to={'/events'} className={classes.iconOnMobile}>
-                                <PublicIcon name={'calendrier'} className={classes.accentIcon}/>
+                                <PublicIcon name={'tente'} size={18} className={classes.accentIcon}/>
                                 <span className={classes.label}>{t`Events`}</span>
                             </PublicBarLink>
                         )}
                         <PublicBarLink to={'/my-tickets'} className={classes.iconOnMobile}>
-                            <PublicIcon name={'billet'} className={classes.accentIcon}/>
+                            <PublicIcon name={'billet-ligne'} size={18} className={classes.accentIcon}/>
                             <span className={classes.label}>{t`My tickets`}</span>
                         </PublicBarLink>
                     </>
