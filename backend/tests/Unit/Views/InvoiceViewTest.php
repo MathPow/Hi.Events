@@ -77,6 +77,7 @@ class InvoiceViewTest extends TestCase
 
         $event = m::mock(EventDomainObject::class);
         $event->shouldReceive('getTitle')->andReturn('Backyard Boreal 2026');
+        $event->shouldReceive('getStartDate')->andReturn(null);
 
         return View::make('invoice', [
             'order' => $order,
