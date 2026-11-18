@@ -7,8 +7,17 @@ export const ticketLookupClient = {
         return response.data;
     },
 
-    getOrdersByToken: async (token: string) => {
-        const response = await api.get<GenericDataResponse<Order[]>>(`public/ticket-lookup/${token}`);
+    // The emailed link, swapped for an HttpOnly cookie: the link itself is never kept.
+    openSession: async (token: string) => {
+        await api.post(`public/ticket-lookup/${encodeURIComponent(token)}/session`);
+    },
+
+    closeSession: async () => {
+        await api.delete('public/ticket-lookup/session');
+    },
+
+    getOrders: async () => {
+        const response = await api.get<GenericDataResponse<Order[]>>('public/ticket-lookup');
         return response.data;
     },
 }

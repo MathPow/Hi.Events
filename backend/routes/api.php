@@ -286,7 +286,9 @@ use HiEvents\Http\Actions\Admin\RegistrationInvites\RevokeRegistrationInviteActi
 use HiEvents\Http\Actions\Admin\Users\GetAllUsersAction;
 use HiEvents\Http\Actions\Admin\Users\StartImpersonationAction;
 use HiEvents\Http\Actions\Admin\Users\StopImpersonationAction;
-use HiEvents\Http\Actions\TicketLookup\GetOrdersByLookupTokenAction;
+use HiEvents\Http\Actions\TicketLookup\CloseTicketLookupSessionAction;
+use HiEvents\Http\Actions\TicketLookup\GetTicketLookupOrdersAction;
+use HiEvents\Http\Actions\TicketLookup\OpenTicketLookupSessionAction;
 use HiEvents\Http\Actions\TicketLookup\SendTicketLookupEmailAction;
 use HiEvents\Http\Actions\Waitlist\Organizer\CancelWaitlistEntryAction;
 use HiEvents\Http\Actions\Waitlist\Organizer\GetWaitlistEntriesAction;
@@ -777,7 +779,10 @@ $router->prefix('/public')->group(
 
         // Ticket Lookup
         $router->post('/ticket-lookup', SendTicketLookupEmailAction::class);
-        $router->get('/ticket-lookup/{token}', GetOrdersByLookupTokenAction::class);
+        // The emailed link is swapped for an HttpOnly cookie; the orders are read with that cookie only.
+        $router->get('/ticket-lookup', GetTicketLookupOrdersAction::class);
+        $router->delete('/ticket-lookup/session', CloseTicketLookupSessionAction::class);
+        $router->post('/ticket-lookup/{token}/session', OpenTicketLookupSessionAction::class)->middleware('throttle:self-service-email');
 
         // Self-service order and attendee edits
         $router->prefix('/events/{event_id}/order/{order_short_id}')->group(function (Router $router): void {

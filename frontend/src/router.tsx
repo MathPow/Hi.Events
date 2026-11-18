@@ -8,7 +8,6 @@ import { publicOrganizerRouteLoader } from "./routeLoaders/publicOrganizerRouteL
 import { organizerPreviewRouteLoader } from "./routeLoaders/organizerPreviewRouteLoader.ts";
 import { landingRouteLoader } from "./routeLoaders/landingRouteLoader.ts";
 import { eventsDirectoryRouteLoader } from "./routeLoaders/eventsDirectoryRouteLoader.ts";
-import { myTicketsRouteLoader } from "./routeLoaders/myTicketsRouteLoader.ts";
 import Landing from "./components/routes/landing";
 
 const GettingStartedRedirect = () => {
@@ -688,7 +687,6 @@ const routes: RouteObject[] = [
     },
     {
         path: "/my-tickets/:token?",
-        loader: myTicketsRouteLoader,
         async lazy() {
             const MyTickets = await import("./components/routes/my-tickets");
             return { Component: MyTickets.default };

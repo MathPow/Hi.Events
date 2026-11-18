@@ -7,7 +7,8 @@ import {Helmet} from "react-helmet-async";
 import QRCode from "react-qr-code";
 import dayjs from "dayjs";
 
-import {useGetOrdersByLookupToken} from "../../../queries/useGetOrdersByLookupToken.ts";
+import {GET_TICKET_LOOKUP_ORDERS_QUERY_KEY, useGetTicketLookupOrders} from "../../../queries/useGetTicketLookupOrders.ts";
+import {ticketLookupClient} from "../../../api/ticket-lookup.client.ts";
 import {useSendTicketLookupEmail} from "../../../mutations/useSendTicketLookupEmail.ts";
 import {useGetUpcomingEventsPublic} from "../../../queries/useGetUpcomingEventsPublic.ts";
 import {showError} from "../../../utilites/notifications.tsx";
@@ -15,7 +16,9 @@ import {backToMyTickets, eventCoverImageUrl, eventHomepagePath, organizerHomepag
 import {eventLocation, getShortLocationDisplay} from "../../../utilites/addressUtilities.ts";
 import {getAttendeeProductTitle} from "../../../utilites/products.ts";
 import {getConfig} from "../../../utilites/config.ts";
-import {forgetTicketsLink, OTHER_EMAIL_PARAM, savedTicketsLink, saveTicketsLink} from "../../../utilites/myTicketsLink.ts";
+import {forgetLegacyTicketsLink, OTHER_EMAIL_PARAM} from "../../../utilites/myTicketsLink.ts";
+import {useQueryClient} from "@tanstack/react-query";
+import {AxiosError} from "axios";
 
 import {PublicBarLink, PublicPageBar} from "../../common/PublicPageBar";
 import {PublicPageFooter} from "../../common/PublicPageFooter";
@@ -456,13 +459,13 @@ const DashboardSkeleton = ({locked = false}: { locked?: boolean }) => (
 // L'en-tete ne depend pas des billets: il s'affiche tout de suite, seul le courriel attend la commande.
 const Hero = ({email, loading}: { email?: string, loading: boolean }) => (
     <header className={`${shell.card} ${classes.hero}`} data-rough>
-        <img src={'/landing/stickers/autocollant-billet.svg'} alt="" aria-hidden
+        <img src={'/landing/stickers/autocollant-sapin.webp'} alt="" aria-hidden
              className={classes.stickerPine}/>
         <p className={classes.kicker}>{t`See you outside!`}</p>
         <h1 className={classes.title}>
             <span className={classes.titleText}>
                 {t`My tickets`}
-                <img src={'/landing/stickers/autocollant-dossard.svg'} alt="" aria-hidden
+                <img src={'/landing/stickers/autocollant-drapeau-dehors.webp'} alt="" aria-hidden
                      className={classes.stickerFlag}/>
             </span>
         </h1>
@@ -597,20 +600,56 @@ const DiscoverEvents = ({groups, suggested}: { groups: EventTickets[], suggested
  */
 export const MyTickets = () => {
     const {token} = useParams();
-    const {data: orders, isLoading, isError, error, refetch, isRefetching} = useGetOrdersByLookupToken(token);
-    const linkRejected = isError && !!error?.linkRejected;
+    const {search} = useLocation();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const otherEmail = new URLSearchParams(search).has(OTHER_EMAIL_PARAM);
+    // The emailed link is opened once: swapped for an HttpOnly cookie, then the address bar
+    // drops it (a copied or shared address no longer shows anyone's tickets).
+    const [opening, setOpening] = useState(!!token);
+    const [linkError, setLinkError] = useState<string | null>(null);
 
-    // Un lien qui marche est retenu par l'appareil (myTicketsRouteLoader le rouvre); un lien
-    // expire est oublie.
+    useEffect(() => forgetLegacyTicketsLink(), []);
+
     useEffect(() => {
-        if (token && orders) {
-            saveTicketsLink(token);
-        } else if (token && linkRejected && savedTicketsLink(document.cookie) === token) {
-            forgetTicketsLink();
+        if (!token) {
+            return;
         }
-    }, [token, orders, linkRejected]);
+        let cancelled = false;
+        setOpening(true);
+        ticketLookupClient.openSession(token)
+            .then(() => {
+                setLinkError(null);
+                queryClient.removeQueries({queryKey: [GET_TICKET_LOOKUP_ORDERS_QUERY_KEY]});
+            })
+            .catch((e: AxiosError<{ message?: string }>) => {
+                setLinkError(e.response?.data?.message || t`This link is invalid or has expired.`);
+            })
+            .finally(() => {
+                if (!cancelled) {
+                    setOpening(false);
+                    navigate('/my-tickets', {replace: true});
+                }
+            });
 
-    const locked = !token || isError;
+        return () => {
+            cancelled = true;
+        };
+    }, [token]);
+
+    // « Changer »: this device forgets the email before another one is asked.
+    useEffect(() => {
+        if (otherEmail) {
+            ticketLookupClient.closeSession().catch(() => undefined);
+            queryClient.removeQueries({queryKey: [GET_TICKET_LOOKUP_ORDERS_QUERY_KEY]});
+        }
+    }, [otherEmail]);
+
+    const enabled = !token && !opening && !otherEmail;
+    const {data: orders, isPending, isError, error, refetch, isRefetching} = useGetTicketLookupOrders(enabled);
+    const linkRejected = isError && !!error?.linkRejected;
+    const isLoading = !!token || opening || (enabled && isPending);
+    const locked = otherEmail || isError;
 
     const groups = groupByEvent(orders ?? []);
     const upcoming = groups.filter((group) => !isPast(group.event)).sort(byStart);
@@ -641,7 +680,7 @@ export const MyTickets = () => {
                 {locked ? (
                     <div className={classes.locked}>
                         <DashboardSkeleton locked/>
-                        <EmailOverlay expired={linkRejected} message={error?.message || undefined}
+                        <EmailOverlay expired={!otherEmail && !!linkError} message={linkError || undefined}
                                       onRetry={isError && !linkRejected ? () => refetch() : undefined}
                                       retrying={isRefetching}/>
                     </div>

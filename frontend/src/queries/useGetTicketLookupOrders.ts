@@ -3,10 +3,10 @@ import {ticketLookupClient} from "../api/ticket-lookup.client.ts";
 import {Order} from "../types.ts";
 import {AxiosError} from "axios";
 
-export const GET_ORDERS_BY_LOOKUP_TOKEN_QUERY_KEY = "getOrdersByLookupToken";
+export const GET_TICKET_LOOKUP_ORDERS_QUERY_KEY = "getTicketLookupOrders";
 
-// Le lien n'est refuse que si le serveur l'a refuse (4xx); sans reseau ou sur une panne, on
-// garde le lien et on propose de reessayer.
+// Refused only when the server says so (4xx: no cookie, expired); offline or on an outage, the
+// page offers to try again.
 export class TicketLookupError extends Error {
     constructor(message: string | undefined, public readonly status?: number) {
         super(message ?? '');
@@ -17,23 +17,19 @@ export class TicketLookupError extends Error {
     }
 }
 
-export const useGetOrdersByLookupToken = (token: string | undefined) => {
+export const useGetTicketLookupOrders = (enabled: boolean) => {
     return useQuery<Order[], TicketLookupError>({
-        queryKey: [GET_ORDERS_BY_LOOKUP_TOKEN_QUERY_KEY, token],
+        queryKey: [GET_TICKET_LOOKUP_ORDERS_QUERY_KEY],
         queryFn: async () => {
-            if (!token) {
-                throw new TicketLookupError(undefined, 400);
-            }
             try {
-                const {data} = await ticketLookupClient.getOrdersByToken(token);
+                const {data} = await ticketLookupClient.getOrders();
                 return data;
             } catch (e) {
                 const axiosError = e as AxiosError<{ message?: string }>;
-                const message = axiosError.response?.data?.message;
-                throw new TicketLookupError(message, axiosError.response?.status);
+                throw new TicketLookupError(axiosError.response?.data?.message, axiosError.response?.status);
             }
         },
-        enabled: !!token,
+        enabled,
         refetchOnWindowFocus: false,
         retry: false,
     });
