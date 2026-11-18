@@ -101,7 +101,7 @@ const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) =
 );
 
 const sectionLinks = () => [
-    {href: '#steps', label: t`How it works`},
+    {href: '#steps', label: t({message: 'Steps', context: 'landing section'})},
     {href: '#fees', label: t`Fees`},
     {href: '#payments', label: t`Payments`},
     {href: '#features', label: t`Features`},
