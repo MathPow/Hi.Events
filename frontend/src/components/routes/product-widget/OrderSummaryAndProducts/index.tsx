@@ -5,8 +5,9 @@ import {IconCheck} from "@tabler/icons-react";
 import {CSSProperties, ReactNode, useEffect, useState} from "react";
 import {useQueryClient} from "@tanstack/react-query";
 
-import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
+import {GET_ORDER_PUBLIC_QUERY_KEY, isOrderLapsed, isOrderSettled, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {eventCheckoutPath, eventHomepageUrl} from "../../../../utilites/urlHelper.ts";
+import {isSsr} from "../../../../utilites/helpers.ts";
 import {eventLocation, formatAddress, isAddressSet} from "../../../../utilites/addressUtilities.ts";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
@@ -26,6 +27,7 @@ import {PublicIcon, PublicIconName} from "../../../common/PublicIcon";
 import {platformSupportLabel} from "../../../common/PlatformSupportInput";
 import {EditAttendeeModal} from "./EditAttendeeModal";
 import {EditOrderModal} from "./EditOrderModal";
+import {isTransferWindowOpen, TransferTicketModal} from "../../../modals/TransferTicketModal";
 import {ConfirmationTicket} from "./ConfirmationTicket";
 import {OtherEvents} from "./OtherEvents";
 import {eventRangeLabel, timezoneLabel} from "./confirmationDates.ts";
@@ -347,13 +349,14 @@ const EventCard = ({event, order, className}: { event: Event, order: Order, clas
 export const OrderSummaryAndProducts = () => {
     const {eventId, orderShortId} = useParams();
     const location = useLocation();
-    const {data: order, isFetched: orderIsFetched, isError} = useGetOrderPublic(eventId, orderShortId, ['event']);
+    const {data: order, isFetched: orderIsFetched, isError} = useGetOrderPublic(eventId, orderShortId, ['event'], true);
     const event = order?.event;
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const emailUpdated = location.state?.emailUpdated === true;
 
     const [editingAttendee, setEditingAttendee] = useState<Attendee | null>(null);
+    const [transferringAttendee, setTransferringAttendee] = useState<Attendee | null>(null);
     const [editOrderModalOpened, setEditOrderModalOpened] = useState(false);
     const [wallet, setWallet] = useState<WalletPlatform | null>(null);
     const [contactOpened, setContactOpened] = useState(false);
@@ -527,7 +530,16 @@ export const OrderSummaryAndProducts = () => {
         );
     };
 
-    if (isError) {
+    const paymentFailed = !isSsr() && (window.location.search.includes('failed') || order?.payment_status === 'PAYMENT_FAILED');
+
+    useEffect(() => {
+        if (paymentFailed) {
+            navigate(eventCheckoutPath(eventId, orderShortId, 'payment') + '?payment_failed=true', {replace: true});
+        }
+    }, [paymentFailed]);
+
+    // Une requete ratee pendant l'attente ne fait pas disparaitre une commande deja affichee.
+    if (isError && !order) {
         return (
             <HomepageInfoMessage
                 status="not_found"
@@ -541,25 +553,37 @@ export const OrderSummaryAndProducts = () => {
         return <LoadingMask/>;
     }
 
-    if (window?.location.search.includes('failed') || order?.payment_status === 'PAYMENT_FAILED') {
-        navigate(eventCheckoutPath(eventId, orderShortId, 'payment') + '?payment_failed=true');
-        return;
+    if (paymentFailed) {
+        return <LoadingMask/>;
     }
 
-    if (order?.status !== 'COMPLETED' && order?.status !== 'CANCELLED' && order?.status !== 'AWAITING_OFFLINE_PAYMENT') {
+    if (isOrderLapsed(order)) {
+        return (
+            <HomepageInfoMessage
+                status="expired"
+                message={t`This order has expired`}
+                subtitle={t`Order #${order.public_id} was not completed in time and its tickets were released. If you were charged, the payment is refunded automatically. You can start a new order from the event page.`}
+                link={eventHomepageUrl(event)}
+                linkText={t`Return to Event`}
+            />
+        );
+    }
+
+    if (!isOrderSettled(order)) {
+        const isReserved = order.status === 'RESERVED';
         return (
             <HomepageInfoMessage
                 status="processing"
                 message={t`Processing order`}
-                subtitle={t`This order is being processed.`}
+                subtitle={t`Order #${order.public_id} is waiting for payment confirmation. This page updates on its own.`}
+                link={isReserved ? eventCheckoutPath(eventId, orderShortId, 'payment') : eventHomepageUrl(event)}
+                linkText={isReserved ? t`I haven't paid yet` : t`Return to Event`}
             />
         );
     }
 
     const isCompleted = order.status === 'COMPLETED';
     const isCancelled = order.status === 'CANCELLED';
-    // Montre dans la carte de confirmation, sauf pour une commande annulee.
-    const messageApresAchat = !isCancelled ? (event.settings?.post_checkout_message || '') : '';
     const isAwaitingPayment = order.status === 'AWAITING_OFFLINE_PAYMENT';
     const attendees = order.attendees || [];
     const hasTickets = attendees.length > 0;
@@ -573,6 +597,8 @@ export const OrderSummaryAndProducts = () => {
     const canAddToWallet = isCompleted && activeAttendees.length > 0 && !!wallet && !!order.wallet_passes?.[wallet];
     const showResendTicket = canSelfEdit && activeAttendees.length > 0
         && (activeAttendees.length > 1 || activeAttendees[0].email !== order.email);
+    const canTransfer = isCompleted && activeAttendees.length > 0 && !!event.settings?.allow_ticket_transfer
+        && isTransferWindowOpen(event.start_date, event.settings?.ticket_transfer_cutoff_hours);
 
     // Seule la couleur principale suit le theme de l'evenement (toujours calculee en mode clair):
     // le creme, le texte fonce et la police restent ceux de Dehors.
@@ -627,6 +653,15 @@ export const OrderSummaryAndProducts = () => {
                 icon={'courriel'}
                 label={t`Resend Confirmation`}
                 onClick={handleResendOrderConfirmation}
+            />
+        ),
+        canTransfer && (
+            <AttendeeAction
+                key="transfer-ticket"
+                icon={'fleche'}
+                label={t`Transfer a ticket`}
+                attendees={activeAttendees}
+                onPick={setTransferringAttendee}
             />
         ),
         showResendTicket && (
@@ -703,11 +738,6 @@ export const OrderSummaryAndProducts = () => {
                             mapsUrl={venue?.mapsUrl || null}
                             className={classes.desktopOnly}
                         />
-                        {/* Le message de l'organisateur apres l'achat, en vue des l'arrivee plutot qu'en
-                            bas de page : pour une sortie DehorsQC, le rendez-vous et le lien du groupe Instagram. */}
-                        {messageApresAchat && (
-                            <div className={`${classes.richText} ${classes.heroMessage}`} dangerouslySetInnerHTML={{__html: messageApresAchat}}/>
-                        )}
                     </header>
 
                     {emailUpdated && (
@@ -765,7 +795,7 @@ export const OrderSummaryAndProducts = () => {
                                 <HtmlCard title={t`Online Event Details`} html={event.settings.online_event_connection_details}/>
                             )}
 
-                            {!!event.settings?.post_checkout_message && !messageApresAchat && (
+                            {!!event.settings?.post_checkout_message && (
                                 <HtmlCard title={t`Additional Information`} html={event.settings.post_checkout_message}/>
                             )}
 
@@ -794,6 +824,20 @@ export const OrderSummaryAndProducts = () => {
                     attendee={editingAttendee}
                     onSuccess={(values: any) => {
                         handleEditAttendee(editingAttendee, values);
+                    }}
+                />
+            )}
+
+            {transferringAttendee && (
+                <TransferTicketModal
+                    eventId={eventId!}
+                    timezone={event.timezone || 'UTC'}
+                    attendee={transferringAttendee}
+                    onClose={() => setTransferringAttendee(null)}
+                    onTransferred={(name) => {
+                        setTransferringAttendee(null);
+                        queryClient.invalidateQueries({queryKey: [GET_ORDER_PUBLIC_QUERY_KEY]});
+                        showSuccess(t`The ticket has been transferred to ${name}.`);
                     }}
                 />
             )}

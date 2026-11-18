@@ -53,7 +53,13 @@ export type Bubble =
     stopped?: boolean;
 };
 
-export type AssistantStatus = { ready: boolean; model: string; remaining: number; limit: number };
+export type AssistantStatus = {
+    ready: boolean;
+    model: string;
+    remaining: number;
+    limit: number;
+    over_weekly_budget?: boolean;
+};
 
 export const newId = () => Math.random().toString(36).slice(2, 10);
 

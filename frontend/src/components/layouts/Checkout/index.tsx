@@ -5,7 +5,7 @@ import {t} from "@lingui/macro";
 import {Countdown} from "../../common/Countdown";
 import {ActionIcon, Button, Group, Modal, Tooltip} from "@mantine/core";
 import {IconArrowLeft, IconPrinter, IconReceipt} from "@tabler/icons-react";
-import {eventHomepagePath, eventHomepageUrl} from "../../../utilites/urlHelper.ts";
+import {eventCheckoutPath, eventHomepagePath, eventHomepageUrl} from "../../../utilites/urlHelper.ts";
 import {ShareComponent} from "../../common/ShareIcon";
 import {AddToEventCalendarButton} from "../../common/AddEventToCalendarButton";
 import {ProgressStepper} from "../../common/ProgressStepper";
@@ -32,7 +32,7 @@ const DEHORS_ACCENT = '#fa7853';
 
 const Checkout = () => {
     const {eventId, orderShortId} = useParams();
-    const {data: order} = useGetOrderPublic(eventId, orderShortId, ['event']);
+    const {data: order, refetch: refetchOrder} = useGetOrderPublic(eventId, orderShortId, ['event']);
     const event = order?.event;
     const {data: publicEvent} = useGetEventPublic(eventId, !!eventId);
     const navigate = useNavigate();
@@ -109,21 +109,48 @@ const Checkout = () => {
                 eventId: Number(eventId),
                 orderShortId: String(orderShortId),
             });
-        } catch (error) {
-            showError(t`Failed to abandon order. Please try again.`);
-        } finally {
-            setShowAbandonDialog(false);
-            showInfo(t`Your order has been cancelled.`);
-
-            if (blocker.state === 'blocked') {
-                blocker.proceed();
-            } else if (pendingNavigation) {
-                navigate(pendingNavigation);
+        } catch (error: any) {
+            // 409: la commande n'est deja plus reservee. Payee entre-temps (autre onglet, webhook):
+            // on mene a la confirmation. Annulee (reponse perdue) ou expiree: rien ne retient plus
+            // l'acheteur. Toute autre erreur: elle tient toujours, on reste.
+            if (error?.response?.status !== 409) {
+                showError(t`Failed to abandon order. Please try again.`);
+                setIsAbandoning(false);
+                return;
             }
 
-            setPendingNavigation(null);
-            setIsAbandoning(false);
+            // Relecture ratee: on ne sait pas, donc on ne dit pas « annulee »; la page de la commande
+            // se met a jour d'elle-meme et dira ce qu'il en est.
+            const {data: current, isError: reloadFailed} = await refetchOrder();
+            const paid = current?.status === 'COMPLETED' || current?.status === 'AWAITING_OFFLINE_PAYMENT';
+            if (paid || reloadFailed) {
+                setShowAbandonDialog(false);
+                setIsAbandoning(false);
+                if (blocker.state === 'blocked') {
+                    blocker.reset();
+                }
+                setPendingNavigation(null);
+                if (paid) {
+                    showInfo(t`This order was already paid, so it was not cancelled.`);
+                } else {
+                    showError(t`We couldn't check this order. Its page will update as soon as the connection is back.`);
+                }
+                navigate(eventCheckoutPath(eventId, orderShortId, 'summary'));
+                return;
+            }
         }
+
+        setShowAbandonDialog(false);
+        showInfo(t`Your order has been cancelled.`);
+
+        if (blocker.state === 'blocked') {
+            blocker.proceed();
+        } else if (pendingNavigation) {
+            navigate(pendingNavigation);
+        }
+
+        setPendingNavigation(null);
+        setIsAbandoning(false);
     };
 
     const handleAbandonCancel = () => {

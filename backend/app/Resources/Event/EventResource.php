@@ -28,7 +28,9 @@ class EventResource extends BaseResource
             'lifecycle_status' => $this->getLifeCycleStatus(),
             'currency' => $this->getCurrency(),
             'timezone' => $this->getTimezone(),
+            'cancelled_at' => $this->getCancelledAt(),
             'slug' => $this->getSlug(),
+            'series_id' => $this->getSeriesId(),
             'products' => $this->when(
                 condition: (bool)$this->getProducts(),
                 value: fn() => ProductResource::collection($this->getProducts()),

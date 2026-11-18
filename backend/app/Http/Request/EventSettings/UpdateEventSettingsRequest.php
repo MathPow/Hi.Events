@@ -72,6 +72,8 @@ class UpdateEventSettingsRequest extends BaseRequest
             'deposit_instructions' => ['string', 'nullable', 'max:5000'],
             'waiver_text' => ['string', 'nullable', 'max:20000'],
             'participants_sign_themselves' => ['boolean'],
+            'allow_ticket_transfer' => ['boolean'],
+            'ticket_transfer_cutoff_hours' => ['integer', 'in:24,48,168'],
 
             // Invoice settings
             'enable_invoicing' => ['boolean'],

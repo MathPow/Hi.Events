@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import {useGetAssistantUsage} from "../../../../queries/useGetAssistantUsage";
 import {UsageTables} from "./UsageTables";
 import {ModelPicker} from "./ModelPicker";
+import {BudgetCard} from "./BudgetCard";
 import {formatCompact, formatUsd} from "./format";
 
 // What the organizers' assistant costs the platform: Anthropic bills each call, in US dollars.
@@ -105,6 +106,8 @@ const AssistantUsage = () => {
 
                 {usage && <ModelPicker models={usage.models} current={usage.model} totals={totals}/>}
 
+                {usage && <BudgetCard budget={usage.weekly_budget} defaultBudget={usage.default_weekly_budget}/>}
+
                 <Paper shadow="sm" p="md" radius="md" withBorder style={{opacity: isFetching ? 0.6 : 1}}>
                     <Title order={2} size="h4" mb="md">
                         <Trans>Cost per day</Trans>
@@ -146,6 +149,7 @@ const AssistantUsage = () => {
                             accounts={usage?.accounts ?? []}
                             users={usage?.users ?? []}
                             dailyLimit={usage?.daily_limit ?? 0}
+                            weeklyBudget={usage?.weekly_budget ?? 0}
                         />
                     )}
                 </div>

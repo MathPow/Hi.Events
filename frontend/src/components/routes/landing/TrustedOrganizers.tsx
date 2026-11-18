@@ -11,6 +11,8 @@ export interface Organizer {
     ratio: number;
     // Its billetterie page, when it has one.
     url?: string;
+    // Above 1 for a logo with thin lines, to weigh as much as the others.
+    scale?: number;
 }
 
 const COPIES = 4;
@@ -84,7 +86,7 @@ const buildRow = (organizers: Organizer[], tintOffset: number) => {
 // A wide wordmark is shorter than a squarer logo, for both to weigh the same.
 const logoStyle = (organizer: Organizer) => ({
     '--logo': `url('/landing/organizers/${organizer.logo}.svg')`,
-    '--logo-scale': (1 / Math.sqrt(organizer.ratio)).toFixed(3),
+    '--logo-scale': ((organizer.scale ?? 1) / Math.sqrt(organizer.ratio)).toFixed(3),
     aspectRatio: String(organizer.ratio),
 }) as CSSProperties;
 

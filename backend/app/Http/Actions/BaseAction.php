@@ -27,6 +27,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class BaseAction extends Controller
 {
@@ -168,6 +169,36 @@ abstract class BaseAction extends Controller
             'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"\\') . '"',
             'Cache-Control' => 'no-store',
         ]);
+    }
+
+    /**
+     * @param resource $stream
+     */
+    protected function streamedFileResponse(
+        mixed  $stream,
+        string $mimeType,
+        string $contentDisposition,
+        ?int   $size = null,
+    ): StreamedResponse
+    {
+        $headers = [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => $contentDisposition,
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'no-store',
+        ];
+
+        if ($size !== null) {
+            $headers['Content-Length'] = (string)$size;
+        }
+
+        return new StreamedResponse(static function () use ($stream): void {
+            fpassthru($stream);
+
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+        }, ResponseCodes::HTTP_OK, $headers);
     }
 
     protected function isActionAuthorized(

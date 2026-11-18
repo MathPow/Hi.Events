@@ -70,11 +70,11 @@ export const ErrorScreen = ({
 
             <div className={classes.page}>
                 <div className={classes.card} data-rough>
-                    <img src="/landing/stickers/autocollant-sapin.webp" alt="" aria-hidden
+                    <img src="/landing/stickers/autocollant-toilette.svg" alt="" aria-hidden
                          className={`${classes.sticker} ${classes.stickerTree}`}/>
-                    <img src="/landing/stickers/autocollant-feu-de-camp.svg" alt="" aria-hidden
+                    <img src="/landing/stickers/autocollant-tente.svg" alt="" aria-hidden
                          className={`${classes.sticker} ${classes.stickerFire}`}/>
-                    <img src="/landing/stickers/autocollant-sac-a-dos.svg" alt="" aria-hidden
+                    <img src="/landing/stickers/autocollant-compass.svg" alt="" aria-hidden
                          className={`${classes.sticker} ${classes.stickerBag}`}/>
 
                     <header className={classes.top}>

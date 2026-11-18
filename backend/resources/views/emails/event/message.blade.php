@@ -6,7 +6,7 @@
 @php /** @see \HiEvents\Mail\Event\EventMessage */ @endphp
 
 @php
-    $text = "Allotrope, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    $text = "DehorsAllotrope, 'Helvetica Neue', Helvetica, Arial, sans-serif";
     $brown = '#352924';
     $muted = 'rgba(53, 41, 36, 0.62)';
 @endphp

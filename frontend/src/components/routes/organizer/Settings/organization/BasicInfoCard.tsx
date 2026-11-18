@@ -5,7 +5,7 @@ import {useForm} from "@mantine/form";
 import {IdParam, Organizer} from "../../../../../types.ts";
 import {useUpdateOrganizer} from "../../../../../mutations/useUpdateOrganizer.ts";
 import {currencies} from "../../../../../../data/currencies.ts";
-import {timezones} from "../../../../../../data/timezones.ts";
+import {timezoneComboboxProps, timezones} from "../../../../../../data/timezones.ts";
 import {Editor} from "../../../../common/Editor";
 import {useSectionAutosave} from "../../../../layouts/AppLayout/PageStatus.tsx";
 import {cleanDescription} from "../../OrganizerHomepageDesigner/homepageDraft.ts";
@@ -125,7 +125,7 @@ export const BasicInfoCard = ({organizerId, organizer}: { organizerId: IdParam, 
                     label={t`Timezone`}
                     searchable
                     allowDeselect={false}
-                    data={timezones}
+                    data={timezones} comboboxProps={timezoneComboboxProps}
                     value={form.values.timezone}
                     error={form.errors.timezone}
                     onChange={(value) => select('timezone', value)}

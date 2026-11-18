@@ -132,6 +132,25 @@ class CreateOrderHandlerTest extends TestCase
         $this->handler->handle($eventId, $this->createOrderDTO());
     }
 
+    public function testThrowsWhenEventIsCancelled(): void
+    {
+        $eventId = 1;
+
+        $this->databaseManager->shouldReceive('statement')->andReturn(true);
+        $this->setupEventMock($eventId, cancelled: true);
+        $this->orderManagementService->shouldNotReceive('createNewOrder');
+
+        try {
+            $this->handler->handle($eventId, $this->createOrderDTO());
+            $this->fail('A cancelled event must not take new orders');
+        } catch (ValidationException $exception) {
+            $this->assertSame(
+                __('This event has been cancelled. Tickets are no longer on sale.'),
+                $exception->errors()['products'][0],
+            );
+        }
+    }
+
     public function testPassesWhenQuantityIsWithinAvailability(): void
     {
         $eventId = 1;
@@ -178,7 +197,7 @@ class CreateOrderHandlerTest extends TestCase
         ]);
     }
 
-    private function setupEventMock(int $eventId, bool $hasEnded = false): void
+    private function setupEventMock(int $eventId, bool $hasEnded = false, bool $cancelled = false): void
     {
         $eventSettings = Mockery::mock(EventSettingDomainObject::class);
         $eventSettings->shouldReceive('getOrderTimeoutInMinutes')->andReturn(15);
@@ -187,6 +206,7 @@ class CreateOrderHandlerTest extends TestCase
         $event->shouldReceive('getId')->andReturn($eventId);
         $event->shouldReceive('getStatus')->andReturn(EventStatus::LIVE->name);
         $event->shouldReceive('isEventInPast')->andReturn($hasEnded);
+        $event->shouldReceive('isCancelled')->andReturn($cancelled);
         $event->shouldReceive('getEventSettings')->andReturn($eventSettings);
         $event->shouldReceive('getAccountId')->andReturn(1);
 

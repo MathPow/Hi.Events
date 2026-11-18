@@ -16,6 +16,7 @@ interface StatusToggleProps {
     entityId: IdParam;
     currentStatus: 'DRAFT' | 'LIVE';
     entityName?: string;
+    organizerId?: IdParam;
     onSuccess?: () => void;
 }
 
@@ -23,6 +24,7 @@ export const StatusToggle: React.FC<StatusToggleProps> = ({
                                                               entityType,
                                                               entityId,
                                                               currentStatus,
+    organizerId,
     onSuccess,
                                                           }) => {
     const eventStatusMutation = useUpdateEventStatus();
@@ -61,7 +63,8 @@ export const StatusToggle: React.FC<StatusToggleProps> = ({
                 onError: (error: any) => {
                     showStatusChangeError(error, entityType === 'event'
                         ? t`Event status update failed. Please try again later`
-                        : t`Organizer status update failed. Please try again later`);
+                        : t`Organizer status update failed. Please try again later`,
+                        entityType === 'event' ? {eventId: entityId, organizerId} : {});
                 }
             });
         });
@@ -69,6 +72,7 @@ export const StatusToggle: React.FC<StatusToggleProps> = ({
         entityType,
         entityId,
         currentStatus,
+        organizerId,
         mutation
     ]);
 

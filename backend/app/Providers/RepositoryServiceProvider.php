@@ -22,6 +22,7 @@ use HiEvents\Repository\Eloquent\CheckInListRepository;
 use HiEvents\Repository\Eloquent\EmailTemplateRepository;
 use HiEvents\Repository\Eloquent\EventDailyStatisticRepository;
 use HiEvents\Repository\Eloquent\EventRepository;
+use HiEvents\Repository\Eloquent\EventRouteFileRepository;
 use HiEvents\Repository\Eloquent\EventSettingsRepository;
 use HiEvents\Repository\Eloquent\EventStatisticRepository;
 use HiEvents\Repository\Eloquent\ImageRepository;
@@ -34,12 +35,16 @@ use HiEvents\Repository\Eloquent\WaiverRepository;
 use HiEvents\Repository\Eloquent\OrderItemRepository;
 use HiEvents\Repository\Eloquent\OrderPaymentPlatformFeeRepository;
 use HiEvents\Repository\Eloquent\OrderRefundRepository;
+use HiEvents\Repository\Eloquent\EventCancellationRepository;
+use HiEvents\Repository\Eloquent\EventChangeRefundRepository;
+use HiEvents\Repository\Eloquent\EventDateChangeRepository;
 use HiEvents\Repository\Eloquent\OrderRepository;
 use HiEvents\Repository\Eloquent\OrganizerAchievementRepository;
 use HiEvents\Repository\Eloquent\OrganizerMessageRepository;
 use HiEvents\Repository\Eloquent\OrganizerMessageReplyRepository;
 use HiEvents\Repository\Eloquent\OrganizerDocumentRepository;
 use HiEvents\Repository\Eloquent\DocumentSignatureRepository;
+use HiEvents\Repository\Eloquent\AttendeeTransferRepository;
 use HiEvents\Repository\Eloquent\PushSubscriptionRepository;
 use HiEvents\Repository\Eloquent\OrganizerRepository;
 use HiEvents\Repository\Eloquent\OrganizerSettingsRepository;
@@ -81,6 +86,7 @@ use HiEvents\Repository\Interfaces\CheckInListRepositoryInterface;
 use HiEvents\Repository\Interfaces\EmailTemplateRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventDailyStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventRouteFileRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
@@ -93,12 +99,16 @@ use HiEvents\Repository\Interfaces\WaiverRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderItemRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderPaymentPlatformFeeRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRefundRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventCancellationRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventChangeRefundRepositoryInterface;
+use HiEvents\Repository\Interfaces\EventDateChangeRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrderRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerAchievementRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerMessageReplyRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerDocumentRepositoryInterface;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
+use HiEvents\Repository\Interfaces\AttendeeTransferRepositoryInterface;
 use HiEvents\Repository\Interfaces\PushSubscriptionRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerSettingsRepositoryInterface;
@@ -134,6 +144,7 @@ class RepositoryServiceProvider extends ServiceProvider
         AccountRepositoryInterface::class => AccountRepository::class,
         AccountAttributionRepositoryInterface::class => AccountAttributionRepository::class,
         EventRepositoryInterface::class => EventRepository::class,
+        EventRouteFileRepositoryInterface::class => EventRouteFileRepository::class,
         ProductRepositoryInterface::class => ProductRepository::class,
         OrderRepositoryInterface::class => OrderRepository::class,
         AttendeeRepositoryInterface::class => AttendeeRepository::class,
@@ -162,6 +173,9 @@ class RepositoryServiceProvider extends ServiceProvider
         DonationReceiptRepositoryInterface::class => DonationReceiptRepository::class,
         InvoiceRepositoryInterface::class => InvoiceRepository::class,
         OrderRefundRepositoryInterface::class => OrderRefundRepository::class,
+        EventDateChangeRepositoryInterface::class => EventDateChangeRepository::class,
+        EventCancellationRepositoryInterface::class => EventCancellationRepository::class,
+        EventChangeRefundRepositoryInterface::class => EventChangeRefundRepository::class,
         WebhookRepositoryInterface::class => WebhookRepository::class,
         WebhookLogRepositoryInterface::class => WebhookLogRepository::class,
         OrderApplicationFeeRepositoryInterface::class => OrderApplicationFeeRepository::class,
@@ -172,6 +186,7 @@ class RepositoryServiceProvider extends ServiceProvider
         OrganizerMessageReplyRepositoryInterface::class => OrganizerMessageReplyRepository::class,
         OrganizerDocumentRepositoryInterface::class => OrganizerDocumentRepository::class,
         DocumentSignatureRepositoryInterface::class => DocumentSignatureRepository::class,
+        AttendeeTransferRepositoryInterface::class => AttendeeTransferRepository::class,
         PushSubscriptionRepositoryInterface::class => PushSubscriptionRepository::class,
         OrderPaymentPlatformFeeRepositoryInterface::class => OrderPaymentPlatformFeeRepository::class,
         StripePayoutsRepositoryInterface::class => StripePayoutsRepository::class,

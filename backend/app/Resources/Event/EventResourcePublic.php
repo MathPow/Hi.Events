@@ -47,6 +47,7 @@ class EventResourcePublic extends BaseResource
             'status' => $this->getStatus(),
             'lifecycle_status' => $this->getLifecycleStatus(),
             'timezone' => $this->getTimezone(),
+            'cancelled_at' => $this->getCancelledAt(),
             'location_details' => $this->when((bool)$this->getLocationDetails(), fn() => $this->getLocationDetails()),
             'product_categories' => $this->when(
                 condition: !is_null($this->getProductCategories()) && $this->getProductCategories()->isNotEmpty(),
@@ -78,6 +79,16 @@ class EventResourcePublic extends BaseResource
             'organizer' => $this->when(
                 condition: !is_null($this->getOrganizer()),
                 value: fn() => new OrganizerResourcePublic($this->getOrganizer()),
+            ),
+            'series_occurrences' => $this->when(
+                condition: !is_null($this->getSeriesOccurrences()),
+                value: fn() => $this->getSeriesOccurrences()->map(fn(EventDomainObject $occurrence) => [
+                    'id' => $occurrence->getId(),
+                    'slug' => $occurrence->getSlug(),
+                    'start_date' => $occurrence->getStartDate(),
+                    'end_date' => $occurrence->getEndDate(),
+                    'timezone' => $occurrence->getTimezone(),
+                ])->values(),
             ),
         ];
     }

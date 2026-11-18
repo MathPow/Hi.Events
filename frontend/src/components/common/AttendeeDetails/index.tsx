@@ -1,11 +1,11 @@
 import {Anchor} from "@mantine/core";
 import {useParams} from "react-router";
-import {Attendee, Product} from "../../../types.ts";
+import {Attendee, AttendeeTransfer, Product} from "../../../types.ts";
 import classes from "./AttendeeDetails.module.scss";
 import {t} from "@lingui/macro";
 import {getAttendeeProductTitle} from "../../../utilites/products.ts";
 import {getLocaleName, SupportedLocales} from "../../../locales.ts";
-import {relativeDate} from "../../../utilites/dates.ts";
+import {formatDateWithLocale, relativeDate} from "../../../utilites/dates.ts";
 import {useGetAttendeeDocuments} from "../../../queries/useGetOrganizerDocuments.ts";
 import {organizerDocumentClient} from "../../../api/organizerDocument.client.ts";
 import {downloadBinary} from "../../../utilites/download.ts";
@@ -40,6 +40,16 @@ export const AttendeeDetails = ({attendee}: { attendee: Attendee }) => {
                     <Anchor href={'mailto:' + attendee.email} target={'_blank'}>{attendee.email}</Anchor>
                 </div>
             </div>
+            {!!attendee.transfers?.length && (
+                <div className={classes.block}>
+                    <div className={classes.title}>
+                        {t`Transfer`}
+                    </div>
+                    <div className={classes.value}>
+                        {attendee.transfers.map(transfer => <TransferredFrom key={transfer.id} transfer={transfer}/>)}
+                    </div>
+                </div>
+            )}
             <div className={classes.block}>
                 <div className={classes.title}>
                     {t`Product`}
@@ -125,7 +135,9 @@ const AttendeeDocuments = ({attendee}: { attendee: Attendee }) => {
                         {' - '}
                         {copy.signed_at
                             ? <SignedBy names={[copy.signer_name, copy.guardian_name].filter(Boolean).join(', ')} date={copy.signed_at}/>
-                            : t`To print (sent with the ticket)`}
+                            : copy.signing_mode === 'ONLINE'
+                                ? t`Not signed yet (the participant signs from their ticket or at the entrance)`
+                                : t`To print (sent with the ticket)`}
                     </div>
                 ))}
             </div>
@@ -136,4 +148,11 @@ const AttendeeDocuments = ({attendee}: { attendee: Attendee }) => {
 const SignedBy = ({names, date}: { names: string, date: string }) => {
     const when = relativeDate(date);
     return <>{t`Signed by ${names}`} - {when}</>;
+};
+
+// « Transféré de Léo Tremblay (leo@exemple.com) le 12 nov. 2026 », in the viewer's timezone.
+const TransferredFrom = ({transfer}: { transfer: AttendeeTransfer }) => {
+    const from = `${transfer.from_first_name} ${transfer.from_last_name} (${transfer.from_email})`;
+    const date = formatDateWithLocale(transfer.created_at, 'shortDate', Intl.DateTimeFormat().resolvedOptions().timeZone);
+    return <div>{t`Transferred from ${from} on ${date}`}</div>;
 };

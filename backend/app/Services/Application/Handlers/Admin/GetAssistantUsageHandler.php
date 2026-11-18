@@ -50,6 +50,7 @@ class GetAssistantUsageHandler
         $turns = (int)$totals->turns;
         $cost = (float)$totals->cost_usd;
         $firstDay = $daily->first()?->day;
+        $weekCosts = $this->usageRepository->getCostByAccountSince($this->quotaService->weekStart());
         $firstUse = $firstDay !== null ? Carbon::parse($firstDay, self::TIMEZONE)->startOfDay()->utc()->max($since) : $since;
 
         return new AssistantUsageResponseDTO(
@@ -59,6 +60,8 @@ class GetAssistantUsageHandler
             default_model: $this->modelService->default(),
             models: $this->modelService->options(),
             daily_limit: $this->quotaService->limit(),
+            weekly_budget: $this->quotaService->weeklyBudget(),
+            default_weekly_budget: $this->quotaService->defaultWeeklyBudget(),
             totals: [
                 'turns' => $turns,
                 'accounts' => (int)$totals->accounts,
@@ -73,6 +76,7 @@ class GetAssistantUsageHandler
             ],
             daily: $this->dailySeries($daily->keyBy('day')->all(), $since, $now),
             accounts: $this->usageRepository->getByAccountSince($since)->map(fn(object $row) => [
+                'week_cost_usd' => round($weekCosts[(int)$row->account_id] ?? 0.0, 4),
                 'account_id' => (int)$row->account_id,
                 'account_name' => $row->account_name,
                 'account_email' => $row->account_email,

@@ -1,0 +1,95 @@
+@use "../../../styles/mixins";
+
+// « Répéter cet événement »: the popup's fields (CreateEventModal.module.scss) and the dates to tick.
+$ink: var(--dehors-brun);
+
+.intro {
+  margin: 0;
+  color: $ink;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.hint {
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.end {
+  max-width: 16rem;
+
+  @include mixins.respond-below(md) {
+    max-width: none;
+  }
+}
+
+.unit {
+  color: var(--dehors-texte-doux);
+  font-size: 0.9375rem;
+}
+
+.previewHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.count {
+  color: var(--dehors-texte-doux);
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dates {
+  display: flex;
+  flex-direction: column;
+  max-height: 18rem;
+  margin: 0;
+  padding: 0.25rem;
+  overflow-y: auto;
+  border-radius: 1.25rem;
+  background: var(--dehors-fond, #fff6ed);
+  list-style: none;
+
+  @include mixins.respond-below(md) {
+    max-height: 14rem;
+  }
+}
+
+.date {
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.875rem;
+
+  &:hover {
+    background: rgb(55 39 33 / 0.04);
+  }
+
+  :global(.mantine-Checkbox-label) {
+    color: $ink;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  :global(.mantine-Checkbox-input) {
+    cursor: pointer;
+  }
+
+  &[data-skipped] :global(.mantine-Checkbox-label) {
+    color: var(--dehors-texte-doux);
+    font-weight: 400;
+    text-decoration: line-through;
+  }
+}
+
+.empty {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: var(--dehors-fond, #fff6ed);
+  color: var(--dehors-texte-doux);
+  font-size: 0.9375rem;
+}

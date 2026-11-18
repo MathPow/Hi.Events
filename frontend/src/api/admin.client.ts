@@ -246,6 +246,8 @@ export interface AssistantUsageByAccount {
     monthly_rate: number;
     first_used_at: string;
     last_used_at: string;
+    // Spent since Monday midnight, Quebec time.
+    week_cost_usd: number;
 }
 
 export interface AssistantUsageByUser {
@@ -279,6 +281,9 @@ export interface AssistantUsage {
     default_model: string;
     models: AssistantModelOption[];
     daily_limit: number;
+    // US dollars per account per week; 0: no cap.
+    weekly_budget: number;
+    default_weekly_budget: number;
     totals: AssistantUsageTotals;
     daily: AssistantUsageDay[];
     accounts: AssistantUsageByAccount[];
@@ -569,6 +574,10 @@ export const adminClient = {
     },
 
     // null: back to the server's configuration.
+    updateAssistantBudget: async (budget: number | null) => {
+        const response = await api.put<{ weekly_budget: number }>('admin/assistant-budget', {budget});
+        return response.data;
+    },
     updateAssistantModel: async (model: string | null) => {
         const response = await api.put<{ model: string }>('admin/assistant-model', {model});
         return response.data;

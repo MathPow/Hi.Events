@@ -186,7 +186,10 @@ const EventLayout = () => {
                     }
                 },
                 onError: (error: any) => {
-                    showStatusChangeError(error, t`Event status update failed. Please try again later`);
+                    showStatusChangeError(error, t`Event status update failed. Please try again later`, {
+                        eventId,
+                        organizerId: event?.organizer?.id ?? event?.organizer_id,
+                    });
                 }
             });
         });

@@ -3,6 +3,7 @@
 namespace HiEvents\Http\Actions\Attendees;
 
 use HiEvents\DomainObjects\AttendeeCheckInDomainObject;
+use HiEvents\DomainObjects\AttendeeTransferDomainObject;
 use HiEvents\DomainObjects\CheckInListDomainObject;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\ProductDomainObject;
@@ -47,6 +48,7 @@ class GetAttendeeAction extends BaseAction
                 ],
                 name: 'check_ins'
             ))
+            ->loadRelation(new Relationship(domainObject: AttendeeTransferDomainObject::class, name: 'transfers'))
             ->findFirstWhere([
                 'id' => $attendeeId,
                 'event_id' => $eventId,

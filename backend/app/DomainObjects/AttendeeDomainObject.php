@@ -23,6 +23,9 @@ class AttendeeDomainObject extends Generated\AttendeeDomainObjectAbstract implem
     /** @var Collection<AttendeeCheckInDomainObject>|null */
     private ?Collection $checkIns = null;
 
+    /** @var Collection<AttendeeTransferDomainObject>|null */
+    private ?Collection $transfers = null;
+
     public static function getDefaultSort(): string
     {
         return self::CREATED_AT;
@@ -139,5 +142,16 @@ class AttendeeDomainObject extends Generated\AttendeeDomainObjectAbstract implem
     public function getCheckIns(): ?Collection
     {
         return $this->checkIns;
+    }
+
+    public function setTransfers(?Collection $transfers): AttendeeDomainObject
+    {
+        $this->transfers = $transfers;
+        return $this;
+    }
+
+    public function getTransfers(): ?Collection
+    {
+        return $this->transfers;
     }
 }

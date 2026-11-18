@@ -5,6 +5,7 @@ import {useGetOrder} from "../../../queries/useGetOrder.ts";
 import {Modal} from "../../common/Modal";
 import {
     Alert,
+    Anchor,
     Button,
     Checkbox,
     ComboboxItemGroup,
@@ -14,6 +15,7 @@ import {
     Menu,
     MultiSelect,
     Select,
+    Text,
     TextInput
 } from "@mantine/core";
 import {
@@ -34,6 +36,7 @@ import {useFormErrorResponseHandler} from "../../../hooks/useFormErrorResponseHa
 import {showSuccess} from "../../../utilites/notifications.tsx";
 import {t} from "@lingui/macro";
 import {Editor} from "../../common/Editor";
+import {clearFormDraft, readFormDraft, useSaveFormDraft} from "../../../hooks/useFormDraft";
 import {useSendEventMessage} from "../../../mutations/useSendEventMessage.ts";
 import {ProductSelector} from "../../common/ProductSelector";
 import {useEffect, useMemo, useRef, useState} from "react";
@@ -210,10 +213,16 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
 
     const sendMessageMutation = useSendEventMessage();
 
+    // Le sujet et le message tapes restent dans l'onglet, pour ces destinataires-la: un
+    // rechargement ou une fenetre fermee par erreur ne les perd plus.
+    const draftKey = eventId ? `message-draft:${eventId}:${orderId ?? ''}:${attendeeId ?? ''}:${productId ?? ''}` : null;
+    const [draft] = useState(() => readFormDraft<{ subject?: string, message?: string }>(draftKey));
+    const [showDraftNotice, setShowDraftNotice] = useState(!!(draft?.subject || draft?.message));
+
     const form = useForm({
         initialValues: {
-            subject: '',
-            message: '',
+            subject: draft?.subject ?? '',
+            message: draft?.message ?? '',
             message_type: messageType,
             attendee_ids: attendeeId ? [String(attendeeId)] : [],
             product_ids: productId ? [String(productId)] : [],
@@ -270,6 +279,7 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
         }, {
             onSuccess: () => {
                 showSuccess(isScheduled ? t`Message Scheduled` : t`Message Sent`);
+                clearFormDraft(draftKey);
                 form.reset();
                 onClose();
             },
@@ -283,6 +293,16 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
             }
         });
     }
+
+    useSaveFormDraft(draftKey, {subject: form.values.subject, message: form.values.message},
+        !!(form.values.subject || form.values.message));
+
+    const discardDraft = () => {
+        clearFormDraft(draftKey);
+        form.setFieldValue('subject', '');
+        form.setFieldValue('message', '');
+        setShowDraftNotice(false);
+    };
 
     useEffect(() => {
         form.setFieldValue('product_ids', []);
@@ -454,6 +474,15 @@ export const SendMessageModal = (props: EventMessageModalProps) => {
                                     {t`Reminder the day before`}
                                 </Button>
                             </div>
+
+                            {showDraftNotice && (
+                                <Text size="xs" c="dimmed">
+                                    {t`Your draft is back.`}{' '}
+                                    <Anchor component="button" type="button" size="xs" onClick={discardDraft}>
+                                        {t`Start over`}
+                                    </Anchor>
+                                </Text>
+                            )}
 
                             <TextInput
                                 required

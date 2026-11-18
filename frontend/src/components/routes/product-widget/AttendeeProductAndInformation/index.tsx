@@ -4,18 +4,24 @@ import {useGetAttendeePublic} from "../../../../queries/useGetAttendeePublic.ts"
 import {AttendeeTicket} from "../../../common/AttendeeTicket";
 import {Attendee, Product} from "../../../../types.ts";
 import {t} from "@lingui/macro";
-import {CSSProperties} from "react";
+import {CSSProperties, useState} from "react";
 import {OnlineEventDetails} from "../../../common/OnlineEventDetails";
 import {HomepageInfoMessage} from "../../../common/HomepageInfoMessage";
 import {PublicBarLink, PublicPageBar} from "../../../common/PublicPageBar";
 import {PublicPageFooter} from "../../../common/PublicPageFooter";
 import {computeThemeVariables, publicHighlightCss, validateThemeSettings} from "../../../../utilites/themeUtils.ts";
 import print from "../PrintOrder/PrintOrder.module.scss";
+import shell from "../../../layouts/OrganizerHomepage/OrganizerHomepage.module.scss";
 import classes from './AttendeeProductAndInformation.module.scss';
 import {useGetParticipantSignatures} from "../../../../queries/useGetParticipantSignatures.ts";
 import {hasPendingSignatures, participantSignatureClientPublic} from "../../../../api/participantSignature.client.ts";
 import {ParticipantSigning} from "../../../common/ParticipantSigning";
 import {showSuccess} from "../../../../utilites/notifications.tsx";
+import {RouteDownloads} from "./RouteDownloads.tsx";
+import {useGetTicketTransfer} from "../../../../queries/useGetTicketTransfer.ts";
+import {transferDeadlineLabel, TransferTicketModal} from "../../../modals/TransferTicketModal";
+import {useGetTransferredHolderDetails} from "../../../../queries/useGetTransferredHolderDetails.ts";
+import {HolderDetailsCard} from "./HolderDetailsCard.tsx";
 
 /**
  * A ticket's page (/product/<event>/<ticket>): the cream public page of the order confirmation and
@@ -39,6 +45,22 @@ export const AttendeeProductAndInformation = () => {
     const {data: attendee, isError: attendeeError} = useGetAttendeePublic(eventId, String(attendeeShortId));
     // Ce que le participant a encore a signer lui-meme (le lien « Signer maintenant » de son courriel).
     const signaturesQuery = useGetParticipantSignatures(eventId, String(attendeeShortId));
+    const transferQuery = useGetTicketTransfer(eventId, String(attendeeShortId));
+    // A transferred ticket's new holder gives their own participant details first.
+    const detailsQuery = useGetTransferredHolderDetails(eventId, String(attendeeShortId));
+    const [transferOpened, setTransferOpened] = useState(false);
+    const [transferredTo, setTransferredTo] = useState<string | null>(null);
+
+    // The old link stops working once the ticket is given away.
+    if (transferredTo) {
+        return (
+            <HomepageInfoMessage
+                status="success"
+                message={t`Ticket transferred`}
+                subtitle={t`${transferredTo} receives the ticket by email. This link no longer works.`}
+            />
+        );
+    }
 
     if (eventError || attendeeError) {
         return (
@@ -60,6 +82,12 @@ export const AttendeeProductAndInformation = () => {
         ? Object.fromEntries(Object.entries(computeThemeVariables({...validateThemeSettings(rawThemeSettings), mode: 'light'}))
             .filter(([name]) => name.startsWith('--theme-accent')))
         : {}) as CSSProperties;
+
+    const transfer = transferQuery.data;
+    const timezone = event.timezone || 'UTC';
+    const transferDeadline = transfer?.deadline ? transferDeadlineLabel(transfer.deadline, timezone) : null;
+    const showTransfer = !!transfer?.enabled && (transfer.can_transfer || transfer.refusal === 'DEADLINE_PASSED');
+    const pendingDetails = detailsQuery.data ?? [];
 
     return (
         <main className={print.page} style={themeStyles}>
@@ -84,7 +112,16 @@ export const AttendeeProductAndInformation = () => {
                 <p className={print.heroLine}>{event.title}</p>
             </header>
 
-            {hasPendingSignatures(signaturesQuery.data) && (
+            {pendingDetails.length > 0 && (
+                <HolderDetailsCard
+                    eventId={eventId!}
+                    attendeeShortId={String(attendeeShortId)}
+                    questions={pendingDetails}
+                    onSaved={() => Promise.all([detailsQuery.refetch(), signaturesQuery.refetch()])}
+                />
+            )}
+
+            {pendingDetails.length === 0 && hasPendingSignatures(signaturesQuery.data) && (
                 <section id="signer" className={`${classes.signCard} ${print.screenOnly}`} data-rough>
                     <h2 className={classes.signTitle}>{t`To sign before the event`}</h2>
                     <p className={classes.signIntro}>
@@ -109,8 +146,42 @@ export const AttendeeProductAndInformation = () => {
                     event={event}
                     showPoweredBy
                 />
+                <RouteDownloads eventId={eventId}/>
+                {showTransfer && (
+                    <section className={`${classes.transferCard} ${print.screenOnly}`} data-rough>
+                        <div>
+                            <h2 className={classes.transferTitle}>{t`Can't make it?`}</h2>
+                            <p className={classes.transferText}>
+                                {transfer!.can_transfer
+                                    ? (transferDeadline
+                                        ? t`Give your ticket to someone else, until ${transferDeadline}.`
+                                        : t`Give your ticket to someone else.`)
+                                    : transfer!.refusal_message}
+                            </p>
+                        </div>
+                        {transfer!.can_transfer && (
+                            <button type="button" className={`${shell.button} ${shell.buttonFilled} ${classes.transferButton}`}
+                                    onClick={() => setTransferOpened(true)}>
+                                {t`Transfer my ticket`}
+                            </button>
+                        )}
+                    </section>
+                )}
                 {event?.settings?.is_online_event && <OnlineEventDetails eventSettings={event.settings}/>}
             </div>
+
+            {transferOpened && (
+                <TransferTicketModal
+                    eventId={eventId!}
+                    timezone={timezone}
+                    attendee={attendee as Attendee}
+                    onClose={() => setTransferOpened(false)}
+                    onTransferred={(name) => {
+                        setTransferOpened(false);
+                        setTransferredTo(name);
+                    }}
+                />
+            )}
 
             <div className={print.screenOnly}>
                 <PublicPageFooter/>

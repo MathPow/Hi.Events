@@ -60,6 +60,8 @@ class UpdateEventSettingsDTO extends BaseDTO
         public readonly ?string                 $deposit_instructions = null,
         public readonly ?string                 $waiver_text = null,
         public readonly bool                    $participants_sign_themselves = false,
+        public readonly bool                    $allow_ticket_transfer = false,
+        public readonly int                     $ticket_transfer_cutoff_hours = 48,
         public readonly ?string                 $product_info_message = null,
         public readonly ?string                 $product_info_button_text = null,
         public readonly ?string                 $product_info_button_url = null,

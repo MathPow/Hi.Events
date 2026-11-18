@@ -5,7 +5,6 @@ import {Button, Checkbox, NativeSelect, Skeleton, TextInput} from "@mantine/core
 import {IconCircleCheck, IconClock} from "@tabler/icons-react";
 import {t, Trans} from "@lingui/macro";
 import {useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
 import {GET_ORDER_PUBLIC_QUERY_KEY, useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
 import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {useGetEventQuestionsPublic} from "../../../../queries/useGetEventQuestionsPublic.ts";
@@ -35,6 +34,7 @@ import {useCheckoutPrefill, CheckoutPrefill} from "../../../../hooks/useCheckout
 import {useApplyPromoCodeToOrder} from "../../../../mutations/useApplyPromoCodeToOrder.ts";
 import {WaiverSignature} from "../../../common/WaiverSignature";
 import {DocumentSigning, emptyDocumentEntry} from "../../../common/DocumentSigning";
+import {clearFormDraft, readFormDraft, useSaveFormDraft} from "../../../../hooks/useFormDraft";
 import {documentNeedsBirthDate} from "../../../common/OrganizerDocument/blocks.ts";
 import {useGetEventDocumentsPublic} from "../../../../queries/useGetOrganizerDocuments.ts";
 import {PublicOrganizerDocument} from "../../../../api/organizerDocument.client.ts";
@@ -108,6 +108,9 @@ export const CollectInformation = () => {
     // prepare garde son montant): ni contribution, ni code promo.
     const isEditing = order?.status === 'RESERVED' && !!order?.email
         && (order.payment_status === 'AWAITING_PAYMENT' || order.payment_status === 'PAYMENT_FAILED');
+    // Ce que l'acheteur a deja tape, garde dans l'onglet: un rechargement au milieu du formulaire
+    // ne le vide plus. Les signatures de documents ne sont pas gardees: elles se refont.
+    const draftKey = orderShortId ? `checkout-draft:${orderShortId}` : null;
     const requireBillingAddress = event?.settings?.require_billing_address;
     const isPerOrderCollection = event?.settings?.attendee_details_collection_method === 'PER_ORDER';
     const allowCopyToAllAttendees = event?.settings?.allow_copy_details_to_all_attendees ?? true;
@@ -146,16 +149,6 @@ export const CollectInformation = () => {
             order: {
                 email_confirmation: (value, values) =>
                     value !== values.order.email ? t`Email addresses do not match` : null,
-            },
-            products: {
-                email_confirmation: (value, values, path) => {
-                    const index = parseInt(path.split('.')[1]);
-                    const product = values.products[index];
-                    if (product && product.email !== value) {
-                        return t`Email addresses do not match`;
-                    }
-                    return null;
-                },
             },
         },
         validateInputOnBlur: true,
@@ -315,6 +308,7 @@ export const CollectInformation = () => {
             if (nextPage === 'summary') {
                 trackEvent(AnalyticsEvents.PURCHASE_COMPLETED_FREE);
             }
+            clearFormDraft(draftKey);
             // Les participants modifies, pas ceux du premier envoi encore en cache.
             queryClient.invalidateQueries({queryKey: [GET_ORDER_PUBLIC_QUERY_KEY]});
             navigate(eventCheckoutPath(eventId, data.data.short_id, nextPage));
@@ -325,14 +319,14 @@ export const CollectInformation = () => {
                 shouldScrollToError.current = true;
                 form.setErrors(toFullNameErrors(error.response.data.errors) as any);
             } else if (error?.response?.data?.message) {
-                notifications.show({
-                    message: error?.response?.data?.message,
-                });
+                showError(error.response.data.message);
 
                 // if it's a 409, we need to redirect to the event page as the order is no longer valid
                 if (error.response.status === 409) {
                     navigate(eventHomepagePath(event as Event));
                 }
+            } else {
+                showError(t`We couldn't save your details. Check your connection and try again.`);
             }
         }
     });
@@ -456,7 +450,12 @@ export const CollectInformation = () => {
         mutation.mutate({
             ...values,
             order: {...orderValues, ...splitFullName(orderFullName)},
-            products: values.products.map(({full_name, ...product}: any) => ({...product, ...splitFullName(full_name)})),
+            // Le participant ne retape plus son courriel: la confirmation que l'API attend, c'est lui.
+            products: values.products.map(({full_name, ...product}: any) => ({
+                ...product,
+                email_confirmation: product.email,
+                ...splitFullName(full_name),
+            })),
         });
     };
 
@@ -504,14 +503,29 @@ export const CollectInformation = () => {
                     : {...product, ...orderPrefill};
             });
 
+            // Un brouillon de cet onglet (rechargement): chaque fiche reprend ce qui y etait ecrit,
+            // tant qu'elle correspond au meme billet.
+            const draft = isEditing ? null : readFormDraft<{ order?: Record<string, unknown>, products?: any[] }>(draftKey);
+            const restoredProducts = prefilledProducts.map((product: any, index: number) => {
+                const saved = draft?.products?.[index];
+                if (!saved || String(saved.product_price_id) !== String(product.product_price_id)) {
+                    return product;
+                }
+                const {documents: _documents, ...typed} = saved;
+                return {...product, ...typed};
+            });
+
             form.setValues({
                 ...form.values,
-                products: prefilledProducts,
+                products: restoredProducts,
                 order: {
                     ...form.values.order,
                     ...orderPrefill,
                     ...(isEditing && order?.address ? {address: order.address} : {}),
                     questions: formOrderQuestions,
+                    ...(draft?.order ?? {}),
+                    // Un nom ou un courriel impose par le lien reste celui du lien.
+                    ...(lock ? orderPrefill : {}),
                 },
             });
         }
@@ -550,6 +564,11 @@ export const CollectInformation = () => {
         // Seulement quand les documents ou les fiches changent.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isFormBuilt, onlineDocumentsKey, formEntriesKey]);
+
+    useSaveFormDraft(draftKey, {
+        order: form.values.order,
+        products: (form.values.products as any[]).map(({documents: _documents, ...product}) => product),
+    }, isFormBuilt && !isEditing);
 
     // Les coordonnees deja envoyees (on revient du paiement): plus de merch a ajouter.
     const detailsAlreadySent = !!order?.email || order?.payment_status === 'AWAITING_PAYMENT';
@@ -738,6 +757,7 @@ export const CollectInformation = () => {
                                 {...form.getInputProps(`products.${currentProductIndex}.full_name`)}
                             />
                             <TextInput
+                                className={checkoutClasses.fieldFull}
                                 withAsterisk
                                 type={"email"}
                                 label={t`Email`}
@@ -747,17 +767,6 @@ export const CollectInformation = () => {
                                 rightSection={isEmailValid(form.values.products[currentProductIndex]?.email || '') ?
                                     <EmailCheckIcon/> : null}
                                 {...form.getInputProps(`products.${currentProductIndex}.email`)}
-                            />
-                            <TextInput
-                                withAsterisk
-                                type={"email"}
-                                label={t`Confirm email`}
-                                placeholder={t`name@example.com`}
-                                autoComplete="off"
-                                disabled={isLocked('email')}
-                                rightSection={isEmailValid(form.values.products[currentProductIndex]?.email_confirmation || '') ?
-                                    <EmailCheckIcon/> : null}
-                                {...form.getInputProps(`products.${currentProductIndex}.email_confirmation`)}
                             />
                         </div>
                     )}

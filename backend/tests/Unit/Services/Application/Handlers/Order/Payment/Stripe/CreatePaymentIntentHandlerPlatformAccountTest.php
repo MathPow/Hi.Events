@@ -76,6 +76,7 @@ class CreatePaymentIntentHandlerPlatformAccountTest extends TestCase
     {
         $event = Mockery::mock(EventDomainObject::class);
         $event->shouldReceive('getOrganizerId')->andReturn(3);
+        $event->shouldReceive('isCancelled')->andReturnFalse();
 
         $order = Mockery::mock(OrderDomainObject::class);
         $order->shouldReceive('getSessionId')->andReturn('session');

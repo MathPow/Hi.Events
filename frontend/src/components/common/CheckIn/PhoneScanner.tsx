@@ -7,6 +7,11 @@ const ICONS = '/interface/admin/scanner';
 
 // A code kept in front of the camera counts once, until it has been gone this long.
 const SAME_CODE_MS = 4000;
+// Apres un echec passager (reseau, serveur), le meme billet est relu au bout de ce delai.
+const RETRY_PAUSE_MS = 2000;
+
+// busy: pas traite, a relire tout de suite; retry: echec passager; done: reponse definitive.
+export type ScanOutcome = 'busy' | 'retry' | 'done';
 
 export interface ScanResult {
     tone: 'ok' | 'problem' | 'info';
@@ -26,7 +31,7 @@ interface PhoneScannerProps {
     // The matching attendees, while searching.
     searchResults: ReactNode;
     onSell?: () => void;
-    onScan: (code: string) => void;
+    onScan: (code: string) => void | Promise<ScanOutcome | void>;
     onClose: () => void;
 }
 
@@ -68,11 +73,23 @@ export const PhoneScanner = ({
         // mount undone right away (React's strict mode) must not leave one behind.
         const timer = window.setTimeout(() => {
             scanner = new QrScanner(element, ({data}) => {
+                // Seule une lecture transmise ouvre la pause du meme code: tenir le billet ne la
+                // prolonge pas. Un code non traite est relu tout de suite, un echec passager apres 2 s.
                 const now = Date.now();
                 const last = lastCode.current;
-                lastCode.current = {code: data, at: now};
                 if (!last || last.code !== data || now - last.at > SAME_CODE_MS) {
-                    onScanRef.current(data);
+                    const sent = {code: data, at: now};
+                    lastCode.current = sent;
+                    Promise.resolve(onScanRef.current(data)).then((outcome) => {
+                        if (lastCode.current !== sent) {
+                            return;
+                        }
+                        if (outcome === 'busy') {
+                            lastCode.current = null;
+                        } else if (outcome === 'retry') {
+                            lastCode.current = {code: data, at: Date.now() - SAME_CODE_MS + RETRY_PAUSE_MS};
+                        }
+                    });
                 }
             }, {returnDetailedScanResult: true, maxScansPerSecond: 4, preferredCamera: 'environment'});
 

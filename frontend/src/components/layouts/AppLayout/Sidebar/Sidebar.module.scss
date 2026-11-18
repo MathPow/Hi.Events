@@ -352,7 +352,12 @@
 
 // A super admin in someone else's account: the sidebar in orange, never taken for their own.
 :global(html[data-impersonating]) .sidebar {
-  background: var(--dehors-orange);
+  background: var(--dehors-orange-fonce);
+
+  // The orange wordmark would vanish on the orange: cream, like the links.
+  .wordmark img {
+    filter: brightness(0) invert(96%) sepia(8%) saturate(500%) hue-rotate(330deg);
+  }
 }
 
 // Figma « Admin · Barre latérale · Événement »: more entries, in tighter rows (36 px, 18 px icons, small

@@ -8,6 +8,14 @@
   padding: 40px;
   @include mixins.fond-roche;
 
+  // Sur ordi, la carte tient dans l'ecran: son cadre et la photo restent en place, seul le
+  // formulaire defile (la molette sur la photo le fait defiler aussi).
+  @include mixins.respond-above(lg) {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
   @include mixins.respond-below(lg) {
     padding: 12px;
   }
@@ -25,6 +33,11 @@
   overflow: hidden;
   background: var(--dehors-creme);
 
+  @include mixins.respond-above(lg) {
+    height: 100%;
+    min-height: 0;
+  }
+
   @include mixins.respond-below(lg) {
     display: flex;
     flex-direction: column;
@@ -41,6 +54,17 @@
   justify-content: space-between;
   gap: 2.5rem;
   padding: 44px 64px 40px;
+
+  @include mixins.respond-above(lg) {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    // Sans barre de defilement: la molette, le pave et le clavier suffisent.
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
   @include mixins.respond-below(lg) {
     justify-content: flex-start;

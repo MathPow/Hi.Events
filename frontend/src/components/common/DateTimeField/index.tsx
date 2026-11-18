@@ -22,6 +22,8 @@ interface DateTimeFieldProps {
     withWeekday?: boolean;
     // The time given to a date picked first (« 09:00 »).
     defaultTime?: string;
+    // A day alone (« 2026-12-15 »), without the time field.
+    dateOnly?: boolean;
 }
 
 /**
@@ -39,6 +41,7 @@ export const DateTimeField = ({
     className,
     withWeekday,
     defaultTime = '09:00',
+    dateOnly,
 }: DateTimeFieldProps) => {
     const id = useId();
     const locale = intlLocale();
@@ -65,10 +68,12 @@ export const DateTimeField = ({
             day: 'numeric',
             month: 'short',
             year: 'numeric',
-        } as Intl.DateTimeFormatOptions).format(selected.toDate())} · ${clockTime(selected.toDate(), undefined)}`
+        } as Intl.DateTimeFormatOptions).format(selected.toDate())}${dateOnly ? '' : ` · ${clockTime(selected.toDate(), undefined)}`}`
         : (placeholder ?? '');
 
-    const pickDay = (day: Dayjs) => onChange(`${day.format('YYYY-MM-DD')}T${selectedTime ?? defaultTime}`);
+    const pickDay = (day: Dayjs) => onChange(dateOnly
+        ? day.format('YYYY-MM-DD')
+        : `${day.format('YYYY-MM-DD')}T${selectedTime ?? defaultTime}`);
 
     // While the hour is being typed, the field reports an empty value: only a full time counts.
     const pickTime = (time: string) => {
@@ -135,7 +140,7 @@ export const DateTimeField = ({
                             </button>
                         ))}
                     </div>
-                    <div className={classes.timeBlock}>
+                    {!dateOnly && <div className={classes.timeBlock}>
                         <label className={classes.timeLabel} htmlFor={`${id}-time`}>{t`Time`}</label>
                         <input
                             id={`${id}-time`}
@@ -146,7 +151,7 @@ export const DateTimeField = ({
                             onChange={(event) => pickTime(event.currentTarget.value)}
                             onKeyDown={(event) => event.key === 'Enter' && setOpened(false)}
                         />
-                    </div>
+                    </div>}
                     <div className={classes.footer}>
                         {clearable && selected ? (
                             <button type="button" className={classes.clear} onClick={() => {

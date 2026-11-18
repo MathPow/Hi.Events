@@ -22,4 +22,10 @@ interface AssistantUsageRepositoryInterface extends RepositoryInterface
 
     /** Turns and cost per person since a date, the costliest first. */
     public function getByUserSince(Carbon $since): Collection;
+
+    /** What one account's calls have cost since a date, in US dollars. */
+    public function getAccountCostSince(int $accountId, Carbon $since): float;
+
+    /** @return array<int, float> what each account's calls have cost since a date, by account id */
+    public function getCostByAccountSince(Carbon $since): array;
 }

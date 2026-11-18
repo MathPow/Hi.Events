@@ -67,7 +67,10 @@ export const SetupCard = ({eventId, event}: { eventId: IdParam, event: Event }) 
                 trackEvent(AnalyticsEvents.EVENT_PUBLISHED);
                 showSuccess(t`Event status updated`);
             },
-            onError: (error: any) => showStatusChangeError(error, t`Event status update failed. Please try again later`),
+            onError: (error: any) => showStatusChangeError(error, t`Event status update failed. Please try again later`, {
+                eventId,
+                organizerId: event.organizer?.id ?? event.organizer_id,
+            }),
         }),
     );
 

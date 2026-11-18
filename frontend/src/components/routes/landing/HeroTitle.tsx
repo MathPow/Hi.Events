@@ -1,6 +1,7 @@
 import {CSSProperties, Fragment, useEffect, useRef} from "react";
 import {t} from "@lingui/macro";
 import classes from "./Landing.module.scss";
+import {useStickerTilt} from "./useStickerTilt.ts";
 
 const WORD_SPEEDS = [0.1, 0.18, 0.07, 0.15, 0.05, 0.13];
 // Where each word comes from in the entrance, one high and one low in turn,
@@ -11,7 +12,6 @@ const WORD_FROM = ['-45%', '105%', '-105%', '100%', '-90%', '60%'];
 // first is a light red sticker, the second a green one.
 const STICKER_WORD = /^\[(.+)]$/;
 const STICKER_COLOURS = [classes.stickerWordFewer, classes.stickerWordMore];
-const EDGE_FILTER = 'hero-sticker-edge';
 
 /**
  * The hero headline and its subtitle. On scroll, each word rises at its own
@@ -19,6 +19,13 @@ const EDGE_FILTER = 'hero-sticker-edge';
  * "fewer" and "more" are stickers, in a cream outline cut a little roughly,
  * and each starts a line; the sentence stays as plain words for screen readers.
  */
+const StickerWord = ({text, colour}: { text: string, colour: string }) => {
+    const element = useRef<HTMLSpanElement>(null);
+    useStickerTilt(element);
+
+    return <span ref={element} className={`${classes.stickerWord} ${colour}`} data-text={text}>{text}</span>;
+};
+
 export const HeroTitle = () => {
     const root = useRef<HTMLDivElement>(null);
     let stickers = 0;
@@ -86,12 +93,7 @@ export const HeroTitle = () => {
                                             '--speed': WORD_SPEEDS[index % WORD_SPEEDS.length],
                                             '--from-y': WORD_FROM[index % WORD_FROM.length],
                                         } as CSSProperties}>
-                                            {word.colour ? (
-                                                <span className={`${classes.stickerWord} ${word.colour}`}
-                                                      data-text={word.text}>
-                                                    {word.text}
-                                                </span>
-                                            ) : word.text}
+                                            {word.colour ? <StickerWord text={word.text} colour={word.colour}/> : word.text}
                                         </span>
                                     </Fragment>
                                 ))}
@@ -102,13 +104,6 @@ export const HeroTitle = () => {
                 <span className={classes.visuallyHidden}>{t`Fewer fees, more people.`}</span>
             </h1>
             <p className={classes.heroSubtitle}>{t`The Quebec ticketing platform built for the sports community.`}</p>
-            {/* Roughens the stickers' cream outline (.stickerWord::before). */}
-            <svg className={classes.stickerWordFilter} aria-hidden="true" focusable="false">
-                <filter id={EDGE_FILTER} x="-10%" y="-20%" width="120%" height="140%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7"/>
-                    <feDisplacementMap in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-                </filter>
-            </svg>
         </div>
     );
 };

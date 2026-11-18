@@ -18,9 +18,11 @@ import {glideTo, installSmoothScroll, onSmoothScroll} from "./smoothScroll.ts";
 import {useMatchWidth} from "./useMatchWidth.ts";
 import {useStackOnScroll} from "./useStackOnScroll.ts";
 import classes from "./Landing.module.scss";
+import {openCookieSettings} from "../../common/CookieConsentBanner";
+import {useStickerTilt} from "./useStickerTilt.ts";
 
 const ASSETS = '/landing';
-const HERO_VIDEO = `${ASSETS}/hero.mp4`;
+const HERO_PHOTO = `${ASSETS}/photos/hero-groupe-doux.webp`;
 const CONTACT_EMAIL = 'support@dehorsqc.com';
 const DEHORS_SITE = 'https://dehorsqc.com';
 const DEHORS_INSTAGRAM = 'https://www.instagram.com/dehors.qc';
@@ -39,6 +41,7 @@ const TRUSTED_ORGANIZERS: Organizer[] = [
     {name: "Su'l Pace", logo: 'sulpace', ratio: 1008 / 585.56, url: '/events/3/sul-pace'},
     {name: 'Course en Blanc', logo: 'course-en-blanc', ratio: 496 / 372, url: '/events/4/melysa-bolduc'},
     {name: 'Ultratales', logo: 'ultratales', ratio: 1008 / 360, url: '/events/1/dehorsqc'},
+    {name: 'Rose en Piste', logo: 'rose-en-piste', ratio: 1429 / 790, scale: 1.3, url: '/events/5/la-course-rose-en-piste'},
 ];
 
 const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, children, ...props}: {
@@ -54,24 +57,17 @@ const Rough = <T extends ElementType = 'div'>({as, amplitude, step, className, c
     return <Component ref={ref} className={className} {...props}>{children}</Component>;
 };
 
-// Each file's size. A sticker is a WebP unless its name gives another extension.
-const STICKER_SIZES: Record<string, [number, number]> = {
-    'autocollant-drapeau-dehors': [288, 288],
-    'autocollant-drapeau': [289, 288],
-    'autocollant-sac-a-dos.svg': [144, 144],
-    'autocollant-feu-de-camp.svg': [144, 144],
-};
-
 /**
- * A sticker that tilts from one pose to the other, like the "Ce qui nous guide"
- * stickers of the DEHORS shop (.sticker).
+ * One of the brand's stickers (public/landing/stickers, 144px squares), tilting
+ * from one pose to the other like the "Ce qui nous guide" stickers of the DEHORS shop (.sticker).
  */
-const Sticker = ({name, className}: { name: string, className?: string }) => {
-    const [width, height] = STICKER_SIZES[name] ?? [1, 1];
+const Sticker = ({name, className, eager}: { name: string, className?: string, eager?: boolean }) => {
+    const element = useRef<HTMLImageElement>(null);
+    useStickerTilt(element);
 
     return (
-        <img className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/${name.includes('.') ? name : `${name}.webp`}`}
-             width={width} height={height} alt="" aria-hidden="true" loading="lazy" decoding="async"
+        <img ref={element} className={`${classes.sticker} ${className ?? ''}`} src={`${ASSETS}/stickers/autocollant-${name}.svg`}
+             width={144} height={144} alt="" aria-hidden="true" loading={eager ? 'eager' : 'lazy'} decoding="async"
              draggable={false}/>
     );
 };
@@ -101,11 +97,11 @@ const ScrollDown = () => {
 };
 
 const RegisterButton = ({variant = 'orange'}: { variant?: 'orange' | 'dark' }) => (
-    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Create my account`}/>
+    <LandingButton as={NavLink} to="/auth/register" variant={variant} label={t`Sell tickets`}/>
 );
 
 const sectionLinks = () => [
-    {href: '#steps', label: t`How it works`},
+    {href: '#steps', label: t({message: 'Steps', context: 'landing section'})},
     {href: '#fees', label: t`Fees`},
     {href: '#payments', label: t`Payments`},
     {href: '#features', label: t`Features`},
@@ -186,7 +182,7 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
     }
 
     return (
-        <nav ref={nav} id={MENU_ID} className={classes.menu} aria-label={t`Menu`}>
+        <nav ref={nav} id={MENU_ID} className={classes.menu} aria-label={t`Menu`} data-rough>
             {sectionLinks().map((link) => (
                 <a key={link.href} href={link.href} onClick={(event) => {
                     onClose();
@@ -194,7 +190,7 @@ const MobileMenu = ({open, onClose}: { open: boolean, onClose: () => void }) => 
                 }}><ShakyText text={link.label}/></a>
             ))}
             <div className={classes.menuActions}>
-                <LandingButton as={NavLink} to="/auth/register" label={t`Create my account`} onClick={onClose}/>
+                <LandingButton as={NavLink} to="/auth/register" label={t`Sell tickets`} onClick={onClose}/>
                 <LandingButton as={NavLink} to="/auth/login" variant="dark" label={t`Log in`} onClick={onClose}/>
                 <div className={classes.menuVisitors}>
                     <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`} onClick={onClose}/>
@@ -237,28 +233,39 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
             return;
         }
         let frame: number | null = null;
-        // Where the nav sits in the layout, whatever its entrance or the opening's clip do to it on screen.
-        const update = () => {
-            frame = null;
+        let threshold = 0;
+        // Where the nav sits in the layout, whatever its entrance or the opening's clip do to it on
+        // screen. Measured once and on resize, never while scrolling: reading offsetTop at each frame
+        // makes the browser lay the page out again.
+        const measure = () => {
             let top = 0;
             for (let element: HTMLElement | null = nav; element; element = element.offsetParent as HTMLElement | null) {
                 top += element.offsetTop;
             }
-            setShown(window.scrollY > top + nav.offsetHeight);
+            threshold = top + nav.offsetHeight;
+        };
+        const update = () => {
+            frame = null;
+            setShown(window.scrollY > threshold);
         };
         const schedule = () => {
             if (frame === null) {
                 frame = requestAnimationFrame(update);
             }
         };
+        const resize = () => {
+            measure();
+            schedule();
+        };
 
+        measure();
         update();
         window.addEventListener('scroll', schedule, {passive: true});
-        window.addEventListener('resize', schedule, {passive: true});
+        window.addEventListener('resize', resize, {passive: true});
 
         return () => {
             window.removeEventListener('scroll', schedule);
-            window.removeEventListener('resize', schedule);
+            window.removeEventListener('resize', resize);
             if (frame !== null) {
                 cancelAnimationFrame(frame);
             }
@@ -320,15 +327,56 @@ const ScrolledNav = ({heroNav, menuOpen, onMenuToggle, onMenuClose}: {
                 ))}
             </nav>
             <div className={classes.scrolledNavActions}>
+                <nav className={classes.scrolledNavShortcuts} aria-label={t`Shortcuts`}>
+                    {shortcuts().map(({to, label, Icon}) => (
+                        <NavLink key={to} to={to} aria-label={label}>
+                            <Icon/>
+                            <span className={classes.shortcutLabel} aria-hidden="true">{label}</span>
+                        </NavLink>
+                    ))}
+                </nav>
                 <NavLink to="/auth/login" className={classes.scrolledNavLogin}><ShakyText text={t`Log in`}/></NavLink>
                 <RegisterButton/>
             </div>
             <MenuButton open={menuOpen} onToggle={onMenuToggle} buttonRef={menuButton}/>
             <MobileMenu open={menuOpen} onClose={onMenuClose}/>
         </header>
+        {/* On a phone, once the hero is passed, its two links at the bottom of the screen. */}
+        <nav className={`${classes.bottomLinks} ${shown && !menuOpen ? classes.bottomLinksShown : ''}`}
+             aria-label={t`Shortcuts`} aria-hidden={!shown || menuOpen || undefined}>
+            {shortcuts().map(({to, label}) => (
+                <NavLink key={to} to={to} tabIndex={shown && !menuOpen ? undefined : -1}>{label}</NavLink>
+            ))}
+        </nav>
         </>
     );
 };
+
+// Lucide's « tent » and « ticket » (ISC), drawn inline.
+const LucideIcon = ({children}: { children: ReactNode }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {children}
+    </svg>
+);
+
+const TentIcon = () => (
+    <LucideIcon>
+        <path d="M3.5 21 14 3"/><path d="M20.5 21 10 3"/><path d="M15.5 21 12 15l-3.5 6"/><path d="M2 21h20"/>
+    </LucideIcon>
+);
+
+const TicketIcon = () => (
+    <LucideIcon>
+        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+        <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+    </LucideIcon>
+);
+
+const shortcuts = () => [
+    {to: '/events', label: t`Events`, Icon: TentIcon},
+    {to: '/my-tickets', label: t`My tickets`, Icon: TicketIcon},
+];
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
@@ -483,22 +531,13 @@ const useRiseOnScroll = (root: RefObject<HTMLElement>) => {
     }, [root]);
 };
 
-const HeroVideo = () => {
-    const video = useRef<HTMLVideoElement>(null);
-
-    useEffect(() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            video.current?.pause();
-        }
-    }, []);
-
-    return (
-        <video ref={video} className={classes.heroVideo} autoPlay muted loop playsInline preload="metadata"
-               poster={`${ASSETS}/photos/hero-groupe.webp`} aria-hidden="true">
-            <source src={HERO_VIDEO} type="video/mp4"/>
-        </video>
-    );
-};
+// The hero's photo, already a little dimmer and flatter (hero-groupe-doux.webp) for the bright
+// windows and shirts not to fight the headline: no filter to redraw as it slides on scroll. No
+// video until one exists (hero.mp4 was never there: a request lost on each visit).
+const HeroVideo = () => (
+    <img className={classes.heroVideo} src={HERO_PHOTO} width={1920} height={1280} alt=""
+         aria-hidden="true" fetchPriority="high" decoding="async"/>
+);
 
 // How far the backdrop slides each way: the 2rem it overflows by (.feesRock).
 const BACKDROP_DRIFT = 32;
@@ -594,25 +633,49 @@ const FooterWordmark = () => {
         }
 
         const element = wordmark.current;
+        let frame: number | null = null;
+        let listening = false;
         const check = () => {
+            frame = null;
             const box = element.getBoundingClientRect();
             const page = element.closest('footer')?.previousElementSibling?.getBoundingClientRect();
             const top = Math.max(box.top, page?.bottom ?? -Infinity);
             const bottom = Math.min(box.bottom, window.innerHeight);
             if (box.height && (bottom - top) / box.height >= 0.3) {
                 setVisible(true);
-                window.removeEventListener('scroll', check);
-                window.removeEventListener('resize', check);
+                stop();
+                observer.disconnect();
             }
         };
-
-        window.addEventListener('scroll', check, {passive: true});
-        window.addEventListener('resize', check);
-        check();
+        const schedule = () => {
+            if (frame === null) {
+                frame = requestAnimationFrame(check);
+            }
+        };
+        const start = () => {
+            if (!listening) {
+                listening = true;
+                window.addEventListener('scroll', schedule, {passive: true});
+                window.addEventListener('resize', schedule);
+            }
+            schedule();
+        };
+        const stop = () => {
+            listening = false;
+            window.removeEventListener('scroll', schedule);
+            window.removeEventListener('resize', schedule);
+        };
+        // Measured only while the wordmark is near the screen, once a frame at most: reading its
+        // box at each scroll event lays the page out again, all the way down.
+        const observer = new IntersectionObserver(([entry]) => entry?.isIntersecting ? start() : stop(), {rootMargin: '200px 0px'});
+        observer.observe(element);
 
         return () => {
-            window.removeEventListener('scroll', check);
-            window.removeEventListener('resize', check);
+            observer.disconnect();
+            stop();
+            if (frame !== null) {
+                cancelAnimationFrame(frame);
+            }
         };
     }, [letters]);
 
@@ -894,11 +957,16 @@ const Landing = () => {
                     <Rough className={classes.hero} amplitude={2} step={56}>
                         <HeroVideo/>
                         <div className={classes.heroShade}/>
+                        <div className={classes.heroStickers}>
+                            <Sticker name="compass" className={classes.heroStickerTopLeft} eager/>
+                            <Sticker name="toilette" className={classes.heroStickerMiddleLeft} eager/>
+                            <Sticker name="autre" className={classes.heroStickerUpperRight} eager/>
+                        </div>
                         <header ref={heroNav} className={classes.nav}>
                             {/* Deux publics: a gauche, ceux qui sortent (les evenements, leurs billets), sans
                                 compte; a droite, les organisateurs. Le hero seulement, pas la barre qui suit. */}
                             <div className={classes.navStart}>
-                                <NavLink to="/" className={classes.brand} aria-label="Billetterie Dehors"><img src="/logos/billetterie-dehors-wordmark.svg" alt=""/></NavLink>
+                                <NavLink to="/" className={classes.brand} aria-label="Billetterie Dehors"><img src="/logos/billetterie-dehors-wordmark-creme.svg" alt=""/></NavLink>
                                 <div className={classes.navLinks}>
                                     <LandingButton as={NavLink} to="/events" variant="ghost" label={t`Events`}/>
                                     <LandingButton as={NavLink} to="/my-tickets" variant="ghost" label={t`My tickets`}/>
@@ -947,7 +1015,7 @@ const Landing = () => {
                     </div>
                     <div className={classes.introPhotoLarge} data-rise>
                         <Photo name="photo-c"/>
-                        <Sticker name="autocollant-sac-a-dos.svg" className={classes.stickerBackpack}/>
+                        <Sticker name="billet" className={classes.stickerBackpack}/>
                     </div>
                 </section>
 
@@ -977,7 +1045,7 @@ const Landing = () => {
                             <Rough className={classes.feesCard} amplitude={1.8} step={36}>
                                 <FeesComparator/>
                             </Rough>
-                            <Sticker name="autocollant-feu-de-camp.svg" className={classes.stickerCampfire}/>
+                            <Sticker name="tirelire" className={classes.stickerFees}/>
                             <p className={classes.feesNote}>{t`Billetterie Dehors: 2.5% + Stripe 2.9% + $0.30. Eventbrite in Canada, according to its help centre (October 2026): 3.5% + $1.29 per ticket + 2.9% processing. One ticket per order, fees included in the price.`}</p>
                         </div>
                     </Rough>
@@ -985,6 +1053,7 @@ const Landing = () => {
 
                 <section id="payments" className={classes.stripe} data-stack>
                     <div className={classes.stripeText} data-rise>
+                        <Sticker name="coin" className={classes.stickerStripe}/>
                         <h2><Trans>Stripe,<br/>what's that?</Trans></h2>
                         <p>{t`Stripe is the company that takes the card payments for your ticketing. It's the same tool you can use for your next digital projects: millions of businesses already do.`}</p>
                         <LandingButton as="a" href={stripeSite(i18n.locale)} target="_blank" rel="noopener" variant="dark"
@@ -1033,6 +1102,7 @@ const Landing = () => {
                                 </ul>
                                 <div ref={featuresAside} className={classes.featuresAside}>
                                     <FeatureFrame pictures={featurePictures} shown={openFeature}/>
+                                    <Sticker name="entrepreneuriat" className={classes.stickerFeatures}/>
                                 </div>
                             </div>
                         </div>
@@ -1044,8 +1114,8 @@ const Landing = () => {
                             <Photo name="photo-b" className={classes.communityPhoto1}/>
                             <Photo name="photo-c" className={classes.communityPhoto2}/>
                             <Photo name="photo-a" className={classes.communityPhoto3}/>
-                            <Sticker name="autocollant-drapeau" className={classes.stickerCommunityLeft}/>
-                            <Sticker name="autocollant-drapeau-dehors" className={classes.stickerCommunityRight}/>
+                            <Sticker name="calendrier-creme" className={classes.stickerCommunityLeft}/>
+                            <Sticker name="social" className={classes.stickerCommunityRight}/>
                         </div>
                     </section>
 
@@ -1082,6 +1152,9 @@ const Landing = () => {
                     </div>
                     <div className={classes.footerLegal}>
                         <span>© {new Date().getFullYear()} Billetterie Dehors</span>
+                        <button type="button" className={classes.footerCookies} onClick={openCookieSettings}>
+                            {t`Cookies`}
+                        </button>
                         <a className={classes.footerCredit} href="https://melonstudio.ca/" target="_blank" rel="noopener">
                             <Trans>Designed with the help of <strong>MelonStudio</strong></Trans>
                         </a>

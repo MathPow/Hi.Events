@@ -181,7 +181,7 @@ export const OrganizerHomepage = ({
                                 {/* Deux lignes au plus; le nom entier au survol. */}
                                 <h1 className={classes.name} title={organizer.name}>{organizer.name}</h1>
 
-                                {/* Quatre lignes au plus, « Lire la suite » pour le reste. */}
+                                {/* Trois lignes au plus, « Lire la suite » pour le reste. */}
                                 {organizer.description && (
                                     <div className={classes.descriptionBlock}>
                                         <CollapsibleDescription html={organizer.description}
@@ -190,51 +190,46 @@ export const OrganizerHomepage = ({
                                 )}
 
                                 {(shortLocation || websiteUrl || socialLinks.length > 0 || donationUrl) && (
-                                    <ul className={classes.meta}>
+                                    <div className={classes.meta}>
                                         {shortLocation && locationDetails && (
-                                            <li>
-                                                <a href={getGoogleMapsUrl(locationDetails)} target="_blank"
-                                                   rel="noopener noreferrer" className={classes.pill} data-rough>
-                                                    <PublicIcon name={'lieu-petit'} className={classes.pillIcon}/>
-                                                    {shortLocation}
-                                                </a>
-                                            </li>
+                                            <a href={getGoogleMapsUrl(locationDetails)} target="_blank"
+                                               rel="noopener noreferrer" className={classes.metaLink}>
+                                                <PublicIcon name={'lieu-petit'} className={classes.metaIcon}/>
+                                                {shortLocation}
+                                            </a>
                                         )}
                                         {websiteUrl && (
-                                            <li>
-                                                <a href={websiteUrl} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.pill} data-rough>
-                                                    <PublicIcon name={'globe'} className={classes.pillIcon}/>
-                                                    {websiteLabel(websiteUrl)}
-                                                </a>
-                                            </li>
+                                            <a href={websiteUrl} target="_blank" rel="noopener noreferrer"
+                                               className={classes.metaLink}>
+                                                <PublicIcon name={'globe'} className={classes.metaIcon}/>
+                                                {/* Sur telephone, « Site web ↗ »: la ligne d'infos tient sans couper le domaine. */}
+                                                <span className={classes.longLabel}>{websiteLabel(websiteUrl)}</span>
+                                                <span className={classes.shortLabel}>{t`Website`} ↗</span>
+                                            </a>
                                         )}
-                                        {socialLinks.map(({platform, handle, url, Icon}) => (
-                                            <li key={platform}>
-                                                {platform === 'instagram' ? (
-                                                    <a href={url} target="_blank" rel="noopener noreferrer"
-                                                       className={classes.pill} data-rough>
-                                                        <PublicIcon name={'instagram'} className={classes.pillIcon}/>
-                                                        @{handle}
-                                                    </a>
-                                                ) : (
-                                                    <a href={url} target="_blank" rel="noopener noreferrer"
-                                                       className={`${classes.pill} ${classes.iconPill}`} data-rough aria-label={platform}>
-                                                        <Icon size={16} stroke={1.8} className={classes.pillIcon}/>
-                                                    </a>
-                                                )}
-                                            </li>
-                                        ))}
                                         {donationUrl && (
-                                            <li>
-                                                <a href={donationUrl} target="_blank" rel="noopener noreferrer"
-                                                   className={classes.pill} data-rough>
-                                                    <IconHeart size={16} stroke={1.8} className={classes.pillIcon}/>
-                                                    {t`Donate`}
-                                                </a>
-                                            </li>
+                                            <a href={donationUrl} target="_blank" rel="noopener noreferrer"
+                                               className={classes.metaLink}>
+                                                <IconHeart size={16} stroke={1.8} className={classes.metaIcon}/>
+                                                {t`Donate`}
+                                            </a>
                                         )}
-                                    </ul>
+                                        {socialLinks.length > 0 && (
+                                            <ul className={classes.socials}>
+                                                {socialLinks.map(({platform, handle, url, Icon}) => (
+                                                    <li key={platform}>
+                                                        <a href={url} target="_blank" rel="noopener noreferrer"
+                                                           className={classes.social}
+                                                           aria-label={`${platform} @${handle}`} title={`@${handle}`}>
+                                                            {platform === 'instagram'
+                                                                ? <PublicIcon name={'instagram'} size={18}/>
+                                                                : <Icon size={18} stroke={1.8}/>}
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
                                 )}
                             </div>
 
@@ -245,9 +240,11 @@ export const OrganizerHomepage = ({
                                         text={organizer.name}
                                         url={organizerHomepageUrl(organizer)}
                                     >
-                                        <button type="button" className={`${classes.button} ${classes.buttonOutline}`} data-rough="button">
+                                        {/* Sur telephone, l'icone seule: Contacter prend la largeur. */}
+                                        <button type="button" className={`${classes.button} ${classes.buttonOutline} ${classes.shareButton}`}
+                                                data-rough="button" aria-label={t`Share`}>
                                             <PublicIcon name={'partager'} size={20}/>
-                                            {t`Share`}
+                                            <span className={classes.longLabel}>{t`Share`}</span>
                                         </button>
                                     </ShareComponent>
                                 </div>

@@ -240,4 +240,26 @@ class OrderCancelServiceTest extends TestCase
 
         $this->assertTrue(true, "Order cancellation proceeded without throwing an exception.");
     }
+
+    public function testCancelOrderWithoutEmailingTheBuyer(): void
+    {
+        Event::fake();
+
+        $order = m::mock(OrderDomainObject::class);
+        $order->shouldReceive('getEventId')->andReturn(1);
+        $order->shouldReceive('getId')->andReturn(1);
+        $order->shouldReceive('isOrderAwaitingOfflinePayment')->andReturn(false);
+
+        $this->attendeeRepository->shouldReceive('findWhere')->andReturn(new Collection());
+        $this->attendeeRepository->shouldReceive('updateWhere')->once();
+        $this->orderRepository->shouldReceive('updateWhere')->once();
+        $this->eventStatisticsCancellationService->shouldReceive('decrementForCancelledOrder')->once();
+        $this->domainEventDispatcherService->shouldReceive('dispatch')->once();
+        $this->databaseManager->shouldReceive('transaction')->once()->andReturnUsing(fn($callback) => $callback());
+
+        $this->eventRepository->shouldNotReceive('findById');
+        $this->mailer->shouldNotReceive('to');
+
+        $this->service->cancelOrder($order, notifyBuyer: false);
+    }
 }

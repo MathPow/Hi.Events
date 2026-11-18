@@ -1,0 +1,45 @@
+@use "../../../../../styles/mixins";
+@use "../../../../../styles/admin-ui" as ui;
+
+// The course's round icon, like the pastilles of the other rows.
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: #fbe7b5;
+  color: ui.$ink;
+
+  @include mixins.respond-below(sm) {
+    display: none;
+  }
+}
+
+// The name, editable in place: plain text until it is clicked.
+.labelInput.labelInput {
+  margin: 0;
+
+  :global(.mantine-Input-input) {
+    height: 2rem;
+    min-height: 2rem;
+    margin-left: -0.5rem;
+    padding: 0 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: ui.$ink;
+    font-size: 0.9375rem;
+    font-weight: 700;
+
+    &:hover {
+      border-color: rgb(55 39 33 / 0.16);
+    }
+
+    &:focus {
+      border-color: ui.$ink;
+      background: ui.$card;
+    }
+  }
+}

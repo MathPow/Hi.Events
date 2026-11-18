@@ -63,6 +63,12 @@ use HiEvents\Http\Actions\Events\GetEventPublicAction;
 use HiEvents\Http\Actions\Events\GetEventsAction;
 use HiEvents\Http\Actions\Events\GetOrganizerEventsPublicAction;
 use HiEvents\Http\Actions\Events\GetUpcomingEventsPublicAction;
+use HiEvents\Http\Actions\Events\RepeatEventAction;
+use HiEvents\Http\Actions\EventChange\CancelEventAction;
+use HiEvents\Http\Actions\EventChange\GetEventChangeStatusAction;
+use HiEvents\Http\Actions\EventChange\PostponeEventAction;
+use HiEvents\Http\Actions\EventChange\Public\GetRefundRequestPublicAction;
+use HiEvents\Http\Actions\EventChange\Public\SubmitRefundRequestPublicAction;
 use HiEvents\Http\Actions\Events\Images\CreateEventImageAction;
 use HiEvents\Http\Actions\Events\Images\DeleteEventImageAction;
 use HiEvents\Http\Actions\Events\Images\GetEventImagesAction;
@@ -130,6 +136,10 @@ use HiEvents\Http\Actions\Organizers\CreateOrganizerAction;
 use HiEvents\Http\Actions\SelfService\EditAttendeePublicAction;
 use HiEvents\Http\Actions\Attendees\Public\GetParticipantSignaturesPublicAction;
 use HiEvents\Http\Actions\Attendees\Public\SignParticipantSignaturesPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\GetTicketTransferPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\TransferTicketPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\GetTransferredHolderDetailsPublicAction;
+use HiEvents\Http\Actions\Attendees\Public\SaveTransferredHolderDetailsPublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\GetCheckInAttendeeSignaturesPublicAction;
 use HiEvents\Http\Actions\CheckInLists\Public\SignCheckInAttendeeSignaturesPublicAction;
 use HiEvents\Http\Actions\SelfService\EditOrderPublicAction;
@@ -158,6 +168,12 @@ use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Documents\GetOrganizerDocumentsAction;
 use HiEvents\Http\Actions\Organizers\Documents\UpdateOrganizerDocumentAction;
 use HiEvents\Http\Actions\Events\GetEventDocumentsPublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\DeleteEventRouteFileAction;
+use HiEvents\Http\Actions\Events\RouteFiles\DownloadEventRouteFilePublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesAction;
+use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesPublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\UpdateEventRouteFileAction;
+use HiEvents\Http\Actions\Events\RouteFiles\UploadEventRouteFileAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentsAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerUnreadMessagesCountAction;
@@ -237,6 +253,7 @@ use HiEvents\Http\Actions\Users\UpdateUserAction;
 use HiEvents\Http\Actions\Users\UpdateUserNotificationEmailsAction;
 use HiEvents\Http\Actions\Admin\Accounts\AssignConfigurationAction;
 use HiEvents\Http\Actions\Admin\Assistant\GetAssistantUsageAction;
+use HiEvents\Http\Actions\Admin\Assistant\UpdateAssistantBudgetAction;
 use HiEvents\Http\Actions\Admin\Assistant\UpdateAssistantModelAction;
 use HiEvents\Http\Actions\Admin\Accounts\GetAccountAction as GetAdminAccountAction;
 use HiEvents\Http\Actions\Admin\Accounts\GetAllAccountsAction as GetAllAdminAccountsAction;
@@ -439,6 +456,7 @@ $router->middleware(['auth:api'])->group(
         $router->delete('/events/{event_id}', DeleteEventAction::class);
         $router->get('/events/{event_id}/deletion-status', GetEventDeletionStatusAction::class);
         $router->post('/events/{event_id}/duplicate', DuplicateEventAction::class);
+        $router->post('/events/{event_id}/repeat', RepeatEventAction::class);
 
         // Product Categories
         $router->post('/events/{event_id}/product-categories', CreateProductCategoryAction::class);
@@ -454,6 +472,11 @@ $router->middleware(['auth:api'])->group(
         $router->get('/events/{event_id}/products/{ticket_id}', GetProductAction::class);
         $router->delete('/events/{event_id}/products/{ticket_id}', DeleteProductAction::class);
         $router->get('/events/{event_id}/products', GetProductsAction::class);
+
+        // « Mauvaise météo ? »: postpone or cancel the event, participants told and refunded
+        $router->get('/events/{event_id}/weather', GetEventChangeStatusAction::class);
+        $router->post('/events/{event_id}/postpone', PostponeEventAction::class);
+        $router->post('/events/{event_id}/cancel', CancelEventAction::class);
 
         // Stats
         $router->get('/events/{event_id}/stats', GetEventStatsAction::class);
@@ -514,6 +537,12 @@ $router->middleware(['auth:api'])->group(
         $router->post('/events/{event_id}/images', CreateEventImageAction::class);
         $router->get('/events/{event_id}/images', GetEventImagesAction::class);
         $router->delete('/events/{event_id}/images/{image_id}', DeleteEventImageAction::class);
+
+        // GPX courses, downloaded by participants from their ticket
+        $router->get('/events/{event_id}/route-files', GetEventRouteFilesAction::class);
+        $router->post('/events/{event_id}/route-files', UploadEventRouteFileAction::class);
+        $router->patch('/events/{event_id}/route-files/{route_file_id}', UpdateEventRouteFileAction::class);
+        $router->delete('/events/{event_id}/route-files/{route_file_id}', DeleteEventRouteFileAction::class);
 
         // Promo Codes
         $router->post('/events/{event_id}/promo-codes', CreatePromoCodeAction::class);
@@ -590,6 +619,7 @@ $router->prefix('/admin')->middleware(['auth:api'])->group(
         $router->get('/platform-revenue', GetPlatformRevenueAction::class);
         $router->get('/assistant-usage', GetAssistantUsageAction::class);
         $router->put('/assistant-model', UpdateAssistantModelAction::class);
+        $router->put('/assistant-budget', UpdateAssistantBudgetAction::class);
         $router->get('/attribution/stats', GetUtmAttributionStatsAction::class);
         $router->get('/accounts', GetAllAdminAccountsAction::class);
         $router->get('/accounts/{account_id}', GetAdminAccountAction::class);
@@ -640,6 +670,9 @@ $router->prefix('/public')->group(
         $router->get('/events/{event_id}/map-location', GetEventMapLocationPublicAction::class)
             ->middleware('throttle:30,1');
         $router->get('/events/{event_id}/documents', GetEventDocumentsPublicAction::class);
+        $router->get('/events/{event_id}/route-files', GetEventRouteFilesPublicAction::class);
+        $router->get('/events/{event_id}/route-files/{route_file_id}', DownloadEventRouteFilePublicAction::class)
+            ->middleware('throttle:60,1');
 
         // Organizers
         $router->get('/organizers/{organizer_id}', GetPublicOrganizerAction::class);
@@ -672,6 +705,21 @@ $router->prefix('/public')->group(
             ->middleware('throttle:self-service-edit');
         $router->post('/events/{event_id}/attendees/{attendee_short_id}/signatures', SignParticipantSignaturesPublicAction::class)
             ->middleware('throttle:self-service-edit');
+        // A participant gives their ticket to someone else, within the organizer's rules.
+        $router->get('/events/{event_id}/attendees/{attendee_short_id}/transfer', GetTicketTransferPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->post('/events/{event_id}/attendees/{attendee_short_id}/transfer', TransferTicketPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->get('/events/{event_id}/attendees/{attendee_short_id}/details', GetTransferredHolderDetailsPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->post('/events/{event_id}/attendees/{attendee_short_id}/details', SaveTransferredHolderDetailsPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+
+        // A postponed event: the participant who can no longer come cancels and gets refunded
+        $router->get('/events/{event_id}/order/{order_short_id}/refund-request', GetRefundRequestPublicAction::class)
+            ->middleware('throttle:30,1');
+        $router->post('/events/{event_id}/order/{order_short_id}/refund-request', SubmitRefundRequestPublicAction::class)
+            ->middleware('throttle:10,1');
 
         // Waitlist
         $router->post('/events/{event_id}/waitlist', CreateWaitlistEntryActionPublic::class)

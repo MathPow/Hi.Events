@@ -18,6 +18,8 @@ use HiEvents\Services\Domain\Attendee\GenerateAttendeeTicketPDFService;
 use HiEvents\DomainObjects\DocumentSignatureDomainObject;
 use HiEvents\Repository\Interfaces\DocumentSignatureRepositoryInterface;
 use HiEvents\Services\Domain\Document\DocumentPdfService;
+use HiEvents\Services\Domain\Event\RouteFile\EventRouteFileService;
+use HiEvents\DomainObjects\EventRouteFileDomainObject;
 use HiEvents\Services\Domain\Email\DTO\RenderedEmailTemplateDTO;
 use HiEvents\Services\Infrastructure\QrCode\QrCodeImageService;
 use Illuminate\Mail\Mailables\Attachment;
@@ -91,6 +93,7 @@ class AttendeeTicketMail extends BaseMail
                 'renderedCta' => $this->renderedTemplate->cta,
                 'eventSettings' => $this->eventSettings,
                 'signatureLinks' => $this->signatureLinks(),
+                'routeFiles' => $this->routeFiles(),
             ]);
         }
 
@@ -114,6 +117,7 @@ class AttendeeTicketMail extends BaseMail
             'organizer' => $this->organizer,
             'order' => $this->order,
             'tickets' => $tickets,
+            'routeFiles' => $this->routeFiles(),
             'ticketUrl' => sprintf(
                 Url::getFrontEndUrlFromConfig(Url::ATTENDEE_TICKET),
                 $this->event->getId(),
@@ -137,6 +141,16 @@ class AttendeeTicketMail extends BaseMail
             $this->event->getId(),
             $attendee->getShortId(),
         ) . '#signer';
+    }
+
+    /**
+     * The event's GPX courses, a download link each.
+     *
+     * @return Collection<int, EventRouteFileDomainObject>
+     */
+    private function routeFiles(): Collection
+    {
+        return app(EventRouteFileService::class)->forEvent($this->event->getId());
     }
 
     /**

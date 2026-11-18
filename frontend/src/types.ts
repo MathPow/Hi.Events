@@ -247,6 +247,9 @@ export interface EventSettings {
     waiver_text?: string | null;
     // Chaque participant signe lui-meme (lien de son billet, ou a l'entree); l'acheteur, son billet seulement.
     participants_sign_themselves?: boolean;
+    /** Participants may give their ticket to someone else, until this many hours before the start. */
+    allow_ticket_transfer?: boolean;
+    ticket_transfer_cutoff_hours?: number;
 
     // Payment settings
     offline_payment_instructions: string;
@@ -363,7 +366,15 @@ export interface Event extends EventBase {
     location_details?: VenueAddress;
     statistics?: EventStatistics;
     has_promo_codes?: boolean;
+    // The first event of its series of dates (« Répéter cet événement »).
+    series_id?: IdParam | null;
+    // « Autres dates »: the next live dates of the series, on the public page.
+    series_occurrences?: EventSeriesOccurrence[];
+    // « Annuler l'événement »: no more sales, a banner on its page.
+    cancelled_at?: string | null;
 }
+
+export type EventSeriesOccurrence = Pick<Event, 'id' | 'slug' | 'start_date' | 'end_date' | 'timezone'>;
 
 export interface EventStatistics {
     unique_views: number;
@@ -710,6 +721,19 @@ export interface Attendee {
     waiver_signed_name?: string | null;
     waiver_guardian_name?: string | null;
     waiver_signed_at?: string | null;
+    /** Who held this ticket before (admin only). */
+    transfers?: AttendeeTransfer[];
+}
+
+export interface AttendeeTransfer {
+    id: number;
+    from_first_name: string;
+    from_last_name: string;
+    from_email: string;
+    to_first_name: string;
+    to_last_name: string;
+    to_email: string;
+    created_at: string;
 }
 
 export type PublicCheckIn = Pick<AttendeeCheckIn, 'id' | 'order_id' | 'attendee_id' | 'check_in_list_id' | 'product_id' | 'event_id'>;

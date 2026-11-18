@@ -25,7 +25,10 @@ class OrderSummaryForOrganizerTest extends TestCase
         $this->assertStringContainsString('Vous avez reçu une nouvelle commande', $html);
         $this->assertStringContainsString('Backyard Boréal</strong>', $html);
         $this->assertStringContainsString('Complétée', $html);
-        $this->assertStringContainsString('https://billets.example.com/logos/billetterie-dehors-wordmark.png', $html);
+        $this->assertMatchesRegularExpression('#<img src="cid:[^"]+" class="logo"#', $html);
+        $this->assertCount(1, $email->getAttachments());
+        $this->assertSame('inline', $email->getAttachments()[0]->getDisposition());
+        $this->assertStringContainsString("font-family: DehorsFatFrank, 'Arial Black'", $html);
         $this->assertStringContainsString('Propulsé par', $html);
         $this->assertStringNotContainsString('hi-events-stacked', $html);
         $this->assertStringNotContainsString('received a new order', $html);

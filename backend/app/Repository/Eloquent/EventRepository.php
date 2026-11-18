@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HiEvents\Repository\Eloquent;
 
+use Carbon\CarbonInterface;
+use Closure;
 use HiEvents\DomainObjects\AccountDomainObject;
 use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventStatisticDomainObject;
@@ -92,6 +94,10 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
                 });
             };
 
+            if ($statusFilter === 'upcoming' && $params->query_params->get('onePerSeries')) {
+                $where[] = self::nextOccurrenceOfEachSeries($defaultEndThreshold);
+            }
+
             $organizerId = $params->filter_fields->first(fn($filter) => $filter->field === EventDomainObjectAbstract::ORGANIZER_ID)?->value;
             if ($organizerId) {
                 $this->model = $this->model->where(EventDomainObjectAbstract::ORGANIZER_ID, $organizerId);
@@ -108,6 +114,41 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             limit: $params->per_page,
             page: $params->page,
         );
+    }
+
+    /**
+     * Keeps a repeated event (same series_id) once, at its next upcoming date: no other upcoming,
+     * not cancelled date of the series with the same status starts before it.
+     */
+    private static function nextOccurrenceOfEachSeries(CarbonInterface $defaultEndThreshold): Closure
+    {
+        return static function (Builder $builder) use ($defaultEndThreshold) {
+            $builder->where(function ($query) use ($defaultEndThreshold) {
+                $query->whereNull('events.' . EventDomainObjectAbstract::SERIES_ID)
+                    ->orWhereNotExists(function ($earlier) use ($defaultEndThreshold) {
+                        $earlier->selectRaw('1')
+                            ->from('events as earlier')
+                            ->whereColumn('earlier.series_id', 'events.series_id')
+                            ->whereColumn('earlier.status', 'events.status')
+                            ->whereNull('earlier.deleted_at')
+                            ->whereNull('earlier.cancelled_at')
+                            ->where(function ($upcoming) use ($defaultEndThreshold) {
+                                $upcoming->where('earlier.end_date', '>=', now())
+                                    ->orWhere(function ($withoutEnd) use ($defaultEndThreshold) {
+                                        $withoutEnd->whereNull('earlier.end_date')
+                                            ->where('earlier.start_date', '>=', $defaultEndThreshold);
+                                    });
+                            })
+                            ->where(function ($sooner) {
+                                $sooner->whereColumn('earlier.start_date', '<', 'events.start_date')
+                                    ->orWhere(function ($sameTime) {
+                                        $sameTime->whereColumn('earlier.start_date', '=', 'events.start_date')
+                                            ->whereColumn('earlier.id', '<', 'events.id');
+                                    });
+                            });
+                    });
+            });
+        };
     }
 
     public function getUpcomingEventsForAdmin(int $perPage): LengthAwarePaginator
@@ -171,6 +212,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             ->join('event_settings', 'events.id', '=', 'event_settings.event_id')
             ->where('events.' . EventDomainObjectAbstract::STATUS, EventStatus::LIVE->name)
             ->where('event_settings.' . EventSettingDomainObjectAbstract::ALLOW_SEARCH_ENGINE_INDEXING, true)
+            ->whereNull('events.' . EventDomainObjectAbstract::CANCELLED_AT)
             ->whereNull('events.' . EventDomainObjectAbstract::DELETED_AT)
             ->orderBy('events.' . EventDomainObjectAbstract::ID)
             ->paginate($perPage, ['*'], 'page', $page));
@@ -183,6 +225,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             ->join('event_settings', 'events.id', '=', 'event_settings.event_id')
             ->where('events.' . EventDomainObjectAbstract::STATUS, EventStatus::LIVE->name)
             ->where('event_settings.' . EventSettingDomainObjectAbstract::ALLOW_SEARCH_ENGINE_INDEXING, true)
+            ->whereNull('events.' . EventDomainObjectAbstract::CANCELLED_AT)
             ->whereNull('events.' . EventDomainObjectAbstract::DELETED_AT)
             ->count();
     }

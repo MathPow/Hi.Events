@@ -256,19 +256,19 @@ $ridge-mobile: 10vw;
   -webkit-user-select: none;
   -webkit-user-drag: none;
 
+  // The two poses flip with an attribute (useStickerTilt), the float only runs on screen: a
+  // filtered element animated in CSS is redrawn at every frame.
   @media (prefers-reduced-motion: no-preference) {
-    animation: sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
-    sticker-tilt 2.4s steps(1) var(--tilt-delay, 0s) infinite;
-  }
-}
-
-@keyframes sticker-tilt {
-  0% {
     transform: rotate(-2.5deg);
-  }
+    animation: sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate;
 
-  50%, 100% {
-    transform: rotate(2.5deg);
+    &[data-tilt] {
+      transform: rotate(2.5deg);
+    }
+
+    &:not([data-onscreen]) {
+      animation-play-state: paused;
+    }
   }
 }
 
@@ -324,7 +324,7 @@ $ridge-mobile: 10vw;
   // visible screen. Without a script to take it over, it steps aside.
   &:not([data-live]) {
     --mountain-width: min(8rem, calc(100vw - 4rem));
-    animation: opening-fallback 0.4s ease 10s both;
+    animation: opening-fallback 0.4s ease 2.5s both;
 
     &::after {
       content: '';
@@ -425,7 +425,7 @@ $ridge-mobile: 10vw;
 
   overflow: hidden;
   color: $creme;
-  background: $brun url('/landing/photos/hero-groupe.webp') center / cover;
+  background: $brun url('/landing/photos/hero-groupe-doux.webp') center / cover;
 }
 
 .heroVideo {
@@ -434,8 +434,6 @@ $ridge-mobile: 10vw;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  // A little dimmer and flatter, for the bright windows and shirts not to fight the headline.
-  filter: brightness(0.82) contrast(0.92) saturate(1.05);
 }
 
 // The video slides down a quarter of the scroll, so it seems to scroll slower
@@ -624,13 +622,15 @@ $ridge-mobile: 10vw;
 }
 
 // The "fewer" and "more" of the headline (HeroTitle), stickers among its
-// words: the word in colour over a cream copy of itself, outlined and cut a
-// little roughly (the SVG filter), tilted, swinging like the other stickers.
+// words: the word in colour over a cream copy of itself, outlined,
+// tilted, swinging like the other stickers. No `filter` on it or its copy: a
+// filtered word is drawn as an image, blurry once tilted (Safari). The outline
+// is a cream stroke widened by cream shadows all around.
 .stickerWord {
   position: relative;
+  isolation: isolate;
   display: inline-block;
   margin-inline: 0.03em;
-  filter: drop-shadow(0 0.02em 0.04em rgb(53 41 36 / 0.35));
 
   &::before {
     content: attr(data-text);
@@ -638,12 +638,42 @@ $ridge-mobile: 10vw;
     z-index: -1;
     inset: 0;
     color: $creme;
-    -webkit-text-stroke: 0.12em $creme;
-    filter: url('#hero-sticker-edge');
+    -webkit-text-stroke: 0.1em $creme;
+    text-shadow:
+    0.075em 0 0 $creme,
+    0.072em 0.019em 0 $creme,
+    0.065em 0.037em 0 $creme,
+    0.053em 0.053em 0 $creme,
+    0.038em 0.065em 0 $creme,
+    0.019em 0.072em 0 $creme,
+    0 0.075em 0 $creme,
+    -0.019em 0.072em 0 $creme,
+    -0.037em 0.065em 0 $creme,
+    -0.053em 0.053em 0 $creme,
+    -0.065em 0.037em 0 $creme,
+    -0.072em 0.019em 0 $creme,
+    -0.075em 0 0 $creme,
+    -0.072em -0.019em 0 $creme,
+    -0.065em -0.037em 0 $creme,
+    -0.053em -0.053em 0 $creme,
+    -0.038em -0.065em 0 $creme,
+    -0.019em -0.072em 0 $creme,
+    0 -0.075em 0 $creme,
+    0.019em -0.072em 0 $creme,
+    0.038em -0.065em 0 $creme,
+    0.053em -0.053em 0 $creme,
+    0.065em -0.038em 0 $creme,
+    0.072em -0.019em 0 $creme,
+    0 0.1em 0.2em rgb(53 41 36 / 0.35);
   }
 
+  // Flipped by useStickerTilt, not a CSS animation, like the other stickers.
   @media (prefers-reduced-motion: no-preference) {
-    animation: sticker-tilt 2.4s steps(1) var(--tilt-delay, 0s) infinite;
+    transform: rotate(-2.5deg);
+
+    &[data-tilt] {
+      transform: rotate(2.5deg);
+    }
   }
 }
 
@@ -658,11 +688,6 @@ $ridge-mobile: 10vw;
   --tilt-delay: -1.2s;
 }
 
-.stickerWordFilter {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
 
 // A sticker and the word after it, on the same line.
 .heroWordGroup {
@@ -714,16 +739,16 @@ $ridge-mobile: 10vw;
 }
 
 // While the opening waits, its window already shows the hero where the
-// entrance takes it from. Held 10s at most, like the opening without its
+// entrance takes it from. Held 2.5s at most, like the opening without its
 // script (.opening); with no script at all, the hero stays in place.
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .landing:not([data-entrance]) {
     .heroTitle h1 {
-      animation: hero-land-wait 1ms 10s backwards;
+      animation: hero-land-wait 1ms 2.5s backwards;
     }
 
     .heroWord, .heroSubtitle, .nav, .heroFooter, .scrollDownWrap {
-      animation: hero-converge-wait 1ms 10s backwards;
+      animation: hero-converge-wait 1ms 2.5s backwards;
     }
   }
 }
@@ -774,6 +799,122 @@ $ridge-mobile: 10vw;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+// The hero's stickers, around the title as in the mockup: inside the hero,
+// cut by its edges, over the shade and under the nav and the title.
+.heroStickers {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+
+  .sticker {
+    z-index: auto;
+    pointer-events: none;
+  }
+}
+
+// Three in the gaps around the title.
+.heroStickerTopLeft,
+.heroStickerMiddleLeft,
+.heroStickerUpperRight {
+  width: clamp(4.5rem, 7.5vw, 8rem);
+}
+
+.heroStickerTopLeft {
+  top: 9%;
+  left: 40%;
+  rotate: 7deg;
+  --tilt-delay: -0.9s;
+  --float-delay: -3.5s;
+  --pop-delay: 0.1s;
+
+  // Beside the full nav it would sit on the links: lower, above the title.
+  @media (max-width: 1439px) {
+    top: 12%;
+    left: 30%;
+  }
+
+  // Narrower, the language switch slides over to it: a step lower.
+  @media (max-width: 1279px) {
+    top: 17%;
+  }
+}
+
+.heroStickerMiddleLeft {
+  top: 50%;
+  left: 4%;
+  rotate: -7deg;
+  --tilt-delay: -1.4s;
+  --float-delay: -1.5s;
+  --pop-delay: 0.25s;
+
+  @media (max-width: 1279px) {
+    top: auto;
+    bottom: 12%;
+    left: 3%;
+  }
+}
+
+.heroStickerUpperRight {
+  top: 33%;
+  right: 3%;
+  rotate: 9deg;
+  --tilt-delay: -0.3s;
+  --float-delay: -4.5s;
+  --pop-delay: 0.4s;
+
+  @media (max-width: 1279px) {
+    top: 22%;
+    right: 3%;
+  }
+}
+
+// On a phone, the title takes the whole width: the stickers keep to the corners.
+@media (max-width: $mobile) {
+  .heroStickerTopLeft {
+    top: 13%;
+    left: 6%;
+  }
+
+  .heroStickerMiddleLeft {
+    bottom: 10%;
+    left: 6%;
+  }
+
+  .heroStickerUpperRight {
+    top: auto;
+    bottom: 15%;
+    right: 6%;
+  }
+}
+
+// They land once the title has, one after the other.
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .landing[data-entrance] .heroStickers .sticker {
+    animation:
+      sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
+      hero-sticker-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(1.6s + var(--pop-delay, 0s)) both;
+  }
+
+  .landing:not([data-entrance]) .heroStickers .sticker {
+    animation:
+      sticker-float 6s ease-in-out var(--float-delay, 0s) infinite alternate,
+      hero-sticker-pop-wait 1ms 2.5s backwards;
+  }
+}
+
+@keyframes hero-sticker-pop {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes hero-sticker-pop-wait {
+  from {
+    scale: 0;
+  }
 }
 
 .scrollDownWrap {
@@ -880,6 +1021,7 @@ $ridge-mobile: 10vw;
 // The cream pill is a layer of its own (navigation.svg): its shadow follows the
 // drawn outline without touching the text.
 .scrolledNav {
+  white-space: nowrap;
   position: fixed;
   z-index: 50;
   top: 1.25rem;
@@ -1091,7 +1233,6 @@ $ridge-mobile: 10vw;
   padding: 0.75rem;
   border-radius: 1.25rem;
   background: $creme;
-  box-shadow: 0 0.75rem 1.875rem rgb(53 41 36 / 0.13);
   font-size: 1.125rem;
   animation: menu-entrance 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
 
@@ -1327,7 +1468,7 @@ $ridge-mobile: 10vw;
   grid-template-columns: 2.4fr 3.2fr 3.4fr;
   grid-template-areas:
     "title title large"
-    "text medium large"
+    "text text large"
     "small medium large";
   align-items: end;
   gap: 1.75rem 1rem;
@@ -1335,8 +1476,10 @@ $ridge-mobile: 10vw;
   margin: clamp(6rem, 11vw, 9rem) auto 0;
 }
 
+// Over the first two photos, on few long lines.
 .introText {
   grid-area: text;
+  max-width: 40rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1693,54 +1836,22 @@ $ridge-mobile: 10vw;
 // the left (NextEvents), stopped under the mouse. A photo and the title under
 // it, on two lines at most.
 .nextEvents {
-  margin-top: 4rem;
+  margin-top: clamp(6rem, 9vw, 8rem);
 }
 
 // The banner already marks the break: the intro comes closer.
 .nextEvents + .intro {
-  margin-top: clamp(4rem, 8vw, 6rem);
-}
-
-// Handwritten, like the confirmation's « On se voit dehors! », past `.landing h2`.
-.nextEvents .nextEventsTitle {
-  margin: 0 0 1.5rem;
-  font-family: 'Felt Tip', 'Comic Sans MS', cursive;
-  font-size: 1.75rem;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: center;
-  color: $orange;
+  margin-top: clamp(6rem, 11vw, 9rem);
 }
 
 // « Voir tous les evenements », centre sous la file: le repertoire (/events).
 .nextEventsMore {
   display: flex;
   justify-content: center;
-  margin-top: 1.75rem;
+  margin-top: 2.5rem;
 }
 
 // A plain link: its letters shake like every link's, its arrow hops forward on the shop's beat.
-.nextEventsLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-weight: 700;
-  color: $brun;
-
-  svg {
-    flex: none;
-  }
-
-  @media (hover: hover) {
-    &:hover svg {
-      animation: arrow-hop 0.8s steps(1) infinite;
-    }
-  }
-
-  &:focus-visible svg {
-    animation: arrow-hop 0.8s steps(1) infinite;
-  }
-}
 
 @keyframes arrow-hop {
   50% {
@@ -1748,12 +1859,24 @@ $ridge-mobile: 10vw;
   }
 }
 
-// Clipped on the sides only: a hovered card rises a little. Without motion, it scrolls by hand.
+// Clipped on the sides only: a hovered card rises a little. Grabbed to be thrown
+// either way (useDragMarquee), a finger's vertical swipe still scrolling the page.
+// Without motion, it scrolls by hand.
 .nextEventsScroller {
+  container-type: inline-size;
   overflow: clip visible;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+
+  &[data-dragging] {
+    cursor: grabbing;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     overflow-x: auto;
+    touch-action: auto;
   }
 }
 
@@ -1780,22 +1903,30 @@ $ridge-mobile: 10vw;
 }
 
 .nextEvent {
+  // About seven across the row, never smaller than 12.5rem.
+  --next-event-width: max(12.5rem, (100cqi - 6rem) / 7);
+
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  width: 12.5rem;
+  width: var(--next-event-width);
   color: $brun;
   text-decoration: none;
+  cursor: inherit;
   transition: translate 0.25s $ease;
 
   &:hover {
     translate: 0 -0.125rem;
   }
+
+  .nextEventsScroller[data-dragging] & {
+    translate: none;
+  }
 }
 
 .nextEventPicture {
   position: relative;
-  height: 7.5rem;
+  aspect-ratio: 5 / 3;
   overflow: hidden;
   border-radius: 1rem;
   background: $orange-pale;
@@ -1815,7 +1946,7 @@ $ridge-mobile: 10vw;
   left: 0.5rem;
   padding: 0.3125rem 0.625rem;
   border-radius: 62rem;
-  font-size: 0.75rem;
+  font-size: clamp(0.75rem, var(--next-event-width) * 0.05, 0.875rem);
   font-weight: 700;
   line-height: normal;
   white-space: nowrap;
@@ -1827,7 +1958,7 @@ $ridge-mobile: 10vw;
   display: -webkit-box;
   overflow: hidden;
   font-family: $display;
-  font-size: 0.9375rem;
+  font-size: clamp(0.9375rem, var(--next-event-width) * 0.066, 1.25rem);
   line-height: 1.15;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1836,12 +1967,7 @@ $ridge-mobile: 10vw;
 
 @media (max-width: $mobile) {
   .nextEvents {
-    margin-top: 3.5rem;
-  }
-
-  .nextEvents .nextEventsTitle {
-    margin-bottom: 1.125rem;
-    font-size: 1.5rem;
+    margin-top: 5rem;
   }
 
   .nextEventsCopy {
@@ -1850,11 +1976,10 @@ $ridge-mobile: 10vw;
   }
 
   .nextEvent {
-    width: 10.5rem;
+    --next-event-width: 10.5rem;
   }
 
   .nextEventPicture {
-    height: 6.25rem;
     border-radius: 0.875rem;
   }
 
@@ -1969,6 +2094,7 @@ $ridge-mobile: 10vw;
 }
 
 .feesCompare {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -2056,12 +2182,14 @@ $ridge-mobile: 10vw;
   }
 }
 
+// Always on one line: smaller in a narrow card (cqi, the card's width) rather than wrapping.
 .feesTotal {
   display: block;
   font-family: $display;
   font-weight: 400;
-  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-size: min(clamp(2.25rem, 4vw, 3.25rem), 7.8cqi);
   line-height: 1;
+  white-space: nowrap;
 }
 
 .feesNote {
@@ -2076,12 +2204,17 @@ $ridge-mobile: 10vw;
   }
 }
 
-.stickerCampfire {
+// The piggy bank on the calculator's top corner.
+.stickerFees {
   top: -3.25rem;
   right: -2.5rem;
   width: clamp(5.5rem, 9vw, 8rem);
   rotate: 8deg;
   --tilt-delay: -1.8s;
+
+  @media (max-width: $mobile) {
+    right: -0.5rem;
+  }
 }
 
 // --- Stripe ---
@@ -2102,6 +2235,7 @@ $ridge-mobile: 10vw;
 }
 
 .stripeText {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -2130,6 +2264,21 @@ $ridge-mobile: 10vw;
 
   @media (min-width: 961px) {
     order: -1;
+  }
+}
+
+// The coin beside the title, off the card.
+.stickerStripe {
+  top: -4rem;
+  right: 0.5rem;
+  width: clamp(5rem, 8vw, 7rem);
+  rotate: 12deg;
+  --tilt-delay: -0.6s;
+
+  @media (max-width: $mobile) {
+    top: -1rem;
+    right: 0;
+    width: 4.5rem;
   }
 }
 
@@ -2283,6 +2432,7 @@ $ridge-mobile: 10vw;
 }
 
 .featuresWrap {
+  position: relative;
   padding: clamp(2.5rem, 5vw, 4rem) $gutter clamp(3rem, 6vw, 5rem);
 
   @media (max-width: $mobile) {
@@ -2675,6 +2825,21 @@ $ridge-mobile: 10vw;
   translate: 0 1rem;
 }
 
+// On the photo's bottom right corner, two thirds outside it.
+.stickerFeatures {
+  --w: clamp(5.5rem, 7vw, 7.5rem);
+  right: calc(0.5rem - var(--w) * 0.67);
+  bottom: 1.5rem;
+  width: var(--w);
+  rotate: 8deg;
+  --tilt-delay: -1.2s;
+
+  // Narrower, the margin is too thin: a third outside, not cut by the screen.
+  @media (max-width: 1279px) {
+    right: calc(0.5rem - var(--w) * 0.35);
+  }
+}
+
 .stickerCommunityLeft {
   top: -2.5rem;
   left: -2rem;
@@ -2821,6 +2986,21 @@ $footer-ridge-mobile: 13.205056%;
   }
 }
 
+// Reopens the cookie choice (the floating biscuit goes away once chosen).
+.footerCookies {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    color: $creme;
+    text-decoration: underline;
+  }
+}
+
 // The studio's name stands out of the muted line, and underlines on hover.
 .footerCredit {
   strong {
@@ -2887,7 +3067,7 @@ $footer-ridge-mobile: 13.205056%;
 
 // --- Small screens ---
 
-// Too narrow for the text beside the small photo: it goes above the first two.
+// The title over the whole width.
 @media (max-width: 1100px) {
   .intro {
     grid-template-columns: 2fr 3.3fr 3.4fr;
@@ -2974,10 +3154,6 @@ $footer-ridge-mobile: 13.205056%;
     min-height: 14rem;
   }
 
-  .stickerCampfire {
-    right: -0.5rem;
-  }
-
   // The FAQ's phone layout, 20px corners; the badge goes under the name.
   .features li {
     border-radius: 1.25rem;
@@ -3017,4 +3193,114 @@ $footer-ridge-mobile: 13.205056%;
     }
   }
 
+}
+
+// With reduced motion, no hover or focus effect moves (hop, boiling outline, shaking letters,
+// arrows): the page's other animations already stop there.
+@media (prefers-reduced-motion: reduce) {
+  .landing :is(:hover, :focus-visible),
+  .landing :is(:hover, :focus-visible) *,
+  .landing :is(:hover, :focus-visible)::before,
+  .landing :is(:hover, :focus-visible)::after,
+  .landing :is(:hover, :focus-visible) *::before,
+  .landing :is(:hover, :focus-visible) *::after {
+    animation: none !important;
+  }
+}
+
+// --- Shortcuts ---
+
+// In the scrolled bar: « Événements » and « Mes billets » as two icons, their name under them on hover.
+.scrolledNavShortcuts {
+  display: flex;
+  gap: 0.25rem;
+
+  a {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    color: $brun;
+    transition: background-color 0.2s;
+
+    &:hover,
+    &:focus-visible {
+      background: $peche;
+
+      .shortcutLabel {
+        opacity: 1;
+        translate: -50% 0;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $brun;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.shortcutLabel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 50%;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 999px;
+  background: $brun;
+  color: $creme;
+  font: 700 0.875rem/1.2 $sans;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -50% -0.25rem;
+  pointer-events: none;
+  transition: opacity 0.2s, translate 0.2s $ease;
+}
+
+// On a phone: no icons up top, one cream pill at the bottom, « Événements  Mes billets » as in the menu.
+.bottomLinks {
+  display: none;
+}
+
+@media (max-width: $mobile) {
+  .scrolledNavShortcuts {
+    display: none;
+  }
+
+  .bottomLinks {
+    position: fixed;
+    z-index: 48;
+    left: 50%;
+    bottom: 0.75rem;
+    display: flex;
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: $creme;
+    box-shadow: 0 0.375rem 1.25rem rgb(53 41 36 / 0.22);
+    translate: -50% calc(100% + 2rem);
+    visibility: hidden;
+    transition: translate 0.45s $ease, visibility 0s linear 0.45s;
+
+    a {
+      padding: 0.625rem 1.125rem;
+      color: $brun;
+      font: 700 1rem/1.2 $sans;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+  }
+
+  .bottomLinksShown {
+    translate: -50% 0;
+    visibility: visible;
+    transition: translate 0.45s $ease, visibility 0s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottomLinks,
+  .shortcutLabel {
+    transition: none;
+  }
 }

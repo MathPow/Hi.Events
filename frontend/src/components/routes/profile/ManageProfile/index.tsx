@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {useSearchParams} from "react-router";
 import {t, Trans} from "@lingui/macro";
 import {useGetMe} from "../../../../queries/useGetMe.ts";
-import {timezones} from "../../../../../data/timezones.ts";
+import {timezoneComboboxProps, timezones} from "../../../../../data/timezones.ts";
 import {useUpdateMe} from "../../../../mutations/useUpdateMe.ts";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
 import {UserMeRequest} from "../../../../api/user.client.ts";
@@ -13,7 +13,7 @@ import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorRespons
 import {useResendEmailConfirmation} from "../../../../mutations/useResendEmailConfirmation.ts";
 import {useConfirmEmailAddress} from "../../../../mutations/useConfirmEmailAddress.ts";
 import {useConfirmEmailChange} from "../../../../mutations/useConfirmEmailChange.ts";
-import {availableLocales, localeToFlagEmojiMap, localeToNameMap, SupportedLocales} from "../../../../locales.ts";
+import {availableLocales, getClientLocale, localeToFlagEmojiMap, localeToNameMap, SupportedLocales} from "../../../../locales.ts";
 import {getConfig} from "../../../../utilites/config.ts";
 import {usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
 import {Modal} from "../../../common/Modal";
@@ -69,14 +69,18 @@ export const ManageProfile = () => {
     });
 
     useEffect(() => {
-        profileForm.setValues({
+        // La langue affichee est celle du temoin (le choix FR | EN des pages publiques), pas toujours
+        // celle du profil: le champ montre celle qu'on voit, pour qu'en choisir une autre la change.
+        const values = {
             first_name: me?.first_name,
             last_name: me?.last_name,
             email: me?.email,
             timezone: me?.timezone,
-            locale: me?.locale,
+            locale: (getClientLocale() ?? me?.locale) as SupportedLocales | undefined,
             marketing_opt_in: me?.marketing_opted_in_at !== null,
-        });
+        };
+        profileForm.setInitialValues(values);
+        profileForm.setValues(values);
     }, [me]);
 
     const clearParam = (name: string) => setSearchParams(params => {
@@ -98,15 +102,23 @@ export const ManageProfile = () => {
     }, [confirmEmailToken, me?.id]);
 
     const handleProfileFormSubmit = (formValues: Partial<UserMeRequest>, form: UseFormReturnType<any>) => {
+        // Compare a la langue affichee, lu avant l'envoi: la page se recharge dans la nouvelle.
+        const localeChanged = !!formValues.locale && formValues.locale !== getClientLocale();
+
         mutation.mutate({
             userData: formValues,
         }, {
             onSuccess: () => {
-                form.reset();
+                // Le profil garde ce qui vient d'etre enregistre; le mot de passe se vide.
+                if (formValues.locale) {
+                    form.resetDirty();
+                    document.cookie = `locale=${formValues.locale};path=/;max-age=31536000`;
+                } else {
+                    form.reset();
+                }
                 showSuccess(t`Profile updated successfully`);
-                document.cookie = `locale=${formValues.locale};path=/;max-age=31536000`;
 
-                if (form.isDirty('locale')) {
+                if (localeChanged) {
                     window.location.reload();
                 }
             },
@@ -211,7 +223,7 @@ export const ManageProfile = () => {
                 <SettingsCard title={t`Regional Settings`}>
                     <fieldset className={classes.fieldset} disabled={isFetching}>
                         <div className={settings.fields}>
-                            <Select className={settings.field} required searchable data={timezones}
+                            <Select className={settings.field} required searchable data={timezones} comboboxProps={timezoneComboboxProps}
                                     label={t`Timezone`} placeholder={t`UTC`}
                                     {...profileForm.getInputProps('timezone')}/>
                             <Select className={settings.field} required data={localeSelectData} label={t`Language`}

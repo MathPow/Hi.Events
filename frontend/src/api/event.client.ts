@@ -85,6 +85,16 @@ export const eventsClient = {
         return response.data;
     },
 
+    // « Répéter cet événement »: one copy per day (YYYY-MM-DD, event's time zone). meta.failed_date is
+    // the day the creation stopped at, when one failed.
+    repeat: async (eventId: IdParam, dates: string[]) => {
+        const response = await api.post<GenericDataResponse<Event[]> & { meta: { failed_date: string | null } }>(
+            'events/' + eventId + '/repeat',
+            {dates},
+        );
+        return response.data;
+    },
+
     updateEventStatus: async (eventId: IdParam, status: string) => {
         const response = await api.put<GenericDataResponse<Event>>('events/' + eventId + '/status', {
             status

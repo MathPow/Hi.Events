@@ -5,6 +5,7 @@ import {useFormErrorResponseHandler} from "../../../../hooks/useFormErrorRespons
 import {useRegisterAccount} from "../../../../mutations/useRegisterAccount.ts";
 import {NavLink, useLocation, useNavigate} from "react-router";
 import {t, Trans} from "@lingui/macro";
+import {TicketLookupCard} from "../../../common/TicketLookupCard";
 import classes from "./Register.module.scss";
 import {getClientLocale} from "../../../../locales.ts";
 import {useEffect, useState} from "react";
@@ -120,7 +121,7 @@ export const Register = () => {
     return (
         <div className={classes.stack}>
             <header className={classes.header}>
-                <h2>{t`Create an account`}</h2>
+                <h2>{t`Create an organizer account`}</h2>
                 <p>
                     <Trans>
                         Already have an account?{' '}
@@ -129,6 +130,7 @@ export const Register = () => {
                         </NavLink>
                     </Trans>
                 </p>
+
             </header>
 
             <form className={classes.registerForm} onSubmit={form.onSubmit(registerUser)}>
@@ -227,6 +229,9 @@ export const Register = () => {
                     </Trans>
                 </footer>
             </form>
+
+            {/* Un acheteur arrive ici en cherchant ses billets: le lien lui est envoye, sans compte. */}
+            <TicketLookupCard/>
         </div>
     )
 }

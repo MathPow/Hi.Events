@@ -57,6 +57,7 @@ export const SizedPricing = ({product, event, form, productIndex}: SizedPricingP
                                         max={(Math.min(price.quantity_remaining ?? 50, product.max_per_order ?? 50))}
                                         fieldName={`products.${productIndex}.quantities.${index}.quantity`}
                                         formInstance={form}
+                                        itemLabel={[product.title, price.label].filter(Boolean).join(' – ')}
                                     />
                                     {form.errors[`products.${productIndex}.quantities.${index}.quantity`] && (
                                         <div className={'hi-product-quantity-error'}>

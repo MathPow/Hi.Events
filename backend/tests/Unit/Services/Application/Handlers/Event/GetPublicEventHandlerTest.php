@@ -150,6 +150,46 @@ class GetPublicEventHandlerTest extends TestCase
         $this->handler->handle($data);
     }
 
+    public function testHandleListsTheNextLiveDatesOfTheSeries(): void
+    {
+        $data = new GetPublicEventDTO(eventId: 11, isAuthenticated: true, ipAddress: '127.0.0.1', promoCode: null);
+        $event = (new EventDomainObject())->setId(11)->setSeriesId(10);
+        $event->setProductCategories(collect());
+        $occurrences = collect(range(12, 19))->map(fn(int $id) => (new EventDomainObject())->setId($id));
+
+        $this->setupEventRepositoryMock($event, $data->eventId);
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect());
+        $this->ticketFilterService->shouldReceive('filter')->once()->andReturn(collect());
+        $this->eventRepository->shouldReceive('findWhere')
+            ->once()
+            ->withArgs(fn(array $where) => $where['series_id'] === 10
+                && $where['status'] === 'LIVE'
+                && $where[0] === ['id', '!=', 11]
+                && $where[1][0] === 'start_date' && $where[1][1] === '>')
+            ->andReturn($occurrences);
+
+        $result = $this->handler->handle($data);
+
+        $this->assertSame(
+            [12, 13, 14, 15, 16, 17],
+            $result->getSeriesOccurrences()->map(fn(EventDomainObject $occurrence) => $occurrence->getId())->all(),
+        );
+    }
+
+    public function testHandleDoesNotLookForOtherDatesOutsideASeries(): void
+    {
+        $data = new GetPublicEventDTO(eventId: 1, isAuthenticated: true, ipAddress: '127.0.0.1', promoCode: null);
+        $event = new EventDomainObject();
+        $event->setProductCategories(collect());
+
+        $this->setupEventRepositoryMock($event, $data->eventId);
+        $this->promoCodeRepository->shouldReceive('findWhere')->once()->andReturn(collect());
+        $this->ticketFilterService->shouldReceive('filter')->once()->andReturn(collect());
+        $this->eventRepository->shouldNotReceive('findWhere');
+
+        $this->assertNull($this->handler->handle($data)->getSeriesOccurrences());
+    }
+
     private function setupEventRepositoryMock($event, $eventId): void
     {
         $this->eventRepository->shouldReceive('loadRelation')->andReturnSelf()->times(4);

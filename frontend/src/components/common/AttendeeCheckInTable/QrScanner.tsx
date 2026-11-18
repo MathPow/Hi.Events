@@ -4,14 +4,19 @@ import {useDebouncedValue} from '@mantine/hooks';
 import classes from './QrScanner.module.scss';
 import {showError} from "../../../utilites/notifications.tsx";
 import {t} from "@lingui/macro";
+import {ScanOutcome} from "../CheckIn/PhoneScanner";
 import {QrScannerControls} from './QrScannerControls';
 import {PermissionDeniedMessage} from './PermissionDeniedMessage';
 
 interface QRScannerComponentProps {
-    onAttendeeScanned: (attendeePublicId: string) => void;
+    onAttendeeScanned: (attendeePublicId: string) => void | Promise<ScanOutcome | void>;
     onClose: () => void;
     isSoundOn?: boolean;
 }
+
+const RECENT_SCAN_MS = 6000;
+const RETRY_PAUSE_MS = 2000;
+const BUSY_PAUSE_MS = 400;
 
 export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -24,13 +29,17 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     const [cameraList, setCameraList] = useState<QrScanner.Camera[]>();
     const [processedAttendeeIds, setProcessedAttendeeIds] = useState<string[]>([]);
     const latestProcessedAttendeeIdsRef = useRef<string[]>([]);
+    const inFlightAttendeeIdRef = useRef<string | null>(null);
+    const scannedAtRef = useRef(new Map<string, number>());
+    const lastHandledIdRef = useRef<string | null>(null);
 
     const [currentAttendeeId, setCurrentAttendeeId] = useState<string | null>(null);
     const [debouncedAttendeeId] = useDebouncedValue(currentAttendeeId, 1000);
+    // Relance le traitement du billet tenu devant la camera (sa valeur ne change pas apres une
+    // pause ou un enregistrement en cours, donc le debounce seul ne le relirait jamais).
+    const [rescanTick, setRescanTick] = useState(0);
     const [isScanFailed, setIsScanFailed] = useState(false);
-    const [isScanSucceeded, setIsScanSucceeded] = useState(false);
 
-    const scanSuccessAudioRef = useRef<HTMLAudioElement | null>(null);
     const scanErrorAudioRef = useRef<HTMLAudioElement | null>(null);
     const scanInProgressAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -80,11 +89,32 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
     };
 
     useEffect(() => {
+        if (!debouncedAttendeeId) {
+            lastHandledIdRef.current = null;
+        }
         if (debouncedAttendeeId) {
             const latestProcessedAttendeeIds = latestProcessedAttendeeIdsRef.current;
             const alreadyScanned = latestProcessedAttendeeIds.includes(debouncedAttendeeId);
 
-            if (isScanSucceeded || isScanFailed) {
+            // Occupe (ou ce billet est en cours d'enregistrement): on oublie cette lecture pour que
+            // le billet tenu devant la camera soit relu ensuite, sans faux « deja scanne ».
+            if (isScanFailed || isCheckingIn || inFlightAttendeeIdRef.current === debouncedAttendeeId) {
+                setCurrentAttendeeId(null);
+                return;
+            }
+
+            // Le billet qu'on vient de traiter, encore devant la camera: l'ecran a deja repondu.
+            const scannedAt = scannedAtRef.current.get(debouncedAttendeeId);
+            if (alreadyScanned && scannedAt && Date.now() - scannedAt < RECENT_SCAN_MS) {
+                setCurrentAttendeeId(null);
+                return;
+            }
+
+            // Une relance (rescanTick) n'est pas une nouvelle lecture: pas de « deja scanne » pour un
+            // billet qui n'est peut-etre plus devant la camera.
+            const freshRead = lastHandledIdRef.current !== debouncedAttendeeId;
+            lastHandledIdRef.current = debouncedAttendeeId;
+            if (alreadyScanned && !freshRead) {
                 return;
             }
 
@@ -92,7 +122,7 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 showError(t`You already scanned this ticket`);
 
                 setIsScanFailed(true);
-                setInterval(() => setIsScanFailed(false), 500);
+                setTimeout(() => setIsScanFailed(false), 500);
                 if (isSoundOn && scanErrorAudioRef.current) {
                     scanErrorAudioRef.current.play();
                 }
@@ -102,23 +132,45 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
 
             if (!isCheckingIn && !alreadyScanned) {
                 setIsCheckingIn(true);
-                if (isSoundOn && scanInProgressAudioRef.current) {
+                // Une relance (occupe, echec passager) ne rejoue pas le son: un bip par billet lu.
+                if (freshRead && isSoundOn && scanInProgressAudioRef.current) {
                     scanInProgressAudioRef.current.play();
                 }
 
-                props.onAttendeeScanned(debouncedAttendeeId);
-                setIsCheckingIn(false);
-                setProcessedAttendeeIds(prevIds => [...prevIds, debouncedAttendeeId]);
+                // L'entree (ou son refus) est annoncee par l'ecran d'enregistrement, une fois la
+                // reponse du serveur recue: pas de vert ni de son de reussite avant.
+                const scannedId = debouncedAttendeeId;
+                inFlightAttendeeIdRef.current = scannedId;
+                scannedAtRef.current.set(scannedId, Date.now());
+                setProcessedAttendeeIds(prevIds => [...prevIds, scannedId]);
                 setCurrentAttendeeId(null);
-
-                setIsScanSucceeded(true);
-                setInterval(() => setIsScanSucceeded(false), 500);
-                if (isSoundOn && scanSuccessAudioRef.current) {
-                    scanSuccessAudioRef.current.play();
-                }
+                // Non traite: relu tout de suite; echec passager: relu apres une courte pause.
+                const forget = () => setProcessedAttendeeIds(prevIds => prevIds.filter(id => id !== scannedId));
+                let busy = false;
+                Promise.resolve(props.onAttendeeScanned(scannedId)).then((outcome) => {
+                    if (outcome === 'busy') {
+                        // Un autre billet est en cours (lecteur USB): on relit un peu plus tard,
+                        // pas en boucle a chaque rendu.
+                        busy = true;
+                        forget();
+                        setTimeout(() => setRescanTick(tick => tick + 1), BUSY_PAUSE_MS);
+                    } else if (outcome === 'retry') {
+                        setTimeout(() => {
+                            forget();
+                            setRescanTick(tick => tick + 1);
+                        }, RETRY_PAUSE_MS);
+                    }
+                }).finally(() => {
+                    inFlightAttendeeIdRef.current = null;
+                    scannedAtRef.current.set(scannedId, Date.now());
+                    setIsCheckingIn(false);
+                    if (!busy) {
+                        setRescanTick(tick => tick + 1);
+                    }
+                });
             }
         }
-    }, [debouncedAttendeeId]);
+    }, [debouncedAttendeeId, rescanTick]);
 
     const stopScanner = () => {
         if (qrScannerRef.current) {
@@ -205,11 +257,10 @@ export const QRScannerComponent = (props: QRScannerComponentProps) => {
                 onClose={handleClose}
             />
 
-            <audio ref={scanSuccessAudioRef} src="/sounds/scan-success.wav"/>
             <audio ref={scanErrorAudioRef} src="/sounds/scan-error.wav"/>
             <audio ref={scanInProgressAudioRef} src="/sounds/scan-in-progress.wav"/>
             
-            <div className={`${classes.scannerOverlay} ${isScanSucceeded ? classes.success : ""} ${isScanFailed ? classes.failure : ""} ${isCheckingIn ? classes.checkingIn : ""}`}/>
+            <div className={`${classes.scannerOverlay} ${isScanFailed ? classes.failure : ""} ${isCheckingIn ? classes.checkingIn : ""}`}/>
         </div>
     );
 };

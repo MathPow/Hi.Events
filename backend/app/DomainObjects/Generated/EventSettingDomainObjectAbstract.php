@@ -80,6 +80,8 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const LOCATION_GEOCODED_FOR = 'location_geocoded_for';
     final public const LOCATION_REGION = 'location_region';
     final public const PARTICIPANTS_SIGN_THEMSELVES = 'participants_sign_themselves';
+    final public const ALLOW_TICKET_TRANSFER = 'allow_ticket_transfer';
+    final public const TICKET_TRANSFER_CUTOFF_HOURS = 'ticket_transfer_cutoff_hours';
 
     protected int $id;
     protected int $event_id;
@@ -151,6 +153,8 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected ?string $location_geocoded_for = null;
     protected ?string $location_region = null;
     protected bool $participants_sign_themselves = false;
+    protected bool $allow_ticket_transfer = false;
+    protected int $ticket_transfer_cutoff_hours = 48;
 
     public function toArray(): array
     {
@@ -225,6 +229,8 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'location_geocoded_for' => $this->location_geocoded_for ?? null,
                     'location_region' => $this->location_region ?? null,
                     'participants_sign_themselves' => $this->participants_sign_themselves ?? null,
+                    'allow_ticket_transfer' => $this->allow_ticket_transfer ?? null,
+                    'ticket_transfer_cutoff_hours' => $this->ticket_transfer_cutoff_hours ?? null,
                 ];
     }
 
@@ -997,5 +1003,27 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getParticipantsSignThemselves(): bool
     {
         return $this->participants_sign_themselves;
+    }
+
+    public function setAllowTicketTransfer(bool $allow_ticket_transfer): self
+    {
+        $this->allow_ticket_transfer = $allow_ticket_transfer;
+        return $this;
+    }
+
+    public function getAllowTicketTransfer(): bool
+    {
+        return $this->allow_ticket_transfer;
+    }
+
+    public function setTicketTransferCutoffHours(int $ticket_transfer_cutoff_hours): self
+    {
+        $this->ticket_transfer_cutoff_hours = $ticket_transfer_cutoff_hours;
+        return $this;
+    }
+
+    public function getTicketTransferCutoffHours(): int
+    {
+        return $this->ticket_transfer_cutoff_hours;
     }
 }

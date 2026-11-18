@@ -109,7 +109,7 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                 <img className={classes.headerMascot} src={'/interface/admin/stagiaire.svg'} width={21} height={24} alt=""
                      aria-hidden/>
                 <strong className={classes.title}>{t`Assistant`}</strong>
-                {status && status.remaining <= 20 && (
+                {status && !status.over_weekly_budget && status.remaining <= 20 && (
                     <span className={classes.remaining}>{t`${status.remaining} requests left today`}</span>
                 )}
                 {bubbles.length > 0 && (
@@ -129,7 +129,11 @@ const AssistantPanel = ({userId}: { userId: string }) => {
                     {statusFailed && <p className={classes.error}>{t`The assistant can't be reached right now.`}</p>}
                     {status && !status.ready && <p className={classes.error}>{t`The assistant is not available yet.`}</p>}
                     {status?.ready && status.remaining <= 0 && (
-                        <p className={classes.error}>{t`The assistant has reached its daily limit for this account. It will be back tomorrow.`}</p>
+                        <p className={classes.error}>
+                            {status.over_weekly_budget
+                                ? t`The assistant has used its budget for this week on this account. It will be back on Monday.`
+                                : t`The assistant has reached its daily limit for this account. It will be back tomorrow.`}
+                        </p>
                     )}
                     {bubbles.length === 0 && (
                         <div className={classes.empty}>

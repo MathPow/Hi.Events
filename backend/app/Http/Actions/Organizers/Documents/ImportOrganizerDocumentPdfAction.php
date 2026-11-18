@@ -63,7 +63,7 @@ class ImportOrganizerDocumentPdfAction extends BaseAction
         $userId = $this->getAuthenticatedUser()->getId();
         if (!$this->quotaService->consume($accountId)) {
             return $this->errorResponse(
-                __('The assistant has reached its daily limit for this account. It will be back tomorrow.'),
+                $this->quotaService->refusalMessage($accountId),
                 ResponseCodes::HTTP_TOO_MANY_REQUESTS,
             );
         }

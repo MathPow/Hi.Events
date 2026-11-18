@@ -9,6 +9,7 @@ use Exception;
 use HiEvents\DomainObjects\AttendeeDomainObject;
 use HiEvents\DomainObjects\Enums\AttendeeDetailsCollectionMethod;
 use HiEvents\DomainObjects\Enums\ProductType;
+use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\EventSettingDomainObject;
 use HiEvents\DomainObjects\Generated\AttendeeDomainObjectAbstract;
 use HiEvents\DomainObjects\Generated\OrderDomainObjectAbstract;
@@ -327,6 +328,10 @@ class CompleteOrderHandler
         if ($order->getStatus() !== OrderStatus::RESERVED->name) {
             throw new ResourceConflictException(__('This order has already been processed'));
         }
+
+        if ($order->getEvent()?->isCancelled()) {
+            throw new ResourceConflictException(__('This event has been cancelled. Tickets are no longer on sale.'));
+        }
     }
 
     /**
@@ -370,6 +375,7 @@ class CompleteOrderHandler
                     domainObject: OrderItemDomainObject::class,
                     nested: [new Relationship(ProductDomainObject::class, name: 'product')]
                 ))
+            ->loadRelation(new Relationship(EventDomainObject::class, name: 'event'))
             ->findByShortId($orderShortId);
 
         if ($order === null) {

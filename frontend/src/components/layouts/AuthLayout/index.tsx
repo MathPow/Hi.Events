@@ -4,7 +4,7 @@ import {t} from "@lingui/macro";
 import {useGetMe} from "../../../queries/useGetMe.ts";
 import {PoweredByFooter} from "../../common/PoweredByFooter";
 import {LanguageSwitcher} from "../../common/LanguageSwitcher";
-import {MouseEvent, useCallback, useRef} from "react";
+import {MouseEvent, useCallback, useRef, WheelEvent} from "react";
 import {IconChartBar, IconCreditCard, IconPalette, IconQrcode, IconSparkles} from "@tabler/icons-react";
 import {isHiEvents} from "../../../utilites/helpers.ts";
 import {showInfo} from "../../../utilites/notifications.tsx";
@@ -51,6 +51,7 @@ const Photo = () => {
 const AuthLayout = () => {
     useDehorsAppTheme();
     const me = useGetMe();
+    const formColumnRef = useRef<HTMLDivElement>(null);
     const clickCountRef = useRef(0);
     const clickTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -73,12 +74,20 @@ const AuthLayout = () => {
         return <Navigate to={'/manage/events'} />
     }
 
+    // Sur ordi, seul le formulaire defile: la molette n'importe ou sur la page le fait defiler.
+    const scrollFormFromAnywhere = (event: WheelEvent<HTMLDivElement>) => {
+        const column = formColumnRef.current;
+        if (column && !column.contains(event.target as Node) && column.scrollHeight > column.clientHeight) {
+            column.scrollBy({top: event.deltaY});
+        }
+    };
+
     // Une grande carte creme sur l'orange: le formulaire a gauche, la photo a
     // droite. Sur mobile, la photo passe en haut et porte le retour et le logo.
     return (
-        <div className={classes.authLayout}>
+        <div className={classes.authLayout} onWheel={scrollFormFromAnywhere}>
             <div className={classes.card} data-rough>
-                <div className={classes.formColumn}>
+                <div className={classes.formColumn} ref={formColumnRef}>
                     <div className={classes.top}>
                         <Link to={'/'} className={classes.backHome} data-rough>
                             <img src={'/interface/fleche-retour.svg'} alt={''} className={classes.arrowLong}/>

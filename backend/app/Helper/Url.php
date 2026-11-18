@@ -19,6 +19,7 @@ class Url
     public const REGISTRATION_INVITE = 'app.frontend_urls.registration_invite';
     public const ORGANIZER_STRIPE_RETURN = 'app.frontend_urls.organizer_stripe_return_url';
     public const ORGANIZER_STRIPE_REFRESH = 'app.frontend_urls.organizer_stripe_refresh_url';
+    public const EVENT_ROUTE_FILE_DOWNLOAD = 'app.frontend_urls.event_route_file_download';
 
     public static function getFrontEndUrlFromConfig(string $key, array $queryParams = []): string
     {

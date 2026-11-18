@@ -63,6 +63,8 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  // A long word (a timezone, an email) goes to the next line rather than scrolling the list sideways.
+  overflow-wrap: anywhere;
 }
 
 .description {

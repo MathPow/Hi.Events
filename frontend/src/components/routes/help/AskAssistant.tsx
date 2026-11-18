@@ -103,7 +103,9 @@ const SignedInAsk = ({userId, title}: { userId: string, title?: string }) => {
         : status && !status.ready
             ? t`The assistant is not available yet.`
             : status && remaining <= 0
-                ? t`The assistant has reached its daily limit for this account. It will be back tomorrow.`
+                ? (status.over_weekly_budget
+                    ? t`The assistant has used its budget for this week on this account. It will be back on Monday.`
+                    : t`The assistant has reached its daily limit for this account. It will be back tomorrow.`)
                 : null;
 
     return (

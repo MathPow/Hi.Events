@@ -50,10 +50,16 @@ export const HomepageInfoMessage = ({
 
     return (
         <div className={classes.container}>
-            <div className={classes.card}>
-                <div className={classes.emojiContainer}>
-                    <span className={classes.emoji}>{emoji}</span>
-                </div>
+            <div className={classes.card} data-rough>
+                {/* Une commande reussie prend l'autocollant de la page d'accueil, les autres etats leur emoji. */}
+                {status === 'success' ? (
+                    <img src="/landing/stickers/autocollant-social.svg" alt="" aria-hidden="true"
+                         className={classes.sticker}/>
+                ) : (
+                    <div className={classes.emojiContainer} data-rough>
+                        <span className={classes.emoji}>{emoji}</span>
+                    </div>
+                )}
 
                 <h2 className={classes.title}>{message}</h2>
 

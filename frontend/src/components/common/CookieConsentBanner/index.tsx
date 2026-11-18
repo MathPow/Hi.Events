@@ -6,12 +6,13 @@ import {getConsentState} from '../../../utilites/trackingPixels/consent';
 import {useRoughEdge} from '../../../hooks/useRoughEdge';
 import classes from './CookieConsentBanner.module.scss';
 
-// Between the page showing (the landing's opening done) and the panel opening, on a first visit.
-const OPEN_AFTER = 900;
+// On a first visit the panel waits for the visitor to start reading: 3 s after the first scroll.
+const OPEN_AFTER_SCROLL = 3000;
 
-/** Once chosen, the biscuit stays on the public pages only: elsewhere it would sit on the page's own buttons. */
-const biscuitPage = () => typeof window !== 'undefined'
-    && (window.location.pathname === '/' || window.location.pathname.startsWith('/events/'));
+// The footers' « Cookies » link reopens the panel once a choice is made (the biscuit is gone by then).
+const OPEN_EVENT = 'dehors:cookies';
+
+export const openCookieSettings = () => window.dispatchEvent(new Event(OPEN_EVENT));
 
 /** Calls back once the landing's opening (Opening.tsx) is gone, or right away elsewhere. */
 const whenPageShows = (callback: () => void) => {
@@ -31,11 +32,12 @@ const whenPageShows = (callback: () => void) => {
 
 /**
  * The DEHORS shop's cookie banner (BanniereTemoins.vue): a biscuit at the
- * bottom right, the mountain bitten, which opens a small brown panel. On a
- * first visit the panel opens by itself once the page shows, without taking
- * the focus, and waits for an answer; after that it only comes back from the
- * biscuit, to change one's mind. Accepting and declining weigh the same, as
- * Quebec's Law 25 asks; « Customize » shows the two categories.
+ * bottom right, the mountain bitten, with a small brown panel. On a first
+ * visit both appear 3 s after the first scroll, without taking the focus, and
+ * wait for an answer. Once chosen, the biscuit goes away: the « Cookies » link
+ * of the footers reopens the panel, to change one's mind. Accepting and
+ * declining weigh the same, as Quebec's Law 25 asks; « Customize » shows the
+ * two categories.
  */
 export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean) => void }) => {
     const [chosen, setChosen] = useState(() => getConsentState() !== 'pending');
@@ -44,9 +46,10 @@ export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean)
     const [open, setOpen] = useState(false);
     const [details, setDetails] = useState(false);
     const [measure, setMeasure] = useState(granted);
-    const [onBiscuitPage, setOnBiscuitPage] = useState(biscuitPage);
     const panel = useRef<HTMLElement>(null);
     const biscuit = useRef<HTMLButtonElement>(null);
+    // What reopened the panel (the footer link), to give the focus back once it closes.
+    const opener = useRef<HTMLElement | null>(null);
     const focusOnOpen = useRef(false);
     const roughPanel = useRoughEdge<HTMLDivElement>({amplitude: 1.5, step: 40});
     const titleId = useId();
@@ -54,33 +57,39 @@ export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean)
     const privacyUrl = getConfig('VITE_PRIVACY_URL');
 
     useEffect(() => {
+        if (chosen) {
+            return;
+        }
         let timer: number | undefined;
-        const stop = whenPageShows(() => {
-            setShown(true);
-            if (!chosen) {
-                timer = window.setTimeout(() => setOpen(true), OPEN_AFTER);
-            }
-        });
+        const onScroll = () => {
+            window.removeEventListener('scroll', onScroll);
+            timer = window.setTimeout(() => {
+                setShown(true);
+                setOpen(true);
+            }, OPEN_AFTER_SCROLL);
+        };
+        const stop = whenPageShows(() => window.addEventListener('scroll', onScroll, {passive: true}));
 
         return () => {
             stop();
+            window.removeEventListener('scroll', onScroll);
             window.clearTimeout(timer);
         };
         // Only on arrival: after a choice the panel never opens by itself again.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // The router moves without telling: the page is checked again after each click and history step.
     useEffect(() => {
-        const check = () => window.setTimeout(() => setOnBiscuitPage(biscuitPage()));
-        document.addEventListener('click', check, true);
-        window.addEventListener('popstate', check);
-
-        return () => {
-            document.removeEventListener('click', check, true);
-            window.removeEventListener('popstate', check);
+        const reopen = () => {
+            opener.current = document.activeElement as HTMLElement | null;
+            setShown(true);
+            openPanel();
         };
-    }, []);
+        window.addEventListener(OPEN_EVENT, reopen);
+
+        return () => window.removeEventListener(OPEN_EVENT, reopen);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [granted]);
 
     useEffect(() => {
         if (open && focusOnOpen.current) {
@@ -102,13 +111,14 @@ export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean)
         setOpen(true);
     };
 
-    /** The focus goes back to the biscuit if it was in the panel, not left on a button that's gone. */
+    /** The focus goes back to what opened the panel (the footer link) if it was in the panel. */
     const close = () => {
         const focusInside = panel.current?.contains(document.activeElement) ?? false;
         setOpen(false);
         if (focusInside) {
-            biscuit.current?.focus();
+            (opener.current ?? biscuit.current)?.focus();
         }
+        opener.current = null;
     };
 
     const choose = (accepted: boolean) => {
@@ -118,7 +128,7 @@ export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean)
         close();
     };
 
-    if (!shown || (chosen && !open && !onBiscuitPage)) {
+    if (!shown || (chosen && !open)) {
         return null;
     }
 
@@ -186,8 +196,8 @@ export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean)
                 </div>
             </section>
 
-            {/* The biscuit: the mountain bitten, on a round drawn by hand. Its two crumbs stay put. */}
-            <button ref={biscuit} type="button" className={classes.biscuit} aria-label={t`Cookies`}
+            {/* The biscuit: the mountain bitten, on a round drawn by hand, until a choice is made. */}
+            {!chosen && <button ref={biscuit} type="button" className={classes.biscuit} aria-label={t`Cookies`}
                     aria-controls={panelId} aria-expanded={open} onClick={() => (open ? close() : openPanel())}>
                 <span className={classes.round} aria-hidden="true"/>
                 <svg className={classes.drawing} width="80" height="94" viewBox="0 0 80 94" aria-hidden="true"
@@ -196,7 +206,7 @@ export const CookieConsentBanner = ({onConsent}: { onConsent: (granted: boolean)
                     <path d="M74.92 24.8701C75.52 25.9901 76.06 27.2201 75.72 28.3401C75.38 29.4601 72.09 31.8601 69.61 31.7301C68.44 31.6701 67.1 30.4901 66.5 29.3701C65.9 28.2501 66.7 26.8301 67.04 25.7101C67.38 24.5901 71.21 22.3901 72.34 22.7401C73.47 23.0901 74.33 23.7501 74.92 24.8701Z"/>
                     <path d="M65.1899 43.2C66.2099 41.75 69.8999 40.04 71.0699 42.36C71.8099 43.83 75.8399 42.75 77.2399 45.92C77.8999 47.42 77.1199 49.42 76.0999 50.87C75.0799 52.32 71.9099 54.1 68.9999 52.74C67.5099 52.05 64.4299 49.38 64.1499 47.76C63.8699 46.14 64.1699 44.64 65.1799 43.2H65.1899Z"/>
                 </svg>
-            </button>
+            </button>}
         </div>
     );
 };

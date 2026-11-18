@@ -6,6 +6,7 @@
 @php /** @var \HiEvents\DomainObjects\OrderDomainObject $order */ @endphp
 @php /** @var \HiEvents\Services\Domain\Mail\DTO\EventEmailBrandingDTO $branding */ @endphp
 @php /** @var \Illuminate\Support\Collection $tickets */ @endphp
+@php /** @var \Illuminate\Support\Collection<int, \HiEvents\DomainObjects\EventRouteFileDomainObject> $routeFiles */ @endphp
 @php /** @see \HiEvents\Mail\Attendee\AttendeeTicketMail */ @endphp
 <x-mail::event-message :branding="$branding" :note="$organizerMessage" :footer="$eventSettings->getGetEmailFooterHtml()">
 # {{ trans_choice('{1} Your ticket|[2,*] Your :count tickets', $tickets->count(), ['count' => $tickets->count()]) }}
@@ -35,6 +36,16 @@
 <div style="margin-top: 14px;"><a href="{{ $ticket['ticketUrl'] }}" style="font-size: 14px; font-weight: bold; color: {{ $branding->accentDeepColor }};">{{ __('View this ticket online') }}</a></div>
 </td></tr></table>
 @endforeach
+
+@if($routeFiles->isNotEmpty())
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; margin: 0 0 20px; background-color: #ffffff; border: 1px solid #f1dccd; border-radius: 18px; border-collapse: separate;"><tr><td style="padding: 22px 20px; text-align: center;">
+<div style="font-size: 17px; font-weight: bold; color: #352924;">{{ __('Route') }}</div>
+<div style="margin-top: 6px; font-size: 14px; color: #352924;">{{ __('Load it into your watch or phone (GPX file).') }}</div>
+@foreach($routeFiles as $routeFile)
+<div style="margin-top: 12px;"><a href="{{ $routeFile->getDownloadUrl() }}" style="display: inline-block; padding: 10px 20px; border-radius: 999px; border: 2px solid {{ $branding->accentDeepColor }}; color: {{ $branding->accentDeepColor }}; font-size: 15px; font-weight: bold; text-decoration: none;">{{ __('Download the route · :label', ['label' => $routeFile->getLabel()]) }}</a></div>
+@endforeach
+</td></tr></table>
+@endif
 
 {{ __('Each QR code can only be scanned once, so please do not share it.') }}
 

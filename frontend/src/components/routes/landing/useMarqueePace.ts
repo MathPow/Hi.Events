@@ -22,12 +22,20 @@ export const useMarqueePace = (scroller: RefObject<HTMLElement>, track: string, 
             return;
         }
         let loop: number | null = null;
+        let visible = false;
         let pace = 1;
         let lastY = 0;
         let lastTime = 0;
+        let animations: Animation[] = [];
+        let frames = 0;
+
+        // The rows' animations, looked up again now and then (dragging restarts them), not at each frame.
+        const findAnimations = () => {
+            animations = Array.from(element.querySelectorAll<HTMLElement>(`.${track}`))
+                .flatMap((row) => row.getAnimations());
+        };
 
         const tick = (now: number) => {
-            loop = requestAnimationFrame(tick);
             const speed = Math.abs(window.scrollY - lastY) / Math.max(now - lastTime, 1);
             lastY = window.scrollY;
             lastTime = now;
@@ -36,28 +44,44 @@ export const useMarqueePace = (scroller: RefObject<HTMLElement>, track: string, 
             if (Math.abs(target - pace) < 0.001) {
                 pace = target;
             }
-            element.querySelectorAll<HTMLElement>(`.${track}`).forEach((row) => {
-                row.getAnimations().forEach((animation) => {
-                    if (animation.playbackRate !== pace) {
-                        animation.playbackRate = pace;
-                    }
-                });
+            if (frames++ % 60 === 0) {
+                findAnimations();
+            }
+            animations.forEach((animation) => {
+                if (animation.playbackRate !== pace) {
+                    animation.playbackRate = pace;
+                }
             });
+            // Settled (no scroll, the pace reached): the loop rests until a scroll or the mouse wakes it.
+            loop = pace === target && speed === 0 ? null : requestAnimationFrame(tick);
         };
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry?.isIntersecting && loop === null) {
+        const wake = () => {
+            if (visible && loop === null) {
                 lastY = window.scrollY;
                 lastTime = performance.now();
                 loop = requestAnimationFrame(tick);
-            } else if (!entry?.isIntersecting && loop !== null) {
+            }
+        };
+        const observer = new IntersectionObserver(([entry]) => {
+            visible = !!entry?.isIntersecting;
+            if (visible) {
+                frames = 0;
+                wake();
+            } else if (loop !== null) {
                 cancelAnimationFrame(loop);
                 loop = null;
             }
         });
         observer.observe(element);
+        window.addEventListener('scroll', wake, {passive: true});
+        element.addEventListener('pointerenter', wake);
+        element.addEventListener('pointerleave', wake);
 
         return () => {
             observer.disconnect();
+            window.removeEventListener('scroll', wake);
+            element.removeEventListener('pointerenter', wake);
+            element.removeEventListener('pointerleave', wake);
             if (loop !== null) {
                 cancelAnimationFrame(loop);
             }

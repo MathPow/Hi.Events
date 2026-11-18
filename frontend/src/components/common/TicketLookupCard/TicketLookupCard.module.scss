@@ -1,0 +1,121 @@
+@use "../../../styles/mixins.scss";
+
+// « Vous cherchez vos billets? »: une tuile sable avec une fleche, qui s'ouvre sur le champ courriel.
+.ticketLookup {
+  border-radius: 16px;
+  background: var(--dehors-champ);
+}
+
+.ticketLookupTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 20px;
+  color: var(--dehors-brun);
+
+  @include mixins.respond-below(lg) {
+    padding: 16px 18px;
+  }
+}
+
+.ticketLookupText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  strong {
+    font-size: 16px;
+    font-weight: 700;
+
+    @include mixins.respond-below(lg) {
+      font-size: 15px;
+    }
+  }
+
+  span {
+    font-size: 14px;
+    line-height: normal;
+
+    @include mixins.respond-below(lg) {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+  }
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: rotate 0.25s ease;
+
+  [data-expanded="true"] & {
+    rotate: 90deg;
+  }
+}
+
+.ticketLookupContent {
+  padding: 0 20px 18px;
+
+  @include mixins.respond-below(lg) {
+    padding: 0 18px 16px;
+  }
+}
+
+.ticketLookupForm {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+
+  @include mixins.respond-below(sm) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :global(.mantine-TextInput-input) {
+    height: 44px;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 0 14px;
+    font-size: 16px;
+    color: var(--dehors-brun);
+    background: var(--dehors-creme);
+
+    &:focus {
+      outline: 3px solid var(--dehors-brun);
+      outline-offset: 3px;
+    }
+  }
+
+  :global(.mantine-Button-root) {
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dehors-creme);
+    background: var(--dehors-brun);
+  }
+}
+
+.ticketEmailInput {
+  flex: 1;
+}
+
+.successMessage {
+  p {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--dehors-brun);
+  }
+}
+
+.resetLink {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dehors-orange);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}

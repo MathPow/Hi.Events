@@ -5,6 +5,7 @@ import {PoweredByFooter} from "../PoweredByFooter";
 import {getConfig} from "../../../utilites/config.ts";
 import {availableLocales} from "../../../locales.ts";
 import {switchLocale} from "../LanguageSwitcher";
+import {openCookieSettings} from "../CookieConsentBanner";
 
 // Telephone seulement: la langue passe de la barre du haut au pied de page, FR et EN cote a
 // cote, la langue active pleine.
@@ -40,6 +41,11 @@ export const PublicPageFooter = () => (
                     <span className={classes.long}>{t`Terms of Service`}</span>
                     <span className={classes.short}>{t`Terms`}</span>
                 </a>
+                <span className={classes.dot} aria-hidden>·</span>
+                {/* Rouvre le choix des temoins: le biscuit flottant part une fois le choix fait. */}
+                <button type="button" className={classes.linkButton} onClick={openCookieSettings}>
+                    {t`Cookies`}
+                </button>
             </p>
             <LanguageToggle/>
         </div>
