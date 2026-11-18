@@ -584,6 +584,8 @@ export const OrderSummaryAndProducts = () => {
 
     const isCompleted = order.status === 'COMPLETED';
     const isCancelled = order.status === 'CANCELLED';
+    // Montre dans la carte de confirmation, sauf pour une commande annulee.
+    const messageApresAchat = !isCancelled ? (event.settings?.post_checkout_message || '') : '';
     const isAwaitingPayment = order.status === 'AWAITING_OFFLINE_PAYMENT';
     const attendees = order.attendees || [];
     const hasTickets = attendees.length > 0;
@@ -738,6 +740,11 @@ export const OrderSummaryAndProducts = () => {
                             mapsUrl={venue?.mapsUrl || null}
                             className={classes.desktopOnly}
                         />
+                        {/* Le message de l'organisateur apres l'achat, en vue des l'arrivee plutot qu'en
+                            bas de page : pour une sortie DehorsQC, le rendez-vous et le lien du groupe Instagram. */}
+                        {messageApresAchat && (
+                            <div className={`${classes.richText} ${classes.heroMessage}`} dangerouslySetInnerHTML={{__html: messageApresAchat}}/>
+                        )}
                     </header>
 
                     {emailUpdated && (
@@ -795,7 +802,7 @@ export const OrderSummaryAndProducts = () => {
                                 <HtmlCard title={t`Online Event Details`} html={event.settings.online_event_connection_details}/>
                             )}
 
-                            {!!event.settings?.post_checkout_message && (
+                            {!!event.settings?.post_checkout_message && !messageApresAchat && (
                                 <HtmlCard title={t`Additional Information`} html={event.settings.post_checkout_message}/>
                             )}
 
