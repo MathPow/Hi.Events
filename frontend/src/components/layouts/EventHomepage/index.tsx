@@ -223,7 +223,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
         >
             <button type="button" className={className} title={t`Share`} aria-label={t`Share`}
                     data-rough="button">
-                <PublicIcon name={'partager'} size={withLabel ? 20 : 18}/>
+                <PublicIcon name={'partager'} size={20}/>
                 {withLabel && t`Share`}
             </button>
         </ShareComponent>

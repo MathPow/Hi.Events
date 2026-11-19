@@ -251,9 +251,12 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   text-decoration: none;
 
   span:last-child {
-    overflow: hidden;
+    min-width: 0;
+    overflow-x: clip;
     white-space: nowrap;
     text-overflow: ellipsis;
+    // Centred on the capitals, not on the font's uneven ascent and descent.
+    text-box: trim-both cap alphabetic;
   }
 }
 
@@ -262,8 +265,8 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: none;
   border-radius: 50%;
