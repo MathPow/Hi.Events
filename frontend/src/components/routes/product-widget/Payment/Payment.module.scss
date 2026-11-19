@@ -56,40 +56,24 @@
   font-size: 16px;
 }
 
-.paymentMethodTabs {
-  display: flex;
-  gap: 12px;
-
-  @include mixins.respond-below(md) {
-    gap: 10px;
-  }
-}
-
-.paymentMethodTab {
+.switchMethod {
   display: inline-flex;
-  flex: 1;
+  align-self: flex-start;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  height: 48px;
-  padding: 0 18px;
+  padding: 0;
   border: none;
-  border-radius: 16px;
   font-family: inherit;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--dehors-brun);
-  background: var(--public-champ);
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
 
   &:hover {
-    background: var(--public-champ-survol);
-  }
-
-  &[data-active] {
-    color: var(--dehors-creme);
-    background: var(--dehors-brun);
+    text-decoration-thickness: 2px;
   }
 }
 

@@ -5,7 +5,7 @@ import {StripePaymentMethod} from "./PaymentMethods/Stripe";
 import {OfflinePaymentMethod} from "./PaymentMethods/Offline";
 import {Event} from "../../../../types.ts";
 import {Button, Skeleton} from "@mantine/core";
-import {IconBuildingBank, IconWallet} from "@tabler/icons-react";
+import {IconBuildingBank, IconCreditCard} from "@tabler/icons-react";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {t, Trans} from "@lingui/macro";
 import {useGetOrderPublic} from "../../../../queries/useGetOrderPublic.ts";
@@ -46,11 +46,11 @@ const Payment = () => {
     const isOfflineEnabled = event?.settings?.payment_providers?.includes('OFFLINE');
 
     React.useEffect(() => {
-        // Automatically set the first available payment method
-        if (isStripeEnabled) {
-            setActivePaymentMethod('STRIPE');
-        } else if (isOfflineEnabled) {
+        // Le paiement hors ligne passe devant: sans frais pour l'organisateur. La carte reste a un lien.
+        if (isOfflineEnabled) {
             setActivePaymentMethod('OFFLINE');
+        } else if (isStripeEnabled) {
+            setActivePaymentMethod('STRIPE');
         } else {
             setActivePaymentMethod(null); // No methods available
         }
@@ -197,31 +197,6 @@ const Payment = () => {
                     </p>
                 )}
 
-                {(isStripeEnabled && isOfflineEnabled) && (
-                    <div className={classes.paymentMethodTabs} role="group" aria-label={t`Payment method`}>
-                        <button
-                            type="button"
-                            className={classes.paymentMethodTab} data-rough="button"
-                            data-active={activePaymentMethod === 'STRIPE' || undefined}
-                            aria-pressed={activePaymentMethod === 'STRIPE'}
-                            onClick={() => setActivePaymentMethod('STRIPE')}
-                        >
-                            <IconWallet size={18}/>
-                            <span>{t`Online`}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={classes.paymentMethodTab} data-rough="button"
-                            data-active={activePaymentMethod === 'OFFLINE' || undefined}
-                            aria-pressed={activePaymentMethod === 'OFFLINE'}
-                            onClick={() => setActivePaymentMethod('OFFLINE')}
-                        >
-                            <IconBuildingBank size={18}/>
-                            <span>{t`Offline`}</span>
-                        </button>
-                    </div>
-                )}
-
                 {isStripeEnabled && (
                     <div style={{display: activePaymentMethod === 'STRIPE' ? 'block' : 'none'}}>
                         <StripePaymentMethod enabled={true} setSubmitHandler={setSubmitHandler}
@@ -233,6 +208,26 @@ const Payment = () => {
                     <div style={{display: activePaymentMethod === 'OFFLINE' ? 'block' : 'none'}}>
                         <OfflinePaymentMethod event={checkoutEvent as Event}/>
                     </div>
+                )}
+
+                {(isStripeEnabled && isOfflineEnabled) && (
+                    <button
+                        type="button"
+                        className={classes.switchMethod}
+                        onClick={() => setActivePaymentMethod(activePaymentMethod === 'STRIPE' ? 'OFFLINE' : 'STRIPE')}
+                    >
+                        {activePaymentMethod === 'STRIPE' ? (
+                            <>
+                                <IconBuildingBank size={18}/>
+                                <span>{t`Pay offline instead`}</span>
+                            </>
+                        ) : (
+                            <>
+                                <IconCreditCard size={18}/>
+                                <span>{t`Pay by credit card instead`}</span>
+                            </>
+                        )}
+                    </button>
                 )}
 
                 {!!order.deposit_amount && order.deposit_amount > 0 && (
