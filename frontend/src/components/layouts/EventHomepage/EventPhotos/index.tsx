@@ -83,11 +83,11 @@ export const CoverPhotos = ({photos, title, onOpen}: CoverPhotosProps) => {
                 <span className={classes.counter} aria-hidden>{index + 1} / {photos.length}</span>
             )}
 
-            <button type="button" className={`${classes.arrow} ${classes.previous}`} onClick={() => goTo(index - 1)}
+            <button type="button" className={`${classes.arrow} ${classes.previous}`} data-rough="button" onClick={() => goTo(index - 1)}
                     disabled={index === 0} aria-label={t`Previous photo`}>
                 <PublicIcon name={'chevron-droite'} size={18}/>
             </button>
-            <button type="button" className={`${classes.arrow} ${classes.next}`} onClick={() => goTo(index + 1)}
+            <button type="button" className={`${classes.arrow} ${classes.next}`} data-rough="button" onClick={() => goTo(index + 1)}
                     disabled={index === photos.length - 1} aria-label={t`Next photo`}>
                 <PublicIcon name={'chevron-droite'} size={18}/>
             </button>
@@ -116,6 +116,7 @@ export const PhotoGrid = ({photos, onOpen}: PhotoGridProps) => {
                         key={photo.id}
                         type="button"
                         className={classes.tile}
+                        data-rough
                         style={photo.avg_colour ? {backgroundColor: photo.avg_colour} : undefined}
                         onClick={() => onOpen(photoIndex)}
                         aria-label={more ? t`See all ${total} photos` : t`See photo ${number} of ${total}`}

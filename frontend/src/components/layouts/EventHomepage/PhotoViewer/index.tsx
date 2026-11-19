@@ -90,18 +90,18 @@ export const PhotoViewer = ({photos, startIndex, onClose}: PhotoViewerProps) => 
 
             <div className={classes.top}>
                 <span className={classes.counter} aria-live="polite">{index + 1} / {photos.length}</span>
-                <button type="button" className={classes.button} onClick={onClose} aria-label={t`Close`}>
+                <button type="button" className={classes.button} data-rough="button" onClick={onClose} aria-label={t`Close`}>
                     <IconX size={22} stroke={2.25}/>
                 </button>
             </div>
 
             {photos.length > 1 && (
                 <>
-                    <button type="button" className={`${classes.button} ${classes.arrow} ${classes.previous}`}
+                    <button type="button" className={`${classes.button} ${classes.arrow} ${classes.previous}`} data-rough="button"
                             onClick={() => goTo(index - 1)} disabled={index === 0} aria-label={t`Previous photo`}>
                         <PublicIcon name={'chevron-droite'} size={20}/>
                     </button>
-                    <button type="button" className={`${classes.button} ${classes.arrow} ${classes.next}`}
+                    <button type="button" className={`${classes.button} ${classes.arrow} ${classes.next}`} data-rough="button"
                             onClick={() => goTo(index + 1)} disabled={index === photos.length - 1} aria-label={t`Next photo`}>
                         <PublicIcon name={'chevron-droite'} size={20}/>
                     </button>
