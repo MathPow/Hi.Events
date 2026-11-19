@@ -59,6 +59,20 @@ class EventStatisticsCancellationService
             return;
         }
 
+        // Only a completed order was counted (UpdateEventStatsListener): an order still awaiting its
+        // offline payment has nothing to take back.
+        if (!$order->isOrderCompleted()) {
+            $this->logger->info(
+                'Statistics not decremented for a cancelled order that was never completed',
+                [
+                    'order_id' => $order->getId(),
+                    'event_id' => $order->getEventId(),
+                    'status' => $order->getStatus(),
+                ]
+            );
+            return;
+        }
+
         $this->retrier->retry(
             callableAction: function (int $attempt) use ($order): void {
                 $this->databaseManager->transaction(function () use ($order, $attempt): void {

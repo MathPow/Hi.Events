@@ -79,6 +79,7 @@ class EventStatisticsCancellationServiceTest extends TestCase
         $order->shouldReceive('getOrderItems')->andReturn($orderItems);
         $order->shouldReceive('getTicketOrderItems')->andReturn($ticketOrderItems);
         $order->shouldReceive('getStatisticsDecrementedAt')->andReturnNull();
+        $order->shouldReceive('isOrderCompleted')->andReturnTrue();
 
         // Mock order repository to return order with relations
         $this->orderRepository
@@ -247,6 +248,28 @@ class EventStatisticsCancellationServiceTest extends TestCase
         $this->orderRepository->shouldNotReceive('updateFromArray');
 
         // Execute
+        $this->service->decrementForCancelledOrder($order);
+
+        $this->assertTrue(true);
+    }
+
+    public function testAnOrderNeverCompletedLeavesTheStatisticsAlone(): void
+    {
+        $order = Mockery::mock(OrderDomainObject::class);
+        $order->shouldReceive('getId')->andReturn(123);
+        $order->shouldReceive('getEventId')->andReturn(1);
+        $order->shouldReceive('getStatus')->andReturn('AWAITING_OFFLINE_PAYMENT');
+        $order->shouldReceive('getStatisticsDecrementedAt')->andReturnNull();
+        $order->shouldReceive('isOrderCompleted')->andReturnFalse();
+
+        $this->orderRepository->shouldReceive('loadRelation')->with(OrderItemDomainObject::class)->andReturnSelf();
+        $this->orderRepository->shouldReceive('findById')->with(123)->andReturn($order);
+        $this->logger->shouldReceive('info')->once();
+
+        $this->retrier->shouldNotReceive('retry');
+        $this->eventStatisticsRepository->shouldNotReceive('updateWhere');
+        $this->orderRepository->shouldNotReceive('updateFromArray');
+
         $this->service->decrementForCancelledOrder($order);
 
         $this->assertTrue(true);
