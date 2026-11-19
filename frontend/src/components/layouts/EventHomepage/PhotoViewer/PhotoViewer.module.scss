@@ -1,6 +1,9 @@
+// Above the public pages' popup look (dehors-app.scss, fenetres.scss): black, square, white text.
 .content {
+  border-radius: 0 !important;
   background: #111 !important;
-  color: #fff;
+  color: #fff !important;
+  box-shadow: none !important;
 }
 
 .body {
@@ -55,6 +58,7 @@
 }
 
 .counter {
+  color: #fff;
   font-size: 15px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -69,12 +73,12 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: rgb(255 255 255 / 16%);
+  background: rgb(0 0 0 / 50%);
   color: #fff;
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    background: rgb(255 255 255 / 28%);
+    background: rgb(0 0 0 / 70%);
   }
 
   &:disabled {

@@ -184,6 +184,9 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
 }
 
 .tileImage {
+  // Out of the flow: the photo's own height never stretches the grid's rows.
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -204,9 +207,9 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   background: rgb(0 0 0 / 50%);
   color: #fff;
   font-family: $affichage;
-  font-size: 34px;
+  font-size: 44px;
 
   @include mixins.respond-below(md) {
-    font-size: 26px;
+    font-size: 32px;
   }
 }
