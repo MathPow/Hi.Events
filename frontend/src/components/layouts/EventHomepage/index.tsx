@@ -8,6 +8,7 @@ import {IconHeart, IconWorld} from "@tabler/icons-react";
 import {EventDocumentHead} from "../../common/EventDocumentHead";
 import {
     eventCoverImage,
+    eventGalleryImages,
     eventHomepageUrl,
     EventPageBackState,
     organizerHomepagePath
@@ -42,6 +43,8 @@ import {TicketsCard} from "./TicketsCard";
 import {EventLocationMap} from "./EventLocationMap";
 import {CollapsibleDescription} from "./CollapsibleDescription";
 import {OtherDates} from "./OtherDates";
+import {CoverPhotos, PhotoGrid} from "./EventPhotos";
+import {PhotoViewer} from "./PhotoViewer";
 
 const TICKETS_FORM_ID = 'event-tickets-form';
 
@@ -101,6 +104,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const [ticketsOutOfView, setTicketsOutOfView] = useState(false);
     const [contactModalOpen, setContactModalOpen] = useState(false);
     const [selection, setSelection] = useState<ProductSelectionSummary | null>(null);
+    // The photo open full screen, as its place in the cover's photos.
+    const [viewerIndex, setViewerIndex] = useState<number | null>(null);
     const ticketsRef = useRef<HTMLElement>(null);
     const {i18n} = useLingui();
     const location = useLocation();
@@ -161,6 +166,10 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     } : undefined) as React.CSSProperties | undefined;
 
     const coverImage = eventCoverImage(event);
+    const galleryImages = eventGalleryImages(event);
+    const photos = coverImage ? [coverImage, ...galleryImages] : galleryImages;
+    const galleryOffset = photos.length - galleryImages.length;
+    const framePhoto = photos[0];
     const organizer = event.organizer!;
     const organizerIsLive = organizer?.status === OrganizerStatus.LIVE;
     const organizerLocation = getShortLocationDisplay(organizer?.settings?.location_details);
@@ -291,17 +300,14 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                             )}
 
                             <section className={`${classes.card} ${classes.presentation}`} data-rough>
-                                {coverImage && (
+                                {framePhoto && (
                                     <div
                                         className={classes.cover} data-rough
-                                        style={(coverImage.width && coverImage.height) ? {
-                                            '--cover-ratio': `${coverImage.width} / ${coverImage.height}`,
+                                        style={(framePhoto.width && framePhoto.height) ? {
+                                            '--cover-ratio': `${framePhoto.width} / ${framePhoto.height}`,
                                         } as React.CSSProperties : undefined}
                                     >
-                                        {coverImage.lqip_base64 && (
-                                            <img src={coverImage.lqip_base64} alt="" aria-hidden className={classes.coverLqip}/>
-                                        )}
-                                        <img src={coverImage.url} alt={event.title} className={classes.coverImage}/>
+                                        <CoverPhotos photos={photos} title={event.title} onOpen={setViewerIndex}/>
 
                                         {/* Sur mobile, le retour et le partage passent sur l'image. */}
                                         <div className={classes.coverActions}>
@@ -318,7 +324,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                 )}
 
                                 <div className={classes.heading}>
-                                    <div className={`${classes.organizerRow} ${coverImage ? classes.organizerRowWithCover : ''}`}>
+                                    <div className={`${classes.organizerRow} ${framePhoto ? classes.organizerRowWithCover : ''}`}>
                                         {organizerIsLive ? (
                                             <Link to={organizerHomepagePath(organizer)} className={classes.organizerPill} data-rough>
                                                 <OrganizerLogo organizer={organizer} className={classes.organizerPillLogo}/>
@@ -406,6 +412,14 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                 <section className={`${classes.card} ${classes.section} ${classes.about}`} data-rough>
                                     <h2 className={classes.sectionTitle}>{t`About`}</h2>
                                     <CollapsibleDescription html={event.description}/>
+                                </section>
+                            )}
+
+                            {galleryImages.length > 0 && (
+                                <section className={`${classes.card} ${classes.section} ${classes.photos}`} data-rough>
+                                    <h2 className={classes.sectionTitle}>{t`Photos`}</h2>
+                                    <PhotoGrid photos={galleryImages}
+                                               onOpen={(index) => setViewerIndex(galleryOffset + index)}/>
                                 </section>
                             )}
 
@@ -511,6 +525,10 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                 {consentPending && (
                     <CookieConsentBanner onConsent={onConsent}/>
+                )}
+
+                {photos.length > 0 && (
+                    <PhotoViewer photos={photos} startIndex={viewerIndex} onClose={() => setViewerIndex(null)}/>
                 )}
             </main>
         </>

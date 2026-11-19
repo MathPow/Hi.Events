@@ -57,6 +57,13 @@ export const eventCoverImage = (event: Event): Image | undefined => {
     return event?.images?.find((image) => image.type === 'EVENT_COVER');
 }
 
+// The event's photos after its cover, in the order they were added.
+export const eventGalleryImages = (event: Event): Image[] => {
+    return (event?.images ?? [])
+        .filter((image) => image.type === 'EVENT_GALLERY')
+        .sort((a, b) => Number(a.id) - Number(b.id));
+}
+
 export const imageUrl = (imageType: ImageType, images?: Image[], fallbackUrl?: string) => {
     if (!images || images.length === 0) {
         return fallbackUrl || getConfig('VITE_DEFAULT_IMAGE_URL');

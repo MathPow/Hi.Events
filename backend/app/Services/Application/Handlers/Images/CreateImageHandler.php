@@ -7,6 +7,7 @@ use HiEvents\DomainObjects\EventDomainObject;
 use HiEvents\DomainObjects\ImageDomainObject;
 use HiEvents\DomainObjects\OrganizerDomainObject;
 use HiEvents\DomainObjects\UserDomainObject;
+use HiEvents\Exceptions\ImageLimitReachedException;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
 use HiEvents\Repository\Interfaces\OrganizerRepositoryInterface;
@@ -16,6 +17,8 @@ use HiEvents\Services\Infrastructure\Image\Exception\CouldNotUploadImageExceptio
 
 class CreateImageHandler
 {
+    public const MAX_EVENT_GALLERY_IMAGES = 20;
+
     private const IMAGES_TYPES_WITH_ONLY_ONE_IMAGE_ALLOWED = [
         ImageType::ORGANIZER_LOGO,
         ImageType::ORGANIZER_COVER,
@@ -34,6 +37,7 @@ class CreateImageHandler
 
     /**
      * @throws CouldNotUploadImageException
+     * @throws ImageLimitReachedException
      */
     public function handle(CreateImageDTO $imageData): ImageDomainObject
     {
@@ -55,6 +59,8 @@ class CreateImageHandler
         $entityType = $imageData->imageType->getEntityType();
 
         $this->validateEntityBelongsToUser($imageData->accountId, $imageData->entityId, $entityType);
+
+        $this->ensureGalleryHasRoom($imageData, $entityType);
 
         $this->deleteExistingImages($imageData, $entityType);
 
@@ -86,6 +92,28 @@ class CreateImageHandler
                     throw new CouldNotUploadImageException('Event does not belong to the user.');
                 }
                 break;
+        }
+    }
+
+    /**
+     * @throws ImageLimitReachedException
+     */
+    private function ensureGalleryHasRoom(CreateImageDTO $imageData, string $entityType): void
+    {
+        if ($imageData->imageType !== ImageType::EVENT_GALLERY) {
+            return;
+        }
+
+        $count = $this->imageRepository->countWhere([
+            'entity_id' => $imageData->entityId,
+            'entity_type' => $entityType,
+            'type' => ImageType::EVENT_GALLERY->name,
+        ]);
+
+        if ($count >= self::MAX_EVENT_GALLERY_IMAGES) {
+            throw new ImageLimitReachedException(__('An event can have up to :count photos.', [
+                'count' => self::MAX_EVENT_GALLERY_IMAGES,
+            ]));
         }
     }
 

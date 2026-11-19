@@ -123,6 +123,7 @@ class DuplicateEventService
 
             if ($duplicateEventCoverImage) {
                 $this->cloneEventCoverImage($event, $newEvent->getId());
+                $this->cloneEventGalleryImages($event, $newEvent->getId());
             }
 
             if ($duplicateTicketLogo) {
@@ -347,6 +348,28 @@ class DuplicateEventService
                 'mime_type' => $coverImage->getMimeType(),
             ]);
         }
+    }
+
+    private function cloneEventGalleryImages(EventDomainObject $event, int $newEventId): void
+    {
+        $event->getImages()
+            ?->filter(fn(ImageDomainObject $image) => $image->getType() === ImageType::EVENT_GALLERY->name)
+            ->sortBy(fn(ImageDomainObject $image) => $image->getId())
+            ->each(fn(ImageDomainObject $image) => $this->imageRepository->create([
+                'account_id' => $image->getAccountId(),
+                'entity_id' => $newEventId,
+                'entity_type' => EventDomainObject::class,
+                'type' => ImageType::EVENT_GALLERY->name,
+                'disk' => $image->getDisk(),
+                'path' => $image->getPath(),
+                'filename' => $image->getFileName(),
+                'size' => $image->getSize(),
+                'mime_type' => $image->getMimeType(),
+                'width' => $image->getWidth(),
+                'height' => $image->getHeight(),
+                'avg_colour' => $image->getAvgColour(),
+                'lqip_base64' => $image->getLqipBase64(),
+            ]));
     }
 
     private function cloneTicketLogo(EventDomainObject $event, int $newEventId): void

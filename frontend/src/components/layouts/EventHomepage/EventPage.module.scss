@@ -228,11 +228,18 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
   @include mixins.respond-below(md) {
     position: absolute;
     inset: 0 0 auto;
+    z-index: 1;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
     padding: 12px 12px 0;
+    // The photos under it still swipe between the two buttons.
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
   }
 }
 
@@ -540,6 +547,12 @@ $affichage: FatFrank, 'Arial Black', sans-serif;
 }
 
 .about {
+  @include mixins.respond-below(lg) {
+    order: 4;
+  }
+}
+
+.photos {
   @include mixins.respond-below(lg) {
     order: 4;
   }

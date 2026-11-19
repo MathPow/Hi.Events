@@ -20,6 +20,17 @@ const previewImages = (images: Image[] = [], cover: EventPreviewDraft['cover']):
     return [...others, current?.url === cover ? current : {...current, type: 'EVENT_COVER', url: cover, lqip_base64: undefined} as Image];
 };
 
+// The photos as they will be published; the new ones come after the saved ones, as on the page.
+const previewGallery = (images: Image[], gallery: EventPreviewDraft['gallery']): Image[] => {
+    if (gallery === undefined) {
+        return images;
+    }
+    const others = images.filter(image => image.type !== 'EVENT_GALLERY');
+    const saved = images.filter(image => image.type === 'EVENT_GALLERY');
+    return [...others, ...gallery.map((url, index) => saved.find(image => image.url === url)
+        ?? {id: Number.MAX_SAFE_INTEGER - gallery.length + index, type: 'EVENT_GALLERY', url} as Image)];
+};
+
 // The event's page inside the homepage designer, showing the draft it sends.
 const EventHomepagePreview = () => {
     const {eventId} = useParams();
@@ -52,7 +63,7 @@ const EventHomepagePreview = () => {
     const previewEvent: Event = draft ? {
         ...event,
         ...draft.event,
-        images: previewImages(event.images, draft.cover),
+        images: previewGallery(previewImages(event.images, draft.cover), draft.gallery),
         settings: event.settings && {
             ...event.settings,
             homepage_theme_settings: {

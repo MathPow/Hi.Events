@@ -29,7 +29,8 @@ import {DesignerSection, SectionId} from "../../organizer/OrganizerHomepageDesig
 import {ImagePicker} from "../../organizer/OrganizerHomepageDesigner/ImagesSection.tsx";
 import {AccentSection} from "../../organizer/OrganizerHomepageDesigner/AccentSection.tsx";
 import {PreviewMessages, PreviewModal, PreviewPanel, PreviewSkeleton} from "../../organizer/OrganizerHomepageDesigner/PreviewPanel.tsx";
-import {eventDraftChanges, EventPageDraft, publishedEventDraft} from "./eventPageDraft.ts";
+import {eventDraftChanges, EventPageDraft, GalleryDraftImage, publishedEventDraft} from "./eventPageDraft.ts";
+import {GalleryPicker} from "./GalleryPicker.tsx";
 import {SkeletonLine} from "../../../common/Skeletons";
 import classes from "../../organizer/OrganizerHomepageDesigner/OrganizerHomepageDesigner.module.scss";
 import {CONFIRM_GROUP_PROPS} from "../../../../utilites/confirmationDialog.tsx";
@@ -121,6 +122,7 @@ const HomepageDesigner = () => {
         event: {title: draft.title, description: cleanDescription(draft.description)},
         accent: draft.accent,
         cover: draft.cover?.url ?? null,
+        gallery: draft.gallery.map(image => image.url),
         continue_button_text: draft.buttonText,
     } : {}, [draft]);
 
@@ -134,6 +136,8 @@ const HomepageDesigner = () => {
         return current && {...current, cover};
     });
 
+    const setGallery = (gallery: GalleryDraftImage[]) => setDraft(current => current && {...current, gallery});
+
     const toggleSection = (id: SectionId) => setOpenSections(current =>
         current.includes(id) ? current.filter(section => section !== id) : [...current, id]);
 
@@ -146,6 +150,7 @@ const HomepageDesigner = () => {
         if (draft?.cover?.kind === 'new') {
             URL.revokeObjectURL(draft.cover.url);
         }
+        draft?.gallery.forEach(image => image.kind === 'new' && URL.revokeObjectURL(image.url));
         setDraft(next);
         setResetKey(key => key + 1);
     };
@@ -171,6 +176,28 @@ const HomepageDesigner = () => {
                     setCover({kind: 'saved', id: data.id, url: data.url});
                 } else if (!draft.cover && published.cover?.kind === 'saved') {
                     await deleteImage.mutateAsync({imageId: published.cover.id});
+                }
+            }
+
+            if (changes.gallery) {
+                // Removed photos first, so they make room under the limit; the new ones then follow
+                // the kept ones, in the draft's order. Each saved photo leaves the draft's new ones, so a
+                // second try after an error doesn't upload it twice.
+                const kept = new Set(draft.gallery.filter(image => image.kind === 'saved').map(image => String(image.id)));
+                for (const image of published.gallery) {
+                    if (image.kind === 'saved' && !kept.has(String(image.id))) {
+                        await deleteImage.mutateAsync({imageId: image.id});
+                    }
+                }
+                for (const image of draft.gallery) {
+                    if (image.kind === 'new') {
+                        const {data} = await uploadImage.mutateAsync({image: image.file, imageType: 'EVENT_GALLERY', entityId: eventId});
+                        setDraft(current => current && {
+                            ...current,
+                            gallery: current.gallery.map(other => other === image ? {kind: 'saved', id: data.id, url: data.url} : other),
+                        });
+                        URL.revokeObjectURL(image.url);
+                    }
                 }
             }
 
@@ -232,7 +259,7 @@ const HomepageDesigner = () => {
     const loading = !draft;
 
     const sections: { id: SectionId, icon: string, title: string, long: string, short: string }[] = [
-        {id: 'images', icon: 'image', title: t`Images`, long: t`Cover image at the top of the page`, short: t`Cover Image`},
+        {id: 'images', icon: 'image', title: t`Images`, long: t`Cover image and photos of the event`, short: t`Cover and photos`},
         {
             id: 'accent',
             icon: 'drop',
@@ -263,14 +290,17 @@ const HomepageDesigner = () => {
         switch (id) {
             case 'images':
                 return (
-                    <ImagePicker
-                        kind="cover"
-                        label={t`Cover Image`}
-                        recommendation={t`We recommend dimensions of 1950px by 650px, a ratio of 3:1, and a maximum file size of 30MB`}
-                        image={draft.cover}
-                        onChange={setCover}
-                        disabled={publishing}
-                    />
+                    <>
+                        <ImagePicker
+                            kind="cover"
+                            label={t`Cover Image`}
+                            recommendation={t`We recommend dimensions of 1950px by 650px, a ratio of 3:1, and a maximum file size of 30MB`}
+                            image={draft.cover}
+                            onChange={setCover}
+                            disabled={publishing}
+                        />
+                        <GalleryPicker images={draft.gallery} onChange={setGallery} disabled={publishing}/>
+                    </>
                 );
             case 'accent':
                 return <AccentSection accent={draft.accent} onChange={(accent) => edit({accent})} disabled={publishing}/>;

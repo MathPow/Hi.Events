@@ -1,0 +1,107 @@
+.content {
+  background: #111 !important;
+  color: #fff;
+}
+
+.body {
+  position: relative;
+  height: 100dvh;
+  padding: 0 !important;
+}
+
+.track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.slide {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.top {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(12px, env(safe-area-inset-top)) 16px 12px;
+  background: linear-gradient(rgb(0 0 0 / 45%), transparent);
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.counter {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 16%);
+  color: #fff;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgb(255 255 255 / 28%);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+}
+
+// Arrows for a mouse; a finger swipes.
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  @media (hover: none) {
+    display: none;
+  }
+}
+
+.previous {
+  left: 16px;
+
+  span {
+    transform: rotate(180deg);
+  }
+}
+
+.next {
+  right: 16px;
+}
