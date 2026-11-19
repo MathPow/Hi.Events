@@ -51,6 +51,31 @@ class ImageOptimizationServiceTest extends TestCase
         $this->assertSame('photo.jpg', $result->getClientOriginalName());
     }
 
+    public function testMediumJpegKeepsItsSize(): void
+    {
+        $upload = $this->makeImage(1600, 1000, 'jpeg', noise: true, quality: 100);
+
+        $result = $this->service->optimize($upload);
+        $this->tempFiles[] = $result->getRealPath();
+
+        $output = new Imagick($result->getRealPath());
+        $this->assertNotSame($upload, $result);
+        $this->assertSame(1600, $output->getImageWidth());
+        $this->assertSame(1000, $output->getImageHeight());
+    }
+
+    public function testHugeJpegIsDownscaled(): void
+    {
+        $upload = $this->makeImage(6000, 4000, 'jpeg');
+
+        $result = $this->service->optimize($upload);
+        $this->tempFiles[] = $result->getRealPath();
+
+        $output = new Imagick($result->getRealPath());
+        $this->assertSame(ImageOptimizationService::MAX_DIMENSION, $output->getImageWidth());
+        $this->assertSame(1707, $output->getImageHeight());
+    }
+
     public function testSmallImageThatWouldNotShrinkIsKeptAsIs(): void
     {
         $upload = $this->makeImage(800, 400, 'jpeg', quality: 40);

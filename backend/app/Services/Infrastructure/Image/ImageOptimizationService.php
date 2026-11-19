@@ -45,9 +45,10 @@ class ImageOptimizationService
                 return $image;
             }
 
-            if ($format === 'jpg' || $format === 'jpeg') {
+            if (($format === 'jpg' || $format === 'jpeg') && $this->isLargerThanDecodeHint($image)) {
                 // libjpeg decode directement a une taille reduite: une photo de
-                // 48 Mpx ne passe jamais en memoire a pleine resolution.
+                // 48 Mpx ne passe jamais en memoire a pleine resolution. Seulement pour
+                // celles-la: ImageMagick 7 agrandit aussi au double une photo plus petite.
                 $imagick->setOption('jpeg:size', (self::MAX_DIMENSION * 2) . 'x' . (self::MAX_DIMENSION * 2));
             }
 
@@ -88,6 +89,13 @@ class ImageOptimizationService
         } finally {
             $imagick->clear();
         }
+    }
+
+    private function isLargerThanDecodeHint(UploadedFile $image): bool
+    {
+        $size = @getimagesize($image->getRealPath());
+
+        return $size !== false && max($size[0], $size[1]) > self::MAX_DIMENSION * 2;
     }
 
     private function resizeToFit(Imagick $imagick): bool
