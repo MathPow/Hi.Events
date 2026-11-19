@@ -8,6 +8,7 @@ import {useGetEvent} from "../../../../queries/useGetEvent.ts";
 import {useGetEventStats} from "../../../../queries/useGetEventStats.ts";
 import {useGetEventOrders} from "../../../../queries/useGetEventOrders.ts";
 import {useGetAttendees} from "../../../../queries/useGetAttendees.ts";
+import {QueryFilterOperator} from "../../../../types.ts";
 import {usePageDetail} from "../../../layouts/AppLayout/PageStatus.tsx";
 import {PageBody} from "../../../common/PageBody";
 import {PageTitle} from "../../../common/PageTitle";
@@ -198,8 +199,17 @@ const OrdersAndAttendees = () => {
     const section: Section = /\/attendees\/?$/.test(pathname) ? 'attendees' : 'orders';
     const {data: event} = useGetEvent(eventId);
     const {data: stats} = useGetEventStats(eventId);
-    const ordersTotal = useGetEventOrders(eventId, {pageNumber: 1, perPage: 1}).data?.meta?.total;
-    const attendeesTotal = useGetAttendees(eventId, {pageNumber: 1, perPage: 1}).data?.meta?.total;
+    // The capsule counts what still stands: a cancelled order or attendee stays in the list, not in the count.
+    const ordersTotal = useGetEventOrders(eventId, {
+        pageNumber: 1,
+        perPage: 1,
+        filterFields: {status: {operator: QueryFilterOperator.NotEquals, value: 'CANCELLED'}},
+    }).data?.meta?.total;
+    const attendeesTotal = useGetAttendees(eventId, {
+        pageNumber: 1,
+        perPage: 1,
+        filterFields: {status: {operator: QueryFilterOperator.NotEquals, value: 'CANCELLED'}},
+    }).data?.meta?.total;
 
     usePageDetail(section === 'attendees' ? t`Attendees` : null);
 

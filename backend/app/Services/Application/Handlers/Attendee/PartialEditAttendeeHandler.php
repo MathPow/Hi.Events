@@ -134,6 +134,12 @@ class PartialEditAttendeeHandler
             return;
         }
 
+        // The statistics only count the attendees of a completed order: one still awaiting its
+        // offline payment is counted with its order once paid.
+        if (!$order->isOrderCompleted()) {
+            return;
+        }
+
         if ($data->status === AttendeeStatus::CANCELLED->name) {
             $this->eventStatisticsCancellationService->decrementForCancelledAttendee(
                 eventId: $attendee->getEventId(),
