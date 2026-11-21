@@ -72,10 +72,14 @@ export const AttendeesTab = ({event, stats, capsule}: { event: Event, stats?: Ev
     });
 
     const attendeesQuery = useGetAttendees(event.id, isMobile ? filtersFor(shown) : filtersFor(PER_PAGE, page));
+    // A cancelled participant keeps their bib number but no longer counts.
     const bibsGiven = useGetAttendees(event.id, {
         pageNumber: 1,
         perPage: 1,
-        filterFields: {bib_number: {operator: QueryFilterOperator.NotEquals, value: 'null'}},
+        filterFields: {
+            bib_number: {operator: QueryFilterOperator.NotEquals, value: 'null'},
+            status: {operator: QueryFilterOperator.NotEquals, value: 'CANCELLED'},
+        },
     }).data?.meta?.total;
 
     const attendees = attendeesQuery.data?.data ?? [];
