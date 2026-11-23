@@ -65,6 +65,11 @@
     max-height: none;
     padding: 1.25rem;
   }
+
+  // In a column that scrolls, a child with overflow hidden (the segmented controls) would shrink to nothing.
+  > * {
+    flex-shrink: 0;
+  }
 }
 
 .panelHead {

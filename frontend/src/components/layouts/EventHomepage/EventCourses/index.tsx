@@ -65,7 +65,10 @@ export const EventCourses = ({eventId}: { eventId: IdParam }) => {
 
     useEffect(() => {
         const element = frame.current;
-        if (!element || typeof IntersectionObserver === 'undefined') {
+        if (!element) {
+            return;
+        }
+        if (typeof IntersectionObserver === 'undefined') {
             setNear(true);
             return;
         }
@@ -126,8 +129,9 @@ export const EventCourses = ({eventId}: { eventId: IdParam }) => {
             cancelled = true;
             created?.remove();
         };
+        // The section (and its map frame) only exists once the courses are known.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [near]);
+    }, [near, files.length > 0]);
 
     useEffect(() => {
         if (!map || !course) {

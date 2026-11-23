@@ -4,8 +4,8 @@ import {CourseSurface, RoutedLine, routeThrough} from "./routing.ts";
 import {CourseKind} from "./gpx.ts";
 
 // Courses close to the distance asked for. A loop is a shape drawn around the start (a square on a
-// circle through it, turned 6 ways), routed on real trails and streets, then grown or shrunk until the
-// routed distance lands near the target. A line heads out the same 6 ways, or joins the given finish.
+// circle through it, turned 8 ways), routed on real trails and streets, then grown or shrunk until the
+// routed distance lands near the target. A line heads out the same 8 ways, or joins the given finish.
 
 export interface CourseDraft {
     // The points the course goes through, start first. A loop comes back to the first one.
@@ -21,7 +21,7 @@ export interface ProposalRequest {
     surface: CourseSurface;
 }
 
-const BEARINGS = [0, 60, 120, 180, 240, 300];
+const BEARINGS = [0, 45, 90, 135, 180, 225, 270, 315];
 const MAX_PROPOSALS = 4;
 const MAX_TRIES = 4;
 const CLOSE_ENOUGH = 0.03;
@@ -31,6 +31,26 @@ const LOOP_FACTOR = 1.25;
 const LINE_FACTOR = 1.3;
 // Past this, waypoints are left where they fall (Overpass would return too much).
 const SNAP_MAX_RADIUS_M = 6000;
+
+// Overpass is often slow: past a few seconds the proposals go without it (BRouter's trail profile
+// already prefers paths). What came back is kept for the next search around the same start.
+const TRAILS_DEADLINE_MS = 4000;
+const trailCache = new Map<string, Promise<LatLng[]>>();
+
+const trailsAround = (center: LatLng, radiusM: number): Promise<LatLng[]> => {
+    const key = `${center.lat.toFixed(3)},${center.lng.toFixed(3)},${Math.ceil(radiusM / 500)}`;
+    let request = trailCache.get(key);
+    if (!request) {
+        request = fetchTrailPoints(center, Math.ceil(radiusM / 500) * 500);
+        request.then((points) => points.length === 0 && trailCache.delete(key));
+        trailCache.set(key, request);
+    }
+
+    return Promise.race([
+        request,
+        new Promise<LatLng[]>((resolve) => setTimeout(() => resolve([]), TRAILS_DEADLINE_MS)),
+    ]);
+};
 
 export const viaPoints = (kind: CourseKind, waypoints: LatLng[]): LatLng[] =>
     kind === 'loop' && waypoints.length > 1 ? [...waypoints, waypoints[0]] : waypoints;
@@ -62,7 +82,7 @@ export const proposeCourses = async (
 
     const reach = kind === 'loop' ? 2 * targetM / (5.66 * LOOP_FACTOR) : targetM / LINE_FACTOR;
     const trailPoints = surface !== 'road' && reach <= SNAP_MAX_RADIUS_M
-        ? await fetchTrailPoints(start, Math.min(SNAP_MAX_RADIUS_M, reach * 1.6 + 300))
+        ? await trailsAround(start, Math.min(SNAP_MAX_RADIUS_M, reach * 1.6 + 300))
         : [];
     // The start, and a finish the organizer chose, stay exactly where they are.
     const snap = (points: LatLng[]) => points.map((p, index) => (

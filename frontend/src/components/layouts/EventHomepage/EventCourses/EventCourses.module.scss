@@ -85,8 +85,15 @@
   }
 }
 
-.download {
+// The page's outline button, at its own width beside the figures.
+.download.download {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  width: auto;
+
+  @include mixins.respond-below(sm) {
+    width: 100%;
+    justify-content: center;
+  }
 }
