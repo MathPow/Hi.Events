@@ -1,4 +1,4 @@
-import {backtrackShare, bearing as bearingTo, destination, haversine, LatLng, overlapShare} from "./geo.ts";
+import {backtrackShare, bearing as bearingTo, destination, haversine, LatLng, nearestAlong, overlapShare} from "./geo.ts";
 import {fetchTrailPoints, snapToTrail} from "./places.ts";
 import {CourseSurface, RoutedLine, routeThrough} from "./routing.ts";
 import {CourseKind} from "./gpx.ts";
@@ -57,8 +57,20 @@ export const viaPoints = (kind: CourseKind, waypoints: LatLng[]): LatLng[] =>
 
 export const routeDraft = async (kind: CourseKind, waypoints: LatLng[], surface: CourseSurface, signal?: AbortSignal): Promise<CourseDraft | null> => {
     const line = await routeThrough(viaPoints(kind, waypoints), surface, signal);
+    if (!line) {
+        return null;
+    }
 
-    return line ? {waypoints, line} : null;
+    // A point dropped off any path is joined from the nearest one: it moves onto the line it gave,
+    // so every point to drag sits on the course.
+    let fromIndex = 0;
+    const onLine = waypoints.map((point) => {
+        const hit = nearestAlong(point, line.points, fromIndex);
+        fromIndex = hit.index;
+        return hit.point;
+    });
+
+    return {waypoints: onLine, line};
 };
 
 // How far a draft is from what was asked: the distance gap, and running the same way twice.

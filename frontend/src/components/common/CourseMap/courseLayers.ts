@@ -1,4 +1,5 @@
 /* eslint-disable lingui/no-unlocalized-strings -- technical strings: URLs, XML, map style keys */
+import {t} from "@lingui/macro";
 import type {GeoJSONSource, Map as MapLibreMap, MapOptions} from "maplibre-gl";
 import {cumulative, LatLng, pointAlong} from "../../../utilites/course/geo.ts";
 import {fetchCourseMapStyle} from "./courseMapStyle.ts";
@@ -36,6 +37,14 @@ export const loadCourseMap = async (container: HTMLElement, options: Partial<Map
         center: [-73.5673, 45.5017],
         zoom: 10,
         attributionControl: false,
+        locale: {
+            'CooperativeGesturesHandler.WindowsHelpText': t`Use Ctrl + scroll to zoom the map`,
+            'CooperativeGesturesHandler.MacHelpText': t`Use ⌘ + scroll to zoom the map`,
+            'CooperativeGesturesHandler.MobileHelpText': t`Use two fingers to move the map`,
+            'NavigationControl.ZoomIn': t`Zoom in`,
+            'NavigationControl.ZoomOut': t`Zoom out`,
+            'AttributionControl.ToggleAttribution': t`Map credits`,
+        },
         ...options,
     });
     map.addControl(new maplibregl.AttributionControl({compact: true}), 'bottom-right');
