@@ -4,7 +4,7 @@ import {useGetEventPublic} from "../../../../queries/useGetEventPublic.ts";
 import {StripePaymentMethod} from "./PaymentMethods/Stripe";
 import {OfflinePaymentMethod} from "./PaymentMethods/Offline";
 import {Event} from "../../../../types.ts";
-import {Button, Skeleton} from "@mantine/core";
+import {Button, Checkbox, Skeleton} from "@mantine/core";
 import {IconBuildingBank, IconCreditCard} from "@tabler/icons-react";
 import {formatCurrency} from "../../../../utilites/currency.ts";
 import {t, Trans} from "@lingui/macro";
@@ -40,6 +40,8 @@ const Payment = () => {
     const [submitHandler, setSubmitHandler] = useState<(() => Promise<void>) | null>(null);
     // Stripe a refuse le paiement en ligne (l'organisateur n'a pas fini sa configuration...).
     const [isStripeUnavailable, setIsStripeUnavailable] = useState(false);
+    // L'acheteur coche qu'il a lu les instructions: sans ca, il paie hors ligne sans savoir quoi envoyer.
+    const [hasReadOfflineInstructions, setHasReadOfflineInstructions] = useState(false);
     const transitionOrderToOfflinePaymentMutation = useTransitionOrderToOfflinePaymentPublic();
 
     const isStripeEnabled = event?.settings?.payment_providers?.includes('STRIPE');
@@ -207,6 +209,12 @@ const Payment = () => {
                 {isOfflineEnabled && (
                     <div style={{display: activePaymentMethod === 'OFFLINE' ? 'block' : 'none'}}>
                         <OfflinePaymentMethod event={checkoutEvent as Event}/>
+                        <Checkbox
+                            className={classes.readInstructions}
+                            checked={hasReadOfflineInstructions}
+                            onChange={(event) => setHasReadOfflineInstructions(event.currentTarget.checked)}
+                            label={t`I have read the payment instructions`}
+                        />
                     </div>
                 )}
 
@@ -242,7 +250,8 @@ const Payment = () => {
                     <Button
                         className={checkoutClasses.primaryButton}
                         loading={isLoading || isPaymentLoading}
-                        disabled={activePaymentMethod === 'STRIPE' && (isStripeUnavailable || !submitHandler)}
+                        disabled={(activePaymentMethod === 'STRIPE' && (isStripeUnavailable || !submitHandler))
+                            || (activePaymentMethod === 'OFFLINE' && !hasReadOfflineInstructions)}
                         onClick={handleSubmit}
                         leftSection={<PublicIcon name={'cadenas'} size={20}/>}
                     >
