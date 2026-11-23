@@ -95,7 +95,14 @@ export const AttendeesTab = ({event, stats, capsule}: { event: Event, stats?: Ev
     const capacity = ticketProducts.length > 0 && ticketProducts.every((product) => Number(product.initial_quantity_available) > 0)
         ? ticketProducts.reduce((sum, product) => sum + Number(product.initial_quantity_available), 0)
         : null;
-    const remaining = capacity !== null ? Math.max(capacity - registered, 0) : null;
+    // Les commandes hors ligne pas encore payees tiennent deja leur place (quantity_sold), comme a la caisse.
+    const taken = Math.max(ticketProducts.reduce((sum, product) => sum + Number(product.quantity_sold ?? 0), 0), registered);
+    const awaitingPayment = taken - registered;
+    const remaining = capacity !== null ? Math.max(capacity - taken, 0) : null;
+    const registeredDetail = [
+        awaitingPayment > 0 ? t`${awaitingPayment} awaiting payment` : null,
+        remaining !== null ? plural(remaining, {one: '# spot left', other: '# spots left'}) : null,
+    ].filter(Boolean).join(' · ');
 
     // « Merch à remettre »: the products sold, by size when they have sizes (« S 4 · M 5 · L 3 »).
     const merchSold = merch.reduce((sum, product) => sum + Number(product.quantity_sold ?? 0), 0);
@@ -227,10 +234,8 @@ export const AttendeesTab = ({event, stats, capsule}: { event: Event, stats?: Ev
 
             <div className={classes.tiles}>
                 <InfoTile loading={!stats} icon={`${ICONS}/participants-20.svg`} tone="orange" label={t`Registered`}
-                          value={capacity !== null ? `${registered} / ${capacity}` : registered}
-                          detail={remaining !== null
-                              ? plural(remaining, {one: '# spot left', other: '# spots left'})
-                              : undefined}/>
+                          value={capacity !== null ? `${taken} / ${capacity}` : taken}
+                          detail={registeredDetail || undefined}/>
                 {merch.length > 0 && (
                     <InfoTile icon="/interface/admin/produits/chandail.svg" tone="blue" label={t`Merch to hand out`}
                               value={merchSold} detail={sizesLine || undefined}/>
