@@ -137,6 +137,7 @@ const EventLayout = () => {
             attention: needsDetails,
         },
         {link: 'homepage-designer', label: t`Event Page`, iconSrc: navIcon('page'), attention: needsImages},
+        {link: 'courses', label: t`Routes`, iconSrc: navIcon('parcours')},
         {link: 'questions', label: t`Registration Questions`, iconSrc: navIcon('questions')},
 
         // 5. COMMUNICATION

@@ -1,0 +1,92 @@
+@use "../../../../styles/mixins.scss";
+
+// « Parcours » on the event page: below « Photos », above « Emplacement ».
+.courses {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include mixins.respond-below(lg) {
+    order: 4;
+  }
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tab {
+  @include mixins.bouton-contour;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &[aria-selected='true'] {
+    background: var(--dehors-brun);
+    color: var(--dehors-creme);
+  }
+}
+
+.mapFrame {
+  position: relative;
+  overflow: hidden;
+  height: 360px;
+  border-radius: 24px;
+  background: #fbf4e8;
+
+  @include mixins.respond-below(md) {
+    height: 280px;
+    border-radius: 22px;
+  }
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.figures {
+  display: flex;
+  gap: 24px;
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  span {
+    font-size: 13px;
+    opacity: 0.75;
+  }
+}
+
+.download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

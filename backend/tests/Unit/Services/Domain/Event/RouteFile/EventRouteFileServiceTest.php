@@ -149,6 +149,53 @@ class EventRouteFileServiceTest extends TestCase
         $this->service->store(12, UploadedFile::fake()->createWithContent('route.gpx', '<gpx/>'), null);
     }
 
+    public function test_a_replaced_course_keeps_its_id_gets_the_new_file_and_drops_the_old_one(): void
+    {
+        $file = UploadedFile::fake()->createWithContent('Boucle 5 km.gpx', '<gpx version="1.1"><trk/></gpx>');
+        $existing = $this->routeFile(3, 'Boucle 5 km', 'events/12/routes/old.gpx');
+
+        $this->disk->shouldReceive('putFileAs')->once()
+            ->with('events/12/routes', $file, m::pattern('#^[0-9a-f-]{36}\.gpx$#'), m::type('array'))
+            ->andReturnUsing(fn(string $directory, $file, string $name) => $directory . '/' . $name);
+        $this->repository->shouldReceive('updateFromArray')->once()->with(3, m::on(function (array $attributes) {
+            return $attributes['label'] === 'Boucle du lac'
+                && $attributes['original_filename'] === 'Boucle 5 km.gpx'
+                && $attributes['disk'] === 'public'
+                && preg_match('#^events/12/routes/[0-9a-f-]{36}\.gpx$#', $attributes['path']) === 1
+                && $attributes['size'] === strlen('<gpx version="1.1"><trk/></gpx>');
+        }))->andReturn($existing);
+        $this->disk->shouldReceive('delete')->once()->with('events/12/routes/old.gpx')->andReturnTrue();
+
+        $this->service->replace($existing, $file, 'Boucle du lac');
+    }
+
+    public function test_a_replaced_course_without_a_label_keeps_its_name(): void
+    {
+        $file = UploadedFile::fake()->createWithContent('export.gpx', '<gpx version="1.1"/>');
+        $existing = $this->routeFile(3, 'Demi-marathon', 'events/12/routes/old.gpx');
+
+        $this->disk->shouldReceive('putFileAs')->once()->andReturn('events/12/routes/new.gpx');
+        $this->repository->shouldReceive('updateFromArray')->once()
+            ->with(3, m::on(fn(array $attributes) => $attributes['label'] === 'Demi-marathon'))
+            ->andReturn($existing);
+        $this->disk->shouldReceive('delete')->once()->andReturnTrue();
+
+        $this->service->replace($existing, $file, '  ');
+    }
+
+    public function test_a_failed_replacement_keeps_the_old_file(): void
+    {
+        $existing = $this->routeFile(3, 'Boucle 5 km', 'events/12/routes/old.gpx');
+
+        $this->disk->shouldReceive('putFileAs')->once()->andReturnFalse();
+        $this->repository->shouldNotReceive('updateFromArray');
+        $this->disk->shouldNotReceive('delete');
+
+        $this->expectException(CouldNotStoreRouteFileException::class);
+
+        $this->service->replace($existing, UploadedFile::fake()->createWithContent('route.gpx', '<gpx/>'), null);
+    }
+
     public function test_the_label_defaults_to_the_file_name_and_is_cleaned(): void
     {
         $this->assertSame('10 km', $this->service->cleanLabel(null, '10 km.gpx'));

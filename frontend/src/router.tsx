@@ -462,6 +462,14 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                // « Parcours »: the course maker and the event's GPX routes.
+                path: "courses",
+                async lazy() {
+                    const Courses = await import("./components/routes/event/Courses");
+                    return { Component: Courses.default };
+                }
+            },
+            {
                 path: "messages",
                 async lazy() {
                     const Messages = await import("./components/routes/event/messages");

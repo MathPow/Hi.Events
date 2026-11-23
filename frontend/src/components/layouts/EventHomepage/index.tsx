@@ -41,6 +41,7 @@ import {ProductSelectionSummary} from "../../routes/product-widget/SelectProduct
 import {findDefaultTicket, StickyBuyBar} from "./StickyBuyBar";
 import {TicketsCard} from "./TicketsCard";
 import {EventLocationMap} from "./EventLocationMap";
+import {EventCourses} from "./EventCourses";
 import {CollapsibleDescription} from "./CollapsibleDescription";
 import {OtherDates} from "./OtherDates";
 import {CoverPhotos, PhotoGrid} from "./EventPhotos";
@@ -422,6 +423,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                                onOpen={(index) => setViewerIndex(galleryOffset + index)}/>
                                 </section>
                             )}
+
+                            <EventCourses eventId={event.id}/>
 
                             {hasLocation && locationDetails && mapUrl && (
                                 <section className={`${classes.card} ${classes.section} ${classes.location}`} data-rough>

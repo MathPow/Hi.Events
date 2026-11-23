@@ -172,6 +172,7 @@ use HiEvents\Http\Actions\Events\RouteFiles\DeleteEventRouteFileAction;
 use HiEvents\Http\Actions\Events\RouteFiles\DownloadEventRouteFilePublicAction;
 use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesAction;
 use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesPublicAction;
+use HiEvents\Http\Actions\Events\RouteFiles\ReplaceEventRouteFileAction;
 use HiEvents\Http\Actions\Events\RouteFiles\UpdateEventRouteFileAction;
 use HiEvents\Http\Actions\Events\RouteFiles\UploadEventRouteFileAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentsAction;
@@ -544,6 +545,7 @@ $router->middleware(['auth:api'])->group(
         $router->get('/events/{event_id}/route-files', GetEventRouteFilesAction::class);
         $router->post('/events/{event_id}/route-files', UploadEventRouteFileAction::class);
         $router->patch('/events/{event_id}/route-files/{route_file_id}', UpdateEventRouteFileAction::class);
+        $router->post('/events/{event_id}/route-files/{route_file_id}/file', ReplaceEventRouteFileAction::class);
         $router->delete('/events/{event_id}/route-files/{route_file_id}', DeleteEventRouteFileAction::class);
 
         // Promo Codes

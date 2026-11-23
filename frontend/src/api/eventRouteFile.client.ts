@@ -25,10 +25,25 @@ export const eventRouteFileClient = {
         const response = await api.get<GenericDataResponse<EventRouteFile[]>>(`events/${eventId}/route-files`);
         return response.data;
     },
-    upload: async (eventId: IdParam, file: File) => {
+    upload: async (eventId: IdParam, file: File, label?: string) => {
         const formData = new FormData();
         formData.append('file', file);
+        if (label) {
+            formData.append('label', label);
+        }
         const response = await api.post<GenericDataResponse<EventRouteFile>>(`events/${eventId}/route-files`, formData, {
+            headers: {'Content-Type': 'multipart/form-data'},
+        });
+        return response.data;
+    },
+    // A new version of the course under the same id: the links already sent in ticket emails keep working.
+    replace: async (eventId: IdParam, routeFileId: IdParam, file: File, label?: string) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        if (label) {
+            formData.append('label', label);
+        }
+        const response = await api.post<GenericDataResponse<EventRouteFile>>(`events/${eventId}/route-files/${routeFileId}/file`, formData, {
             headers: {'Content-Type': 'multipart/form-data'},
         });
         return response.data;

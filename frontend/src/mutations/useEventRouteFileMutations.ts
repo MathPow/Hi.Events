@@ -13,7 +13,18 @@ export const useUploadEventRouteFile = () => {
     const refresh = useRefreshList();
 
     return useMutation({
-        mutationFn: ({eventId, file}: { eventId: IdParam, file: File }) => eventRouteFileClient.upload(eventId, file),
+        mutationFn: ({eventId, file, label}: { eventId: IdParam, file: File, label?: string }) =>
+            eventRouteFileClient.upload(eventId, file, label),
+        onSuccess: (_, {eventId}) => refresh(eventId),
+    });
+};
+
+export const useReplaceEventRouteFile = () => {
+    const refresh = useRefreshList();
+
+    return useMutation({
+        mutationFn: ({eventId, routeFileId, file, label}: { eventId: IdParam, routeFileId: IdParam, file: File, label?: string }) =>
+            eventRouteFileClient.replace(eventId, routeFileId, file, label),
         onSuccess: (_, {eventId}) => refresh(eventId),
     });
 };

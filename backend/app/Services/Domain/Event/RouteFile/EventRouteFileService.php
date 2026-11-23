@@ -57,32 +57,51 @@ class EventRouteFileService
     {
         $disk = $this->config->get('filesystems.public');
         $originalFilename = (string)$file->getClientOriginalName();
-
-        $path = $this->filesystemManager->disk($disk)->putFileAs(
-            path: $this->directory($eventId),
-            file: $file,
-            name: Str::uuid() . '.gpx',
-            options: self::STORAGE_OPTIONS,
-        );
-
-        if ($path === false) {
-            $this->logger->error('Could not store event route file', [
-                'disk' => $disk,
-                'event_id' => $eventId,
-                'original_filename' => $originalFilename,
-            ]);
-
-            throw new CouldNotStoreRouteFileException(__('The GPX file could not be saved. Please try again.'));
-        }
+        $path = $this->putFile($disk, $eventId, $file);
 
         return $this->routeFileRepository->create([
             EventRouteFileDomainObject::EVENT_ID => $eventId,
             EventRouteFileDomainObject::LABEL => $this->cleanLabel($label, $originalFilename),
-            EventRouteFileDomainObject::ORIGINAL_FILENAME => Str::limit(StringHelper::stripControlCharacters($originalFilename), 255, ''),
+            EventRouteFileDomainObject::ORIGINAL_FILENAME => $this->cleanFilename($originalFilename),
             EventRouteFileDomainObject::DISK => $disk,
             EventRouteFileDomainObject::PATH => $path,
             EventRouteFileDomainObject::SIZE => (int)$file->getSize(),
         ]);
+    }
+
+    /**
+     * A new version of the course under the same id, so the links already sent in ticket emails keep
+     * working. Without a label, the course keeps its name. The old file goes once the new one is saved.
+     *
+     * @throws CouldNotStoreRouteFileException
+     */
+    public function replace(EventRouteFileDomainObject $routeFile, UploadedFile $file, ?string $label): EventRouteFileDomainObject
+    {
+        $disk = $this->config->get('filesystems.public');
+        $originalFilename = (string)$file->getClientOriginalName();
+        $path = $this->putFile($disk, $routeFile->getEventId(), $file);
+
+        $updated = $this->routeFileRepository->updateFromArray($routeFile->getId(), [
+            EventRouteFileDomainObject::LABEL => trim($label ?? '') === ''
+                ? $routeFile->getLabel()
+                : $this->cleanLabel($label, $originalFilename),
+            EventRouteFileDomainObject::ORIGINAL_FILENAME => $this->cleanFilename($originalFilename),
+            EventRouteFileDomainObject::DISK => $disk,
+            EventRouteFileDomainObject::PATH => $path,
+            EventRouteFileDomainObject::SIZE => (int)$file->getSize(),
+        ]);
+
+        try {
+            $this->filesystemManager->disk($routeFile->getDisk())->delete($routeFile->getPath());
+        } catch (Throwable $exception) {
+            $this->logger->warning('Could not delete the replaced event route file', [
+                'route_file_id' => $routeFile->getId(),
+                'path' => $routeFile->getPath(),
+                'exception' => $exception->getMessage(),
+            ]);
+        }
+
+        return $updated;
     }
 
     /**
@@ -139,6 +158,36 @@ class EventRouteFileService
                 EventRouteFileDomainObject::SIZE => $routeFile->getSize(),
             ]);
         }
+    }
+
+    /**
+     * @throws CouldNotStoreRouteFileException
+     */
+    private function putFile(string $disk, int $eventId, UploadedFile $file): string
+    {
+        $path = $this->filesystemManager->disk($disk)->putFileAs(
+            path: $this->directory($eventId),
+            file: $file,
+            name: Str::uuid() . '.gpx',
+            options: self::STORAGE_OPTIONS,
+        );
+
+        if ($path === false) {
+            $this->logger->error('Could not store event route file', [
+                'disk' => $disk,
+                'event_id' => $eventId,
+                'original_filename' => (string)$file->getClientOriginalName(),
+            ]);
+
+            throw new CouldNotStoreRouteFileException(__('The GPX file could not be saved. Please try again.'));
+        }
+
+        return $path;
+    }
+
+    private function cleanFilename(string $originalFilename): string
+    {
+        return Str::limit(StringHelper::stripControlCharacters($originalFilename), 255, '');
     }
 
     private function directory(int $eventId): string

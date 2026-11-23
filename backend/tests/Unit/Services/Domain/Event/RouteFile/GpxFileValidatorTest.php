@@ -46,6 +46,33 @@ XML;
         $this->addToAssertionCount(1);
     }
 
+    public function test_a_course_drawn_in_dehors_with_its_control_points_is_accepted(): void
+    {
+        $this->validator->validateContents(<<<'GPX'
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Billetterie Dehors" xmlns="http://www.topografix.com/GPX/1/1" xmlns:dehors="https://billets.dehorsqc.com/xmlns/parcours/1">
+  <metadata>
+    <name>Boucle 5 km &amp; plus</name>
+    <extensions>
+      <dehors:course kind="loop" surface="trail" target="5000">
+        <dehors:point lat="45.658300" lon="-73.908800"/>
+        <dehors:point lat="45.665000" lon="-73.900000"/>
+      </dehors:course>
+    </extensions>
+  </metadata>
+  <trk>
+    <name>Boucle 5 km &amp; plus</name>
+    <trkseg>
+      <trkpt lat="45.658385" lon="-73.908704"><ele>71.5</ele></trkpt>
+      <trkpt lat="45.665000" lon="-73.900000"><ele>74.0</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+GPX);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function test_the_extension_is_checked_case_insensitively(): void
     {
         $this->validator->validate(UploadedFile::fake()->createWithContent('PARCOURS.GPX', self::VALID_GPX));

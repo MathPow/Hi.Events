@@ -1,7 +1,7 @@
 import {KeyboardEvent, useEffect, useRef, useState} from "react";
 import {t} from "@lingui/macro";
 import {Button, FileButton, Skeleton, TextInput} from "@mantine/core";
-import {IconDownload, IconRoute, IconTrash} from "@tabler/icons-react";
+import {IconDownload, IconPencil, IconRoute, IconTrash} from "@tabler/icons-react";
 import {IdParam} from "../../../../../types.ts";
 import {
     EventRouteFile,
@@ -30,10 +30,11 @@ const uploadError = (error: any): string => {
 };
 
 /**
- * « Parcours (GPX) »: the courses participants load in their watch or phone, downloaded from their
- * ticket and their ticket email. Up to 5 files of 10 MB, each with a name (« 10 km »).
+ * « Parcours de l'événement »: the courses participants load in their watch or phone, downloaded from
+ * the event page, their ticket and their ticket email. Up to 5 files of 10 MB, each with a name
+ * (« 10 km »), drawn in the course maker above it or added as a GPX.
  */
-export const RouteFilesCard = ({eventId}: { eventId: IdParam }) => {
+export const RouteFilesCard = ({eventId, onEdit}: { eventId: IdParam, onEdit?: (routeFile: EventRouteFile) => void }) => {
     const routeFilesQuery = useGetEventRouteFiles(eventId);
     const uploadMutation = useUploadEventRouteFile();
     const deleteMutation = useDeleteEventRouteFile();
@@ -82,8 +83,8 @@ export const RouteFilesCard = ({eventId}: { eventId: IdParam }) => {
         <SettingsCard
             id="route-files"
             className={extra.anchored}
-            title={t`Route (GPX)`}
-            subtitle={t`The course to load in a watch or a phone. Participants download it from their ticket and their ticket email.`}
+            title={t`The event's routes`}
+            subtitle={t`Participants download them from the event page, their ticket and their ticket email.`}
             action={(
                 <FileButton onChange={upload} accept=".gpx,application/gpx+xml" multiple disabled={full}
                             resetRef={resetPicker}>
@@ -100,12 +101,13 @@ export const RouteFilesCard = ({eventId}: { eventId: IdParam }) => {
                 <Skeleton height={64} radius="md"/>
             ) : routeFiles.length === 0 ? (
                 <p className={classes.empty}>
-                    {t`No route yet. Add a GPX file: participants will be able to download it from their ticket.`}
+                    {t`No route yet. Draw one above, or add a GPX file you already have.`}
                 </p>
             ) : (
                 <div className={classes.list}>
                     {routeFiles.map((routeFile) => (
                         <RouteFileRow key={routeFile.id} eventId={eventId} routeFile={routeFile}
+                                      onEdit={onEdit ? () => onEdit(routeFile) : undefined}
                                       onDelete={() => remove(routeFile)}/>
                     ))}
                 </div>
@@ -118,9 +120,10 @@ export const RouteFilesCard = ({eventId}: { eventId: IdParam }) => {
     );
 };
 
-const RouteFileRow = ({eventId, routeFile, onDelete}: {
+const RouteFileRow = ({eventId, routeFile, onEdit, onDelete}: {
     eventId: IdParam,
     routeFile: EventRouteFile,
+    onEdit?: () => void,
     onDelete: () => void,
 }) => {
     const renameMutation = useRenameEventRouteFile();
@@ -168,6 +171,12 @@ const RouteFileRow = ({eventId, routeFile, onDelete}: {
                 />
                 <span className={classes.listRowHint}>{t`GPX · ${size} · ${filename}`}</span>
             </span>
+            {onEdit && (
+                <button type="button" className={classes.iconButton} aria-label={t`Edit on the map`}
+                        title={t`Edit on the map`} onClick={onEdit}>
+                    <IconPencil size={18}/>
+                </button>
+            )}
             <a className={classes.iconButton} href={eventRouteFileClientPublic.downloadUrl(eventId, routeFile.id)}
                aria-label={t`Download`} title={t`Download`}>
                 <IconDownload size={18}/>
