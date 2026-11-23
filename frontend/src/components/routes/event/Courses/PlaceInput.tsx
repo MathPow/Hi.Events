@@ -66,35 +66,39 @@ export const PlaceInput = ({label, placeholder, value, near, picking, onPick, on
     };
 
     return (
-        <div className={classes.placeRow}>
-            <Autocomplete
-                className={classes.placeInput}
-                label={label}
-                placeholder={placeholder}
-                value={text}
-                data={[...new Set(results.map((result) => result.label))]}
-                filter={({options}) => options}
-                onChange={(next) => {
-                    typed.current = true;
-                    setText(next);
-                }}
-                onOptionSubmit={choose}
-                rightSection={searching ? <Loader size={14}/> : undefined}
-                comboboxProps={{withinPortal: true}}
-            />
-            <Tooltip label={t`Choose on the map`} withArrow>
-                <ActionIcon
-                    className={classes.pickButton}
-                    data-active={picking || undefined}
-                    variant="default"
-                    size={42}
-                    aria-label={t`Choose on the map`}
-                    aria-pressed={picking}
-                    onClick={onPick}
-                >
-                    <IconMapPin size={20}/>
-                </ActionIcon>
-            </Tooltip>
-        </div>
+        <Autocomplete
+            className={classes.placeInput}
+            label={label}
+            placeholder={placeholder}
+            value={text}
+            data={[...new Set(results.map((result) => result.label))]}
+            filter={({options}) => options}
+            onChange={(next) => {
+                typed.current = true;
+                setText(next);
+            }}
+            onOptionSubmit={choose}
+            rightSectionWidth={searching ? 64 : 44}
+            rightSectionPointerEvents="all"
+            rightSection={(
+                <>
+                    {searching && <Loader size={14}/>}
+                    <Tooltip label={t`Choose on the map`} withArrow>
+                        <ActionIcon
+                            className={classes.pickButton}
+                            data-active={picking || undefined}
+                            variant="subtle"
+                            size={34}
+                            aria-label={t`Choose on the map`}
+                            aria-pressed={picking}
+                            onClick={onPick}
+                        >
+                            <IconMapPin size={20}/>
+                        </ActionIcon>
+                    </Tooltip>
+                </>
+            )}
+            comboboxProps={{withinPortal: true}}
+        />
     );
 };

@@ -100,23 +100,16 @@
   }
 }
 
-.placeRow {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
-}
-
 .placeInput {
-  flex: 1;
   min-width: 0;
 }
 
+// The pin inside the address field, on its right: « Choisir sur la carte ».
 .pickButton {
-  flex-shrink: 0;
-  border-radius: 0.75rem;
+  border-radius: 0.625rem;
+  color: ui.$ink;
 
   &[data-active] {
-    border-color: ui.$ink;
     background: ui.$ink;
     color: var(--dehors-creme);
   }
@@ -323,8 +316,10 @@
   }
 }
 
+// maplibre-gl.css sets .maplibregl-map { position: relative } on this same element: without
+// !important the map falls back to a zero height.
 .map {
-  position: absolute;
+  position: absolute !important;
   inset: 0;
 }
 
