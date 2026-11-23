@@ -11,6 +11,8 @@ export interface CourseDesign {
     kind: CourseKind;
     surface: CourseSurface;
     targetM?: number;
+    // The climb as the router measured it: shown the same everywhere the course appears.
+    ascentM?: number;
     waypoints: LatLng[];
 }
 
@@ -59,11 +61,13 @@ export const parseGpx = (xml: string): ParsedGpx | null => {
         const kind = course.getAttribute('kind') === 'line' ? 'line' : 'loop';
         const surface = course.getAttribute('surface');
         const target = parseFloat(course.getAttribute('target') ?? '');
+        const ascent = parseFloat(course.getAttribute('ascent') ?? '');
         if (waypoints.length >= 2) {
             design = {
                 kind,
                 surface: surface === 'mixed' || surface === 'road' ? surface : 'trail',
                 targetM: Number.isFinite(target) && target > 0 ? target : undefined,
+                ascentM: Number.isFinite(ascent) && ascent >= 0 ? ascent : undefined,
                 waypoints,
             };
         }
@@ -85,7 +89,7 @@ export const buildGpx = (name: string, points: TrackPoint[], design?: CourseDesi
 
     const extension = design ? `
     <extensions>
-      <dehors:course kind="${design.kind}" surface="${design.surface}"${design.targetM ? ` target="${Math.round(design.targetM)}"` : ''}>
+      <dehors:course kind="${design.kind}" surface="${design.surface}"${design.targetM ? ` target="${Math.round(design.targetM)}"` : ''}${design.ascentM !== undefined ? ` ascent="${Math.round(design.ascentM)}"` : ''}>
 ${design.waypoints.map((p) => `        <dehors:point lat="${p.lat.toFixed(6)}" lon="${p.lng.toFixed(6)}"/>`).join('\n')}
       </dehors:course>
     </extensions>` : '';

@@ -38,7 +38,7 @@ const loadCourse = async (eventId: IdParam, routeFile: EventRouteFilePublic): Pr
         return {
             points,
             distance: pathDistance(points),
-            ascent: elevationGain(points),
+            ascent: gpx.design?.ascentM ?? elevationGain(points),
             loop: gpx.design ? gpx.design.kind === 'loop' : haversine(points[0], points[points.length - 1]) < 80,
         };
     } catch {

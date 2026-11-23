@@ -42,7 +42,7 @@ const kmText = (km: number) => new Intl.NumberFormat(intlLocale(), {maximumFract
 
 /** An edited GPX: its control points when Dehors drew it, else points picked along its line. */
 const draftFromGpx = (gpx: ParsedGpx): { draft: CourseDraft; kind: CourseKind; surface: CourseSurface; targetM?: number } => {
-    const line = {points: gpx.points, distance: pathDistance(gpx.points), ascent: elevationGain(gpx.points)};
+    const line = {points: gpx.points, distance: pathDistance(gpx.points), ascent: gpx.design?.ascentM ?? elevationGain(gpx.points)};
     if (gpx.design) {
         return {draft: {waypoints: gpx.design.waypoints, line}, kind: gpx.design.kind, surface: gpx.design.surface, targetM: gpx.design.targetM};
     }
@@ -400,6 +400,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone}: Course
         kind,
         surface,
         targetM: targetM || undefined,
+        ascentM: draft.line.ascent,
         waypoints: draft.waypoints,
     }) : '';
 
