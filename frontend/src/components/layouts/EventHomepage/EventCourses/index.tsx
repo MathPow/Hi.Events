@@ -49,20 +49,19 @@ const loadCourse = async (eventId: IdParam, routeFile: EventRouteFilePublic): Pr
 interface EventCoursesProps {
     eventId: IdParam;
     // The venue: the section becomes « Emplacement », its map (brand colors, centered pin) with the
-    // course drawn under the pin, the address below.
-    address?: string | null;
+    // course drawn under the pin. The address is already at the top of the page.
     mapUrl?: string | null;
     accent?: string;
 }
 
 /**
- * « Emplacement » with a course: the venue's map with the course on it, the address, then its distance
+ * « Emplacement » with a course: the venue's map with the course on it, then its distance
  * and climb and its elevation (the GPX comes with the ticket, after buying). Without a venue, « Parcours » on
  * the trail map. A tab per course when there are several.
  */
-export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesProps) => {
+export const EventCourses = ({eventId, mapUrl, accent}: EventCoursesProps) => {
     const {data: routeFiles} = useGetEventRouteFilesPublic(eventId);
-    const hasVenue = !!address && !!mapUrl;
+    const hasVenue = !!mapUrl;
     const frame = useRef<HTMLDivElement>(null);
     const canvas = useRef<HTMLDivElement>(null);
     const [near, setNear] = useState(false);
@@ -193,10 +192,6 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
                     </div>
                 )}
             </div>
-
-            {hasVenue && (
-                <a href={mapUrl!} target="_blank" rel="noopener noreferrer" className={classes.address}>{address}</a>
-            )}
 
             <div className={classes.footer}>
                 <div className={classes.figures}>

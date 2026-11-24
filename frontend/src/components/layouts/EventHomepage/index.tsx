@@ -430,8 +430,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
 
                             {hasCourses && (
                                 <EventCourses eventId={event.id}
-                                              address={hasLocation && locationDetails ? formatAddress(locationDetails) : null}
-                                              mapUrl={mapUrl}
+                                              mapUrl={hasLocation ? mapUrl : null}
                                               accent={themeVariables?.['--theme-accent']}/>
                             )}
 
@@ -440,7 +439,6 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                     <h2 className={classes.sectionTitle}>{t`Location`}</h2>
                                     <EventLocationMap eventId={event.id} mapUrl={mapUrl}
                                                       accent={themeVariables?.['--theme-accent']}/>
-                                    <p className={classes.mapAddress}>{formatAddress(locationDetails)}</p>
                                 </section>
                             )}
 
