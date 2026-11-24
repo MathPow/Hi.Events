@@ -252,6 +252,11 @@
     outline: 3px solid ui.$ink;
     outline-offset: 2px;
   }
+
+  // Its outline, redrawn along the cut edge, stays dashed like « + Ajouter un billet ».
+  &[data-rough-outlined]::after {
+    border-style: dashed;
+  }
 }
 
 .empty {

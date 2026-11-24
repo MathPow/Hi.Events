@@ -3,9 +3,10 @@ import {roughClipPath, roughEdgeClipPath, roughEdgePath} from "../utilites/rough
 import {roughButtonPath} from "./useRoughButton.ts";
 
 // Ce qui se coupe: les blocs marques data-rough, tous les champs et boutons Mantine, les
-// fenetres et les notifications, partout (pages publiques, back-office, portails).
+// pilules des choix (SegmentedControl), les fenetres et les notifications, partout (pages
+// publiques, back-office, portails).
 const SELECTOR = '[data-rough], .mantine-Input-input, .mantine-Button-root, .mantine-ActionIcon-root, .mantine-CloseButton-root,'
-    + ' .mantine-Modal-content, .mantine-Notification-root';
+    + ' .mantine-SegmentedControl-control, .mantine-Modal-content, .mantine-Notification-root';
 // Les boutons pleins prennent le contour des boutons du site (rugueux.ts: des bosses lisses,
 // les bouts nets) sur leur propre rayon, les boutons contour celui des blocs; tous
 // bouillonnent au survol entre trois traces.
@@ -154,19 +155,9 @@ const cutRoughEdges = (root: HTMLElement) => {
         const pill = isButton && !round && height <= PILL_MAX_HEIGHT && width >= height * 0.9;
         const boxRadius = Math.min(radius, width / 2, height / 2);
 
-        // Un bouton contour (bordure visible) garde son trait lisse, net et regulier, comme
-        // « Personnaliser » du panneau des temoins: coupe, son trait ondulait d'un demi-pixel et
-        // paraissait flou, aminci par endroits. Il saute et grossit quand meme au survol; sans
-        // --rough-clip, rough-clip-boil ne le coupe pas (clip-path retombe a none).
-        if (isButton && border) {
-            element.dataset.roughBoil = round || pill ? 'pill' : 'tile';
-            element.style.setProperty('--rough-grow', (1 + Math.min(PILL_GROW, PILL_GROW_MAX / width)).toFixed(4));
-            return;
-        }
-
-        // Un bouton plein prend les bosses des boutons du site. Un bouton dont la bordure n'est
-        // pas encore visible (elle se colore au survol ou une fois choisi) se coupe comme un bloc
-        // borde: de petites ondulations, et il bouillonne entre trois.
+        // Un bouton plein prend les bosses des boutons du site. Un bouton contour (bordure
+        // visible) se coupe comme un bloc borde, les onglets de l'organisateur: de petites
+        // ondulations qui mordent a peine sa propre bordure, et il bouillonne entre trois.
         const edge = (seed: number) => {
             let amplitude = Math.min(width, height) < 40 ? SMALL_AMPLITUDE : AMPLITUDE;
             if (border) {

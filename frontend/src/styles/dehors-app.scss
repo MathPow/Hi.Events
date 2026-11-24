@@ -508,18 +508,25 @@ body.dehors-app {
     }
   }
 
+  // Each pill is cut like the outlined buttons (useRoughEdges), its stroke redrawn along the cut.
+  // The chosen one is filled by its own background, inside the same cut: Mantine's sliding
+  // indicator is a separate smooth pill, its edge showed past the wavy stroke.
   .mantine-SegmentedControl-control {
     border: 1.5px solid var(--dehors-brun);
     border-radius: 999px;
+    transition: background-color 0.2s ease;
 
     &::before {
       display: none;
     }
+
+    &[data-active] {
+      background: var(--dehors-brun);
+    }
   }
 
   .mantine-SegmentedControl-indicator {
-    background: var(--dehors-brun);
-    box-shadow: none;
+    display: none;
   }
 
   .mantine-SegmentedControl-label {
