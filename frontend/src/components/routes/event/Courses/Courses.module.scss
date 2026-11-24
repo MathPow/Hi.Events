@@ -44,6 +44,16 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 
 // ---- the maker ----
 
+// The card's shadow, on a plain box behind the hand-cut edge (data-rough).
+.makerShadow {
+  border-radius: 2rem;
+  box-shadow: ui.$shadow;
+
+  @include mixins.respond-below(lg) {
+    border-radius: 1.75rem;
+  }
+}
+
 .maker {
   display: grid;
   grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
@@ -53,7 +63,6 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   // clip, not hidden: hidden would make the maker a scroll box and the map would no longer stick on phones.
   overflow: clip;
   background: ui.$card;
-  box-shadow: ui.$shadow;
 
   @include mixins.respond-below(lg) {
     grid-template-columns: minmax(0, 1fr);
@@ -188,13 +197,12 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
     font-size: 0.9375rem;
   }
 
+  // The whole address, on as many lines as it needs.
   span {
-    overflow: hidden;
     color: var(--dehors-texte-doux);
     font-size: 0.8125rem;
     font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -220,10 +228,8 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 .editingName {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
   font-size: 0.9375rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .fieldLabel {
@@ -399,8 +405,8 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   grid-template-columns: auto 1fr;
   gap: 0.5rem 0.625rem;
   padding: 0.875rem;
-  border: 1.5px dashed ui.$ink;
   border-radius: 1rem;
+  background: ui.$row;
 
   p {
     margin: 0;
@@ -430,6 +436,8 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 }
 
 .proposal {
+  // Positioned: its border, transparent until hovered, is redrawn along the cut edge.
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -453,11 +461,16 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 
 .proposalThumb {
   position: relative;
-  display: grid;
   flex-shrink: 0;
-  place-items: center;
   width: 3.25rem;
   height: 3.25rem;
+}
+
+.proposalShape {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
   border-radius: 0.75rem;
   background: ui.$card;
 }
@@ -554,6 +567,7 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 }
 
 .proposalChip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -667,9 +681,8 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
     z-index: 3;
     margin: 0 0.75rem 0.75rem;
     padding: 0.75rem 0.875rem;
-    border: none;
+    border: 1.5px solid rgb(55 39 33 / 0.2);
     border-radius: 1.25rem;
-    box-shadow: 0 8px 24px rgb(55 39 33 / 0.18);
   }
 
   @include mixins.respond-below(md) {
@@ -831,9 +844,9 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   align-items: center;
   gap: 0.5rem;
   padding: 0.4375rem 0.875rem;
+  border: 1.5px solid rgb(55 39 33 / 0.15);
   border-radius: 999px;
   background: ui.$card;
-  box-shadow: ui.$shadow;
   font-size: 0.8125rem;
   font-weight: 700;
   white-space: nowrap;
@@ -850,9 +863,9 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   align-items: flex-start;
   gap: 0.25rem;
   padding: 0.625rem 0.5rem 0.625rem 0.875rem;
+  border: 1.5px solid rgb(55 39 33 / 0.15);
   border-radius: 1rem;
   background: rgb(255 252 248 / 0.95);
-  box-shadow: ui.$shadow;
 
   ul {
     display: flex;
@@ -915,9 +928,9 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   z-index: 2;
   width: 2.25rem;
   height: 2.25rem;
+  border: 1.5px solid rgb(55 39 33 / 0.15);
   border-radius: 999px;
   background: ui.$card;
-  box-shadow: ui.$shadow;
 }
 
 // « Retirer ce point », over the point clicked.

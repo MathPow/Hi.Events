@@ -3,8 +3,19 @@
 
 // « Les parcours de l'événement », a sibling of the sections of « Billets et produits ».
 
+// The card's shadow, on a plain box behind the hand-cut edge (data-rough).
+.cardShadow {
+  border-radius: 2rem;
+  box-shadow: ui.$shadow;
+
+  @include mixins.respond-below(md) {
+    border-radius: 1.5rem;
+  }
+}
+
 .card {
   @include ui.card(1.5rem);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
@@ -78,22 +89,25 @@
 }
 
 .row {
+  // Positioned, with a border that stays transparent until needed: it is then drawn along the cut edge.
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.875rem;
   padding: 0.625rem 0.75rem 0.625rem 0.625rem;
+  border: 2px solid transparent;
   border-radius: 1.25rem;
   background: ui.$row;
-  transition: background-color 0.8s ease, box-shadow 0.8s ease;
+  transition: background-color 0.8s ease, border-color 0.8s ease;
 
   &[data-editing] {
-    box-shadow: 0 0 0 2px ui.tone-text(waiting);
+    border-color: ui.tone-text(waiting);
   }
 
   // The route just saved, lit up for a few seconds (the page clears it).
   &[data-highlighted] {
+    border-color: ui.tone-text(ok);
     background: ui.tone-bg(ok);
-    box-shadow: 0 0 0 2px ui.tone-text(ok);
   }
 
   @include mixins.respond-below(sm) {
@@ -163,13 +177,11 @@
   flex-shrink: 0;
 }
 
+// Kind, distance and climb: on two lines rather than cut on a phone.
 .meta {
-  overflow: hidden;
   color: var(--dehors-texte-doux);
   font-size: 0.8125rem;
   font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .actions {
@@ -239,6 +251,11 @@
   &:focus-visible {
     outline: 3px solid ui.$ink;
     outline-offset: 2px;
+  }
+
+  // Its outline, redrawn along the cut edge, stays dashed like « + Ajouter un billet ».
+  &[data-rough-outlined]::after {
+    border-style: dashed;
   }
 }
 

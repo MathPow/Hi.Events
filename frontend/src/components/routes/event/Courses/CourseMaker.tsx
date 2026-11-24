@@ -153,7 +153,7 @@ const Step = ({number, title, done, action, children}: {
 }) => (
     <section className={classes.step}>
         <header className={classes.stepHead}>
-            <span className={classes.stepNumber} data-done={done || undefined} aria-hidden>
+            <span className={classes.stepNumber} data-rough data-done={done || undefined} aria-hidden>
                 {done ? <IconCheck size={14} stroke={3}/> : number}
             </span>
             <h3 className={classes.stepTitle}>{title}</h3>
@@ -602,6 +602,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 .setLngLat([position.lng, position.lat])
                 .setDOMContent(button)
                 .addTo(map);
+            // The pill around « Retirer ce point » gets the hand-cut edge too.
+            popup.current.getElement().querySelector<HTMLElement>('.maplibregl-popup-content')?.setAttribute('data-rough', '');
         };
 
         if (draft) {
@@ -902,6 +904,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 <SegmentedControl
                     fullWidth
                     className={classes.segmented}
+                    data-rough
                     value={kind}
                     onChange={(value) => guard(() => {
                         setKind(value as CourseKind);
@@ -965,6 +968,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                             <UnstyledButton
                                 key={km}
                                 className={classes.chip}
+                                data-rough="button"
                                 data-active={askedKm === km || undefined}
                                 aria-pressed={askedKm === km}
                                 onClick={() => setTargetKm(km)}
@@ -980,6 +984,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     <SegmentedControl
                         fullWidth
                         className={classes.segmented}
+                        data-rough
                         value={surface}
                         onChange={(value) => setSurface(value as CourseSurface)}
                         data={[
@@ -1011,12 +1016,14 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     );
 
     return (
-        <section className={classes.maker}>
+        // The shadow sits on a plain wrapper: the cut edge of the card would clip its own.
+        <div className={classes.makerShadow}>
+        <section className={classes.maker} data-rough>
             <div className={classes.panel}>
                 <div className={classes.panelBody}>
                     {editing && (
-                        <div className={classes.editingHead}>
-                            <span className={classes.editingTag}><IconPencil size={14}/>{t`Editing`}</span>
+                        <div className={classes.editingHead} data-rough>
+                            <span className={classes.editingTag} data-rough><IconPencil size={14}/>{t`Editing`}</span>
                             <strong className={classes.editingName}>{editing.routeFile.label}</strong>
                             <Button variant="subtle" size="compact-sm" className={classes.linkButton}
                                     onClick={() => guard(() => onDone())}>
@@ -1026,10 +1033,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     )}
 
                     {justSaved && (
-                        <div className={classes.savedBanner} role="status">
+                        <div className={classes.savedBanner} data-rough role="status">
                             <IconCircleCheck size={20}/>
                             <p>{t`« ${justSaved} » is saved. Draw another one from the same start, or find it below.`}</p>
-                            <button type="button" className={classes.legendClose} aria-label={t`Close`}
+                            <button type="button" className={classes.legendClose} data-rough="button" aria-label={t`Close`}
                                     onClick={() => setJustSaved(null)}>
                                 <IconX size={14}/>
                             </button>
@@ -1037,8 +1044,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     )}
 
                     {collapsed ? (
-                        <UnstyledButton className={classes.summary} onClick={() => setExpanded(true)}>
-                            <span className={classes.stepNumber} data-done aria-hidden><IconCheck size={14} stroke={3}/></span>
+                        <UnstyledButton className={classes.summary} data-rough="button" onClick={() => setExpanded(true)}>
+                            <span className={classes.stepNumber} data-rough data-done aria-hidden><IconCheck size={14} stroke={3}/></span>
                             <span className={classes.summaryText}>
                                 <strong>{[kindLabel, formatKm(targetM), surfaceLabel].join(" · ")}</strong>
                                 <span>{kind === 'line' && finish ? `${placeLabel} → ${finish.label}` : placeLabel}</span>
@@ -1067,7 +1074,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                         )}
 
                         {drawing && (
-                            <div className={classes.drawingCard}>
+                            <div className={classes.drawingCard} data-rough>
                                 <IconClick size={20} className={classes.drawingIcon}/>
                                 <p>
                                     {t`Click the map, point by point: the route follows the trails and streets.`}
@@ -1110,6 +1117,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                     <UnstyledButton
                                         key={index}
                                         className={classes.proposalChip}
+                                        data-rough="button"
                                         style={{'--proposal-color': colorOf(index)} as CSSProperties}
                                         data-selected={(!!draft && !drawing && selected === index) || undefined}
                                         data-hovered={hovered === index || undefined}
@@ -1121,7 +1129,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                         onFocus={() => setHovered(index)}
                                         onBlur={() => setHovered(null)}
                                     >
-                                        <span className={classes.chipLetter}>{letter}</span>
+                                        <span className={classes.chipLetter} data-rough>{letter}</span>
                                         {distance}
                                     </UnstyledButton>
                                     );
@@ -1139,6 +1147,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                         <UnstyledButton
                                             key={index}
                                             className={classes.proposal}
+                                            data-rough="button"
                                             style={{'--proposal-color': colorOf(index)} as CSSProperties}
                                             data-hovered={hovered === index || undefined}
                                             onClick={() => selectProposal(index)}
@@ -1148,8 +1157,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                             onBlur={() => setHovered(null)}
                                         >
                                             <span className={classes.proposalThumb}>
-                                                <CourseShape points={proposal.line.points} color={colorOf(index)} size={44}/>
-                                                <span className={classes.proposalLetter}>{proposalLetter(index)}</span>
+                                                <span className={classes.proposalShape} data-rough>
+                                                    <CourseShape points={proposal.line.points} color={colorOf(index)} size={44}/>
+                                                </span>
+                                                <span className={classes.proposalLetter} data-rough>{proposalLetter(index)}</span>
                                             </span>
                                             <span className={classes.proposalText}>
                                                 <strong>{formatKm(proposal.line.distance)}</strong>
@@ -1157,7 +1168,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                                 {share && <span>{share}</span>}
                                             </span>
                                             {targetM > 0 && (
-                                                <span className={classes.gap}
+                                                <span className={classes.gap} data-rough
                                                       data-close={Math.abs(proposalGap) / targetM <= 0.05 || undefined}>
                                                     {gapText(proposalGap)}
                                                 </span>
@@ -1172,7 +1183,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                         )}
 
                         {searchFailed && !generating && proposals.length === 0 && !draft && !drawing && (
-                            <div className={classes.notice} role="alert">
+                            <div className={classes.notice} data-rough role="alert">
                                 <p>{t`The search could not reach the map server. Check your connection and try again.`}</p>
                                 <Button variant="subtle" size="compact-sm" className={classes.linkButton} onClick={propose}>
                                     {t`Try again`}
@@ -1181,13 +1192,13 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                         )}
 
                         {searched && !searchFailed && !generating && proposals.length === 0 && !draft && !drawing && (
-                            <p className={classes.notice} role="status">
+                            <p className={classes.notice} data-rough role="status">
                                 {t`No route found from this start. Move the start a little, change the distance, or draw it yourself.`}
                             </p>
                         )}
 
                         {full && !editing && (
-                            <p className={classes.notice}>{t`This event already has 5 routes: delete one to add this one.`}</p>
+                            <p className={classes.notice} data-rough>{t`This event already has 5 routes: delete one to add this one.`}</p>
                         )}
                     </Step>
 
@@ -1203,7 +1214,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                     <strong>{formatKm(draft.line.distance)}</strong>
                                     <span className={classes.resultClimb}>{t`${draftClimb} of climb`}</span>
                                     {targetM > 0 && (
-                                        <span className={classes.gap} data-close={gapClose || undefined}>
+                                        <span className={classes.gap} data-rough data-close={gapClose || undefined}>
                                             {gapText(gap)}
                                         </span>
                                     )}
@@ -1232,7 +1243,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 </div>
 
                 {draft && (
-                    <div className={classes.footer}>
+                    <div className={classes.footer} data-rough>
                         <p className={classes.footerNote}>
                             <span className={classes.footerDot} data-quiet={(!!editing && !unsaved) || undefined} aria-hidden/>
                             {editing ? (unsaved ? t`Changes not saved` : t`No changes yet`) : t`Not added to the event yet`}
@@ -1255,35 +1266,36 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
 
             <div className={classes.mapFrame}>
                 <div ref={container} className={classes.map}/>
-                {hint && <p className={classes.hint} aria-live="polite">{hint}</p>}
+                {hint && <p className={classes.hint} data-rough aria-live="polite">{hint}</p>}
                 {draft && !drawing && (legendHidden ? (
-                    <button type="button" className={classes.legendToggle} aria-label={t`How to edit the route`}
+                    <button type="button" className={classes.legendToggle} data-rough="button" aria-label={t`How to edit the route`}
                             title={t`How to edit the route`} onClick={() => hideLegend(false)}>
                         <IconHelp size={20}/>
                     </button>
                 ) : (
-                    <div className={classes.legend}>
+                    <div className={classes.legend} data-rough>
                         <ul>
                             <li><IconHandGrab size={16}/>{t`Drag a point to move it`}</li>
                             <li><IconPlus size={16}/>{t`Click the line to add a point`}</li>
                             <li><IconX size={16}/>{t`Click a point to remove it`}</li>
                         </ul>
-                        <button type="button" className={classes.legendClose} aria-label={t`Hide the help`}
+                        <button type="button" className={classes.legendClose} data-rough="button" aria-label={t`Hide the help`}
                                 onClick={() => hideLegend(true)}>
                             <IconX size={14}/>
                         </button>
                     </div>
                 ))}
                 {busyText && (
-                    <span className={classes.busy} aria-live="polite"><Loader size={14}/>{busyText}</span>
+                    <span className={classes.busy} data-rough aria-live="polite"><Loader size={14}/>{busyText}</span>
                 )}
                 {failedShown && (
-                    <p className={classes.error} role="alert">{t`No trail or street goes there. The route was kept as it was.`}</p>
+                    <p className={classes.error} data-rough role="alert">{t`No trail or street goes there. The route was kept as it was.`}</p>
                 )}
-                {mapFailed && <p className={classes.error} role="alert">{t`The map could not load. Please reload the page.`}</p>}
+                {mapFailed && <p className={classes.error} data-rough role="alert">{t`The map could not load. Please reload the page.`}</p>}
                 {!map && !mapFailed && <div className={classes.mapLoading}><Loader size={24}/></div>}
             </div>
         </section>
+        </div>
     );
 };
 

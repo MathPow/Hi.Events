@@ -93,13 +93,15 @@ export const RouteFilesCard = ({eventId, onEdit, onNew, editingId, highlightId}:
     };
 
     return (
-        <section id="route-files" className={local.card}>
+        // The shadow sits on a plain wrapper: the cut edge of the card would clip its own.
+        <div className={local.cardShadow}>
+        <section id="route-files" className={local.card} data-rough>
             <header className={local.head}>
                 <div className={local.headText}>
                     <h2 className={local.title}>
                         {t`The event's routes`}
                         {!routeFilesQuery.isLoading && !routeFilesQuery.isError && (
-                            <span className={local.count}>{`${routeFiles.length} / ${MAX_ROUTE_FILES_PER_EVENT}`}</span>
+                            <span className={local.count} data-rough>{`${routeFiles.length} / ${MAX_ROUTE_FILES_PER_EVENT}`}</span>
                         )}
                     </h2>
                     <p className={local.subtitle}>
@@ -124,7 +126,7 @@ export const RouteFilesCard = ({eventId, onEdit, onNew, editingId, highlightId}:
                     <Skeleton height={72} radius={18}/>
                 </div>
             ) : routeFilesQuery.isError ? (
-                <div className={local.problem} role="alert">
+                <div className={local.problem} data-rough role="alert">
                     <span>{t`The routes could not be loaded.`}</span>
                     <Button variant="subtle" size="compact-sm" className={local.linkButton}
                             onClick={() => routeFilesQuery.refetch()}>
@@ -132,7 +134,7 @@ export const RouteFilesCard = ({eventId, onEdit, onNew, editingId, highlightId}:
                     </Button>
                 </div>
             ) : routeFiles.length === 0 ? (
-                <p className={local.empty}>
+                <p className={local.empty} data-rough>
                     {t`No route yet. Draw one above, or add a GPX file you already have.`}
                 </p>
             ) : (
@@ -148,7 +150,7 @@ export const RouteFilesCard = ({eventId, onEdit, onNew, editingId, highlightId}:
             )}
 
             {onNew && !full && !routeFilesQuery.isLoading && !routeFilesQuery.isError && (
-                <button type="button" className={local.addRow} onClick={onNew}>
+                <button type="button" className={local.addRow} data-rough="button" onClick={onNew}>
                     <IconPlus size={18}/>
                     {t`Draw a new route`}
                 </button>
@@ -158,6 +160,7 @@ export const RouteFilesCard = ({eventId, onEdit, onNew, editingId, highlightId}:
                 {t`Up to ${MAX_ROUTE_FILES_PER_EVENT} .gpx files of 10 MB each.`}
             </p>
         </section>
+        </div>
     );
 };
 
@@ -218,8 +221,8 @@ const RouteFileRow = ({eventId, routeFile, editing, highlighted, onEdit, onDelet
     };
 
     return (
-        <div ref={row} className={local.row} data-editing={editing || undefined} data-highlighted={highlighted || undefined}>
-            <span className={local.thumb} aria-hidden>
+        <div ref={row} className={local.row} data-rough data-editing={editing || undefined} data-highlighted={highlighted || undefined}>
+            <span className={local.thumb} data-rough aria-hidden>
                 {points.length > 1
                     ? <CourseShape points={points} color={SHAPE_COLOR} size={48}/>
                     : <IconRoute size={22} stroke={1.75}/>}
@@ -235,22 +238,22 @@ const RouteFileRow = ({eventId, routeFile, editing, highlighted, onEdit, onDelet
                         onBlur={save}
                         onKeyDown={onKeyDown}
                     />
-                    {editing && <span className={local.editingTag}>{t`Being edited`}</span>}
+                    {editing && <span className={local.editingTag} data-rough>{t`Being edited`}</span>}
                 </span>
                 <span className={local.meta}>{figures}</span>
             </span>
             <span className={local.actions}>
                 {onEdit && (
-                    <button type="button" className={local.iconButton} aria-label={t`Edit on the map`}
+                    <button type="button" className={local.iconButton} data-rough="button" aria-label={t`Edit on the map`}
                             title={t`Edit on the map`} onClick={onEdit} disabled={editing}>
                         <IconPencil size={19}/>
                     </button>
                 )}
-                <a className={local.iconButton} href={eventRouteFileClientPublic.downloadUrl(eventId, routeFile.id)}
+                <a className={local.iconButton} data-rough="button" href={eventRouteFileClientPublic.downloadUrl(eventId, routeFile.id)}
                    aria-label={t`Download`} title={t`Download`}>
                     <IconDownload size={19}/>
                 </a>
-                <button type="button" className={local.iconButton} data-tone="danger" aria-label={t`Delete`}
+                <button type="button" className={local.iconButton} data-rough="button" data-tone="danger" aria-label={t`Delete`}
                         title={t`Delete`} onClick={onDelete}>
                     <IconTrash size={19}/>
                 </button>
