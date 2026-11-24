@@ -5,6 +5,7 @@ import {IdParam} from "../../../../types.ts";
 import {EventRouteFilePublic, eventRouteFileClientPublic} from "../../../../api/eventRouteFile.client.ts";
 import {useGetEventRouteFilesPublic} from "../../../../queries/useGetEventRouteFilesPublic.ts";
 import {EventLocationMap} from "../EventLocationMap";
+import {toHexColor} from "../../../../utilites/themeUtils.ts";
 import {boundsOf, elevationGain, haversine, pathDistance, TrackPoint} from "../../../../utilites/course/geo.ts";
 import {parseGpx} from "../../../../utilites/course/gpx.ts";
 import {loadCourseMap, showCourse} from "../../../common/CourseMap/courseLayers.ts";
@@ -216,7 +217,7 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
                 </div>
             </div>
 
-            {course && <ElevationProfile points={course.points}/>}
+            {course && <ElevationProfile points={course.points} color={toHexColor(accent) ?? undefined}/>}
         </section>
     );
 };

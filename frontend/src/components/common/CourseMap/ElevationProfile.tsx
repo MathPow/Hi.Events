@@ -10,7 +10,8 @@ const SAMPLES = 160;
 
 /** The elevation along the course, as a filled line: where it climbs, at a glance. */
 // The length shown under it: the route's own when known (the router's figure, as on the rest of the page).
-export const ElevationProfile = ({points, distance}: { points: TrackPoint[], distance?: number }) => {
+// `color`: the organizer's, on their event page (orange otherwise).
+export const ElevationProfile = ({points, distance, color}: { points: TrackPoint[], distance?: number, color?: string }) => {
     const profile = useMemo(() => {
         const withEle = points.filter((p) => p.ele !== undefined);
         if (withEle.length < 2 || withEle.length < points.length * 0.8) {
@@ -57,8 +58,10 @@ export const ElevationProfile = ({points, distance}: { points: TrackPoint[], dis
         <figure className={classes.profile}>
             <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="none" role="img"
                  aria-label={t`Elevation from ${low} m to ${high} m`}>
-                <path d={profile.area} className={classes.profileArea}/>
-                <path d={profile.line} className={classes.profileLine} vectorEffect="non-scaling-stroke"/>
+                <path d={profile.area} className={classes.profileArea}
+                      style={color ? {fill: color, fillOpacity: 0.22} : undefined}/>
+                <path d={profile.line} className={classes.profileLine} vectorEffect="non-scaling-stroke"
+                      style={color ? {stroke: color} : undefined}/>
             </svg>
             <figcaption className={classes.profileCaption}>
                 <span>{t`${low} m to ${high} m`}</span>
