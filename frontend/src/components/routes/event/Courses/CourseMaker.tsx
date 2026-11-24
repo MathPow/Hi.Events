@@ -32,13 +32,17 @@ interface CourseMakerProps {
     onDone: () => void;
 }
 
-const QUICK_DISTANCES = [5, 10, 21.1, 42.2];
+const QUICK_DISTANCES = [5, 6.7, 10, 21.1, 42.2];
 
 type Picking = 'start' | 'finish' | null;
 
 const colorOf = (index: number | null) => PROPOSAL_COLORS[(index ?? 0) % PROPOSAL_COLORS.length];
 
 const kmText = (km: number) => new Intl.NumberFormat(intlLocale(), {maximumFractionDigits: 1}).format(km);
+
+// « 6,7 » in French, « 6.7 » in English: the field shows the page's separator and takes either one.
+const decimalSeparator = () =>
+    new Intl.NumberFormat(intlLocale()).formatToParts(1.5).find((part) => part.type === 'decimal')?.value ?? '.';
 
 /** An edited GPX: its control points when Dehors drew it, else points picked along its line. */
 const draftFromGpx = (gpx: ParsedGpx): { draft: CourseDraft; kind: CourseKind; surface: CourseSurface; targetM?: number } => {
@@ -499,6 +503,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone}: Course
                         label={t`Distance`}
                         suffix=" km"
                         decimalScale={1}
+                        decimalSeparator={decimalSeparator()}
+                        allowedDecimalSeparators={['.', ',']}
+                        // While typing « 6, » the value is the string « 6. »: read it as a number, not as text.
+                        valueIsNumericString
                         min={0.5}
                         max={200}
                         value={targetKm}
