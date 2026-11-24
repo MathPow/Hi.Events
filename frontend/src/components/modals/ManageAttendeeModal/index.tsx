@@ -200,7 +200,7 @@ export const ManageAttendeeModal = ({onClose, attendeeId}: ManageAttendeeModalPr
     );
 
     return (
-        <SideDrawer opened onClose={onClose} size="lg" padding="md">
+        <SideDrawer opened onClose={onClose}>
             <Stack className={classes.container}>
                 <div className={classes.header}>
                     <div className={classes.attendeeInfo}>

@@ -1,42 +1,63 @@
-@use "../../../styles/mixins";
 @use "../../../styles/admin-ui" as ui;
 
-// The panels opened from a list (an order, an attendee): cream like the modals, rounded on the page side.
-.content {
+// The panels opened from a list (an order, an attendee): the cream popup of « Créer un événement ».
+.popup {
   background: var(--dehors-carte) !important;
   color: ui.$ink;
+  box-shadow: 0 10px 16px rgb(55 39 33 / 0.08);
+}
 
-  @include mixins.respond-above(md) {
-    border-radius: 1.75rem 0 0 1.75rem !important;
+.popupBody {
+  position: relative;
+  padding: 2.25rem !important;
+}
+
+.sheet {
+  max-height: 92dvh;
+  border-radius: 1.75rem 1.75rem 0 0 !important;
+  background: var(--dehors-carte) !important;
+  color: ui.$ink;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  &::before {
+    content: '';
+    display: block;
+    width: 2.75rem;
+    height: 5px;
+    margin: 0.75rem auto 0;
+    border-radius: 9px;
+    background: var(--dehors-brun);
   }
 }
 
-.header {
-  background: var(--dehors-carte) !important;
+.sheetBody {
+  position: relative;
+  padding: 1.25rem 1.25rem 2rem !important;
 }
 
-.sideDrawerTitle {
-  font-family: FatFrank, 'Arial Black', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
+// Round, top right; the panel's header leaves room for it.
 .close {
-  width: 2.5rem !important;
-  height: 2.5rem !important;
-  min-width: 2.5rem !important;
-  border-radius: 999px !important;
-  background: var(--public-accent-doux) !important;
-  color: ui.$ink !important;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: #f7dccd;
+  color: ui.$ink;
+  transition: background-color 0.15s ease;
 
   &:hover {
-    background: #f2cbb7 !important;
+    background: #f2cbb7;
   }
-}
 
-.body {
-  padding: 0 0 1.5rem;
+  &:focus-visible {
+    outline: 2px solid var(--dehors-brun);
+    outline-offset: 2px;
+  }
 }
 
 .focusStart {
