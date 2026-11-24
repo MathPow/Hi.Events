@@ -971,13 +971,13 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                                 </span>
                                 <div className={classes.resultFigures}>
                                     <strong>{formatKm(draft.line.distance)}</strong>
-                                    <span>{t`${draftClimb} of climb`}</span>
+                                    <span className={classes.resultClimb}>{t`${draftClimb} of climb`}</span>
+                                    {targetM > 0 && (
+                                        <span className={classes.gap} data-close={gapClose || undefined}>
+                                            {gapText(gap)}
+                                        </span>
+                                    )}
                                 </div>
-                                {targetM > 0 && (
-                                    <span className={classes.gap} data-close={gapClose || undefined}>
-                                        {gapText(gap)}
-                                    </span>
-                                )}
                                 {!drawing && (
                                     <Button variant="subtle" size="compact-sm" className={classes.linkButton}
                                             leftSection={<IconArrowBackUp size={16}/>} disabled={!editor.canUndo}
