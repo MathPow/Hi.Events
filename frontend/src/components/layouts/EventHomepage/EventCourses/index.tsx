@@ -26,6 +26,7 @@ interface LoadedCourse {
 
 const COURSE_COLOR = '#352924';
 const DEHORS_ORANGE = '#fa7853';
+const VENUE_NEARBY_M = 2000;
 
 // The map loads only when the section comes near (MapLibre weighs ~220 kB).
 const PRELOAD_MARGIN = '400px';
@@ -155,11 +156,21 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
             return;
         }
         showCourse(map, course.points, COURSE_COLOR);
-        const bounds = boundsOf(course.points);
+    }, [map, course]);
+
+    // The course fills the map, with the venue's pin when it stands by the course (a venue across
+    // town would shrink the course to nothing).
+    useEffect(() => {
+        if (!map || !course) {
+            return;
+        }
+        const pin = venue ? {lat: venue.latitude, lng: venue.longitude} : null;
+        const pinNearby = !!pin && course.points.some((point) => haversine(point, pin) < VENUE_NEARBY_M);
+        const bounds = boundsOf(pinNearby ? [...course.points, pin!] : course.points);
         if (bounds) {
             map.fitBounds(bounds, {padding: 36, maxZoom: 16, duration: 0});
         }
-    }, [map, course]);
+    }, [map, course, venue]);
 
     useEffect(() => {
         if (!map || !makeMarker || !venue) {
