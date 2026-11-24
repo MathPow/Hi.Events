@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Link, useBlocker} from "react-router";
 import {t} from "@lingui/macro";
 import {Button, Loader, NumberInput, SegmentedControl, Skeleton, Text, TextInput, UnstyledButton} from "@mantine/core";
@@ -6,6 +6,7 @@ import {modals} from "@mantine/modals";
 import {
     IconArrowBackUp,
     IconCheck,
+    IconCircleCheck,
     IconClick,
     IconDownload,
     IconHandGrab,
@@ -51,13 +52,31 @@ export interface CourseToEdit {
     gpx: ParsedGpx;
 }
 
+/** What the next route starts from: the same start, kind, distance and terrain as the one just saved. */
+export interface CourseSetup {
+    kind: CourseKind;
+    surface: CourseSurface;
+    targetKm: number | string;
+    start: Place | null;
+    finish: Place | null;
+}
+
+export interface SavedCourse {
+    id?: number;
+    label: string;
+    setup: CourseSetup;
+}
+
 interface CourseMakerProps {
     eventId: IdParam;
     eventPlace?: Place;
     editing: CourseToEdit | null;
+    // The setup kept from the route just saved, and its name for the confirmation.
+    setup?: CourseSetup | null;
+    savedLabel?: string | null;
     full: boolean;
-    onDone: (savedId?: number) => void;
-    onDirtyChange?: (dirty: boolean) => void;
+    onDone: (saved?: SavedCourse) => void;
+    onDirtyChange?: (unsaved: boolean) => void;
 }
 
 const QUICK_DISTANCES = [5, 6.7, 10, 21.1, 42.2];
@@ -66,6 +85,11 @@ const ON_TARGET_M = 50;
 // Past this, a search tells the organizer it is still going.
 const SLOW_SEARCH_MS = 4000;
 const LEGEND_KEY = 'dehors-course-legend-hidden';
+// eslint-disable-next-line lingui/no-unlocalized-strings -- a media query
+const PHONE_QUERY = '(max-width: 767px)';
+// One arrow key press moves a point this far on the screen.
+const NUDGE_PX = 12;
+const ARROWS: Record<string, [number, number]> = {ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0]};
 
 type Picking = 'start' | 'finish' | null;
 
@@ -79,11 +103,14 @@ const decimalSeparator = () =>
 
 const gapText = (metres: number) => Math.abs(metres) < ON_TARGET_M ? t`Right on the distance` : formatGap(metres);
 
+// Closed until asked for on a phone, where the map is small; open elsewhere until closed.
 const readLegendHidden = () => {
+    const small = typeof window !== 'undefined' && window.matchMedia?.(PHONE_QUERY).matches;
     try {
-        return window.localStorage.getItem(LEGEND_KEY) === '1';
+        const stored = window.localStorage.getItem(LEGEND_KEY);
+        return stored === null ? !!small : stored === '1';
     } catch {
-        return false;
+        return !!small;
     }
 };
 
@@ -130,7 +157,7 @@ const Step = ({number, title, done, action, children}: {
     </section>
 );
 
-export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirtyChange}: CourseMakerProps) => {
+export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, full, onDone, onDirtyChange}: CourseMakerProps) => {
     const container = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<MapLibreMap | null>(null);
     const maplibre = useRef<typeof import('maplibre-gl') | null>(null);
@@ -138,19 +165,21 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
 
     const initial = useMemo(() => (editing ? draftFromGpx(editing.gpx) : null), [editing]);
 
-    const [kind, setKind] = useState<CourseKind>(initial?.kind ?? 'loop');
-    const [surface, setSurface] = useState<CourseSurface>(initial?.surface ?? 'trail');
+    const [kind, setKind] = useState<CourseKind>(initial?.kind ?? setup?.kind ?? 'loop');
+    const [surface, setSurface] = useState<CourseSurface>(initial?.surface ?? setup?.surface ?? 'trail');
     const [targetKm, setTargetKm] = useState<number | string>(
-        initial?.targetM ? Math.round(initial.targetM / 100) / 10 : initial ? Math.round(initial.draft.line.distance / 100) / 10 : 5,
+        initial?.targetM ? Math.round(initial.targetM / 100) / 10 : initial ? Math.round(initial.draft.line.distance / 100) / 10 : setup?.targetKm ?? 5,
     );
     const [start, setStart] = useState<Place | null>(
-        initial ? {label: t`Start of the route`, position: initial.draft.waypoints[0]} : eventPlace ?? null,
+        initial ? {label: t`Start of the route`, position: initial.draft.waypoints[0]} : setup?.start ?? eventPlace ?? null,
     );
     const [finish, setFinish] = useState<Place | null>(
         initial?.kind === 'line'
             ? {label: t`Finish of the route`, position: initial.draft.waypoints[initial.draft.waypoints.length - 1]}
-            : null,
+            : setup?.finish ?? null,
     );
+    const [justSaved, setJustSaved] = useState(savedLabel ?? null);
+    const [searchFailed, setSearchFailed] = useState(false);
     const [picking, setPicking] = useState<Picking>(null);
     const [drawing, setDrawing] = useState(false);
     const [proposals, setProposals] = useState<CourseDraft[]>([]);
@@ -175,7 +204,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
 
     // The course as it came (a proposal, the saved file): anything else is work that a new search would lose.
     const pristine = useRef<CourseDraft | null>(initial?.draft ?? null);
-    const dirty = !!draft && draft !== pristine.current;
+    const nameChanged = !!editing && name.trim() !== editing.routeFile.label;
+    const dirty = (!!draft && draft !== pristine.current) || nameChanged;
+    // What leaving the page would lose: a route not added yet, or the changes to the one being edited.
+    const unsaved = editing ? dirty : !!draft;
 
     const uploadMutation = useUploadEventRouteFile();
     const replaceMutation = useReplaceEventRouteFile();
@@ -191,13 +223,13 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
     }, [draft, kind, nameTouched]);
 
     useEffect(() => {
-        onDirtyChange?.(dirty);
-    }, [dirty, onDirtyChange]);
+        onDirtyChange?.(unsaved);
+    }, [unsaved, onDirtyChange]);
 
     // ---- leaving with a course not saved ----
 
     const blocker = useBlocker(({currentLocation, nextLocation}) =>
-        dirty && !saving && currentLocation.pathname !== nextLocation.pathname);
+        unsaved && !saving && currentLocation.pathname !== nextLocation.pathname);
 
     useEffect(() => {
         if (blocker.state !== 'blocked') {
@@ -219,13 +251,13 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
     }, [blocker.state]);
 
     useEffect(() => {
-        if (!dirty) {
+        if (!unsaved) {
             return;
         }
         const warn = (beforeUnload: BeforeUnloadEvent) => beforeUnload.preventDefault();
         window.addEventListener('beforeunload', warn);
         return () => window.removeEventListener('beforeunload', warn);
-    }, [dirty]);
+    }, [unsaved]);
 
     // ---- the map ----
 
@@ -275,15 +307,13 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
 
     useEffect(() => {
         if (map) {
-            showProposals(map, proposals.map((proposal) => proposal.line.points), draft ? selected : null);
+            showProposals(map, proposals.map((proposal) => proposal.line.points), draft ? selected : null, drawing);
         }
-    }, [map, proposals, selected, draft]);
+    }, [map, proposals, selected, draft, drawing]);
 
-    const hoveredBefore = useRef<number | null>(null);
     useEffect(() => {
         if (map) {
-            hoverProposal(map, hovered, hoveredBefore.current);
-            hoveredBefore.current = hovered;
+            hoverProposal(map, hovered, proposals.length);
         }
     }, [map, hovered, proposals]);
 
@@ -307,8 +337,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
     // ---- replacing a course that was worked on ----
 
     // The latest state, for the map's own event handlers.
-    const state = useRef({draft, picking, drawing, start, kind, proposals, dirty});
-    state.current = {draft, picking, drawing, start, kind, proposals, dirty};
+    const state = useRef({draft, picking, drawing, start, kind, proposals, dirty, generating});
+    state.current = {draft, picking, drawing, start, kind, proposals, dirty, generating};
 
     const guard = useCallback((action: () => void) => {
         if (!state.current.dirty) {
@@ -319,10 +349,36 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
             {confirm: t`Replace`, cancel: t`Keep it`});
     }, []);
 
-    const placeStart = useCallback((position: LatLng) => {
-        setStart({label: t`Point on the map`, position});
-        setPicking(null);
+    const stopSearch = useCallback((keepSearched: boolean) => {
+        generation.current?.abort();
+        generation.current = null;
+        setGenerating(false);
+        if (!keepSearched) {
+            setSearched(false);
+        }
     }, []);
+
+    // A new start or finish: the route being made follows it, and proposals made for the old one go.
+    const changeEnd = useCallback((end: 'start' | 'finish', place: Place | null) => {
+        (end === 'start' ? setStart : setFinish)(place);
+        setPicking(null);
+        const current = state.current;
+        if (!place) {
+            return;
+        }
+        if (current.proposals.length > 0 || current.generating) {
+            stopSearch(false);
+            setProposals([]);
+            setSelected(null);
+        }
+        if (current.draft && (end === 'start' || current.kind === 'line')) {
+            move(end === 'start' ? 0 : current.draft.waypoints.length - 1, place.position);
+        }
+    }, [move, stopSearch]);
+
+    const placeStart = useCallback((position: LatLng) => {
+        changeEnd('start', {label: t`Point on the map`, position});
+    }, [changeEnd]);
 
     const selectProposal = useCallback((index: number) => {
         const proposal = state.current.proposals[index];
@@ -330,12 +386,16 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
             return;
         }
         guard(() => {
+            // The list stops moving once one is picked: its letter stays on its route.
+            if (state.current.generating) {
+                stopSearch(true);
+            }
             pristine.current = proposal;
             setSelected(index);
             setDrawing(false);
             load(proposal);
         });
-    }, [load, guard]);
+    }, [load, guard, stopSearch]);
 
     useEffect(() => {
         if (!map) {
@@ -359,8 +419,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                 return;
             }
             if (current.picking === 'finish') {
-                setFinish({label: t`Point on the map`, position});
-                setPicking(null);
+                changeEnd('finish', {label: t`Point on the map`, position});
                 return;
             }
             if (current.drawing) {
@@ -402,7 +461,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
             map.off('mousemove', onMove);
             map.off('mouseout', onLeave);
         };
-    }, [map, append, insertOnLine, placeStart, selectProposal]);
+    }, [map, append, insertOnLine, placeStart, selectProposal, changeEnd]);
 
     // ---- markers: the start, the finish, and the points to drag ----
 
@@ -413,6 +472,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
         if (!map || !lib) {
             return;
         }
+        // The point that had the keyboard keeps it once the markers are made again.
+        const focused = map.getContainer().contains(document.activeElement)
+            ? (document.activeElement as HTMLElement).dataset.point
+            : undefined;
         markers.current.forEach((marker) => marker.remove());
         markers.current = [];
         popup.current?.remove();
@@ -426,6 +489,18 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                     const {lng, lat} = marker.getLngLat();
                     onDrag({lat, lng});
                 });
+                // The arrow keys move it a little (Shift: more), like a drag.
+                element.addEventListener('keydown', (event) => {
+                    const step = ARROWS[event.key];
+                    if (!step) {
+                        return;
+                    }
+                    event.preventDefault();
+                    const at = map.project([position.lng, position.lat]);
+                    const size = event.shiftKey ? NUDGE_PX * 4 : NUDGE_PX;
+                    const next = map.unproject([at.x + step[0] * size, at.y + step[1] * size]);
+                    onDrag({lat: next.lat, lng: next.lng});
+                });
             }
             markers.current.push(marker);
             return marker;
@@ -436,6 +511,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
             const element = document.createElement('div');
             element.className = classes.flagMarker;
             element.dataset.anchor = 'bottom';
+            element.dataset.point = tone;
+            element.tabIndex = 0;
+            element.setAttribute('role', 'button');
+            element.setAttribute('aria-label', t`${text}: drag it or use the arrow keys to move it.`);
             const pill = document.createElement('span');
             pill.className = classes.flag;
             pill.dataset.tone = tone;
@@ -466,11 +545,17 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
             const canRemove = draft.waypoints.length > 2;
             draft.waypoints.forEach((point, index) => {
                 if (index === 0) {
-                    add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point, (p) => move(0, p));
+                    add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point, (p) => {
+                        setStart({label: t`Point on the map`, position: p});
+                        move(0, p);
+                    });
                     return;
                 }
                 if (kind === 'line' && index === last) {
-                    add(flag(t`Finish`, 'finish'), point, (p) => move(index, p));
+                    add(flag(t`Finish`, 'finish'), point, (p) => {
+                        setFinish({label: t`Point on the map`, position: p});
+                        move(index, p);
+                    });
                     return;
                 }
                 const element = document.createElement('button');
@@ -480,8 +565,9 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                 const dot = document.createElement('span');
                 dot.className = classes.handleDot;
                 element.appendChild(dot);
+                element.dataset.point = String(index);
                 element.title = t`Drag to move · click to remove`;
-                element.setAttribute('aria-label', t`Point ${index} of the route: drag it to move it, Delete key to remove it.`);
+                element.setAttribute('aria-label', t`Point ${index} of the route: drag it or use the arrow keys to move it, Delete key to remove it.`);
                 let dragged = false;
                 element.addEventListener('click', (event) => {
                     event.stopPropagation();
@@ -521,6 +607,16 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                 add(flag(t`Finish`, 'finish'), finish.position, (p) => setFinish({label: t`Point on the map`, position: p}));
             }
         }
+
+        if (focused) {
+            const elements = markers.current.map((marker) => marker.getElement());
+            const numbered = Number(focused);
+            // A point removed from the keyboard: the one before it takes the focus.
+            const target = elements.find((element) => element.dataset.point === focused)
+                ?? (Number.isFinite(numbered) ? elements.find((element) => element.dataset.point === String(numbered - 1)) : undefined)
+                ?? elements.find((element) => element.dataset.point === 'start');
+            target?.focus({preventScroll: true});
+        }
     }, [map, draft, start, finish, kind, color, move, remove]);
 
     useEffect(() => () => {
@@ -556,6 +652,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
 
         setGenerating(true);
         setSearched(true);
+        setSearchFailed(false);
+        setJustSaved(null);
         setExpanded(false);
         setDrawing(false);
         setSelected(null);
@@ -584,7 +682,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                 fitTo(result.flatMap((proposal) => proposal.line.points));
             }
         } catch {
-            // replaced by a newer search
+            // Stopped or replaced by a newer search: nothing to say. Otherwise the router could not be reached.
+            if (!controller.signal.aborted) {
+                setSearchFailed(true);
+            }
         } finally {
             if (generation.current === controller) {
                 setGenerating(false);
@@ -594,24 +695,14 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
 
     const propose = () => guard(() => void runSearch());
 
-    const stopSearch = () => {
-        generation.current?.abort();
-        generation.current = null;
-        setGenerating(false);
-        if (proposals.length === 0) {
-            setSearched(false);
-        }
-    };
-
     useEffect(() => () => generation.current?.abort(), []);
 
+    // The proposals stay behind, faded: cancelling the drawing brings them back.
     const startDrawing = () => guard(() => {
-        generation.current?.abort();
-        setGenerating(false);
-        setProposals([]);
-        setSearched(false);
+        stopSearch(true);
         setSelected(null);
         setExpanded(false);
+        setJustSaved(null);
         pristine.current = null;
         load(null);
         setDrawing(true);
@@ -663,17 +754,19 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
         }
         const label = name.trim();
         const file = new File([gpxText()], gpxFileName(label), {type: 'application/gpx+xml'});
+        // The next route starts where this one did.
+        const kept: CourseSetup = {kind, surface, targetKm, start, finish};
         try {
             if (editing) {
                 await replaceMutation.mutateAsync({eventId, routeFileId: editing.routeFile.id, file, label});
                 pristine.current = draft;
                 showSuccess(t`Route saved. Participants download the new version.`);
-                onDone(editing.routeFile.id);
+                onDone({id: editing.routeFile.id, label, setup: kept});
             } else {
                 const response = await uploadMutation.mutateAsync({eventId, file, label});
                 pristine.current = draft;
                 showSuccess(t`Route added. Participants can download it from their ticket.`);
-                onDone(response?.data?.id);
+                onDone({id: response?.data?.id, label, setup: kept});
             }
         } catch (error: any) {
             const messages = error?.response?.data?.errors?.file;
@@ -681,15 +774,20 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
         }
     };
 
+
     // ---- the panel ----
 
     const gap = draft && targetM ? draft.line.distance - targetM : 0;
     const draftClimb = draft ? formatClimb(draft.line.ascent) : '';
     const gapClose = targetM > 0 && Math.abs(gap) / targetM <= 0.05;
-    const setupDone = !!start && targetM > 0;
+    const setupDone = (!!start || !!draft) && targetM > 0;
     const collapsed = setupDone && (searched || drawing || !!draft) && !expanded;
     const kindLabel = kind === 'loop' ? t`Loop` : t`Point to point`;
     const surfaceLabel = surface === 'trail' ? t`Trails` : surface === 'mixed' ? t`Mixed` : t`Roads`;
+    const placeLabel = start?.label ?? t`Start of the route`;
+    // Once a route is on the map, the proposals shrink to their letters: the route comes first.
+    const compactProposals = !!draft || drawing;
+    const searchingFirst = generating && proposals.length === 0;
 
     const trailShare = (proposal: CourseDraft) => {
         const nature = proposal.line.nature;
@@ -716,7 +814,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
         ? t`Routing…`
         : generating ? (proposals.length > 0 ? t`More routes on the way…` : t`Looking for routes around the start…`) : null;
 
-    const setup = (
+    const setupSteps = (
         <>
             <Step
                 number={1}
@@ -749,7 +847,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                     near={start?.position ?? eventPlace?.position}
                     picking={picking === 'start'}
                     onPick={() => setPicking(picking === 'start' ? null : 'start')}
-                    onChange={setStart}
+                    onChange={(place) => changeEnd('start', place)}
                 />
 
                 {kind === 'line' && (
@@ -760,11 +858,11 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                         near={start?.position ?? eventPlace?.position}
                         picking={picking === 'finish'}
                         onPick={() => setPicking(picking === 'finish' ? null : 'finish')}
-                        onChange={setFinish}
+                        onChange={(place) => changeEnd('finish', place)}
                     />
                 )}
 
-                {!eventPlace && !editing && (
+                {!eventPlace && !editing && !start && (
                     <Link className={classes.tipLink} to={`${eventSettingsTabPath(eventId!, 'event')}#location-settings`}>
                         <IconMapPin size={16}/>
                         {t`Add the event's location: the start will be placed there`}
@@ -772,7 +870,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                 )}
             </Step>
 
-            <Step number={2} title={t`Distance and terrain`} done={targetM > 0}>
+            <Step number={2} title={t`Distance and terrain`} done={!!start && targetM > 0}>
                 <div className={classes.distanceRow}>
                     <NumberInput
                         className={classes.distanceInput}
@@ -822,6 +920,21 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
         </>
     );
 
+    // The first search is the main action; after that it steps back behind the proposals and the route.
+    const searchFirst = !draft && proposals.length === 0 && !drawing;
+    const searchButton = (
+        <Button
+            key={searchFirst ? 'search-first' : 'search-again'}
+            className={searchFirst ? classes.primaryButton : classes.outlineButton}
+            variant={searchFirst ? undefined : 'default'}
+            leftSection={searchingFirst ? <Loader size={16}/> : <IconSparkles size={18}/>}
+            disabled={!start || targetM <= 0 || searchingFirst}
+            onClick={propose}
+        >
+            {searchingFirst ? t`Searching…` : searched || draft ? t`Suggest again` : t`Suggest routes`}
+        </Button>
+    );
+
     return (
         <section className={classes.maker}>
             <div className={classes.panel}>
@@ -837,28 +950,31 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                         </div>
                     )}
 
-                    {collapsed && start ? (
+                    {justSaved && (
+                        <div className={classes.savedBanner} role="status">
+                            <IconCircleCheck size={20}/>
+                            <p>{t`« ${justSaved} » is saved. Draw another one from the same start, or find it below.`}</p>
+                            <button type="button" className={classes.legendClose} aria-label={t`Close`}
+                                    onClick={() => setJustSaved(null)}>
+                                <IconX size={14}/>
+                            </button>
+                        </div>
+                    )}
+
+                    {collapsed ? (
                         <UnstyledButton className={classes.summary} onClick={() => setExpanded(true)}>
                             <span className={classes.stepNumber} data-done aria-hidden><IconCheck size={14} stroke={3}/></span>
                             <span className={classes.summaryText}>
                                 <strong>{[kindLabel, formatKm(targetM), surfaceLabel].join(" · ")}</strong>
-                                <span>{kind === 'line' && finish ? `${start.label} → ${finish.label}` : start.label}</span>
+                                <span>{kind === 'line' && finish ? `${placeLabel} → ${finish.label}` : placeLabel}</span>
                             </span>
                             <span className={classes.stepLink}>{t({message: 'Change', context: 'course settings'})}</span>
                         </UnstyledButton>
-                    ) : setup}
+                    ) : setupSteps}
 
                     <Step number={3} title={t`Choose the route`} done={!!draft}>
                         <div className={classes.actions}>
-                            <Button
-                                className={draft ? classes.outlineButton : classes.primaryButton}
-                                variant={draft ? 'default' : undefined}
-                                leftSection={<IconSparkles size={18}/>}
-                                disabled={!start || targetM <= 0}
-                                onClick={propose}
-                            >
-                                {searched || draft ? t`Suggest again` : t`Suggest routes`}
-                            </Button>
+                            {searchButton}
                             <Button
                                 variant="default"
                                 className={classes.outlineButton}
@@ -871,7 +987,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                             </Button>
                         </div>
 
-                        {!start && !drawing && (
+                        {!start && !draft && !drawing && (
                             <p className={classes.helper}>{t`Choose a start first (step 1), or draw the route yourself.`}</p>
                         )}
 
@@ -883,19 +999,62 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                                     {kind === 'loop' && ` ${t`The loop comes back to the start by itself.`}`}
                                 </p>
                                 <div className={classes.drawingActions}>
-                                    <Button variant="subtle" size="compact-sm" className={classes.linkButton}
+                                    <Button variant="default" className={classes.smallOutlineButton}
                                             leftSection={<IconArrowBackUp size={16}/>} disabled={!editor.canUndo}
                                             onClick={editor.undo}>
                                         {t`Undo`}
                                     </Button>
-                                    <Button size="compact-sm" className={classes.inkButton} onClick={() => setDrawing(false)}>
+                                    <Button className={classes.inkButton} onClick={() => setDrawing(false)}>
                                         {draft ? t`Stop drawing` : t`Cancel`}
                                     </Button>
                                 </div>
                             </div>
                         )}
 
-                        {(proposals.length > 0 || generating) && (
+                        {generating && (
+                            <p className={classes.searching} aria-live="polite">
+                                <Loader size={14}/>
+                                <span className={classes.searchingText}>
+                                    {proposals.length > 0
+                                        ? t`More routes on the way…`
+                                        : slow ? t`Still a few seconds…` : t`Looking for routes around the start…`}
+                                </span>
+                                <UnstyledButton className={classes.stepLink} onClick={() => stopSearch(proposals.length > 0)}>
+                                    {t({message: 'Stop', context: 'course search'})}
+                                </UnstyledButton>
+                            </p>
+                        )}
+
+                        {proposals.length > 0 && compactProposals && (
+                            <div className={classes.proposalChips}>
+                                <span className={classes.fieldLabel}>{t`Proposals`}</span>
+                                {proposals.map((proposal, index) => {
+                                    const letter = proposalLetter(index);
+                                    const distance = formatKm(proposal.line.distance);
+                                    return (
+                                    <UnstyledButton
+                                        key={index}
+                                        className={classes.proposalChip}
+                                        style={{'--proposal-color': colorOf(index)} as CSSProperties}
+                                        data-selected={(!!draft && !drawing && selected === index) || undefined}
+                                        data-hovered={hovered === index || undefined}
+                                        aria-pressed={!!draft && !drawing && selected === index}
+                                        aria-label={t`Proposal ${letter}, ${distance}`}
+                                        onClick={() => selectProposal(index)}
+                                        onMouseEnter={() => setHovered(index)}
+                                        onMouseLeave={() => setHovered(null)}
+                                        onFocus={() => setHovered(index)}
+                                        onBlur={() => setHovered(null)}
+                                    >
+                                        <span className={classes.chipLetter}>{letter}</span>
+                                        {distance}
+                                    </UnstyledButton>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {!compactProposals && (proposals.length > 0 || generating) && (
                             <div className={classes.proposals}>
                                 {proposals.map((proposal, index) => {
                                     const climb = formatClimb(proposal.line.ascent);
@@ -905,9 +1064,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                                         <UnstyledButton
                                             key={index}
                                             className={classes.proposal}
-                                            data-selected={(!!draft && selected === index) || undefined}
+                                            style={{'--proposal-color': colorOf(index)} as CSSProperties}
                                             data-hovered={hovered === index || undefined}
-                                            aria-pressed={!!draft && selected === index}
                                             onClick={() => selectProposal(index)}
                                             onMouseEnter={() => setHovered(index)}
                                             onMouseLeave={() => setHovered(null)}
@@ -916,13 +1074,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                                         >
                                             <span className={classes.proposalThumb}>
                                                 <CourseShape points={proposal.line.points} color={colorOf(index)} size={44}/>
-                                                <span className={classes.proposalLetter} style={{background: colorOf(index)}}>
-                                                    {proposalLetter(index)}
-                                                </span>
+                                                <span className={classes.proposalLetter}>{proposalLetter(index)}</span>
                                             </span>
                                             <span className={classes.proposalText}>
                                                 <strong>{formatKm(proposal.line.distance)}</strong>
-                                                <span>{share ? `${t`${climb} of climb`} · ${share}` : t`${climb} of climb`}</span>
+                                                <span>{t`${climb} of climb`}</span>
+                                                {share && <span>{share}</span>}
                                             </span>
                                             {targetM > 0 && (
                                                 <span className={classes.gap}
@@ -936,23 +1093,19 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                                 {generating && Array.from({length: proposals.length === 0 ? 3 : 1}, (_, index) => (
                                     <Skeleton key={`waiting-${index}`} height={68} radius={16} className={classes.proposalSkeleton}/>
                                 ))}
-                                {generating && (
-                                    <p className={classes.searching} aria-live="polite">
-                                        <Loader size={14}/>
-                                        <span>
-                                            {proposals.length > 0
-                                                ? t`More routes on the way…`
-                                                : slow ? t`Still a few seconds…` : t`Looking for routes around the start…`}
-                                        </span>
-                                        <UnstyledButton className={classes.stepLink} onClick={stopSearch}>
-                                            {t({message: 'Stop', context: 'course search'})}
-                                        </UnstyledButton>
-                                    </p>
-                                )}
                             </div>
                         )}
 
-                        {searched && !generating && proposals.length === 0 && !draft && !drawing && (
+                        {searchFailed && !generating && proposals.length === 0 && !draft && (
+                            <div className={classes.notice} role="alert">
+                                <p>{t`The search could not reach the map server. Check your connection and try again.`}</p>
+                                <Button variant="subtle" size="compact-sm" className={classes.linkButton} onClick={propose}>
+                                    {t`Try again`}
+                                </Button>
+                            </div>
+                        )}
+
+                        {searched && !searchFailed && !generating && proposals.length === 0 && !draft && !drawing && (
                             <p className={classes.notice} role="status">
                                 {t`No route found from this start. Move the start a little, change the distance, or draw it yourself.`}
                             </p>
@@ -967,7 +1120,9 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                         <div className={classes.result}>
                             <div className={classes.resultHead}>
                                 <span className={classes.resultBadge} style={{background: color}}>
-                                    {selected !== null && !drawing && !dirty ? proposalLetter(selected) : <IconPencil size={16}/>}
+                                    {selected !== null && !drawing && draft === pristine.current
+                                        ? proposalLetter(selected)
+                                        : <IconPencil size={16}/>}
                                 </span>
                                 <div className={classes.resultFigures}>
                                     <strong>{formatKm(draft.line.distance)}</strong>
@@ -978,10 +1133,9 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                                         </span>
                                     )}
                                 </div>
-                                {!drawing && (
+                                {!drawing && editor.canUndo && (
                                     <Button variant="subtle" size="compact-sm" className={classes.linkButton}
-                                            leftSection={<IconArrowBackUp size={16}/>} disabled={!editor.canUndo}
-                                            onClick={editor.undo}>
+                                            leftSection={<IconArrowBackUp size={16}/>} onClick={editor.undo}>
                                         {t`Undo`}
                                     </Button>
                                 )}
@@ -1005,18 +1159,19 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone, onDirty
                 {draft && (
                     <div className={classes.footer}>
                         <p className={classes.footerNote}>
-                            <span className={classes.footerDot} aria-hidden/>
-                            {editing ? (dirty ? t`Changes not saved` : t`No changes yet`) : t`Not added to the event yet`}
+                            <span className={classes.footerDot} data-quiet={(!!editing && !unsaved) || undefined} aria-hidden/>
+                            {editing ? (unsaved ? t`Changes not saved` : t`No changes yet`) : t`Not added to the event yet`}
                         </p>
                         <div className={classes.actions}>
                             <Button className={classes.primaryButton} loading={saving}
-                                    disabled={!name.trim() || editor.routing || (full && !editing) || (!!editing && !dirty && name.trim() === editing.routeFile.label)}
+                                    disabled={!name.trim() || editor.routing || (full && !editing) || (!!editing && !unsaved)}
                                     onClick={save}>
                                 {editing ? t`Save changes` : t`Add to the event`}
                             </Button>
-                            <Button variant="default" className={classes.outlineButton} leftSection={<IconDownload size={18}/>}
-                                    onClick={() => downloadGpx(name.trim(), gpxText())}>
-                                {t`GPX`}
+                            <Button variant="default" className={classes.gpxButton} aria-label={t`Download the GPX`}
+                                    title={t`Download the GPX`} onClick={() => downloadGpx(name.trim(), gpxText())}>
+                                <IconDownload size={18}/>
+                                <span className={classes.gpxLabel}>{t`GPX`}</span>
                             </Button>
                         </div>
                     </div>

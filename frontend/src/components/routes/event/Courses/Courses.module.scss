@@ -3,8 +3,13 @@
 
 // « Parcours »: the maker (panel and map side by side), then the event's routes.
 
-// The floating tab bar of phones (MobileNav.module.scss): the save bar stays above it.
-$tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bottom));
+// Sticky offsets count from inside the padding of the page's scroll box (AppLayout .main: 0.75rem on top
+// on phones, 2.5rem at the bottom, 7.5rem on phones to clear the floating tab bar).
+$page-padding-top-phone: 0.75rem;
+$page-padding-bottom: 2.5rem;
+$page-padding-bottom-phone: 7.5rem;
+// The tab bar's top edge (MobileNav.module.scss: 1.25rem gap + 4.375rem bar) and a little air above it.
+$tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 
 .page {
   display: flex;
@@ -278,11 +283,12 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
 }
 
 .distanceInput {
-  width: 5.25rem;
+  width: 5.75rem;
 
   input {
     height: 2.5rem;
     min-height: 2.5rem;
+    padding: 0 0.5rem;
     border-radius: 999px;
     font-weight: 700;
     text-align: center;
@@ -296,12 +302,12 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
 .chip {
   @include ui.chip;
   height: 2.5rem;
-  padding: 0 0.625rem;
+  padding: 0 0.5625rem;
   font-size: 0.875rem;
 
   @include mixins.respond-below(md) {
     height: 2.5rem;
-    padding: 0 0.625rem;
+    padding: 0 0.5625rem;
     font-size: 0.875rem;
   }
 
@@ -338,10 +344,21 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
 }
 
 .inkButton {
+  height: 2.5rem !important;
+  padding: 0 1rem !important;
   border-radius: 999px !important;
   background: ui.$ink !important;
   color: var(--dehors-creme) !important;
   font-weight: 700 !important;
+}
+
+.smallOutlineButton {
+  @include ui.outline-button;
+  height: 2.5rem !important;
+  padding: 0 0.875rem !important;
+  border-width: 1.5px !important;
+  border-radius: 999px !important;
+  font-size: 0.9375rem !important;
 }
 
 .linkButton {
@@ -404,12 +421,8 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
 
   &:hover,
   &[data-hovered] {
-    border-color: rgb(55 39 33 / 0.25);
-  }
-
-  &[data-selected] {
-    border-color: ui.$ink;
-    background: ui.$card;
+    border-color: var(--proposal-color);
+    background: color-mix(in srgb, var(--proposal-color) 8%, #{ui.$row});
   }
 
   &:focus-visible {
@@ -439,6 +452,7 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
   height: 1.375rem;
   border: 2px solid #ffffff;
   border-radius: 999px;
+  background: var(--proposal-color);
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 800;
@@ -484,18 +498,79 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
   font-size: 0.875rem;
   font-weight: 600;
 
-  > span {
-    flex: 1;
-  }
+}
+
+.searchingText {
+  flex: 1;
 }
 
 .notice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
   margin: 0;
   padding: 0.75rem 0.875rem;
   border-radius: 0.875rem;
   background: ui.$accent-soft;
   font-size: 0.875rem;
   line-height: 1.4;
+
+  p {
+    margin: 0;
+  }
+}
+
+// Once a route is on the map: the proposals as letters, one tap to switch.
+.proposalChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+
+  .fieldLabel {
+    margin: 0 0.25rem 0 0;
+  }
+}
+
+.proposalChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.25rem;
+  padding: 0 0.75rem 0 0.25rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: ui.$row;
+  font-size: 0.875rem;
+  font-weight: 700;
+
+  &:hover,
+  &[data-hovered] {
+    border-color: var(--proposal-color);
+  }
+
+  &[data-selected] {
+    border-color: var(--proposal-color);
+    background: color-mix(in srgb, var(--proposal-color) 12%, #{ui.$card});
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 2px;
+  }
+}
+
+.chipLetter {
+  display: grid;
+  place-items: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 999px;
+  background: var(--proposal-color);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 // ---- the chosen route ----
@@ -568,7 +643,7 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
 
   @include mixins.respond-below(lg) {
     position: sticky;
-    bottom: 0.75rem;
+    bottom: 0.75rem - $page-padding-bottom;
     z-index: 3;
     margin: 0 0.75rem 0.75rem;
     padding: 0.75rem 0.875rem;
@@ -578,15 +653,35 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
   }
 
   @include mixins.respond-below(md) {
-    bottom: $tab-bar-clearance;
+    bottom: $tab-bar-top - $page-padding-bottom-phone;
   }
 
   .actions {
     flex-wrap: nowrap;
   }
+}
 
-  .outlineButton {
-    flex: 0 0 auto;
+// « GPX »: the word goes on narrow phones, the icon stays.
+.gpxButton {
+  @include ui.outline-button;
+  flex: 0 0 auto;
+  gap: 0.375rem;
+  height: 2.75rem !important;
+  padding: 0 1rem !important;
+  font-size: 1rem !important;
+
+  :global(.mantine-Button-label) {
+    gap: 0.375rem;
+  }
+
+  @include mixins.respond-below(sm) {
+    padding: 0 0.75rem !important;
+  }
+}
+
+.gpxLabel {
+  @include mixins.respond-below(sm) {
+    display: none;
   }
 }
 
@@ -605,6 +700,33 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
   height: 0.5rem;
   border-radius: 999px;
   background: ui.$accent;
+
+  &[data-quiet] {
+    background: ui.$track;
+  }
+}
+
+// After a save: what happened, and that the next route starts from the same place.
+.savedBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.75rem 0.5rem 0.75rem 0.875rem;
+  border-radius: 1rem;
+  background: ui.tone-bg(ok);
+  color: ui.tone-text(ok);
+
+  p {
+    flex: 1;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
 }
 
 // ---- the map ----
@@ -617,7 +739,7 @@ $tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bot
   // On phones the map stays at the top of the screen while the steps scroll under it.
   @include mixins.respond-below(lg) {
     position: sticky;
-    top: -0.75rem;
+    top: -$page-padding-top-phone;
     z-index: 4;
     order: 1;
     height: 40dvh;

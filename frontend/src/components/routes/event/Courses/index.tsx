@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useParams} from "react-router";
 import {t} from "@lingui/macro";
 import {Skeleton} from "@mantine/core";
@@ -12,7 +12,7 @@ import {formatAddress} from "../../../../utilites/addressUtilities.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
 import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {RouteFilesCard} from "../Settings/cards/RouteFilesCard.tsx";
-import {CourseMaker, CourseToEdit} from "./CourseMaker.tsx";
+import {CourseMaker, CourseSetup, CourseToEdit, SavedCourse} from "./CourseMaker.tsx";
 import {Place} from "./PlaceInput.tsx";
 import classes from "./Courses.module.scss";
 
@@ -28,7 +28,9 @@ const Courses = () => {
     const routeFiles = useGetEventRouteFiles(eventId).data ?? [];
     const [editing, setEditing] = useState<CourseToEdit | null>(null);
     const [round, setRound] = useState(0);
-    const [savedId, setSavedId] = useState<number | null>(null);
+    const [saved, setSaved] = useState<SavedCourse | null>(null);
+    // The next route starts from the last one saved.
+    const [setup, setSetup] = useState<CourseSetup | null>(null);
     const dirty = useRef(false);
     const top = useRef<HTMLDivElement>(null);
 
@@ -65,7 +67,7 @@ const Courses = () => {
                 return;
             }
             dirty.current = false;
-            setSavedId(null);
+            setSaved(null);
             setEditing({routeFile, gpx});
             setRound((value) => value + 1);
             toTop();
@@ -74,23 +76,30 @@ const Courses = () => {
         }
     });
 
-    const done = (saved?: number) => {
+    const done = (result?: SavedCourse) => {
         dirty.current = false;
         setEditing(null);
         setRound((value) => value + 1);
-        setSavedId(saved ?? null);
+        setSaved(result ?? null);
+        if (result) {
+            setSetup(result.setup);
+        }
     };
 
-    const startNew = () => {
-        if (editing) {
-            unlessDirty(() => {
-                done();
-                toTop();
-            });
+    // The saved route stands out in the list for a moment, then the list is back to normal.
+    useEffect(() => {
+        if (!saved) {
             return;
         }
+        const timer = window.setTimeout(() => setSaved((current) => current && {...current, id: undefined}), 4000);
+        return () => window.clearTimeout(timer);
+    }, [saved]);
+
+    // A fresh maker, from the same start: the route in progress goes once the organizer says so.
+    const startNew = () => unlessDirty(() => {
+        done();
         toTop();
-    };
+    });
 
     return (
         <div className={classes.page} ref={top}>
@@ -107,6 +116,8 @@ const Courses = () => {
                     eventId={eventId!}
                     eventPlace={eventPlace}
                     editing={editing}
+                    setup={setup}
+                    savedLabel={saved?.label ?? null}
                     full={routeFiles.length >= MAX_ROUTE_FILES_PER_EVENT}
                     onDone={done}
                     onDirtyChange={onDirtyChange}
@@ -117,7 +128,7 @@ const Courses = () => {
 
             <div className={classes.files}>
                 <RouteFilesCard eventId={eventId!} onEdit={edit} onNew={startNew}
-                                editingId={editing?.routeFile.id ?? null} highlightId={savedId}/>
+                                editingId={editing?.routeFile.id ?? null} highlightId={saved?.id ?? null}/>
             </div>
         </div>
     );

@@ -19,6 +19,7 @@ const COURSE = 'dehors-course';
 const KM = 'dehors-km';
 const FONT = ['Noto Sans Bold'];
 const HOVER: ExpressionSpecification = ['boolean', ['feature-state', 'hover'], false];
+const DIM: ExpressionSpecification = ['boolean', ['feature-state', 'dim'], false];
 
 type Feature = GeoJSON.Feature<GeoJSON.Geometry, Record<string, unknown>>;
 
@@ -85,7 +86,7 @@ const addCourseLayers = (map: MapLibreMap) => {
         paint: {
             'line-color': '#ffffff',
             'line-width': ['case', HOVER, 11, 8],
-            'line-opacity': ['case', HOVER, 1, ['get', 'opacity']],
+            'line-opacity': ['case', HOVER, 1, DIM, 0.15, ['get', 'opacity']],
         },
     });
     map.addLayer({
@@ -96,7 +97,7 @@ const addCourseLayers = (map: MapLibreMap) => {
         paint: {
             'line-color': ['get', 'color'],
             'line-width': ['case', HOVER, 6.5, 4.5],
-            'line-opacity': ['case', HOVER, 1, ['get', 'opacity']],
+            'line-opacity': ['case', HOVER, 1, DIM, 0.2, ['get', 'opacity']],
         },
     });
 
@@ -161,6 +162,8 @@ const addCourseLayers = (map: MapLibreMap) => {
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#ffffff',
             'circle-stroke-width': 2.5,
+            'circle-opacity': ['case', HOVER, 1, DIM, 0.3, ['get', 'opacity']],
+            'circle-stroke-opacity': ['case', HOVER, 1, DIM, 0.3, ['get', 'opacity']],
         },
     });
     map.addLayer({
@@ -168,7 +171,7 @@ const addCourseLayers = (map: MapLibreMap) => {
         type: 'symbol',
         source: LABELS,
         layout: {'text-field': ['get', 'letter'], 'text-font': FONT, 'text-size': 13, 'text-allow-overlap': true},
-        paint: {'text-color': '#ffffff'},
+        paint: {'text-color': '#ffffff', 'text-opacity': ['case', HOVER, 1, DIM, 0.3, ['get', 'opacity']]},
     });
 };
 
@@ -215,11 +218,12 @@ const setData = (map: MapLibreMap, source: string, data: GeoJSON.FeatureCollecti
     (map.getSource(source) as GeoJSONSource | undefined)?.setData(data);
 };
 
-/** The proposals with their letters, the chosen one bright and the others faded behind it. */
-export const showProposals = (map: MapLibreMap, lines: LatLng[][], selected: number | null) => {
+/** The proposals with their letters, faded behind the chosen one (or behind a route drawn by hand). */
+export const showProposals = (map: MapLibreMap, lines: LatLng[][], selected: number | null, faded = false) => {
     const colorAt = (index: number) => PROPOSAL_COLORS[index % PROPOSAL_COLORS.length];
+    const behind = selected !== null || faded;
     setData(map, PROPOSALS, collection(lines.map((points, index) => ({
-        ...lineFeature(points, {index, color: colorAt(index), opacity: selected === null ? 0.9 : 0.3}),
+        ...lineFeature(points, {index, color: colorAt(index), opacity: behind ? 0.3 : 0.9}),
         id: index,
     })).filter((_, index) => index !== selected)));
 
@@ -230,7 +234,7 @@ export const showProposals = (map: MapLibreMap, lines: LatLng[][], selected: num
             labels.push({
                 type: 'Feature',
                 id: index,
-                properties: {index, color: colorAt(index), letter: proposalLetter(index)},
+                properties: {index, color: colorAt(index), letter: proposalLetter(index), opacity: behind ? 0.55 : 1},
                 geometry: {type: 'Point', coordinates: [point.lng, point.lat]},
             });
         }
@@ -238,17 +242,14 @@ export const showProposals = (map: MapLibreMap, lines: LatLng[][], selected: num
     setData(map, LABELS, collection(labels));
 };
 
-/** A proposal pointed at, in the list or on the map: its line and its letter stand out. */
-export const hoverProposal = (map: MapLibreMap, index: number | null, previous: number | null) => {
+/** A proposal pointed at, in the list or on the map: it stands out, the others fade. */
+export const hoverProposal = (map: MapLibreMap, index: number | null, count: number) => {
     for (const source of [PROPOSALS, LABELS]) {
         if (!map.getSource(source)) {
             continue;
         }
-        if (previous !== null) {
-            map.setFeatureState({source, id: previous}, {hover: false});
-        }
-        if (index !== null) {
-            map.setFeatureState({source, id: index}, {hover: true});
+        for (let id = 0; id < count; id++) {
+            map.setFeatureState({source, id}, {hover: id === index, dim: index !== null && id !== index});
         }
     }
 };
