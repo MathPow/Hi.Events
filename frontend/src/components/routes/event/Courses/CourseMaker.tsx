@@ -906,7 +906,6 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 <SegmentedControl
                     fullWidth
                     className={classes.segmented}
-                    data-rough
                     value={kind}
                     onChange={(value) => guard(() => {
                         setKind(value as CourseKind);
@@ -986,7 +985,6 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     <SegmentedControl
                         fullWidth
                         className={classes.segmented}
-                        data-rough
                         value={surface}
                         onChange={(value) => setSurface(value as CourseSurface)}
                         data={[
