@@ -12,6 +12,9 @@ const PROFILES: Record<CourseSurface, string> = {
     mixed: 'trekking',
     road: 'fastbike',
 };
+// Ours has a profile of its own for « Sentiers » (dehors-trail.brf next to BRouter): every metre costs
+// 1 + 3 × (1 − natureOf), the same as the planner counts, so it follows the trails a loop was planned on.
+const OWN_PROFILES: Record<CourseSurface, string> = {...PROFILES, trail: 'dehors-trail'};
 
 const PUBLIC_BROUTER_URL = 'https://brouter.de/brouter';
 // A point BRouter can't reach (a lake, a forest without paths) makes it search for long: give up instead.
@@ -43,18 +46,20 @@ const PARK_PATHS = ['cycleway', 'pedestrian'];
 const STREETS = ['service', 'residential', 'living_street', 'unclassified'];
 const PAVED = ['paved', 'asphalt', 'concrete', 'concrete:plates', 'concrete:lanes', 'paving_stones', 'sett', 'cobblestone', 'chipseal', 'metal'];
 
-// How much a stretch feels like a trail, 0 to 1. Cities map their sidewalks as footways: a paved
+// How much a stretch feels like a trail, 0 to 1 (dehors-trail.brf on our BRouter counts the same). Cities map their sidewalks as footways: a paved
 // footway counts as a sidewalk, an unpaved one as a trail.
-const natureOf = (highway: string, surface: string | undefined): number => {
+export const natureOf = (highway: string, surface: string | undefined): number => {
     const paved = surface === undefined ? undefined : PAVED.includes(surface);
     if (TRAILS.includes(highway)) {
         return paved ? 0.4 : 1;
     }
+    // A footway without a surface is most often a park path; sidewalks are tagged as such, or paved.
     if (highway === 'footway') {
-        return paved === undefined ? 0.6 : paved ? 0.3 : 1;
+        return paved === undefined ? 0.7 : paved ? 0.3 : 1;
     }
+    // A paved bike path runs along a boulevard as often as through a park.
     if (PARK_PATHS.includes(highway)) {
-        return paved === false ? 0.8 : 0.4;
+        return paved === false ? 0.8 : 0.3;
     }
     if (BUSY[highway]) {
         return 0;
@@ -182,17 +187,17 @@ export const routeThrough = async (via: LatLng[], surface: CourseSurface, signal
     }
 
     const lonlats = via.map((p) => `${p.lng.toFixed(6)},${p.lat.toFixed(6)}`).join('|');
-    const query = `lonlats=${lonlats}&profile=${PROFILES[surface]}&alternativeidx=0&format=geojson`;
+    const query = (profile: string) => `lonlats=${lonlats}&profile=${profile}&alternativeidx=0&format=geojson`;
 
     await slot();
     try {
         // Ours only holds Québec: no route there can also mean a place outside it, so the public one tries too.
         const own = ownServerUrl();
         if (own) {
-            let result = await ask(own, query, signal);
+            let result = await ask(own, query(OWN_PROFILES[surface]), signal);
             for (let retry = 1; result === 'busy' && retry <= BUSY_RETRIES; retry++) {
                 await wait(BUSY_WAIT_MS * retry, signal);
-                result = await ask(own, query, signal);
+                result = await ask(own, query(OWN_PROFILES[surface]), signal);
             }
             if (result && result !== 'busy') {
                 return result;
@@ -202,7 +207,7 @@ export const routeThrough = async (via: LatLng[], surface: CourseSurface, signal
             }
         }
 
-        const result = await ask(PUBLIC_BROUTER_URL, query, signal);
+        const result = await ask(PUBLIC_BROUTER_URL, query(PROFILES[surface]), signal);
 
         return result && result !== 'busy' ? result : null;
     } finally {

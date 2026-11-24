@@ -11,13 +11,16 @@ import {
     pointAlong,
     selfCrossings,
 } from "./geo.ts";
-import {fetchTrailPoints, snapToTrail} from "./places.ts";
+import {fetchTrailWays, snapToTrail} from "./places.ts";
 import {CourseSurface, RoutedLine, routeThrough} from "./routing.ts";
 import {CourseKind} from "./gpx.ts";
+import {missedStretches, PlannedLoop, planLoops, TrailWay} from "./trailGraph.ts";
 
-// Courses close to the distance asked for. A loop is a shape drawn around the start (a square on a
-// circle through it, turned 8 ways), routed on real trails and streets, then grown or shrunk until the
-// routed distance lands near the target. A line heads out the same 8 ways, or joins the given finish.
+// Courses close to the distance asked for. A « Sentiers » loop is planned on the trails around the
+// start (see trailGraph.ts), then routed through points along it. Otherwise, and when there are too few
+// trails, a loop is a shape drawn around the start (a square on a circle through it, turned 8 ways),
+// routed on real trails and streets, then grown or shrunk until the routed distance lands near the
+// target. A line heads out the same 8 ways, or joins the given finish.
 
 export interface CourseDraft {
     // The points the course goes through, start first. A loop comes back to the first one.
@@ -54,24 +57,32 @@ const LINE_FACTOR = 1.3;
 const SNAP_MAX_RADIUS_M = 6000;
 
 // Overpass is often slow: past a few seconds the proposals go without it (BRouter's trail profile
-// already prefers paths). What came back is kept for the next search around the same start.
+// already prefers paths), a little longer for « Sentiers » loops, which are planned on its trails.
+// What came back is kept for the next search around the same start.
 const TRAILS_DEADLINE_MS = 4000;
-const trailCache = new Map<string, Promise<LatLng[]>>();
+const PLANNING_DEADLINE_MS = 9000;
+const trailCache = new Map<string, Promise<TrailWay[]>>();
 
-const trailsAround = (center: LatLng, radiusM: number): Promise<LatLng[]> => {
+const trailsAround = (center: LatLng, radiusM: number, deadlineMs: number): Promise<TrailWay[]> => {
     const key = `${center.lat.toFixed(3)},${center.lng.toFixed(3)},${Math.ceil(radiusM / 500)}`;
     let request = trailCache.get(key);
     if (!request) {
-        request = fetchTrailPoints(center, Math.ceil(radiusM / 500) * 500);
-        request.then((points) => points.length === 0 && trailCache.delete(key));
+        request = fetchTrailWays(center, Math.ceil(radiusM / 500) * 500);
+        request.then((ways) => ways.length === 0 && trailCache.delete(key));
         trailCache.set(key, request);
     }
 
     return Promise.race([
         request,
-        new Promise<LatLng[]>((resolve) => setTimeout(() => resolve([]), TRAILS_DEADLINE_MS)),
+        new Promise<TrailWay[]>((resolve) => setTimeout(() => resolve([]), deadlineMs)),
     ]);
 };
+
+// The trails a shape's corners move onto: real trails for « Sentiers », any path for « Mixte ».
+const SNAP_NATURE: Record<CourseSurface, number> = {trail: 0.7, mixed: 0.3, road: 2};
+// Points added where BRouter left a planned loop anyway, a few at a time.
+const MAX_EXTRA_MARKS = 4;
+const MARK_ROUNDS = 2;
 
 export const viaPoints = (kind: CourseKind, waypoints: LatLng[]): LatLng[] =>
     kind === 'loop' && waypoints.length > 1 ? [...waypoints, waypoints[0]] : waypoints;
@@ -177,9 +188,15 @@ export const proposeCourses = async (
     const {kind, start, finish, targetM, surface} = request;
 
     const reach = kind === 'loop' ? 2 * targetM / (5.66 * LOOP_FACTOR) : targetM / LINE_FACTOR;
-    const trailPoints = surface !== 'road' && reach <= SNAP_MAX_RADIUS_M
-        ? await trailsAround(start, Math.min(SNAP_MAX_RADIUS_M, reach * 1.6 + 300))
+    const planning = kind === 'loop' && surface === 'trail';
+    const trailWays = surface !== 'road' && reach <= SNAP_MAX_RADIUS_M
+        ? await trailsAround(start, Math.min(SNAP_MAX_RADIUS_M, reach * 1.6 + 300), planning ? PLANNING_DEADLINE_MS : TRAILS_DEADLINE_MS)
         : [];
+    if (signal.aborted) {
+        return [];
+    }
+    const trailPoints = trailWays.filter((way) => way.nature >= SNAP_NATURE[surface]).flatMap((way) => way.points);
+    const planned = planning ? planLoops(trailWays, start, targetM, MAX_PROPOSALS) : [];
     // The start, and a finish the organizer chose, stay exactly where they are.
     const isFixed = (index: number, count: number) => index === 0 || (!!finish && index === count - 1);
     const snap = (points: LatLng[]) => points.map((p, index) => (
@@ -223,6 +240,37 @@ export const proposeCourses = async (
         }
         return draft;
     };
+
+    // A planned loop, routed through points along it, then through the trails BRouter left out.
+    const routePlanned = async (index: number, loop: PlannedLoop) => {
+        let marks = loop.marks;
+        let draft = await routeDraft(kind, [start, ...marks.map((mark) => mark.point)], surface, signal);
+        if (!draft || draft.line.distance > targetM * MAX_STRETCH) {
+            return;
+        }
+        best.set(index, draft);
+        publish();
+        for (let round = 0; round < MARK_ROUNDS && !signal.aborted; round++) {
+            const missed = missedStretches(loop, draft.line.points);
+            if (missed.length === 0) {
+                break;
+            }
+            marks = [...marks, ...missed.slice(0, MAX_EXTRA_MARKS)].sort((a, b) => a.along - b.along);
+            const again = await routeDraft(kind, [start, ...marks.map((mark) => mark.point)], surface, signal);
+            if (!again) {
+                break;
+            }
+            if (rank(again) < rank(draft)) {
+                draft = again;
+                best.set(index, draft);
+                publish();
+            }
+        }
+    };
+    if (planned.length > 0) {
+        await Promise.all(planned.map((loop, index) => routePlanned(index, loop)));
+        return publish();
+    }
 
     const shapes: Shape[] = [];
     if (kind === 'loop') {
