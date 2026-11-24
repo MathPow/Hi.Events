@@ -180,7 +180,8 @@ const RouteFileRow = ({eventId, routeFile, editing, highlighted, onEdit, onDelet
     // The route just saved comes into view, lit up.
     useEffect(() => {
         if (highlighted) {
-            row.current?.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+            // In the middle of the screen: clear of the tab bar on phones and the assistant button.
+            row.current?.scrollIntoView({behavior: 'smooth', block: 'center'});
         }
     }, [highlighted]);
 

@@ -99,6 +99,7 @@ const ARROWS: Record<string, [number, number]> = {ArrowUp: [0, -1], ArrowDown: [
 type Picking = 'start' | 'finish' | null;
 
 const colorOf = (index: number | null) => PROPOSAL_COLORS[(index ?? 0) % PROPOSAL_COLORS.length];
+const DRAWN_COLOR = '#352924';
 
 const kmText = (km: number) => new Intl.NumberFormat(intlLocale(), {maximumFractionDigits: 1}).format(km);
 
@@ -202,7 +203,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
 
     const editor = useCourseEditorFor(kind, surface, initial?.draft ?? null);
     const {draft, load, move, remove, insertOnLine, append, rerouteAll} = editor;
-    const color = colorOf(selected);
+    // A proposal keeps its colour; a route drawn by hand, or a saved one, is in the page's ink.
+    const color = selected === null ? DRAWN_COLOR : colorOf(selected);
     // Left at « 6, » the field holds the text « 6. »: still 6 km.
     const askedKm = typeof targetKm === 'number' ? targetKm : parseFloat(targetKm);
     const targetM = Number.isFinite(askedKm) && askedKm > 0 ? askedKm * 1000 : 0;
@@ -292,6 +294,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 loaded.dragRotate.disable();
                 loaded.keyboard.disableRotation();
                 loaded.touchZoomRotate.disableRotation();
+                loaded.touchPitch.disable();
                 setMap(loaded);
             })
             .catch(() => !cancelled && setMapFailed(true));
@@ -320,7 +323,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
 
     useEffect(() => {
         if (map) {
-            showProposals(map, proposals.map((proposal) => proposal.line.points), draft ? selected : null, drawing);
+            // Behind any route on the map: the proposals stay as faded alternatives.
+            showProposals(map, proposals.map((proposal) => proposal.line.points), draft ? selected : null, drawing || !!draft);
         }
     }, [map, proposals, selected, draft, drawing]);
 
@@ -409,6 +413,9 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         setFinish(recorded.finish);
     }, [draft]);
     useEffect(() => {
+        if (editor.failed) {
+            focusAfter.current = null;
+        }
         const recorded = editor.failed && draft ? endsOf.current.get(draft) : undefined;
         if (recorded) {
             setStart(recorded.start);
@@ -592,17 +599,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             const canRemove = draft.waypoints.length > 2;
             draft.waypoints.forEach((point, index) => {
                 if (index === 0) {
-                    add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point, (p) => {
-                        setStart({label: t`Point on the map`, position: p});
-                        move(0, p);
-                    });
+                    add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point,
+                        (p) => changeEnd('start', {label: t`Point on the map`, position: p}));
                     return;
                 }
                 if (kind === 'line' && index === last) {
-                    add(flag(t`Finish`, 'finish'), point, (p) => {
-                        setFinish({label: t`Point on the map`, position: p});
-                        move(index, p);
-                    });
+                    add(flag(t`Finish`, 'finish'), point, (p) => changeEnd('finish', {label: t`Point on the map`, position: p}));
                     return;
                 }
                 const element = document.createElement('button');
@@ -634,6 +636,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     if (event.key === 'Delete' || event.key === 'Backspace') {
                         event.preventDefault();
                         event.stopPropagation();
+                        focusAfter.current = index > 1 ? String(index - 1) : 'start';
                         remove(index);
                     }
                 });
@@ -704,10 +707,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         pristine.current = null;
         load(null);
 
-        const unansweredBefore = unansweredRoutingRequests();
+        // Each proposal remembers the start and finish it was made from.
+        const ends = {start, finish: kind === 'line' ? finish : null};
         // The map shows the first proposals as soon as they come, then all of them at the end.
         let shown = false;
         const onUpdate = (found: CourseDraft[]) => {
+            found.forEach((proposal) => endsOf.current.has(proposal) || endsOf.current.set(proposal, ends));
             setProposals(found);
             if (!shown && found.length > 0) {
                 shown = true;
@@ -724,7 +729,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             if (!controller.signal.aborted) {
                 fitTo(result.flatMap((proposal) => proposal.line.points));
                 // Nothing found because no router answered: that is not « no route from here ».
-                if (result.length === 0 && unansweredRoutingRequests() > unansweredBefore) {
+                if (result.length === 0 && unansweredRoutingRequests(controller.signal) > 0) {
                     setSearchFailed(true);
                 }
             }
@@ -976,11 +981,13 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             key={searchFirst ? 'search-first' : 'search-again'}
             className={searchFirst ? classes.primaryButton : classes.outlineButton}
             variant={searchFirst ? undefined : 'default'}
-            leftSection={searchingFirst ? <Loader size={16}/> : searchFirst ? <IconSparkles size={18}/> : undefined}
+            leftSection={searchingFirst ? <Loader size={16}/> : <IconSparkles size={searchFirst ? 18 : 16}/>}
             disabled={!start || targetM <= 0 || searchingFirst}
             onClick={propose}
         >
-            {searchingFirst ? t`Searching…` : searched || draft ? t`Suggest again` : t`Suggest routes`}
+            {searchingFirst
+                ? t`Searching…`
+                : !searchFirst ? t({message: 'Suggest', context: 'course'}) : searched ? t`Suggest again` : t`Suggest routes`}
         </Button>
     );
 
@@ -1027,7 +1034,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                             <Button
                                 variant="default"
                                 className={classes.outlineButton}
-                                leftSection={searchFirst ? <IconPencil size={18}/> : undefined}
+                                leftSection={<IconPencil size={searchFirst ? 18 : 16}/>}
                                 data-active={drawing || undefined}
                                 aria-pressed={drawing}
                                 onClick={() => drawing ? setDrawing(false) : startDrawing()}
