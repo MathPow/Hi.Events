@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from "react";
 import {t} from "@lingui/macro";
-import {IconDownload} from "@tabler/icons-react";
 import type {Map as MapLibreMap} from "maplibre-gl";
 import {IdParam} from "../../../../types.ts";
 import {EventRouteFilePublic, eventRouteFileClientPublic} from "../../../../api/eventRouteFile.client.ts";
@@ -11,7 +10,6 @@ import {parseGpx} from "../../../../utilites/course/gpx.ts";
 import {loadCourseMap, showCourse} from "../../../common/CourseMap/courseLayers.ts";
 import {ElevationProfile} from "../../../common/CourseMap/ElevationProfile.tsx";
 import {formatClimb, formatKm} from "../../../common/CourseMap/courseFormat.ts";
-import shell from "../../OrganizerHomepage/OrganizerHomepage.module.scss";
 import page from "../EventPage.module.scss";
 import classes from "./EventCourses.module.scss";
 
@@ -58,7 +56,7 @@ interface EventCoursesProps {
 
 /**
  * « Emplacement » with a course: the venue's map with the course on it, the address, then its distance
- * and climb, its elevation and the GPX to load in a watch or an app. Without a venue, « Parcours » on
+ * and climb and its elevation (the GPX comes with the ticket, after buying). Without a venue, « Parcours » on
  * the trail map. A tab per course when there are several.
  */
 export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesProps) => {
@@ -216,14 +214,6 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
                         <span className={classes.figure}><strong>{label}</strong></span>
                     )}
                 </div>
-                {current && (
-                    <a href={eventRouteFileClientPublic.downloadUrl(eventId, current.id)}
-                       className={`${shell.button} ${shell.buttonOutline} ${classes.download}`}
-                       data-rough="button">
-                        <IconDownload size={18} aria-hidden/>
-                        {t`Download the GPX`}
-                    </a>
-                )}
             </div>
 
             {course && <ElevationProfile points={course.points}/>}
