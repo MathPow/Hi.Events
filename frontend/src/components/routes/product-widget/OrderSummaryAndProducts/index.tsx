@@ -26,6 +26,7 @@ import {PublicPageFooter} from "../../../common/PublicPageFooter";
 import {PublicIcon, PublicIconName} from "../../../common/PublicIcon";
 import {platformSupportLabel} from "../../../common/PlatformSupportInput";
 import {EditAttendeeModal} from "./EditAttendeeModal";
+import {RouteDownloads} from "../AttendeeProductAndInformation/RouteDownloads.tsx";
 import {EditOrderModal} from "./EditOrderModal";
 import {isTransferWindowOpen, TransferTicketModal} from "../../../modals/TransferTicketModal";
 import {ConfirmationTicket} from "./ConfirmationTicket";
@@ -753,6 +754,7 @@ export const OrderSummaryAndProducts = () => {
                                 {attendees.map((attendee) => (
                                     <ConfirmationTicket key={attendee.id} attendee={attendee} event={event}/>
                                 ))}
+                                {!isCancelled && <RouteDownloads eventId={eventId}/>}
                             </div>
                         )}
 
