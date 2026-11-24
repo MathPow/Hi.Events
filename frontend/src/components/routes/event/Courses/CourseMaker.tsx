@@ -186,6 +186,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     );
     const [justSaved, setJustSaved] = useState(savedLabel ?? null);
     const [searchFailed, setSearchFailed] = useState(false);
+    const [markersRound, setMarkersRound] = useState(0);
     const [picking, setPicking] = useState<Picking>(null);
     const [drawing, setDrawing] = useState(false);
     const [proposals, setProposals] = useState<CourseDraft[]>([]);
@@ -415,6 +416,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     useEffect(() => {
         if (editor.failed) {
             focusAfter.current = null;
+            // A point or flag dropped where no path goes goes back to its place on the route.
+            setMarkersRound((value) => value + 1);
         }
         const recorded = editor.failed && draft ? endsOf.current.get(draft) : undefined;
         if (recorded) {
@@ -513,6 +516,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
 
     // ---- markers: the start, the finish, and the points to drag ----
 
+    // With a route, its flags sit on its own points: a new start in the field doesn't redraw them
+    // before the route has followed (a dragged flag would jump back meanwhile).
+    const flagStart = draft ? null : start;
+    const flagFinish = draft ? null : finish;
     const markers = useRef<Marker[]>([]);
     const popup = useRef<Popup | null>(null);
     const focusAfter = useRef<string | null>(null);
@@ -605,6 +612,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     // Moving a route's flag changes that route, like any of its points: the proposals stay,
                     // each with the start it was made from.
                     add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point, (p) => {
+                        setPicking(null);
                         setStart({label: t`Point on the map`, position: p});
                         move(0, p);
                     });
@@ -612,6 +620,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 }
                 if (kind === 'line' && index === last) {
                     add(flag(t`Finish`, 'finish'), point, (p) => {
+                        setPicking(null);
                         setFinish({label: t`Point on the map`, position: p});
                         move(index, p);
                     });
@@ -661,12 +670,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 }, 0));
             });
         } else {
-            if (start) {
-                add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), start.position,
+            if (flagStart) {
+                add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), flagStart.position,
                     (p) => changeEnd('start', {label: t`Point on the map`, position: p}));
             }
-            if (kind === 'line' && finish) {
-                add(flag(t`Finish`, 'finish'), finish.position, (p) => changeEnd('finish', {label: t`Point on the map`, position: p}));
+            if (kind === 'line' && flagFinish) {
+                add(flag(t`Finish`, 'finish'), flagFinish.position, (p) => changeEnd('finish', {label: t`Point on the map`, position: p}));
             }
         }
 
@@ -679,7 +688,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 ?? elements.find((element) => element.dataset.point === 'start');
             target?.focus({preventScroll: true});
         }
-    }, [map, draft, start, finish, kind, color, move, remove, changeEnd]);
+    }, [map, draft, flagStart, flagFinish, kind, color, move, remove, changeEnd, markersRound]);
 
     useEffect(() => () => {
         markers.current.forEach((marker) => marker.remove());
