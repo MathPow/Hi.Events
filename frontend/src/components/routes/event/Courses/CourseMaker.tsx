@@ -331,7 +331,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
 
     useEffect(() => {
         if (map) {
-            hoverProposal(map, hovered, proposals.length);
+            // A row pointed at can leave the list as results come in: then nothing is pointed at.
+            hoverProposal(map, hovered !== null && hovered < proposals.length ? hovered : null, proposals.length);
         }
     }, [map, hovered, proposals]);
 
@@ -735,6 +736,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         const onUpdate = (found: CourseDraft[]) => {
             found.forEach((proposal) => endsOf.current.has(proposal) || endsOf.current.set(proposal, ends));
             setProposals(found);
+            setHovered(null);
             if (!shown && found.length > 0) {
                 shown = true;
                 fitTo(found.flatMap((proposal) => proposal.line.points));
