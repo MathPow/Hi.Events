@@ -1,4 +1,4 @@
-import {useMemo} from "react";
+import {useId, useMemo} from "react";
 import {t} from "@lingui/macro";
 import {cumulative, TrackPoint} from "../../../utilites/course/geo.ts";
 import {formatKm} from "./courseFormat.ts";
@@ -12,6 +12,7 @@ const SAMPLES = 160;
 // The length shown under it: the route's own when known (the router's figure, as on the rest of the page).
 // `color`: the organizer's, on their event page (orange otherwise).
 export const ElevationProfile = ({points, distance, color}: { points: TrackPoint[], distance?: number, color?: string }) => {
+    const fade = `ele-fade-${useId().replace(/:/g, '')}`;
     const profile = useMemo(() => {
         const withEle = points.filter((p) => p.ele !== undefined);
         if (withEle.length < 2 || withEle.length < points.length * 0.8) {
@@ -58,8 +59,13 @@ export const ElevationProfile = ({points, distance, color}: { points: TrackPoint
         <figure className={classes.profile}>
             <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="none" role="img"
                  aria-label={t`Elevation from ${low} m to ${high} m`}>
-                <path d={profile.area} className={classes.profileArea}
-                      style={color ? {fill: color, fillOpacity: 0.22} : undefined}/>
+                <defs>
+                    <linearGradient id={fade} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stopColor={color ?? '#fa7853'} stopOpacity={0.5}/>
+                        <stop offset="1" stopColor={color ?? '#fa7853'} stopOpacity={0}/>
+                    </linearGradient>
+                </defs>
+                <path d={profile.area} className={classes.profileArea} style={{fill: `url(#${fade})`}}/>
                 <path d={profile.line} className={classes.profileLine} vectorEffect="non-scaling-stroke"
                       style={color ? {stroke: color} : undefined}/>
             </svg>
