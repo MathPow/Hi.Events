@@ -10,7 +10,8 @@ import {useGetEventSettings} from "../../../queries/useGetEventSettings.ts";
 import {Event} from '../../../types.ts';
 import {useGetEvent} from "../../../queries/useGetEvent.ts";
 import {PageTitle} from "../PageTitle";
-import {PillChoice, ToggleRow} from "../../routes/organizer/Settings/SettingsUi.tsx";
+import {ToggleRow} from "../../routes/organizer/Settings/SettingsUi.tsx";
+import {PillChoice} from "../Pill";
 
 // A piece of code to paste, with its copy button.
 const CodeBlock = ({label, hint, code}: { label: string, hint: string, code: string }) => (

@@ -49,6 +49,7 @@ import {
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {PageBody} from "../../../../common/PageBody";
+import {PillChoice} from "../../../../common/Pill";
 import {PAGE_GAP, usePaperPages} from "./usePaperPages.ts";
 import {useGetOrganizer} from "../../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerDocument} from "../../../../../queries/useGetOrganizerDocuments.ts";
@@ -688,19 +689,15 @@ const SortableBlock = ({
             {selected && block.type === 'signature' && (
                 <div className={classes.blockOptions}>
                     <span className={classes.blockOptionsLabel}>{t`Who signs here?`}</span>
-                    <div className={classes.pills}>
-                        {(['participant', 'guardian'] as const).map(signer => (
-                            <button
-                                key={signer}
-                                type="button"
-                                className={classes.pill}
-                                aria-pressed={(block.signer ?? 'participant') === signer}
-                                onClick={() => onUpdate({signer})}
-                            >
-                                {signer === 'participant' ? t`Participant` : t`Parent or guardian`}
-                            </button>
-                        ))}
-                    </div>
+                    <PillChoice<'participant' | 'guardian'>
+                        label={t`Who signs here?`}
+                        value={block.signer ?? 'participant'}
+                        onChange={(signer) => onUpdate({signer})}
+                        options={[
+                            {value: 'participant', label: t`Participant`},
+                            {value: 'guardian', label: t`Parent or guardian`},
+                        ]}
+                    />
                 </div>
             )}
         </div>
@@ -820,19 +817,15 @@ const DocumentSettings = ({draft, onChange, onExport}: {
             </div>
 
             <h3 className={classes.settingsTitle}>{t`Who has to fill it in?`}</h3>
-            <div className={classes.pills}>
-                {([['ALL', t`Everyone`], ['MINORS', t`By age`]] as const).map(([audience, label]) => (
-                    <button
-                        key={audience}
-                        type="button"
-                        className={classes.pill}
-                        aria-pressed={draft.audience === audience}
-                        onClick={() => onChange({audience})}
-                    >
-                        {label}
-                    </button>
-                ))}
-            </div>
+            <PillChoice<'ALL' | 'MINORS'>
+                label={t`Who has to fill it in?`}
+                value={draft.audience}
+                onChange={(audience) => onChange({audience})}
+                options={[
+                    {value: 'ALL', label: t`Everyone`},
+                    {value: 'MINORS', label: t`By age`},
+                ]}
+            />
             {draft.audience === 'MINORS' && (
                 <>
                     {/* 16 for the rules some activities have in Québec; a parent or guardian still signs under 18. */}

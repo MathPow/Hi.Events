@@ -144,41 +144,6 @@
   gap: 0.625rem;
 }
 
-// The information block's icon: round buttons.
-.iconChoices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.iconChoice {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
-  border: 1.5px solid ui.$ink;
-  border-radius: 999px;
-  background: none;
-  color: ui.$ink;
-  cursor: pointer;
-
-  &[aria-checked='true'] {
-    background: ui.$ink;
-    color: var(--dehors-creme);
-  }
-
-  &:focus-visible {
-    outline: 2px solid ui.$accent;
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: default;
-  }
-}
-
 // Payment methods: one row each, the offline settings under their row.
 .methods {
   display: flex;

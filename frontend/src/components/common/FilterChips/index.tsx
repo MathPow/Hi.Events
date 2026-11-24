@@ -1,5 +1,6 @@
 import {useEffect, useRef} from "react";
 import classNames from "classnames";
+import {Pill} from "../Pill";
 import classes from "./FilterChips.module.scss";
 
 export interface FilterChip<T extends string> {
@@ -18,7 +19,7 @@ interface FilterChipsProps<T extends string> {
     className?: string;
 }
 
-// Quick filters of a list, like the tabs of the organizer's events page: outlined chips, the chosen
+// Quick filters of a list, like the tabs of the organizer's events page: pills (Pill), the chosen
 // one filled in brown, an optional count bubble.
 export function FilterChips<T extends string>({chips, value, onChange, label, className}: FilterChipsProps<T>) {
     const rowRef = useRef<HTMLDivElement>(null);
@@ -42,16 +43,10 @@ export function FilterChips<T extends string>({chips, value, onChange, label, cl
     return (
         <div ref={rowRef} className={classNames(classes.chips, className)} role="group" aria-label={label}>
             {chips.map((chip) => (
-                <button
-                    key={chip.value}
-                    type="button"
-                    className={classes.chip}
-                    aria-pressed={chip.value === value}
-                    onClick={() => onChange(chip.value)}
-                >
+                <Pill key={chip.value} active={chip.value === value} count={chip.count || undefined}
+                      onClick={() => onChange(chip.value)}>
                     {chip.label}
-                    {!!chip.count && <span className={classes.count}>{chip.count}</span>}
-                </button>
+                </Pill>
             ))}
         </div>
     );

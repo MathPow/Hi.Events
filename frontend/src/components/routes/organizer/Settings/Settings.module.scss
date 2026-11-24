@@ -351,44 +351,6 @@ $danger-ink: #a63a2b;
   }
 }
 
-// Choix en pastilles (« Pour chaque billet » / « Par commande »)
-.pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2.5rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  background: none;
-  color: $ink;
-  font: inherit;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  cursor: pointer;
-
-  &[aria-checked='true'] {
-    background: $ink;
-    color: $cream-text;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $accent;
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: default;
-  }
-}
-
 .separator {
   height: 1px;
   margin: 0;

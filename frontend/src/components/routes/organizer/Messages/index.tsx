@@ -1,7 +1,8 @@
 import {t, Trans} from "@lingui/macro";
 import {useEffect, useRef, useState} from "react";
 import {useParams, useSearchParams} from "react-router";
-import {Button, Pagination, SegmentedControl} from "@mantine/core";
+import {Button, Pagination} from "@mantine/core";
+import {PillChoice} from "../../../common/Pill";
 import {
     IconArrowBackUp,
     IconBell,
@@ -272,13 +273,14 @@ const Messages = () => {
             <DeviceNotifications/>
 
             <div className={classes.toolbar}>
-                <SegmentedControl
+                <PillChoice<'all' | 'unread'>
+                    label={t`Messages`}
                     value={filter}
                     onChange={(value) => {
-                        setFilter(value as 'all' | 'unread');
+                        setFilter(value);
                         setPage(1);
                     }}
-                    data={[
+                    options={[
                         {value: 'all', label: t`All`},
                         {value: 'unread', label: unreadCount ? t`Unread (${unreadCount})` : t`Unread`},
                     ]}

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Navigate, useParams, useSearchParams} from "react-router";
 import {t} from "@lingui/macro";
-import {Menu, UnstyledButton} from "@mantine/core";
+import {Menu} from "@mantine/core";
 import classNames from "classnames";
 import {useGetOrganizer} from "../../../../queries/useGetOrganizer.ts";
 import {useGetOrganizerStats} from "../../../../queries/useGetOrganizerStats.ts";
@@ -29,6 +29,7 @@ import {
     TaxSummaryReport,
 } from "./reportPanels.tsx";
 import classes from "./Reports.module.scss";
+import {Pill} from "../../../common/Pill";
 
 interface ReportDefinition {
     id: OrganizerReportTypes;
@@ -136,11 +137,10 @@ const OrganizerReports = () => {
                     <h2 className={classes.sectionTitle}>{t({message: 'Overview', context: 'reports section'})}</h2>
                     <Menu position="bottom-end" width={240} withinPortal>
                         <Menu.Target>
-                            <UnstyledButton className={dashboardClasses.selector}>
-                                <img src={reportIcon('calendrier')} alt="" className={classes.desktopOnly}/>
+                            <Pill leftSection={<img src={reportIcon('calendrier')} alt="" className={classes.desktopOnly}/>}
+                                  rightSection={<img src={reportIcon('chevron-bas')} alt=""/>}>
                                 {periodLabel(periodDays)}
-                                <img src={reportIcon('chevron-bas')} alt=""/>
-                            </UnstyledButton>
+                            </Pill>
                         </Menu.Target>
                         <Menu.Dropdown>
                             {PERIODS.map((days) => (

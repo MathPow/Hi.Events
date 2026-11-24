@@ -146,66 +146,8 @@ $tones: (
   }
 }
 
-// Pill selector (period, currency): 1.5px brown outline.
-@mixin pill-selector {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  max-width: 100%;
-  height: 2.75rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  color: $ink;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  white-space: nowrap;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background: rgb(55 39 33 / 0.05);
-  }
-
-  &:focus-visible {
-    outline: 3px solid $ink;
-    outline-offset: 2px;
-  }
-
-  @include mixins.respond-below(md) {
-    height: 2.5rem;
-    padding: 0 1rem;
-    font-size: 1rem;
-  }
-}
-
-// Filter chips / tabs: outlined, dark when active.
-@mixin chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-  height: 2.75rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  color: $ink;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  white-space: nowrap;
-
-  &[data-active],
-  &[aria-pressed='true'],
-  &[aria-current='page'] {
-    background: $ink;
-    color: var(--dehors-creme);
-  }
-
-  @include mixins.respond-below(md) {
-    height: 2.5rem;
-    padding: 0 0.875rem;
-    font-size: 1rem;
-  }
-}
+// Pills (filters, selectors, chips, choices): no mixin, the component components/common/Pill
+// (Pill, PillChoice, PillToggles, FilterChips), so every pill is cut by hand and moves the same.
 
 // The floating field of the events directory: cream, no border, the card shadow on its parent.
 @mixin floating-field {

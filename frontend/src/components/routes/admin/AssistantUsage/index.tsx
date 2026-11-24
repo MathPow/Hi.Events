@@ -1,4 +1,5 @@
-import {Container, Group, Paper, SegmentedControl, SimpleGrid, Skeleton, Stack, Text, Title} from "@mantine/core";
+import {Container, Group, Paper, SimpleGrid, Skeleton, Stack, Text, Title} from "@mantine/core";
+import {PillChoice} from "../../../common/Pill";
 import {BarChart} from "@mantine/charts";
 import {t, Trans} from "@lingui/macro";
 import {IconBuildingBank, IconCoins, IconMessages, IconStack2} from "@tabler/icons-react";
@@ -62,10 +63,11 @@ const AssistantUsage = () => {
                         <Title order={1}>
                             <Trans>Assistant usage</Trans>
                         </Title>
-                        <SegmentedControl
+                        <PillChoice
+                            label={t`Dates`}
                             value={days}
                             onChange={setDays}
-                            data={[
+                            options={[
                                 {value: '7', label: t`7 days`},
                                 {value: '30', label: t`30 days`},
                                 {value: '90', label: t`90 days`},

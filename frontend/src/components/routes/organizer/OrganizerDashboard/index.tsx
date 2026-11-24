@@ -26,6 +26,7 @@ import {StatTile} from "../../../common/StatBoxes";
 import {ListRowsSkeleton, SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import {useOrderDate} from "../../../../utilites/orderDate.ts";
 import classes from './OrganizerDashboard.module.scss';
+import {Pill} from "../../../common/Pill";
 
 const icon = (name: string) => `/interface/admin/tableau/${name}.svg`;
 
@@ -396,10 +397,9 @@ export const OrganizerDashboard = () => {
                     {currencies.length > 1 && (
                         <Menu position="bottom-end" width={220} withinPortal>
                             <Menu.Target>
-                                <UnstyledButton className={classes.selector}>
+                                <Pill rightSection={<img src={icon('chevron-bas')} alt=""/>}>
                                     {currency}
-                                    <img src={icon('chevron-bas')} alt=""/>
-                                </UnstyledButton>
+                                </Pill>
                             </Menu.Target>
                             <Menu.Dropdown>
                                 {currencies.map((option) => (
@@ -412,11 +412,10 @@ export const OrganizerDashboard = () => {
                     )}
                     <Menu position="bottom-end" width={240} withinPortal>
                         <Menu.Target>
-                            <UnstyledButton className={classes.selector}>
-                                <img src={icon('periode')} alt=""/>
+                            <Pill leftSection={<img src={icon('periode')} alt=""/>}
+                                  rightSection={<img src={icon('chevron-bas')} alt=""/>}>
                                 {periodLabel(periodDays)}
-                                <img src={icon('chevron-bas')} alt=""/>
-                            </UnstyledButton>
+                            </Pill>
                         </Menu.Target>
                         <Menu.Dropdown>
                             {PERIODS.map((days) => (
@@ -514,21 +513,13 @@ export const OrganizerDashboard = () => {
                         </h2>
                     </div>
                     <div className={classes.notificationsBar}>
-                        <UnstyledButton
-                            className={classNames(classes.chip, {[classes.chipActive]: notificationsTab === 'all'})}
-                            onClick={() => setNotificationsTab('all')}
-                            aria-pressed={notificationsTab === 'all'}
-                        >
+                        <Pill size="sm" active={notificationsTab === 'all'} onClick={() => setNotificationsTab('all')}>
                             {t`All`}
-                        </UnstyledButton>
-                        <UnstyledButton
-                            className={classNames(classes.chip, {[classes.chipActive]: notificationsTab === 'to_handle'})}
-                            onClick={() => setNotificationsTab('to_handle')}
-                            aria-pressed={notificationsTab === 'to_handle'}
-                        >
+                        </Pill>
+                        <Pill size="sm" active={notificationsTab === 'to_handle'} count={toHandleCount || undefined}
+                              onClick={() => setNotificationsTab('to_handle')}>
                             {t`To handle`}
-                            {toHandleCount > 0 && <span className={classes.chipCount}>{toHandleCount}</span>}
-                        </UnstyledButton>
+                        </Pill>
                         <span className={classes.spacer}/>
                         {unreadCount > 0 && (
                             <UnstyledButton className={classes.markAllRead} onClick={markAllAsRead}>

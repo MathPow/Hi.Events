@@ -1,4 +1,5 @@
-import {Badge, Container, Group, Paper, SegmentedControl, SimpleGrid, Skeleton, Stack, Table, Text, Title} from "@mantine/core";
+import {Badge, Container, Group, Paper, SimpleGrid, Skeleton, Stack, Table, Text, Title} from "@mantine/core";
+import {PillChoice} from "../../../common/Pill";
 import {t, Trans} from "@lingui/macro";
 import {IconCoins, IconHeartHandshake, IconPercentage} from "@tabler/icons-react";
 import {useState} from "react";
@@ -64,10 +65,11 @@ const PlatformRevenue = () => {
                         <Title order={1}>
                             <Trans>Platform Earnings</Trans>
                         </Title>
-                        <SegmentedControl
+                        <PillChoice
+                            label={t`Dates`}
                             value={days}
                             onChange={setDays}
-                            data={[
+                            options={[
                                 {value: '7', label: t`7 days`},
                                 {value: '30', label: t`30 days`},
                                 {value: '90', label: t`90 days`},
@@ -116,12 +118,12 @@ const PlatformRevenue = () => {
                         <Title order={2}>
                             <Trans>By organizer and event</Trans>
                         </Title>
-                        <SegmentedControl
-                            size="xs"
+                        <PillChoice
+                            label={t`Dates`}
                             value={breakdownDays}
                             onChange={setBreakdownDays}
                             disabled={isFetching}
-                            data={[
+                            options={[
                                 {value: '0', label: t`All time`},
                                 {value: '30', label: t`30 days`},
                                 {value: '90', label: t`90 days`},

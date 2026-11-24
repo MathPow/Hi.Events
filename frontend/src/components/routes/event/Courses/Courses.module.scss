@@ -238,17 +238,6 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   font-weight: 700;
 }
 
-.segmented {
-  border-radius: 999px;
-  background: ui.$track;
-  font-weight: 700;
-
-  :global(.mantine-SegmentedControl-label[data-active]),
-  :global(.mantine-SegmentedControl-label[data-active]:hover) {
-    color: var(--dehors-creme);
-  }
-}
-
 .placeInput {
   min-width: 0;
 
@@ -298,24 +287,6 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
 
 .quickDistances {
   display: contents;
-}
-
-.chip {
-  @include ui.chip;
-  height: 2.5rem;
-  padding: 0 0.5625rem;
-  font-size: 0.875rem;
-
-  @include mixins.respond-below(md) {
-    height: 2.5rem;
-    padding: 0 0.5625rem;
-    font-size: 0.875rem;
-  }
-
-  &:focus-visible {
-    outline: 3px solid ui.$ink;
-    outline-offset: 2px;
-  }
 }
 
 .actions {

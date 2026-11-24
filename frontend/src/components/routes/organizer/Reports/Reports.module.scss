@@ -240,37 +240,6 @@ $green-text: #2f6b3a;
   }
 }
 
-.selector {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  max-width: 100%;
-  height: 2.75rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  color: $ink;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  white-space: nowrap;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background: rgb(55 39 33 / 0.05);
-  }
-
-  &:focus-visible {
-    outline: 3px solid $ink;
-    outline-offset: 2px;
-  }
-
-  @include mixins.respond-below(md) {
-    height: 2.5rem;
-    padding: 0 1rem;
-    font-size: 1rem;
-  }
-}
-
 .selectorCalendar {
   @include mixins.respond-below(md) {
     display: none;
@@ -278,6 +247,7 @@ $green-text: #2f6b3a;
 }
 
 .selectorText {
+  display: block;
   min-width: 0;
   max-width: 16rem;
   overflow: hidden;

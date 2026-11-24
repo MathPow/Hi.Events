@@ -1,4 +1,5 @@
-import {Container, Title, Text, Paper, Stack, SimpleGrid, SegmentedControl, Table, Skeleton, Pagination, Group} from "@mantine/core";
+import {Container, Title, Text, Paper, Stack, SimpleGrid, Table, Skeleton, Pagination, Group} from "@mantine/core";
+import {PillChoice} from "../../../common/Pill";
 import {t, Trans} from "@lingui/macro";
 import {useGetUtmAttributionStats} from "../../../../queries/useGetUtmAttributionStats";
 import {useState} from "react";
@@ -96,13 +97,14 @@ const Attribution = () => {
                         <Title order={2}>
                             <Trans>Attribution Breakdown</Trans>
                         </Title>
-                        <SegmentedControl
+                        <PillChoice<typeof groupBy>
+                            label={t`Attribution Breakdown`}
                             value={groupBy}
                             onChange={(value) => {
-                                setGroupBy(value as typeof groupBy);
+                                setGroupBy(value);
                                 setPage(1);
                             }}
-                            data={[
+                            options={[
                                 {label: t`Source`, value: 'source'},
                                 {label: t`Campaign`, value: 'campaign'},
                                 {label: t`Medium`, value: 'medium'},

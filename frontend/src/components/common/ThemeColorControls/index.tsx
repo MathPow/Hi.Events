@@ -1,4 +1,5 @@
-import {ColorInput, SegmentedControl, Stack, Text, Group, Tooltip} from "@mantine/core";
+import {ColorInput, Stack, Text, Group, Tooltip} from "@mantine/core";
+import {PillChoice} from "../Pill";
 import {t} from "@lingui/macro";
 import {HomepageThemeSettings} from "../../../types.ts";
 import {detectMode, getAccentReadability, getDefaultThemeSettings} from "../../../utilites/themeUtils.ts";
@@ -102,12 +103,13 @@ export const ThemeColorControls = ({
                 <Text size="xs" c="dimmed" mb={8}>
                     {t`Automatically detected based on background color, but can be overridden`}
                 </Text>
-                <SegmentedControl
+                <PillChoice
                     fullWidth
+                    label={t`Color Mode`}
                     value={currentMode}
                     onChange={handleModeChange}
                     disabled={disabled}
-                    data={[
+                    options={[
                         {
                             label: (
                                 <Group gap={6} justify="center">

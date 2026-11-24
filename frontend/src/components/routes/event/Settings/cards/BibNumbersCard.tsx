@@ -1,7 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {t} from "@lingui/macro";
 import {Button, NumberInput, Skeleton} from "@mantine/core";
-import {IconCheck} from "@tabler/icons-react";
 import {IdParam, ProductType} from "../../../../../types.ts";
 import {useGetEventProductCategories} from "../../../../../queries/useGetProductCategories.ts";
 import {useUpdateBibNumberStarts} from "../../../../../mutations/useUpdateBibNumberStarts.ts";
@@ -9,6 +8,7 @@ import {useAssignBibNumbers} from "../../../../../mutations/useAssignBibNumbers.
 import {showError, showSuccess} from "../../../../../utilites/notifications.tsx";
 import {useSectionAutosave} from "../../../../layouts/AppLayout/PageStatus.tsx";
 import {SettingsCard, ToggleRow} from "../../../organizer/Settings/SettingsUi.tsx";
+import {PillToggles} from "../../../../common/Pill";
 import classes from "../../../organizer/Settings/Settings.module.scss";
 import extra from "../EventSettings.module.scss";
 
@@ -140,24 +140,12 @@ export const BibNumbersCard = ({eventId}: { eventId: IdParam }) => {
 
                             <div className={extra.fieldGroup}>
                                 <p className={classes.fieldLabel}>{t`Tickets with a bib`}</p>
-                                <div className={classes.pills} role="group" aria-label={t`Tickets with a bib`}>
-                                    {rows.map(row => {
-                                        const checked = starts[row.id] != null;
-                                        return (
-                                            <button
-                                                key={row.id}
-                                                type="button"
-                                                role="checkbox"
-                                                aria-checked={checked}
-                                                className={classes.pill}
-                                                onClick={() => toggleTicket(row.id)}
-                                            >
-                                                {checked && <IconCheck size={16} stroke={2.25}/>}
-                                                {row.label}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
+                                <PillToggles
+                                    label={t`Tickets with a bib`}
+                                    value={rows.filter(row => starts[row.id] != null).map(row => row.id)}
+                                    options={rows.map(row => ({value: row.id, label: row.label}))}
+                                    onToggle={toggleTicket}
+                                />
                             </div>
 
                             <div className={extra.footerRow}>

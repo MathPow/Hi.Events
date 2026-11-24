@@ -10,7 +10,8 @@ import {timezoneComboboxProps, timezones} from "../../../../../../data/timezones
 import {CATEGORY_OF_TYPE, EVENT_TYPES, eventTypeLabel, typeOfCategory} from "../../../../../constants/eventTypes.ts";
 import {Editor} from "../../../../common/Editor";
 import {DateTimeField} from "../../../../common/DateTimeField";
-import {PillChoice, SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
+import {SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
+import {PillChoice} from "../../../../common/Pill";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
 import {fieldIcon, FIELD_CHEVRON} from "../fieldParts.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";

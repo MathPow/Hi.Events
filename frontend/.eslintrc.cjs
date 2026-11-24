@@ -16,5 +16,14 @@ module.exports = {
     "lingui/no-single-tag-to-translate": 2,
     "lingui/no-trans-inside-trans": 2,
     'react-refresh/only-export-components': 'warn',
+    // One look for every pill of the app: components/common/Pill (Pill, PillChoice, PillToggles,
+    // FilterChips), hand-cut with the hover effect of the Dehors buttons.
+    'no-restricted-imports': ['error', {
+      paths: [{
+        name: '@mantine/core',
+        importNames: ['SegmentedControl', 'Chip'],
+        message: 'Use PillChoice / PillToggles / Pill from components/common/Pill: the app\'s pills, cut by hand like every button.',
+      }],
+    }],
   },
 }

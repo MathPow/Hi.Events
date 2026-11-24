@@ -37,7 +37,8 @@ import {showError} from "../../../utilites/notifications.tsx";
 import classNames from "classnames";
 import {DateTimeField} from "../../common/DateTimeField";
 import {CreateTaxOrFeeModal} from "../../modals/CreateTaxOrFeeModal";
-import {PillChoice, ToggleRow} from "../../routes/organizer/Settings/SettingsUi.tsx";
+import {ToggleRow} from "../../routes/organizer/Settings/SettingsUi.tsx";
+import {PillChoice} from "../../common/Pill";
 import settings from "../../routes/organizer/Settings/Settings.module.scss";
 
 const ICONS = '/interface/admin/produits';

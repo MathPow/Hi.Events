@@ -309,40 +309,6 @@
   gap: 0.5rem;
 }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2.5rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid ui.$ink;
-  border-radius: 999px;
-  color: ui.$ink;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  white-space: nowrap;
-  transition: background-color 0.15s ease;
-
-  &:hover:not([aria-pressed='true']) {
-    background: rgb(55 39 33 / 0.05);
-  }
-
-  &[aria-pressed='true'] {
-    background: ui.$ink;
-    color: #fbf2e3;
-  }
-
-  img {
-    display: block;
-  }
-
-  @include mixins.respond-below(md) {
-    height: 2.25rem;
-    padding: 0 0.875rem;
-    font-size: 0.875rem;
-  }
-}
-
 .periodOption[data-selected] {
   font-weight: 700;
 }

@@ -1,0 +1,120 @@
+@use "../../../styles/mixins";
+@use "../../../styles/admin-ui" as ui;
+
+// The outlined pill of the app (Pill, PillChoice, FilterChips). The 2px stroke is the outlined
+// buttons' one: useRoughEdges cuts it by hand and redraws it along the cut, and on hover the pill
+// boils, hops and grows (dehors-app.scss, data-rough-boil).
+.pill {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  min-height: 2.75rem;
+  padding: 0.25rem 1.25rem;
+  border: 2px solid ui.$ink;
+  border-radius: 999px;
+  background: transparent;
+  color: ui.$ink;
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &:hover:where(:not([data-active], :disabled)) {
+    background: rgb(55 39 33 / 0.05);
+  }
+
+  &[data-active] {
+    background: ui.$ink;
+    color: var(--dehors-creme);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &[data-size='sm'] {
+    min-height: 2.5rem;
+    padding-inline: 1.125rem;
+    font-size: 0.9375rem;
+  }
+
+  // Only an icon (grid / list, the information block's icon): a round.
+  &:has(> .label > svg:only-child) {
+    width: 2.75rem;
+    padding: 0;
+
+    &[data-size='sm'] {
+      width: 2.5rem;
+    }
+
+    @include mixins.respond-below(md) {
+      width: 2.5rem;
+    }
+  }
+
+  @include mixins.respond-below(md) {
+    min-height: 2.5rem;
+    padding-inline: 1rem;
+    font-size: 1rem;
+
+    &[data-size='sm'] {
+      font-size: 0.9375rem;
+    }
+  }
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  // Sharing a row (PillChoice fullWidth), a long label goes to the next line instead of being cut.
+  .choice[data-full-width] & {
+    white-space: normal;
+    text-wrap: balance;
+  }
+}
+
+.count {
+  display: grid;
+  place-items: center;
+  min-width: 1.4375rem;
+  height: 1.375rem;
+  padding: 0 0.4375rem;
+  border-radius: 999px;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+  font-size: 0.8125rem;
+
+  [data-active] > & {
+    background: ui.$accent;
+  }
+}
+
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  &[data-full-width] {
+    flex-wrap: nowrap;
+
+    > .pill {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}

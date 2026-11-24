@@ -112,6 +112,16 @@ cd docker/development
 - Use Mantine UI components for UI elements
 - Prefer SCSS modules over Mantine layout components for layout styling
 
+#### Buttons and pills: one look, hand-cut edges
+Every button and pill of the app gets the DEHORS hand-cut edge and hover effect (boil, hop, grow) from `useRoughEdges`. They only get it through these, so **never hand-roll a button or a pill** (no `<button>` / `UnstyledButton` with its own border, no Mantine `SegmentedControl` or `Chip`: ESLint refuses them):
+- **Actions**: Mantine `Button`. Filled for the main action, `variant="default"` (outlined) for the others.
+- **Pills** (`frontend/src/components/common/Pill`). A 2px brown outline, filled in brown when active:
+  - `Pill`: a single pill. Used for a filter, a tab, or a menu trigger (`rightSection` chevron). Takes `active`, `count` and `size="sm"`.
+  - `PillChoice`: one choice among several, as a radio group. Use `fullWidth` for a shared row and `ariaLabel` on icon-only options.
+  - `PillToggles`: several picks.
+  - `FilterChips`: the quick filters of a list.
+- **Anything else clickable with a shape**: add `data-rough="button"`. Add `data-rough` to a block (card, tag) to cut its edges.
+
 #### Error Handling
 - **DON'T** use `showNotification` from `@mantine/notifications`
 - **DO** use `showSuccess`, `showError` from `frontend/src/utilites/notifications.tsx`

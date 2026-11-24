@@ -37,7 +37,7 @@ import {useUpdateEventSettings} from "../../../mutations/useUpdateEventSettings.
 import {useAddParticipantForm} from "../../../mutations/useAddParticipantForm.ts";
 import {ActionMenu} from "../ActionMenu";
 import {FilterChips} from "../FilterChips";
-import {PillChoice} from "../../routes/organizer/Settings/SettingsUi.tsx";
+import {PillChoice} from "../Pill";
 import {SkeletonLine, SkeletonLines, SkeletonPill} from "../Skeletons";
 
 interface QuestionsTableProp {

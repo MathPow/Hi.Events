@@ -11,6 +11,7 @@ import {
 } from "../../../../../constants/productInfoIcons.ts";
 import {Editor} from "../../../../common/Editor";
 import {SettingsCard} from "../../../organizer/Settings/SettingsUi.tsx";
+import {PillChoice} from "../../../../common/Pill";
 import {htmlOrNull, useAutosaveForm} from "../useAutosaveForm.ts";
 import {fieldIcon} from "../fieldParts.tsx";
 import classes from "../../../organizer/Settings/Settings.module.scss";
@@ -74,25 +75,15 @@ export const InfoBlockCard = ({eventId, settings}: { eventId: IdParam, settings:
 
             <div className={extra.fieldGroup}>
                 <p className={classes.fieldLabel}>{t`Icon`}</p>
-                <div className={extra.iconChoices} role="radiogroup" aria-label={t`Icon`}>
-                    {choices.map(key => {
+                <PillChoice<string>
+                    label={t`Icon`}
+                    value={form.values.product_info_icon}
+                    onChange={(key) => choose('product_info_icon', key)}
+                    options={choices.map(key => {
                         const Icon = PRODUCT_INFO_ICONS[key];
-                        return (
-                            <button
-                                key={key}
-                                type="button"
-                                role="radio"
-                                aria-checked={form.values.product_info_icon === key}
-                                aria-label={iconLabels[key]}
-                                title={iconLabels[key]}
-                                className={extra.iconChoice}
-                                onClick={() => choose('product_info_icon', key)}
-                            >
-                                <Icon size={18} stroke={1.75}/>
-                            </button>
-                        );
+                        return {value: key, label: <Icon size={18} stroke={1.75}/>, ariaLabel: iconLabels[key]};
                     })}
-                </div>
+                />
             </div>
 
             <div className={classes.fields} onBlur={groupBlur(BUTTON)}>

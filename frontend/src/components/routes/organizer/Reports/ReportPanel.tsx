@@ -8,6 +8,7 @@ import {showError} from "../../../../utilites/notifications.tsx";
 import {DateRange, REPORT_PERIODS, ReportPeriod, reportPeriodLabel} from "./reportData.ts";
 import {SkeletonLine, varied} from "../../../common/Skeletons";
 import classes from "./Reports.module.scss";
+import {Pill} from "../../../common/Pill";
 
 export const reportIcon = (name: string) => `/interface/admin/rapports/${name}.svg`;
 
@@ -81,12 +82,11 @@ export const ReportControls = ({
                 {period && onPeriodChange && (
                     <Menu position="bottom-start" width={220} withinPortal>
                         <Menu.Target>
-                            <UnstyledButton className={classes.selector}>
-                                <img src={reportIcon('calendrier')} alt="" className={classes.selectorCalendar}/>
+                            <Pill leftSection={<img src={reportIcon('calendrier')} alt="" className={classes.selectorCalendar}/>}
+                                  rightSection={<img src={reportIcon('chevron-bas')} alt=""/>}>
                                 <span className={classes.desktopOnly}>{reportPeriodLabel(period)}</span>
                                 <span className={classes.mobileOnly}>{reportPeriodLabel(period, true)}</span>
-                                <img src={reportIcon('chevron-bas')} alt=""/>
-                            </UnstyledButton>
+                            </Pill>
                         </Menu.Target>
                         <Menu.Dropdown>
                             {REPORT_PERIODS.map((days) => (
@@ -104,7 +104,7 @@ export const ReportControls = ({
                 )}
                 <Menu position="bottom-start" width={300} withinPortal>
                     <Menu.Target>
-                        <UnstyledButton className={classes.selector}>
+                        <Pill rightSection={<img src={reportIcon('chevron-bas')} alt=""/>}>
                             <span className={classes.selectorText}>
                                 {selectedEvent?.title ?? (
                                     <>
@@ -113,8 +113,7 @@ export const ReportControls = ({
                                     </>
                                 )}
                             </span>
-                            <img src={reportIcon('chevron-bas')} alt=""/>
-                        </UnstyledButton>
+                        </Pill>
                     </Menu.Target>
                     <Menu.Dropdown className={classes.eventMenu}>
                         <Menu.Item onClick={() => onEventChange(null)} data-selected={!eventId || undefined}

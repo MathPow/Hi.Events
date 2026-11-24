@@ -13,6 +13,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import {useStackedTableLabels} from "../../../hooks/useStackedTableLabels.ts";
 import classes from './ReportTable.module.scss';
+import {Pill} from "../Pill";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -294,11 +295,10 @@ const ReportTable = <T extends Record<string, any>>({
                         {showDateFilter && (
                             <Menu position="bottom-start" width={240} withinPortal>
                                 <Menu.Target>
-                                    <UnstyledButton className={classes.selector}>
-                                        <img src={reportIcon('calendrier')} alt=""/>
+                                    <Pill leftSection={<img src={reportIcon('calendrier')} alt=""/>}
+                                          rightSection={<img src={reportIcon('chevron-bas')} alt=""/>}>
                                         <span className={classes.selectorText}>{periodLabel(selectedPeriod)}</span>
-                                        <img src={reportIcon('chevron-bas')} alt=""/>
-                                    </UnstyledButton>
+                                    </Pill>
                                 </Menu.Target>
                                 <Menu.Dropdown className={classes.periodMenu}>
                                     {PERIODS.map((period) => (

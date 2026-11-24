@@ -20,6 +20,7 @@ import {EditCheckInListModal} from "../../../modals/EditCheckInListModal";
 import {listTimes, nextOpening} from "./checkInListTimes.ts";
 import {SkeletonLine, SkeletonPill} from "../../../common/Skeletons";
 import classes from "./CheckInLists.module.scss";
+import {Pill} from "../../../common/Pill";
 
 const icon = (path: string) => `/interface/admin/${path}.svg`;
 
@@ -231,10 +232,9 @@ const PhonePanel = ({lists}: { lists: CheckInList[] }) => {
                     {lists.length > 1 && (
                         <Menu position="bottom-start" width={260} withinPortal>
                             <Menu.Target>
-                                <UnstyledButton className={classes.listChoice}>
+                                <Pill rightSection={<img src={icon('tableau/chevron-bas')} alt=""/>}>
                                     {name}
-                                    <img src={icon('tableau/chevron-bas')} alt=""/>
-                                </UnstyledButton>
+                                </Pill>
                             </Menu.Target>
                             <Menu.Dropdown>
                                 {lists.map((candidate) => (

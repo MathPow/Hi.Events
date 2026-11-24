@@ -1,7 +1,8 @@
 import {Fragment, useState} from "react";
 import {t} from "@lingui/macro";
-import {Menu, Skeleton, Tooltip, UnstyledButton} from "@mantine/core";
+import {Menu, Skeleton, Tooltip} from "@mantine/core";
 import {SkeletonLine} from "../../../common/Skeletons";
+import {Pill} from "../../../common/Pill";
 import {useMediaQuery} from "@mantine/hooks";
 import {EventDailyStats, IdParam} from "../../../../types.ts";
 import {useGetEventStats} from "../../../../queries/useGetEventStats.ts";
@@ -202,18 +203,17 @@ export const SalesChart = ({eventId, currency, loading = false}: { eventId: IdPa
             <div className={classes.chartHead}>
                 <h2 className={classes.sectionHeading}>{t`Sales`}</h2>
                 <div className={classes.chartControls}>
-                    <UnstyledButton className={classes.chip} aria-pressed={mode === 'revenue'} onClick={() => setMode('revenue')}>
+                    <Pill size="sm" active={mode === 'revenue'} onClick={() => setMode('revenue')}>
                         {t({message: 'Revenue', context: 'sales chart'})}
-                    </UnstyledButton>
-                    <UnstyledButton className={classes.chip} aria-pressed={mode === 'products'} onClick={() => setMode('products')}>
+                    </Pill>
+                    <Pill size="sm" active={mode === 'products'} onClick={() => setMode('products')}>
                         {t`Products sold`}
-                    </UnstyledButton>
+                    </Pill>
                     <Menu position="bottom-end" width={220} withinPortal>
                         <Menu.Target>
-                            <UnstyledButton className={classes.chip}>
+                            <Pill size="sm" rightSection={<img src={icon('chevron-bas')} alt=""/>}>
                                 {periodLabel(period)}
-                                <img src={icon('chevron-bas')} alt=""/>
-                            </UnstyledButton>
+                            </Pill>
                         </Menu.Target>
                         <Menu.Dropdown>
                             {PERIODS.map((option) => (

@@ -88,35 +88,6 @@ $neutral-text: #6e625a;
   flex-shrink: 0;
 }
 
-.selector {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2.75rem;
-  padding: 0 1.125rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  color: $ink;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  white-space: nowrap;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background: rgb(55 39 33 / 0.05);
-  }
-
-  &:focus-visible {
-    outline: 3px solid $ink;
-    outline-offset: 2px;
-  }
-
-  @include mixins.respond-below(md) {
-    height: 2.5rem;
-    font-size: 1rem;
-  }
-}
-
 .periodOption[data-selected] {
   background: $accent-soft;
 }
@@ -575,41 +546,6 @@ $neutral-text: #6e625a;
   @include mixins.respond-below(md) {
     display: none;
   }
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2.5rem;
-  padding: 0 0.875rem;
-  border: 1.5px solid $ink;
-  border-radius: 999px;
-  color: $ink;
-  font-size: 0.9375rem;
-  font-weight: 700;
-
-  &:focus-visible {
-    outline: 3px solid $ink;
-    outline-offset: 2px;
-  }
-}
-
-.chipActive {
-  background: $ink;
-  color: var(--dehors-creme);
-}
-
-.chipCount {
-  display: grid;
-  place-items: center;
-  min-width: 1.375rem;
-  height: 1.375rem;
-  padding: 0 0.4375rem;
-  border-radius: 999px;
-  background: $accent-soft;
-  color: $ink;
-  font-size: 0.8125rem;
 }
 
 .spacer {

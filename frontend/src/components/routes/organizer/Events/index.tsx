@@ -25,6 +25,7 @@ import {DuplicateEventModal} from "../../../modals/DuplicateEventModal";
 import {showStatusChangeError} from "../../../common/EmailNotConfirmedError";
 import {SkeletonLine, SkeletonLines, SkeletonPill} from "../../../common/Skeletons";
 import classes from "./Events.module.scss";
+import {Pill, PillChoice} from "../../../common/Pill";
 
 type EventsState = 'upcoming' | 'ended' | 'archived';
 type View = 'grid' | 'list';
@@ -346,28 +347,28 @@ const Events = () => {
             <div className={classes.toolbar}>
                 <nav className={classes.tabs} aria-label={t`Events`}>
                     {STATES.map((item) => (
-                        <UnstyledButton
+                        <Pill
                             key={item}
-                            className={classNames(classes.tab, {[classes.tabActive]: item === state})}
+                            active={item === state}
+                            aria-pressed={undefined}
                             aria-current={item === state ? 'page' : undefined}
+                            count={counts[item] || undefined}
                             onClick={() => navigate(`/manage/organizer/${organizerId}/events/${item}`)}
                         >
                             {stateLabel(item)}
-                            {!!counts[item] && <span className={classes.tabCount}>{counts[item]}</span>}
-                        </UnstyledButton>
+                        </Pill>
                     ))}
                 </nav>
-                <div className={classes.viewToggle} role="radiogroup" aria-label={t`Display`}>
-                    <UnstyledButton role="radio" aria-checked={view === 'grid'} aria-label={t`Grid`}
-                                    className={classNames(classes.viewButton, {[classes.viewButtonActive]: view === 'grid'})}
-                                    onClick={() => chooseView('grid')}>
-                        <IconLayoutGrid size={18} stroke={2}/>
-                    </UnstyledButton>
-                    <UnstyledButton role="radio" aria-checked={view === 'list'} aria-label={t`List`}
-                                    className={classNames(classes.viewButton, {[classes.viewButtonActive]: view === 'list'})}
-                                    onClick={() => chooseView('list')}>
-                        <IconList size={18} stroke={2}/>
-                    </UnstyledButton>
+                <div className={classes.viewToggle}>
+                    <PillChoice<'grid' | 'list'>
+                        label={t`Display`}
+                        value={view}
+                        onChange={chooseView}
+                        options={[
+                            {value: 'grid', label: <IconLayoutGrid size={18} stroke={2}/>, ariaLabel: t`Grid`},
+                            {value: 'list', label: <IconList size={18} stroke={2}/>, ariaLabel: t`List`},
+                        ]}
+                    />
                 </div>
             </div>
 

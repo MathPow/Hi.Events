@@ -491,58 +491,6 @@ body.dehors-app {
     font-weight: 700;
   }
 
-  // Segmented controls: the choice pills of Figma (Settings.module.scss .pill), one per choice with
-  // a brown edge, the chosen one filled in brown.
-  .mantine-SegmentedControl-root {
-    --sc-radius: 999px;
-    --sc-padding: 0 1.125rem;
-    gap: 0.5rem;
-    padding: 0;
-    background: transparent;
-
-    // As wide as its pills, like Figma's, unless asked for the full width.
-    &:not([data-full-width]) {
-      align-self: flex-start;
-      width: fit-content;
-      max-width: 100%;
-    }
-  }
-
-  // Each pill is cut like the outlined buttons (useRoughEdges), its stroke redrawn along the cut.
-  // The chosen one is filled by its own background, inside the same cut: Mantine's sliding
-  // indicator is a separate smooth pill, its edge showed past the wavy stroke.
-  .mantine-SegmentedControl-control {
-    border: 1.5px solid var(--dehors-brun);
-    border-radius: 999px;
-    transition: background-color 0.2s ease;
-
-    &::before {
-      display: none;
-    }
-
-    &[data-active] {
-      background: var(--dehors-brun);
-    }
-  }
-
-  .mantine-SegmentedControl-indicator {
-    display: none;
-  }
-
-  .mantine-SegmentedControl-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 2.5rem;
-    color: var(--dehors-brun);
-    font-size: 0.9375rem;
-    font-weight: 700;
-
-    &[data-active] {
-      color: var(--dehors-creme);
-    }
-  }
-
   // Rich text editor, as in Figma (Settings.module.scss .description): a peach field like the others,
   // its buttons inside it in a brown bar with cream icons.
   .mantine-RichTextEditor-root {

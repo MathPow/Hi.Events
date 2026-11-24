@@ -31,33 +31,6 @@ export const SettingsCard = ({id, title, subtitle, action, full, className, chil
     </section>
 );
 
-interface PillChoiceProps<T extends string> {
-    label: string;
-    value: T | null;
-    options: { value: T, label: string }[];
-    onChange: (value: T) => void;
-    disabled?: boolean;
-}
-
-// « Pour chaque billet » / « Par commande »: one choice among pills.
-export const PillChoice = <T extends string, >({label, value, options, onChange, disabled}: PillChoiceProps<T>) => (
-    <div className={classes.pills} role="radiogroup" aria-label={label}>
-        {options.map(option => (
-            <button
-                key={option.value}
-                type="button"
-                role="radio"
-                aria-checked={value === option.value}
-                className={classes.pill}
-                disabled={disabled}
-                onClick={() => value !== option.value && onChange(option.value)}
-            >
-                {option.label}
-            </button>
-        ))}
-    </div>
-);
-
 interface ToggleRowProps {
     label: string;
     hint?: ReactNode;

@@ -13,6 +13,7 @@ import {ElevationProfile} from "../../../common/CourseMap/ElevationProfile.tsx";
 import {formatClimb, formatKm} from "../../../common/CourseMap/courseFormat.ts";
 import page from "../EventPage.module.scss";
 import classes from "./EventCourses.module.scss";
+import {Pill} from "../../../common/Pill";
 
 interface LoadedCourse {
     points: TrackPoint[];
@@ -174,10 +175,10 @@ export const EventCourses = ({eventId, mapUrl, accent}: EventCoursesProps) => {
                 {files.length > 1 && (
                     <div className={classes.tabs} role="tablist" aria-label={t`Routes`}>
                         {files.map((routeFile, index) => (
-                            <button key={routeFile.id} type="button" role="tab" className={classes.tab}
-                                    aria-selected={index === active} onClick={() => setActive(index)}>
+                            <Pill key={routeFile.id} size="sm" role="tab" aria-selected={index === active}
+                                  aria-pressed={undefined} active={index === active} onClick={() => setActive(index)}>
                                 {routeFile.label}
-                            </button>
+                            </Pill>
                         ))}
                     </div>
                 )}

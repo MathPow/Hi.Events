@@ -26,6 +26,7 @@ import {Pagination} from "../../../common/Pagination";
 import events from "../Events/Events.module.scss";
 import settings from "../Settings/Settings.module.scss";
 import classes from "./Orders.module.scss";
+import {Pill} from "../../../common/Pill";
 
 dayjs.extend(utc);
 
@@ -320,15 +321,16 @@ const Orders = () => {
 
             <nav className={events.tabs} aria-label={t`Orders`}>
                 {TABS.map(item => (
-                    <UnstyledButton
+                    <Pill
                         key={item}
-                        className={classNames(events.tab, {[events.tabActive]: item === tab})}
+                        active={item === tab}
+                        aria-pressed={undefined}
                         aria-current={item === tab ? 'page' : undefined}
+                        count={counts[item]}
                         onClick={() => setTab(item)}
                     >
                         {tabLabel(item)}
-                        {counts[item] !== undefined && <span className={events.tabCount}>{counts[item]}</span>}
-                    </UnstyledButton>
+                    </Pill>
                 ))}
             </nav>
 

@@ -1,10 +1,10 @@
 import {Button, Switch, Textarea, TextInput} from "@mantine/core";
-import {IconCheck} from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {UseFormReturnType} from "@mantine/form";
 import {useMemo} from "react";
 import {CheckInListRequest, ProductCategory, ProductType} from "../../../types.ts";
 import {DateTimeField} from "../../common/DateTimeField";
+import {PillToggles} from "../../common/Pill";
 import settings from "../../routes/organizer/Settings/Settings.module.scss";
 import classes from "./CheckInListForm.module.scss";
 
@@ -70,25 +70,12 @@ export const CheckInListForm = ({form, productCategories, isEditing}: CheckInLis
 
             <div className={classes.group}>
                 <p className={settings.fieldLabel}>{t`Accepted tickets`}</p>
-                <div className={settings.pills} role="group" aria-label={t`Accepted tickets`}>
-                    {tickets.map(ticket => {
-                        const id = String(ticket.id);
-                        const checked = selected.includes(id);
-                        return (
-                            <button
-                                key={id}
-                                type="button"
-                                role="checkbox"
-                                aria-checked={checked}
-                                className={settings.pill}
-                                onClick={() => toggleTicket(id)}
-                            >
-                                {checked && <IconCheck size={16} stroke={2.25}/>}
-                                {ticket.title}
-                            </button>
-                        );
-                    })}
-                </div>
+                <PillToggles
+                    label={t`Accepted tickets`}
+                    value={selected}
+                    options={tickets.map(ticket => ({value: String(ticket.id), label: ticket.title}))}
+                    onToggle={toggleTicket}
+                />
                 {form.errors.product_ids && <p className={classes.error} role="alert">{form.errors.product_ids}</p>}
             </div>
 

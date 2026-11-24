@@ -4,6 +4,7 @@ import {t} from "@lingui/macro";
 import {useLingui} from "@lingui/react";
 import dayjs, {Dayjs} from "dayjs";
 import {MenuTrigger} from "../../../common/EventFilters";
+import {Pill} from "../../../common/Pill";
 import {PublicIcon} from "../../../common/PublicIcon";
 import filterClasses from "../../../common/EventFilters/EventFilters.module.scss";
 import classes from "./OrdersAndAttendees.module.scss";
@@ -322,11 +323,10 @@ export const SheetChips = ({choices, value, onChange, label}: {
         {choices.map((choice) => {
             const checked = value.includes(choice.value);
             return (
-                <UnstyledButton key={choice.value} className={classes.chip} data-checked={checked || undefined}
-                                aria-pressed={checked} onClick={() => onChange(toggled(value, choice.value))}>
+                <Pill key={choice.value} size="sm" active={checked} count={choice.count}
+                      onClick={() => onChange(toggled(value, choice.value))}>
                     {choice.label}
-                    {choice.count !== undefined && <span className={classes.chipCount}>{choice.count}</span>}
-                </UnstyledButton>
+                </Pill>
             );
         })}
     </div>
@@ -348,24 +348,23 @@ export const SheetDates = ({value, onChange, onSaleSince}: {
         <>
             <div className={classes.chips} role="group" aria-label={t`Dates`}>
                 {choices.map(({preset, label}) => (
-                    <UnstyledButton key={preset} className={classes.chip} data-checked={value.preset === preset || undefined}
-                                    aria-pressed={value.preset === preset}
-                                    onClick={() => {
-                                        setCustom(false);
-                                        onChange(value.preset === preset ? NO_DATES : presetRange(preset, onSaleSince));
-                                    }}>
+                    <Pill key={preset} size="sm" active={value.preset === preset}
+                          onClick={() => {
+                              setCustom(false);
+                              onChange(value.preset === preset ? NO_DATES : presetRange(preset, onSaleSince));
+                          }}>
                         {label}
-                    </UnstyledButton>
+                    </Pill>
                 ))}
-                <UnstyledButton className={classes.chip} data-checked={custom || undefined} aria-pressed={custom}
-                                onClick={() => {
-                                    setCustom(!custom);
-                                    if (custom) {
-                                        onChange(NO_DATES);
-                                    }
-                                }}>
+                <Pill size="sm" active={custom}
+                      onClick={() => {
+                          setCustom(!custom);
+                          if (custom) {
+                              onChange(NO_DATES);
+                          }
+                      }}>
                     {t({message: 'Custom', context: 'dates'})}
-                </UnstyledButton>
+                </Pill>
             </div>
             {custom && <Calendar range={value.preset === 'CUSTOM' ? value : NO_DATES} onChange={onChange}/>}
         </>

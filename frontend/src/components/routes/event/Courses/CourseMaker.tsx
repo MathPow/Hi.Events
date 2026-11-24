@@ -1,7 +1,7 @@
 import {CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Link, useBlocker} from "react-router";
 import {t} from "@lingui/macro";
-import {Button, Loader, NumberInput, SegmentedControl, Skeleton, Text, TextInput, UnstyledButton} from "@mantine/core";
+import {Button, Loader, NumberInput, Skeleton, Text, TextInput, UnstyledButton} from "@mantine/core";
 import {modals} from "@mantine/modals";
 import {
     IconArrowBackUp,
@@ -42,6 +42,7 @@ import {
 import {ElevationProfile} from "../../../common/CourseMap/ElevationProfile.tsx";
 import {CourseShape} from "../../../common/CourseMap/CourseShape.tsx";
 import {formatClimb, formatGap, formatKm} from "../../../common/CourseMap/courseFormat.ts";
+import {Pill, PillChoice} from "../../../common/Pill";
 import {eventSettingsTabPath} from "../Settings/settingsTabs.ts";
 import {Place, PlaceInput} from "./PlaceInput.tsx";
 import {useCourseEditor} from "./useCourseEditor.ts";
@@ -903,15 +904,15 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     </UnstyledButton>
                 )}
             >
-                <SegmentedControl
+                <PillChoice<CourseKind>
                     fullWidth
-                    className={classes.segmented}
+                    label={t`Loop or point to point`}
                     value={kind}
                     onChange={(value) => guard(() => {
-                        setKind(value as CourseKind);
+                        setKind(value);
                         startOver();
                     })}
-                    data={[
+                    options={[
                         {value: 'loop', label: t`Loop`},
                         {value: 'line', label: t`Point to point`},
                     ]}
@@ -966,28 +967,21 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     />
                     <div className={classes.quickDistances}>
                         {QUICK_DISTANCES.map((km) => (
-                            <UnstyledButton
-                                key={km}
-                                className={classes.chip}
-                                data-rough="button"
-                                data-active={askedKm === km || undefined}
-                                aria-pressed={askedKm === km}
-                                onClick={() => setTargetKm(km)}
-                            >
+                            <Pill key={km} size="sm" active={askedKm === km} onClick={() => setTargetKm(km)}>
                                 {kmText(km)}
-                            </UnstyledButton>
+                            </Pill>
                         ))}
                     </div>
                 </div>
 
                 <div>
                     <p className={classes.fieldLabel}>{t`Mostly on`}</p>
-                    <SegmentedControl
+                    <PillChoice<CourseSurface>
                         fullWidth
-                        className={classes.segmented}
+                        label={t`Mostly on`}
                         value={surface}
-                        onChange={(value) => setSurface(value as CourseSurface)}
-                        data={[
+                        onChange={setSurface}
+                        options={[
                             {value: 'trail', label: t`Trails`},
                             {value: 'mixed', label: t`Mixed`},
                             {value: 'road', label: t`Roads`},

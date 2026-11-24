@@ -3,7 +3,8 @@ import {t} from "@lingui/macro";
 import {AttendeeDetailsCollectionMethod, IdParam, OrganizerSettings} from "../../../../../types.ts";
 import {useUpdateOrganizerSettings} from "../../../../../mutations/useUpdateOrganizerSettings.ts";
 import {useSectionAutosave} from "../../../../layouts/AppLayout/PageStatus.tsx";
-import {PillChoice, SettingsCard, ToggleRow} from "../SettingsUi.tsx";
+import {SettingsCard, ToggleRow} from "../SettingsUi.tsx";
+import {PillChoice} from "../../../../common/Pill";
 import classes from "../Settings.module.scss";
 
 type EventDefaults = Pick<OrganizerSettings,
