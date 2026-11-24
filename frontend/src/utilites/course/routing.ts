@@ -20,12 +20,81 @@ const TIMEOUT_MS = 12000;
 const MAX_PARALLEL = 3;
 // After our server fails, the public one for a minute instead of trying ours on every request.
 const OWN_SERVER_PAUSE_MS = 60000;
+// Ours answers 429 to a visitor asking too much at once: wait a moment and ask it again.
+const BUSY_RETRIES = 3;
+const BUSY_WAIT_MS = 700;
 
 export interface RoutedLine {
     points: TrackPoint[];
     distance: number;
     ascent: number;
+    // What the line runs on, from the way tags BRouter lists: how much of its length is on trails (0 to
+    // 1, see natureOf), and on busy roads. Unknown when BRouter didn't list them.
+    nature?: number;
+    busy?: number;
 }
+
+const BUSY: Record<string, number> = {
+    trunk: 1, trunk_link: 1, primary: 1, primary_link: 1, secondary: 1, secondary_link: 1,
+    tertiary: 0.5, tertiary_link: 0.5,
+};
+const TRAILS = ['path', 'track', 'bridleway', 'steps'];
+const PARK_PATHS = ['cycleway', 'pedestrian'];
+const STREETS = ['service', 'residential', 'living_street', 'unclassified'];
+const PAVED = ['paved', 'asphalt', 'concrete', 'concrete:plates', 'concrete:lanes', 'paving_stones', 'sett', 'cobblestone', 'chipseal', 'metal'];
+
+// How much a stretch feels like a trail, 0 to 1. Cities map their sidewalks as footways: a paved
+// footway counts as a sidewalk, an unpaved one as a trail.
+const natureOf = (highway: string, surface: string | undefined): number => {
+    const paved = surface === undefined ? undefined : PAVED.includes(surface);
+    if (TRAILS.includes(highway)) {
+        return paved ? 0.4 : 1;
+    }
+    if (highway === 'footway') {
+        return paved === undefined ? 0.6 : paved ? 0.3 : 1;
+    }
+    if (PARK_PATHS.includes(highway)) {
+        return paved === false ? 0.8 : 0.4;
+    }
+    if (BUSY[highway]) {
+        return 0;
+    }
+    if (paved === false) {
+        return 0.6;
+    }
+    return STREETS.includes(highway) ? 0.1 : 0;
+};
+
+// BRouter's « messages »: a header row, then one row per stretch with its length and its way tags.
+const readWays = (messages: unknown): { nature: number; busy: number } | undefined => {
+    if (!Array.isArray(messages) || messages.length < 2) {
+        return undefined;
+    }
+    const header = messages[0] as string[];
+    const lengthAt = header.indexOf('Distance');
+    const tagsAt = header.indexOf('WayTags');
+    if (lengthAt < 0 || tagsAt < 0) {
+        return undefined;
+    }
+
+    let total = 0;
+    let nature = 0;
+    let busy = 0;
+    for (const row of messages.slice(1) as string[][]) {
+        const length = Number(row[lengthAt]);
+        const tags = String(row[tagsAt] ?? '');
+        const highway = /(?:^|\s)highway=([a-z_]+)/.exec(tags)?.[1] ?? '';
+        const surface = /(?:^|\s)surface=([a-z_:]+)/.exec(tags)?.[1];
+        if (!Number.isFinite(length) || length <= 0) {
+            continue;
+        }
+        total += length;
+        nature += length * natureOf(highway, surface);
+        busy += length * (BUSY[highway] ?? 0);
+    }
+
+    return total > 0 ? {nature: nature / total, busy: busy / total} : undefined;
+};
 
 let running = 0;
 const waiting: (() => void)[] = [];
@@ -43,12 +112,21 @@ const release = () => {
     waiting.shift()?.();
 };
 
+const wait = (ms: number, signal?: AbortSignal) => new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(resolve, ms);
+    signal?.addEventListener('abort', () => {
+        clearTimeout(timer);
+        reject(signal.reason);
+    }, {once: true});
+});
+
 const ownServerUrl = (): string | null => (
     typeof window === 'undefined' || Date.now() < ownServerDownUntil ? null : `${window.location.origin}/brouter`
 );
 
-// A 2xx with a route, null when BRouter answered that there is none, undefined when the server failed.
-const ask = async (baseUrl: string, query: string, signal?: AbortSignal): Promise<RoutedLine | null | undefined> => {
+// A 2xx with a route, null when BRouter answered that there is none, 'busy' for too many requests at
+// once, undefined when the server failed.
+const ask = async (baseUrl: string, query: string, signal?: AbortSignal): Promise<RoutedLine | null | undefined | 'busy'> => {
     const timeout = AbortSignal.timeout(TIMEOUT_MS);
     let response: Response;
     try {
@@ -64,6 +142,9 @@ const ask = async (baseUrl: string, query: string, signal?: AbortSignal): Promis
     // BRouter says « no route » with a 400 and a message; anything else is the server failing.
     if (response.status === 400) {
         return null;
+    }
+    if (response.status === 429) {
+        return 'busy';
     }
     if (!response.ok || !(response.headers.get('content-type') ?? '').includes('json')) {
         return undefined;
@@ -87,6 +168,7 @@ const ask = async (baseUrl: string, query: string, signal?: AbortSignal): Promis
             points,
             distance: Number.isFinite(reported) && reported > 0 ? reported : pathDistance(points),
             ascent: Number.isFinite(ascent) ? Math.round(ascent) : elevationGain(points),
+            ...readWays(feature.properties?.messages),
         };
     } catch {
         return undefined;
@@ -107,8 +189,12 @@ export const routeThrough = async (via: LatLng[], surface: CourseSurface, signal
         // Ours only holds Québec: no route there can also mean a place outside it, so the public one tries too.
         const own = ownServerUrl();
         if (own) {
-            const result = await ask(own, query, signal);
-            if (result) {
+            let result = await ask(own, query, signal);
+            for (let retry = 1; result === 'busy' && retry <= BUSY_RETRIES; retry++) {
+                await wait(BUSY_WAIT_MS * retry, signal);
+                result = await ask(own, query, signal);
+            }
+            if (result && result !== 'busy') {
                 return result;
             }
             if (result === undefined) {
@@ -116,7 +202,9 @@ export const routeThrough = async (via: LatLng[], surface: CourseSurface, signal
             }
         }
 
-        return (await ask(PUBLIC_BROUTER_URL, query, signal)) ?? null;
+        const result = await ask(PUBLIC_BROUTER_URL, query, signal);
+
+        return result && result !== 'busy' ? result : null;
     } finally {
         release();
     }

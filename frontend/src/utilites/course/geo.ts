@@ -236,3 +236,66 @@ export const boundsOf = (points: LatLng[]): [[number, number], [number, number]]
 
     return [[minLng, minLat], [maxLng, maxLat]];
 };
+
+// A point every `step` metres along the line, with its distance along it.
+const resample = (line: LatLng[], step: number): { point: LatLng; along: number }[] => {
+    const cum = cumulative(line);
+    const total = cum[cum.length - 1] ?? 0;
+    const samples: { point: LatLng; along: number }[] = [];
+    let i = 1;
+    for (let d = 0; d <= total; d += step) {
+        while (i < cum.length - 1 && cum[i] < d) {
+            i++;
+        }
+        const a = line[i - 1];
+        const b = line[i] ?? a;
+        const t = Math.max(0, Math.min(1, (d - cum[i - 1]) / (cum[i] - cum[i - 1] || 1)));
+        samples.push({point: {lat: a.lat + t * (b.lat - a.lat), lng: a.lng + t * (b.lng - a.lng)}, along: d});
+    }
+
+    return samples;
+};
+
+/**
+ * The out-and-back stubs of a line (a dead end run to its end and back): where each one leaves the
+ * line and where it comes back, in metres along it. Those shorter than `minM` don't count.
+ */
+export const findSpurs = (line: LatLng[], minM = 40): { from: number; to: number }[] => {
+    const step = 10;
+    const samples = resample(line, step);
+    const spurs: { from: number; to: number }[] = [];
+    for (let tip = 1; tip < samples.length - 1; tip++) {
+        let k = 0;
+        while (tip - k - 1 >= 0 && tip + k + 1 < samples.length
+        && haversine(samples[tip - k - 1].point, samples[tip + k + 1].point) < 12) {
+            k++;
+        }
+        if (k * step >= minM) {
+            spurs.push({from: samples[tip - k].along, to: samples[tip + k].along});
+            tip += k;
+        }
+    }
+
+    return spurs;
+};
+
+const crosses = (a: LatLng, b: LatLng, c: LatLng, d: LatLng) => {
+    const side = (p: LatLng, q: LatLng, r: LatLng) => Math.sign((q.lng - p.lng) * (r.lat - p.lat) - (q.lat - p.lat) * (r.lng - p.lng));
+
+    return side(a, b, c) * side(a, b, d) < 0 && side(c, d, a) * side(c, d, b) < 0;
+};
+
+/** How many times a line crosses itself (a loop meeting its start doesn't count). */
+export const selfCrossings = (line: LatLng[]): number => {
+    const s = simplify(line, 8);
+    let count = 0;
+    for (let i = 0; i < s.length - 1; i++) {
+        for (let j = i + 2; j < s.length - 1; j++) {
+            if (!(i === 0 && j === s.length - 2) && crosses(s[i], s[i + 1], s[j], s[j + 1])) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+};
