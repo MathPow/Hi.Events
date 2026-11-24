@@ -1,12 +1,9 @@
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 import {IdParam} from "../types.ts";
 import {orderClient} from "../api/order.client.ts";
-import {GET_ORDER_QUERY_KEY} from "../queries/useGetOrder.ts";
-import {GET_EVENT_ORDERS_QUERY_KEY} from "../queries/useGetEventOrders.ts";
+import {invalidateOrderViews} from "../utilites/invalidateOrderViews.ts";
 
 export const useCancelOrder = () => {
-    const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: ({eventId, orderId, refund}: {
             eventId: IdParam,
@@ -14,13 +11,6 @@ export const useCancelOrder = () => {
             refund?: boolean,
         }) => orderClient.cancel(eventId, orderId, refund),
 
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({
-                queryKey: [GET_ORDER_QUERY_KEY, variables.orderId]
-            });
-            queryClient.invalidateQueries({
-                queryKey: [GET_EVENT_ORDERS_QUERY_KEY, variables.eventId]
-            });
-        }
+        onSuccess: () => invalidateOrderViews(),
     });
 }

@@ -180,12 +180,7 @@ export const ManageOrderModal = ({onClose, orderId}: GenericModalProps & ManageO
     );
 
     return (
-        <SideDrawer
-            opened={true}
-            onClose={onClose}
-            size="lg"
-            padding="md"
-        >
+        <SideDrawer opened onClose={onClose}>
             <Stack className={classes.container}>
                 <div className={classes.header}>
                     <div className={classes.orderInfo}>
