@@ -101,7 +101,9 @@ export const CourseMaker = ({eventId, eventPlace, editing, full, onDone}: Course
     const editor = useCourseEditorFor(kind, surface, initial?.draft ?? null);
     const {draft, load, move, remove, insertOnLine, append, rerouteAll} = editor;
     const color = colorOf(selected);
-    const targetM = typeof targetKm === 'number' && targetKm > 0 ? targetKm * 1000 : 0;
+    // Left at « 6, » the field holds the text « 6. »: still 6 km.
+    const askedKm = typeof targetKm === 'number' ? targetKm : parseFloat(targetKm);
+    const targetM = Number.isFinite(askedKm) && askedKm > 0 ? askedKm * 1000 : 0;
 
     const uploadMutation = useUploadEventRouteFile();
     const replaceMutation = useReplaceEventRouteFile();
