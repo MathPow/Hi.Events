@@ -523,9 +523,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         }
         // The point that had the keyboard keeps it once the markers are made again (after « Retirer ce
         // point », the one before it).
-        const focused = focusAfter.current ?? (map.getContainer().contains(document.activeElement)
-            ? (document.activeElement as HTMLElement).dataset.point
-            : undefined);
+        // Not if the organizer has moved on to another field in the meantime.
+        const active = document.activeElement;
+        const onMap = map.getContainer().contains(active) || active === document.body;
+        const focused = onMap
+            ? focusAfter.current ?? (active as HTMLElement | null)?.dataset?.point
+            : undefined;
         focusAfter.current = null;
         markers.current.forEach((marker) => marker.remove());
         markers.current = [];
@@ -599,12 +602,19 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             const canRemove = draft.waypoints.length > 2;
             draft.waypoints.forEach((point, index) => {
                 if (index === 0) {
-                    add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point,
-                        (p) => changeEnd('start', {label: t`Point on the map`, position: p}));
+                    // Moving a route's flag changes that route, like any of its points: the proposals stay,
+                    // each with the start it was made from.
+                    add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), point, (p) => {
+                        setStart({label: t`Point on the map`, position: p});
+                        move(0, p);
+                    });
                     return;
                 }
                 if (kind === 'line' && index === last) {
-                    add(flag(t`Finish`, 'finish'), point, (p) => changeEnd('finish', {label: t`Point on the map`, position: p}));
+                    add(flag(t`Finish`, 'finish'), point, (p) => {
+                        setFinish({label: t`Point on the map`, position: p});
+                        move(index, p);
+                    });
                     return;
                 }
                 const element = document.createElement('button');

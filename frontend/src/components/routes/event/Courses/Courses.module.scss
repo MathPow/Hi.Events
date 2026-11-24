@@ -326,9 +326,10 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   &[data-compact] {
     flex-wrap: nowrap;
 
+    // « Proposer » is short: the room left goes to « Tracer moi-même ».
     .primaryButton,
     .outlineButton {
-      flex: 1 1 0;
+      flex: 1 1 auto;
       min-width: 0;
       height: 2.5rem !important;
       padding: 0 0.625rem !important;
