@@ -333,6 +333,11 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
       height: 2.5rem !important;
       padding: 0 0.625rem !important;
       font-size: 0.9375rem !important;
+
+      @include mixins.respond-below(sm) {
+        padding: 0 0.375rem !important;
+        font-size: 0.8125rem !important;
+      }
     }
   }
 }
