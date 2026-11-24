@@ -46,6 +46,7 @@ import {CollapsibleDescription} from "./CollapsibleDescription";
 import {OtherDates} from "./OtherDates";
 import {CoverPhotos, PhotoGrid} from "./EventPhotos";
 import {PhotoViewer} from "./PhotoViewer";
+import {useGetEventRouteFilesPublic} from "../../../queries/useGetEventRouteFilesPublic.ts";
 
 const TICKETS_FORM_ID = 'event-tickets-form';
 
@@ -108,6 +109,7 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     // The photo open full screen, as its place in the cover's photos.
     const [viewerIndex, setViewerIndex] = useState<number | null>(null);
     const ticketsRef = useRef<HTMLElement>(null);
+    const {data: routeFiles} = useGetEventRouteFilesPublic(event?.id);
     const {i18n} = useLingui();
     const location = useLocation();
     // Ouverte depuis Mes billets, la page y ramene. Cet etat n'existe qu'au navigateur: on attend
@@ -177,6 +179,8 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
     const locationDetails = event.settings?.location_details;
     const isOnlineEvent = event.settings?.is_online_event;
     const hasLocation = isAddressSet(locationDetails) && !isOnlineEvent;
+    // A course takes the place of the « Emplacement » map: the venue goes on the course's map.
+    const hasCourses = !!routeFiles?.length;
     const mapUrl = event.settings?.maps_url || (locationDetails ? getGoogleMapsUrl(locationDetails) : null);
     // Le statut du serveur compte aussi un evenement sans date de fin (termine quelques heures
     // apres son debut); la date de fin, pour une page restee ouverte.
@@ -424,9 +428,14 @@ const EventHomepage = ({event, promoCodeValid, promoCode}: EventHomepageProps) =
                                 </section>
                             )}
 
-                            <EventCourses eventId={event.id}/>
+                            {hasCourses && (
+                                <EventCourses eventId={event.id}
+                                              address={hasLocation && locationDetails ? formatAddress(locationDetails) : null}
+                                              mapUrl={mapUrl}
+                                              accent={themeVariables?.['--theme-accent']}/>
+                            )}
 
-                            {hasLocation && locationDetails && mapUrl && (
+                            {!hasCourses && hasLocation && locationDetails && mapUrl && (
                                 <section className={`${classes.card} ${classes.section} ${classes.location}`} data-rough>
                                     <h2 className={classes.sectionTitle}>{t`Location`}</h2>
                                     <EventLocationMap eventId={event.id} mapUrl={mapUrl}
