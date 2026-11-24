@@ -9,7 +9,8 @@ const HEIGHT = 96;
 const SAMPLES = 160;
 
 /** The elevation along the course, as a filled line: where it climbs, at a glance. */
-export const ElevationProfile = ({points}: { points: TrackPoint[] }) => {
+// The length shown under it: the route's own when known (the router's figure, as on the rest of the page).
+export const ElevationProfile = ({points, distance}: { points: TrackPoint[], distance?: number }) => {
     const profile = useMemo(() => {
         const withEle = points.filter((p) => p.ele !== undefined);
         if (withEle.length < 2 || withEle.length < points.length * 0.8) {
@@ -61,7 +62,7 @@ export const ElevationProfile = ({points}: { points: TrackPoint[] }) => {
             </svg>
             <figcaption className={classes.profileCaption}>
                 <span>{t`${low} m to ${high} m`}</span>
-                <span>{formatKm(profile.total)}</span>
+                <span>{formatKm(distance ?? profile.total)}</span>
             </figcaption>
         </figure>
     );

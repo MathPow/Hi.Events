@@ -321,6 +321,20 @@ $tab-bar-top: 1.25rem + 4.375rem + 0.5rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+
+  // After the first search: both on one row, smaller, behind the proposals and the route.
+  &[data-compact] {
+    flex-wrap: nowrap;
+
+    .primaryButton,
+    .outlineButton {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 2.5rem !important;
+      padding: 0 0.625rem !important;
+      font-size: 0.9375rem !important;
+    }
+  }
 }
 
 .primaryButton {

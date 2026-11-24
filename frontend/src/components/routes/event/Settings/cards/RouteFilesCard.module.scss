@@ -77,14 +77,6 @@
   gap: 0.625rem;
 }
 
-@keyframes justSaved {
-  0%,
-  35% {
-    background: ui.tone-bg(ok);
-    box-shadow: 0 0 0 2px ui.tone-text(ok);
-  }
-}
-
 .row {
   display: flex;
   align-items: center;
@@ -92,13 +84,16 @@
   padding: 0.625rem 0.75rem 0.625rem 0.625rem;
   border-radius: 1.25rem;
   background: ui.$row;
+  transition: background-color 0.8s ease, box-shadow 0.8s ease;
 
   &[data-editing] {
     box-shadow: 0 0 0 2px ui.tone-text(waiting);
   }
 
+  // The route just saved, lit up for a few seconds (the page clears it).
   &[data-highlighted] {
-    animation: justSaved 2.4s ease-out;
+    background: ui.tone-bg(ok);
+    box-shadow: 0 0 0 2px ui.tone-text(ok);
   }
 
   @include mixins.respond-below(sm) {

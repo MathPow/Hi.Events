@@ -12,7 +12,7 @@ import {formatAddress} from "../../../../utilites/addressUtilities.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
 import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {RouteFilesCard} from "../Settings/cards/RouteFilesCard.tsx";
-import {CourseMaker, CourseSetup, CourseToEdit, SavedCourse} from "./CourseMaker.tsx";
+import {CourseMaker, CourseSetup, CourseToEdit, PendingRoute, SavedCourse} from "./CourseMaker.tsx";
 import {Place} from "./PlaceInput.tsx";
 import classes from "./Courses.module.scss";
 
@@ -31,7 +31,9 @@ const Courses = () => {
     const [saved, setSaved] = useState<SavedCourse | null>(null);
     // The next route starts from the last one saved.
     const [setup, setSetup] = useState<CourseSetup | null>(null);
-    const dirty = useRef(false);
+    const pending = useRef<PendingRoute>(null);
+    // The maker's start, kind, distance and terrain as they are now: a new route starts from them.
+    const currentSetup = useRef<CourseSetup | null>(null);
     const top = useRef<HTMLDivElement>(null);
 
     // The maker opens on the event's place, once we know where it is (or that it has none).
@@ -43,18 +45,26 @@ const Courses = () => {
         position: {lat: location.latitude, lng: location.longitude},
     } : undefined;
 
-    const onDirtyChange = useCallback((value: boolean) => {
-        dirty.current = value;
+    const onDirtyChange = useCallback((value: PendingRoute) => {
+        pending.current = value;
+    }, []);
+    const onSetupChange = useCallback((value: CourseSetup) => {
+        currentSetup.current = value;
     }, []);
 
     // A route being drawn is only dropped once the organizer says so.
     const unlessDirty = (action: () => void) => {
-        if (!dirty.current) {
+        if (!pending.current) {
             action();
             return;
         }
-        confirmationDialog(t`Replace the route in progress? Your changes will be lost.`, action,
-            {confirm: t`Replace`, cancel: t`Keep it`});
+        confirmationDialog(
+            pending.current === 'changes'
+                ? t`Replace the route in progress? Your changes will be lost.`
+                : t`This route is not on the event yet. Replace it?`,
+            action,
+            {confirm: t`Replace`, cancel: t`Keep it`},
+        );
     };
 
     const toTop = () => top.current?.scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -66,7 +76,7 @@ const Courses = () => {
                 showError(t`This GPX has no route to edit.`);
                 return;
             }
-            dirty.current = false;
+            pending.current = null;
             setSaved(null);
             setEditing({routeFile, gpx});
             setRound((value) => value + 1);
@@ -77,7 +87,7 @@ const Courses = () => {
     });
 
     const done = (result?: SavedCourse) => {
-        dirty.current = false;
+        pending.current = null;
         setEditing(null);
         setRound((value) => value + 1);
         setSaved(result ?? null);
@@ -88,7 +98,7 @@ const Courses = () => {
 
     // The saved route stands out in the list for a moment, then the list is back to normal.
     useEffect(() => {
-        if (!saved) {
+        if (!saved?.id) {
             return;
         }
         const timer = window.setTimeout(() => setSaved((current) => current && {...current, id: undefined}), 4000);
@@ -97,6 +107,9 @@ const Courses = () => {
 
     // A fresh maker, from the same start: the route in progress goes once the organizer says so.
     const startNew = () => unlessDirty(() => {
+        if (currentSetup.current && !editing) {
+            setSetup(currentSetup.current);
+        }
         done();
         toTop();
     });
@@ -121,6 +134,7 @@ const Courses = () => {
                     full={routeFiles.length >= MAX_ROUTE_FILES_PER_EVENT}
                     onDone={done}
                     onDirtyChange={onDirtyChange}
+                    onSetupChange={onSetupChange}
                 />
             ) : (
                 <Skeleton height={640} radius={24}/>

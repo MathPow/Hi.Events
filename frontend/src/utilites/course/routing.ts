@@ -180,6 +180,11 @@ const ask = async (baseUrl: string, query: string, signal?: AbortSignal): Promis
     }
 };
 
+// Requests that no server answered (down, offline): a search that finds nothing because of them
+// says so, instead of « no route from here ».
+let unanswered = 0;
+export const unansweredRoutingRequests = () => unanswered;
+
 /** The routed line through `via` (at least 2 points), or null when no route was found. */
 export const routeThrough = async (via: LatLng[], surface: CourseSurface, signal?: AbortSignal): Promise<RoutedLine | null> => {
     if (via.length < 2) {
@@ -208,6 +213,9 @@ export const routeThrough = async (via: LatLng[], surface: CourseSurface, signal
         }
 
         const result = await ask(PUBLIC_BROUTER_URL, query(PROFILES[surface]), signal);
+        if (result === undefined) {
+            unanswered++;
+        }
 
         return result && result !== 'busy' ? result : null;
     } finally {

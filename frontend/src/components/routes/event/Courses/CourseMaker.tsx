@@ -23,6 +23,7 @@ import {boundsOf, elevationGain, haversine, LatLng, pathDistance, simplify} from
 import {buildGpx, CourseKind, downloadGpx, gpxFileName, ParsedGpx} from "../../../../utilites/course/gpx.ts";
 import {CourseSurface} from "../../../../utilites/course/routing.ts";
 import {CourseDraft, proposeCourses} from "../../../../utilites/course/proposals.ts";
+import {unansweredRoutingRequests} from "../../../../utilites/course/routing.ts";
 import {EventRouteFile} from "../../../../api/eventRouteFile.client.ts";
 import {useReplaceEventRouteFile, useUploadEventRouteFile} from "../../../../mutations/useEventRouteFileMutations.ts";
 import {showError, showSuccess} from "../../../../utilites/notifications.tsx";
@@ -76,8 +77,12 @@ interface CourseMakerProps {
     savedLabel?: string | null;
     full: boolean;
     onDone: (saved?: SavedCourse) => void;
-    onDirtyChange?: (unsaved: boolean) => void;
+    // What leaving would lose: changes to a route, or a route not added yet.
+    onDirtyChange?: (pending: PendingRoute) => void;
+    onSetupChange?: (setup: CourseSetup) => void;
 }
+
+export type PendingRoute = 'changes' | 'not-added' | null;
 
 const QUICK_DISTANCES = [5, 6.7, 10, 21.1, 42.2];
 // Within 50 m of the distance asked for: « Pile la distance » rather than « +0,0 km ».
@@ -157,7 +162,7 @@ const Step = ({number, title, done, action, children}: {
     </section>
 );
 
-export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, full, onDone, onDirtyChange}: CourseMakerProps) => {
+export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, full, onDone, onDirtyChange, onSetupChange}: CourseMakerProps) => {
     const container = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<MapLibreMap | null>(null);
     const maplibre = useRef<typeof import('maplibre-gl') | null>(null);
@@ -223,8 +228,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     }, [draft, kind, nameTouched]);
 
     useEffect(() => {
-        onDirtyChange?.(unsaved);
-    }, [unsaved, onDirtyChange]);
+        onDirtyChange?.(unsaved ? (dirty ? 'changes' : 'not-added') : null);
+    }, [unsaved, dirty, onDirtyChange]);
+
+    useEffect(() => {
+        onSetupChange?.({kind, surface, targetKm, start, finish});
+    }, [kind, surface, targetKm, start, finish, onSetupChange]);
 
     // ---- leaving with a course not saved ----
 
@@ -268,7 +277,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         }
         let cancelled = false;
         let created: MapLibreMap | undefined;
-        const center = initial?.draft.waypoints[0] ?? eventPlace?.position;
+        const center = initial?.draft.waypoints[0] ?? start?.position;
 
         loadCourseMap(element, center ? {center: [center.lng, center.lat], zoom: 14} : {})
             .then(({map: loaded, maplibregl}) => {
@@ -279,6 +288,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 created = loaded;
                 maplibre.current = maplibregl;
                 loaded.addControl(new maplibregl.NavigationControl({showCompass: false}), 'top-right');
+                // No compass to turn it back: the map stays north up.
+                loaded.dragRotate.disable();
+                loaded.keyboard.disableRotation();
+                loaded.touchZoomRotate.disableRotation();
                 setMap(loaded);
             })
             .catch(() => !cancelled && setMapFailed(true));
@@ -337,8 +350,8 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     // ---- replacing a course that was worked on ----
 
     // The latest state, for the map's own event handlers.
-    const state = useRef({draft, picking, drawing, start, kind, proposals, dirty, generating});
-    state.current = {draft, picking, drawing, start, kind, proposals, dirty, generating};
+    const state = useRef({draft, picking, drawing, start, finish, kind, proposals, dirty, generating});
+    state.current = {draft, picking, drawing, start, finish, kind, proposals, dirty, generating};
 
     const guard = useCallback((action: () => void) => {
         if (!state.current.dirty) {
@@ -359,9 +372,11 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     }, []);
 
     // A new start or finish: the route being made follows it, and proposals made for the old one go.
-    const changeEnd = useCallback((end: 'start' | 'finish', place: Place | null) => {
+    // A chosen address also brings the map there (not a flag being dragged or nudged).
+    const changeEnd = useCallback((end: 'start' | 'finish', place: Place | null, follow = false) => {
         (end === 'start' ? setStart : setFinish)(place);
         setPicking(null);
+        setSearchFailed(false);
         const current = state.current;
         if (!place) {
             return;
@@ -373,8 +388,34 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         }
         if (current.draft && (end === 'start' || current.kind === 'line')) {
             move(end === 'start' ? 0 : current.draft.waypoints.length - 1, place.position);
+        } else if (follow && map && end === 'start') {
+            map.flyTo({center: [place.position.lng, place.position.lat], zoom: Math.max(map.getZoom(), 14), duration: 700});
         }
-    }, [move, stopSearch]);
+    }, [map, move, stopSearch]);
+
+    // Each route remembers the start and finish it was made for: undoing a change, or a change the
+    // router refused, brings the fields back with the route.
+    const endsOf = useRef(new WeakMap<CourseDraft, { start: Place | null; finish: Place | null }>());
+    useEffect(() => {
+        if (!draft) {
+            return;
+        }
+        const recorded = endsOf.current.get(draft);
+        if (!recorded) {
+            endsOf.current.set(draft, {start: state.current.start, finish: state.current.finish});
+            return;
+        }
+        setStart(recorded.start);
+        setFinish(recorded.finish);
+    }, [draft]);
+    useEffect(() => {
+        const recorded = editor.failed && draft ? endsOf.current.get(draft) : undefined;
+        if (recorded) {
+            setStart(recorded.start);
+            setFinish(recorded.finish);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editor.failed]);
 
     const placeStart = useCallback((position: LatLng) => {
         changeEnd('start', {label: t`Point on the map`, position});
@@ -467,15 +508,18 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
 
     const markers = useRef<Marker[]>([]);
     const popup = useRef<Popup | null>(null);
+    const focusAfter = useRef<string | null>(null);
     useEffect(() => {
         const lib = maplibre.current;
         if (!map || !lib) {
             return;
         }
-        // The point that had the keyboard keeps it once the markers are made again.
-        const focused = map.getContainer().contains(document.activeElement)
+        // The point that had the keyboard keeps it once the markers are made again (after « Retirer ce
+        // point », the one before it).
+        const focused = focusAfter.current ?? (map.getContainer().contains(document.activeElement)
             ? (document.activeElement as HTMLElement).dataset.point
-            : undefined;
+            : undefined);
+        focusAfter.current = null;
         markers.current.forEach((marker) => marker.remove());
         markers.current = [];
         popup.current?.remove();
@@ -495,7 +539,9 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     if (!step) {
                         return;
                     }
+                    // The map would move (or turn) with the same keys.
                     event.preventDefault();
+                    event.stopPropagation();
                     const at = map.project([position.lng, position.lat]);
                     const size = event.shiftKey ? NUDGE_PX * 4 : NUDGE_PX;
                     const next = map.unproject([at.x + step[0] * size, at.y + step[1] * size]);
@@ -532,6 +578,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             button.textContent = t`Remove this point`;
             button.addEventListener('click', () => {
                 popup.current?.remove();
+                focusAfter.current = index > 1 ? String(index - 1) : 'start';
                 remove(index);
             });
             popup.current = new lib.Popup({closeButton: false, offset: 18, className: classes.popup, focusAfterOpen: true})
@@ -586,6 +633,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 element.addEventListener('keydown', (event) => {
                     if (event.key === 'Delete' || event.key === 'Backspace') {
                         event.preventDefault();
+                        event.stopPropagation();
                         remove(index);
                     }
                 });
@@ -601,10 +649,11 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             });
         } else {
             if (start) {
-                add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), start.position, (p) => setStart({label: t`Point on the map`, position: p}));
+                add(flag(kind === 'loop' ? t`Start and finish` : t({message: 'Start', context: 'course'}), 'start'), start.position,
+                    (p) => changeEnd('start', {label: t`Point on the map`, position: p}));
             }
             if (kind === 'line' && finish) {
-                add(flag(t`Finish`, 'finish'), finish.position, (p) => setFinish({label: t`Point on the map`, position: p}));
+                add(flag(t`Finish`, 'finish'), finish.position, (p) => changeEnd('finish', {label: t`Point on the map`, position: p}));
             }
         }
 
@@ -617,19 +666,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                 ?? elements.find((element) => element.dataset.point === 'start');
             target?.focus({preventScroll: true});
         }
-    }, [map, draft, start, finish, kind, color, move, remove]);
+    }, [map, draft, start, finish, kind, color, move, remove, changeEnd]);
 
     useEffect(() => () => {
         markers.current.forEach((marker) => marker.remove());
         popup.current?.remove();
     }, []);
-
-    // The map follows a newly chosen address.
-    useEffect(() => {
-        if (map && start && !state.current.draft) {
-            map.flyTo({center: [start.position.lng, start.position.lat], zoom: Math.max(map.getZoom(), 14), duration: 700});
-        }
-    }, [map, start]);
 
     // ---- proposals ----
 
@@ -662,6 +704,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
         pristine.current = null;
         load(null);
 
+        const unansweredBefore = unansweredRoutingRequests();
         // The map shows the first proposals as soon as they come, then all of them at the end.
         let shown = false;
         const onUpdate = (found: CourseDraft[]) => {
@@ -680,6 +723,10 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             );
             if (!controller.signal.aborted) {
                 fitTo(result.flatMap((proposal) => proposal.line.points));
+                // Nothing found because no router answered: that is not « no route from here ».
+                if (result.length === 0 && unansweredRoutingRequests() > unansweredBefore) {
+                    setSearchFailed(true);
+                }
             }
         } catch {
             // Stopped or replaced by a newer search: nothing to say. Otherwise the router could not be reached.
@@ -700,6 +747,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     // The proposals stay behind, faded: cancelling the drawing brings them back.
     const startDrawing = () => guard(() => {
         stopSearch(true);
+        setSearchFailed(false);
         setSelected(null);
         setExpanded(false);
         setJustSaved(null);
@@ -709,6 +757,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
     });
 
     const startOver = () => {
+        setSearchFailed(false);
         generation.current?.abort();
         setGenerating(false);
         setProposals([]);
@@ -847,7 +896,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     near={start?.position ?? eventPlace?.position}
                     picking={picking === 'start'}
                     onPick={() => setPicking(picking === 'start' ? null : 'start')}
-                    onChange={(place) => changeEnd('start', place)}
+                    onChange={(place) => changeEnd('start', place, true)}
                 />
 
                 {kind === 'line' && (
@@ -927,7 +976,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
             key={searchFirst ? 'search-first' : 'search-again'}
             className={searchFirst ? classes.primaryButton : classes.outlineButton}
             variant={searchFirst ? undefined : 'default'}
-            leftSection={searchingFirst ? <Loader size={16}/> : <IconSparkles size={18}/>}
+            leftSection={searchingFirst ? <Loader size={16}/> : searchFirst ? <IconSparkles size={18}/> : undefined}
             disabled={!start || targetM <= 0 || searchingFirst}
             onClick={propose}
         >
@@ -973,12 +1022,12 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                     ) : setupSteps}
 
                     <Step number={3} title={t`Choose the route`} done={!!draft}>
-                        <div className={classes.actions}>
+                        <div className={classes.actions} data-compact={!searchFirst || undefined}>
                             {searchButton}
                             <Button
                                 variant="default"
                                 className={classes.outlineButton}
-                                leftSection={<IconPencil size={18}/>}
+                                leftSection={searchFirst ? <IconPencil size={18}/> : undefined}
                                 data-active={drawing || undefined}
                                 aria-pressed={drawing}
                                 onClick={() => drawing ? setDrawing(false) : startDrawing()}
@@ -1096,7 +1145,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                             </div>
                         )}
 
-                        {searchFailed && !generating && proposals.length === 0 && !draft && (
+                        {searchFailed && !generating && proposals.length === 0 && !draft && !drawing && (
                             <div className={classes.notice} role="alert">
                                 <p>{t`The search could not reach the map server. Check your connection and try again.`}</p>
                                 <Button variant="subtle" size="compact-sm" className={classes.linkButton} onClick={propose}>
@@ -1140,7 +1189,7 @@ export const CourseMaker = ({eventId, eventPlace, editing, setup, savedLabel, fu
                                     </Button>
                                 )}
                             </div>
-                            <ElevationProfile points={draft.line.points}/>
+                            <ElevationProfile points={draft.line.points} distance={draft.line.distance}/>
                             <TextInput
                                 className={classes.nameInput}
                                 label={t`Name`}
