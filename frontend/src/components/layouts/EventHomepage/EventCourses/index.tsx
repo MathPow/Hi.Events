@@ -1,13 +1,11 @@
 import {useEffect, useRef, useState} from "react";
-import type {Marker} from "maplibre-gl";
 import {t} from "@lingui/macro";
 import {IconDownload} from "@tabler/icons-react";
 import type {Map as MapLibreMap} from "maplibre-gl";
 import {IdParam} from "../../../../types.ts";
 import {EventRouteFilePublic, eventRouteFileClientPublic} from "../../../../api/eventRouteFile.client.ts";
 import {useGetEventRouteFilesPublic} from "../../../../queries/useGetEventRouteFilesPublic.ts";
-import {useGetEventMapLocation} from "../../../../queries/useGetEventMapLocation.ts";
-import {toHexColor} from "../../../../utilites/themeUtils.ts";
+import {EventLocationMap} from "../EventLocationMap";
 import {boundsOf, elevationGain, haversine, pathDistance, TrackPoint} from "../../../../utilites/course/geo.ts";
 import {parseGpx} from "../../../../utilites/course/gpx.ts";
 import {loadCourseMap, showCourse} from "../../../common/CourseMap/courseLayers.ts";
@@ -25,8 +23,6 @@ interface LoadedCourse {
 }
 
 const COURSE_COLOR = '#352924';
-const DEHORS_ORANGE = '#fa7853';
-const VENUE_NEARBY_M = 2000;
 
 // The map loads only when the section comes near (MapLibre weighs ~220 kB).
 const PRELOAD_MARGIN = '400px';
@@ -53,28 +49,27 @@ const loadCourse = async (eventId: IdParam, routeFile: EventRouteFilePublic): Pr
 
 interface EventCoursesProps {
     eventId: IdParam;
-    // The venue: the section becomes « Emplacement », its pin on the course map, its address below.
+    // The venue: the section becomes « Emplacement », its map (brand colors, centered pin) with the
+    // course drawn under the pin, the address below.
     address?: string | null;
     mapUrl?: string | null;
     accent?: string;
 }
 
 /**
- * « Emplacement » with a course: the course on a still map (trails in orange, the venue's pin), the
- * address, then its distance and climb, its elevation and the GPX to load in a watch or an app.
- * A tab per course when there are several.
+ * « Emplacement » with a course: the venue's map with the course on it, the address, then its distance
+ * and climb, its elevation and the GPX to load in a watch or an app. Without a venue, « Parcours » on
+ * the trail map. A tab per course when there are several.
  */
 export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesProps) => {
     const {data: routeFiles} = useGetEventRouteFilesPublic(eventId);
-    const hasVenue = !!address;
+    const hasVenue = !!address && !!mapUrl;
     const frame = useRef<HTMLDivElement>(null);
     const canvas = useRef<HTMLDivElement>(null);
     const [near, setNear] = useState(false);
     const [active, setActive] = useState(0);
     const [courses, setCourses] = useState<Record<number, LoadedCourse | null>>({});
     const [map, setMap] = useState<MapLibreMap | null>(null);
-    const [makeMarker, setMakeMarker] = useState<(() => Marker) | null>(null);
-    const {data: venue} = useGetEventMapLocation(eventId, near && hasVenue);
 
     const files = routeFiles ?? [];
     const current = files[Math.min(active, files.length - 1)];
@@ -132,13 +127,12 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
         let created: MapLibreMap | undefined;
         // Still: the page scrolls over it, nothing to drag.
         loadCourseMap(element, {interactive: false})
-            .then(({map: loaded, maplibregl}) => {
+            .then(({map: loaded}) => {
                 if (cancelled) {
                     loaded.remove();
                     return;
                 }
                 created = loaded;
-                setMakeMarker(() => () => new maplibregl.Marker({color: toHexColor(accent) ?? DEHORS_ORANGE}));
                 setMap(loaded);
             })
             .catch(() => undefined);
@@ -158,30 +152,15 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
         showCourse(map, course.points, COURSE_COLOR);
     }, [map, course]);
 
-    // The course fills the map, with the venue's pin when it stands by the course (a venue across
-    // town would shrink the course to nothing).
     useEffect(() => {
         if (!map || !course) {
             return;
         }
-        const pin = venue ? {lat: venue.latitude, lng: venue.longitude} : null;
-        const pinNearby = !!pin && course.points.some((point) => haversine(point, pin) < VENUE_NEARBY_M);
-        const bounds = boundsOf(pinNearby ? [...course.points, pin!] : course.points);
+        const bounds = boundsOf(course.points);
         if (bounds) {
             map.fitBounds(bounds, {padding: 36, maxZoom: 16, duration: 0});
         }
-    }, [map, course, venue]);
-
-    useEffect(() => {
-        if (!map || !makeMarker || !venue) {
-            return;
-        }
-        const marker = makeMarker().setLngLat([venue.longitude, venue.latitude]).addTo(map);
-
-        return () => {
-            marker.remove();
-        };
-    }, [map, makeMarker, venue]);
+    }, [map, course]);
 
     if (files.length === 0) {
         return null;
@@ -206,14 +185,18 @@ export const EventCourses = ({eventId, address, mapUrl, accent}: EventCoursesPro
                 )}
             </div>
 
-            <div ref={frame} className={classes.mapFrame} data-rough>
-                <div ref={canvas} className={classes.map}/>
+            <div ref={frame}>
+                {hasVenue ? (
+                    <EventLocationMap eventId={eventId} mapUrl={mapUrl!} accent={accent} course={course?.points}/>
+                ) : (
+                    <div className={classes.mapFrame} data-rough>
+                        <div ref={canvas} className={classes.map}/>
+                    </div>
+                )}
             </div>
 
             {hasVenue && (
-                mapUrl
-                    ? <a href={mapUrl} target="_blank" rel="noopener noreferrer" className={classes.address}>{address}</a>
-                    : <p className={classes.address}>{address}</p>
+                <a href={mapUrl!} target="_blank" rel="noopener noreferrer" className={classes.address}>{address}</a>
             )}
 
             <div className={classes.footer}>
