@@ -2,11 +2,16 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {IdParam} from "../types.ts";
 import {eventRouteFileClient} from "../api/eventRouteFile.client.ts";
 import {GET_EVENT_ROUTE_FILES_QUERY_KEY} from "../queries/useGetEventRouteFiles.ts";
+import {GET_EVENT_ROUTE_FILE_GPX_QUERY_KEY} from "../queries/useGetEventRouteFileGpx.ts";
 
+// The list, and the GPX already read (a new version can keep the same size).
 const useRefreshList = () => {
     const queryClient = useQueryClient();
 
-    return (eventId: IdParam) => queryClient.invalidateQueries({queryKey: [GET_EVENT_ROUTE_FILES_QUERY_KEY, eventId]});
+    return (eventId: IdParam) => Promise.all([
+        queryClient.invalidateQueries({queryKey: [GET_EVENT_ROUTE_FILES_QUERY_KEY, eventId]}),
+        queryClient.invalidateQueries({queryKey: [GET_EVENT_ROUTE_FILE_GPX_QUERY_KEY, eventId]}),
+    ]);
 };
 
 export const useUploadEventRouteFile = () => {

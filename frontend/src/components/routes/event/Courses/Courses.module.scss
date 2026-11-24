@@ -3,6 +3,9 @@
 
 // « Parcours »: the maker (panel and map side by side), then the event's routes.
 
+// The floating tab bar of phones (MobileNav.module.scss): the save bar stays above it.
+$tab-bar-clearance: calc(1.25rem + 4.375rem + 0.625rem + env(safe-area-inset-bottom));
+
 .page {
   display: flex;
   flex-direction: column;
@@ -38,16 +41,18 @@
 
 .maker {
   display: grid;
-  grid-template-columns: minmax(0, 23rem) minmax(0, 1fr);
-  min-height: 42rem;
+  grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+  // As tall as the window allows, so the panel and the map fill it once scrolled to.
+  height: clamp(36rem, calc(100dvh - 15.5rem), 50rem);
   border-radius: 2rem;
-  overflow: hidden;
+  // clip, not hidden: hidden would make the maker a scroll box and the map would no longer stick on phones.
+  overflow: clip;
   background: ui.$card;
   box-shadow: ui.$shadow;
 
   @include mixins.respond-below(lg) {
     grid-template-columns: minmax(0, 1fr);
-    min-height: 0;
+    height: auto;
     border-radius: 1.75rem;
   }
 }
@@ -55,15 +60,34 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 1.125rem;
-  padding: 1.5rem;
-  overflow-y: auto;
-  max-height: 46rem;
+  min-height: 0;
+  border-right: 1px solid ui.$separator;
 
   @include mixins.respond-below(lg) {
     order: 2;
-    max-height: none;
+    border-right: none;
+  }
+
+  // The global margin under every Mantine field: the steps space their own fields.
+  :global(.mantine-InputWrapper-root) {
+    margin-bottom: 0;
+  }
+}
+
+.panelBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-height: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+
+  @include mixins.scrollbar;
+
+  @include mixins.respond-below(lg) {
     padding: 1.25rem;
+    overflow: visible;
   }
 
   // In a column that scrolls, a child with overflow hidden (the segmented controls) would shrink to nothing.
@@ -72,15 +96,129 @@
   }
 }
 
-.panelHead {
+// ---- the steps ----
+
+.step {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.875rem;
+
+  > * {
+    flex-shrink: 0;
+  }
 }
 
-.panelTitle {
-  @include ui.section-title;
+.stepHead {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+// The number of a step, a check once it is done (the dashboard's « Préparez votre événement »).
+.stepNumber {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: ui.$track;
+  font-size: 0.8125rem;
+  font-weight: 700;
+
+  &[data-done] {
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
+}
+
+.stepTitle {
+  flex: 1;
+  margin: 0;
+  font-family: FatFrank, 'Arial Black', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.stepLink {
+  color: ui.$accent-dark;
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Steps 1 and 2 folded into one line once a route is being chosen.
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border-radius: 1rem;
+  background: ui.$row;
+  text-align: left;
+
+  &:hover {
+    background: ui.$track;
+  }
+
+  &:hover .stepLink {
+    text-decoration: underline;
+  }
+}
+
+.summaryText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+
+  strong {
+    font-size: 0.9375rem;
+  }
+
+  span {
+    overflow: hidden;
+    color: var(--dehors-texte-doux);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.editingHead {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 1rem;
+  background: ui.tone-bg(waiting);
+}
+
+.editingTag {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.25rem;
+  color: ui.tone-text(waiting);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.editingName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.9375rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .fieldLabel {
@@ -107,6 +245,11 @@
 
 .placeInput {
   min-width: 0;
+
+  // A long address ends with « … » instead of being cut.
+  input {
+    text-overflow: ellipsis;
+  }
 }
 
 // The pin inside the address field, on its right: « Choisir sur la carte ».
@@ -120,31 +263,50 @@
   }
 }
 
+.tipLink {
+  @include ui.accent-link;
+  align-self: flex-start;
+  font-size: 0.875rem;
+  white-space: normal;
+}
+
 .distanceRow {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
 }
 
 .distanceInput {
-  max-width: 10rem;
+  width: 6.5rem;
+
+  input {
+    height: 2.5rem;
+    min-height: 2.5rem;
+    border-radius: 999px;
+    font-weight: 700;
+    text-align: center;
+  }
 }
 
 .quickDistances {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
+  display: contents;
 }
 
 .chip {
   @include ui.chip;
-  height: 2rem;
+  height: 2.5rem;
   padding: 0 0.75rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 
   @include mixins.respond-below(md) {
-    height: 2rem;
-    font-size: 0.875rem;
+    height: 2.5rem;
+    font-size: 0.9375rem;
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 2px;
   }
 }
 
@@ -163,6 +325,7 @@
 
 .outlineButton {
   @include ui.outline-button;
+  flex: 1 1 auto;
   height: 2.75rem !important;
   padding: 0 1rem !important;
   font-size: 1rem !important;
@@ -173,41 +336,111 @@
   }
 }
 
+.inkButton {
+  border-radius: 999px !important;
+  background: ui.$ink !important;
+  color: var(--dehors-creme) !important;
+  font-weight: 700 !important;
+}
+
 .linkButton {
   color: ui.$accent-dark !important;
   font-weight: 700 !important;
 }
 
+.helper {
+  margin: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+// « Tracer moi-même »: what to do on the map, and the way out.
+.drawingCard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 0.625rem;
+  padding: 0.875rem;
+  border: 1.5px dashed ui.$ink;
+  border-radius: 1rem;
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+}
+
+.drawingIcon {
+  margin-top: 0.0625rem;
+}
+
+.drawingActions {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+// ---- the proposals ----
+
 .proposals {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.5rem;
 }
 
 .proposal {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.625rem 0.75rem;
+  padding: 0.5rem 0.75rem 0.5rem 0.5rem;
   border: 1.5px solid transparent;
   border-radius: 1rem;
   background: ui.$row;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 
-  &:hover {
-    border-color: rgb(55 39 33 / 0.2);
+  &:hover,
+  &[data-hovered] {
+    border-color: rgb(55 39 33 / 0.25);
   }
 
   &[data-selected] {
     border-color: ui.$ink;
+    background: ui.$card;
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 2px;
   }
 }
 
-.swatch {
+.proposalThumb {
+  position: relative;
+  display: grid;
   flex-shrink: 0;
-  width: 1.75rem;
-  height: 0.375rem;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 0.75rem;
+  background: ui.$card;
+}
+
+.proposalLetter {
+  position: absolute;
+  top: -0.375rem;
+  left: -0.375rem;
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 2px solid #ffffff;
   border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 .proposalText {
@@ -226,20 +459,33 @@
   }
 }
 
-.proposalGap {
-  color: var(--dehors-texte-doux);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  white-space: nowrap;
+.proposalSkeleton {
+  flex-shrink: 0;
+}
+
+.gap {
+  @include ui.tag(neutral);
+  flex-shrink: 0;
+  padding: 0.25rem 0.5rem;
+
+  &[data-close] {
+    background: ui.tone-bg(ok);
+    color: ui.tone-text(ok);
+  }
 }
 
 .searching {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0.25rem 0 0;
+  margin: 0.125rem 0 0;
   color: var(--dehors-texte-doux);
   font-size: 0.875rem;
+  font-weight: 600;
+
+  > span {
+    flex: 1;
+  }
 }
 
 .notice {
@@ -251,12 +497,14 @@
   line-height: 1.4;
 }
 
+// ---- the chosen route ----
+
 .result {
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  padding-top: 1.125rem;
-  border-top: 1px solid ui.$separator;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(55 39 33 / 0.08);
 }
 
 .resultHead {
@@ -265,7 +513,7 @@
   gap: 0.75rem;
 }
 
-.resultIcon {
+.resultBadge {
   display: grid;
   flex-shrink: 0;
   place-items: center;
@@ -273,6 +521,7 @@
   height: 2.25rem;
   border-radius: 999px;
   color: #ffffff;
+  font-weight: 800;
 }
 
 .resultFigures {
@@ -294,30 +543,78 @@
   }
 }
 
-.gap {
-  padding: 0.25rem 0.5rem;
-  border-radius: 999px;
-  background: ui.$accent-soft;
+.nameInput {
+  :global(.mantine-InputWrapper-description) {
+    margin-top: 0;
+  }
+}
+
+// The save bar: always in view under the panel (above the tab bar on phones).
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem 1.125rem;
+  border-top: 1px solid rgb(55 39 33 / 0.08);
+  background: ui.$card;
+
+  @include mixins.respond-below(lg) {
+    position: sticky;
+    bottom: 0.75rem;
+    z-index: 3;
+    margin: 0 0.75rem 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border: none;
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 24px rgb(55 39 33 / 0.18);
+  }
+
+  @include mixins.respond-below(md) {
+    bottom: $tab-bar-clearance;
+  }
+
+  .actions {
+    flex-wrap: nowrap;
+  }
+
+  .outlineButton {
+    flex: 0 0 auto;
+  }
+}
+
+.footerNote {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  color: var(--dehors-texte-doux);
   font-size: 0.8125rem;
   font-weight: 700;
-  white-space: nowrap;
+}
 
-  &[data-close] {
-    background: #dcebd3;
-  }
+.footerDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: ui.$accent;
 }
 
 // ---- the map ----
 
 .mapFrame {
   position: relative;
-  min-height: 42rem;
+  min-height: 0;
   background: #fbf4e8;
 
+  // On phones the map stays at the top of the screen while the steps scroll under it.
   @include mixins.respond-below(lg) {
+    position: sticky;
+    top: -0.75rem;
+    z-index: 4;
     order: 1;
-    min-height: 0;
-    height: 62vh;
+    height: 40dvh;
+    min-height: 16rem;
+    box-shadow: 0 6px 12px rgb(55 39 33 / 0.08);
   }
 }
 
@@ -341,7 +638,7 @@
   top: 0.875rem;
   left: 50%;
   z-index: 2;
-  max-width: min(32rem, calc(100% - 6rem));
+  max-width: min(30rem, calc(100% - 6rem));
   margin: 0;
   padding: 0.5rem 0.875rem;
   border-radius: 999px;
@@ -355,29 +652,150 @@
   pointer-events: none;
 
   @include mixins.respond-below(md) {
+    top: 0.625rem;
+    left: 0.625rem;
+    max-width: calc(100% - 4.25rem);
     border-radius: 1rem;
     font-size: 0.8125rem;
+    text-align: left;
+    transform: none;
   }
 }
 
 .error {
   top: auto;
-  bottom: 2.5rem;
+  bottom: 3rem;
   background: #c8442f;
+
+  @include mixins.respond-below(md) {
+    top: auto;
+  }
 }
 
 .busy {
   position: absolute;
-  bottom: 2.5rem;
-  left: 1rem;
+  bottom: 2.25rem;
+  left: 50%;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.875rem;
+  border-radius: 999px;
+  background: ui.$card;
+  box-shadow: ui.$shadow;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+// How to change the route, at the bottom left of the map while one is shown.
+.legend {
+  position: absolute;
+  bottom: 0.875rem;
+  left: 0.875rem;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 0.625rem 0.5rem 0.625rem 0.875rem;
+  border-radius: 1rem;
+  background: rgb(255 252 248 / 0.95);
+  box-shadow: ui.$shadow;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  @include mixins.respond-below(md) {
+    bottom: 0.625rem;
+    left: 0.625rem;
+    padding: 0.5rem 0.375rem 0.5rem 0.625rem;
+
+    li {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.legendClose,
+.legendToggle {
   display: grid;
   place-items: center;
+  padding: 0;
+  border: none;
+  color: ui.$ink;
+  cursor: pointer;
+}
+
+.legendClose {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: none;
+
+  &:hover {
+    background: ui.$track;
+  }
+}
+
+.legendToggle {
+  position: absolute;
+  bottom: 0.875rem;
+  left: 0.875rem;
+  z-index: 2;
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
   background: ui.$card;
   box-shadow: ui.$shadow;
+}
+
+// « Retirer ce point », over the point clicked.
+.popup {
+  :global(.maplibregl-popup-content) {
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: ui.$ink;
+    box-shadow: 0 6px 16px rgb(55 39 33 / 0.3);
+  }
+
+  :global(.maplibregl-popup-tip) {
+    border-top-color: ui.$ink;
+    border-bottom-color: ui.$ink;
+  }
+}
+
+.popupButton {
+  padding: 0.375rem 0.75rem;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--dehors-creme);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: rgb(255 247 233 / 0.15);
+    outline: none;
+  }
 }
 
 // The start and finish flags: a pill pointing down at the spot.
@@ -419,28 +837,40 @@
   }
 }
 
-// A point of the course to drag: a larger invisible target around the dot, for fingers.
+// A point of the course to drag: hollow (the kilometre marks are filled), with a larger invisible
+// target around it for fingers.
 .handle {
   display: grid;
   place-items: center;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
   padding: 0;
   border: none;
+  border-radius: 999px;
   background: transparent;
   cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: -4px;
+  }
 }
 
 .handleDot {
-  width: 1.125rem;
-  height: 1.125rem;
-  border: 3px solid var(--handle-color, #352924);
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 4px solid var(--handle-color, #352924);
   border-radius: 999px;
   background: #ffffff;
-  box-shadow: 0 2px 6px rgb(55 39 33 / 0.3);
+  box-shadow: 0 2px 6px rgb(55 39 33 / 0.35);
   transition: scale 0.12s ease;
 
-  .handle:hover & {
-    scale: 1.25;
+  .handle:hover &,
+  .handle:focus-visible & {
+    scale: 1.2;
   }
 }

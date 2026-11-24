@@ -214,7 +214,9 @@ msgstr "{chosenCount, plural, one {Créer # date} other {Créer # dates}}"
 msgid "{chosenCount} of {total} dates"
 msgstr "{chosenCount} dates sur {total}"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:570
+#: src/components/routes/event/Courses/CourseMaker.tsx:925
+#: src/components/routes/event/Courses/CourseMaker.tsx:925
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:195
 msgid "{climb} of climb"
 msgstr "{climb} de dénivelé"
 
@@ -270,7 +272,7 @@ msgstr "{days} jours, {hours} heures, {minutes} minutes, et {seconds} secondes"
 msgid "{doneCount, plural, one {# step out of {total}} other {# steps out of {total}}}"
 msgstr "{doneCount, plural, one {# étape sur {total}} other {# étapes sur {total}}}"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:596
+#: src/components/routes/event/Courses/CourseMaker.tsx:974
 msgid "{draftClimb} of climb"
 msgstr "{draftClimb} de dénivelé"
 
@@ -315,11 +317,11 @@ msgstr "{input} en entrée · {output} en sortie"
 msgid "{itemCount, plural, one {# ticket} other {# tickets}}"
 msgstr "{itemCount, plural, one {# billet} other {# billets}}"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:112
+#: src/components/routes/event/Courses/CourseMaker.tsx:190
 msgid "{km} km loop"
 msgstr "Boucle de {km} km"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:112
+#: src/components/routes/event/Courses/CourseMaker.tsx:190
 msgid "{km} km route"
 msgstr "Parcours de {km} km"
 
@@ -368,6 +370,10 @@ msgstr "{people} personnes"
 #: src/components/routes/admin/AssistantUsage/index.tsx:41
 msgid "{perCall} per call on average"
 msgstr "{perCall} par appel en moyenne"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:700
+msgid "{percent} % on trails"
+msgstr "{percent} % en sentier"
 
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:48
 msgid "{platformFees} per ticket + Stripe fees ({stripeFees}). Nothing on free events."
@@ -944,7 +950,7 @@ msgstr "Ajouter un bloc"
 msgid "Add a first block from the list or with the button below."
 msgstr "Ajoutez un premier bloc depuis la liste ou avec le bouton ci-dessous."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:94
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:115
 msgid "Add a GPX"
 msgstr "Ajouter un GPX"
 
@@ -1059,6 +1065,10 @@ msgstr "Ajouter une question"
 msgid "Add Tax or Fee"
 msgstr "Ajouter une taxe ou des frais"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:770
+msgid "Add the event's location: the start will be placed there"
+msgstr "Ajoutez le lieu de l'événement : le départ s'y placera"
+
 #: src/components/common/QuestionsTable/index.tsx:386
 msgid "Add the participant form"
 msgstr "Ajouter la fiche participant"
@@ -1102,7 +1112,7 @@ msgstr "Ajouter à Google Wallet"
 msgid "Add to my draft"
 msgstr "Ajouter à mon brouillon"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:622
+#: src/components/routes/event/Courses/CourseMaker.tsx:1015
 msgid "Add to the event"
 msgstr "Ajouter à l'événement"
 
@@ -1180,7 +1190,7 @@ msgstr "Adresse de votre site ou de votre Instagram"
 msgid "Address of your website, Instagram or ticketing page"
 msgstr "Adresse de votre site web, de votre Instagram ou de votre billetterie"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:475
+#: src/components/routes/event/Courses/CourseMaker.tsx:747
 msgid "Address, park, trailhead…"
 msgstr "Adresse, parc, départ de sentier…"
 
@@ -1495,7 +1505,7 @@ msgstr "Une erreur s'est produite lors du chargement de la page"
 msgid "An event can have up to {MAX_GALLERY_IMAGES} photos."
 msgstr "Un événement peut avoir jusqu'à {MAX_GALLERY_IMAGES} photos."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:50
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:63
 msgid "An event can have up to {MAX_ROUTE_FILES_PER_EVENT} GPX files."
 msgstr "Un événement peut avoir jusqu'à {MAX_ROUTE_FILES_PER_EVENT} fichiers GPX."
 
@@ -2235,6 +2245,10 @@ msgstr "En raison de la météo, nous devons malheureusement annuler {title}. La
 msgid "Before payment"
 msgstr "Avant le paiement"
 
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:237
+msgid "Being edited"
+msgstr "En modification"
+
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:288
 #: src/components/routes/event/OrdersAndAttendees/index.tsx:92
 #: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:176
@@ -2499,11 +2513,12 @@ msgstr "Vous ne pouvez plus y aller? Cédez votre place à quelqu'un d'autre : c
 #: src/components/common/WaitlistTable/index.tsx:151
 #: src/components/modals/TransferTicketModal/index.tsx:205
 #: src/components/routes/admin/RegistrationInvites/index.tsx:241
-#: src/components/routes/event/Courses/CourseMaker.tsx:454
+#: src/components/routes/event/Courses/CourseMaker.tsx:835
+#: src/components/routes/event/Courses/CourseMaker.tsx:892
 #: src/components/routes/event/HomepageDesigner/index.tsx:408
 #: src/components/routes/event/messages.tsx:82
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:207
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:78
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:91
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:190
 #: src/components/routes/organizer/Emails/EmailMessageEditor.tsx:83
 #: src/components/routes/organizer/Messages/ReplyModal.tsx:109
@@ -2652,6 +2667,11 @@ msgstr "Catégorie"
 msgid "Category Created Successfully"
 msgstr "Catégorie créée avec succès"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:847
+msgctxt "course settings"
+msgid "Change"
+msgstr "Modifier"
+
 #: src/components/routes/my-tickets/index.tsx:478
 msgid "Change"
 msgstr "Changer"
@@ -2676,6 +2696,10 @@ msgstr "Modifier les paramètres de liste d'attente"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:315
 msgid "Changes appear on the right."
 msgstr "Les changements s’affichent à droite."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:1009
+msgid "Changes not saved"
+msgstr "Modifications non enregistrées"
 
 #: src/components/layouts/AppLayout/Topbar/index.tsx:37
 #: src/components/modals/EditProductModal/index.tsx:167
@@ -2834,13 +2858,17 @@ msgstr "Chinois (traditionnel)"
 msgid "Choose <0>Add to Home Screen</0>."
 msgstr "Choisissez <0>Sur l'écran d'accueil</0>."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:55
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:68
 msgid "Choose a GPX file."
 msgstr "Choisissez un fichier GPX."
 
 #: src/components/routes/organizer/Documents/index.tsx:121
 msgid "Choose a PDF file."
 msgstr "Choisissez un fichier PDF."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:875
+msgid "Choose a start first (step 1), or draw the route yourself."
+msgstr "Choisissez d'abord un départ (étape 1), ou tracez le parcours vous-même."
 
 #: src/components/modals/ChooseAccountModal/index.tsx:13
 msgid "Choose an account"
@@ -2858,14 +2886,18 @@ msgstr "Choisissez une option"
 msgid "Choose calendar"
 msgstr "Choisir le calendrier"
 
-#: src/components/routes/event/Courses/PlaceInput.tsx:86
-#: src/components/routes/event/Courses/PlaceInput.tsx:92
+#: src/components/routes/event/Courses/PlaceInput.tsx:103
+#: src/components/routes/event/Courses/PlaceInput.tsx:109
 msgid "Choose on the map"
 msgstr "Choisir sur la carte"
 
 #: src/components/modals/PostponeEventModal/index.tsx:81
 msgid "Choose the new date."
 msgstr "Choisissez la nouvelle date."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:851
+msgid "Choose the route"
+msgstr "Choisir le tracé"
 
 #: src/components/modals/PostponeEventModal/index.tsx:94
 msgid "Choose until when participants can ask."
@@ -2913,22 +2945,38 @@ msgstr "Effacer les filtres"
 msgid "Clear Search Text"
 msgstr "Effacer le texte de recherche"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:1039
+msgid "Click a point to remove it"
+msgstr "Cliquez sur un point pour le retirer"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:1038
+msgid "Click the line to add a point"
+msgstr "Cliquez sur la ligne pour ajouter un point"
+
 #: src/components/common/EmailNotConfirmedError/index.tsx:16
 msgid "Click the link we sent to {0}, then try again."
 msgstr "Cliquez sur le lien envoyé à {0}, puis réessayez."
 
 #: src/components/routes/event/Courses/CourseMaker.tsx:439
-msgid "Click the map to add the next point: the route follows the trails and streets."
-msgstr "Cliquez sur la carte pour ajouter le prochain point : le tracé suit les sentiers et les rues."
+#~ msgid "Click the map to add the next point: the route follows the trails and streets."
+#~ msgstr "Cliquez sur la carte pour ajouter le prochain point : le tracé suit les sentiers et les rues."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:436
+#: src/components/routes/event/Courses/CourseMaker.tsx:708
+msgid "Click the map to add the next point."
+msgstr "Cliquez sur la carte pour ajouter le point suivant."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:706
 msgid "Click the map where the route finishes."
 msgstr "Cliquez sur la carte à l'arrivée du parcours."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:434
-#: src/components/routes/event/Courses/CourseMaker.tsx:440
+#: src/components/routes/event/Courses/CourseMaker.tsx:704
+#: src/components/routes/event/Courses/CourseMaker.tsx:708
 msgid "Click the map where the route starts."
 msgstr "Cliquez sur la carte au départ du parcours."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:882
+msgid "Click the map, point by point: the route follows the trails and streets."
+msgstr "Cliquez sur la carte, point par point : le tracé suit les sentiers et les rues."
 
 #: src/components/common/PromoCodeTable/index.tsx:34
 msgid "Click to copy"
@@ -3013,6 +3061,10 @@ msgstr "Le code doit comporter entre 3 et 50 caractères"
 #: src/components/modals/CreateAffiliateModal/index.tsx:34
 msgid "Code must be no more than 20 characters"
 msgstr "Le code ne doit pas dépasser 20 caractères"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:727
+msgid "Collapse"
+msgstr "Réduire"
 
 #: src/components/layouts/AppLayout/Sidebar/index.tsx:136
 #: src/components/layouts/AppLayout/Sidebar/index.tsx:138
@@ -3961,9 +4013,9 @@ msgstr "Contributions Dehors"
 #: src/components/common/TaxAndFeeList/index.tsx:78
 #: src/components/modals/EditProductModal/index.tsx:184
 #: src/components/routes/admin/FailedJobs/index.tsx:209
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:78
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:184
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:184
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:91
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:252
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:253
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:629
 #: src/components/routes/organizer/Documents/index.tsx:294
 #: src/components/routes/organizer/Messages/index.tsx:177
@@ -4016,7 +4068,7 @@ msgstr "Supprimer le travail"
 msgid "Delete permanently"
 msgstr "Supprimer définitivement"
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:73
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:86
 msgid "Delete the route « {label} »? Participants will no longer be able to download it."
 msgstr "Supprimer le parcours « {label} »? Les participants ne pourront plus le télécharger."
 
@@ -4199,9 +4251,13 @@ msgstr "Affichage et ordre"
 msgid "Display name"
 msgstr "Nom affiché"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:498
+#: src/components/routes/event/Courses/CourseMaker.tsx:779
 msgid "Distance"
 msgstr "Distance"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:775
+msgid "Distance and terrain"
+msgstr "Distance et terrain"
 
 #: src/components/forms/ProductForm/SizedProductForm.tsx:128
 msgid "Distances 5–42 km"
@@ -4282,8 +4338,8 @@ msgstr "Terminé"
 msgid "Door sales"
 msgstr "Vente sur place"
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:181
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:181
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:249
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:249
 msgid "Download"
 msgstr "Télécharger"
 
@@ -4355,9 +4411,13 @@ msgstr "Téléchargement du reçu"
 msgid "Draft"
 msgstr "Brouillon"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:1037
+msgid "Drag a point to move it"
+msgstr "Glissez un point pour le déplacer"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:442
-msgid "Drag the points to change the route. Click the line to add a point, double-click a point to remove it."
-msgstr "Glissez les points pour changer le tracé. Cliquez sur la ligne pour ajouter un point, double-cliquez sur un point pour le retirer."
+#~ msgid "Drag the points to change the route. Click the line to add a point, double-click a point to remove it."
+#~ msgstr "Glissez les points pour changer le tracé. Cliquez sur la ligne pour ajouter un point, double-cliquez sur un point pour le retirer."
 
 #: src/components/common/QuestionsTable/index.tsx:395
 msgid "Drag the questions to change their order."
@@ -4367,24 +4427,32 @@ msgstr "Glissez les questions pour changer leur ordre."
 msgid "Drag to change the order on the page"
 msgstr "Glissez pour changer l’ordre sur la page"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:483
+msgid "Drag to move · click to remove"
+msgstr "Glisser pour déplacer · cliquer pour retirer"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:305
-msgid "Drag to move · double-click to remove"
-msgstr "Glisser pour déplacer · double-cliquer pour retirer"
+#~ msgid "Drag to move · double-click to remove"
+#~ msgstr "Glisser pour déplacer · double-cliquer pour retirer"
 
 #: src/components/common/ProductsTable/ProductRow.tsx:163
 #: src/components/routes/organizer/OrganizerHomepageDesigner/SortableRows.tsx:74
 msgid "Drag to reorder"
 msgstr "Glisser pour réordonner"
 
-#: src/components/routes/event/Courses/index.tsx:65
+#: src/components/routes/event/Courses/index.tsx:100
 msgid "Draw a loop or a point-to-point route on the real trails and streets. Participants see it on the event page and download the GPX for their watch or their app."
 msgstr "Tracez une boucle ou un point à point sur les vrais sentiers et les vraies rues. Les participants le voient sur la page de l'événement et téléchargent le GPX pour leur montre ou leur application."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:451
-msgid "Draw a route"
-msgstr "Tracer un parcours"
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:153
+msgid "Draw a new route"
+msgstr "Tracer un nouveau parcours"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:552
+#: src/components/routes/event/Courses/CourseMaker.tsx:451
+#~ msgid "Draw a route"
+#~ msgstr "Tracer un parcours"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:870
 msgid "Draw it myself"
 msgstr "Tracer moi-même"
 
@@ -4580,8 +4648,8 @@ msgstr "Modifier le code"
 msgid "Edit Configuration"
 msgstr "Modifier la configuration"
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:175
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:176
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:243
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:244
 msgid "Edit on the map"
 msgstr "Modifier sur la carte"
 
@@ -4618,8 +4686,8 @@ msgid "Edit the product"
 msgstr "Modifier le produit"
 
 #: src/components/routes/event/Courses/CourseMaker.tsx:451
-msgid "Edit the route"
-msgstr "Modifier le parcours"
+#~ msgid "Edit the route"
+#~ msgstr "Modifier le parcours"
 
 #: src/components/modals/EditProductModal/index.tsx:175
 msgid "Edit the ticket"
@@ -4648,6 +4716,10 @@ msgstr "Modifier le webhook"
 #: src/components/modals/EditWebhookModal/index.tsx:87
 msgid "Edit Webhook"
 msgstr "Modifier le webhook"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:831
+msgid "Editing"
+msgstr "En modification"
 
 #: src/components/common/EmailTemplateEditor/EmailTemplateEditor.tsx:127
 msgid "Editor"
@@ -4947,7 +5019,7 @@ msgstr "Saisissez le nom"
 msgid "Enter new password"
 msgstr "Entrez le nouveau mot de passe"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:445
+#: src/components/routes/event/Courses/CourseMaker.tsx:713
 msgid "Enter the address of the start, or click the map."
 msgstr "Entrez l'adresse du départ, ou cliquez sur la carte."
 
@@ -5116,7 +5188,7 @@ msgstr "Événement dupliqué avec succès"
 msgid "Event Homepage"
 msgstr "Page d'accueil de l'événement"
 
-#: src/components/routes/event/Courses/index.tsx:35
+#: src/components/routes/event/Courses/index.tsx:40
 msgid "Event location"
 msgstr "Lieu de l'événement"
 
@@ -5750,16 +5822,16 @@ msgstr "Retrouver un billet"
 msgid "Find your next outing"
 msgstr "Trouvez votre prochaine sortie"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:295
-#: src/components/routes/event/Courses/CourseMaker.tsx:317
+#: src/components/routes/event/Courses/CourseMaker.tsx:473
+#: src/components/routes/event/Courses/CourseMaker.tsx:521
 msgid "Finish"
 msgstr "Arrivée"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:485
+#: src/components/routes/event/Courses/CourseMaker.tsx:757
 msgid "Finish (optional)"
 msgstr "Arrivée (facultatif)"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:84
+#: src/components/routes/event/Courses/CourseMaker.tsx:151
 msgid "Finish of the route"
 msgstr "Arrivée du parcours"
 
@@ -6067,17 +6139,18 @@ msgstr "Google Agenda"
 msgid "Got it"
 msgstr "Compris"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:626
+#: src/components/routes/event/Courses/CourseMaker.tsx:1019
 msgid "GPX"
 msgstr "GPX"
 
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:191
 #: src/components/routes/product-widget/AttendeeProductAndInformation/RouteDownloads.tsx:35
 msgid "GPX · {size}"
 msgstr "GPX · {size}"
 
 #: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:172
-msgid "GPX · {size} · {filename}"
-msgstr "GPX · {size} · {filename}"
+#~ msgid "GPX · {size} · {filename}"
+#~ msgstr "GPX · {size} · {filename}"
 
 #: src/components/common/LanguageSwitcher/index.tsx:47
 msgid "Greek"
@@ -6254,6 +6327,10 @@ msgstr "Masquer le produit avant la date de début de vente"
 msgid "Hide product when sold out"
 msgstr "Masquer le produit lorsqu'il est épuisé"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:1041
+msgid "Hide the help"
+msgstr "Masquer l'aide"
+
 #: src/components/forms/ProductCategoryForm/index.tsx:37
 msgid "Hide this category?"
 msgstr "Masquer cette catégorie ?"
@@ -6349,6 +6426,11 @@ msgstr "L'affichage des prix et ce que les participants peuvent modifier eux-mê
 #: src/components/routes/event/Settings/index.tsx:86
 msgid "How the event page shows in Google and when it is shared."
 msgstr "Comment la page de l'événement apparaît dans Google et quand on la partage."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:1030
+#: src/components/routes/event/Courses/CourseMaker.tsx:1031
+msgid "How to edit the route"
+msgstr "Comment modifier le tracé"
 
 #: src/components/routes/organizer/Settings/organization/SeoCard.tsx:55
 msgid "How your page shows in Google and when it is shared."
@@ -6830,6 +6912,11 @@ msgstr "Rejoindre la liste d'attente pour {productDisplayName}"
 msgid "Joined"
 msgstr "Inscrit"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:319
+#: src/components/routes/event/Courses/index.tsx:55
+msgid "Keep it"
+msgstr "Le garder"
+
 #: src/components/routes/product-widget/CollectInformation/index.tsx:975
 msgid "Keep me updated on news and events from {0}"
 msgstr "Recevoir les nouvelles de {0}"
@@ -6999,6 +7086,7 @@ msgstr "Feuille"
 msgid "Learn more about Stripe"
 msgstr "En savoir plus sur Stripe"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:210
 #: src/components/routes/event/HomepageDesigner/index.tsx:102
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:110
 msgid "Leave"
@@ -7020,7 +7108,7 @@ msgstr "Laissez vide pour un lien sans expiration."
 msgid "Leave empty to keep the usual subject."
 msgstr "Laissez vide pour garder l'objet habituel."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:486
+#: src/components/routes/event/Courses/CourseMaker.tsx:758
 msgid "Leave empty: Dehors suggests one"
 msgstr "Laissez vide : Dehors en propose une"
 
@@ -7032,6 +7120,10 @@ msgstr "Laissez la quantité vide pour un stock illimité"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:108
 msgid "Leave without publishing?"
 msgstr "Quitter sans publier?"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:208
+msgid "Leave without saving the route?"
+msgstr "Quitter sans enregistrer le parcours?"
 
 #: src/components/routes/event/Deposits/index.tsx:267
 msgid "Left to return"
@@ -7229,12 +7321,17 @@ msgid "Look Up My Tickets"
 msgstr "Rechercher mes billets"
 
 #: src/components/routes/event/Courses/CourseMaker.tsx:578
-msgid "Looking for more…"
-msgstr "Recherche d'autres parcours…"
+#~ msgid "Looking for more…"
+#~ msgstr "Recherche d'autres parcours…"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:717
+#: src/components/routes/event/Courses/CourseMaker.tsx:945
+msgid "Looking for routes around the start…"
+msgstr "On cherche des parcours autour du départ…"
 
 #: src/components/routes/event/Courses/CourseMaker.tsx:578
-msgid "Looking for routes on the trails and streets…"
-msgstr "Recherche de parcours sur les sentiers et les rues…"
+#~ msgid "Looking for routes on the trails and streets…"
+#~ msgstr "Recherche de parcours sur les sentiers et les rues…"
 
 #: src/components/common/ErrorScreen/index.tsx:118
 #: src/components/common/TicketLookupCard/index.tsx:37
@@ -7253,7 +7350,9 @@ msgstr "Je regarde…"
 msgid "loop"
 msgstr "boucle"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:468
+#: src/components/routes/event/Courses/CourseMaker.tsx:691
+#: src/components/routes/event/Courses/CourseMaker.tsx:740
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:195
 msgid "Loop"
 msgstr "Boucle"
 
@@ -7320,7 +7419,7 @@ msgstr "Offre manuelle"
 msgid "Manually Add Attendee"
 msgstr "Ajouter manuellement un participant"
 
-#: src/components/common/CourseMap/courseLayers.ts:46
+#: src/components/common/CourseMap/courseLayers.ts:52
 msgid "Map credits"
 msgstr "Crédits de la carte"
 
@@ -7518,7 +7617,8 @@ msgstr "minutes"
 msgid "Missing something?"
 msgstr "Il te manque quelque chose?"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:529
+#: src/components/routes/event/Courses/CourseMaker.tsx:692
+#: src/components/routes/event/Courses/CourseMaker.tsx:816
 msgid "Mixed"
 msgstr "Mixte"
 
@@ -7569,11 +7669,16 @@ msgstr "Plus d'actions"
 msgid "More options"
 msgstr "Plus d'options"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:717
+#: src/components/routes/event/Courses/CourseMaker.tsx:944
+msgid "More routes on the way…"
+msgstr "D'autres propositions arrivent…"
+
 #: src/components/routes/admin/Dashboard/index.tsx:407
 msgid "Most Viewed Events (Last 14 Days)"
 msgstr "Événements les plus vus (14 derniers jours)"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:521
+#: src/components/routes/event/Courses/CourseMaker.tsx:808
 msgid "Mostly on"
 msgstr "Surtout sur"
 
@@ -7646,7 +7751,7 @@ msgstr "N/A"
 #: src/components/modals/DuplicateEventModal/index.tsx:109
 #: src/components/routes/admin/Configurations/index.tsx:219
 #: src/components/routes/admin/PlatformRevenue/index.tsx:209
-#: src/components/routes/event/Courses/CourseMaker.tsx:610
+#: src/components/routes/event/Courses/CourseMaker.tsx:992
 #: src/components/routes/event/HomepageDesigner/index.tsx:312
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImportFromUrl.tsx:79
 msgid "Name"
@@ -7878,6 +7983,10 @@ msgstr "Aucun compte"
 msgid "No accounts found"
 msgstr "Aucun compte trouvé"
 
+#: src/components/routes/event/Courses/PlaceInput.tsx:95
+msgid "No address found. Try another spelling, or choose on the map."
+msgstr "Aucune adresse trouvée. Essayez une autre orthographe, ou choisissez sur la carte."
+
 #: src/components/routes/event/Settings/cards/LocationCard.tsx:121
 msgid "No address: the connection link is sent with the order."
 msgstr "Pas d'adresse : le lien de connexion est envoyé avec la commande."
@@ -7933,6 +8042,10 @@ msgstr "Aucune capacité"
 #: src/components/common/CapacityAssignmentList/index.tsx:45
 msgid "No Capacity Assignments"
 msgstr "Aucune Affectation de Capacité"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:1009
+msgid "No changes yet"
+msgstr "Aucune modification pour l'instant"
 
 #: src/components/common/CheckInStatusModal/index.tsx:116
 msgctxt "attendee check-in"
@@ -8165,7 +8278,7 @@ msgstr "Pas de réponse"
 msgid "No responses yet"
 msgstr "Aucune réponse pour le moment"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:586
+#: src/components/routes/event/Courses/CourseMaker.tsx:957
 msgid "No route found from this start. Move the start a little, change the distance, or draw it yourself."
 msgstr "Aucun parcours trouvé à partir de ce départ. Déplacez un peu le départ, changez la distance, ou tracez-le vous-même."
 
@@ -8173,7 +8286,7 @@ msgstr "Aucun parcours trouvé à partir de ce départ. Déplacez un peu le dép
 #~ msgid "No route yet. Add a GPX file: participants will be able to download it from their ticket."
 #~ msgstr "Aucun parcours pour l'instant. Ajoutez un fichier GPX : les participants pourront le télécharger depuis leur billet."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:104
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:136
 msgid "No route yet. Draw one above, or add a GPX file you already have."
 msgstr "Aucun parcours pour l'instant. Tracez-en un plus haut, ou ajoutez un fichier GPX que vous avez déjà."
 
@@ -8210,7 +8323,7 @@ msgstr "Aucun billet pour l’instant."
 msgid "No tokens yet."
 msgstr "Aucun jeton pour le moment."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:643
+#: src/components/routes/event/Courses/CourseMaker.tsx:1051
 msgid "No trail or street goes there. The route was kept as it was."
 msgstr "Aucun sentier ni aucune rue ne passe là. Le tracé est resté tel quel."
 
@@ -8279,6 +8392,10 @@ msgstr "Aucun"
 #: src/constants/canadianProvinces.ts:10
 msgid "Northwest Territories"
 msgstr "Territoires du Nord-Ouest"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:1009
+msgid "Not added to the event yet"
+msgstr "Pas encore ajouté à l'événement"
 
 #: src/components/common/Assistant/Answer.tsx:86
 msgid "Not answered."
@@ -9250,7 +9367,7 @@ msgstr "Participants arrivés"
 msgid "Participants can transfer their ticket"
 msgstr "Les participants peuvent transférer leur billet"
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:87
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:106
 msgid "Participants download them from the event page, their ticket and their ticket email."
 msgstr "Les participants les téléchargent depuis la page de l'événement, leur billet et le courriel de leur billet."
 
@@ -9552,7 +9669,7 @@ msgstr "Autorisation photo et vidéo"
 msgid "Photos"
 msgstr "Photos"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:444
+#: src/components/routes/event/Courses/CourseMaker.tsx:712
 msgid "Pick a suggestion, on the map or in the list."
 msgstr "Choisissez une proposition, sur la carte ou dans la liste."
 
@@ -9723,10 +9840,14 @@ msgstr "Veuillez patienter pendant que nous préparons vos affiliés pour l'expo
 msgid "Please wait while we prepare your invoice..."
 msgstr "Veuillez patienter pendant que nous préparons votre facture..."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:178
-#: src/components/routes/event/Courses/CourseMaker.tsx:210
-#: src/components/routes/event/Courses/CourseMaker.tsx:314
-#: src/components/routes/event/Courses/CourseMaker.tsx:317
+#: src/components/routes/event/Courses/CourseMaker.tsx:484
+msgid "Point {index} of the route: drag it to move it, Delete key to remove it."
+msgstr "Point {index} du tracé : glissez-le pour le déplacer, touche Suppr pour le retirer."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:323
+#: src/components/routes/event/Courses/CourseMaker.tsx:362
+#: src/components/routes/event/Courses/CourseMaker.tsx:518
+#: src/components/routes/event/Courses/CourseMaker.tsx:521
 msgid "Point on the map"
 msgstr "Point sur la carte"
 
@@ -9734,7 +9855,9 @@ msgstr "Point sur la carte"
 msgid "point to point"
 msgstr "point à point"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:469
+#: src/components/routes/event/Courses/CourseMaker.tsx:691
+#: src/components/routes/event/Courses/CourseMaker.tsx:741
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:195
 msgid "Point to point"
 msgstr "Point à point"
 
@@ -10545,14 +10668,25 @@ msgstr "Retirer la photo {number}"
 msgid "Remove promo code"
 msgstr "Retirer le code promo"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:453
+msgid "Remove this point"
+msgstr "Retirer ce point"
+
 #: src/components/modals/RepeatEventModal/index.tsx:140
 #: src/components/routes/event/Settings/cards/RecurringEventCard.tsx:25
 msgid "Repeat this event"
 msgstr "Répéter cet événement"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:319
+#: src/components/routes/event/Courses/index.tsx:55
 #: src/components/routes/organizer/OrganizerHomepageDesigner/ImagesSection.tsx:75
 msgid "Replace"
 msgstr "Remplacer"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:318
+#: src/components/routes/event/Courses/index.tsx:54
+msgid "Replace the route in progress? Your changes will be lost."
+msgstr "Remplacer le parcours en cours? Vos modifications seront perdues."
 
 #: src/components/modals/SendMessageModal/index.tsx:320
 msgid "Replace the subject and the message with this template?"
@@ -10809,7 +10943,12 @@ msgstr "Révoquer cette invitation ? Le lien cessera immédiatement de fonctionn
 msgid "Revoked"
 msgstr "Révoquée"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:530
+#: src/components/routes/event/Courses/CourseMaker.tsx:80
+msgid "Right on the distance"
+msgstr "Pile la distance"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:692
+#: src/components/routes/event/Courses/CourseMaker.tsx:817
 msgid "Roads"
 msgstr "Routes"
 
@@ -10831,24 +10970,28 @@ msgstr "Parcours"
 #~ msgid "Route (GPX)"
 #~ msgstr "Parcours (GPX)"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:418
+#: src/components/routes/event/Courses/CourseMaker.tsx:675
 msgid "Route added. Participants can download it from their ticket."
 msgstr "Parcours ajouté. Les participants peuvent le télécharger depuis leur billet."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:165
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:230
 msgid "Route name"
 msgstr "Nom du parcours"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:415
+#: src/components/routes/event/Courses/CourseMaker.tsx:670
 msgid "Route saved. Participants download the new version."
 msgstr "Parcours enregistré. Les participants téléchargent la nouvelle version."
 
 #: src/components/layouts/Event/index.tsx:140
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:157
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:159
-#: src/components/routes/event/Courses/index.tsx:63
+#: src/components/routes/event/Courses/index.tsx:98
 msgid "Routes"
 msgstr "Parcours"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:716
+msgid "Routing…"
+msgstr "Calcul du tracé…"
 
 #: src/components/forms/ProductForm/index.tsx:98
 msgid "Sale End Date"
@@ -10923,7 +11066,7 @@ msgstr "Saskatchewan"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:622
+#: src/components/routes/event/Courses/CourseMaker.tsx:1015
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
@@ -11715,7 +11858,7 @@ msgstr "Affichés sur le résumé de la commande et les billets, une fois la com
 msgid "Shown on the payment page, the order summary and the confirmation email (e.g. where to send the Interac e-Transfer, the deadline)."
 msgstr "Affichées sur la page de paiement, le résumé de la commande et le courriel de confirmation (p. ex. où envoyer le virement Interac, la date limite)."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:611
+#: src/components/routes/event/Courses/CourseMaker.tsx:993
 msgid "Shown on the ticket and the event page."
 msgstr "Affiché sur le billet et la page de l'événement."
 
@@ -11996,9 +12139,10 @@ msgctxt "event date"
 msgid "Start"
 msgstr "Début"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:291
-#: src/components/routes/event/Courses/CourseMaker.tsx:314
-#: src/components/routes/event/Courses/CourseMaker.tsx:474
+#: src/components/routes/event/Courses/CourseMaker.tsx:469
+#: src/components/routes/event/Courses/CourseMaker.tsx:518
+#: src/components/routes/event/Courses/CourseMaker.tsx:723
+#: src/components/routes/event/Courses/CourseMaker.tsx:746
 msgctxt "course"
 msgid "Start"
 msgstr "Départ"
@@ -12007,9 +12151,9 @@ msgstr "Départ"
 msgid "Start"
 msgstr "Commencer"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:291
-#: src/components/routes/event/Courses/CourseMaker.tsx:314
-#: src/components/routes/event/Courses/CourseMaker.tsx:474
+#: src/components/routes/event/Courses/CourseMaker.tsx:469
+#: src/components/routes/event/Courses/CourseMaker.tsx:518
+#: src/components/routes/event/Courses/CourseMaker.tsx:746
 msgid "Start and finish"
 msgstr "Départ et arrivée"
 
@@ -12026,7 +12170,7 @@ msgstr "Partez d'un modèle, puis adaptez-le à votre événement."
 msgid "Start of sales"
 msgstr "Début des ventes"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:80
+#: src/components/routes/event/Courses/CourseMaker.tsx:147
 msgid "Start of the route"
 msgstr "Départ du parcours"
 
@@ -12097,6 +12241,7 @@ msgstr "Les statistiques sont basées sur la date de création du compte"
 msgid "Status"
 msgstr "Statut"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:210
 #: src/components/routes/event/HomepageDesigner/index.tsx:102
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:110
 msgid "Stay"
@@ -12116,6 +12261,10 @@ msgctxt "landing section"
 msgid "Steps"
 msgstr "Étapes"
 
+#: src/components/routes/event/Courses/CourseMaker.tsx:945
+msgid "Still a few seconds…"
+msgstr "Encore quelques secondes…"
+
 #: src/components/routes/help/HelpGuide.tsx:74
 #: src/components/routes/help/index.tsx:71
 msgid "Still stuck? Write to us:"
@@ -12126,6 +12275,15 @@ msgstr "Toujours bloqué ? Écrivez-nous :"
 #: src/components/routes/help/AskAssistant.tsx:117
 msgid "Stop"
 msgstr "Arrêter"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:948
+msgctxt "course search"
+msgid "Stop"
+msgstr "Arrêter"
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:892
+msgid "Stop drawing"
+msgstr "Terminer le tracé"
 
 #: src/components/routes/organizer/Settings/team/MembersCard.tsx:
 #~ msgid "Stop emailing visitor messages"
@@ -12306,11 +12464,11 @@ msgstr "Code promotionnel mis à jour avec succès"
 msgid "Successfully updated Webhook"
 msgstr "Webhook mis à jour avec succès"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:543
+#: src/components/routes/event/Courses/CourseMaker.tsx:860
 msgid "Suggest again"
 msgstr "Proposer à nouveau"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:543
+#: src/components/routes/event/Courses/CourseMaker.tsx:860
 msgid "Suggest routes"
 msgstr "Proposer des parcours"
 
@@ -12772,7 +12930,7 @@ msgstr "La page de l'événement est de nouveau visible."
 msgid "The event you're looking for is not available at the moment. It may have been removed, expired, or the URL might be incorrect."
 msgstr "L'événement que vous recherchez n'est pas disponible pour le moment. Il a peut-être été supprimé, expiré ou l'URL est incorrecte."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:86
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:100
 msgid "The event's routes"
 msgstr "Les parcours de l'événement"
 
@@ -12788,11 +12946,11 @@ msgstr "Les frais s'ajoutent au prix du billet. Vous recevez le prix complet."
 msgid "The full order amount will be refunded to the customer's original payment method."
 msgstr "Le montant total de la commande sera remboursé sur le mode de paiement original du client."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:29
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:33
 msgid "The GPX file could not be added. Please try again."
 msgstr "Le fichier GPX n'a pas pu être ajouté. Veuillez réessayer."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:59
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:72
 msgid "The GPX file must be 10 MB or less."
 msgstr "Le fichier GPX doit faire 10 Mo ou moins."
 
@@ -12808,7 +12966,11 @@ msgstr "Le lien que vous essayez d'accéder a expiré ou n'est plus valide. Veui
 msgid "The list is created. Open the scanner or copy its link from its card."
 msgstr "La liste est créée. Ouvre le scanner ou copie son lien depuis sa carte."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:645
+#: src/components/routes/event/Courses/CourseMaker.tsx:883
+msgid "The loop comes back to the start by itself."
+msgstr "La boucle revient d'elle-même au départ."
+
+#: src/components/routes/event/Courses/CourseMaker.tsx:1053
 msgid "The map could not load. Please reload the page."
 msgstr "La carte n'a pas pu se charger. Rechargez la page."
 
@@ -12960,21 +13122,29 @@ msgstr "La date limite de remboursement doit être avant le nouveau début."
 msgid "The refund deadline must be in the future."
 msgstr "La date limite de remboursement doit être dans le futur."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:76
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:89
 msgid "The route could not be deleted. Please try again."
 msgstr "Le parcours n'a pas pu être supprimé. Veuillez réessayer."
 
-#: src/components/routes/event/Courses/index.tsx:51
+#: src/components/routes/event/Courses/index.tsx:73
 msgid "The route could not be opened. Please try again."
 msgstr "Le parcours n'a pas pu s'ouvrir. Veuillez réessayer."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:423
+#: src/components/routes/event/Courses/CourseMaker.tsx:680
 msgid "The route could not be saved. Please try again."
 msgstr "Le parcours n'a pas pu être enregistré. Veuillez réessayer."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:147
+#: src/components/routes/event/Courses/CourseMaker.tsx:209
+msgid "The route in progress will be lost."
+msgstr "Le parcours en cours sera perdu."
+
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:207
 msgid "The route name could not be saved. Please try again."
 msgstr "Le nom du parcours n'a pas pu être enregistré. Veuillez réessayer."
+
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:128
+msgid "The routes could not be loaded."
+msgstr "Les parcours n'ont pas pu être chargés."
 
 #: src/components/routes/event/Settings/cards/RecurringEventCard.tsx:22
 msgid "The same outing every week, every two weeks or every month: create its next dates in one go, each with its tickets and its settings."
@@ -13126,7 +13296,7 @@ msgstr "Ce code sera utilisé pour suivre les ventes. Seuls les lettres, chiffre
 msgid "This document could not be found."
 msgstr "Ce document est introuvable."
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:630
+#: src/components/routes/event/Courses/CourseMaker.tsx:962
 msgid "This event already has 5 routes: delete one to add this one."
 msgstr "Cet événement a déjà 5 parcours : supprimez-en un pour ajouter celui-ci."
 
@@ -13151,7 +13321,7 @@ msgstr "Cet événement fait partie d'une série de dates : les nouvelles s'y aj
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
 
-#: src/components/routes/event/Courses/index.tsx:44
+#: src/components/routes/event/Courses/index.tsx:64
 msgid "This GPX has no route to edit."
 msgstr "Ce GPX n'a pas de tracé à modifier."
 
@@ -13802,7 +13972,8 @@ msgstr "Suivez la croissance et les performances des comptes par source d'attrib
 msgid "Track sales, revenue, and attendance with detailed reports"
 msgstr "Suivez les ventes, les revenus et la fréquentation avec des rapports détaillés"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:528
+#: src/components/routes/event/Courses/CourseMaker.tsx:692
+#: src/components/routes/event/Courses/CourseMaker.tsx:815
 msgid "Trails"
 msgstr "Sentiers"
 
@@ -13840,6 +14011,7 @@ msgstr "Confiance et sécurité"
 
 #: src/components/common/CheckIn/PhoneScanner.tsx:139
 #: src/components/common/ErrorDisplay/index.tsx:41
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:131
 #: src/components/routes/my-tickets/index.tsx:517
 #: src/components/routes/welcome/index.tsx:609
 msgid "Try again"
@@ -13989,7 +14161,8 @@ msgstr "Moins de {ageLimit} ans le jour de l'événement, selon la date de naiss
 msgid "Under what age?"
 msgstr "Moins de quel âge?"
 
-#: src/components/routes/event/Courses/CourseMaker.tsx:605
+#: src/components/routes/event/Courses/CourseMaker.tsx:889
+#: src/components/routes/event/Courses/CourseMaker.tsx:985
 msgid "Undo"
 msgstr "Défaire"
 
@@ -14072,7 +14245,7 @@ msgstr "Non fiable"
 msgid "Up to {MAX_GALLERY_IMAGES} photos. They follow the cover at the top of the page and appear under the description."
 msgstr "Jusqu'à {MAX_GALLERY_IMAGES} photos. Elles suivent la couverture en haut de la page et s'affichent sous la description."
 
-#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:117
+#: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:158
 msgid "Up to {MAX_ROUTE_FILES_PER_EVENT} .gpx files of 10 MB each."
 msgstr "Jusqu'à {MAX_ROUTE_FILES_PER_EVENT} fichiers .gpx de 10 Mo chacun."
 
@@ -14174,7 +14347,7 @@ msgstr "Scanner USB/HID"
 msgid "Use"
 msgstr "Utiliser"
 
-#: src/components/common/CourseMap/courseLayers.ts:42
+#: src/components/common/CourseMap/courseLayers.ts:48
 msgid "Use ⌘ + scroll to zoom the map"
 msgstr "⌘ + molette pour zoomer sur la carte"
 
@@ -14186,7 +14359,7 @@ msgstr "Utilisez un code comme #FA7853"
 msgid "Use another Stripe account for this organizer"
 msgstr "Utiliser un autre compte Stripe pour cet organisateur"
 
-#: src/components/common/CourseMap/courseLayers.ts:41
+#: src/components/common/CourseMap/courseLayers.ts:47
 msgid "Use Ctrl + scroll to zoom the map"
 msgstr "Ctrl + molette pour zoomer sur la carte"
 
@@ -14210,7 +14383,7 @@ msgstr "Utiliser les informations de l'acheteur pour tous les participants"
 msgid "Use the default version"
 msgstr "Utiliser la version par défaut"
 
-#: src/components/common/CourseMap/courseLayers.ts:43
+#: src/components/common/CourseMap/courseLayers.ts:49
 msgid "Use two fingers to move the map"
 msgstr "Deux doigts pour déplacer la carte"
 
@@ -15644,10 +15817,10 @@ msgstr "Code Postal"
 msgid "ZIP or Postal Code"
 msgstr "Code postal"
 
-#: src/components/common/CourseMap/courseLayers.ts:44
+#: src/components/common/CourseMap/courseLayers.ts:50
 msgid "Zoom in"
 msgstr "Zoomer"
 
-#: src/components/common/CourseMap/courseLayers.ts:45
+#: src/components/common/CourseMap/courseLayers.ts:51
 msgid "Zoom out"
 msgstr "Dézoomer"

@@ -1,24 +1,142 @@
 @use "../../../../../styles/mixins";
 @use "../../../../../styles/admin-ui" as ui;
 
-// The course's round icon, like the pastilles of the other rows.
-.icon {
+// « Les parcours de l'événement », a sibling of the sections of « Billets et produits ».
+
+.card {
+  @include ui.card(1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  color: ui.$ink;
+  scroll-margin-top: 1rem;
+
+  @include mixins.respond-below(md) {
+    padding: 1rem;
+    border-radius: 1.5rem;
+  }
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  // On phones the button goes under the title instead of squeezing it.
+  @include mixins.respond-below(sm) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title {
+  @include ui.section-title;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+
+  @include mixins.respond-below(md) {
+    font-size: 1.25rem;
+  }
+}
+
+.count {
+  @include ui.tag;
+  background: ui.$accent-soft;
+  color: ui.$ink;
+  font-family: var(--mantine-font-family);
+  text-transform: none;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.importButton {
+  @include ui.outline-button;
+  flex-shrink: 0;
+  height: 2.75rem !important;
+  font-size: 1rem !important;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+@keyframes justSaved {
+  0%,
+  35% {
+    background: ui.tone-bg(ok);
+    box-shadow: 0 0 0 2px ui.tone-text(ok);
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 0.75rem 0.625rem 0.625rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+
+  &[data-editing] {
+    box-shadow: 0 0 0 2px ui.tone-text(waiting);
+  }
+
+  &[data-highlighted] {
+    animation: justSaved 2.4s ease-out;
+  }
+
+  @include mixins.respond-below(sm) {
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+}
+
+.thumb {
   display: grid;
   flex-shrink: 0;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 999px;
-  background: #fbe7b5;
-  color: ui.$ink;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.875rem;
+  background: ui.$card;
+  color: ui.$accent-dark;
+}
 
-  @include mixins.respond-below(sm) {
-    display: none;
-  }
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.nameLine {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 // The name, editable in place: plain text until it is clicked.
 .labelInput.labelInput {
+  flex: 1;
+  min-width: 0;
   margin: 0;
 
   :global(.mantine-Input-input) {
@@ -30,8 +148,9 @@
     border-radius: 0.5rem;
     background: transparent;
     color: ui.$ink;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 700;
+    text-overflow: ellipsis;
 
     &:hover {
       border-color: rgb(55 39 33 / 0.16);
@@ -42,4 +161,122 @@
       background: ui.$card;
     }
   }
+}
+
+.editingTag {
+  @include ui.tag(waiting);
+  flex-shrink: 0;
+}
+
+.meta {
+  overflow: hidden;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+
+  @include mixins.respond-below(sm) {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: ui.$ink;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: ui.$track;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 1px;
+  }
+
+  &[data-tone='danger'] {
+    color: #c8442f;
+  }
+}
+
+// « + Tracer un nouveau parcours », dashed like « + Ajouter un billet ».
+.addRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 3.25rem;
+  padding: 0 1rem;
+  border: 1.5px dashed ui.$ink;
+  border-radius: 1.25rem;
+  background: none;
+  color: ui.$accent-dark;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: ui.$row;
+  }
+
+  &:focus-visible {
+    outline: 3px solid ui.$ink;
+    outline-offset: 2px;
+  }
+}
+
+.empty {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: ui.$row;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.problem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: ui.tone-bg(problem);
+  color: ui.tone-text(problem);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.linkButton {
+  color: ui.$accent-dark !important;
+  font-weight: 700 !important;
+}
+
+.hint {
+  margin: 0;
+  color: var(--dehors-texte-doux);
+  font-size: 0.8125rem;
 }

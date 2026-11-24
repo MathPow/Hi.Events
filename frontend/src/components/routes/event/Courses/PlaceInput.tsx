@@ -27,9 +27,14 @@ export const PlaceInput = ({label, placeholder, value, near, picking, onPick, on
     const [text, setText] = useState(value?.label ?? '');
     const [results, setResults] = useState<PlaceResult[]>([]);
     const [searching, setSearching] = useState(false);
+    const [searchedFor, setSearchedFor] = useState('');
     const typed = useRef(false);
 
     useEffect(() => {
+        // Emptied by typing: the text being typed stays.
+        if (value === null && typed.current) {
+            return;
+        }
         typed.current = false;
         setText(value?.label ?? '');
     }, [value]);
@@ -38,6 +43,8 @@ export const PlaceInput = ({label, placeholder, value, near, picking, onPick, on
         const query = text.trim();
         if (!typed.current || query.length < 3) {
             setResults([]);
+            setSearching(false);
+            setSearchedFor('');
             return;
         }
 
@@ -48,12 +55,14 @@ export const PlaceInput = ({label, placeholder, value, near, picking, onPick, on
             if (!cancelled) {
                 setResults(found);
                 setSearching(false);
+                setSearchedFor(query);
             }
         }, 350);
 
         return () => {
             cancelled = true;
             window.clearTimeout(timer);
+            setSearching(false);
         };
     }, [text, near]);
 
@@ -76,8 +85,16 @@ export const PlaceInput = ({label, placeholder, value, near, picking, onPick, on
             onChange={(next) => {
                 typed.current = true;
                 setText(next);
+                // The place shown no longer matches the text: it isn't the start any more.
+                if (value) {
+                    onChange(null);
+                }
             }}
             onOptionSubmit={choose}
+            description={!searching && searchedFor !== '' && searchedFor === text.trim() && results.length === 0
+                ? t`No address found. Try another spelling, or choose on the map.`
+                : undefined}
+            inputWrapperOrder={['label', 'input', 'description']}
             rightSectionWidth={searching ? 64 : 44}
             rightSectionPointerEvents="all"
             rightSection={(

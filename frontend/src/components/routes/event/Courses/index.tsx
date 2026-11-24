@@ -1,14 +1,16 @@
-import {useRef, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import {useParams} from "react-router";
 import {t} from "@lingui/macro";
 import {Skeleton} from "@mantine/core";
+import {useQueryClient} from "@tanstack/react-query";
 import {useGetEventSettings} from "../../../../queries/useGetEventSettings.ts";
 import {useGetEventMapLocation} from "../../../../queries/useGetEventMapLocation.ts";
 import {useGetEventRouteFiles} from "../../../../queries/useGetEventRouteFiles.ts";
-import {EventRouteFile, eventRouteFileClientPublic, MAX_ROUTE_FILES_PER_EVENT} from "../../../../api/eventRouteFile.client.ts";
+import {eventRouteFileGpxQuery} from "../../../../queries/useGetEventRouteFileGpx.ts";
+import {EventRouteFile, MAX_ROUTE_FILES_PER_EVENT} from "../../../../api/eventRouteFile.client.ts";
 import {formatAddress} from "../../../../utilites/addressUtilities.ts";
-import {parseGpx} from "../../../../utilites/course/gpx.ts";
 import {showError} from "../../../../utilites/notifications.tsx";
+import {confirmationDialog} from "../../../../utilites/confirmationDialog.tsx";
 import {RouteFilesCard} from "../Settings/cards/RouteFilesCard.tsx";
 import {CourseMaker, CourseToEdit} from "./CourseMaker.tsx";
 import {Place} from "./PlaceInput.tsx";
@@ -20,11 +22,14 @@ import classes from "./Courses.module.scss";
  */
 const Courses = () => {
     const {eventId} = useParams();
+    const queryClient = useQueryClient();
     const settingsQuery = useGetEventSettings(eventId);
     const locationQuery = useGetEventMapLocation(eventId, !!eventId);
     const routeFiles = useGetEventRouteFiles(eventId).data ?? [];
     const [editing, setEditing] = useState<CourseToEdit | null>(null);
     const [round, setRound] = useState(0);
+    const [savedId, setSavedId] = useState<number | null>(null);
+    const dirty = useRef(false);
     const top = useRef<HTMLDivElement>(null);
 
     // The maker opens on the event's place, once we know where it is (or that it has none).
@@ -36,25 +41,55 @@ const Courses = () => {
         position: {lat: location.latitude, lng: location.longitude},
     } : undefined;
 
-    const edit = async (routeFile: EventRouteFile) => {
+    const onDirtyChange = useCallback((value: boolean) => {
+        dirty.current = value;
+    }, []);
+
+    // A route being drawn is only dropped once the organizer says so.
+    const unlessDirty = (action: () => void) => {
+        if (!dirty.current) {
+            action();
+            return;
+        }
+        confirmationDialog(t`Replace the route in progress? Your changes will be lost.`, action,
+            {confirm: t`Replace`, cancel: t`Keep it`});
+    };
+
+    const toTop = () => top.current?.scrollIntoView({behavior: 'smooth', block: 'start'});
+
+    const edit = (routeFile: EventRouteFile) => unlessDirty(async () => {
         try {
-            const response = await fetch(eventRouteFileClientPublic.downloadUrl(eventId!, routeFile.id));
-            const gpx = response.ok ? parseGpx(await response.text()) : null;
+            const gpx = await queryClient.fetchQuery(eventRouteFileGpxQuery(eventId!, routeFile));
             if (!gpx || gpx.points.length < 2) {
                 showError(t`This GPX has no route to edit.`);
                 return;
             }
+            dirty.current = false;
+            setSavedId(null);
             setEditing({routeFile, gpx});
             setRound((value) => value + 1);
-            top.current?.scrollIntoView({behavior: 'smooth', block: 'start'});
+            toTop();
         } catch {
             showError(t`The route could not be opened. Please try again.`);
         }
-    };
+    });
 
-    const done = () => {
+    const done = (saved?: number) => {
+        dirty.current = false;
         setEditing(null);
         setRound((value) => value + 1);
+        setSavedId(saved ?? null);
+    };
+
+    const startNew = () => {
+        if (editing) {
+            unlessDirty(() => {
+                done();
+                toTop();
+            });
+            return;
+        }
+        toTop();
     };
 
     return (
@@ -74,13 +109,15 @@ const Courses = () => {
                     editing={editing}
                     full={routeFiles.length >= MAX_ROUTE_FILES_PER_EVENT}
                     onDone={done}
+                    onDirtyChange={onDirtyChange}
                 />
             ) : (
                 <Skeleton height={640} radius={24}/>
             )}
 
             <div className={classes.files}>
-                <RouteFilesCard eventId={eventId!} onEdit={edit}/>
+                <RouteFilesCard eventId={eventId!} onEdit={edit} onNew={startNew}
+                                editingId={editing?.routeFile.id ?? null} highlightId={savedId}/>
             </div>
         </div>
     );
