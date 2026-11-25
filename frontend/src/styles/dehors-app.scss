@@ -265,30 +265,11 @@ body.dehors-app [data-dehors-apercu] {
   }
 }
 
-// Safari colours its bars from the page edges, as on the shop: orange above (the strip on load,
-// and the pull-down), brown below (the pull-up past the end).
-html:has(body.dehors-app) {
-  background: linear-gradient(#fa7853 50%, #352924 50%);
-}
-
 body.dehors-app {
   @each $nom, $valeur in $variables {
     --#{$nom}: #{$valeur};
   }
 
-  min-height: 100dvh;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    height: 6px;
-    background: var(--dehors-orange);
-    pointer-events: none;
-  }
 
   --dehors-onglet: 2.5rem;
 
