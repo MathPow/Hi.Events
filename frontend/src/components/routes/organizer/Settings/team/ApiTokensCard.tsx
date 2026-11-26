@@ -8,9 +8,26 @@ import {showError, showSuccess} from "../../../../../utilites/notifications.tsx"
 import {confirmationDialog} from "../../../../../utilites/confirmationDialog.tsx";
 import {prettyDate} from "../../../../../utilites/dates.ts";
 import {SettingsCard} from "../SettingsUi.tsx";
+import {getConfig} from "../../../../../utilites/config.ts";
 import classes from "../Settings.module.scss";
 
 const API_TOKENS_QUERY_KEY = 'apiTokens';
+
+// The ticketing's MCP server (backend McpAction): an agent reads and edits the ticketing with a token.
+const mcpUrl = () => `${getConfig('VITE_API_URL_CLIENT')}/mcp`;
+
+const mcpCommand = (token: string) =>
+    `claude mcp add --transport http billetterie-dehors ${mcpUrl()} --header "Authorization: Bearer ${token}"`;
+
+const CopyLink = ({value}: { value: string }) => (
+    <CopyButton value={value}>
+        {({copied, copy}) => (
+            <button type="button" className={classes.textButton} onClick={copy}>
+                {copied ? t`Copied` : t`Copy`}
+            </button>
+        )}
+    </CopyButton>
+);
 
 // « Jetons d'API »: another application using the API on the account's behalf. Developers only.
 export const ApiTokensCard = () => {
@@ -57,19 +74,19 @@ export const ApiTokensCard = () => {
             title={t`API tokens`}
             subtitle={t`Let another application use this API on your behalf, without sharing your password.`}
         >
+            <p className={classes.empty}>
+                <Trans>AI agents connect through the MCP server:</Trans> <code>{mcpUrl()}</code>
+            </p>
             {freshToken && (
                 <div className={`${classes.notice} ${classes.noticeWarning}`}>
                     <IconKey size={18}/>
                     <div className={classes.cardBody} style={{gap: '0.5rem', flex: 1, minWidth: 0}}>
                         <Trans>Copy this token now. It is shown once and cannot be recovered afterwards.</Trans>
                         <code className={classes.code}>{freshToken.token}</code>
-                        <CopyButton value={freshToken.token}>
-                            {({copied, copy}) => (
-                                <button type="button" className={classes.textButton} onClick={copy}>
-                                    {copied ? t`Copied` : t`Copy`}
-                                </button>
-                            )}
-                        </CopyButton>
+                        <CopyLink value={freshToken.token}/>
+                        <Trans>To connect an AI agent (MCP), add this server with the token as a Bearer header. For Claude Code:</Trans>
+                        <code className={classes.code}>{mcpCommand(freshToken.token)}</code>
+                        <CopyLink value={mcpCommand(freshToken.token)}/>
                     </div>
                 </div>
             )}
