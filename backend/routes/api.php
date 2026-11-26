@@ -105,6 +105,7 @@ use HiEvents\Http\Actions\Messages\GetMessagesAction;
 use HiEvents\Http\Actions\Messages\SendMessageAction;
 use HiEvents\Http\Actions\Orders\CancelOrderAction;
 use HiEvents\Http\Actions\ApiTokens\CreateApiTokenAction;
+use HiEvents\Http\Actions\Mcp\McpAction;
 use HiEvents\Http\Actions\ApiTokens\DeleteApiTokenAction;
 use HiEvents\Http\Actions\ApiTokens\GetApiTokensAction;
 use HiEvents\Http\Actions\Orders\DownloadDonationReceiptAction;
@@ -611,6 +612,9 @@ $router->middleware(['auth:api'])->group(
         // L'assistant des organisateurs (Claude) : voir AssistantTurnAction.
         $router->get('/assistant', GetAssistantAction::class);
         $router->post('/assistant', AssistantTurnAction::class)->middleware('throttle:30,1');
+
+        // Le serveur MCP, pour les agents branches avec un jeton d'API : voir McpAction.
+        $router->match(['GET', 'POST', 'DELETE'], '/mcp', McpAction::class)->middleware('throttle:120,1');
     }
 );
 

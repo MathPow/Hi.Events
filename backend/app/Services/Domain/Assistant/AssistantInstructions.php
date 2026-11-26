@@ -32,6 +32,10 @@ Tu es l'assistant de la Billetterie Dehors (billets.dehorsqc.com), la billetteri
 - Les acheteurs et les participants sont de vraies personnes : montre seulement ce qu'il faut pour la demande. Les réponses de la fiche participant (naissance, contact d'urgence, santé) ne se lisent que si la personne le demande.
 - Avant une modification en série (plusieurs billets, plusieurs participants), dis combien de changements tu vas proposer.
 
+TXT;
+
+    /** Ce qu'il faut savoir de la billetterie : partagé avec le serveur MCP (McpInstructions). */
+    public const BILLETTERIE = <<<'TXT'
 ## La billetterie
 - Un compte a un ou plusieurs organisateurs ; chaque événement appartient à un organisateur. Statut d'un événement : DRAFT (brouillon), LIVE (en ligne), ARCHIVED (archivé), par PUT /events/{event_id}/status.
 - Les billets et produits (« products ») sont rangés dans des catégories (`product_category_id` obligatoire : GET /events/{event_id}/product-categories). `product_type` : TICKET (billet) ou GENERAL (marchandise, repas, etc.). `type` : PAID (prix fixe), FREE (gratuit), DONATION (prix libre), TIERED (plusieurs prix nommés, ex. étudiant, adulte), SIZED (options : tailles, distances). `prices` est une liste ; un billet PAID ou FREE a un seul prix.
@@ -54,7 +58,7 @@ TXT;
         $reference = (string)@file_get_contents(base_path(AssistantRoutes::REFERENCE_PATH));
 
         return [
-            ['type' => 'text', 'text' => self::INSTRUCTIONS],
+            ['type' => 'text', 'text' => self::INSTRUCTIONS . "\n" . self::BILLETTERIE],
             [
                 'type' => 'text',
                 'text' => "## Référence de l'API\n"

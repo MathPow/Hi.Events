@@ -19,8 +19,8 @@ class AssistantRoutes
 
     public const HEADER = 'X-Dehors-Assistant';
 
-    /** Connexion, jetons d'application, super-administration, pages publiques, l'assistant lui-meme et les utilisateurs. */
-    public const BLOCKED_PREFIXES = ['/auth', '/api-tokens', '/admin', '/public', '/assistant', '/users'];
+    /** Connexion, jetons d'application, super-administration, pages publiques, l'assistant et le serveur MCP eux-memes, et les utilisateurs. */
+    public const BLOCKED_PREFIXES = ['/auth', '/api-tokens', '/admin', '/public', '/assistant', '/mcp', '/users'];
 
     /** Le profil de la personne se lit, sans plus. */
     private const READABLE_EXCEPTIONS = ['/users/me'];
