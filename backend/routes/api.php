@@ -612,11 +612,13 @@ $router->middleware(['auth:api'])->group(
         // L'assistant des organisateurs (Claude) : voir AssistantTurnAction.
         $router->get('/assistant', GetAssistantAction::class);
         $router->post('/assistant', AssistantTurnAction::class)->middleware('throttle:30,1');
-
-        // Le serveur MCP, pour les agents branches avec un jeton d'API : voir McpAction.
-        $router->match(['GET', 'POST', 'DELETE'], '/mcp', McpAction::class)->middleware('throttle:120,1');
     }
 );
+
+// Le serveur MCP, pour les agents branches avec un jeton d'API. Hors du groupe auth:api : la
+// poignee de main et la liste des outils repondent sans jeton, pour qu'un client verifie l'adresse
+// avant qu'on y colle une cle ; les appels d'outils l'exigent (voir McpAction).
+$router->match(['GET', 'POST', 'DELETE'], '/mcp', McpAction::class)->middleware('throttle:120,1');
 
 $router->prefix('/admin')->middleware(['auth:api'])->group(
     function (Router $router): void {
