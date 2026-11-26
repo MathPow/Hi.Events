@@ -11,7 +11,8 @@ use Illuminate\Http\Response;
 /**
  * Le serveur MCP de la billetterie (transport « Streamable HTTP », sans session ni flux) :
  * un agent s'y branche avec un jeton d'API (Réglages de l'organisateur → Équipe) et lit ou
- * modifie la billetterie avec les droits de ce jeton. Voir McpMessageHandler.
+ * modifie la billetterie avec les droits de ce jeton. La poignée de main et la liste des outils
+ * répondent sans jeton ; un appel d'outil sans jeton reçoit un 401. Voir McpMessageHandler.
  */
 class McpAction extends BaseAction
 {
@@ -32,6 +33,13 @@ class McpAction extends BaseAction
             return $this->jsonResponse(['jsonrpc' => '2.0', 'id' => null, 'error' => ['code' => -32700, 'message' => 'Parse error']]);
         }
 
+        $messages = is_array($payload) && array_is_list($payload) ? $payload : [$payload];
+
+        if (!$this->isUserAuthenticated() && $this->needsAuthentication($messages)) {
+            return $this->jsonResponse(['message' => __('Unauthenticated.')], Response::HTTP_UNAUTHORIZED)
+                ->header('WWW-Authenticate', 'Bearer realm="billetterie-dehors"');
+        }
+
         $authorization = (string)$request->headers->get('Authorization');
         $clientIp = $this->getClientIp($request);
 
@@ -47,5 +55,17 @@ class McpAction extends BaseAction
         $response = $this->handler->handle($payload, $authorization, $clientIp);
 
         return $response === null ? $this->noContentResponse(Response::HTTP_ACCEPTED) : $this->jsonResponse($response);
+    }
+
+    /** Seuls les appels d'outils touchent à la billetterie ; le reste du protocole ne montre rien. */
+    private function needsAuthentication(array $messages): bool
+    {
+        foreach ($messages as $message) {
+            if (!is_array($message) || ($message['method'] ?? null) === 'tools/call') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
