@@ -88,4 +88,13 @@ class Handler extends ExceptionHandler
 
         return parent::render($request, $exception);
     }
+
+    /**
+     * Le serveur MCP (McpAction) repond toujours en JSON : un agent qui le sonde sans en-tete
+     * Accept doit recevoir un 401, pas la page de connexion.
+     */
+    protected function shouldReturnJson($request, Throwable $e)
+    {
+        return $request->is('mcp') || parent::shouldReturnJson($request, $e);
+    }
 }
