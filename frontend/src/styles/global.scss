@@ -73,23 +73,10 @@
   box-sizing: border-box;
 }
 
-// Safari colours its bars from the page edges, as on the shop: orange above (the strip on load,
-// and the pull-down), brown below (the pull-up past the end).
+// Safari colours its bars from the page edges, as on the shop: orange above (the pull-down), brown below (the pull-up past the end).
 html {
   height: auto;
   background: linear-gradient(#fa7853 50%, #352924 50%);
-}
-
-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  height: 6px;
-  background: #fa7853;
-  pointer-events: none;
 }
 
 body {
