@@ -147,29 +147,32 @@ export const AttendeeProductAndInformation = () => {
                     event={event}
                     showPoweredBy
                 />
-                <RouteDownloads eventId={eventId}/>
-                <LiveTrackCard eventId={eventId!} attendeeShortId={String(attendeeShortId)}/>
-                {showTransfer && (
-                    <section className={`${classes.transferCard} ${print.screenOnly}`} data-rough>
-                        <div>
-                            <h2 className={classes.transferTitle}>{t`Can't make it?`}</h2>
-                            <p className={classes.transferText}>
-                                {transfer!.can_transfer
-                                    ? (transferDeadline
-                                        ? t`Give your ticket to someone else, until ${transferDeadline}.`
-                                        : t`Give your ticket to someone else.`)
-                                    : transfer!.refusal_message}
-                            </p>
-                        </div>
-                        {transfer!.can_transfer && (
-                            <button type="button" className={`${shell.button} ${shell.buttonFilled} ${classes.transferButton}`}
-                                    onClick={() => setTransferOpened(true)}>
-                                {t`Transfer my ticket`}
-                            </button>
-                        )}
-                    </section>
-                )}
-                {event?.settings?.is_online_event && <OnlineEventDetails eventSettings={event.settings}/>}
+                {/* Beside the ticket on a wide screen, under it on a phone. */}
+                <div className={classes.extras}>
+                    <RouteDownloads eventId={eventId}/>
+                    <LiveTrackCard eventId={eventId!} attendeeShortId={String(attendeeShortId)}/>
+                    {showTransfer && (
+                        <section className={`${classes.transferCard} ${print.screenOnly}`} data-rough>
+                            <div>
+                                <h2 className={classes.transferTitle}>{t`Can't make it?`}</h2>
+                                <p className={classes.transferText}>
+                                    {transfer!.can_transfer
+                                        ? (transferDeadline
+                                            ? t`Give your ticket to someone else, until ${transferDeadline}.`
+                                            : t`Give your ticket to someone else.`)
+                                        : transfer!.refusal_message}
+                                </p>
+                            </div>
+                            {transfer!.can_transfer && (
+                                <button type="button" className={`${shell.button} ${shell.buttonFilled} ${classes.transferButton}`}
+                                        onClick={() => setTransferOpened(true)}>
+                                    {t`Transfer my ticket`}
+                                </button>
+                            )}
+                        </section>
+                    )}
+                    {event?.settings?.is_online_event && <OnlineEventDetails eventSettings={event.settings}/>}
+                </div>
             </div>
 
             {transferOpened && (
