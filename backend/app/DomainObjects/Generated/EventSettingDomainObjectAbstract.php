@@ -82,6 +82,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     final public const PARTICIPANTS_SIGN_THEMSELVES = 'participants_sign_themselves';
     final public const ALLOW_TICKET_TRANSFER = 'allow_ticket_transfer';
     final public const TICKET_TRANSFER_CUTOFF_HOURS = 'ticket_transfer_cutoff_hours';
+    final public const LIVE_TRACKING_ENABLED = 'live_tracking_enabled';
 
     protected int $id;
     protected int $event_id;
@@ -155,6 +156,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     protected bool $participants_sign_themselves = false;
     protected bool $allow_ticket_transfer = false;
     protected int $ticket_transfer_cutoff_hours = 48;
+    protected bool $live_tracking_enabled = false;
 
     public function toArray(): array
     {
@@ -231,6 +233,7 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
                     'participants_sign_themselves' => $this->participants_sign_themselves ?? null,
                     'allow_ticket_transfer' => $this->allow_ticket_transfer ?? null,
                     'ticket_transfer_cutoff_hours' => $this->ticket_transfer_cutoff_hours ?? null,
+                    'live_tracking_enabled' => $this->live_tracking_enabled ?? null,
                 ];
     }
 
@@ -1025,5 +1028,16 @@ abstract class EventSettingDomainObjectAbstract extends \HiEvents\DomainObjects\
     public function getTicketTransferCutoffHours(): int
     {
         return $this->ticket_transfer_cutoff_hours;
+    }
+
+    public function setLiveTrackingEnabled(bool $live_tracking_enabled): self
+    {
+        $this->live_tracking_enabled = $live_tracking_enabled;
+        return $this;
+    }
+
+    public function getLiveTrackingEnabled(): bool
+    {
+        return $this->live_tracking_enabled;
     }
 }

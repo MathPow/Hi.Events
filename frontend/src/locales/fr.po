@@ -19,14 +19,14 @@ msgstr ""
 msgid "Receive product updates from {appName}."
 msgstr "Recevoir les nouveautés de {appName}."
 
-#: src/components/layouts/Event/index.tsx:248
-#: src/components/layouts/Event/index.tsx:252
+#: src/components/layouts/Event/index.tsx:250
+#: src/components/layouts/Event/index.tsx:254
 #: src/components/layouts/OrganizerLayout/index.tsx:315
 msgid "- Click to Publish"
 msgstr "- Cliquez pour publier"
 
-#: src/components/layouts/Event/index.tsx:261
-#: src/components/layouts/Event/index.tsx:262
+#: src/components/layouts/Event/index.tsx:263
+#: src/components/layouts/Event/index.tsx:264
 msgid "- Click to Unpublish"
 msgstr "- Cliquez pour dépublier"
 
@@ -181,6 +181,10 @@ msgstr "{0} : {1} billets vendus sur {2}."
 msgid "{0}: one week to go"
 msgstr "{0} : c'est dans une semaine"
 
+#: src/components/routes/event/LiveTracking/index.tsx:99
+msgid "{along} of {total} · {percent} %"
+msgstr "{along} sur {total} · {percent} %"
+
 #: src/components/routes/event/CheckInLists/index.tsx:191
 msgid "{arrived} / {total} arrived"
 msgstr "{arrived} / {total} arrivés"
@@ -196,6 +200,10 @@ msgstr "{availableCount} sur {totalCount} disponibles"
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:103
 msgid "{awaitingPayment} awaiting payment"
 msgstr "{awaitingPayment} en attente de paiement"
+
+#: src/components/routes/event/LiveTracking/index.tsx:111
+msgid "{cadence} spm"
+msgstr "{cadence} pas/min"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:399
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:361
@@ -304,6 +312,15 @@ msgstr "{from} à {to} sur {total} commandes"
 msgid "{gross} gross"
 msgstr "{gross} brut"
 
+#: src/components/routes/event/LiveTracking/index.tsx:110
+#: src/components/routes/event/LiveTracking/index.tsx:299
+msgid "{heartRate} bpm"
+msgstr "{heartRate} bpm"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:104
+msgid "{hours} h {rest} ago"
+msgstr "il y a {hours} h {rest}"
+
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:24
 msgid "{hours} hours"
 msgstr "{hours} heures"
@@ -336,6 +353,10 @@ msgstr "{left} en stock"
 msgid "{low} m to {high} m"
 msgstr "De {low} m à {high} m"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:119
+msgid "{metres} m off the course"
+msgstr "À {metres} m du parcours"
+
 #: src/components/routes/help/GuideCards.tsx:20
 #: src/components/routes/help/HelpGuide.tsx:70
 msgid "{minutes} min read"
@@ -344,6 +365,10 @@ msgstr "{minutes} min de lecture"
 #: src/components/common/Countdown/index.tsx:72
 msgid "{minutes} minutes and {seconds} seconds"
 msgstr "{minutes} minutes et {secondes} secondes"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:152
+msgid "{minutes}:{seconds} /km"
+msgstr "{minutes}:{seconds} /km"
 
 #: src/components/modals/TransferTicketModal/index.tsx:150
 msgid "{newName} receives the ticket by email."
@@ -354,7 +379,7 @@ msgstr "{newName} reçoit le billet par courriel."
 msgid "{openCount, plural, one {Open list} other {Open lists}}"
 msgstr "{openCount, plural, one {Liste ouverte} other {Listes ouvertes}}"
 
-#: src/components/layouts/Event/index.tsx:215
+#: src/components/layouts/Event/index.tsx:217
 msgid "{organizerName} · All events"
 msgstr "{organizerName} · Tous les événements"
 
@@ -419,6 +444,10 @@ msgstr "{remaining, plural, one {# place restante} other {# places restantes}}"
 msgid "{remaining} requests left today"
 msgstr "{remaining} demandes restantes aujourd'hui"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:99
+msgid "{rounded} min ago"
+msgstr "il y a {rounded} min"
+
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:132
 msgid "{selectedCount, plural, one {# ticket} other {# tickets}}"
 msgstr "{selectedCount, plural, one {# billet} other {# billets}}"
@@ -472,7 +501,7 @@ msgstr "{toAssign} à attribuer"
 msgid "{totalCount} ticket types"
 msgstr "{totalCount} types de billets"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:60
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:61
 msgid "{transferredTo} receives the ticket by email. This link no longer works."
 msgstr "{transferredTo} reçoit le billet par courriel. Ce lien ne fonctionne plus."
 
@@ -630,6 +659,10 @@ msgstr "7 jours"
 #: src/components/routes/admin/PlatformRevenue/index.tsx:129
 msgid "90 days"
 msgstr "90 jours"
+
+#: src/components/routes/event/LiveTracking/index.tsx:203
+msgid "A « Live tracking » card appears on each ticket, with the steps and a field to paste the link."
+msgstr "Une carte « Suivi en direct » s'affiche sur chaque billet, avec les étapes et un champ pour coller le lien."
 
 #: src/components/routes/event/Settings/cards/InfoBlockCard.tsx:64
 msgid "A box under the tickets for important information or a link (e.g. a donation)."
@@ -808,6 +841,10 @@ msgstr "Accepter l'invitation"
 msgid "Accept payments on the platform's Stripe account"
 msgstr "Encaisser sur le compte Stripe de la plateforme"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:55
+msgid "Accept that the organizer sees your position to share it."
+msgstr "Acceptez que l'organisateur voie votre position pour la partager."
+
 #: src/components/forms/CheckInListForm/index.tsx:72
 #: src/components/forms/CheckInListForm/index.tsx:74
 msgid "Accepted tickets"
@@ -938,6 +975,10 @@ msgstr "Jours actifs"
 msgid "Active Events"
 msgstr "Événements actifs"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:133
+msgid "Activity ended"
+msgstr "Activité terminée"
+
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:84
 #: src/components/routes/event/products.tsx:96
 msgid "Add"
@@ -980,6 +1021,10 @@ msgstr "Ajouter un produit"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/FaqSection.tsx:119
 msgid "Add a question"
 msgstr "Ajouter une question"
+
+#: src/components/routes/event/LiveTracking/index.tsx:217
+msgid "Add a route in « Routes » to see how far along each participant is. Without one, the map shows their positions only."
+msgstr "Ajoutez un parcours dans « Parcours » pour voir où chacun est rendu. Sans parcours, la carte montre seulement les positions."
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:59
 #: src/components/common/ProductsTable/index.tsx:101
@@ -1468,6 +1513,10 @@ msgstr "Rembourser également cette commande"
 msgid "Also upcoming"
 msgstr "Aussi à venir"
 
+#: src/components/routes/event/LiveTracking/index.tsx:113
+msgid "Altitude"
+msgstr "Altitude"
+
 #: src/components/routes/event/CheckInLists/checkInListTimes.ts:48
 msgid "Always open"
 msgstr "Toujours ouverte"
@@ -1749,11 +1798,11 @@ msgstr "Êtes-vous sûr de vouloir supprimer ce webhook ?"
 msgid "Are you sure you want to leave?"
 msgstr "Êtes-vous sûr de vouloir partir ?"
 
-#: src/components/layouts/Event/index.tsx:174
+#: src/components/layouts/Event/index.tsx:176
 msgid "Are you sure you want to make this event draft? This will make the event invisible to the public"
 msgstr "Êtes-vous sûr de vouloir créer un brouillon pour cet événement ? Cela rendra l'événement invisible au public"
 
-#: src/components/layouts/Event/index.tsx:175
+#: src/components/layouts/Event/index.tsx:177
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:64
 msgid "Are you sure you want to make this event public? This will make the event visible to the public"
 msgstr "Êtes-vous sûr de vouloir rendre cet événement public ? Cela rendra l'événement visible au public"
@@ -2143,6 +2192,10 @@ msgstr "Moyenne"
 msgid "Average order"
 msgstr "Panier moyen"
 
+#: src/components/routes/event/LiveTracking/index.tsx:109
+msgid "Average pace"
+msgstr "Rythme moyen"
+
 #: src/components/routes/event/Deposits/index.tsx:64
 #: src/components/routes/event/Deposits/index.tsx:261
 msgid "Awaiting"
@@ -2268,6 +2321,7 @@ msgid "Bib"
 msgstr "Dossard"
 
 #: src/components/layouts/CheckIn/index.tsx:162
+#: src/components/routes/event/LiveTracking/index.tsx:77
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:308
 msgid "Bib {bib}"
 msgstr "Dossard {bib}"
@@ -2475,6 +2529,10 @@ msgstr "En créant un compte, vous acceptez les <0>Conditions d'utilisation</0> 
 msgid "Bypass Application Fees"
 msgstr "Contourner les frais d'application"
 
+#: src/components/routes/event/LiveTracking/index.tsx:111
+msgid "Cadence"
+msgstr "Cadence"
+
 #: src/components/forms/TaxAndFeeForm/index.tsx:52
 msgid "Calculation Type"
 msgstr "Type de calcul"
@@ -2509,7 +2567,7 @@ msgstr "Campagne"
 msgid "Can't find a ticket?"
 msgstr "Un billet introuvable?"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:153
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:155
 msgid "Can't make it?"
 msgstr "Vous ne pouvez plus y aller?"
 
@@ -2539,6 +2597,7 @@ msgstr "Vous ne pouvez plus y aller? Cédez votre place à quelqu'un d'autre : c
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:68
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:115
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:83
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:83
 #: src/utilites/confirmationDialog.tsx:20
@@ -2775,11 +2834,11 @@ msgstr "Vérifiez votre e-mail"
 msgid "Check your inbox! If tickets are associated with this email, you'll receive a link to view them."
 msgstr "Vérifiez votre boîte de réception! Si des billets sont associés à ce courriel, vous recevrez un lien pour les consulter."
 
-#: src/components/layouts/Event/index.tsx:128
+#: src/components/layouts/Event/index.tsx:129
 msgid "Check-in"
 msgstr "Pointage"
 
-#: src/components/layouts/Event/index.tsx:128
+#: src/components/layouts/Event/index.tsx:129
 #: src/components/routes/event/CheckInLists/index.tsx:316
 msgid "Check-in and scanning"
 msgstr "Accueil et scan"
@@ -2994,6 +3053,10 @@ msgstr "Cliquez sur la carte, point par point : le tracé suit les sentiers et l
 msgid "Click to copy"
 msgstr "Cliquez pour copier"
 
+#: src/components/routes/event/LiveTracking/index.tsx:112
+msgid "Climb"
+msgstr "Dénivelé"
+
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:27
@@ -3010,6 +3073,7 @@ msgstr "Cliquez pour copier"
 #: src/components/modals/TransferTicketModal/index.tsx:120
 #: src/components/modals/TransferTicketModal/index.tsx:133
 #: src/components/routes/event/Courses/CourseMaker.tsx:1033
+#: src/components/routes/event/LiveTracking/index.tsx:81
 #: src/components/routes/event/OrdersAndAttendees/filters.tsx:385
 #: src/components/routes/event/Settings/cards/DangerZoneCard.tsx:165
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:213
@@ -3132,7 +3196,7 @@ msgstr "Club relève"
 msgid "Commissions"
 msgstr "Commissions"
 
-#: src/components/layouts/Event/index.tsx:144
+#: src/components/layouts/Event/index.tsx:146
 msgid "Communication"
 msgstr "Communication"
 
@@ -3195,7 +3259,7 @@ msgstr "Code du composant"
 msgid "Compose"
 msgstr "Rédiger"
 
-#: src/components/layouts/Event/index.tsx:131
+#: src/components/layouts/Event/index.tsx:133
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -3268,7 +3332,7 @@ msgstr "Confirmez d'abord votre adresse courriel"
 msgid "Confirm your email address to customize your emails"
 msgstr "Confirmez votre adresse courriel pour personnaliser vos courriels"
 
-#: src/components/layouts/Event/index.tsx:303
+#: src/components/layouts/Event/index.tsx:305
 msgid "Confirm your email to access all features."
 msgstr "Confirmez votre e-mail pour accéder à toutes les fonctionnalités."
 
@@ -3409,6 +3473,10 @@ msgstr "Contributions"
 #: src/components/routes/landing/index.tsx:1156
 msgid "Cookies"
 msgstr "Témoins (cookies)"
+
+#: src/components/routes/event/LiveTracking/index.tsx:119
+msgid "Coordinates"
+msgstr "Coordonnées"
 
 #: src/components/common/AttendeeTicket/index.tsx:69
 #: src/components/common/CopyButton/index.tsx:13
@@ -3816,9 +3884,17 @@ msgstr "Devise"
 msgid "Current"
 msgstr "Actuel"
 
+#: src/components/routes/event/LiveTracking/index.tsx:107
+msgid "Current pace"
+msgstr "Rythme actuel"
+
 #: src/components/routes/profile/ManageProfile/index.tsx:254
 msgid "Current Password"
 msgstr "Mot de passe actuel"
+
+#: src/components/routes/event/LiveTracking/index.tsx:108
+msgid "Current speed"
+msgstr "Vitesse actuelle"
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:156
 msgid "Current VAT number is validated"
@@ -3934,7 +4010,7 @@ msgid "Dark"
 msgstr "Sombre"
 
 #: src/components/layouts/Admin/index.tsx:16
-#: src/components/layouts/Event/index.tsx:96
+#: src/components/layouts/Event/index.tsx:97
 #: src/components/layouts/OrganizerLayout/index.tsx:131
 #: src/components/routes/event/EventDashboard/index.tsx:75
 #: src/components/routes/event/EventDashboard/index.tsx:159
@@ -4139,7 +4215,7 @@ msgstr "Dépôt : {0}. Retournez la différence au participant."
 msgid "deposits"
 msgstr "les dépôts"
 
-#: src/components/layouts/Event/index.tsx:122
+#: src/components/layouts/Event/index.tsx:123
 msgid "Deposits"
 msgstr "Dépôts"
 
@@ -4423,8 +4499,8 @@ msgstr "Téléchargement du reçu"
 
 #: src/components/common/EventCard/index.tsx:81
 #: src/components/common/EventStatusBadge/index.tsx:16
-#: src/components/layouts/Event/index.tsx:248
-#: src/components/layouts/Event/index.tsx:252
+#: src/components/layouts/Event/index.tsx:250
+#: src/components/layouts/Event/index.tsx:254
 #: src/components/layouts/OrganizerLayout/index.tsx:315
 #: src/utilites/eventSales.ts:65
 msgid "Draft"
@@ -4752,6 +4828,10 @@ msgstr "par exemple. 2,50 pour 2,50$"
 msgid "eg. 23.5 for 23.5%"
 msgstr "par exemple. 23,5 pour 23,5%"
 
+#: src/components/routes/event/LiveTracking/index.tsx:106
+msgid "Elapsed time"
+msgstr "Temps écoulé"
+
 #: src/components/common/CourseMap/ElevationProfile.tsx:61
 msgid "Elevation from {low} m to {high} m"
 msgstr "Altitude de {low} m à {high} m"
@@ -4824,7 +4904,7 @@ msgid "Email confirmation resent"
 msgstr "E-mail de confirmation renvoyé"
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:18
-#: src/components/layouts/Event/index.tsx:69
+#: src/components/layouts/Event/index.tsx:70
 #: src/components/layouts/OrganizerLayout/index.tsx:218
 #: src/components/routes/profile/ManageProfile/index.tsx:149
 msgid "Email confirmation resent successfully"
@@ -4959,6 +5039,7 @@ msgstr "Fin des ventes"
 #: src/components/common/EventsDashboardStatusButtons/index.tsx:23
 #: src/components/common/EventStatusBadge/index.tsx:27
 #: src/components/common/ProductsTable/ProductRow.tsx:47
+#: src/components/routes/event/LiveTracking/index.tsx:240
 #: src/utilites/eventSales.ts:71
 msgid "Ended"
 msgstr "Terminé"
@@ -5135,7 +5216,7 @@ msgstr "Entreprises enregistrées à la TVA UE : Mécanisme d'autoliquidation ap
 
 #: src/components/common/AdminOrdersTable/index.tsx:72
 #: src/components/layouts/Checkout/CheckoutTopBar/index.tsx:32
-#: src/components/layouts/Event/index.tsx:210
+#: src/components/layouts/Event/index.tsx:212
 #: src/components/routes/admin/Dashboard/index.tsx:368
 #: src/components/routes/admin/Dashboard/index.tsx:419
 #: src/components/routes/admin/Messages/index.tsx:163
@@ -5231,7 +5312,7 @@ msgstr "Le nom de l'événement doit contenir moins de 150 caractères"
 msgid "Event Not Available"
 msgstr "Événement non disponible"
 
-#: src/components/layouts/Event/index.tsx:139
+#: src/components/layouts/Event/index.tsx:141
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
 msgid "Event Page"
 msgstr "Page de l'événement"
@@ -5246,7 +5327,7 @@ msgstr "Paramètres de l'événement"
 
 #: src/components/common/EventCard/index.tsx:67
 #: src/components/common/StatusToggle/index.tsx:65
-#: src/components/layouts/Event/index.tsx:190
+#: src/components/layouts/Event/index.tsx:192
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:70
 #: src/components/routes/organizer/Events/index.tsx:80
 msgid "Event status update failed. Please try again later"
@@ -5254,7 +5335,7 @@ msgstr "La mise à jour du statut de l'événement a échoué. Veuillez réessay
 
 #: src/components/common/EventCard/index.tsx:64
 #: src/components/common/StatusToggle/index.tsx:58
-#: src/components/layouts/Event/index.tsx:186
+#: src/components/layouts/Event/index.tsx:188
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:68
 #: src/components/routes/organizer/Events/index.tsx:79
 msgid "Event status updated"
@@ -6056,6 +6137,14 @@ msgctxt "green"
 msgid "G"
 msgstr "V"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:35
+msgid "Garmin no longer knows this link. Share the link of your new activity."
+msgstr "Garmin ne reconnaît plus ce lien. Partagez le lien de votre nouvelle activité."
+
+#: src/components/routes/event/LiveTracking/index.tsx:199
+msgid "Garmin watches only, with the Garmin Connect app on a phone that has data. Positions are read every minute and deleted after 14 days."
+msgstr "Montres Garmin seulement, avec l'application Garmin Connect sur un téléphone qui a des données. Les positions sont lues chaque minute et effacées après 14 jours."
+
 #: src/components/routes/landing/index.tsx:916
 msgid "Gather your people"
 msgstr "Rassemble ton monde"
@@ -6125,11 +6214,11 @@ msgstr "Abandonner"
 msgid "Give your event a name"
 msgstr "Donnez un nom à votre événement"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:157
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:159
 msgid "Give your ticket to someone else, until {transferDeadline}."
 msgstr "Transférez votre billet à quelqu'un d'autre, jusqu'au {transferDeadline}."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:158
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:160
 msgid "Give your ticket to someone else."
 msgstr "Transférez votre billet à quelqu'un d'autre."
 
@@ -6255,6 +6344,10 @@ msgstr "Titre affiché aux acheteurs"
 #: src/constants/productInfoIcons.ts:45
 msgid "Heart"
 msgstr "Cœur"
+
+#: src/components/routes/event/LiveTracking/index.tsx:110
+msgid "Heart rate"
+msgstr "Fréquence cardiaque"
 
 #: src/components/routes/event/Deposits/index.tsx:263
 msgid "Held"
@@ -6451,6 +6544,10 @@ msgstr "Comment la page de l'événement apparaît dans Google et quand on la pa
 msgid "How to edit the route"
 msgstr "Comment modifier le tracé"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:97
+msgid "How to start LiveTrack and copy the link (2 min)"
+msgstr "Comment démarrer LiveTrack et copier le lien (2 min)"
+
 #: src/components/routes/organizer/Settings/organization/SeoCard.tsx:55
 msgid "How your page shows in Google and when it is shared."
 msgstr "Comment votre page apparaît dans Google et quand on la partage."
@@ -6466,6 +6563,10 @@ msgstr "https://webhook-domain.com/webhook"
 #: src/components/common/LanguageSwitcher/index.tsx:15
 msgid "Hungarian"
 msgstr "Hongrois"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:109
+msgid "I agree that the organizer sees my position and my watch's figures (pace, heart rate) during the event. They are deleted after 14 days."
+msgstr "J'accepte que l'organisateur voie ma position et les données de ma montre (rythme, fréquence cardiaque) pendant l'événement. Elles sont effacées après 14 jours."
 
 #: src/components/modals/JoinWaitlistModal/index.tsx:176
 msgid "I agree to receive email notifications related to this event"
@@ -6722,7 +6823,7 @@ msgstr "Installer l'app"
 msgid "Instant Payouts"
 msgstr "Paiements instantanés"
 
-#: src/components/layouts/Event/index.tsx:149
+#: src/components/layouts/Event/index.tsx:151
 #: src/components/layouts/OrganizerLayout/index.tsx:196
 msgid "Integrations"
 msgstr "Intégrations"
@@ -6931,6 +7032,10 @@ msgstr "Rejoindre la liste d'attente pour {productDisplayName}"
 msgid "Joined"
 msgstr "Inscrit"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:95
+msgid "just now"
+msgstr "à l'instant"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:369
 #: src/components/routes/event/Courses/index.tsx:66
 msgid "Keep it"
@@ -7066,6 +7171,10 @@ msgstr "Nom de famille"
 msgid "Last name is required"
 msgstr "Le nom est obligatoire"
 
+#: src/components/routes/event/LiveTracking/index.tsx:104
+msgid "Last position"
+msgstr "Dernière position"
+
 #: src/components/common/WebhookTable/WebhookList.tsx:91
 #: src/components/common/WebhookTable/WebhookList.tsx:104
 #: src/components/common/WebhookTable/WebhookList.tsx:157
@@ -7188,6 +7297,14 @@ msgstr "Places limitées"
 msgid "Link Expired or Invalid"
 msgstr "Lien expiré ou invalide"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:135
+msgid "Link no longer works"
+msgstr "Le lien ne fonctionne plus"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:37
+msgid "Link received. The organization will see you as soon as your activity starts on your watch."
+msgstr "Lien reçu. L'organisation vous verra dès que votre activité démarre sur votre montre."
+
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:62
 msgid "Link to the order"
 msgstr "Lien vers la commande"
@@ -7243,8 +7360,8 @@ msgstr "Nom de la liste"
 
 #: src/components/common/EventCard/index.tsx:84
 #: src/components/common/EventStatusBadge/index.tsx:14
-#: src/components/layouts/Event/index.tsx:261
-#: src/components/layouts/Event/index.tsx:262
+#: src/components/layouts/Event/index.tsx:263
+#: src/components/layouts/Event/index.tsx:264
 msgid "Live"
 msgstr "En ligne"
 
@@ -7260,6 +7377,20 @@ msgstr "Événements en Direct"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:74
 msgid "Live preview of your page"
 msgstr "Aperçu en direct de votre page"
+
+#: src/components/layouts/Event/index.tsx:130
+#: src/components/routes/event/LiveTracking/index.tsx:187
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:82
+msgid "Live tracking"
+msgstr "Suivi en direct"
+
+#: src/components/routes/event/LiveTracking/index.tsx:179
+msgid "Live tracking is off."
+msgstr "Le suivi en direct est désactivé."
+
+#: src/components/routes/event/LiveTracking/index.tsx:178
+msgid "Live tracking is on. Participants see it on their ticket."
+msgstr "Le suivi en direct est activé. Les participants le voient sur leur billet."
 
 #: src/components/routes/product-widget/AttendeeProductAndInformation/RouteDownloads.tsx:21
 msgid "Load it into your watch or phone before the start."
@@ -7596,7 +7727,7 @@ msgstr "les messages"
 
 #: src/components/common/MessageList/index.tsx:108
 #: src/components/layouts/Admin/index.tsx:29
-#: src/components/layouts/Event/index.tsx:145
+#: src/components/layouts/Event/index.tsx:147
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/messages.tsx:250
 #: src/components/routes/organizer/Messages/index.tsx:267
@@ -8223,6 +8354,10 @@ msgstr "Aucune commande payée"
 msgid "No paid orders over this period"
 msgstr "Aucune commande payée sur cette période"
 
+#: src/components/routes/event/LiveTracking/index.tsx:274
+msgid "No participant shares their position yet. They do it from their ticket, usually just before the start."
+msgstr "Aucun participant ne partage encore sa position. Ça se fait depuis leur billet, en général juste avant le départ."
+
 #: src/components/layouts/OrganizerHomepage/index.tsx:290
 msgid "No past events"
 msgstr "Aucun événement passé"
@@ -8323,6 +8458,14 @@ msgstr "Aucune vente pendant cette période."
 #: src/components/common/NoResultsSplash/index.tsx:53
 msgid "No search results."
 msgstr "Aucun résultat trouvé."
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:111
+msgid "No signal for {minutes} min"
+msgstr "Aucun signal depuis {minutes} min"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:111
+#~ msgid "No signal since {since}"
+#~ msgstr "Aucun signal depuis {since}"
 
 #: src/components/routes/organizer/Reports/reportPanels.tsx:294
 msgid "No taxes collected during this period."
@@ -8442,6 +8585,10 @@ msgctxt "attendee check-in"
 msgid "Not Eligible"
 msgstr "Non incluse"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:115
+msgid "Not moving for {minutes} min"
+msgstr "Immobile depuis {minutes} min"
+
 #: src/components/common/InstallAppPrompt/index.tsx:130
 msgid "Not now"
 msgstr "Plus tard"
@@ -8560,6 +8707,10 @@ msgstr "de"
 msgid "of climb"
 msgstr "de dénivelé"
 
+#: src/components/routes/event/LiveTracking/index.tsx:114
+msgid "Off the course"
+msgstr "Hors parcours"
+
 #: src/components/common/ErrorDisplay/index.tsx:24
 msgid "Off trail"
 msgstr "Hors piste"
@@ -8568,6 +8719,10 @@ msgstr "Hors piste"
 #: src/components/modals/OfferWaitlistModal/index.tsx:219
 msgid "Offer"
 msgstr "Offrir"
+
+#: src/components/routes/event/LiveTracking/index.tsx:198
+msgid "Offer live tracking"
+msgstr "Offrir le suivi en direct"
 
 #: src/components/common/WaitlistTable/index.tsx:88
 msgid "Offer Spot"
@@ -8650,13 +8805,18 @@ msgstr "Sur demande"
 msgid "On Sale"
 msgstr "En vente"
 
-#: src/components/layouts/Event/index.tsx:127
+#: src/components/layouts/Event/index.tsx:128
 msgid "On site"
 msgstr "Sur place"
 
 #: src/components/modals/RepeatEventModal/index.tsx:162
 msgid "On the {ordinal} {weekday} of every month"
 msgstr "Le {ordinal} {weekday} de chaque mois"
+
+#: src/components/routes/event/LiveTracking/index.tsx:228
+#: src/components/routes/event/LiveTracking/liveStatus.ts:129
+msgid "On the course"
+msgstr "Sur le parcours"
 
 #: src/components/routes/landing/index.tsx:925
 msgid "On the DEHORS calendar"
@@ -8803,6 +8963,10 @@ msgstr "Ouverte"
 msgctxt "check-in list"
 msgid "Open Check-In Page"
 msgstr "Ouvrir la page de pointage"
+
+#: src/components/routes/event/LiveTracking/index.tsx:127
+msgid "Open in Garmin LiveTrack"
+msgstr "Ouvrir dans Garmin LiveTrack"
 
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:163
 msgid "Open Stripe Dashboard"
@@ -9062,7 +9226,7 @@ msgid "orders"
 msgstr "les commandes"
 
 #: src/components/layouts/Admin/index.tsx:26
-#: src/components/layouts/Event/index.tsx:116
+#: src/components/layouts/Event/index.tsx:117
 #: src/components/routes/admin/Attribution/index.tsx:140
 #: src/components/routes/admin/Orders/index.tsx:44
 #: src/components/routes/admin/PlatformRevenue/index.tsx:162
@@ -9163,7 +9327,7 @@ msgstr "Organisateur"
 msgid "Organizer archived successfully"
 msgstr "Organisateur archivé avec succès"
 
-#: src/components/layouts/Event/index.tsx:222
+#: src/components/layouts/Event/index.tsx:224
 msgid "Organizer Dashboard"
 msgstr "Tableau de bord de l'organisateur"
 
@@ -9252,8 +9416,8 @@ msgid "Outside these hours, the scanner link shows « List closed »."
 msgstr "Hors de ces heures, le lien du scanner affiche « Liste fermée »."
 
 #: src/components/layouts/Admin/index.tsx:20
-#: src/components/layouts/Event/index.tsx:93
-#: src/components/layouts/Event/index.tsx:101
+#: src/components/layouts/Event/index.tsx:94
+#: src/components/layouts/Event/index.tsx:102
 #: src/components/layouts/OrganizerLayout/index.tsx:128
 msgid "Overview"
 msgstr "Aperçu"
@@ -9362,6 +9526,7 @@ msgid "Partially refunded: {0}"
 msgstr "Partiellement remboursé : {0}"
 
 #: src/components/routes/event/Deposits/index.tsx:306
+#: src/components/routes/event/LiveTracking/liveStatus.ts:50
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:697
 #: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:168
 msgid "Participant"
@@ -9384,10 +9549,18 @@ msgstr "Nom du participant"
 msgid "Participant's date of birth"
 msgstr "Date de naissance du participant"
 
+#: src/components/routes/event/LiveTracking/index.tsx:269
+msgid "Participants"
+msgstr "Participants"
+
 #: src/components/routes/event/CheckInLists/index.tsx:77
 #: src/components/routes/event/CheckInLists/index.tsx:331
 msgid "Participants arrived"
 msgstr "Participants arrivés"
+
+#: src/components/routes/event/LiveTracking/index.tsx:202
+msgid "Participants can share their Garmin LiveTrack"
+msgstr "Les participants peuvent partager leur Garmin LiveTrack"
 
 #: src/components/routes/event/Settings/cards/TicketTransferCard.tsx:47
 msgid "Participants can transfer their ticket"
@@ -9396,6 +9569,10 @@ msgstr "Les participants peuvent transférer leur billet"
 #: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:108
 msgid "Participants download them from the event page, their ticket and their ticket email."
 msgstr "Les participants les téléchargent depuis la page de l'événement, leur billet et le courriel de leur billet."
+
+#: src/components/routes/event/LiveTracking/index.tsx:189
+msgid "Participants share their Garmin LiveTrack from their ticket. See where everyone is on the course, with their watch's figures, and who has stopped, lost the signal or left the course."
+msgstr "Les participants partagent leur Garmin LiveTrack depuis leur billet. Voyez où chacun est rendu sur le parcours, avec les données de sa montre, et qui s'est arrêté, a perdu le signal ou est sorti du parcours."
 
 #: src/components/modals/PostponeEventModal/index.tsx:189
 msgid "Participants who can't come can get a refund"
@@ -9462,6 +9639,10 @@ msgstr "Collez ceci où vous souhaitez que le widget apparaisse."
 #: src/components/common/Editor/Controls/InsertImageControl/index.tsx:103
 msgid "Paste URL"
 msgstr "Coller l’URL"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:54
+msgid "Paste your LiveTrack link."
+msgstr "Collez votre lien LiveTrack."
 
 #: src/components/modals/CreateAttendeeModal/index.tsx:130
 msgid "Patrick"
@@ -9958,8 +10139,8 @@ msgstr "Aperçu"
 msgid "Preview checkout form"
 msgstr "Aperçu du formulaire de paiement"
 
-#: src/components/layouts/Event/index.tsx:275
-#: src/components/layouts/Event/index.tsx:276
+#: src/components/layouts/Event/index.tsx:277
+#: src/components/layouts/Event/index.tsx:278
 msgid "Preview Event page"
 msgstr "Aperçu de la page de l’événement"
 
@@ -10184,7 +10365,7 @@ msgstr "Utilisation des codes promo et détail des réductions"
 msgid "promo codes"
 msgstr "les codes promo"
 
-#: src/components/layouts/Event/index.tsx:123
+#: src/components/layouts/Event/index.tsx:124
 #: src/components/modals/DuplicateEventModal/index.tsx:27
 #: src/components/routes/event/promo-codes.tsx:38
 #: src/components/routes/event/Reports/index.tsx:46
@@ -10386,7 +10567,7 @@ msgstr "Atteignez {count} participants inscrits."
 msgid "Reactivate"
 msgstr "Réactiver"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:128
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:129
 msgid "Read and sign below. Without it, you sign at the entrance before being let in."
 msgstr "Lisez et signez ci-dessous. Sinon, vous signerez à l'entrée avant d'entrer."
 
@@ -10646,7 +10827,7 @@ msgid "Registration Invitations"
 msgstr "Invitations à l'inscription"
 
 #: src/components/common/QuestionsTable/index.tsx:334
-#: src/components/layouts/Event/index.tsx:141
+#: src/components/layouts/Event/index.tsx:143
 msgid "Registration Questions"
 msgstr "Questions d'inscription"
 
@@ -10746,7 +10927,7 @@ msgstr "Répondre"
 msgid "Reply to {name}"
 msgstr "Répondre à {name}"
 
-#: src/components/layouts/Event/index.tsx:105
+#: src/components/layouts/Event/index.tsx:106
 #: src/components/layouts/OrganizerLayout/index.tsx:143
 #: src/components/routes/event/Reports/index.tsx:55
 #: src/components/routes/organizer/Reports/index.tsx:126
@@ -10788,7 +10969,7 @@ msgstr "Renvoyer le courriel de confirmation"
 msgid "Resend Confirmation Email"
 msgstr "Renvoyer l'e-mail de confirmation"
 
-#: src/components/layouts/Event/index.tsx:305
+#: src/components/layouts/Event/index.tsx:307
 msgid "Resend email"
 msgstr "Renvoyer l'e-mail"
 
@@ -11022,10 +11203,11 @@ msgstr "Nom du parcours"
 msgid "Route saved. Participants download the new version."
 msgstr "Parcours enregistré. Les participants téléchargent la nouvelle version."
 
-#: src/components/layouts/Event/index.tsx:140
+#: src/components/layouts/Event/index.tsx:142
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:174
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:176
 #: src/components/routes/event/Courses/index.tsx:120
+#: src/components/routes/event/LiveTracking/index.tsx:247
 msgid "Routes"
 msgstr "Parcours"
 
@@ -11419,7 +11601,7 @@ msgstr "Voir les résultats"
 
 #: src/components/routes/my-tickets/index.tsx:464
 #: src/components/routes/my-tickets/index.tsx:509
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:110
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:111
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:725
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:116
 msgid "See you outside!"
@@ -11761,7 +11943,7 @@ msgstr "Paramètre mis à jour"
 msgid "settings"
 msgstr "les réglages"
 
-#: src/components/layouts/Event/index.tsx:134
+#: src/components/layouts/Event/index.tsx:136
 #: src/components/layouts/OrganizerLayout/index.tsx:189
 #: src/components/modals/DuplicateEventModal/index.tsx:26
 #: src/components/routes/event/Settings/index.tsx:150
@@ -11779,7 +11961,7 @@ msgstr "Plusieurs prix pour le même billet : prévente, étudiant…"
 
 #: src/components/common/ShareIcon/index.tsx:31
 #: src/components/common/ShareIcon/index.tsx:113
-#: src/components/layouts/Event/index.tsx:286
+#: src/components/layouts/Event/index.tsx:288
 #: src/components/layouts/EventHomepage/index.tsx:238
 #: src/components/layouts/EventHomepage/index.tsx:238
 #: src/components/layouts/EventHomepage/index.tsx:241
@@ -11804,21 +11986,29 @@ msgstr "Répartir un coût entre tous les dépôts reçus"
 msgid "Share a cost between deposits"
 msgstr "Répartir un coût entre les dépôts"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:121
+msgid "Share a new link"
+msgstr "Partager un nouveau lien"
+
 #: src/components/common/AffiliateTable/index.tsx:169
 #: src/components/common/AffiliateTable/index.tsx:208
 msgid "Share Affiliate Link"
 msgstr "Partager le lien d'affiliation"
 
-#: src/components/layouts/Event/index.tsx:230
-#: src/components/layouts/Event/index.tsx:282
-#: src/components/layouts/Event/index.tsx:283
+#: src/components/layouts/Event/index.tsx:232
+#: src/components/layouts/Event/index.tsx:284
 #: src/components/layouts/Event/index.tsx:285
-#: src/components/layouts/Event/index.tsx:317
+#: src/components/layouts/Event/index.tsx:287
+#: src/components/layouts/Event/index.tsx:319
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:104
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:135
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:700
 msgid "Share Event"
 msgstr "Partager l'événement"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:113
+msgid "Share my position"
+msgstr "Partager ma position"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:286
 #: src/components/layouts/OrganizerLayout/index.tsx:356
@@ -11828,6 +12018,10 @@ msgstr "Partager la page de l'organisateur"
 #: src/components/routes/event/Deposits/index.tsx:201
 msgid "Share the cost"
 msgstr "Répartir le coût"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:84
+msgid "Share your Garmin LiveTrack: the organization sees where you are on the course during the event, for your safety."
+msgstr "Partagez votre Garmin LiveTrack : l'organisation voit où vous êtes sur le parcours pendant l'événement, pour votre sécurité."
 
 #: src/components/routes/event/CapacityAssignments/index.tsx:38
 msgid "Shared Capacity Management"
@@ -11944,7 +12138,7 @@ msgstr "Affiché avec le montant sur la commande et dans le courriel de confirma
 msgid "Shows common address fields, including country"
 msgstr "Affiche les champs d'adresse courants, y compris le pays"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:132
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:133
 msgid "Sign"
 msgstr "Signer"
 
@@ -12122,9 +12316,11 @@ msgstr "Une erreur s'est produite. Veuillez réessayer plus tard."
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:25
 #: src/components/common/TicketLookupCard/index.tsx:29
-#: src/components/layouts/Event/index.tsx:73
+#: src/components/layouts/Event/index.tsx:74
 #: src/components/layouts/OrganizerLayout/index.tsx:222
+#: src/components/routes/event/LiveTracking/index.tsx:180
 #: src/components/routes/my-tickets/index.tsx:501
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:77
 #: src/components/routes/product-widget/RefundRequest/index.tsx:68
 #: src/components/routes/profile/ManageProfile/index.tsx:139
 #: src/components/routes/profile/ManageProfile/index.tsx:153
@@ -12306,6 +12502,10 @@ msgctxt "landing section"
 msgid "Steps"
 msgstr "Étapes"
 
+#: src/components/routes/event/LiveTracking/index.tsx:210
+msgid "Steps for your participants:"
+msgstr "Les étapes pour vos participants :"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:1096
 msgid "Still a few seconds…"
 msgstr "Encore quelques secondes…"
@@ -12338,6 +12538,10 @@ msgstr "Terminer le tracé"
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:199
 msgid "Stop Impersonating"
 msgstr "Arrêter l'usurpation"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:122
+msgid "Stop sharing"
+msgstr "Arrêter le partage"
 
 #: src/components/common/Assistant/Answer.tsx:196
 msgid "Stopped."
@@ -12737,7 +12941,7 @@ msgstr "Merci de votre compréhension, et à bientôt !"
 msgid "Thank you for your understanding. We hope to see you at a future event!"
 msgstr "Merci de votre compréhension. Au plaisir de vous voir à un prochain événement !"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:135
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:136
 msgid "Thank you, it's signed. See you at the event!"
 msgstr "Merci, c'est signé. À bientôt à l'événement!"
 
@@ -13066,6 +13270,14 @@ msgstr "Les commandes et les participants de cet événement."
 #: src/components/routes/organizer/Orders/index.tsx:275
 msgid "The orders could not be exported. Try again."
 msgstr "Les commandes n'ont pas pu être exportées. Réessayez."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:29
+msgid "The organization sees you on the course: {distance} covered, last position {ago}."
+msgstr "L'organisation vous voit sur le parcours : {distance} parcourus, dernière position {ago}."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:30
+msgid "The organization sees you on the course: last position {ago}."
+msgstr "L'organisation vous voit sur le parcours : dernière position {ago}."
 
 #: src/components/layouts/EventHomepage/index.tsx:301
 msgid "The organizer cancelled this event. Tickets are no longer on sale."
@@ -13645,7 +13857,7 @@ msgstr "Logo du Billet"
 msgid "Ticket not found"
 msgstr "Billet introuvable"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:69
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:70
 msgid "Ticket Not Found"
 msgstr "Billet introuvable"
 
@@ -13677,11 +13889,11 @@ msgstr "Billet vendu et pointé"
 msgid "Ticket transfer"
 msgstr "Transfert de billet"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:59
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:60
 msgid "Ticket transferred"
 msgstr "Billet transféré"
 
-#: src/components/layouts/Event/index.tsx:111
+#: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/landing/index.tsx:1139
 msgid "Ticketing"
 msgstr "Billetterie"
@@ -13703,7 +13915,7 @@ msgstr "Frais de la billetterie"
 msgid "Tickets"
 msgstr "Billets"
 
-#: src/components/layouts/Event/index.tsx:112
+#: src/components/layouts/Event/index.tsx:113
 #: src/components/routes/event/products.tsx:112
 msgid "Tickets & Products"
 msgstr "Billets et produits"
@@ -13833,6 +14045,10 @@ msgctxt "date range"
 msgid "To"
 msgstr "Au"
 
+#: src/components/routes/event/LiveTracking/index.tsx:232
+msgid "To check"
+msgstr "À vérifier"
+
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:87
 msgid "To connect an AI agent (MCP), add this server with the token as a Bearer header. For Claude Code:"
 msgstr "Pour brancher un agent IA (MCP), ajoutez ce serveur avec le jeton en en-tête Bearer. Pour Claude Code :"
@@ -13878,7 +14094,7 @@ msgstr "Pour recevoir vos paiements."
 msgid "To refund yourself"
 msgstr "À rembourser vous-même"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:126
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:127
 msgid "To sign before the event"
 msgstr "À signer avant l'événement"
 
@@ -14047,7 +14263,7 @@ msgstr "Transfert"
 msgid "Transfer a ticket"
 msgstr "Transférer un billet"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:165
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:167
 msgid "Transfer my ticket"
 msgstr "Transférer mon billet"
 
@@ -14620,7 +14836,7 @@ msgstr "Vérifié"
 msgid "Verify Email"
 msgstr "Vérifier l'e-mail"
 
-#: src/components/layouts/Event/index.tsx:302
+#: src/components/layouts/Event/index.tsx:304
 msgid "Verify your email"
 msgstr "Vérifiez votre e-mail"
 
@@ -14672,8 +14888,8 @@ msgid "View Event"
 msgstr "Voir l'événement"
 
 #: src/components/common/EventCard/index.tsx:128
-#: src/components/layouts/Event/index.tsx:227
-#: src/components/layouts/Event/index.tsx:294
+#: src/components/layouts/Event/index.tsx:229
+#: src/components/layouts/Event/index.tsx:296
 #: src/components/routes/event/EventDashboard/index.tsx:79
 #: src/components/routes/event/EventDashboard/index.tsx:170
 msgid "View event page"
@@ -14808,11 +15024,16 @@ msgstr "En attente"
 msgid "Waiting for payment"
 msgstr "En attente de paiement"
 
+#: src/components/routes/event/LiveTracking/index.tsx:236
+#: src/components/routes/event/LiveTracking/liveStatus.ts:131
+msgid "Waiting for the start"
+msgstr "En attente du départ"
+
 #: src/components/common/Assistant/assistant.ts:248
 msgid "waitlist"
 msgstr "la liste d'attente"
 
-#: src/components/layouts/Event/index.tsx:124
+#: src/components/layouts/Event/index.tsx:125
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:55
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:75
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:82
@@ -14847,6 +15068,10 @@ msgstr "Un p’tit biscuit?"
 msgid "Warning: This is the system default configuration. Changes will affect all accounts that don't have a specific configuration assigned."
 msgstr "Attention : Il s'agit de la configuration par défaut du système. Les modifications affecteront tous les comptes auxquels aucune configuration spécifique n'est assignée."
 
+#: src/components/routes/event/LiveTracking/index.tsx:105
+msgid "Watch distance"
+msgstr "Distance de la montre"
+
 #: src/components/routes/product-widget/PaymentReturn/index.tsx:89
 msgid "We could not process your payment. Please try again or contact support."
 msgstr "Nous n'avons pas pu traiter votre paiement. Veuillez réessayer ou contacter l'assistance."
@@ -14859,7 +15084,7 @@ msgstr "Impossible de vérifier cette commande. Sa page se mettra à jour dès q
 msgid "We couldn't find the order you're looking for. The link may have expired or the order details may have changed."
 msgstr "Nous n'avons pas trouvé la commande que vous recherchez. Le lien a peut-être expiré ou les détails de la commande ont changé."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:70
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:71
 msgid "We couldn't find the ticket you're looking for. The link may have expired or the ticket details may have changed."
 msgstr "Nous n'avons pas trouvé le billet que vous recherchez. Le lien a peut-être expiré ou les détails du billet ont changé."
 
@@ -14978,7 +15203,7 @@ msgid "webhooks"
 msgstr "les webhooks"
 
 #: src/components/common/WebhookTable/WebhookList.tsx:86
-#: src/components/layouts/Event/index.tsx:151
+#: src/components/layouts/Event/index.tsx:153
 #: src/components/layouts/OrganizerLayout/index.tsx:197
 #: src/components/modals/DuplicateEventModal/index.tsx:32
 #: src/components/routes/event/Webhooks/index.tsx:29
@@ -15284,7 +15509,7 @@ msgid "Who signs here?"
 msgstr "Qui signe ici?"
 
 #: src/components/common/WidgetEditor/index.tsx:194
-#: src/components/layouts/Event/index.tsx:150
+#: src/components/layouts/Event/index.tsx:152
 msgid "Widget Embed"
 msgstr "Intégrer le widget"
 
@@ -15448,6 +15673,10 @@ msgstr "Vous émettez un remboursement partiel. Le client sera remboursé de {0}
 msgid "You are offline"
 msgstr "Vous êtes hors ligne"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:102
+msgid "You can also paste the whole email Garmin sent you."
+msgstr "Vous pouvez aussi coller tout le courriel envoyé par Garmin."
+
 #: src/components/routes/product-widget/RefundRequest/index.tsx:129
 msgid "You can ask until {deadline}."
 msgstr "Vous pouvez le demander jusqu’au {deadline}."
@@ -15549,6 +15778,10 @@ msgstr "Vous devez vérifier votre adresse e-mail avant de pouvoir mettre à jou
 msgid "You need to verify your account email before you can send messages."
 msgstr "Vous devez vérifier l'adresse e-mail de votre compte avant de pouvoir envoyer des messages."
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:76
+msgid "You no longer share your position."
+msgstr "Vous ne partagez plus votre position."
+
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:108
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:98
 msgid "You receive"
@@ -15586,6 +15819,10 @@ msgstr "Le nom de votre compte est utilisé sur les pages d'événements et dans
 #: src/components/routes/landing/index.tsx:1071
 msgid "Your account, your money."
 msgstr "Ton compte, ton argent."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:33
+msgid "Your activity has ended. The organization no longer follows you."
+msgstr "Votre activité est terminée. L'organisation ne vous suit plus."
 
 #: src/components/routes/event/Affiliates/index.tsx:47
 msgid "Your affiliates have been exported successfully."
@@ -15643,6 +15880,14 @@ msgstr "Tes frais, comparés à Eventbrite"
 #: src/components/routes/partner/index.tsx:226
 msgid "Your link"
 msgstr "Votre lien"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:100
+msgid "Your LiveTrack link"
+msgstr "Votre lien LiveTrack"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:68
+msgid "Your LiveTrack link is shared with the organization."
+msgstr "Votre lien LiveTrack est partagé avec l'organisation."
 
 #: src/components/common/CookieConsentBanner/index.tsx:165
 msgid "Your login, your language, payment and this choice. Always on."
@@ -15799,7 +16044,7 @@ msgstr "Vos résultats"
 msgid "Your sales and check-in in one tap, full screen, like an app."
 msgstr "Vos ventes et le pointage en un toucher, en plein écran, comme une app."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:111
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:112
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:117
 msgid "Your ticket"
 msgstr "Votre billet"

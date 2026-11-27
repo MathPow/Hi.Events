@@ -130,3 +130,53 @@
   font-weight: 600;
   opacity: 0.7;
 }
+
+// « Suivi en direct »: the participant shares their Garmin LiveTrack, under the courses.
+.liveStatus {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(53, 41, 36, 0.06);
+  font-size: 15px;
+  line-height: 1.4;
+
+  svg {
+    flex: none;
+    margin-top: 1px;
+  }
+
+  &[data-status='ACTIVE'] svg {
+    color: #2f7d6d;
+  }
+
+  &[data-status='FAILED'] svg {
+    color: #c2532b;
+  }
+}
+
+.liveForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.liveHelp {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.liveButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

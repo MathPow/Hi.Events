@@ -247,6 +247,7 @@ export interface EventSettings {
     waiver_text?: string | null;
     // Chaque participant signe lui-meme (lien de son billet, ou a l'entree); l'acheteur, son billet seulement.
     participants_sign_themselves?: boolean;
+    live_tracking_enabled?: boolean;
     /** Participants may give their ticket to someone else, until this many hours before the start. */
     allow_ticket_transfer?: boolean;
     ticket_transfer_cutoff_hours?: number;

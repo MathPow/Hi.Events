@@ -18,6 +18,7 @@ import {hasPendingSignatures, participantSignatureClientPublic} from "../../../.
 import {ParticipantSigning} from "../../../common/ParticipantSigning";
 import {showSuccess} from "../../../../utilites/notifications.tsx";
 import {RouteDownloads} from "./RouteDownloads.tsx";
+import {LiveTrackCard} from "./LiveTrackCard.tsx";
 import {useGetTicketTransfer} from "../../../../queries/useGetTicketTransfer.ts";
 import {transferDeadlineLabel, TransferTicketModal} from "../../../modals/TransferTicketModal";
 import {useGetTransferredHolderDetails} from "../../../../queries/useGetTransferredHolderDetails.ts";
@@ -147,6 +148,7 @@ export const AttendeeProductAndInformation = () => {
                     showPoweredBy
                 />
                 <RouteDownloads eventId={eventId}/>
+                <LiveTrackCard eventId={eventId!} attendeeShortId={String(attendeeShortId)}/>
                 {showTransfer && (
                     <section className={`${classes.transferCard} ${print.screenOnly}`} data-rough>
                         <div>

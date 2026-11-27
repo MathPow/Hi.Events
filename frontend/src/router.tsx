@@ -462,6 +462,14 @@ const routes: RouteObject[] = [
                 }
             },
             {
+                // « Suivi en direct »: the participants who share their Garmin LiveTrack, on the course.
+                path: "live-tracking",
+                async lazy() {
+                    const LiveTracking = await import("./components/routes/event/LiveTracking");
+                    return { Component: LiveTracking.default };
+                }
+            },
+            {
                 // « Parcours »: the course maker and the event's GPX routes.
                 path: "courses",
                 async lazy() {

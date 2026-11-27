@@ -75,6 +75,7 @@ class EventSettingsResourcePublic extends JsonResource
             'deposit_instructions' => $this->getDepositInstructions(),
             'waiver_text' => $this->getWaiverText(),
             'participants_sign_themselves' => $this->getParticipantsSignThemselves(),
+            'live_tracking_enabled' => $this->getLiveTrackingEnabled(),
             'allow_ticket_transfer' => $this->getAllowTicketTransfer(),
             'ticket_transfer_cutoff_hours' => $this->getTicketTransferCutoffHours(),
             'allow_orders_awaiting_offline_payment_to_check_in' => $this->getAllowOrdersAwaitingOfflinePaymentToCheckIn(),

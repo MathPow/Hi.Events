@@ -197,8 +197,69 @@ const messages: HelpGuide = {
     ],
 };
 
+const suiviEnDirect: HelpGuide = {
+    slug: 'suivi-en-direct-garmin',
+    category: 'Participants',
+    title: 'Partager votre position en direct avec Garmin LiveTrack',
+    lead: "Pendant la course, l'organisation peut voir où vous êtes sur le parcours, pour votre sécurité. Il suffit de coller votre lien Garmin LiveTrack sur votre billet. Comptez 5 minutes la veille, et 1 minute au départ.",
+    updated: '2026-11-27',
+    minutes: 3,
+    blocks: [
+        {h2: 'Ce qu\'il vous faut'},
+        {
+            ul: [
+                'Une montre Garmin compatible LiveTrack (la plupart des Forerunner, Fenix, Epix, Venu et Instinct, ou un compteur de vélo Edge)',
+                "L'application **Garmin Connect** sur votre téléphone, jumelée à votre montre",
+                'Votre téléphone avec vous pendant la course, avec des données cellulaires : la montre passe par lui pour envoyer votre position',
+            ],
+        },
+        {tip: "Votre montre a sa propre connexion cellulaire (LTE) ? Vous pouvez laisser le téléphone au vestiaire."},
+        {h2: 'La veille : préparer LiveTrack'},
+        {
+            ol: [
+                'Ouvrez **Garmin Connect** sur votre téléphone.',
+                'Touchez **Plus** (ou votre photo de profil), puis **Sécurité et suivi**, puis **LiveTrack**.',
+                'Ajoutez **votre propre adresse courriel** comme contact : Garmin vous enverra ainsi le lien de chaque activité.',
+                "Activez **Démarrage automatique** : LiveTrack démarre tout seul chaque fois que vous lancez une activité extérieure sur la montre.",
+                "Faites un essai de 2 minutes : lancez une course à pied sur la montre et vérifiez que le courriel de Garmin arrive. Arrêtez ensuite l'activité.",
+            ],
+        },
+        {p: "Le nom exact des menus peut changer un peu selon la version de l'application Garmin Connect."},
+        {h2: 'Le jour de la course : partager le lien'},
+        {
+            ol: [
+                'Au départ, lancez votre activité sur la montre. LiveTrack démarre et Garmin vous envoie un courriel avec le lien de cette activité.',
+                "Ouvrez votre billet (le lien est dans votre courriel de confirmation, ou dans [Mes billets](/my-tickets)) et descendez jusqu'à **Suivi en direct**.",
+                'Collez le lien. Il ressemble à **livetrack.garmin.com/session/…/token/…**. Vous pouvez aussi coller tout le courriel de Garmin : on y trouve le lien.',
+                'Cochez la case de consentement, puis touchez **Partager ma position**.',
+            ],
+        },
+        {tip: "Pas de courriel ? Pendant l'activité, ouvrez **LiveTrack** dans Garmin Connect et touchez **Partager** pour copier le lien."},
+        {p: "Votre billet affiche ensuite « L'organisation vous voit sur le parcours ». S'il indique encore « Lien reçu », c'est que votre activité n'a pas commencé ou que votre téléphone n'a pas encore envoyé de position : patientez une minute."},
+        {h2: "Ce que voit l'organisation"},
+        {
+            ul: [
+                'Votre position sur le parcours, mise à jour environ chaque minute, et la distance déjà parcourue',
+                'Votre temps, votre rythme, votre dénivelé et votre fréquence cardiaque, si la montre la mesure',
+                "Une alerte si vous ne bougez plus depuis 10 minutes, si votre signal se perd ou si vous sortez du parcours, pour qu'on puisse vous venir en aide",
+            ],
+        },
+        {p: "Seule l'organisation de l'événement voit ces données. Elles sont effacées 14 jours après le partage. Vous pouvez arrêter de partager à tout moment depuis votre billet."},
+        {h2: 'Problèmes fréquents'},
+        {
+            ul: [
+                "**« C'est votre page LiveTrack personnelle »** : copiez le lien de l'activité (livetrack.garmin.com/session/…), pas celui de votre profil.",
+                "**« Garmin ne reconnaît pas ce lien »** : le lien est incomplet ou l'activité a été supprimée. Recopiez-le depuis le courriel de Garmin.",
+                "**Votre point ne bouge plus** : votre téléphone n'a peut-être plus de réseau. La position revient dès que le signal revient.",
+                "**Le lien d'une autre activité** : chaque activité a son propre lien. Le jour de la course, partagez celui de la course.",
+                "**Pas de montre Garmin** : pour l'instant, le suivi en direct fonctionne seulement avec Garmin LiveTrack.",
+            ],
+        },
+    ],
+};
+
 export const fr: HelpContent = {
-    guides: [premierEvenement, stripe, pointage, rembourser, messages],
+    guides: [premierEvenement, stripe, pointage, rembourser, messages, suiviEnDirect],
     questions: [
         {
             category: 'Paiements',

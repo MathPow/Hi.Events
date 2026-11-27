@@ -23,6 +23,8 @@ use HiEvents\Repository\Eloquent\EmailTemplateRepository;
 use HiEvents\Repository\Eloquent\EventDailyStatisticRepository;
 use HiEvents\Repository\Eloquent\EventRepository;
 use HiEvents\Repository\Eloquent\EventRouteFileRepository;
+use HiEvents\Repository\Eloquent\LiveTrackPointRepository;
+use HiEvents\Repository\Eloquent\LiveTrackRepository;
 use HiEvents\Repository\Eloquent\EventSettingsRepository;
 use HiEvents\Repository\Eloquent\EventStatisticRepository;
 use HiEvents\Repository\Eloquent\ImageRepository;
@@ -87,6 +89,8 @@ use HiEvents\Repository\Interfaces\EmailTemplateRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventDailyStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventRouteFileRepositoryInterface;
+use HiEvents\Repository\Interfaces\LiveTrackPointRepositoryInterface;
+use HiEvents\Repository\Interfaces\LiveTrackRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventSettingsRepositoryInterface;
 use HiEvents\Repository\Interfaces\EventStatisticRepositoryInterface;
 use HiEvents\Repository\Interfaces\ImageRepositoryInterface;
@@ -145,6 +149,8 @@ class RepositoryServiceProvider extends ServiceProvider
         AccountAttributionRepositoryInterface::class => AccountAttributionRepository::class,
         EventRepositoryInterface::class => EventRepository::class,
         EventRouteFileRepositoryInterface::class => EventRouteFileRepository::class,
+        LiveTrackRepositoryInterface::class => LiveTrackRepository::class,
+        LiveTrackPointRepositoryInterface::class => LiveTrackPointRepository::class,
         ProductRepositoryInterface::class => ProductRepository::class,
         OrderRepositoryInterface::class => OrderRepository::class,
         AttendeeRepositoryInterface::class => AttendeeRepository::class,

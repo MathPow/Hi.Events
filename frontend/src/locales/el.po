@@ -19,14 +19,14 @@ msgstr ""
 msgid "Receive product updates from {appName}."
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:248
-#: src/components/layouts/Event/index.tsx:252
+#: src/components/layouts/Event/index.tsx:250
+#: src/components/layouts/Event/index.tsx:254
 #: src/components/layouts/OrganizerLayout/index.tsx:315
 msgid "- Click to Publish"
 msgstr "- Κάντε κλικ για Δημοσίευση"
 
-#: src/components/layouts/Event/index.tsx:261
-#: src/components/layouts/Event/index.tsx:262
+#: src/components/layouts/Event/index.tsx:263
+#: src/components/layouts/Event/index.tsx:264
 msgid "- Click to Unpublish"
 msgstr "- Κάντε κλικ για Κατάργηση Δημοσίευσης"
 
@@ -181,6 +181,10 @@ msgstr "{0}: {1} εισιτήρια πουλήθηκαν από {2}."
 msgid "{0}: one week to go"
 msgstr "{0}: μένει μία εβδομάδα"
 
+#: src/components/routes/event/LiveTracking/index.tsx:99
+msgid "{along} of {total} · {percent} %"
+msgstr "{along} από {total} · {percent} %"
+
 #: src/components/routes/event/CheckInLists/index.tsx:191
 msgid "{arrived} / {total} arrived"
 msgstr "{arrived} / {total} έφτασαν"
@@ -196,6 +200,10 @@ msgstr "{availableCount} από {totalCount} διαθέσιμα"
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:103
 msgid "{awaitingPayment} awaiting payment"
 msgstr ""
+
+#: src/components/routes/event/LiveTracking/index.tsx:111
+msgid "{cadence} spm"
+msgstr "{cadence} spm"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:399
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:361
@@ -304,6 +312,15 @@ msgstr ""
 msgid "{gross} gross"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:110
+#: src/components/routes/event/LiveTracking/index.tsx:299
+msgid "{heartRate} bpm"
+msgstr "{heartRate} bpm"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:104
+msgid "{hours} h {rest} ago"
+msgstr "πριν από {hours} ώρ. {rest}"
+
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:24
 msgid "{hours} hours"
 msgstr "{hours} ώρες"
@@ -336,6 +353,10 @@ msgstr ""
 msgid "{low} m to {high} m"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:119
+msgid "{metres} m off the course"
+msgstr "{metres} μ. εκτός διαδρομής"
+
 #: src/components/routes/help/GuideCards.tsx:20
 #: src/components/routes/help/HelpGuide.tsx:70
 msgid "{minutes} min read"
@@ -344,6 +365,10 @@ msgstr "{minutes} λεπτά ανάγνωσης"
 #: src/components/common/Countdown/index.tsx:72
 msgid "{minutes} minutes and {seconds} seconds"
 msgstr "{minutes} λεπτά και {seconds} δευτερόλεπτα"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:152
+msgid "{minutes}:{seconds} /km"
+msgstr "{minutes}:{seconds} /km"
 
 #: src/components/modals/TransferTicketModal/index.tsx:150
 msgid "{newName} receives the ticket by email."
@@ -354,7 +379,7 @@ msgstr ""
 msgid "{openCount, plural, one {Open list} other {Open lists}}"
 msgstr "{openCount, plural, one {Ανοιχτή λίστα} other {Ανοιχτές λίστες}}"
 
-#: src/components/layouts/Event/index.tsx:215
+#: src/components/layouts/Event/index.tsx:217
 msgid "{organizerName} · All events"
 msgstr "{organizerName} · Όλες οι εκδηλώσεις"
 
@@ -419,6 +444,10 @@ msgstr ""
 msgid "{remaining} requests left today"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:99
+msgid "{rounded} min ago"
+msgstr "πριν από {rounded} λεπτά"
+
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:132
 msgid "{selectedCount, plural, one {# ticket} other {# tickets}}"
 msgstr ""
@@ -472,7 +501,7 @@ msgstr ""
 msgid "{totalCount} ticket types"
 msgstr "{totalCount} τύποι εισιτηρίων"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:60
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:61
 msgid "{transferredTo} receives the ticket by email. This link no longer works."
 msgstr ""
 
@@ -630,6 +659,10 @@ msgstr "7 ημέρες"
 #: src/components/routes/admin/PlatformRevenue/index.tsx:129
 msgid "90 days"
 msgstr "90 ημέρες"
+
+#: src/components/routes/event/LiveTracking/index.tsx:203
+msgid "A « Live tracking » card appears on each ticket, with the steps and a field to paste the link."
+msgstr "Σε κάθε εισιτήριο εμφανίζεται μια κάρτα « Ζωντανή παρακολούθηση », με τα βήματα και ένα πεδίο για επικόλληση του συνδέσμου."
 
 #: src/components/routes/event/Settings/cards/InfoBlockCard.tsx:64
 msgid "A box under the tickets for important information or a link (e.g. a donation)."
@@ -808,6 +841,10 @@ msgstr "Αποδοχή Πρόσκλησης"
 msgid "Accept payments on the platform's Stripe account"
 msgstr "Αποδοχή πληρωμών στον λογαριασμό Stripe της πλατφόρμας"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:55
+msgid "Accept that the organizer sees your position to share it."
+msgstr "Αποδεχτείτε ότι ο διοργανωτής βλέπει τη θέση σας για να τη μοιραστείτε."
+
 #: src/components/forms/CheckInListForm/index.tsx:72
 #: src/components/forms/CheckInListForm/index.tsx:74
 msgid "Accepted tickets"
@@ -938,6 +975,10 @@ msgstr "Ενεργές ημέρες"
 msgid "Active Events"
 msgstr "Ενεργές Εκδηλώσεις"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:133
+msgid "Activity ended"
+msgstr "Η δραστηριότητα ολοκληρώθηκε"
+
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:84
 #: src/components/routes/event/products.tsx:96
 msgid "Add"
@@ -980,6 +1021,10 @@ msgstr "Προσθήκη προϊόντος"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/FaqSection.tsx:119
 msgid "Add a question"
 msgstr "Προσθήκη ερώτησης"
+
+#: src/components/routes/event/LiveTracking/index.tsx:217
+msgid "Add a route in « Routes » to see how far along each participant is. Without one, the map shows their positions only."
+msgstr "Προσθέστε μια διαδρομή στις « Διαδρομές » για να δείτε πόσο έχει προχωρήσει κάθε συμμετέχων. Χωρίς διαδρομή, ο χάρτης δείχνει μόνο τις θέσεις τους."
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:59
 #: src/components/common/ProductsTable/index.tsx:101
@@ -1468,6 +1513,10 @@ msgstr "Επίσης επιστροφή αυτής της παραγγελίας
 msgid "Also upcoming"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:113
+msgid "Altitude"
+msgstr "Υψόμετρο"
+
 #: src/components/routes/event/CheckInLists/checkInListTimes.ts:48
 msgid "Always open"
 msgstr "Πάντα ανοιχτή"
@@ -1749,11 +1798,11 @@ msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετ�
 msgid "Are you sure you want to leave?"
 msgstr "Είστε σίγουροι ότι θέλετε να φύγετε;"
 
-#: src/components/layouts/Event/index.tsx:174
+#: src/components/layouts/Event/index.tsx:176
 msgid "Are you sure you want to make this event draft? This will make the event invisible to the public"
 msgstr "Είστε σίγουροι ότι θέλετε να κάνετε αυτή την εκδήλωση πρόχειρο; Αυτό θα την κάνει αόρατη στο κοινό"
 
-#: src/components/layouts/Event/index.tsx:175
+#: src/components/layouts/Event/index.tsx:177
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:64
 msgid "Are you sure you want to make this event public? This will make the event visible to the public"
 msgstr "Είστε σίγουροι ότι θέλετε να δημοσιεύσετε αυτή την εκδήλωση; Αυτό θα την κάνει ορατή στο κοινό"
@@ -2143,6 +2192,10 @@ msgstr "Μέσος όρος"
 msgid "Average order"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:109
+msgid "Average pace"
+msgstr "Μέσο ρυθμός"
+
 #: src/components/routes/event/Deposits/index.tsx:64
 #: src/components/routes/event/Deposits/index.tsx:261
 msgid "Awaiting"
@@ -2268,6 +2321,7 @@ msgid "Bib"
 msgstr "Αριθμός συμμετοχής"
 
 #: src/components/layouts/CheckIn/index.tsx:162
+#: src/components/routes/event/LiveTracking/index.tsx:77
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:308
 msgid "Bib {bib}"
 msgstr "Αριθμός {bib}"
@@ -2475,6 +2529,10 @@ msgstr "Με την εγγραφή σας συμφωνείτε με τους <0>
 msgid "Bypass Application Fees"
 msgstr "Παράκαμψη Χρεώσεων Εφαρμογής"
 
+#: src/components/routes/event/LiveTracking/index.tsx:111
+msgid "Cadence"
+msgstr "Ρυθμός βημάτων"
+
 #: src/components/forms/TaxAndFeeForm/index.tsx:52
 msgid "Calculation Type"
 msgstr "Τύπος Υπολογισμού"
@@ -2509,7 +2567,7 @@ msgstr "Καμπάνια"
 msgid "Can't find a ticket?"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:153
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:155
 msgid "Can't make it?"
 msgstr ""
 
@@ -2539,6 +2597,7 @@ msgstr ""
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:68
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:115
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:83
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:83
 #: src/utilites/confirmationDialog.tsx:20
@@ -2775,11 +2834,11 @@ msgstr "Ελέγξτε το email σας"
 msgid "Check your inbox! If tickets are associated with this email, you'll receive a link to view them."
 msgstr "Ελέγξτε τα εισερχόμενά σας! Εάν υπάρχουν εισιτήρια συνδεδεμένα με αυτό το email, θα λάβετε σύνδεσμο για προβολή."
 
-#: src/components/layouts/Event/index.tsx:128
+#: src/components/layouts/Event/index.tsx:129
 msgid "Check-in"
 msgstr "Check-in"
 
-#: src/components/layouts/Event/index.tsx:128
+#: src/components/layouts/Event/index.tsx:129
 #: src/components/routes/event/CheckInLists/index.tsx:316
 msgid "Check-in and scanning"
 msgstr "Υποδοχή και σάρωση"
@@ -2990,6 +3049,10 @@ msgstr ""
 msgid "Click to copy"
 msgstr "Κλικ για αντιγραφή"
 
+#: src/components/routes/event/LiveTracking/index.tsx:112
+msgid "Climb"
+msgstr "Ανάβαση"
+
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:27
@@ -3006,6 +3069,7 @@ msgstr "Κλικ για αντιγραφή"
 #: src/components/modals/TransferTicketModal/index.tsx:120
 #: src/components/modals/TransferTicketModal/index.tsx:133
 #: src/components/routes/event/Courses/CourseMaker.tsx:1033
+#: src/components/routes/event/LiveTracking/index.tsx:81
 #: src/components/routes/event/OrdersAndAttendees/filters.tsx:385
 #: src/components/routes/event/Settings/cards/DangerZoneCard.tsx:165
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:213
@@ -3128,7 +3192,7 @@ msgstr "Λέσχη επιστροφής"
 msgid "Commissions"
 msgstr "Προμήθειες"
 
-#: src/components/layouts/Event/index.tsx:144
+#: src/components/layouts/Event/index.tsx:146
 msgid "Communication"
 msgstr "Επικοινωνία"
 
@@ -3191,7 +3255,7 @@ msgstr "Κωδικός Στοιχείου"
 msgid "Compose"
 msgstr "Σύνταξη"
 
-#: src/components/layouts/Event/index.tsx:131
+#: src/components/layouts/Event/index.tsx:133
 msgid "Configuration"
 msgstr "Διαμόρφωση"
 
@@ -3264,7 +3328,7 @@ msgstr ""
 msgid "Confirm your email address to customize your emails"
 msgstr "Επιβεβαιώστε τη διεύθυνση email σας για να προσαρμόσετε τα email σας"
 
-#: src/components/layouts/Event/index.tsx:303
+#: src/components/layouts/Event/index.tsx:305
 msgid "Confirm your email to access all features."
 msgstr "Επιβεβαιώστε το email σας για πρόσβαση σε όλες τις λειτουργίες."
 
@@ -3405,6 +3469,10 @@ msgstr "Συνεισφορές"
 #: src/components/routes/landing/index.tsx:1156
 msgid "Cookies"
 msgstr "Cookies"
+
+#: src/components/routes/event/LiveTracking/index.tsx:119
+msgid "Coordinates"
+msgstr "Συντεταγμένες"
 
 #: src/components/common/AttendeeTicket/index.tsx:69
 #: src/components/common/CopyButton/index.tsx:13
@@ -3807,9 +3875,17 @@ msgstr "Νόμισμα"
 msgid "Current"
 msgstr "Τρέχον"
 
+#: src/components/routes/event/LiveTracking/index.tsx:107
+msgid "Current pace"
+msgstr "Τρέχων ρυθμός"
+
 #: src/components/routes/profile/ManageProfile/index.tsx:254
 msgid "Current Password"
 msgstr "Τρέχων Κωδικός"
+
+#: src/components/routes/event/LiveTracking/index.tsx:108
+msgid "Current speed"
+msgstr "Τρέχουσα ταχύτητα"
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:156
 msgid "Current VAT number is validated"
@@ -3925,7 +4001,7 @@ msgid "Dark"
 msgstr "Σκοτεινό"
 
 #: src/components/layouts/Admin/index.tsx:16
-#: src/components/layouts/Event/index.tsx:96
+#: src/components/layouts/Event/index.tsx:97
 #: src/components/layouts/OrganizerLayout/index.tsx:131
 #: src/components/routes/event/EventDashboard/index.tsx:75
 #: src/components/routes/event/EventDashboard/index.tsx:159
@@ -4130,7 +4206,7 @@ msgstr "Εγγύηση: {0}. Επιστρέψτε τη διαφορά στον �
 msgid "deposits"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:122
+#: src/components/layouts/Event/index.tsx:123
 msgid "Deposits"
 msgstr "Εγγυήσεις"
 
@@ -4414,8 +4490,8 @@ msgstr "Λήψη απόδειξης"
 
 #: src/components/common/EventCard/index.tsx:81
 #: src/components/common/EventStatusBadge/index.tsx:16
-#: src/components/layouts/Event/index.tsx:248
-#: src/components/layouts/Event/index.tsx:252
+#: src/components/layouts/Event/index.tsx:250
+#: src/components/layouts/Event/index.tsx:254
 #: src/components/layouts/OrganizerLayout/index.tsx:315
 #: src/utilites/eventSales.ts:65
 msgid "Draft"
@@ -4727,6 +4803,10 @@ msgstr "π.χ. 2.50 για 2,50€"
 msgid "eg. 23.5 for 23.5%"
 msgstr "π.χ. 23.5 για 23,5%"
 
+#: src/components/routes/event/LiveTracking/index.tsx:106
+msgid "Elapsed time"
+msgstr "Χρόνος που πέρασε"
+
 #: src/components/common/CourseMap/ElevationProfile.tsx:61
 msgid "Elevation from {low} m to {high} m"
 msgstr ""
@@ -4799,7 +4879,7 @@ msgid "Email confirmation resent"
 msgstr "Επαναποστολή επιβεβαίωσης email"
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:18
-#: src/components/layouts/Event/index.tsx:69
+#: src/components/layouts/Event/index.tsx:70
 #: src/components/layouts/OrganizerLayout/index.tsx:218
 #: src/components/routes/profile/ManageProfile/index.tsx:149
 msgid "Email confirmation resent successfully"
@@ -4930,6 +5010,7 @@ msgstr "Λήξη πωλήσεων"
 #: src/components/common/EventsDashboardStatusButtons/index.tsx:23
 #: src/components/common/EventStatusBadge/index.tsx:27
 #: src/components/common/ProductsTable/ProductRow.tsx:47
+#: src/components/routes/event/LiveTracking/index.tsx:240
 #: src/utilites/eventSales.ts:71
 msgid "Ended"
 msgstr "Τελείωσε"
@@ -5106,7 +5187,7 @@ msgstr "Επιχειρήσεις εγγεγραμμένες για ΦΠΑ στη
 
 #: src/components/common/AdminOrdersTable/index.tsx:72
 #: src/components/layouts/Checkout/CheckoutTopBar/index.tsx:32
-#: src/components/layouts/Event/index.tsx:210
+#: src/components/layouts/Event/index.tsx:212
 #: src/components/routes/admin/Dashboard/index.tsx:368
 #: src/components/routes/admin/Dashboard/index.tsx:419
 #: src/components/routes/admin/Messages/index.tsx:163
@@ -5202,7 +5283,7 @@ msgstr "Το όνομα εκδήλωσης πρέπει να έχει λιγότ
 msgid "Event Not Available"
 msgstr "Η Εκδήλωση Δεν Είναι Διαθέσιμη"
 
-#: src/components/layouts/Event/index.tsx:139
+#: src/components/layouts/Event/index.tsx:141
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
 msgid "Event Page"
 msgstr "Σελίδα Εκδήλωσης"
@@ -5217,7 +5298,7 @@ msgstr "Ρυθμίσεις Εκδήλωσης"
 
 #: src/components/common/EventCard/index.tsx:67
 #: src/components/common/StatusToggle/index.tsx:65
-#: src/components/layouts/Event/index.tsx:190
+#: src/components/layouts/Event/index.tsx:192
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:70
 #: src/components/routes/organizer/Events/index.tsx:80
 msgid "Event status update failed. Please try again later"
@@ -5225,7 +5306,7 @@ msgstr "Η ενημέρωση κατάστασης εκδήλωσης απέτυ
 
 #: src/components/common/EventCard/index.tsx:64
 #: src/components/common/StatusToggle/index.tsx:58
-#: src/components/layouts/Event/index.tsx:186
+#: src/components/layouts/Event/index.tsx:188
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:68
 #: src/components/routes/organizer/Events/index.tsx:79
 msgid "Event status updated"
@@ -6027,6 +6108,14 @@ msgctxt "green"
 msgid "G"
 msgstr ""
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:35
+msgid "Garmin no longer knows this link. Share the link of your new activity."
+msgstr "Η Garmin δεν αναγνωρίζει πια αυτόν τον σύνδεσμο. Μοιραστείτε τον σύνδεσμο της νέας σας δραστηριότητας."
+
+#: src/components/routes/event/LiveTracking/index.tsx:199
+msgid "Garmin watches only, with the Garmin Connect app on a phone that has data. Positions are read every minute and deleted after 14 days."
+msgstr "Μόνο ρολόγια Garmin, με την εφαρμογή Garmin Connect σε τηλέφωνο με δεδομένα κινητής. Οι θέσεις διαβάζονται κάθε λεπτό και διαγράφονται μετά από 14 ημέρες."
+
 #: src/components/routes/landing/index.tsx:916
 msgid "Gather your people"
 msgstr "Μάζεψε τον κόσμο σου"
@@ -6096,11 +6185,11 @@ msgstr "Εγκατάλειψη"
 msgid "Give your event a name"
 msgstr "Δώστε ένα όνομα στην εκδήλωσή σας"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:157
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:159
 msgid "Give your ticket to someone else, until {transferDeadline}."
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:158
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:160
 msgid "Give your ticket to someone else."
 msgstr ""
 
@@ -6222,6 +6311,10 @@ msgstr "Τίτλος για τους αγοραστές"
 #: src/constants/productInfoIcons.ts:45
 msgid "Heart"
 msgstr "Καρδιά"
+
+#: src/components/routes/event/LiveTracking/index.tsx:110
+msgid "Heart rate"
+msgstr "Καρδιακός ρυθμός"
 
 #: src/components/routes/event/Deposits/index.tsx:263
 msgid "Held"
@@ -6418,6 +6511,10 @@ msgstr "Πώς εμφανίζεται η σελίδα της εκδήλωσης 
 msgid "How to edit the route"
 msgstr ""
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:97
+msgid "How to start LiveTrack and copy the link (2 min)"
+msgstr "Πώς να ξεκινήσετε το LiveTrack και να αντιγράψετε τον σύνδεσμο (2 λεπτά)"
+
 #: src/components/routes/organizer/Settings/organization/SeoCard.tsx:55
 msgid "How your page shows in Google and when it is shared."
 msgstr "Πώς εμφανίζεται η σελίδα σας στο Google και όταν κοινοποιείται."
@@ -6433,6 +6530,10 @@ msgstr "https://ο-τομεας-σας.gr/webhook"
 #: src/components/common/LanguageSwitcher/index.tsx:15
 msgid "Hungarian"
 msgstr "Ουγγρικά"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:109
+msgid "I agree that the organizer sees my position and my watch's figures (pace, heart rate) during the event. They are deleted after 14 days."
+msgstr "Συμφωνώ ο διοργανωτής να βλέπει τη θέση μου και τα στοιχεία του ρολογιού μου (ρυθμός, καρδιακός ρυθμός) κατά τη διάρκεια της εκδήλωσης. Διαγράφονται μετά από 14 ημέρες."
 
 #: src/components/modals/JoinWaitlistModal/index.tsx:176
 msgid "I agree to receive email notifications related to this event"
@@ -6689,7 +6790,7 @@ msgstr "Εγκατάσταση εφαρμογής"
 msgid "Instant Payouts"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:149
+#: src/components/layouts/Event/index.tsx:151
 #: src/components/layouts/OrganizerLayout/index.tsx:196
 msgid "Integrations"
 msgstr "Ενσωματώσεις"
@@ -6898,6 +6999,10 @@ msgstr "Εγγραφή στη Λίστα Αναμονής για {productDisplay
 msgid "Joined"
 msgstr "Εντάχθηκε"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:95
+msgid "just now"
+msgstr "μόλις τώρα"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:369
 #: src/components/routes/event/Courses/index.tsx:66
 msgid "Keep it"
@@ -7033,6 +7138,10 @@ msgstr "Επώνυμο"
 msgid "Last name is required"
 msgstr "Το επώνυμο είναι υποχρεωτικό"
 
+#: src/components/routes/event/LiveTracking/index.tsx:104
+msgid "Last position"
+msgstr "Τελευταία θέση"
+
 #: src/components/common/WebhookTable/WebhookList.tsx:91
 #: src/components/common/WebhookTable/WebhookList.tsx:104
 #: src/components/common/WebhookTable/WebhookList.tsx:157
@@ -7155,6 +7264,14 @@ msgstr "Περιορισμένες θέσεις"
 msgid "Link Expired or Invalid"
 msgstr "Ο Σύνδεσμος Έληξε ή Δεν Είναι Έγκυρος"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:135
+msgid "Link no longer works"
+msgstr "Ο σύνδεσμος δεν λειτουργεί πια"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:37
+msgid "Link received. The organization will see you as soon as your activity starts on your watch."
+msgstr "Ο σύνδεσμος ελήφθη. Η διοργάνωση θα σας βλέπει μόλις ξεκινήσει η δραστηριότητά σας στο ρολόι."
+
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:62
 msgid "Link to the order"
 msgstr "Σύνδεσμος προς την παραγγελία"
@@ -7210,8 +7327,8 @@ msgstr "Όνομα λίστας"
 
 #: src/components/common/EventCard/index.tsx:84
 #: src/components/common/EventStatusBadge/index.tsx:14
-#: src/components/layouts/Event/index.tsx:261
-#: src/components/layouts/Event/index.tsx:262
+#: src/components/layouts/Event/index.tsx:263
+#: src/components/layouts/Event/index.tsx:264
 msgid "Live"
 msgstr "Δημοσιευμένο"
 
@@ -7227,6 +7344,20 @@ msgstr "Δημοσιευμένες Εκδηλώσεις"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:74
 msgid "Live preview of your page"
 msgstr "Ζωντανή προεπισκόπηση της σελίδας σας"
+
+#: src/components/layouts/Event/index.tsx:130
+#: src/components/routes/event/LiveTracking/index.tsx:187
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:82
+msgid "Live tracking"
+msgstr "Ζωντανή παρακολούθηση"
+
+#: src/components/routes/event/LiveTracking/index.tsx:179
+msgid "Live tracking is off."
+msgstr "Η ζωντανή παρακολούθηση είναι απενεργοποιημένη."
+
+#: src/components/routes/event/LiveTracking/index.tsx:178
+msgid "Live tracking is on. Participants see it on their ticket."
+msgstr "Η ζωντανή παρακολούθηση είναι ενεργή. Οι συμμετέχοντες τη βλέπουν στο εισιτήριό τους."
 
 #: src/components/routes/product-widget/AttendeeProductAndInformation/RouteDownloads.tsx:21
 msgid "Load it into your watch or phone before the start."
@@ -7551,7 +7682,7 @@ msgstr ""
 
 #: src/components/common/MessageList/index.tsx:108
 #: src/components/layouts/Admin/index.tsx:29
-#: src/components/layouts/Event/index.tsx:145
+#: src/components/layouts/Event/index.tsx:147
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/messages.tsx:250
 #: src/components/routes/organizer/Messages/index.tsx:267
@@ -8178,6 +8309,10 @@ msgstr "Δεν υπάρχουν Πληρωμένες Παραγγελίες"
 msgid "No paid orders over this period"
 msgstr "Δεν υπάρχουν πληρωμένες παραγγελίες σε αυτή την περίοδο"
 
+#: src/components/routes/event/LiveTracking/index.tsx:274
+msgid "No participant shares their position yet. They do it from their ticket, usually just before the start."
+msgstr "Κανένας συμμετέχων δεν μοιράζεται ακόμη τη θέση του. Το κάνουν από το εισιτήριό τους, συνήθως λίγο πριν την εκκίνηση."
+
 #: src/components/layouts/OrganizerHomepage/index.tsx:290
 msgid "No past events"
 msgstr "Δεν υπάρχουν παλαιότερες εκδηλώσεις"
@@ -8274,6 +8409,14 @@ msgstr ""
 #: src/components/common/NoResultsSplash/index.tsx:53
 msgid "No search results."
 msgstr "Δεν βρέθηκαν αποτελέσματα αναζήτησης."
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:111
+msgid "No signal for {minutes} min"
+msgstr "Χωρίς σήμα για {minutes} λεπτά"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:111
+#~ msgid "No signal since {since}"
+#~ msgstr "Χωρίς σήμα: {since}"
 
 #: src/components/routes/organizer/Reports/reportPanels.tsx:294
 msgid "No taxes collected during this period."
@@ -8393,6 +8536,10 @@ msgctxt "attendee check-in"
 msgid "Not Eligible"
 msgstr "Δεν περιλαμβάνεται"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:115
+msgid "Not moving for {minutes} min"
+msgstr "Ακίνητος για {minutes} λεπτά"
+
 #: src/components/common/InstallAppPrompt/index.tsx:130
 msgid "Not now"
 msgstr "Όχι τώρα"
@@ -8511,6 +8658,10 @@ msgstr "από"
 msgid "of climb"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:114
+msgid "Off the course"
+msgstr "Εκτός διαδρομής"
+
 #: src/components/common/ErrorDisplay/index.tsx:24
 msgid "Off trail"
 msgstr "Εκτός μονοπατιού"
@@ -8519,6 +8670,10 @@ msgstr "Εκτός μονοπατιού"
 #: src/components/modals/OfferWaitlistModal/index.tsx:219
 msgid "Offer"
 msgstr "Προσφορά"
+
+#: src/components/routes/event/LiveTracking/index.tsx:198
+msgid "Offer live tracking"
+msgstr "Προσφέρετε ζωντανή παρακολούθηση"
 
 #: src/components/common/WaitlistTable/index.tsx:88
 msgid "Offer Spot"
@@ -8601,13 +8756,18 @@ msgstr "Κατόπιν αιτήματος"
 msgid "On Sale"
 msgstr "Σε Πώληση"
 
-#: src/components/layouts/Event/index.tsx:127
+#: src/components/layouts/Event/index.tsx:128
 msgid "On site"
 msgstr "Στον χώρο"
 
 #: src/components/modals/RepeatEventModal/index.tsx:162
 msgid "On the {ordinal} {weekday} of every month"
 msgstr ""
+
+#: src/components/routes/event/LiveTracking/index.tsx:228
+#: src/components/routes/event/LiveTracking/liveStatus.ts:129
+msgid "On the course"
+msgstr "Στη διαδρομή"
 
 #: src/components/routes/landing/index.tsx:925
 msgid "On the DEHORS calendar"
@@ -8754,6 +8914,10 @@ msgstr "Ανοιχτή"
 msgctxt "check-in list"
 msgid "Open Check-In Page"
 msgstr "Άνοιγμα σελίδας check-in"
+
+#: src/components/routes/event/LiveTracking/index.tsx:127
+msgid "Open in Garmin LiveTrack"
+msgstr "Άνοιγμα στο Garmin LiveTrack"
 
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:163
 msgid "Open Stripe Dashboard"
@@ -9013,7 +9177,7 @@ msgid "orders"
 msgstr ""
 
 #: src/components/layouts/Admin/index.tsx:26
-#: src/components/layouts/Event/index.tsx:116
+#: src/components/layouts/Event/index.tsx:117
 #: src/components/routes/admin/Attribution/index.tsx:140
 #: src/components/routes/admin/Orders/index.tsx:44
 #: src/components/routes/admin/PlatformRevenue/index.tsx:162
@@ -9114,7 +9278,7 @@ msgstr "Διοργανωτής"
 msgid "Organizer archived successfully"
 msgstr "Ο διοργανωτής αρχειοθετήθηκε επιτυχώς"
 
-#: src/components/layouts/Event/index.tsx:222
+#: src/components/layouts/Event/index.tsx:224
 msgid "Organizer Dashboard"
 msgstr "Πίνακας Διοργανωτή"
 
@@ -9203,8 +9367,8 @@ msgid "Outside these hours, the scanner link shows « List closed »."
 msgstr "Εκτός αυτών των ωρών, ο σύνδεσμος του σαρωτή εμφανίζει «Η λίστα είναι κλειστή»."
 
 #: src/components/layouts/Admin/index.tsx:20
-#: src/components/layouts/Event/index.tsx:93
-#: src/components/layouts/Event/index.tsx:101
+#: src/components/layouts/Event/index.tsx:94
+#: src/components/layouts/Event/index.tsx:102
 #: src/components/layouts/OrganizerLayout/index.tsx:128
 msgid "Overview"
 msgstr "Επισκόπηση"
@@ -9313,6 +9477,7 @@ msgid "Partially refunded: {0}"
 msgstr "Μερική επιστροφή: {0}"
 
 #: src/components/routes/event/Deposits/index.tsx:306
+#: src/components/routes/event/LiveTracking/liveStatus.ts:50
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:697
 #: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:168
 msgid "Participant"
@@ -9335,10 +9500,18 @@ msgstr ""
 msgid "Participant's date of birth"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:269
+msgid "Participants"
+msgstr "Συμμετέχοντες"
+
 #: src/components/routes/event/CheckInLists/index.tsx:77
 #: src/components/routes/event/CheckInLists/index.tsx:331
 msgid "Participants arrived"
 msgstr "Συμμετέχοντες που έφτασαν"
+
+#: src/components/routes/event/LiveTracking/index.tsx:202
+msgid "Participants can share their Garmin LiveTrack"
+msgstr "Οι συμμετέχοντες μπορούν να μοιραστούν το Garmin LiveTrack τους"
 
 #: src/components/routes/event/Settings/cards/TicketTransferCard.tsx:47
 msgid "Participants can transfer their ticket"
@@ -9347,6 +9520,10 @@ msgstr ""
 #: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:108
 msgid "Participants download them from the event page, their ticket and their ticket email."
 msgstr ""
+
+#: src/components/routes/event/LiveTracking/index.tsx:189
+msgid "Participants share their Garmin LiveTrack from their ticket. See where everyone is on the course, with their watch's figures, and who has stopped, lost the signal or left the course."
+msgstr "Οι συμμετέχοντες μοιράζονται το Garmin LiveTrack τους από το εισιτήριό τους. Δείτε πού βρίσκεται ο καθένας στη διαδρομή, με τα στοιχεία του ρολογιού του, και ποιος έχει σταματήσει, χάσει το σήμα ή βγει από τη διαδρομή."
 
 #: src/components/modals/PostponeEventModal/index.tsx:189
 msgid "Participants who can't come can get a refund"
@@ -9413,6 +9590,10 @@ msgstr "Επικολλήστε αυτό εκεί που θέλετε να εμφ
 #: src/components/common/Editor/Controls/InsertImageControl/index.tsx:103
 msgid "Paste URL"
 msgstr "Επικόλληση URL"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:54
+msgid "Paste your LiveTrack link."
+msgstr "Επικολλήστε τον σύνδεσμο LiveTrack σας."
 
 #: src/components/modals/CreateAttendeeModal/index.tsx:130
 msgid "Patrick"
@@ -9909,8 +10090,8 @@ msgstr "Προεπισκόπηση"
 msgid "Preview checkout form"
 msgstr "Προεπισκόπηση φόρμας checkout"
 
-#: src/components/layouts/Event/index.tsx:275
-#: src/components/layouts/Event/index.tsx:276
+#: src/components/layouts/Event/index.tsx:277
+#: src/components/layouts/Event/index.tsx:278
 msgid "Preview Event page"
 msgstr "Προεπισκόπηση σελίδας εκδήλωσης"
 
@@ -10135,7 +10316,7 @@ msgstr "Χρήση κωδικού προσφοράς και ανάλυση εκ�
 msgid "promo codes"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:123
+#: src/components/layouts/Event/index.tsx:124
 #: src/components/modals/DuplicateEventModal/index.tsx:27
 #: src/components/routes/event/promo-codes.tsx:38
 #: src/components/routes/event/Reports/index.tsx:46
@@ -10337,7 +10518,7 @@ msgstr "Φτάστε τους {count} εγγεγραμμένους συμμετ�
 msgid "Reactivate"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:128
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:129
 msgid "Read and sign below. Without it, you sign at the entrance before being let in."
 msgstr ""
 
@@ -10597,7 +10778,7 @@ msgid "Registration Invitations"
 msgstr "Προσκλήσεις εγγραφής"
 
 #: src/components/common/QuestionsTable/index.tsx:334
-#: src/components/layouts/Event/index.tsx:141
+#: src/components/layouts/Event/index.tsx:143
 msgid "Registration Questions"
 msgstr "Ερωτήσεις Εγγραφής"
 
@@ -10697,7 +10878,7 @@ msgstr ""
 msgid "Reply to {name}"
 msgstr "Απάντηση σε {name}"
 
-#: src/components/layouts/Event/index.tsx:105
+#: src/components/layouts/Event/index.tsx:106
 #: src/components/layouts/OrganizerLayout/index.tsx:143
 #: src/components/routes/event/Reports/index.tsx:55
 #: src/components/routes/organizer/Reports/index.tsx:126
@@ -10739,7 +10920,7 @@ msgstr "Επαναποστολή Επιβεβαίωσης"
 msgid "Resend Confirmation Email"
 msgstr "Επαναποστολή Email Επιβεβαίωσης"
 
-#: src/components/layouts/Event/index.tsx:305
+#: src/components/layouts/Event/index.tsx:307
 msgid "Resend email"
 msgstr "Επαναποστολή email"
 
@@ -10969,10 +11150,11 @@ msgstr ""
 msgid "Route saved. Participants download the new version."
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:140
+#: src/components/layouts/Event/index.tsx:142
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:174
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:176
 #: src/components/routes/event/Courses/index.tsx:120
+#: src/components/routes/event/LiveTracking/index.tsx:247
 msgid "Routes"
 msgstr ""
 
@@ -11366,7 +11548,7 @@ msgstr ""
 
 #: src/components/routes/my-tickets/index.tsx:464
 #: src/components/routes/my-tickets/index.tsx:509
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:110
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:111
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:725
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:116
 msgid "See you outside!"
@@ -11708,7 +11890,7 @@ msgstr "Η ρύθμιση ενημερώθηκε"
 msgid "settings"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:134
+#: src/components/layouts/Event/index.tsx:136
 #: src/components/layouts/OrganizerLayout/index.tsx:189
 #: src/components/modals/DuplicateEventModal/index.tsx:26
 #: src/components/routes/event/Settings/index.tsx:150
@@ -11726,7 +11908,7 @@ msgstr "Πολλές τιμές για το ίδιο εισιτήριο: προ�
 
 #: src/components/common/ShareIcon/index.tsx:31
 #: src/components/common/ShareIcon/index.tsx:113
-#: src/components/layouts/Event/index.tsx:286
+#: src/components/layouts/Event/index.tsx:288
 #: src/components/layouts/EventHomepage/index.tsx:238
 #: src/components/layouts/EventHomepage/index.tsx:238
 #: src/components/layouts/EventHomepage/index.tsx:241
@@ -11751,21 +11933,29 @@ msgstr "Κατανομή κόστους σε όλες τις ληφθείσες 
 msgid "Share a cost between deposits"
 msgstr "Κατανομή κόστους στις εγγυήσεις"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:121
+msgid "Share a new link"
+msgstr "Κοινοποίηση νέου συνδέσμου"
+
 #: src/components/common/AffiliateTable/index.tsx:169
 #: src/components/common/AffiliateTable/index.tsx:208
 msgid "Share Affiliate Link"
 msgstr "Κοινοποίηση Συνδέσμου Συνεργάτη"
 
-#: src/components/layouts/Event/index.tsx:230
-#: src/components/layouts/Event/index.tsx:282
-#: src/components/layouts/Event/index.tsx:283
+#: src/components/layouts/Event/index.tsx:232
+#: src/components/layouts/Event/index.tsx:284
 #: src/components/layouts/Event/index.tsx:285
-#: src/components/layouts/Event/index.tsx:317
+#: src/components/layouts/Event/index.tsx:287
+#: src/components/layouts/Event/index.tsx:319
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:104
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:135
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:700
 msgid "Share Event"
 msgstr "Κοινοποίηση Εκδήλωσης"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:113
+msgid "Share my position"
+msgstr "Κοινοποίηση της θέσης μου"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:286
 #: src/components/layouts/OrganizerLayout/index.tsx:356
@@ -11775,6 +11965,10 @@ msgstr "Κοινοποίηση Σελίδας Διοργανωτή"
 #: src/components/routes/event/Deposits/index.tsx:201
 msgid "Share the cost"
 msgstr "Κατανομή του κόστους"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:84
+msgid "Share your Garmin LiveTrack: the organization sees where you are on the course during the event, for your safety."
+msgstr "Μοιραστείτε το Garmin LiveTrack σας: η διοργάνωση βλέπει πού βρίσκεστε στη διαδρομή κατά τη διάρκεια της εκδήλωσης, για την ασφάλειά σας."
 
 #: src/components/routes/event/CapacityAssignments/index.tsx:38
 msgid "Shared Capacity Management"
@@ -11891,7 +12085,7 @@ msgstr "Εμφανίζεται μαζί με το ποσό στην παραγγ
 msgid "Shows common address fields, including country"
 msgstr "Εμφανίζει κοινά πεδία διεύθυνσης, συμπεριλαμβανομένης της χώρας"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:132
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:133
 msgid "Sign"
 msgstr ""
 
@@ -12069,9 +12263,11 @@ msgstr "Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξα
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:25
 #: src/components/common/TicketLookupCard/index.tsx:29
-#: src/components/layouts/Event/index.tsx:73
+#: src/components/layouts/Event/index.tsx:74
 #: src/components/layouts/OrganizerLayout/index.tsx:222
+#: src/components/routes/event/LiveTracking/index.tsx:180
 #: src/components/routes/my-tickets/index.tsx:501
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:77
 #: src/components/routes/product-widget/RefundRequest/index.tsx:68
 #: src/components/routes/profile/ManageProfile/index.tsx:139
 #: src/components/routes/profile/ManageProfile/index.tsx:153
@@ -12253,6 +12449,10 @@ msgctxt "landing section"
 msgid "Steps"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:210
+msgid "Steps for your participants:"
+msgstr "Βήματα για τους συμμετέχοντές σας:"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:1096
 msgid "Still a few seconds…"
 msgstr ""
@@ -12281,6 +12481,10 @@ msgstr ""
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:199
 msgid "Stop Impersonating"
 msgstr "Διακοπή Υποκατάστασης"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:122
+msgid "Stop sharing"
+msgstr "Διακοπή κοινοποίησης"
 
 #: src/components/common/Assistant/Answer.tsx:196
 msgid "Stopped."
@@ -12680,7 +12884,7 @@ msgstr ""
 msgid "Thank you for your understanding. We hope to see you at a future event!"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:135
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:136
 msgid "Thank you, it's signed. See you at the event!"
 msgstr ""
 
@@ -13005,6 +13209,14 @@ msgstr ""
 #: src/components/routes/organizer/Orders/index.tsx:275
 msgid "The orders could not be exported. Try again."
 msgstr ""
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:29
+msgid "The organization sees you on the course: {distance} covered, last position {ago}."
+msgstr "Η διοργάνωση σας βλέπει στη διαδρομή: διανύθηκαν {distance}, τελευταία θέση {ago}."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:30
+msgid "The organization sees you on the course: last position {ago}."
+msgstr "Η διοργάνωση σας βλέπει στη διαδρομή: τελευταία θέση {ago}."
 
 #: src/components/layouts/EventHomepage/index.tsx:301
 msgid "The organizer cancelled this event. Tickets are no longer on sale."
@@ -13584,7 +13796,7 @@ msgstr "Λογότυπο Εισιτηρίου"
 msgid "Ticket not found"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:69
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:70
 msgid "Ticket Not Found"
 msgstr "Εισιτήριο Δεν Βρέθηκε"
 
@@ -13616,11 +13828,11 @@ msgstr "Το εισιτήριο πωλήθηκε και έγινε check-in"
 msgid "Ticket transfer"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:59
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:60
 msgid "Ticket transferred"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:111
+#: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/landing/index.tsx:1139
 msgid "Ticketing"
 msgstr "Εισιτήρια"
@@ -13642,7 +13854,7 @@ msgstr "Χρεώσεις της πλατφόρμας εισιτηρίων"
 msgid "Tickets"
 msgstr "Εισιτήρια"
 
-#: src/components/layouts/Event/index.tsx:112
+#: src/components/layouts/Event/index.tsx:113
 #: src/components/routes/event/products.tsx:112
 msgid "Tickets & Products"
 msgstr "Εισιτήρια & Προϊόντα"
@@ -13772,6 +13984,10 @@ msgctxt "date range"
 msgid "To"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:232
+msgid "To check"
+msgstr "Προς έλεγχο"
+
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:87
 msgid "To connect an AI agent (MCP), add this server with the token as a Bearer header. For Claude Code:"
 msgstr "Για να συνδέσετε έναν πράκτορα ΤΝ (MCP), προσθέστε αυτόν τον διακομιστή με το διακριτικό ως κεφαλίδα Bearer. Για το Claude Code:"
@@ -13817,7 +14033,7 @@ msgstr "Για να λαμβάνετε τις πληρωμές σας."
 msgid "To refund yourself"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:126
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:127
 msgid "To sign before the event"
 msgstr ""
 
@@ -13986,7 +14202,7 @@ msgstr ""
 msgid "Transfer a ticket"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:165
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:167
 msgid "Transfer my ticket"
 msgstr ""
 
@@ -14559,7 +14775,7 @@ msgstr "Επαληθευμένο"
 msgid "Verify Email"
 msgstr "Επαλήθευση Email"
 
-#: src/components/layouts/Event/index.tsx:302
+#: src/components/layouts/Event/index.tsx:304
 msgid "Verify your email"
 msgstr "Επαληθεύστε το email σας"
 
@@ -14611,8 +14827,8 @@ msgid "View Event"
 msgstr "Προβολή Εκδήλωσης"
 
 #: src/components/common/EventCard/index.tsx:128
-#: src/components/layouts/Event/index.tsx:227
-#: src/components/layouts/Event/index.tsx:294
+#: src/components/layouts/Event/index.tsx:229
+#: src/components/layouts/Event/index.tsx:296
 #: src/components/routes/event/EventDashboard/index.tsx:79
 #: src/components/routes/event/EventDashboard/index.tsx:170
 msgid "View event page"
@@ -14747,11 +14963,16 @@ msgstr "Αναμονή"
 msgid "Waiting for payment"
 msgstr "Αναμονή πληρωμής"
 
+#: src/components/routes/event/LiveTracking/index.tsx:236
+#: src/components/routes/event/LiveTracking/liveStatus.ts:131
+msgid "Waiting for the start"
+msgstr "Αναμονή για την εκκίνηση"
+
 #: src/components/common/Assistant/assistant.ts:248
 msgid "waitlist"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:124
+#: src/components/layouts/Event/index.tsx:125
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:55
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:75
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:82
@@ -14786,6 +15007,10 @@ msgstr "Ένα μπισκοτάκι;"
 msgid "Warning: This is the system default configuration. Changes will affect all accounts that don't have a specific configuration assigned."
 msgstr "Προειδοποίηση: Αυτή είναι η προεπιλεγμένη ρύθμιση συστήματος. Οι αλλαγές θα επηρεάσουν όλους τους λογαριασμούς."
 
+#: src/components/routes/event/LiveTracking/index.tsx:105
+msgid "Watch distance"
+msgstr "Απόσταση ρολογιού"
+
 #: src/components/routes/product-widget/PaymentReturn/index.tsx:89
 msgid "We could not process your payment. Please try again or contact support."
 msgstr "Δεν μπορέσαμε να επεξεργαστούμε την πληρωμή σας. Δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη."
@@ -14798,7 +15023,7 @@ msgstr ""
 msgid "We couldn't find the order you're looking for. The link may have expired or the order details may have changed."
 msgstr "Δεν βρέθηκε η παραγγελία. Ο σύνδεσμος μπορεί να έχει λήξει ή τα στοιχεία να άλλαξαν."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:70
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:71
 msgid "We couldn't find the ticket you're looking for. The link may have expired or the ticket details may have changed."
 msgstr "Δεν βρέθηκε το εισιτήριο. Ο σύνδεσμος μπορεί να έχει λήξει ή τα στοιχεία να άλλαξαν."
 
@@ -14917,7 +15142,7 @@ msgid "webhooks"
 msgstr ""
 
 #: src/components/common/WebhookTable/WebhookList.tsx:86
-#: src/components/layouts/Event/index.tsx:151
+#: src/components/layouts/Event/index.tsx:153
 #: src/components/layouts/OrganizerLayout/index.tsx:197
 #: src/components/modals/DuplicateEventModal/index.tsx:32
 #: src/components/routes/event/Webhooks/index.tsx:29
@@ -15223,7 +15448,7 @@ msgid "Who signs here?"
 msgstr ""
 
 #: src/components/common/WidgetEditor/index.tsx:194
-#: src/components/layouts/Event/index.tsx:150
+#: src/components/layouts/Event/index.tsx:152
 msgid "Widget Embed"
 msgstr "Ενσωμάτωση Widget"
 
@@ -15387,6 +15612,10 @@ msgstr "Εκδίδετε μερική επιστροφή. Ο πελάτης θα
 msgid "You are offline"
 msgstr "Είστε εκτός σύνδεσης"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:102
+msgid "You can also paste the whole email Garmin sent you."
+msgstr "Μπορείτε επίσης να επικολλήσετε ολόκληρο το email που σας έστειλε η Garmin."
+
 #: src/components/routes/product-widget/RefundRequest/index.tsx:129
 msgid "You can ask until {deadline}."
 msgstr ""
@@ -15488,6 +15717,10 @@ msgstr "Πρέπει να επαληθεύσετε τη διεύθυνση email
 msgid "You need to verify your account email before you can send messages."
 msgstr "Πρέπει να επαληθεύσετε το email λογαριασμού πριν στείλετε μηνύματα."
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:76
+msgid "You no longer share your position."
+msgstr "Δεν μοιράζεστε πια τη θέση σας."
+
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:108
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:98
 msgid "You receive"
@@ -15525,6 +15758,10 @@ msgstr "Το όνομα λογαριασμού χρησιμοποιείται σ
 #: src/components/routes/landing/index.tsx:1071
 msgid "Your account, your money."
 msgstr "Ο λογαριασμός σου, τα χρήματά σου."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:33
+msgid "Your activity has ended. The organization no longer follows you."
+msgstr "Η δραστηριότητά σας ολοκληρώθηκε. Η διοργάνωση δεν σας παρακολουθεί πια."
 
 #: src/components/routes/event/Affiliates/index.tsx:47
 msgid "Your affiliates have been exported successfully."
@@ -15582,6 +15819,14 @@ msgstr "Οι χρεώσεις σου σε σύγκριση με την Eventbrit
 #: src/components/routes/partner/index.tsx:226
 msgid "Your link"
 msgstr "Ο σύνδεσμός σας"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:100
+msgid "Your LiveTrack link"
+msgstr "Ο σύνδεσμος LiveTrack σας"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:68
+msgid "Your LiveTrack link is shared with the organization."
+msgstr "Ο σύνδεσμος LiveTrack σας είναι κοινοποιημένος στη διοργάνωση."
 
 #: src/components/common/CookieConsentBanner/index.tsx:165
 msgid "Your login, your language, payment and this choice. Always on."
@@ -15738,7 +15983,7 @@ msgstr "Τα αποτελέσματά σας"
 msgid "Your sales and check-in in one tap, full screen, like an app."
 msgstr "Οι πωλήσεις και το check-in με ένα άγγιγμα, σε πλήρη οθόνη, σαν εφαρμογή."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:111
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:112
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:117
 msgid "Your ticket"
 msgstr ""

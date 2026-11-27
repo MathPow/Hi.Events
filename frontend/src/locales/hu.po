@@ -19,14 +19,14 @@ msgstr ""
 msgid "Receive product updates from {appName}."
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:248
-#: src/components/layouts/Event/index.tsx:252
+#: src/components/layouts/Event/index.tsx:250
+#: src/components/layouts/Event/index.tsx:254
 #: src/components/layouts/OrganizerLayout/index.tsx:315
 msgid "- Click to Publish"
 msgstr "- Kattintson a közzétételhez"
 
-#: src/components/layouts/Event/index.tsx:261
-#: src/components/layouts/Event/index.tsx:262
+#: src/components/layouts/Event/index.tsx:263
+#: src/components/layouts/Event/index.tsx:264
 msgid "- Click to Unpublish"
 msgstr "- Kattintson a visszavonáshoz"
 
@@ -181,6 +181,10 @@ msgstr "{0}: {2} jegyből {1} elkelt."
 msgid "{0}: one week to go"
 msgstr "{0}: még egy hét"
 
+#: src/components/routes/event/LiveTracking/index.tsx:99
+msgid "{along} of {total} · {percent} %"
+msgstr "{along} / {total} · {percent} %"
+
 #: src/components/routes/event/CheckInLists/index.tsx:191
 msgid "{arrived} / {total} arrived"
 msgstr "{arrived} / {total} megérkezett"
@@ -196,6 +200,10 @@ msgstr "{availableCount} / {totalCount} elérhető"
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:103
 msgid "{awaitingPayment} awaiting payment"
 msgstr ""
+
+#: src/components/routes/event/LiveTracking/index.tsx:111
+msgid "{cadence} spm"
+msgstr "{cadence} lépés/perc"
 
 #: src/components/routes/event/HomepageDesigner/index.tsx:399
 #: src/components/routes/organizer/OrganizerHomepageDesigner/index.tsx:361
@@ -304,6 +312,15 @@ msgstr ""
 msgid "{gross} gross"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:110
+#: src/components/routes/event/LiveTracking/index.tsx:299
+msgid "{heartRate} bpm"
+msgstr "{heartRate} bpm"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:104
+msgid "{hours} h {rest} ago"
+msgstr "{hours} órája {rest}"
+
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:24
 msgid "{hours} hours"
 msgstr "{hours} óra"
@@ -336,6 +353,10 @@ msgstr ""
 msgid "{low} m to {high} m"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:119
+msgid "{metres} m off the course"
+msgstr "{metres} m-re az útvonaltól"
+
 #: src/components/routes/help/GuideCards.tsx:20
 #: src/components/routes/help/HelpGuide.tsx:70
 msgid "{minutes} min read"
@@ -344,6 +365,10 @@ msgstr "{minutes} perc olvasás"
 #: src/components/common/Countdown/index.tsx:72
 msgid "{minutes} minutes and {seconds} seconds"
 msgstr "{minutes} perc és {seconds} másodperc"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:152
+msgid "{minutes}:{seconds} /km"
+msgstr "{minutes}:{seconds} /km"
 
 #: src/components/modals/TransferTicketModal/index.tsx:150
 msgid "{newName} receives the ticket by email."
@@ -354,7 +379,7 @@ msgstr ""
 msgid "{openCount, plural, one {Open list} other {Open lists}}"
 msgstr "{openCount, plural, one {Nyitott lista} other {Nyitott listák}}"
 
-#: src/components/layouts/Event/index.tsx:215
+#: src/components/layouts/Event/index.tsx:217
 msgid "{organizerName} · All events"
 msgstr "{organizerName} · Minden esemény"
 
@@ -419,6 +444,10 @@ msgstr ""
 msgid "{remaining} requests left today"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:99
+msgid "{rounded} min ago"
+msgstr "{rounded} perce"
+
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:132
 msgid "{selectedCount, plural, one {# ticket} other {# tickets}}"
 msgstr ""
@@ -472,7 +501,7 @@ msgstr ""
 msgid "{totalCount} ticket types"
 msgstr "{totalCount} jegytípus"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:60
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:61
 msgid "{transferredTo} receives the ticket by email. This link no longer works."
 msgstr ""
 
@@ -630,6 +659,10 @@ msgstr "7 nap"
 #: src/components/routes/admin/PlatformRevenue/index.tsx:129
 msgid "90 days"
 msgstr "90 nap"
+
+#: src/components/routes/event/LiveTracking/index.tsx:203
+msgid "A « Live tracking » card appears on each ticket, with the steps and a field to paste the link."
+msgstr "Minden jegyen megjelenik egy « Élő követés » kártya a lépésekkel és egy mezővel a hivatkozás beillesztéséhez."
 
 #: src/components/routes/event/Settings/cards/InfoBlockCard.tsx:64
 msgid "A box under the tickets for important information or a link (e.g. a donation)."
@@ -808,6 +841,10 @@ msgstr "Meghívó elfogadása"
 msgid "Accept payments on the platform's Stripe account"
 msgstr "Fizetések fogadása a platform Stripe-fiókjára"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:55
+msgid "Accept that the organizer sees your position to share it."
+msgstr "Fogadja el, hogy a szervező lássa a pozícióját, hogy megoszthassa."
+
 #: src/components/forms/CheckInListForm/index.tsx:72
 #: src/components/forms/CheckInListForm/index.tsx:74
 msgid "Accepted tickets"
@@ -938,6 +975,10 @@ msgstr "Aktív napok"
 msgid "Active Events"
 msgstr "Aktív események"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:133
+msgid "Activity ended"
+msgstr "A tevékenység véget ért"
+
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:84
 #: src/components/routes/event/products.tsx:96
 msgid "Add"
@@ -980,6 +1021,10 @@ msgstr "Termék hozzáadása"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/FaqSection.tsx:119
 msgid "Add a question"
 msgstr "Kérdés hozzáadása"
+
+#: src/components/routes/event/LiveTracking/index.tsx:217
+msgid "Add a route in « Routes » to see how far along each participant is. Without one, the map shows their positions only."
+msgstr "Adjon hozzá egy útvonalat az « Útvonalak » alatt, hogy lássa, meddig jutott el az egyes résztvevők. Útvonal nélkül a térkép csak a pozíciójukat mutatja."
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:59
 #: src/components/common/ProductsTable/index.tsx:101
@@ -1468,6 +1513,10 @@ msgstr "A megrendelés visszatérítése is"
 msgid "Also upcoming"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:113
+msgid "Altitude"
+msgstr "Magasság"
+
 #: src/components/routes/event/CheckInLists/checkInListTimes.ts:48
 msgid "Always open"
 msgstr "Mindig nyitva"
@@ -1749,11 +1798,11 @@ msgstr "Biztosan törölni szeretné ezt a webhookot?"
 msgid "Are you sure you want to leave?"
 msgstr "Biztos, hogy el akarsz menni?"
 
-#: src/components/layouts/Event/index.tsx:174
+#: src/components/layouts/Event/index.tsx:176
 msgid "Are you sure you want to make this event draft? This will make the event invisible to the public"
 msgstr "Biztosan piszkozatba szeretné tenni ezt az eseményt? Ezzel az esemény láthatatlanná válik a nyilvánosság számára."
 
-#: src/components/layouts/Event/index.tsx:175
+#: src/components/layouts/Event/index.tsx:177
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:64
 msgid "Are you sure you want to make this event public? This will make the event visible to the public"
 msgstr "Biztosan nyilvánossá szeretné tenni ezt az eseményt? Ezzel az esemény láthatóvá válik a nyilvánosság számára."
@@ -2143,6 +2192,10 @@ msgstr "Átlag"
 msgid "Average order"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:109
+msgid "Average pace"
+msgstr "Átlagos tempó"
+
 #: src/components/routes/event/Deposits/index.tsx:64
 #: src/components/routes/event/Deposits/index.tsx:261
 msgid "Awaiting"
@@ -2268,6 +2321,7 @@ msgid "Bib"
 msgstr "Rajtszám"
 
 #: src/components/layouts/CheckIn/index.tsx:162
+#: src/components/routes/event/LiveTracking/index.tsx:77
 #: src/components/routes/event/OrdersAndAttendees/AttendeesTab.tsx:308
 msgid "Bib {bib}"
 msgstr "{bib}. mezőszám"
@@ -2475,6 +2529,10 @@ msgstr "A regisztrációval elfogadja <0>Szolgáltatási feltételeinket</0> és
 msgid "Bypass Application Fees"
 msgstr "Alkalmazási díjak megkerülése"
 
+#: src/components/routes/event/LiveTracking/index.tsx:111
+msgid "Cadence"
+msgstr "Lépésszám"
+
 #: src/components/forms/TaxAndFeeForm/index.tsx:52
 msgid "Calculation Type"
 msgstr "Számítás típusa"
@@ -2509,7 +2567,7 @@ msgstr "Kampány"
 msgid "Can't find a ticket?"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:153
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:155
 msgid "Can't make it?"
 msgstr ""
 
@@ -2539,6 +2597,7 @@ msgstr ""
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:104
 #: src/components/routes/organizer/Settings/taxes/TaxesAndFeesCard.tsx:32
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:68
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:115
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditAttendeeModal/index.tsx:83
 #: src/components/routes/product-widget/OrderSummaryAndProducts/EditOrderModal/index.tsx:83
 #: src/utilites/confirmationDialog.tsx:20
@@ -2775,11 +2834,11 @@ msgstr "Ellenőrizze e-mail címét"
 msgid "Check your inbox! If tickets are associated with this email, you'll receive a link to view them."
 msgstr "Nézze meg a postafiókját! Ha ehhez az e-mail címhez jegyek tartoznak, kap egy linket a megtekintésükhöz."
 
-#: src/components/layouts/Event/index.tsx:128
+#: src/components/layouts/Event/index.tsx:129
 msgid "Check-in"
 msgstr "Bejelentkeztetés"
 
-#: src/components/layouts/Event/index.tsx:128
+#: src/components/layouts/Event/index.tsx:129
 #: src/components/routes/event/CheckInLists/index.tsx:316
 msgid "Check-in and scanning"
 msgstr "Beléptetés és szkennelés"
@@ -2990,6 +3049,10 @@ msgstr ""
 msgid "Click to copy"
 msgstr "Kattintson a másoláshoz"
 
+#: src/components/routes/event/LiveTracking/index.tsx:112
+msgid "Climb"
+msgstr "Szintemelkedés"
+
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/Assistant/index.tsx:122
 #: src/components/common/AttendeeCheckInTable/PermissionDeniedMessage.tsx:27
@@ -3006,6 +3069,7 @@ msgstr "Kattintson a másoláshoz"
 #: src/components/modals/TransferTicketModal/index.tsx:120
 #: src/components/modals/TransferTicketModal/index.tsx:133
 #: src/components/routes/event/Courses/CourseMaker.tsx:1033
+#: src/components/routes/event/LiveTracking/index.tsx:81
 #: src/components/routes/event/OrdersAndAttendees/filters.tsx:385
 #: src/components/routes/event/Settings/cards/DangerZoneCard.tsx:165
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:213
@@ -3128,7 +3192,7 @@ msgstr "Visszatérők klubja"
 msgid "Commissions"
 msgstr "Jutalékok"
 
-#: src/components/layouts/Event/index.tsx:144
+#: src/components/layouts/Event/index.tsx:146
 msgid "Communication"
 msgstr "Kommunikáció"
 
@@ -3191,7 +3255,7 @@ msgstr "Komponens kód"
 msgid "Compose"
 msgstr "Írás"
 
-#: src/components/layouts/Event/index.tsx:131
+#: src/components/layouts/Event/index.tsx:133
 msgid "Configuration"
 msgstr "Konfiguráció"
 
@@ -3264,7 +3328,7 @@ msgstr ""
 msgid "Confirm your email address to customize your emails"
 msgstr "Erősítse meg az e-mail-címét az e-mailjei testreszabásához"
 
-#: src/components/layouts/Event/index.tsx:303
+#: src/components/layouts/Event/index.tsx:305
 msgid "Confirm your email to access all features."
 msgstr "Erősítse meg e-mail címét az összes funkció eléréséhez."
 
@@ -3405,6 +3469,10 @@ msgstr "Hozzájárulások"
 #: src/components/routes/landing/index.tsx:1156
 msgid "Cookies"
 msgstr "Sütik"
+
+#: src/components/routes/event/LiveTracking/index.tsx:119
+msgid "Coordinates"
+msgstr "Koordináták"
 
 #: src/components/common/AttendeeTicket/index.tsx:69
 #: src/components/common/CopyButton/index.tsx:13
@@ -3807,9 +3875,17 @@ msgstr "Pénznem"
 msgid "Current"
 msgstr "Jelenlegi"
 
+#: src/components/routes/event/LiveTracking/index.tsx:107
+msgid "Current pace"
+msgstr "Aktuális tempó"
+
 #: src/components/routes/profile/ManageProfile/index.tsx:254
 msgid "Current Password"
 msgstr "Jelenlegi jelszó"
+
+#: src/components/routes/event/LiveTracking/index.tsx:108
+msgid "Current speed"
+msgstr "Aktuális sebesség"
 
 #: src/components/modals/EditAccountVatSettingsModal/index.tsx:156
 msgid "Current VAT number is validated"
@@ -3925,7 +4001,7 @@ msgid "Dark"
 msgstr "Sötét"
 
 #: src/components/layouts/Admin/index.tsx:16
-#: src/components/layouts/Event/index.tsx:96
+#: src/components/layouts/Event/index.tsx:97
 #: src/components/layouts/OrganizerLayout/index.tsx:131
 #: src/components/routes/event/EventDashboard/index.tsx:75
 #: src/components/routes/event/EventDashboard/index.tsx:159
@@ -4130,7 +4206,7 @@ msgstr "Kaució: {0}. A különbözetet térítsd vissza a résztvevőnek."
 msgid "deposits"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:122
+#: src/components/layouts/Event/index.tsx:123
 msgid "Deposits"
 msgstr "Kauciók"
 
@@ -4414,8 +4490,8 @@ msgstr "Igazolás letöltése"
 
 #: src/components/common/EventCard/index.tsx:81
 #: src/components/common/EventStatusBadge/index.tsx:16
-#: src/components/layouts/Event/index.tsx:248
-#: src/components/layouts/Event/index.tsx:252
+#: src/components/layouts/Event/index.tsx:250
+#: src/components/layouts/Event/index.tsx:254
 #: src/components/layouts/OrganizerLayout/index.tsx:315
 #: src/utilites/eventSales.ts:65
 msgid "Draft"
@@ -4727,6 +4803,10 @@ msgstr "pl. 2.50 2.50 dollárért"
 msgid "eg. 23.5 for 23.5%"
 msgstr "pl. 23.5 23.5%-ért"
 
+#: src/components/routes/event/LiveTracking/index.tsx:106
+msgid "Elapsed time"
+msgstr "Eltelt idő"
+
 #: src/components/common/CourseMap/ElevationProfile.tsx:61
 msgid "Elevation from {low} m to {high} m"
 msgstr ""
@@ -4799,7 +4879,7 @@ msgid "Email confirmation resent"
 msgstr "E-mail megerősítés újraküldve"
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:18
-#: src/components/layouts/Event/index.tsx:69
+#: src/components/layouts/Event/index.tsx:70
 #: src/components/layouts/OrganizerLayout/index.tsx:218
 #: src/components/routes/profile/ManageProfile/index.tsx:149
 msgid "Email confirmation resent successfully"
@@ -4930,6 +5010,7 @@ msgstr "Értékesítés vége"
 #: src/components/common/EventsDashboardStatusButtons/index.tsx:23
 #: src/components/common/EventStatusBadge/index.tsx:27
 #: src/components/common/ProductsTable/ProductRow.tsx:47
+#: src/components/routes/event/LiveTracking/index.tsx:240
 #: src/utilites/eventSales.ts:71
 msgid "Ended"
 msgstr "Befejezett"
@@ -5106,7 +5187,7 @@ msgstr "EU ÁFA-s vállalkozások: Fordított adózás alkalmazandó (0% - ÁFA 
 
 #: src/components/common/AdminOrdersTable/index.tsx:72
 #: src/components/layouts/Checkout/CheckoutTopBar/index.tsx:32
-#: src/components/layouts/Event/index.tsx:210
+#: src/components/layouts/Event/index.tsx:212
 #: src/components/routes/admin/Dashboard/index.tsx:368
 #: src/components/routes/admin/Dashboard/index.tsx:419
 #: src/components/routes/admin/Messages/index.tsx:163
@@ -5202,7 +5283,7 @@ msgstr "Az esemény nevének 150 karakternél rövidebbnek kell lennie."
 msgid "Event Not Available"
 msgstr "Esemény nem elérhető"
 
-#: src/components/layouts/Event/index.tsx:139
+#: src/components/layouts/Event/index.tsx:141
 #: src/components/routes/event/HomepageDesigner/index.tsx:350
 msgid "Event Page"
 msgstr "Eseményoldal"
@@ -5217,7 +5298,7 @@ msgstr "Esemény beállítások"
 
 #: src/components/common/EventCard/index.tsx:67
 #: src/components/common/StatusToggle/index.tsx:65
-#: src/components/layouts/Event/index.tsx:190
+#: src/components/layouts/Event/index.tsx:192
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:70
 #: src/components/routes/organizer/Events/index.tsx:80
 msgid "Event status update failed. Please try again later"
@@ -5225,7 +5306,7 @@ msgstr "Esemény állapotának frissítése sikertelen. Kérjük, próbálja új
 
 #: src/components/common/EventCard/index.tsx:64
 #: src/components/common/StatusToggle/index.tsx:58
-#: src/components/layouts/Event/index.tsx:186
+#: src/components/layouts/Event/index.tsx:188
 #: src/components/routes/event/EventDashboard/SetupCard.tsx:68
 #: src/components/routes/organizer/Events/index.tsx:79
 msgid "Event status updated"
@@ -6027,6 +6108,14 @@ msgctxt "green"
 msgid "G"
 msgstr ""
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:35
+msgid "Garmin no longer knows this link. Share the link of your new activity."
+msgstr "A Garmin már nem ismeri ezt a hivatkozást. Ossza meg az új tevékenysége hivatkozását."
+
+#: src/components/routes/event/LiveTracking/index.tsx:199
+msgid "Garmin watches only, with the Garmin Connect app on a phone that has data. Positions are read every minute and deleted after 14 days."
+msgstr "Csak Garmin órákkal, a Garmin Connect alkalmazással, mobilnetes telefonon. A pozíciókat percenként olvassuk be, és 14 nap után töröljük."
+
 #: src/components/routes/landing/index.tsx:916
 msgid "Gather your people"
 msgstr "Gyűjtsd össze az embereidet"
@@ -6096,11 +6185,11 @@ msgstr "Feladás"
 msgid "Give your event a name"
 msgstr "Adjon nevet az eseményének"
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:157
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:159
 msgid "Give your ticket to someone else, until {transferDeadline}."
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:158
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:160
 msgid "Give your ticket to someone else."
 msgstr ""
 
@@ -6222,6 +6311,10 @@ msgstr "A vásárlóknak megjelenő cím"
 #: src/constants/productInfoIcons.ts:45
 msgid "Heart"
 msgstr "Szív"
+
+#: src/components/routes/event/LiveTracking/index.tsx:110
+msgid "Heart rate"
+msgstr "Pulzus"
 
 #: src/components/routes/event/Deposits/index.tsx:263
 msgid "Held"
@@ -6418,6 +6511,10 @@ msgstr "Hogyan jelenik meg az esemény oldala a Google-ban és megosztáskor."
 msgid "How to edit the route"
 msgstr ""
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:97
+msgid "How to start LiveTrack and copy the link (2 min)"
+msgstr "Hogyan indítsa el a LiveTracket és másolja ki a hivatkozást (2 perc)"
+
 #: src/components/routes/organizer/Settings/organization/SeoCard.tsx:55
 msgid "How your page shows in Google and when it is shared."
 msgstr "Hogyan jelenik meg az oldala a Google-ben és megosztáskor."
@@ -6433,6 +6530,10 @@ msgstr "https://webhook-domain.com/webhook"
 #: src/components/common/LanguageSwitcher/index.tsx:15
 msgid "Hungarian"
 msgstr "Magyar"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:109
+msgid "I agree that the organizer sees my position and my watch's figures (pace, heart rate) during the event. They are deleted after 14 days."
+msgstr "Elfogadom, hogy a szervező az esemény alatt látja a pozíciómat és az órám adatait (tempó, pulzus). Ezeket 14 nap után töröljük."
 
 #: src/components/modals/JoinWaitlistModal/index.tsx:176
 msgid "I agree to receive email notifications related to this event"
@@ -6689,7 +6790,7 @@ msgstr "Alkalmazás telepítése"
 msgid "Instant Payouts"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:149
+#: src/components/layouts/Event/index.tsx:151
 #: src/components/layouts/OrganizerLayout/index.tsx:196
 msgid "Integrations"
 msgstr "Integrációk"
@@ -6898,6 +6999,10 @@ msgstr "Csatlakozás a várólistához: {productDisplayName}"
 msgid "Joined"
 msgstr "Csatlakozott"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:95
+msgid "just now"
+msgstr "épp most"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:369
 #: src/components/routes/event/Courses/index.tsx:66
 msgid "Keep it"
@@ -7033,6 +7138,10 @@ msgstr "Vezetéknév"
 msgid "Last name is required"
 msgstr "A vezetéknév kötelező"
 
+#: src/components/routes/event/LiveTracking/index.tsx:104
+msgid "Last position"
+msgstr "Utolsó pozíció"
+
 #: src/components/common/WebhookTable/WebhookList.tsx:91
 #: src/components/common/WebhookTable/WebhookList.tsx:104
 #: src/components/common/WebhookTable/WebhookList.tsx:157
@@ -7155,6 +7264,14 @@ msgstr "Korlátozott helyek"
 msgid "Link Expired or Invalid"
 msgstr "A link lejárt vagy érvénytelen"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:135
+msgid "Link no longer works"
+msgstr "A hivatkozás már nem működik"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:37
+msgid "Link received. The organization will see you as soon as your activity starts on your watch."
+msgstr "Hivatkozás megkapva. A szervezők akkor látják Önt, amint a tevékenység elindul az órán."
+
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:62
 msgid "Link to the order"
 msgstr "Hivatkozás a rendelésre"
@@ -7210,8 +7327,8 @@ msgstr "Lista neve"
 
 #: src/components/common/EventCard/index.tsx:84
 #: src/components/common/EventStatusBadge/index.tsx:14
-#: src/components/layouts/Event/index.tsx:261
-#: src/components/layouts/Event/index.tsx:262
+#: src/components/layouts/Event/index.tsx:263
+#: src/components/layouts/Event/index.tsx:264
 msgid "Live"
 msgstr "Élő"
 
@@ -7227,6 +7344,20 @@ msgstr "Élő események"
 #: src/components/routes/organizer/OrganizerHomepageDesigner/PreviewPanel.tsx:74
 msgid "Live preview of your page"
 msgstr "Az oldala élő előnézete"
+
+#: src/components/layouts/Event/index.tsx:130
+#: src/components/routes/event/LiveTracking/index.tsx:187
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:82
+msgid "Live tracking"
+msgstr "Élő követés"
+
+#: src/components/routes/event/LiveTracking/index.tsx:179
+msgid "Live tracking is off."
+msgstr "Az élő követés ki van kapcsolva."
+
+#: src/components/routes/event/LiveTracking/index.tsx:178
+msgid "Live tracking is on. Participants see it on their ticket."
+msgstr "Az élő követés be van kapcsolva. A résztvevők a jegyükön látják."
 
 #: src/components/routes/product-widget/AttendeeProductAndInformation/RouteDownloads.tsx:21
 msgid "Load it into your watch or phone before the start."
@@ -7551,7 +7682,7 @@ msgstr ""
 
 #: src/components/common/MessageList/index.tsx:108
 #: src/components/layouts/Admin/index.tsx:29
-#: src/components/layouts/Event/index.tsx:145
+#: src/components/layouts/Event/index.tsx:147
 #: src/components/layouts/OrganizerLayout/index.tsx:168
 #: src/components/routes/event/messages.tsx:250
 #: src/components/routes/organizer/Messages/index.tsx:267
@@ -8178,6 +8309,10 @@ msgstr "Nincsenek fizetett rendelések"
 msgid "No paid orders over this period"
 msgstr "Nincs fizetett rendelés ebben az időszakban"
 
+#: src/components/routes/event/LiveTracking/index.tsx:274
+msgid "No participant shares their position yet. They do it from their ticket, usually just before the start."
+msgstr "Még egyetlen résztvevő sem osztja meg a pozícióját. A jegyükön keresztül teszik, általában közvetlenül a rajt előtt."
+
 #: src/components/layouts/OrganizerHomepage/index.tsx:290
 msgid "No past events"
 msgstr "Nincsenek múltbeli események"
@@ -8274,6 +8409,14 @@ msgstr ""
 #: src/components/common/NoResultsSplash/index.tsx:53
 msgid "No search results."
 msgstr "Nincs találat."
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:111
+msgid "No signal for {minutes} min"
+msgstr "{minutes} perce nincs jel"
+
+#: src/components/routes/event/LiveTracking/liveStatus.ts:111
+#~ msgid "No signal since {since}"
+#~ msgstr "Nincs jel: {since}"
 
 #: src/components/routes/organizer/Reports/reportPanels.tsx:294
 msgid "No taxes collected during this period."
@@ -8393,6 +8536,10 @@ msgctxt "attendee check-in"
 msgid "Not Eligible"
 msgstr "Nem tartalmazza"
 
+#: src/components/routes/event/LiveTracking/liveStatus.ts:115
+msgid "Not moving for {minutes} min"
+msgstr "{minutes} perce áll"
+
 #: src/components/common/InstallAppPrompt/index.tsx:130
 msgid "Not now"
 msgstr "Most nem"
@@ -8511,6 +8658,10 @@ msgstr "/"
 msgid "of climb"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:114
+msgid "Off the course"
+msgstr "Letért az útvonalról"
+
 #: src/components/common/ErrorDisplay/index.tsx:24
 msgid "Off trail"
 msgstr "Letértél az útról"
@@ -8519,6 +8670,10 @@ msgstr "Letértél az útról"
 #: src/components/modals/OfferWaitlistModal/index.tsx:219
 msgid "Offer"
 msgstr "Felajánlás"
+
+#: src/components/routes/event/LiveTracking/index.tsx:198
+msgid "Offer live tracking"
+msgstr "Élő követés felajánlása"
 
 #: src/components/common/WaitlistTable/index.tsx:88
 msgid "Offer Spot"
@@ -8601,13 +8756,18 @@ msgstr "Kérésre"
 msgid "On Sale"
 msgstr "Eladó"
 
-#: src/components/layouts/Event/index.tsx:127
+#: src/components/layouts/Event/index.tsx:128
 msgid "On site"
 msgstr "Helyszínen"
 
 #: src/components/modals/RepeatEventModal/index.tsx:162
 msgid "On the {ordinal} {weekday} of every month"
 msgstr ""
+
+#: src/components/routes/event/LiveTracking/index.tsx:228
+#: src/components/routes/event/LiveTracking/liveStatus.ts:129
+msgid "On the course"
+msgstr "Az útvonalon"
 
 #: src/components/routes/landing/index.tsx:925
 msgid "On the DEHORS calendar"
@@ -8754,6 +8914,10 @@ msgstr "Nyitva"
 msgctxt "check-in list"
 msgid "Open Check-In Page"
 msgstr "Beléptetési oldal megnyitása"
+
+#: src/components/routes/event/LiveTracking/index.tsx:127
+msgid "Open in Garmin LiveTrack"
+msgstr "Megnyitás a Garmin LiveTrackben"
 
 #: src/components/routes/organizer/Settings/payments/StripeCard.tsx:163
 msgid "Open Stripe Dashboard"
@@ -9013,7 +9177,7 @@ msgid "orders"
 msgstr ""
 
 #: src/components/layouts/Admin/index.tsx:26
-#: src/components/layouts/Event/index.tsx:116
+#: src/components/layouts/Event/index.tsx:117
 #: src/components/routes/admin/Attribution/index.tsx:140
 #: src/components/routes/admin/Orders/index.tsx:44
 #: src/components/routes/admin/PlatformRevenue/index.tsx:162
@@ -9114,7 +9278,7 @@ msgstr "Szervező"
 msgid "Organizer archived successfully"
 msgstr "A szervező sikeresen archiválva"
 
-#: src/components/layouts/Event/index.tsx:222
+#: src/components/layouts/Event/index.tsx:224
 msgid "Organizer Dashboard"
 msgstr "Szervezői irányítópult"
 
@@ -9203,8 +9367,8 @@ msgid "Outside these hours, the scanner link shows « List closed »."
 msgstr "Ezen időszakon kívül a szkenner linkje a „A lista zárva” üzenetet mutatja."
 
 #: src/components/layouts/Admin/index.tsx:20
-#: src/components/layouts/Event/index.tsx:93
-#: src/components/layouts/Event/index.tsx:101
+#: src/components/layouts/Event/index.tsx:94
+#: src/components/layouts/Event/index.tsx:102
 #: src/components/layouts/OrganizerLayout/index.tsx:128
 msgid "Overview"
 msgstr "Áttekintés"
@@ -9313,6 +9477,7 @@ msgid "Partially refunded: {0}"
 msgstr "Részben visszatérítve: {0}"
 
 #: src/components/routes/event/Deposits/index.tsx:306
+#: src/components/routes/event/LiveTracking/liveStatus.ts:50
 #: src/components/routes/organizer/Documents/DocumentEditor/index.tsx:697
 #: src/components/routes/product-widget/OrderSummaryAndProducts/ConfirmationTicket/index.tsx:168
 msgid "Participant"
@@ -9335,10 +9500,18 @@ msgstr ""
 msgid "Participant's date of birth"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:269
+msgid "Participants"
+msgstr "Résztvevők"
+
 #: src/components/routes/event/CheckInLists/index.tsx:77
 #: src/components/routes/event/CheckInLists/index.tsx:331
 msgid "Participants arrived"
 msgstr "Megérkezett résztvevők"
+
+#: src/components/routes/event/LiveTracking/index.tsx:202
+msgid "Participants can share their Garmin LiveTrack"
+msgstr "A résztvevők megoszthatják a Garmin LiveTrackjüket"
 
 #: src/components/routes/event/Settings/cards/TicketTransferCard.tsx:47
 msgid "Participants can transfer their ticket"
@@ -9347,6 +9520,10 @@ msgstr ""
 #: src/components/routes/event/Settings/cards/RouteFilesCard.tsx:108
 msgid "Participants download them from the event page, their ticket and their ticket email."
 msgstr ""
+
+#: src/components/routes/event/LiveTracking/index.tsx:189
+msgid "Participants share their Garmin LiveTrack from their ticket. See where everyone is on the course, with their watch's figures, and who has stopped, lost the signal or left the course."
+msgstr "A résztvevők a jegyükről osztják meg a Garmin LiveTrackjüket. Lássa, ki hol jár az útvonalon, az órájuk adataival együtt, és ki állt meg, vesztette el a jelet vagy tért le az útvonalról."
 
 #: src/components/modals/PostponeEventModal/index.tsx:189
 msgid "Participants who can't come can get a refund"
@@ -9413,6 +9590,10 @@ msgstr "Illessze be ezt oda, ahová a widgetet szeretné."
 #: src/components/common/Editor/Controls/InsertImageControl/index.tsx:103
 msgid "Paste URL"
 msgstr "URL beillesztése"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:54
+msgid "Paste your LiveTrack link."
+msgstr "Illessze be a LiveTrack hivatkozását."
 
 #: src/components/modals/CreateAttendeeModal/index.tsx:130
 msgid "Patrick"
@@ -9909,8 +10090,8 @@ msgstr "Előnézet"
 msgid "Preview checkout form"
 msgstr "Pénztári űrlap előnézete"
 
-#: src/components/layouts/Event/index.tsx:275
-#: src/components/layouts/Event/index.tsx:276
+#: src/components/layouts/Event/index.tsx:277
+#: src/components/layouts/Event/index.tsx:278
 msgid "Preview Event page"
 msgstr "Eseményoldal előnézete"
 
@@ -10135,7 +10316,7 @@ msgstr "Promóciós kód felhasználás és kedvezmény bontás"
 msgid "promo codes"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:123
+#: src/components/layouts/Event/index.tsx:124
 #: src/components/modals/DuplicateEventModal/index.tsx:27
 #: src/components/routes/event/promo-codes.tsx:38
 #: src/components/routes/event/Reports/index.tsx:46
@@ -10337,7 +10518,7 @@ msgstr "Érjen el {count} regisztrált résztvevőt."
 msgid "Reactivate"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:128
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:129
 msgid "Read and sign below. Without it, you sign at the entrance before being let in."
 msgstr ""
 
@@ -10597,7 +10778,7 @@ msgid "Registration Invitations"
 msgstr "Regisztrációs meghívók"
 
 #: src/components/common/QuestionsTable/index.tsx:334
-#: src/components/layouts/Event/index.tsx:141
+#: src/components/layouts/Event/index.tsx:143
 msgid "Registration Questions"
 msgstr "Regisztrációs kérdések"
 
@@ -10697,7 +10878,7 @@ msgstr ""
 msgid "Reply to {name}"
 msgstr "Válasz neki: {name}"
 
-#: src/components/layouts/Event/index.tsx:105
+#: src/components/layouts/Event/index.tsx:106
 #: src/components/layouts/OrganizerLayout/index.tsx:143
 #: src/components/routes/event/Reports/index.tsx:55
 #: src/components/routes/organizer/Reports/index.tsx:126
@@ -10739,7 +10920,7 @@ msgstr "Visszaigazolás újraküldése"
 msgid "Resend Confirmation Email"
 msgstr "Megerősítő e-mail újraküldése"
 
-#: src/components/layouts/Event/index.tsx:305
+#: src/components/layouts/Event/index.tsx:307
 msgid "Resend email"
 msgstr "E-mail újraküldése"
 
@@ -10969,10 +11150,11 @@ msgstr ""
 msgid "Route saved. Participants download the new version."
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:140
+#: src/components/layouts/Event/index.tsx:142
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:174
 #: src/components/layouts/EventHomepage/EventCourses/index.tsx:176
 #: src/components/routes/event/Courses/index.tsx:120
+#: src/components/routes/event/LiveTracking/index.tsx:247
 msgid "Routes"
 msgstr ""
 
@@ -11366,7 +11548,7 @@ msgstr ""
 
 #: src/components/routes/my-tickets/index.tsx:464
 #: src/components/routes/my-tickets/index.tsx:509
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:110
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:111
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:725
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:116
 msgid "See you outside!"
@@ -11708,7 +11890,7 @@ msgstr "Beállítás frissítve"
 msgid "settings"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:134
+#: src/components/layouts/Event/index.tsx:136
 #: src/components/layouts/OrganizerLayout/index.tsx:189
 #: src/components/modals/DuplicateEventModal/index.tsx:26
 #: src/components/routes/event/Settings/index.tsx:150
@@ -11726,7 +11908,7 @@ msgstr "Több ár ugyanahhoz a jegyhez: korai madár, diák…"
 
 #: src/components/common/ShareIcon/index.tsx:31
 #: src/components/common/ShareIcon/index.tsx:113
-#: src/components/layouts/Event/index.tsx:286
+#: src/components/layouts/Event/index.tsx:288
 #: src/components/layouts/EventHomepage/index.tsx:238
 #: src/components/layouts/EventHomepage/index.tsx:238
 #: src/components/layouts/EventHomepage/index.tsx:241
@@ -11751,21 +11933,29 @@ msgstr "Költség szétosztása az összes beérkezett kaució között"
 msgid "Share a cost between deposits"
 msgstr "Költség szétosztása a kauciók között"
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:121
+msgid "Share a new link"
+msgstr "Új hivatkozás megosztása"
+
 #: src/components/common/AffiliateTable/index.tsx:169
 #: src/components/common/AffiliateTable/index.tsx:208
 msgid "Share Affiliate Link"
 msgstr "Partnerlink megosztása"
 
-#: src/components/layouts/Event/index.tsx:230
-#: src/components/layouts/Event/index.tsx:282
-#: src/components/layouts/Event/index.tsx:283
+#: src/components/layouts/Event/index.tsx:232
+#: src/components/layouts/Event/index.tsx:284
 #: src/components/layouts/Event/index.tsx:285
-#: src/components/layouts/Event/index.tsx:317
+#: src/components/layouts/Event/index.tsx:287
+#: src/components/layouts/Event/index.tsx:319
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:104
 #: src/components/modals/EventLiveCelebrationModal/index.tsx:135
 #: src/components/routes/product-widget/OrderSummaryAndProducts/index.tsx:700
 msgid "Share Event"
 msgstr "Esemény megosztása"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:113
+msgid "Share my position"
+msgstr "Pozícióm megosztása"
 
 #: src/components/layouts/OrganizerLayout/index.tsx:286
 #: src/components/layouts/OrganizerLayout/index.tsx:356
@@ -11775,6 +11965,10 @@ msgstr "Szervezői oldal megosztása"
 #: src/components/routes/event/Deposits/index.tsx:201
 msgid "Share the cost"
 msgstr "Költség szétosztása"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:84
+msgid "Share your Garmin LiveTrack: the organization sees where you are on the course during the event, for your safety."
+msgstr "Ossza meg a Garmin LiveTrackjét: a szervezők az esemény alatt látják, hol jár az útvonalon, az Ön biztonsága érdekében."
 
 #: src/components/routes/event/CapacityAssignments/index.tsx:38
 msgid "Shared Capacity Management"
@@ -11891,7 +12085,7 @@ msgstr "A rendelésen és a visszaigazoló e-mailben jelenik meg az összeggel e
 msgid "Shows common address fields, including country"
 msgstr "Gyakori címmezőket mutat, beleértve az országot is."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:132
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:133
 msgid "Sign"
 msgstr ""
 
@@ -12069,9 +12263,11 @@ msgstr "Valami hiba történt. Kérjük, próbálja újra később."
 
 #: src/components/common/EmailNotConfirmedError/index.tsx:25
 #: src/components/common/TicketLookupCard/index.tsx:29
-#: src/components/layouts/Event/index.tsx:73
+#: src/components/layouts/Event/index.tsx:74
 #: src/components/layouts/OrganizerLayout/index.tsx:222
+#: src/components/routes/event/LiveTracking/index.tsx:180
 #: src/components/routes/my-tickets/index.tsx:501
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:77
 #: src/components/routes/product-widget/RefundRequest/index.tsx:68
 #: src/components/routes/profile/ManageProfile/index.tsx:139
 #: src/components/routes/profile/ManageProfile/index.tsx:153
@@ -12253,6 +12449,10 @@ msgctxt "landing section"
 msgid "Steps"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:210
+msgid "Steps for your participants:"
+msgstr "Lépések a résztvevőknek:"
+
 #: src/components/routes/event/Courses/CourseMaker.tsx:1096
 msgid "Still a few seconds…"
 msgstr ""
@@ -12281,6 +12481,10 @@ msgstr ""
 #: src/components/layouts/AppLayout/MobileNav/index.tsx:199
 msgid "Stop Impersonating"
 msgstr "Megszemélyesítés leállítása"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:122
+msgid "Stop sharing"
+msgstr "Megosztás leállítása"
 
 #: src/components/common/Assistant/Answer.tsx:196
 msgid "Stopped."
@@ -12680,7 +12884,7 @@ msgstr ""
 msgid "Thank you for your understanding. We hope to see you at a future event!"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:135
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:136
 msgid "Thank you, it's signed. See you at the event!"
 msgstr ""
 
@@ -13005,6 +13209,14 @@ msgstr ""
 #: src/components/routes/organizer/Orders/index.tsx:275
 msgid "The orders could not be exported. Try again."
 msgstr ""
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:29
+msgid "The organization sees you on the course: {distance} covered, last position {ago}."
+msgstr "A szervezők látják Önt az útvonalon: {distance} megtéve, utolsó pozíció {ago}."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:30
+msgid "The organization sees you on the course: last position {ago}."
+msgstr "A szervezők látják Önt az útvonalon: utolsó pozíció {ago}."
 
 #: src/components/layouts/EventHomepage/index.tsx:301
 msgid "The organizer cancelled this event. Tickets are no longer on sale."
@@ -13584,7 +13796,7 @@ msgstr "Jegy logó"
 msgid "Ticket not found"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:69
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:70
 msgid "Ticket Not Found"
 msgstr "Jegy nem található"
 
@@ -13616,11 +13828,11 @@ msgstr "Jegy eladva és bejelentkeztetve"
 msgid "Ticket transfer"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:59
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:60
 msgid "Ticket transferred"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:111
+#: src/components/layouts/Event/index.tsx:112
 #: src/components/routes/landing/index.tsx:1139
 msgid "Ticketing"
 msgstr "Jegyértékesítés"
@@ -13642,7 +13854,7 @@ msgstr "A jegyértékesítés díjai"
 msgid "Tickets"
 msgstr "Jegyek"
 
-#: src/components/layouts/Event/index.tsx:112
+#: src/components/layouts/Event/index.tsx:113
 #: src/components/routes/event/products.tsx:112
 msgid "Tickets & Products"
 msgstr "Jegyek és termékek"
@@ -13772,6 +13984,10 @@ msgctxt "date range"
 msgid "To"
 msgstr ""
 
+#: src/components/routes/event/LiveTracking/index.tsx:232
+msgid "To check"
+msgstr "Ellenőrizendő"
+
 #: src/components/routes/organizer/Settings/team/ApiTokensCard.tsx:87
 msgid "To connect an AI agent (MCP), add this server with the token as a Bearer header. For Claude Code:"
 msgstr "MI-ügynök (MCP) csatlakoztatásához add hozzá ezt a szervert a tokennel Bearer fejlécként. Claude Code esetén:"
@@ -13817,7 +14033,7 @@ msgstr "A kifizetések fogadásához."
 msgid "To refund yourself"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:126
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:127
 msgid "To sign before the event"
 msgstr ""
 
@@ -13986,7 +14202,7 @@ msgstr ""
 msgid "Transfer a ticket"
 msgstr ""
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:165
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:167
 msgid "Transfer my ticket"
 msgstr ""
 
@@ -14559,7 +14775,7 @@ msgstr "Ellenőrzött"
 msgid "Verify Email"
 msgstr "E-mail ellenőrzése"
 
-#: src/components/layouts/Event/index.tsx:302
+#: src/components/layouts/Event/index.tsx:304
 msgid "Verify your email"
 msgstr "Ellenőrizze e-mail címét"
 
@@ -14611,8 +14827,8 @@ msgid "View Event"
 msgstr "Esemény megtekintése"
 
 #: src/components/common/EventCard/index.tsx:128
-#: src/components/layouts/Event/index.tsx:227
-#: src/components/layouts/Event/index.tsx:294
+#: src/components/layouts/Event/index.tsx:229
+#: src/components/layouts/Event/index.tsx:296
 #: src/components/routes/event/EventDashboard/index.tsx:79
 #: src/components/routes/event/EventDashboard/index.tsx:170
 msgid "View event page"
@@ -14747,11 +14963,16 @@ msgstr "Várakozik"
 msgid "Waiting for payment"
 msgstr "Fizetésre vár"
 
+#: src/components/routes/event/LiveTracking/index.tsx:236
+#: src/components/routes/event/LiveTracking/liveStatus.ts:131
+msgid "Waiting for the start"
+msgstr "Várakozás a rajtra"
+
 #: src/components/common/Assistant/assistant.ts:248
 msgid "waitlist"
 msgstr ""
 
-#: src/components/layouts/Event/index.tsx:124
+#: src/components/layouts/Event/index.tsx:125
 #: src/components/routes/event/Settings/cards/WaitlistCard.tsx:55
 #: src/components/routes/event/SoldOutWaitlist/index.tsx:75
 #: src/components/routes/organizer/Emails/AutomaticEmails.tsx:82
@@ -14786,6 +15007,10 @@ msgstr "Kérsz egy kekszet?"
 msgid "Warning: This is the system default configuration. Changes will affect all accounts that don't have a specific configuration assigned."
 msgstr "Figyelmeztetés: Ez a rendszer alapértelmezett konfigurációja. A módosítások minden olyan fiókot érintenek, amelyhez nincs konkrét konfiguráció hozzárendelve."
 
+#: src/components/routes/event/LiveTracking/index.tsx:105
+msgid "Watch distance"
+msgstr "Óra szerinti távolság"
+
 #: src/components/routes/product-widget/PaymentReturn/index.tsx:89
 msgid "We could not process your payment. Please try again or contact support."
 msgstr "Nem sikerült feldolgozni a fizetését. Kérjük, próbálja újra, vagy lépjen kapcsolatba a támogatással."
@@ -14798,7 +15023,7 @@ msgstr ""
 msgid "We couldn't find the order you're looking for. The link may have expired or the order details may have changed."
 msgstr "Nem találtuk a keresett rendelést. A link lejárhatott, vagy a rendelés adatai megváltozhattak."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:70
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:71
 msgid "We couldn't find the ticket you're looking for. The link may have expired or the ticket details may have changed."
 msgstr "Nem találtuk a keresett jegyet. A link lejárhatott, vagy a jegy adatai megváltozhattak."
 
@@ -14917,7 +15142,7 @@ msgid "webhooks"
 msgstr ""
 
 #: src/components/common/WebhookTable/WebhookList.tsx:86
-#: src/components/layouts/Event/index.tsx:151
+#: src/components/layouts/Event/index.tsx:153
 #: src/components/layouts/OrganizerLayout/index.tsx:197
 #: src/components/modals/DuplicateEventModal/index.tsx:32
 #: src/components/routes/event/Webhooks/index.tsx:29
@@ -15223,7 +15448,7 @@ msgid "Who signs here?"
 msgstr ""
 
 #: src/components/common/WidgetEditor/index.tsx:194
-#: src/components/layouts/Event/index.tsx:150
+#: src/components/layouts/Event/index.tsx:152
 msgid "Widget Embed"
 msgstr "Widget beágyazása"
 
@@ -15387,6 +15612,10 @@ msgstr "Részleges visszatérítést bocsát ki. A vásárló {0} {1} összeget 
 msgid "You are offline"
 msgstr "Offline állapotban van."
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:102
+msgid "You can also paste the whole email Garmin sent you."
+msgstr "A Garmin által küldött teljes e-mailt is beillesztheti."
+
 #: src/components/routes/product-widget/RefundRequest/index.tsx:129
 msgid "You can ask until {deadline}."
 msgstr ""
@@ -15488,6 +15717,10 @@ msgstr "Megerősítenie kell e-mail címét, mielőtt frissítheti a szervezői 
 msgid "You need to verify your account email before you can send messages."
 msgstr "Ellenőriznie kell fiókja e-mail címét, mielőtt üzeneteket küldhet."
 
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:76
+msgid "You no longer share your position."
+msgstr "Már nem osztja meg a pozícióját."
+
 #: src/components/routes/organizer/Settings/payments/FeesCard.tsx:108
 #: src/components/routes/organizer/Settings/tabs/TabSkeletons.tsx:98
 msgid "You receive"
@@ -15525,6 +15758,10 @@ msgstr "Fióknevét az eseményoldalakon és az e-mailekben használják."
 #: src/components/routes/landing/index.tsx:1071
 msgid "Your account, your money."
 msgstr "A te fiókod, a te pénzed."
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:33
+msgid "Your activity has ended. The organization no longer follows you."
+msgstr "A tevékenysége véget ért. A szervezők már nem követik Önt."
 
 #: src/components/routes/event/Affiliates/index.tsx:47
 msgid "Your affiliates have been exported successfully."
@@ -15582,6 +15819,14 @@ msgstr "A díjaid az Eventbrite-hoz képest"
 #: src/components/routes/partner/index.tsx:226
 msgid "Your link"
 msgstr "A linked"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:100
+msgid "Your LiveTrack link"
+msgstr "A LiveTrack hivatkozása"
+
+#: src/components/routes/product-widget/AttendeeProductAndInformation/LiveTrackCard.tsx:68
+msgid "Your LiveTrack link is shared with the organization."
+msgstr "A LiveTrack hivatkozása meg van osztva a szervezőkkel."
 
 #: src/components/common/CookieConsentBanner/index.tsx:165
 msgid "Your login, your language, payment and this choice. Always on."
@@ -15738,7 +15983,7 @@ msgstr "Az eredményeid"
 msgid "Your sales and check-in in one tap, full screen, like an app."
 msgstr "Eladások és beléptetés egy koppintással, teljes képernyőn, mint egy alkalmazás."
 
-#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:111
+#: src/components/routes/product-widget/AttendeeProductAndInformation/index.tsx:112
 #: src/components/routes/product-widget/PrintOrder/PrintTickets.tsx:117
 msgid "Your ticket"
 msgstr ""

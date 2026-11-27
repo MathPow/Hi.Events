@@ -176,6 +176,11 @@ use HiEvents\Http\Actions\Events\RouteFiles\GetEventRouteFilesPublicAction;
 use HiEvents\Http\Actions\Events\RouteFiles\ReplaceEventRouteFileAction;
 use HiEvents\Http\Actions\Events\RouteFiles\UpdateEventRouteFileAction;
 use HiEvents\Http\Actions\Events\RouteFiles\UploadEventRouteFileAction;
+use HiEvents\Http\Actions\LiveTracks\GetEventLiveTracksAction;
+use HiEvents\Http\Actions\LiveTracks\GetLiveTrackPointsAction;
+use HiEvents\Http\Actions\LiveTracks\Public\DeleteAttendeeLiveTrackPublicAction;
+use HiEvents\Http\Actions\LiveTracks\Public\GetAttendeeLiveTrackPublicAction;
+use HiEvents\Http\Actions\LiveTracks\Public\ShareAttendeeLiveTrackPublicAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentsAction;
 use HiEvents\Http\Actions\Attendees\GetAttendeeDocumentPdfAction;
 use HiEvents\Http\Actions\Organizers\Messages\GetOrganizerUnreadMessagesCountAction;
@@ -549,6 +554,10 @@ $router->middleware(['auth:api'])->group(
         $router->post('/events/{event_id}/route-files/{route_file_id}/file', ReplaceEventRouteFileAction::class);
         $router->delete('/events/{event_id}/route-files/{route_file_id}', DeleteEventRouteFileAction::class);
 
+        // « Suivi en direct »: the participants who share their Garmin LiveTrack, on the course
+        $router->get('/events/{event_id}/live-tracks', GetEventLiveTracksAction::class);
+        $router->get('/events/{event_id}/live-tracks/{live_track_id}/points', GetLiveTrackPointsAction::class);
+
         // Promo Codes
         $router->post('/events/{event_id}/promo-codes', CreatePromoCodeAction::class);
         $router->put('/events/{event_id}/promo-codes/{promo_code_id}', UpdatePromoCodeAction::class);
@@ -723,6 +732,13 @@ $router->prefix('/public')->group(
         $router->get('/events/{event_id}/attendees/{attendee_short_id}/details', GetTransferredHolderDetailsPublicAction::class)
             ->middleware('throttle:self-service-edit');
         $router->post('/events/{event_id}/attendees/{attendee_short_id}/details', SaveTransferredHolderDetailsPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        // The participant shares their Garmin LiveTrack link with the organizer, from their ticket.
+        $router->get('/events/{event_id}/attendees/{attendee_short_id}/live-track', GetAttendeeLiveTrackPublicAction::class)
+            ->middleware('throttle:60,1');
+        $router->put('/events/{event_id}/attendees/{attendee_short_id}/live-track', ShareAttendeeLiveTrackPublicAction::class)
+            ->middleware('throttle:self-service-edit');
+        $router->delete('/events/{event_id}/attendees/{attendee_short_id}/live-track', DeleteAttendeeLiveTrackPublicAction::class)
             ->middleware('throttle:self-service-edit');
 
         // A postponed event: the participant who can no longer come cancels and gets refunded

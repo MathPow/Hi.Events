@@ -10,6 +10,7 @@ import {
     IconShare,
     IconWebhook,
     IconShieldLock,
+    IconBroadcast,
 } from "@tabler/icons-react";
 import {t} from "@lingui/macro";
 import {getProductsFromEvent} from "../../../utilites/helpers.ts";
@@ -126,6 +127,7 @@ const EventLayout = () => {
         // 3. ON SITE
         {label: t`On site`},
         {link: 'check-in', label: t`Check-in and scanning`, iconSrc: navIcon('scan'), mobileTab: true, mobileTabLabel: t`Check-in`},
+        {link: 'live-tracking', label: t`Live tracking`, icon: IconBroadcast},
 
         // 4. CONFIGURATION
         {label: t`Configuration`},

@@ -197,8 +197,69 @@ const messages: HelpGuide = {
     ],
 };
 
+const liveTracking: HelpGuide = {
+    slug: 'suivi-en-direct-garmin',
+    category: 'Participants',
+    title: 'Share your live position with Garmin LiveTrack',
+    lead: "During the race, the organization can see where you are on the course, for your safety. All it takes is pasting your Garmin LiveTrack link on your ticket. Allow 5 minutes the day before, and 1 minute at the start.",
+    updated: '2026-11-27',
+    minutes: 3,
+    blocks: [
+        {h2: 'What you need'},
+        {
+            ul: [
+                'A Garmin watch that supports LiveTrack (most Forerunner, Fenix, Epix, Venu and Instinct models, or an Edge bike computer)',
+                'The **Garmin Connect** app on your phone, paired with your watch',
+                'Your phone with you during the race, with mobile data: the watch sends your position through it',
+            ],
+        },
+        {tip: 'Does your watch have its own mobile connection (LTE)? You can leave the phone behind.'},
+        {h2: 'The day before: set up LiveTrack'},
+        {
+            ol: [
+                'Open **Garmin Connect** on your phone.',
+                'Tap **More** (or your profile picture), then **Safety & Tracking**, then **LiveTrack**.',
+                'Add **your own email address** as a contact: Garmin will send you the link of each activity.',
+                'Turn on **Auto Start**: LiveTrack starts by itself every time you start an outdoor activity on the watch.',
+                'Try it for 2 minutes: start a run on the watch and check that the email from Garmin arrives. Then stop the activity.',
+            ],
+        },
+        {p: 'The exact menu names may vary slightly with your version of Garmin Connect.'},
+        {h2: 'On race day: share the link'},
+        {
+            ol: [
+                'At the start, start your activity on the watch. LiveTrack starts and Garmin emails you the link of this activity.',
+                'Open your ticket (the link is in your confirmation email, or in [My tickets](/my-tickets)) and scroll down to **Live tracking**.',
+                'Paste the link. It looks like **livetrack.garmin.com/session/…/token/…**. You can also paste the whole email from Garmin: we find the link in it.',
+                'Tick the consent box, then tap **Share my position**.',
+            ],
+        },
+        {tip: 'No email? During the activity, open **LiveTrack** in Garmin Connect and tap **Share** to copy the link.'},
+        {p: 'Your ticket then says "The organization sees you on the course". If it still says "Link received", your activity hasn\'t started or your phone hasn\'t sent a position yet: give it a minute.'},
+        {h2: 'What the organization sees'},
+        {
+            ul: [
+                'Your position on the course, updated about every minute, and how far you have gone',
+                'Your time, pace, climb and heart rate, if your watch measures it',
+                "An alert if you haven't moved for 10 minutes, lose the signal or leave the course, so someone can come and help",
+            ],
+        },
+        {p: 'Only the event\'s organization sees this data. It is deleted 14 days after you share it. You can stop sharing at any time from your ticket.'},
+        {h2: 'Common problems'},
+        {
+            ul: [
+                '**"This is your personal LiveTrack page"**: copy the activity\'s link (livetrack.garmin.com/session/…), not your profile\'s.',
+                '**"Garmin does not know this LiveTrack link"**: the link is incomplete or the activity was deleted. Copy it again from Garmin\'s email.',
+                '**Your dot stopped moving**: your phone may have lost its network. The position comes back with the signal.',
+                '**The link of another activity**: each activity has its own link. On race day, share the race\'s.',
+                '**No Garmin watch**: for now, live tracking only works with Garmin LiveTrack.',
+            ],
+        },
+    ],
+};
+
 export const en: HelpContent = {
-    guides: [firstEvent, stripe, checkIn, refund, messages],
+    guides: [firstEvent, stripe, checkIn, refund, messages, liveTracking],
     questions: [
         {
             category: 'Payments',

@@ -3,6 +3,8 @@
 namespace HiEvents\Console;
 
 use HiEvents\Jobs\Event\LocateEventsJob;
+use HiEvents\Jobs\LiveTrack\PollLiveTracksJob;
+use HiEvents\Jobs\LiveTrack\PurgeOldLiveTracksJob;
 use HiEvents\Jobs\Message\SendScheduledMessagesJob;
 use HiEvents\Jobs\Order\AnonymizeAbandonedOrdersJob;
 use HiEvents\Jobs\Question\PurgeSensitiveAnswersJob;
@@ -19,6 +21,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new AnonymizeAbandonedOrdersJob)->dailyAt('04:00')->withoutOverlapping();
         $schedule->job(new PurgeSensitiveAnswersJob)->dailyAt('04:30')->withoutOverlapping();
         $schedule->job(new LocateEventsJob)->everyTenMinutes()->withoutOverlapping();
+        $schedule->job(new PollLiveTracksJob)->everyMinute()->withoutOverlapping();
+        $schedule->job(new PurgeOldLiveTracksJob)->dailyAt('04:45')->withoutOverlapping();
     }
 
     protected function commands(): void
